@@ -1,7 +1,7 @@
 # Contributing Guideline
 
 This project is part of the software technology module at the "THM-Mittelhessen". Only the current members of the group "Flutter-App" are allowed to contribute to this project.
-The group leaders are Dario .. and Franz ... who will manage the jira platform, distribute the tasks among the members etc.
+The group leaders are Dario Pläschke and Franz Johann Leonhardt who will manage the jira platform, distribute the tasks among the members etc.
 
 
 ## Workflow
