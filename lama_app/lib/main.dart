@@ -34,3 +34,50 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 }
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+              child: OutlinedButton(
+                child: Text('Aufgabe'),
+                onPressed: () {
+                  BlocProvider.of<NavigationBloc>(context).add(NavigationEvent.task);
+                },
+              )
+          ),
+          Center(
+              child: OutlinedButton(
+                child: Text('Snake'),
+                onPressed: () {
+                  BlocProvider.of<NavigationBloc>(context).add(NavigationEvent.snake);
+                },
+              )
+          )],
+      ),
+    );
+  }
+}
+
+class TaskScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: OutlinedButton(
+          child: Text('Back!'),
+          onPressed: () {
+            BlocProvider.of<NavigationBloc>(context).add(NavigationEvent.home);
+          },
+        ),
+      ),
+    );
+  }
+}
