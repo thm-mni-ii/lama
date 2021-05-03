@@ -1,7 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/snake/snake_game.dart';
 
-void main() {}
+void main() async {
+  runApp(
+    BlocProvider(
+        create: (context) => NavigationBloc(),
+        child: LamaApp()
+    ),
+  );
+}
+
+class LamaApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: BlocBuilder<NavigationBloc, NavigationState>(
+          builder: (_, state) {
+            if (state is NavigationHomeState) {
+              return HomeScreen();
+            }
+            else if (state is NavigationTaskState) {
+              return TaskScreen();
+            }
+
+            SnakeGame game = SnakeGame();
+            return game.widget;
+          }
+      ),
+    );
+  }
+}
 
 enum NavigationEvent { home, task, snake }
 
