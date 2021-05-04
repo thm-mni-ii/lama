@@ -4,7 +4,24 @@ import 'package:lama_app/snake/snake_game.dart';
 class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SnakeGame game = SnakeGame();
-    return game.widget;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Snake"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                color: Colors.green,
+                child: SnakeGame().widget,
+              )
+            )
+          ]
+        )
+      )
+    );
   }
 }
