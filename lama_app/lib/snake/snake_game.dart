@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:developer' as developer;
 
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,6 +35,9 @@ class SnakeGame extends Game with TapDetector {
 
   void resize(Size size) {
     screenSize = size;
-    tileSize = screenSize.width / 9;
+    tileSize = screenSize.width / 20;
+
+    developer.log("The screensize is $screenSize");
+    developer.log("The tilesize is $tileSize");
   }
 }
