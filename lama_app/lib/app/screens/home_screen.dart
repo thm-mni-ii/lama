@@ -83,9 +83,22 @@ class HomeScreen extends StatelessWidget {
                       radius: 25,
                     ),
                     SizedBox(width: 10),
-                    Text(
-                      "GigaKaninchen",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "GigaKaninchen",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        Row(children: [
+                          Text(
+                            "450",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          SizedBox(width: 5),
+                          CircleAvatar(radius: 10)
+                        ])
+                      ],
                     )
                   ],
                 ),
