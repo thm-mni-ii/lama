@@ -17,7 +17,7 @@ class SnakeGame extends Game with TapDetector {
   final bool debugMovement = true;
 
   Background background;
-  Snake snake;
+  SnakeComponent snake;
   double snakeVelocity = 5;
   int snakeDirection = 1;
 
@@ -37,7 +37,7 @@ class SnakeGame extends Game with TapDetector {
     resize(await Flame.util.initialDimensions());
 
     background = Background(this);
-    snake = Snake(Position(1, 1), tileSize, 20, 20);
+    snake = SnakeComponent(Position(1, 1), tileSize, 20, 20);
   }
 
   void render(Canvas canvas) {
@@ -50,7 +50,7 @@ class SnakeGame extends Game with TapDetector {
     // moves the snake depending on its velocity
     if (deltaCounter / (1 / snakeVelocity) > 1.0) {
       // when debug_movement is active the snake moves towards an random direction
-      snake.moveSnake(debugMovement ? rnd.nextInt(3) : snakeDirection);
+      snake.moveSnake(debugMovement ? rnd.nextInt(3) : snakeDirection, rnd.nextInt(100) > 90);
       // resets the deltaCounter
       deltaCounter = 0;
     }

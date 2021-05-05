@@ -1,19 +1,25 @@
+import 'dart:collection';
 import 'dart:ui';
 import 'dart:developer' as developer;
 
 import 'package:lama_app/snake/models/position.dart';
+import 'package:lama_app/snake/models/snake.dart';
 
-class Snake {
+class SnakeComponent {
+  Queue<Snake> snakeParts = Queue();
   Position headPos;
   final double tileSize;
   final int fieldX;
   final int fieldY;
 
-  Snake(this.headPos, this.tileSize, this.fieldX, this.fieldY);
+  SnakeComponent(Position startPos, this.tileSize, this.fieldX, this.fieldY) {
+    snakeParts.add(Snake(startPos));
+  }
 
   /// This method moves the snake by the given direction for 1 tile.
   /// [dir] 1 = north, 2 = west, 3 = east everything else = south
-  void moveSnake(int dir) {
+  void moveSnake(int dir, [bool grow = false]) {
+    Position headPos = snakeParts.last.position;
     switch(dir) {
       case 3 : {
         headPos = headPos.x <= 1 ? Position(fieldX, headPos.y) : Position(headPos.x - 1, headPos.y);
@@ -32,21 +38,27 @@ class Snake {
         break;
       }
     }
+    if (!grow) {
+      snakeParts.removeFirst();
+    }
+    snakeParts.add(Snake(headPos));
   }
 
   void render(Canvas c) {
-    // rectangle
-    Rect bgRect = Rect.fromLTWH(
-        (this.headPos.x - 1) * tileSize,
-        (this.headPos.y - 1) * tileSize,
-        tileSize,
-        tileSize);
+    for (Snake tmpSnake in snakeParts) {
+      // rectangle
+      Rect bgRect = Rect.fromLTWH(
+          (tmpSnake.position.x - 1) * tileSize,
+          (tmpSnake.position.y - 1) * tileSize,
+          tileSize,
+          tileSize);
 
-    // paint
-    Paint bgPaint = Paint();
-    bgPaint.color = Color(0xFF208421);
+      // paint
+      Paint bgPaint = Paint();
+      bgPaint.color = Color(0xFF208421);
 
-    c.drawArc(bgRect, 0, 10, true, bgPaint);
+      c.drawArc(bgRect, 0, 10, true, bgPaint);
+    }
   }
 
   void update(double t) {}
