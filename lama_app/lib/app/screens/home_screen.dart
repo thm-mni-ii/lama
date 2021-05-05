@@ -13,18 +13,137 @@ class HomeScreen extends StatelessWidget {
             Container(
               color: Colors.white,
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(child: Text("Mathe"), onPressed: () => {}),
-                    ElevatedButton(
-                      child: Text("Snake"),
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => GameScreen()),
+                child: Container(
+                  width: screenSize.width / 1.25,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Mathe",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 25),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Color.fromARGB(255, 60, 223, 255),
+                              ),
+                            )
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 112, 231, 255),
+                            minimumSize: Size(screenSize.width / 1.25, 60),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)))),
+                        onPressed: () => {},
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Deutsch",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 25),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Color.fromARGB(255, 239, 30, 50),
+                              ),
+                            )
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 239, 30, 6),
+                            minimumSize: Size(screenSize.width / 1.25, 60),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)))),
+                        onPressed: () => {},
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Englisch",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 25),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Color.fromARGB(255, 239, 30, 50),
+                              ),
+                            )
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 253, 130, 53),
+                            minimumSize: Size(screenSize.width / 1.25, 60),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)))),
+                        onPressed: () => {},
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Spiele",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 25),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Color.fromARGB(255, 239, 30, 50),
+                              ),
+                            )
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 253, 74, 111),
+                            minimumSize: Size(screenSize.width / 1.25, 60),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)))),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => GameScreen()),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
