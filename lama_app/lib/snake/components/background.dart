@@ -14,9 +14,9 @@ class Background {
     // background rectangle
     bgRect = Rect.fromLTWH(
       0,
-      game.screenSize.height - (game.tileSize * 23),
-      game.tileSize * 9,
-      game.tileSize * 23,
+      0,
+      game.screenSize.width,
+      game.screenSize.height,
     );
 
     // background color

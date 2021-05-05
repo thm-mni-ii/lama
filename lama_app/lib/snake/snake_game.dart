@@ -9,10 +9,14 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/background.dart';
 
+import 'components/snake.dart';
+import 'models/position.dart';
+
 class SnakeGame extends Game with TapDetector {
   Size screenSize;
   double tileSize;
   Background background;
+  Snake snake;
 
   SnakeGame() {
     initialize();
@@ -21,13 +25,16 @@ class SnakeGame extends Game with TapDetector {
   void initialize() async {
     resize(await Flame.util.initialDimensions());
     background = Background(this);
+    snake = Snake(Position(5,5), tileSize);
   }
 
   void render(Canvas canvas) {
     background.render(canvas);
+    snake.render(canvas);
   }
 
   void update(double t) {
+
   }
 
   void onTapDown(TapDownDetails d) {
