@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/screens/game_screen.dart';
+import 'package:lama_app/app/screens/user_login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -223,6 +224,16 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: ElevatedButton(
+                child: Text("User select test"),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserLoginScreen()),
+                ),
+              ),
+            )
           ],
         ),
       ),
