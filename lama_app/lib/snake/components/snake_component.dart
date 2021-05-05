@@ -38,9 +38,12 @@ class SnakeComponent {
         break;
       }
     }
+    // only removes the tail when no growth
     if (!grow) {
       snakeParts.removeFirst();
     }
+
+    // adds the new head
     snakeParts.add(Snake(headPos));
   }
 
@@ -55,7 +58,8 @@ class SnakeComponent {
 
       // paint
       Paint bgPaint = Paint();
-      bgPaint.color = Color(0xFF208421);
+      // color the head different than the tail
+      bgPaint.color = Color(tmpSnake == snakeParts.last ? 0xFF208421 : 0xFF200021);
 
       c.drawArc(bgRect, 0, 10, true, bgPaint);
     }

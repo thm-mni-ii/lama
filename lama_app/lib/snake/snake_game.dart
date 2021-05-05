@@ -10,7 +10,7 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/background.dart';
 
-import 'components/snake.dart';
+import 'components/snake_component.dart';
 import 'models/position.dart';
 
 class SnakeGame extends Game with TapDetector {
