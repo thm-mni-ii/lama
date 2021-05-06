@@ -26,8 +26,9 @@ class SnakeGame extends Game with TapDetector {
 
   Size screenSize;
   double tileSize;
-  final maxFieldX = 20;
-  final maxFieldY = 20;
+  final maxFieldX = 19;
+  final maxFieldY = 19;
+  final fieldOffsetY = 3;
 
   SnakeGame() {
     initialize();
@@ -35,9 +36,9 @@ class SnakeGame extends Game with TapDetector {
 
   void initialize() async {
     resize(await Flame.util.initialDimensions());
-
     background = Background(this);
-    snake = SnakeComponent(Position(1, 1), tileSize, 20, 20);
+    // snake
+    snake = SnakeComponent(Position(1, 1), tileSize, maxFieldX, maxFieldY, fieldOffsetY);
   }
 
   void render(Canvas canvas) {
@@ -65,5 +66,6 @@ class SnakeGame extends Game with TapDetector {
 
     developer.log("The screensize is $screenSize");
     developer.log("The tilesize is $tileSize");
+
   }
 }

@@ -8,12 +8,14 @@ import 'package:lama_app/snake/models/snake.dart';
 class SnakeComponent {
   Queue<Snake> snakeParts = Queue();
   Position headPos;
+  final Position startPos;
   final double tileSize;
   final int fieldX;
   final int fieldY;
+  final int offsetY;
 
-  SnakeComponent(Position startPos, this.tileSize, this.fieldX, this.fieldY) {
-    snakeParts.add(Snake(startPos));
+  SnakeComponent(this.startPos, this.tileSize, this.fieldX, this.fieldY, this.offsetY) {
+    snakeParts.add(Snake(Position(this.startPos.x, this.startPos.y + this.offsetY)));
   }
 
   /// This method moves the snake by the given direction for 1 tile.
@@ -30,11 +32,11 @@ class SnakeComponent {
         break;
       }
       case 1 : {
-        headPos = headPos.y <= 1 ? Position(headPos.x, fieldY) : Position(headPos.x, headPos.y - 1);
+        headPos = headPos.y <= this.offsetY + 1 ? Position(headPos.x, fieldY + this.offsetY) : Position(headPos.x, headPos.y - 1);
         break;
       }
       default : {
-        headPos = headPos.y >= fieldY ? Position(headPos.x, 1) : Position(headPos.x, headPos.y + 1);
+        headPos = headPos.y >= fieldY + this.offsetY ? Position(headPos.x, this.offsetY + 1) : Position(headPos.x, headPos.y + 1);
         break;
       }
     }
