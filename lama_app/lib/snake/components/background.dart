@@ -5,6 +5,9 @@ import 'package:lama_app/snake/snake_game.dart';
 
 class Background {
   final SnakeGame game;
+  final bool center;
+  double _offsetX;
+  double _offsetY;
   Rect bgRect;
   Rect fieldBorder;
   List<Position> fieldTiles;
@@ -13,7 +16,7 @@ class Background {
   /// Constructor of this class
   ///
   /// Needs an instance of [SnakeGame] to determine the corresponding size of the screen.
-  Background(this.game) {
+  Background(this.game, this.center) {
     // background rectangle
     bgRect = Rect.fromLTWH(
       0,
@@ -28,6 +31,10 @@ class Background {
     // background color
     bgPaint = Paint();
     bgPaint.color = Color(0xFFF9FBB6);
+
+    // center the quadratic field depending on the max width or height of the screen
+    _offsetX = game.screenSize.width > game.screenSize.height ? (game.screenSize.width - game.screenSize.height) / 2 : 0;
+    _offsetY = game.screenSize.height > game.screenSize.width ? (game.screenSize.height - game.screenSize.width) / 2 : 0;
   }
 
   void render(Canvas c) {
@@ -37,8 +44,8 @@ class Background {
     for (var i = 0 ; i < fieldTiles.length; i++) {
       // tile rectangle
       var rect = Rect.fromLTWH(
-        fieldTiles[i].x * this.game.tileSize,
-        fieldTiles[i].y * this.game.tileSize,
+        fieldTiles[i].x * this.game.tileSize + _offsetX,
+        fieldTiles[i].y * this.game.tileSize + _offsetY,
         game.tileSize,
         game.tileSize,
       );
@@ -47,7 +54,7 @@ class Background {
       var paint = Paint();
       // altering the color depending on the index. odd flied x is necessary for chess pattern
       paint.color = i % 2 <= 0 ? Color(0xFFF9FBB6) : Color(0xFFCDCE97);
-      
+
       c.drawRect(rect, paint);
     }
   }

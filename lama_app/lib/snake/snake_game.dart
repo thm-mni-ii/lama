@@ -35,8 +35,7 @@ class SnakeGame extends Game with TapDetector {
 
   void initialize() async {
     resize(await Flame.util.initialDimensions());
-
-    background = Background(this);
+    background = Background(this, true);
     snake = SnakeComponent(Position(1, 1), tileSize, 20, 20);
   }
 
