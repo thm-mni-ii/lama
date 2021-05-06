@@ -12,6 +12,7 @@ class Background {
   Rect fieldBorder;
   List<Position> fieldTiles;
   Paint bgPaint;
+  Paint fieldBorderPaint;
 
   /// Constructor of this class
   ///
@@ -35,10 +36,18 @@ class Background {
     // center the quadratic field depending on the max width or height of the screen
     _offsetX = game.screenSize.width > game.screenSize.height ? (game.screenSize.width - game.screenSize.height) / 2 : 0;
     _offsetY = game.screenSize.height > game.screenSize.width ? (game.screenSize.height - game.screenSize.width) / 2 : 0;
+
+
+    // field border color
+    fieldBorderPaint = Paint();
+    fieldBorderPaint.color = Color(0xFF4C4C4C);
+    // field border rect
+    fieldBorder = Rect.fromLTWH(0, _offsetY - 2, game.screenSize.width, game.screenSize.width + 4);
   }
 
   void render(Canvas c) {
     c.drawRect(bgRect, bgPaint);
+    c.drawRect(fieldBorder, fieldBorderPaint);
 
     // each tile of the game field
     for (var i = 0 ; i < fieldTiles.length; i++) {
