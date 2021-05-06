@@ -26,8 +26,8 @@ class SnakeGame extends Game with TapDetector {
 
   Size screenSize;
   double tileSize;
-  final maxFieldX = 20;
-  final maxFieldY = 20;
+  final maxFieldX = 19;
+  final maxFieldY = 19;
 
   SnakeGame() {
     initialize();
@@ -65,5 +65,6 @@ class SnakeGame extends Game with TapDetector {
 
     developer.log("The screensize is $screenSize");
     developer.log("The tilesize is $tileSize");
+
   }
 }
