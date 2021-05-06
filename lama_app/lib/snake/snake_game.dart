@@ -38,7 +38,7 @@ class SnakeGame extends Game with TapDetector {
     resize(await Flame.util.initialDimensions());
     background = Background(this);
     // snake
-    snake = SnakeComponent(Position(1, 1), tileSize, 20, 20, fieldOffsetY);
+    snake = SnakeComponent(Position(1, 1), tileSize, maxFieldX, maxFieldY, fieldOffsetY);
   }
 
   void render(Canvas canvas) {

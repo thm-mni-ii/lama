@@ -28,15 +28,15 @@ class SnakeComponent {
         break;
       }
       case 2 : {
-        headPos = headPos.x >= fieldX - 1 ? Position(1, headPos.y) : Position(headPos.x + 1, headPos.y);
+        headPos = headPos.x >= fieldX ? Position(1, headPos.y) : Position(headPos.x + 1, headPos.y);
         break;
       }
       case 1 : {
-        headPos = headPos.y <= this.offsetY + 1 ? Position(headPos.x, fieldY + this.offsetY - 1) : Position(headPos.x, headPos.y - 1);
+        headPos = headPos.y <= this.offsetY + 1 ? Position(headPos.x, fieldY + this.offsetY) : Position(headPos.x, headPos.y - 1);
         break;
       }
       default : {
-        headPos = headPos.y >= fieldY + this.offsetY - 1 ? Position(headPos.x, this.offsetY + 1) : Position(headPos.x, headPos.y + 1);
+        headPos = headPos.y >= fieldY + this.offsetY ? Position(headPos.x, this.offsetY + 1) : Position(headPos.x, headPos.y + 1);
         break;
       }
     }
