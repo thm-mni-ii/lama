@@ -33,9 +33,8 @@ class Background {
     bgPaint.color = Color(0xFFF9FBB6);
 
     // center the quadratic field depending on the max width or height of the screen
-    _offsetX = game.screenSize.width > game.screenSize.height ? game.tileSize * 3 : 0;
-    _offsetY = game.screenSize.height > game.screenSize.width ? game.tileSize * 3 : 0;
-
+    _offsetX = game.screenSize.width > game.screenSize.height ? game.tileSize * this.game.fieldOffsetY : 0;
+    _offsetY = game.screenSize.height > game.screenSize.width ? game.tileSize * this.game.fieldOffsetY : 0;
 
     // field border color
     fieldBorderPaint = Paint();
