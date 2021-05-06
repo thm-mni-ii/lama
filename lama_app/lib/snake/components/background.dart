@@ -5,7 +5,6 @@ import 'package:lama_app/snake/snake_game.dart';
 
 class Background {
   final SnakeGame game;
-  final bool center;
   double _offsetX;
   double _offsetY;
   Rect bgRect;
@@ -17,7 +16,7 @@ class Background {
   /// Constructor of this class
   ///
   /// Needs an instance of [SnakeGame] to determine the corresponding size of the screen.
-  Background(this.game, this.center) {
+  Background(this.game) {
     // background rectangle
     bgRect = Rect.fromLTWH(
       0,
@@ -34,8 +33,8 @@ class Background {
     bgPaint.color = Color(0xFFF9FBB6);
 
     // center the quadratic field depending on the max width or height of the screen
-    _offsetX = game.screenSize.width > game.screenSize.height ? (game.screenSize.width - game.screenSize.height) / 2 : 0;
-    _offsetY = game.screenSize.height > game.screenSize.width ? (game.screenSize.height - game.screenSize.width) / 2 : 0;
+    _offsetX = game.screenSize.width > game.screenSize.height ? game.tileSize * 3 : 0;
+    _offsetY = game.screenSize.height > game.screenSize.width ? game.tileSize * 3 : 0;
 
 
     // field border color
