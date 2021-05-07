@@ -10,22 +10,16 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/background.dart';
 
-import 'components/snake_component.dart';
+import 'components/snake.dart';
 import 'models/position.dart';
 
 class SnakeGame extends Game with TapDetector {
-  final bool debugMovement = true;
-
   Background background;
   SnakeComponent snake;
-  double snakeVelocity = 5;
-  int snakeDirection = 1;
-
-  double deltaCounter = 0;
-  Random rnd = Random();
 
   Size screenSize;
   double tileSize;
+
   final maxFieldX = 19;
   final maxFieldY = 19;
   final fieldOffsetY = 3;
@@ -38,7 +32,7 @@ class SnakeGame extends Game with TapDetector {
     resize(await Flame.util.initialDimensions());
     background = Background(this);
     // snake
-    snake = SnakeComponent(Position(1, 1), tileSize, maxFieldX, maxFieldY, fieldOffsetY);
+    snake = SnakeComponent(Position(1, 1), this);
   }
 
   void render(Canvas canvas) {
@@ -47,14 +41,7 @@ class SnakeGame extends Game with TapDetector {
   }
 
   void update(double t) {
-    deltaCounter += t;
-    // moves the snake depending on its velocity
-    if (deltaCounter / (1 / snakeVelocity) > 1.0) {
-      // when debug_movement is active the snake moves towards an random direction
-      snake.moveSnake(debugMovement ? rnd.nextInt(3) : snakeDirection, rnd.nextInt(100) > 90);
-      // resets the deltaCounter
-      deltaCounter = 0;
-    }
+    snake.update(t);
   }
 
   void onTapDown(TapDownDetails d) {
