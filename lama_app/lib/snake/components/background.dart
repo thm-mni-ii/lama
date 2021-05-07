@@ -5,47 +5,52 @@ import 'package:lama_app/snake/snake_game.dart';
 
 class Background {
   final SnakeGame game;
+
+  Rect backgroundRect;
+  Paint backgroundPaint;
+  Rect fieldBorderRect;
+  Paint fieldBorderPaint;
+  List<Position> fieldTiles;
+
   double _offsetX;
   double _offsetY;
-  Rect bgRect;
-  Rect fieldBorder;
-  List<Position> fieldTiles;
-  Paint bgPaint;
-  Paint fieldBorderPaint;
 
   /// Constructor of this class
   ///
   /// Needs an instance of [SnakeGame] to determine the corresponding size of the screen.
   Background(this.game) {
     // background rectangle
-    bgRect = Rect.fromLTWH(
+    backgroundRect = Rect.fromLTWH(
       0,
       0,
       game.screenSize.width,
       game.screenSize.height,
     );
 
-    fieldTiles = new List.generate(this.game.maxFieldX * this.game.maxFieldY,
+    // generate the field tiles
+    fieldTiles = List.generate(
+        this.game.maxFieldX * this.game.maxFieldY,
             (index) => Position(index % this.game.maxFieldX, index ~/ this.game.maxFieldY));
 
-    // background color
-    bgPaint = Paint();
-    bgPaint.color = Color(0xFFF9FBB6);
+    // background paint
+    backgroundPaint = Paint();
+    backgroundPaint.color = Color(0xFFF9FBB6);
 
-    // center the quadratic field depending on the max width or height of the screen
+    // calculates the offset of the field depending on the [fieldOffsetY] of the SnakeGame
     _offsetX = game.screenSize.width > game.screenSize.height ? game.tileSize * this.game.fieldOffsetY : 0;
     _offsetY = game.screenSize.height > game.screenSize.width ? game.tileSize * this.game.fieldOffsetY : 0;
 
-    // field border color
+    // field border paint
     fieldBorderPaint = Paint();
     fieldBorderPaint.color = Color(0xFF4C4C4C);
+
     // field border rect
-    fieldBorder = Rect.fromLTWH(0, _offsetY - 2, game.screenSize.width, game.screenSize.width + 4);
+    fieldBorderRect = Rect.fromLTWH(_offsetX, _offsetY - 2, game.screenSize.width, game.screenSize.width + 4);
   }
 
   void render(Canvas c) {
-    c.drawRect(bgRect, bgPaint);
-    c.drawRect(fieldBorder, fieldBorderPaint);
+    c.drawRect(backgroundRect, backgroundPaint);
+    c.drawRect(fieldBorderRect, fieldBorderPaint);
 
     // each tile of the game field
     for (var i = 0 ; i < fieldTiles.length; i++) {
@@ -57,9 +62,9 @@ class Background {
         game.tileSize,
       );
 
-      // tile color
+      // tile paint
+      // altering the color depending on the index. odd field width and height x is necessary for chess pattern
       var paint = Paint();
-      // altering the color depending on the index. odd flied x is necessary for chess pattern
       paint.color = i % 2 <= 0 ? Color(0xFFF9FBB6) : Color(0xFFCDCE97);
 
       c.drawRect(rect, paint);
