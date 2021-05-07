@@ -55,6 +55,19 @@ class SnakeComponent {
     snakeParts.add(headPos);
   }
 
+  /// This method checks if the head is on the given [position]
+  bool collideWithHead(Position position) {
+    return position != null &&
+        snakeParts.last.x == position.x &&
+        snakeParts.last.y == position.y;
+  }
+
+  /// This method checks if there is an snakepart on the given [position]
+  bool collideWithSnake(Position position) {
+    return position != null &&
+        snakeParts.where((it) => it.x == position.x && it.y == position.y).isNotEmpty;
+  }
+
   void render(Canvas c) {
     // render each part of the snake
     for (Position tmpSnake in snakeParts) {
