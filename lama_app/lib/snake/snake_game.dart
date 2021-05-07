@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 import 'dart:developer' as developer;
 
@@ -14,6 +13,8 @@ import 'components/snake.dart';
 import 'models/position.dart';
 
 class SnakeGame extends Game with TapDetector {
+  final bool log = true;
+
   Background background;
   SnakeComponent snake;
 
@@ -31,7 +32,7 @@ class SnakeGame extends Game with TapDetector {
   void initialize() async {
     resize(await Flame.util.initialDimensions());
     background = Background(this);
-    // snake
+    // snake with starting location
     snake = SnakeComponent(Position(1, 1), this);
   }
 
@@ -51,8 +52,9 @@ class SnakeGame extends Game with TapDetector {
     screenSize = size;
     tileSize = screenSize.width / maxFieldX;
 
-    developer.log("The screensize is $screenSize");
-    developer.log("The tilesize is $tileSize");
-
+    if (log) {
+      developer.log("[SnakeGame] screensize = $screenSize");
+      developer.log("[SnakeGame] tilesize = $tileSize");
+    }
   }
 }
