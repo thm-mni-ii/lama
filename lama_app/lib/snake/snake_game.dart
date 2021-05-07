@@ -19,6 +19,14 @@ import 'components/snake.dart';
 
 import 'models/position.dart';
 
+/*newly added classes */
+import 'package:lama_app/snake/view.dart';
+import 'package:lama_app/snake/views/home-view.dart';
+
+import 'components/start-button.dart';
+
+/*newly added classes*/
+
 class SnakeGame extends Game with TapDetector {
   final bool log = true;
 
@@ -53,6 +61,11 @@ class SnakeGame extends Game with TapDetector {
   bool _paused = false;
   bool _pauseWasPressed = false;
 
+  View activeView = View.home; // views added
+  HomeView homeView;
+
+  StartButton startButton;
+
   SnakeGame() {
     initialize();
   }
@@ -69,6 +82,10 @@ class SnakeGame extends Game with TapDetector {
     arrowButtonUp = ArrowButtons(this, 1);
     arrowButtonLeft = ArrowButtons(this, 2);
     arrowButtonRight = ArrowButtons(this, 3);
+
+    startButton = StartButton(this);
+
+    homeView = HomeView(this);
 
     pauseButton = PauseButton(this);
     // TODO - this has to move to the begin action of the main menu
@@ -148,7 +165,13 @@ class SnakeGame extends Game with TapDetector {
       background.render(canvas);
       apples.forEach((element) => element.render(canvas));
       snake.render(canvas);
+
       scoreDisplay.render(canvas); 
+      
+      if (activeView == View.home) startButton.render(canvas);
+
+      if (activeView == View.home) homeView.render(canvas);
+      
       arrowButtonDown.render(canvas);
       arrowButtonUp.render(canvas);
       arrowButtonLeft.render(canvas);
@@ -175,6 +198,15 @@ class SnakeGame extends Game with TapDetector {
   }
 /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void onTapDown(TapDownDetails d) {
+    bool isHandled = false;
+
+    // start button
+    if (!isHandled && startButton.rect.contains(d.globalPosition)) {
+      if (activeView == View.home) {
+        startButton.onTapDown();
+        isHandled = true;
+      }
+    }
     
     if (arrowButtonDown.rectButton.contains(d.localPosition)){
       //arrowButtonDown.onTapDown();
