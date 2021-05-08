@@ -70,6 +70,8 @@ class SnakeComponent {
       // only removes the tail when no growth
       if (!grow) {
         snakeParts.removeFirst();
+      } else if (log) {
+        developer.log("[Snake][moveSnake] growth");
       }
 
       // adds the new head
@@ -116,7 +118,7 @@ class SnakeComponent {
     if (_deltaCounter / (1 / velocity) > 1.0) {
       // debug_movement = snake moves towards an random direction
       if (debugMovement) {
-        _direction = rnd.nextInt(4);
+        direction = rnd.nextInt(5);
       }
 
       // debug_movement = snake growths with 10% chance
