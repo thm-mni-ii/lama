@@ -64,11 +64,6 @@ class SnakeComponent {
 
       // adds the new head
       snakeParts.add(headPos);
-
-      if (log) {
-        developer.log("[Snake][Movement] time past = $_deltaCounter");
-        developer.log("[Snake][Movement] direction = $_direction");
-      }
     }
   }
 
