@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CreateAdmin extends StatelessWidget {
+class CreateAdminScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
