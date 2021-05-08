@@ -13,6 +13,8 @@ class SnakeComponent {
   Random rnd = Random();
   Queue<Position> snakeParts = Queue();
   double velocity = 5;
+  /// callback when the snake bites itself
+  Function callbackBiteItSelf;
 
   final SnakeGame game;
 
@@ -46,13 +48,28 @@ class SnakeComponent {
       }
     }
 
-    // only removes the tail when no growth
-    if (!grow) {
-      snakeParts.removeFirst();
-    }
+    if (collideWithSnake(headPos)) {
+      if (callbackBiteItSelf != null) {
+        callbackBiteItSelf();
+      }
 
-    // adds the new head
-    snakeParts.add(headPos);
+      if (log) {
+        developer.log("[Snake][moveSnake] biteItSelf = true");
+      }
+    } else {
+      // only removes the tail when no growth
+      if (!grow) {
+        snakeParts.removeFirst();
+      }
+
+      // adds the new head
+      snakeParts.add(headPos);
+
+      if (log) {
+        developer.log("[Snake][Movement] time past = $_deltaCounter");
+        developer.log("[Snake][Movement] direction = $_direction");
+      }
+    }
   }
 
   /// This method checks if the head is on the given [position]
@@ -99,11 +116,6 @@ class SnakeComponent {
 
       // debug_movement = snake growths with 10% chance
       moveSnake(_direction, debugMovement ? rnd.nextInt(100) > 90 : false);
-
-      if (log) {
-        developer.log("[Snake][Movement] time past = $_deltaCounter");
-        developer.log("[Snake][Movement] direction = $_direction");
-      }
 
       // resets the deltaCounter
       _deltaCounter = 0;
