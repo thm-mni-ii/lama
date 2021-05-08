@@ -25,13 +25,23 @@ class SnakeComponent {
     snakeParts.add(Position(startPos.x, startPos.y + this.game.fieldOffsetY));
   }
 
+  /// This is the setter of [_direction]
+  /// [dir] 1 = north, 2 = west, 3 = south, 4 = east, else = not valid / ignored
+  set direction(int dir) {
+    if (dir != _direction && dir <= 5 && dir > 0) {
+      if (!(_direction.isOdd && dir.isOdd || _direction.isEven && dir.isEven)) {
+        _direction = dir;
+      }
+    }
+  }
+
   /// This method moves the snake by the given direction for 1 tile.
-  /// [dir] 1 = north, 2 = west, 3 = east everything else = south
+  /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void moveSnake(int dir, [bool grow = false]) {
     Position headPos = snakeParts.last;
     switch(dir) {
       case 3 : {
-        headPos = headPos.x <= 1 ? Position(this.game.maxFieldX, headPos.y) : Position(headPos.x - 1, headPos.y);
+        headPos = headPos.y >= this.game.maxFieldY + this.game.fieldOffsetY ? Position(headPos.x, this.game.fieldOffsetY + 1) : Position(headPos.x, headPos.y + 1);
         break;
       }
       case 2 : {
@@ -43,7 +53,7 @@ class SnakeComponent {
         break;
       }
       default : {
-        headPos = headPos.y >= this.game.maxFieldY + this.game.fieldOffsetY ? Position(headPos.x, this.game.fieldOffsetY + 1) : Position(headPos.x, headPos.y + 1);
+        headPos = headPos.x <= 1 ? Position(this.game.maxFieldX, headPos.y) : Position(headPos.x - 1, headPos.y);
         break;
       }
     }
