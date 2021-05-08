@@ -35,7 +35,7 @@ class CreateAdmin extends StatelessWidget {
           )
         ],
       ),
-      backgroundColor: Color(0xFFFFFF),
+      backgroundColor: Color(0xFFFFFFFF),
     );
   }
 
