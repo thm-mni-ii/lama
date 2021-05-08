@@ -26,9 +26,16 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChooseTasksetBloc, ChooseTasksetState>(
-      builder: (context, state) => Center(
-        child: Text("Test"),
+    return Container(
+      child: BlocBuilder<ChooseTasksetBloc, ChooseTasksetState>(
+        builder: (context, state) {
+          if (state is LoadingAllTasksetsState)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          else
+            return Text("This should not happen");
+        },
       ),
     );
   }
