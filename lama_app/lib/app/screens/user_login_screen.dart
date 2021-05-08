@@ -9,7 +9,7 @@ class UserLoginScreen extends StatelessWidget {
         title: Text('Nutzerauswahl'),
       ),
       body: UserSelection(),
-      backgroundColor: Color(0xFFFFFF),
+      backgroundColor: Color(0xFFFFFFFF),
     );
   }
 }
