@@ -13,6 +13,8 @@ class SnakeComponent {
   Random rnd = Random();
   Queue<Position> snakeParts = Queue();
   double velocity = 5;
+  /// callback when the snake bites itself
+  Function callbackBiteItSelf;
 
   final SnakeGame game;
 
@@ -23,13 +25,23 @@ class SnakeComponent {
     snakeParts.add(Position(startPos.x, startPos.y + this.game.fieldOffsetY));
   }
 
+  /// This is the setter of [_direction]
+  /// [dir] 1 = north, 2 = west, 3 = south, 4 = east, else = not valid / ignored
+  set direction(int dir) {
+    if (dir != _direction && dir <= 5 && dir > 0) {
+      if (!(_direction.isOdd && dir.isOdd || _direction.isEven && dir.isEven)) {
+        _direction = dir;
+      }
+    }
+  }
+
   /// This method moves the snake by the given direction for 1 tile.
-  /// [dir] 1 = north, 2 = west, 3 = east everything else = south
+  /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void moveSnake(int dir, [bool grow = false]) {
     Position headPos = snakeParts.last;
     switch(dir) {
       case 3 : {
-        headPos = headPos.x <= 1 ? Position(this.game.maxFieldX, headPos.y) : Position(headPos.x - 1, headPos.y);
+        headPos = headPos.y >= this.game.maxFieldY + this.game.fieldOffsetY ? Position(headPos.x, this.game.fieldOffsetY + 1) : Position(headPos.x, headPos.y + 1);
         break;
       }
       case 2 : {
@@ -41,18 +53,30 @@ class SnakeComponent {
         break;
       }
       default : {
-        headPos = headPos.y >= this.game.maxFieldY + this.game.fieldOffsetY ? Position(headPos.x, this.game.fieldOffsetY + 1) : Position(headPos.x, headPos.y + 1);
+        headPos = headPos.x <= 1 ? Position(this.game.maxFieldX, headPos.y) : Position(headPos.x - 1, headPos.y);
         break;
       }
     }
 
-    // only removes the tail when no growth
-    if (!grow) {
-      snakeParts.removeFirst();
-    }
+    if (collideWithSnake(headPos)) {
+      if (callbackBiteItSelf != null) {
+        callbackBiteItSelf();
+      }
 
-    // adds the new head
-    snakeParts.add(headPos);
+      if (log) {
+        developer.log("[Snake][moveSnake] biteItSelf = true");
+      }
+    } else {
+      // only removes the tail when no growth
+      if (!grow) {
+        snakeParts.removeFirst();
+      } else if (log) {
+        developer.log("[Snake][moveSnake] growth");
+      }
+
+      // adds the new head
+      snakeParts.add(headPos);
+    }
   }
 
   /// This method checks if the head is on the given [position]
@@ -94,16 +118,11 @@ class SnakeComponent {
     if (_deltaCounter / (1 / velocity) > 1.0) {
       // debug_movement = snake moves towards an random direction
       if (debugMovement) {
-        _direction = rnd.nextInt(4);
+        direction = rnd.nextInt(5);
       }
 
       // debug_movement = snake growths with 10% chance
       moveSnake(_direction, debugMovement ? rnd.nextInt(100) > 90 : false);
-
-      if (log) {
-        developer.log("[Snake][Movement] time past = $_deltaCounter");
-        developer.log("[Snake][Movement] direction = $_direction");
-      }
 
       // resets the deltaCounter
       _deltaCounter = 0;

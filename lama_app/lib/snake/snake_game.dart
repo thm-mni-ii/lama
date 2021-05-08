@@ -33,7 +33,19 @@ class SnakeGame extends Game with TapDetector {
     resize(await Flame.util.initialDimensions());
     background = Background(this);
     // snake with starting location
-    snake = SnakeComponent(Position(1, 1), this);
+    spawnSnake();
+  }
+
+  /// This method initialize the snake with its callback
+  void spawnSnake() {
+    // initialize a new snake
+    snake = SnakeComponent(Position(maxFieldX ~/ 2, maxFieldY ~/ 2), this);
+    // TODO: callback when the snake bites itself
+    snake.callbackBiteItSelf = () => spawnSnake();
+
+    if (log) {
+      developer.log("[SnakeGame][spawnSnake]");
+    }
   }
 
   void render(Canvas canvas) {
