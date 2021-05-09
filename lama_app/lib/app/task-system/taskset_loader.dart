@@ -20,6 +20,10 @@ class TasksetLoader {
     dir.listSync().forEach((element) {
       element.delete();
     });
+
+    //TODO: Add Standard-Tasksets
+    //TODO: Download JSON-Tasksets from Server
+
     //get all files in the taskset directory
     List<FileSystemEntity> tasksets = dir.listSync();
 
