@@ -25,6 +25,8 @@ class SnakeGame extends Game with TapDetector {
   final maxFieldY = 19;
   final fieldOffsetY = 3;
 
+  bool _finished = false;
+
   SnakeGame() {
     initialize();
   }
@@ -33,6 +35,7 @@ class SnakeGame extends Game with TapDetector {
     resize(await Flame.util.initialDimensions());
     background = Background(this);
     // snake with starting location
+    // TODO - this has to move to the begin action of the main menu
     spawnSnake();
   }
 
@@ -40,11 +43,11 @@ class SnakeGame extends Game with TapDetector {
   void spawnSnake() {
     // initialize a new snake
     snake = SnakeComponent(Position(maxFieldX ~/ 2, maxFieldY ~/ 2), this);
-    // TODO: callback when the snake bites itself
-    snake.callbackBiteItSelf = () => spawnSnake();
+    snake.callbackBiteItSelf = () => finishGame();
+    snake.callbackCollideWithBorder = () => finishGame();
 
     if (log) {
-      developer.log("[SnakeGame][spawnSnake]");
+      developer.log("[SnakeGame][spawnSnake] spawned");
     }
   }
 
@@ -54,7 +57,17 @@ class SnakeGame extends Game with TapDetector {
   }
 
   void update(double t) {
-    snake.update(t);
+    if (!_finished) {
+      snake.update(t);
+    }
+  }
+
+  /// This method finish the actual game
+  void finishGame() {
+    _finished = true;
+    if (log) {
+      developer.log("[SnakeGame][finishGame] finished the game");
+    }
   }
 
   void onTapDown(TapDownDetails d) {

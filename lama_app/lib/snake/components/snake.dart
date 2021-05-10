@@ -15,6 +15,8 @@ class SnakeComponent {
   double velocity = 5;
   /// callback when the snake bites itself
   Function callbackBiteItSelf;
+  /// callback when the snake hits the border
+  Function callbackCollideWithBorder;
 
   final SnakeGame game;
 
@@ -26,7 +28,8 @@ class SnakeComponent {
   }
 
   /// This is the setter of [_direction]
-  /// [dir] 1 = north, 2 = west, 3 = south, 4 = east, else = not valid / ignored
+  /// [dir] could be: 1 = north, 2 = west, 3 = south, 4 = east, else = not valid / ignored
+  /// You cant move in the opposite direction so this will gets ignored.
   set direction(int dir) {
     if (dir != _direction && dir <= 5 && dir > 0) {
       if (!(_direction.isOdd && dir.isOdd || _direction.isEven && dir.isEven)) {
@@ -38,44 +41,37 @@ class SnakeComponent {
   /// This method moves the snake by the given direction for 1 tile.
   /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void moveSnake(int dir, [bool grow = false]) {
-    Position headPos = snakeParts.last;
-    switch(dir) {
-      case 3 : {
-        headPos = headPos.y >= this.game.maxFieldY + this.game.fieldOffsetY ? Position(headPos.x, this.game.fieldOffsetY + 1) : Position(headPos.x, headPos.y + 1);
-        break;
+    var newPosition = getNewPosition(dir);
+
+    // no movement in between the field possible
+    if (newPosition == null) {
+      if (log) {
+        developer.log("[Snake][moveSnake] collide with the border");
       }
-      case 2 : {
-        headPos = headPos.x >= this.game.maxFieldX ? Position(1, headPos.y) : Position(headPos.x + 1, headPos.y);
-        break;
-      }
-      case 1 : {
-        headPos = headPos.y <= this.game.fieldOffsetY + 1 ? Position(headPos.x, this.game.maxFieldY + this.game.fieldOffsetY) : Position(headPos.x, headPos.y - 1);
-        break;
-      }
-      default : {
-        headPos = headPos.x <= 1 ? Position(this.game.maxFieldX, headPos.y) : Position(headPos.x - 1, headPos.y);
-        break;
+
+      if (callbackCollideWithBorder != null) {
+        callbackCollideWithBorder();
       }
     }
-
-    if (collideWithSnake(headPos)) {
-      if (callbackBiteItSelf != null) {
-        callbackBiteItSelf();
+    else if (collideWithSnake(newPosition)) {
+      if (log) {
+        developer.log("[Snake][moveSnake] biteItSelf");
       }
 
-      if (log) {
-        developer.log("[Snake][moveSnake] biteItSelf = true");
+      if (callbackBiteItSelf != null) {
+        callbackBiteItSelf();
       }
     } else {
       // only removes the tail when no growth
       if (!grow) {
         snakeParts.removeFirst();
-      } else if (log) {
-        developer.log("[Snake][moveSnake] growth");
+      }
+      else if (log) {
+        developer.log("[Snake][moveSnake] snake growths");
       }
 
       // adds the new head
-      snakeParts.add(headPos);
+      snakeParts.add(newPosition);
     }
   }
 
@@ -90,6 +86,48 @@ class SnakeComponent {
   bool collideWithSnake(Position position) {
     return position != null &&
         snakeParts.where((it) => it.x == position.x && it.y == position.y).isNotEmpty;
+  }
+
+  /// This method returns the new Position by the given [dir].
+  /// [dir] could be: 1 = north, 2 = west, 3 = south everything else = east
+  /// return : hits the border = null, movement within the field = [Position]
+  Position getNewPosition(int dir) {
+    Position headPos = snakeParts.last;
+
+    switch(dir) {
+      case 3 : {
+        if (headPos.y >= this.game.maxFieldY + this.game.fieldOffsetY) {
+          // headPos = Position(headPos.x, this.game.fieldOffsetY + 1);
+          return null;
+        }
+
+        return Position(headPos.x, headPos.y + 1);
+      }
+      case 2 : {
+        if (headPos.x >= this.game.maxFieldX) {
+          // headPos = Position(1, headPos.y);
+          return null;
+        }
+
+        return Position(headPos.x + 1, headPos.y);
+      }
+      case 1 : {
+        if (headPos.y <= this.game.fieldOffsetY + 1) {
+          // headPos = Position(headPos.x, this.game.maxFieldY + this.game.fieldOffsetY);
+          return null;
+        }
+
+        return Position(headPos.x, headPos.y - 1);
+      }
+      default : {
+        if (headPos.x <= 1) {
+          // headPos = Position(this.game.maxFieldX, headPos.y);
+          return null;
+        }
+
+        return Position(headPos.x - 1, headPos.y);
+      }
+    }
   }
 
   void render(Canvas c) {
