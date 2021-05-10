@@ -1,3 +1,4 @@
+import 'package:lama_app/app/model/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -99,5 +100,28 @@ class DatabaseProvider{
           );
       }
     );
+  }
+  Future<List<User>> getUser() async {
+    final db = await database;
+
+    var users = await db.query(
+        tableUser,
+        columns:[columnId, columnName, columnPassword, columnGrade, columnCoins, columnIsAdmin]
+    );
+    List<User> userList = List<User>();
+
+    users.forEach((currentUser) {
+      User user = User.fromMap(currentUser);
+
+      userList.add(user);
+    });
+
+    return userList;
+  }
+
+  Future<User> insert (User user) async {
+    final db = await database;
+    user.id = await db.insert(tableUser, user.toMap());
+    return user;
   }
 }
