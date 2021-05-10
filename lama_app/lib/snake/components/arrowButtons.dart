@@ -2,13 +2,14 @@
 import 'package:lama_app/snake/snake_game.dart';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:flame/components/component.dart';
 
 import '../snake_game.dart';
 
 
 
 
-class ArrowButtons {
+class ArrowButtons extends PositionComponent {
   final SnakeGame game;
 
   Rect rectButton;

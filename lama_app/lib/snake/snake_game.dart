@@ -191,28 +191,28 @@ class SnakeGame extends Game with TapDetector {
 /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void onTapDown(TapDownDetails d) {
     
-    if (arrowButtonDown.rectButton.contains(d.globalPosition)){
+    if (arrowButtonDown.rectButton.contains(d.localPosition)){
       arrowButtonDown.onTapDown();
-      snake.direction = 2;
-
-    }
-    if (arrowButtonUp.rectButton.contains(d.globalPosition)){
-      arrowButtonUp.onTapDown();
       snake.direction = 1;
 
     }
-    if (arrowButtonLeft.rectButton.contains(d.globalPosition)){
+    if (arrowButtonUp.rectButton.contains(d.localPosition)){
+      arrowButtonUp.onTapDown();
+      snake.direction = 4;
+
+    }
+    if (arrowButtonLeft.rectButton.contains(d.localPosition)){
       arrowButtonLeft.onTapDown();
       snake.direction = 2;
 
     }
-    if (arrowButtonRight.rectButton.contains(d.globalPosition)){
+    if (arrowButtonRight.rectButton.contains(d.localPosition)){
       arrowButtonRight.onTapDown();
-      snake.direction = 4;
+      snake.direction = 3;
 
     }
 
-    if (rightArrowButton.rectButton.contains(d.globalPosition)){
+    if (rightArrowButton.rectButton.contains(d.localPosition)){
       rightArrowButton.onTapDown();
     }
   }
