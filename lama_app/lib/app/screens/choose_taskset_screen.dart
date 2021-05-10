@@ -33,7 +33,16 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
             return Center(
               child: CircularProgressIndicator(),
             );
-          else
+          if (state is LoadedAllTasksetsState) {
+            print("L:" + state.tasksets.length.toString());
+            return Center(
+              child: ListView.builder(
+                itemCount: state.tasksets.length,
+                itemBuilder: (context, index) =>
+                    Text(state.tasksets[index].name),
+              ),
+            );
+          } else
             return Text("This should not happen");
         },
       ),

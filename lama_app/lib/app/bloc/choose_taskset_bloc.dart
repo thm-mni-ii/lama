@@ -13,9 +13,7 @@ class ChooseTasksetBloc extends Bloc<ChooseTasksetEvent, ChooseTasksetState> {
   Stream<ChooseTasksetState> mapEventToState(ChooseTasksetEvent event) async* {
     if (event is LoadAllTasksetsEvent) yield LoadingAllTasksetsState();
     List<Taskset> tasksets =
-        repository.getTasksetsForSubjectAndGrade("Mathe", 2);
-    for (Taskset t in tasksets) print(t.name);
-    //TODO fetch all tasksets from repository
-    //TODO return a state which contains all tasksets
+        repository.getTasksetsForSubjectAndGrade("Mathe", 3);
+    yield LoadedAllTasksetsState(tasksets);
   }
 }

@@ -24,8 +24,12 @@ class TasksetLoader {
     //****************TESTFILE-CODE*****************************
 
     File f = File(dir.path + "/testFile.json");
+    File f2 = File(dir.path + "/testFile2.json");
+
     f.writeAsString(
         '{"taskset_name":"Test", "taskset_subject":"Mathe", "taskset_grade":3, "tasks": [{"task_type":"4Cards", "task_reward":2, "question":"Tippe die richtige Anwort an!","right_answer":"This the answer", "wrong_answers":["4", "3", "1"]}]}');
+    f2.writeAsString(
+        '{"taskset_name":"Test 2", "taskset_subject":"Mathe", "taskset_grade":3, "tasks": [{"task_type":"4Cards", "task_reward":2, "question":"Tippe die richtige Anwort an!","right_answer":"This the answer", "wrong_answers":["4", "3", "1"]}]}');
     //******************************************
 
     //TODO: Add Standard-Tasksets
