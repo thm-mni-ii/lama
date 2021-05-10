@@ -5,7 +5,7 @@ import 'package:lama_app/app/state/user_login_state.dart';
 import '../user.dart';
 
 class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
-  UserLoginBloc(UserLoginState initialState) : super(initialState);
+  UserLoginBloc({UserLoginState initialState}) : super(initialState);
 
   @override
   Stream<UserLoginState> mapEventToState(UserLoginEvent event) async* {
