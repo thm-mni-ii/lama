@@ -17,6 +17,7 @@ class SnakeGame extends Game with TapDetector {
 
   Background background;
   SnakeComponent snake;
+  int score = 0;
 
   Size screenSize;
   double tileSize;
