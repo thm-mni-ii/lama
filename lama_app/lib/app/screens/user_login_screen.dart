@@ -21,13 +21,14 @@ class UserSelectionState extends State<UserLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: BlocBuilder<UserLoginBloc, UserLoginState>(
+    Size screenSize = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: _bar(screenSize.width / 5),
+      body: BlocBuilder<UserLoginBloc, UserLoginState>(
         builder: (context, state) {
           if (state is UserSelected) {
             return _userCard(state.user);
           }
-          context.read<UserLoginBloc>().add(LoadUsers());
           if (state is UsersLoaded) {
             return _userListView(state.userList);
           }
@@ -38,8 +39,27 @@ class UserSelectionState extends State<UserLoginScreen> {
   }
 }
 
+Widget _bar(double size) {
+  return AppBar(
+    title: Text('Nutzerauswahl'),
+    toolbarHeight: size,
+    backgroundColor: Color.fromARGB(255, 253, 74, 111),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        bottom: Radius.circular(30),
+      ),
+    ),
+  );
+}
+
 Widget _passwortInput() {
-  return null;
+  return TextFormField(
+    decoration: InputDecoration(
+      icon: Icon(Icons.security),
+      hintText: 'Passwort',
+    ),
+    validator: (value) => null,
+  );
 }
 
 Widget _userListView(List<User> list) {
@@ -51,15 +71,19 @@ Widget _userListView(List<User> list) {
 }
 
 Widget _userCard(User user) {
-  return Card(
-    child: ListTile(
-      onTap: () {},
-      title: Text(user.name),
-      leading: CircleAvatar(
-        //TODO should be backgrundImage.
-        //You can use path to get the User Image.
-        backgroundColor: Color(0xFFF48FB1),
+  return BlocBuilder<UserLoginBloc, UserLoginState>(builder: (context, state) {
+    return Card(
+      child: ListTile(
+        onTap: () {
+          context.read<UserLoginBloc>().add(SelectUser(user));
+        },
+        title: Text(user.name),
+        leading: CircleAvatar(
+          //TODO should be backgrundImage.
+          //You can use path to get the User Image.
+          backgroundColor: Color(0xFFF48FB1),
+        ),
       ),
-    ),
-  );
+    );
+  });
 }
