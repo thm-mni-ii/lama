@@ -9,10 +9,16 @@ import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/background.dart';
+
 import 'package:lama_app/snake/components/score_display.dart';
 
 import 'components/apple.dart';
+
+import 'package:lama_app/snake/components/rightArrow.dart';
+import 'package:lama_app/snake/components/arrowButtons.dart';
+
 import 'components/snake.dart';
+
 import 'models/position.dart';
 
 class SnakeGame extends Game with TapDetector {
@@ -20,10 +26,21 @@ class SnakeGame extends Game with TapDetector {
 
   Background background;
   SnakeComponent snake;
+
   List<Apple> apples = [];
   Random rnd = Random();
   ScoreDisplay scoreDisplay;
+
   int score = 0;
+
+  
+  ArrowButtons arrowButtonDown;
+  ArrowButtons arrowButtonUp;
+  ArrowButtons arrowButtonLeft;
+  ArrowButtons arrowButtonRight;
+
+  RightArrowButton rightArrowButton;
+
 
   Size screenSize;
   double tileSize;
@@ -47,7 +64,19 @@ class SnakeGame extends Game with TapDetector {
     resize(await Flame.util.initialDimensions());
 
     background = Background(this);
+
     spawnApples();
+
+
+ 
+
+    arrowButtonDown = ArrowButtons(this, 0);
+    arrowButtonUp = ArrowButtons(this, 1);
+    arrowButtonLeft = ArrowButtons(this, 2);
+    arrowButtonRight = ArrowButtons(this, 3);
+
+    rightArrowButton = RightArrowButton(this);
+    // snake with starting location
 
     // TODO - this has to move to the begin action of the main menu
     spawnSnake();
@@ -122,12 +151,26 @@ class SnakeGame extends Game with TapDetector {
   }
 
   void render(Canvas canvas) {
+
     if (_initialized) {
       background.render(canvas);
       apples.forEach((element) => element.render(canvas));
       snake.render(canvas);
       scoreDisplay.render(canvas);
     }
+
+    background.render(canvas);
+    arrowButtonDown.render(canvas);
+    arrowButtonUp.render(canvas);
+    arrowButtonLeft.render(canvas);
+    arrowButtonRight.render(canvas);
+
+    rightArrowButton.render(canvas);
+    
+    
+
+    snake.render(canvas);
+
   }
 
   void update(double t) {
@@ -145,10 +188,34 @@ class SnakeGame extends Game with TapDetector {
       developer.log("[SnakeGame][finishGame] finished the game");
     }
   }
-
+/// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void onTapDown(TapDownDetails d) {
-  }
+    
+    if (arrowButtonDown.rectButton.contains(d.globalPosition)){
+      arrowButtonDown.onTapDown();
+      snake.direction = 2;
 
+    }
+    if (arrowButtonUp.rectButton.contains(d.globalPosition)){
+      arrowButtonUp.onTapDown();
+      snake.direction = 1;
+
+    }
+    if (arrowButtonLeft.rectButton.contains(d.globalPosition)){
+      arrowButtonLeft.onTapDown();
+      snake.direction = 2;
+
+    }
+    if (arrowButtonRight.rectButton.contains(d.globalPosition)){
+      arrowButtonRight.onTapDown();
+      snake.direction = 4;
+
+    }
+
+    if (rightArrowButton.rectButton.contains(d.globalPosition)){
+      rightArrowButton.onTapDown();
+    }
+  }
   void resize(Size size) {
     screenSize = size;
     tileSize = screenSize.width / maxFieldX;

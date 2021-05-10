@@ -9,7 +9,7 @@ import 'package:lama_app/snake/snake_game.dart';
 import 'apple.dart';
 
 class SnakeComponent {
-  final bool debugMovement = true;
+  final bool debugMovement = false;
   final bool log = true;
 
   Random rnd = Random();
