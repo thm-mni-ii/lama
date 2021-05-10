@@ -15,6 +15,8 @@ class SnakeComponent {
   double velocity = 5;
   /// callback when the snake bites itself
   Function callbackBiteItSelf;
+  /// callback when the snake hits the border
+  Function callbackCollideWithBorder;
 
   final SnakeGame game;
 
@@ -39,21 +41,50 @@ class SnakeComponent {
   /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void moveSnake(int dir, [bool grow = false]) {
     Position headPos = snakeParts.last;
+
     switch(dir) {
       case 3 : {
-        headPos = headPos.y >= this.game.maxFieldY + this.game.fieldOffsetY ? Position(headPos.x, this.game.fieldOffsetY + 1) : Position(headPos.x, headPos.y + 1);
+        if (headPos.y >= this.game.maxFieldY + this.game.fieldOffsetY) {
+          headPos = Position(headPos.x, this.game.fieldOffsetY + 1);
+          callbackCollideWithBorder();
+        }
+        else {
+          headPos = Position(headPos.x, headPos.y + 1);
+        }
+
         break;
       }
       case 2 : {
-        headPos = headPos.x >= this.game.maxFieldX ? Position(1, headPos.y) : Position(headPos.x + 1, headPos.y);
+        if (headPos.x >= this.game.maxFieldX) {
+          headPos = Position(1, headPos.y);
+          callbackCollideWithBorder();
+        }
+        else {
+          headPos = Position(headPos.x + 1, headPos.y);
+        }
+
         break;
       }
       case 1 : {
-        headPos = headPos.y <= this.game.fieldOffsetY + 1 ? Position(headPos.x, this.game.maxFieldY + this.game.fieldOffsetY) : Position(headPos.x, headPos.y - 1);
+        if (headPos.y <= this.game.fieldOffsetY + 1) {
+          headPos = Position(headPos.x, this.game.maxFieldY + this.game.fieldOffsetY);
+          callbackCollideWithBorder();
+        }
+        else {
+          headPos = Position(headPos.x, headPos.y - 1);
+        }
+
         break;
       }
       default : {
-        headPos = headPos.x <= 1 ? Position(this.game.maxFieldX, headPos.y) : Position(headPos.x - 1, headPos.y);
+        if (headPos.x <= 1) {
+          headPos = Position(this.game.maxFieldX, headPos.y);
+          callbackCollideWithBorder();
+        }
+        else {
+          headPos = Position(headPos.x - 1, headPos.y);
+        }
+
         break;
       }
     }
