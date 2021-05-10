@@ -2,9 +2,9 @@ import 'package:lama_app/app/user.dart';
 
 abstract class UserLoginState {}
 
-class UserSelectet extends UserLoginState {
+class UserSelected extends UserLoginState {
   User user;
-  UserSelectet(this.user);
+  UserSelected(this.user);
 }
 
 class UserLoginSuccessful extends UserLoginState {}
