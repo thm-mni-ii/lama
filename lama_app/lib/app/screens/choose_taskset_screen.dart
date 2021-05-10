@@ -26,7 +26,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    /*return Container(
       child: BlocBuilder<ChooseTasksetBloc, ChooseTasksetState>(
         builder: (context, state) {
           if (state is LoadingAllTasksetsState)
@@ -46,6 +46,81 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
             return Text("This should not happen");
         },
       ),
+    );*/
+    Size screenSize = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 253, 74, 111),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Container(
+              color: Colors.white,
+              child: Container(
+                margin: EdgeInsets.only(top: 50),
+                child: Center(
+                  child: BlocBuilder<ChooseTasksetBloc, ChooseTasksetState>(
+                    builder: (context, state) {
+                      if (state is LoadingAllTasksetsState)
+                        return CircularProgressIndicator();
+                      else
+                        return _buildTasksetList(context, state);
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: screenSize.width,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 253, 74, 111),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 2,
+                        offset: Offset(0, 2),
+                        spreadRadius: 1,
+                        color: Colors.grey)
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    "Aufgaben-Set auswählen",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTasksetList(context, state) {
+    return Center(
+      child: ListView.builder(
+          padding: EdgeInsets.only(top: 15, left: 15, right: 15),
+          itemCount: state.tasksets.length,
+          itemBuilder: (context, index) {
+            if (index > 0)
+              return Container(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(state.tasksets[index].name)
+                  ],
+                ),
+              );
+            return Center(child: Text(state.tasksets[index].name));
+          }),
     );
   }
 }
