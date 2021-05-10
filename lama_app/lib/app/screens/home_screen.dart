@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
+import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
@@ -53,7 +54,8 @@ class HomeScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => BlocProvider(
                               create: (BuildContext context) =>
-                                  ChooseTasksetBloc(),
+                                  ChooseTasksetBloc(
+                                      context.read<TasksetRepository>()),
                               child: ChooseTasksetScreen("Mathe"),
                             ),
                           ),
