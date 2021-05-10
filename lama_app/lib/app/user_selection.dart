@@ -5,7 +5,20 @@ import 'package:lama_app/app/event/user_login_event.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/app/user.dart';
 
-class UserSelection extends StatelessWidget {
+class UserSelection extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return UserSelectionState();
+  }
+}
+
+class UserSelectionState extends State<UserSelection> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<UserLoginBloc>(context).add(LoadUsers());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
