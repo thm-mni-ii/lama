@@ -1,30 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/bloc/user_login_bloc.dart';
+import 'package:lama_app/app/event/user_login_event.dart';
+import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/app/user.dart';
 
 class UserSelection extends StatelessWidget {
-  List<User> userList = [
-    new User(1, 'Lars', 'path'),
-    new User(2, 'Kevin', 'path')
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView.builder(
-          itemCount: userList.length,
-          itemBuilder: (context, index) {
-            return Card(
-              child: ListTile(
-                onTap: () {},
-                title: Text(userList[index].name),
-                leading: CircleAvatar(
-                  //TODO should be backgrundImage.
-                  //You can use path to get the User Image.
-                  backgroundColor: Color(0xFFF48FB1),
-                ),
-              ),
-            );
-          }),
+      child: BlocBuilder<UserLoginBloc, UserLoginState>(
+        builder: (context, state) {
+          if (state is UserSelected) {
+            return _userCard(state.user);
+          }
+          context.read<UserLoginBloc>().add(LoadUsers());
+          if (state is UsersLoaded) {
+            return _userListView(state.userList);
+          }
+          return Text('Uppsie');
+        },
+      ),
     );
   }
+}
+
+Widget _passwortInput() {
+  return null;
+}
+
+Widget _userListView(List<User> list) {
+  return ListView.builder(
+      itemCount: list.length,
+      itemBuilder: (context, index) {
+        return _userCard(list[index]);
+      });
+}
+
+Widget _userCard(User user) {
+  return Card(
+    child: ListTile(
+      onTap: () {},
+      title: Text(user.name),
+      leading: CircleAvatar(
+        //TODO should be backgrundImage.
+        //You can use path to get the User Image.
+        backgroundColor: Color(0xFFF48FB1),
+      ),
+    ),
+  );
 }

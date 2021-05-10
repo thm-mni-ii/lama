@@ -17,7 +17,7 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
 
   UserLoginState validateUserLogin(UserLogin event) {
     //TODO Validatin Login
-    if (event.pw.length > 5) {
+    if (event.pw == 'admin' && event.user.name == 'admin') {
       return UserLoginSuccessful();
     } else {
       return UserLoginFailed();
