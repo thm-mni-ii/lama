@@ -45,24 +45,29 @@ class SnakeComponent {
 
     // no movement in between the field possible
     if (newPosition == null) {
+      if (log) {
+        developer.log("[Snake][moveSnake] collide with the border");
+      }
+
       if (callbackCollideWithBorder != null) {
         callbackCollideWithBorder();
       }
     }
     else if (collideWithSnake(newPosition)) {
-      if (callbackBiteItSelf != null) {
-        callbackBiteItSelf();
+      if (log) {
+        developer.log("[Snake][moveSnake] biteItSelf");
       }
 
-      if (log) {
-        developer.log("[Snake][moveSnake] biteItSelf = true");
+      if (callbackBiteItSelf != null) {
+        callbackBiteItSelf();
       }
     } else {
       // only removes the tail when no growth
       if (!grow) {
         snakeParts.removeFirst();
-      } else if (log) {
-        developer.log("[Snake][moveSnake] growth");
+      }
+      else if (log) {
+        developer.log("[Snake][moveSnake] snake growths");
       }
 
       // adds the new head

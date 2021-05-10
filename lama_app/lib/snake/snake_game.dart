@@ -44,7 +44,7 @@ class SnakeGame extends Game with TapDetector {
     // initialize a new snake
     snake = SnakeComponent(Position(maxFieldX ~/ 2, maxFieldY ~/ 2), this);
     snake.callbackBiteItSelf = () => finishGame();
-    snake.callbackCollideWithBorder = () => developer.log("[SnakeGame][spawnSnake] hit the border");
+    snake.callbackCollideWithBorder = () => finishGame();
 
     if (log) {
       developer.log("[SnakeGame][spawnSnake] spawned");
