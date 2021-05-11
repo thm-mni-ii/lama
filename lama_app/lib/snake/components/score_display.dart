@@ -15,6 +15,18 @@ class ScoreDisplay {
       textDirection: TextDirection.ltr,
     );
 
+    textStyle = TextStyle(
+      color: Color(0xBBffffff),
+      fontSize: 50,
+      shadows: <Shadow>[
+        Shadow(
+          blurRadius: 7,
+          color: Color(0xBB000000),
+          offset: Offset(3, 3),
+        ),
+      ],
+    );
+
     position = Offset.zero;
   }
 
@@ -29,7 +41,7 @@ class ScoreDisplay {
 
       position = Offset(
         (game.screenSize.width / 2) - (painter.width / 2),
-        (game.tileSize) + (painter.height / 2),
+        0,
       );
     }
   }
