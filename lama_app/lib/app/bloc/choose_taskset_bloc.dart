@@ -14,6 +14,9 @@ class ChooseTasksetBloc extends Bloc<ChooseTasksetEvent, ChooseTasksetState> {
     if (event is LoadAllTasksetsEvent) yield LoadingAllTasksetsState();
     List<Taskset> tasksets =
         repository.getTasksetsForSubjectAndGrade("Mathe", 3);
+    //TODO: Remove this TESTSTUFF
+    await Future.delayed(Duration(seconds: 1));
+    //
     yield LoadedAllTasksetsState(tasksets);
   }
 }
