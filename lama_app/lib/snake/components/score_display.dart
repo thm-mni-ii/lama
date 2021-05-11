@@ -5,80 +5,81 @@ import 'package:lama_app/snake/snake_game.dart';
 class ScoreDisplay {
   final SnakeGame game;
 
-  double offsetY = 70;
-  Rect borderRect;
-  Rect fillRect;
-  Paint borderPaint;
-  Paint fillPaint;
+  int _offsetYTiles;
+  int _radiusTiles;
+  int _borderThickness;
+  Rect _borderRect;
+  Rect _fillRect;
+  Paint _borderPaint;
+  Paint _fillPaint;
+  TextPainter _painter;
+  TextStyle _textStyle;
+  Offset _position;
 
-  TextPainter painter;
-  TextStyle textStyle;
-  Offset position;
-
-  ScoreDisplay(this.game) {
-    painter = TextPainter(
+  /// This class displays the [score] of the [SnakeGame] class.
+  ScoreDisplay(this.game, [this._offsetYTiles = 4, this._radiusTiles = 4, this._borderThickness = 2]) {
+    // Paint for the text
+    _painter = TextPainter(
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     );
 
-    textStyle = TextStyle(
+    // Style of the text
+    _textStyle = TextStyle(
       color: Color(0xbbffffff),
       fontSize: 30,
     );
 
-    borderRect = Rect.fromLTWH(
-        (game.screenSize.width / 2) - (this.game.tileSize * this.game.fieldOffsetY) / 2,
-        offsetY,
-        this.game.tileSize * this.game.fieldOffsetY,
-        this.game.tileSize * this.game.fieldOffsetY);
+    // rectangle for the border
+    _borderRect = Rect.fromLTWH(
+        (game.screenSize.width / 2) - (this.game.tileSize * this._radiusTiles) / 2,
+        this._offsetYTiles * this.game.tileSize,
+        this.game.tileSize * this._radiusTiles,
+        this.game.tileSize * this._radiusTiles);
 
-    var borderThickness = 1;
-    fillRect = Rect.fromLTWH(
-        (game.screenSize.width / 2) - ((this.game.tileSize * this.game.fieldOffsetY) / 2) + borderThickness,
-        offsetY + borderThickness.toDouble(),
-        this.game.tileSize * this.game.fieldOffsetY - borderThickness * 2,
-        this.game.tileSize * this.game.fieldOffsetY - borderThickness);
+    // rectangle for the background
+    _fillRect = Rect.fromLTWH(
+        (game.screenSize.width / 2) - ((this.game.tileSize * this._radiusTiles) / 2) + _borderThickness,
+        this._offsetYTiles * this.game.tileSize + _borderThickness / 2,
+        this.game.tileSize * this._radiusTiles - _borderThickness * 2,
+        this.game.tileSize * this._radiusTiles - _borderThickness);
 
-    fillPaint = Paint();
-    fillPaint.color = Color(0x66E87070);
+    // background paint
+    _fillPaint = Paint();
+    _fillPaint.color = Color(0x66E87070);
 
-    borderPaint = Paint();
-    borderPaint.color = Color(0x66000000);
+    // border paint
+    _borderPaint = Paint();
+    _borderPaint.color = Color(0x66000000);
 
-    position = Offset.zero;
+    // initialize offset
+    _position = Offset.zero;
   }
 
   void update(double t) {
-    if ((painter.text ?? '') != game.score.toString()) {
-      painter.text = TextSpan(
+    // different score?
+    if ((_painter.text ?? '') != game.score.toString()) {
+      _painter.text = TextSpan(
         text: game.score.toString(),
-        style: textStyle,
+        style: _textStyle,
       );
 
-      painter.layout();
+      _painter.layout();
 
-      position = Offset(
-        (fillRect.left) + (fillRect.width / 2) - painter.width / 2,
-          (fillRect.top) + (fillRect.height / 2) - painter.height / 2,
+      // set new offset depending on the text width
+      _position = Offset(
+        (_fillRect.left) + (_fillRect.width / 2) - _painter.width / 2,
+          (_fillRect.top) + (_fillRect.height / 2) - _painter.height / 2,
       );
     }
   }
 
   void render(Canvas c) {
-    c.drawArc(
-        borderRect,
-        0,
-        10,
-        true,
-        borderPaint);
-
-    c.drawArc(
-        fillRect,
-        0,
-        10,
-        true,
-        fillPaint);
-
-    painter.paint(c, position);
+    // draw border
+    c.drawArc(_borderRect, 0, 10, true, _borderPaint);
+    // draw background
+    c.drawArc(_fillRect, 0, 10, true, _fillPaint);
+    // draw text
+    _painter.paint(c, _position);
   }
 }
