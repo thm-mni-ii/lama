@@ -18,4 +18,23 @@ class ScoreDisplay {
     position = Offset.zero;
   }
 
+  void update(double t) {
+    if ((painter.text ?? '') != game.score.toString()) {
+      painter.text = TextSpan(
+        text: game.score.toString(),
+        style: textStyle,
+      );
+
+      painter.layout();
+
+      position = Offset(
+        (game.screenSize.width / 2) - (painter.width / 2),
+        (game.tileSize) + (painter.height / 2),
+      );
+    }
+  }
+
+  void render(Canvas c) {
+    painter.paint(c, position);
+  }
 }
