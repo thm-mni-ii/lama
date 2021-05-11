@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
 import 'package:lama_app/app/event/choose_taskset_events.dart';
+import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/state/choose_taskset_state.dart';
+import 'package:lama_app/app/task-system/taskset_model.dart';
 
 class ChooseTasksetScreen extends StatefulWidget {
   final String chosenSubject;
@@ -115,12 +117,64 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(state.tasksets[index].name)
+                    _buildTasksetListItem(context, state.tasksets[index])
                   ],
                 ),
               );
-            return Center(child: Text(state.tasksets[index].name));
+            else
+              return _buildTasksetListItem(context, state.tasksets[index]);
           }),
     );
+  }
+
+  Widget _buildTasksetListItem(context, Taskset taskset) {
+    Size screenSize = MediaQuery.of(context).size;
+    return Container(
+        padding: EdgeInsets.all(10),
+        width: screenSize.width,
+        height: screenSize.height / 8,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Colors.orange, Colors.pink]),
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.blueGrey, offset: Offset(0, 1), blurRadius: 1)
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TaskScreen(taskset.tasks),
+              ),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  taskset.name,
+                  style: TextStyle(color: Colors.white, fontSize: 30, shadows: [
+                    Shadow(
+                        color: Colors.blueGrey,
+                        offset: Offset(0, 1),
+                        blurRadius: 2),
+                  ]),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Aufgaben: " + taskset.tasks.length.toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 15, shadows: [
+                    Shadow(
+                        color: Colors.blueGrey,
+                        offset: Offset(0, 1),
+                        blurRadius: 1),
+                  ]),
+                )
+              ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+          ),
+        ));
   }
 }
