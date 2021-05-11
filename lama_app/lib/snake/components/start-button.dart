@@ -1,6 +1,6 @@
 import 'dart:ui';
 import '../snake_game.dart';
-import '../view.dart';
+import '../views/view.dart';
 
 class StartButton {
   final SnakeGame game;
@@ -9,10 +9,10 @@ class StartButton {
 
   StartButton(this.game) {
     rect = Rect.fromLTWH(
-      game.tileSize * 2,
-      (game.screenSize.height * .75) - (game.tileSize * 1.5),
-      game.tileSize * 5,
-      game.tileSize * 2,
+      game.tileSize * 7.5,
+      (game.screenSize.height / 2) + (game.tileSize * 2.5),
+      game.tileSize * 16,
+      game.tileSize * 9,
     );
     startPaint = Paint();
     startPaint.color = Color(0xff6dff4a);

@@ -10,13 +10,13 @@ class HomeView {
 
   HomeView(this.game) {
     titleRect = Rect.fromLTWH(
-      game.tileSize,
-      (game.screenSize.height / 2) - (game.tileSize * 5),
-      game.tileSize * 7,
-      game.tileSize * 5,
+      game.tileSize * 5.5,
+      (game.screenSize.height / 2) - (game.tileSize * 11),
+      game.tileSize * 20,
+      game.tileSize * 11,
     );
     titlePaint = Paint();
-    titlePaint.color = Color(0xFFFFFFF);
+    titlePaint.color = Color(0xFFFFFFFF);
   }
 
   void render(Canvas c) {
