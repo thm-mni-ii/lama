@@ -25,10 +25,11 @@ class SnakeGame extends Game with TapDetector {
   double tileSize;
 
   final maxFieldX = 31;
-  final maxFieldY = 31;
+  final maxFieldY = 41;
   final fieldOffsetY = 3;
 
   bool _finished = false;
+  bool _initialized = false;
 
   SnakeGame() {
     initialize();
@@ -41,6 +42,8 @@ class SnakeGame extends Game with TapDetector {
     // TODO - this has to move to the begin action of the main menu
     spawnSnake();
     scoreDisplay = ScoreDisplay(this);
+
+    _initialized = true;
   }
 
   /// This method initialize the snake with its callback
@@ -56,13 +59,15 @@ class SnakeGame extends Game with TapDetector {
   }
 
   void render(Canvas canvas) {
-    background.render(canvas);
-    snake.render(canvas);
-    scoreDisplay.render(canvas);
+    if (_initialized) {
+      background.render(canvas);
+      snake.render(canvas);
+      scoreDisplay.render(canvas);
+    }
   }
 
   void update(double t) {
-    if (!_finished) {
+    if (!_finished && _initialized) {
       snake.update(t);
       scoreDisplay.update(t);
     }
