@@ -8,6 +8,7 @@ import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/background.dart';
+import 'package:lama_app/snake/components/score_display.dart';
 
 import 'components/snake.dart';
 import 'models/position.dart';
@@ -17,15 +18,18 @@ class SnakeGame extends Game with TapDetector {
 
   Background background;
   SnakeComponent snake;
+  ScoreDisplay scoreDisplay;
+  int score = 9990;
 
   Size screenSize;
   double tileSize;
 
-  final maxFieldX = 19;
-  final maxFieldY = 19;
+  final maxFieldX = 31;
+  final maxFieldY = 41;
   final fieldOffsetY = 3;
 
   bool _finished = false;
+  bool _initialized = false;
 
   SnakeGame() {
     initialize();
@@ -37,6 +41,9 @@ class SnakeGame extends Game with TapDetector {
     // snake with starting location
     // TODO - this has to move to the begin action of the main menu
     spawnSnake();
+    scoreDisplay = ScoreDisplay(this);
+
+    _initialized = true;
   }
 
   /// This method initialize the snake with its callback
@@ -52,13 +59,17 @@ class SnakeGame extends Game with TapDetector {
   }
 
   void render(Canvas canvas) {
-    background.render(canvas);
-    snake.render(canvas);
+    if (_initialized) {
+      background.render(canvas);
+      snake.render(canvas);
+      scoreDisplay.render(canvas);
+    }
   }
 
   void update(double t) {
-    if (!_finished) {
+    if (!_finished && _initialized) {
       snake.update(t);
+      scoreDisplay.update(t);
     }
   }
 

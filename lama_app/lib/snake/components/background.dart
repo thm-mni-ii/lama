@@ -30,7 +30,7 @@ class Background {
     // generate the field tiles
     fieldTiles = List.generate(
         this.game.maxFieldX * this.game.maxFieldY,
-            (index) => Position(index % this.game.maxFieldX, index ~/ this.game.maxFieldY));
+            (index) => Position(index % this.game.maxFieldX, index ~/ this.game.maxFieldX));
 
     // background paint
     backgroundPaint = Paint();
@@ -45,7 +45,11 @@ class Background {
     fieldBorderPaint.color = Color(0xFF4C4C4C);
 
     // field border rect
-    fieldBorderRect = Rect.fromLTWH(_offsetX, _offsetY - 2, game.screenSize.width, game.screenSize.width + 4);
+    fieldBorderRect = Rect.fromLTWH(
+        _offsetX,
+        _offsetY - 2,
+        game.tileSize * this.game.maxFieldX,
+        game.tileSize * this.game.maxFieldY + 4);
   }
 
   void render(Canvas c) {
