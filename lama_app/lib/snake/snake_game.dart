@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:developer' as developer;
+import 'dart:math';
 
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/background.dart';
 import 'package:lama_app/snake/components/score_display.dart';
 
+import 'components/apple.dart';
 import 'components/snake.dart';
 import 'models/position.dart';
 
@@ -18,6 +20,8 @@ class SnakeGame extends Game with TapDetector {
 
   Background background;
   SnakeComponent snake;
+  Apple apple;
+  Random rnd = Random();
   ScoreDisplay scoreDisplay;
   int score = 9990;
 
@@ -43,6 +47,8 @@ class SnakeGame extends Game with TapDetector {
     spawnSnake();
     scoreDisplay = ScoreDisplay(this);
 
+    // spawns random an apple
+    spawnApple();
     _initialized = true;
   }
 
@@ -58,9 +64,16 @@ class SnakeGame extends Game with TapDetector {
     }
   }
 
+  ///Initialize the apple
+  void spawnApple() {
+    //initialize an apple
+    apple = Apple(this, 0, 100);
+  }
+
   void render(Canvas canvas) {
     if (_initialized) {
       background.render(canvas);
+    apple.render(canvas);
       snake.render(canvas);
       scoreDisplay.render(canvas);
     }
@@ -70,6 +83,7 @@ class SnakeGame extends Game with TapDetector {
     if (!_finished && _initialized) {
       snake.update(t);
       scoreDisplay.update(t);
+      apple.update(t);
     }
   }
 
