@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/snake/snake_game.dart';
@@ -5,8 +6,8 @@ import 'package:lama_app/snake/snake_game.dart';
 class ScoreDisplay {
   final SnakeGame game;
 
-  int _offsetYTiles;
-  int _radiusTiles;
+  double _offsetYPercent;
+  double _radiusPercent;
   int _borderThickness;
   Rect _borderRect;
   Rect _fillRect;
@@ -17,7 +18,10 @@ class ScoreDisplay {
   Offset _position;
 
   /// This class displays the [score] of the [SnakeGame] class.
-  ScoreDisplay(this.game, [this._offsetYTiles = 4, this._radiusTiles = 4, this._borderThickness = 2]) {
+  ScoreDisplay(this.game, [this._offsetYPercent = 0.1, this._radiusPercent = 0.15, this._borderThickness = 2]) {
+    // relative length related to the screensize
+    var relativeSize = sqrt(this.game.screenSize.width * this.game.screenSize.height);
+
     // Paint for the text
     _painter = TextPainter(
       textAlign: TextAlign.center,
@@ -27,22 +31,22 @@ class ScoreDisplay {
     // Style of the text
     _textStyle = TextStyle(
       color: Color(0xbbffffff),
-      fontSize: 30,
+      fontSize: relativeSize * this._radiusPercent * 0.4,
     );
 
     // rectangle for the border
     _borderRect = Rect.fromLTWH(
-        (game.screenSize.width / 2) - (this.game.tileSize * this._radiusTiles) / 2,
-        this._offsetYTiles * this.game.tileSize,
-        this.game.tileSize * this._radiusTiles,
-        this.game.tileSize * this._radiusTiles);
+        (game.screenSize.width / 2) - (relativeSize * this._radiusPercent) / 2,
+        this._offsetYPercent * relativeSize,
+        relativeSize * this._radiusPercent,
+        relativeSize * this._radiusPercent);
 
     // rectangle for the background
     _fillRect = Rect.fromLTWH(
-        (game.screenSize.width / 2) - ((this.game.tileSize * this._radiusTiles) / 2) + _borderThickness,
-        this._offsetYTiles * this.game.tileSize + _borderThickness / 2,
-        this.game.tileSize * this._radiusTiles - _borderThickness * 2,
-        this.game.tileSize * this._radiusTiles - _borderThickness);
+        (game.screenSize.width / 2) - ((relativeSize * this._radiusPercent) / 2) + _borderThickness,
+        this._offsetYPercent * relativeSize + _borderThickness / 2,
+        relativeSize * this._radiusPercent - _borderThickness * 2,
+        relativeSize * this._radiusPercent - _borderThickness);
 
     // background paint
     _fillPaint = Paint();

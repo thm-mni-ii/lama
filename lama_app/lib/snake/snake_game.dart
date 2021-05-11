@@ -19,13 +19,13 @@ class SnakeGame extends Game with TapDetector {
   Background background;
   SnakeComponent snake;
   ScoreDisplay scoreDisplay;
-  int score = 0;
+  int score = 9990;
 
   Size screenSize;
   double tileSize;
 
-  final maxFieldX = 19;
-  final maxFieldY = 19;
+  final maxFieldX = 31;
+  final maxFieldY = 31;
   final fieldOffsetY = 3;
 
   bool _finished = false;
