@@ -23,15 +23,15 @@ class SnakeGame extends Game with TapDetector {
   List<Apple> apples = [];
   Random rnd = Random();
   ScoreDisplay scoreDisplay;
-  int score = 9990;
+  int score = 0;
 
   Size screenSize;
   double tileSize;
 
   final maxFieldX = 31;
-  final maxFieldY = 41;
+  final maxFieldY = 31;
   final fieldOffsetY = 3;
-  final maxApples = 10;
+  final maxApples = 100;
 
   bool _finished = false;
   bool _initialized = false;
@@ -75,6 +75,7 @@ class SnakeGame extends Game with TapDetector {
     snake = SnakeComponent(Position(maxFieldX ~/ 2, maxFieldY ~/ 2), this);
     snake.callbackBiteItSelf = () => finishGame();
     snake.callbackCollideWithBorder = () => finishGame();
+    snake.callbackEatsApple = (apple) => score += 1;
 
     if (log) {
       developer.log("[SnakeGame][spawnSnake] spawned");
@@ -92,7 +93,7 @@ class SnakeGame extends Game with TapDetector {
 
   void update(double t) {
     if (!_finished && _initialized) {
-      snake.update(t);
+      snake.update(t, apples);
       apples.forEach((element) => element.update(t));
       scoreDisplay.update(t);
     }
