@@ -1,6 +1,8 @@
 import 'package:lama_app/app/user.dart';
 
-abstract class UserLoginState {}
+abstract class UserLoginState {
+  User get user => null;
+}
 
 class UsersLoaded extends UserLoginState {
   List<User> userList;
@@ -13,8 +15,10 @@ class UserSelected extends UserLoginState {
 }
 
 class UserLoginFailed extends UserLoginState {
+  User user;
   String error;
-  UserLoginFailed({this.error = 'Da ist wohl etwas gehörig schief gelaufen'});
+  UserLoginFailed(this.user,
+      {this.error = 'Da ist wohl etwas gehörig schief gelaufen'});
 }
 
 class UserLoginSuccessful extends UserLoginState {}

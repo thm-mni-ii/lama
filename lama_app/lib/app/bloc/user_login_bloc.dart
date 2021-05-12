@@ -17,10 +17,11 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
 
   UserLoginState validateUserLogin(UserLogin event) {
     //TODO Validatin Login
-    if (event.pw == 'admin' && event.user.name == 'admin') {
+    if (event.pw == 'admin' && event.user.name == 'Lars') {
       return UserLoginSuccessful();
     } else {
-      return UserLoginFailed();
+      return UserLoginFailed(event.user,
+          error: 'Das Passwort ist wohl flasch!');
     }
   }
 

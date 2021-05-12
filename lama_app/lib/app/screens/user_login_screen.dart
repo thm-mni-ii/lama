@@ -13,6 +13,7 @@ class UserLoginScreen extends StatefulWidget {
 }
 
 class UserSelectionState extends State<UserLoginScreen> {
+  String _pass;
   @override
   void initState() {
     super.initState();
@@ -27,10 +28,55 @@ class UserSelectionState extends State<UserLoginScreen> {
       body: BlocBuilder<UserLoginBloc, UserLoginState>(
         builder: (context, state) {
           if (state is UserSelected) {
-            return _userCard(state.user);
+            return Column(
+              children: [
+                _userCard(state.user),
+                SizedBox(
+                  height: 50,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.security),
+                    hintText: 'Passwort',
+                  ),
+                  validator: (value) => null,
+                  onChanged: (value) => this._pass = value,
+                  obscureText: true,
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    context
+                        .read<UserLoginBloc>()
+                        .add(UserLogin(state.user, _pass));
+                  },
+                  child: Text('Einloggen'),
+                  style: ElevatedButton.styleFrom(minimumSize: Size(400, 45)),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<UserLoginBloc>().add(UserLoginAbort());
+                  },
+                  child: Text('Abbrechen'),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(400, 45), primary: Colors.red),
+                ),
+              ],
+            );
+          }
+          if (state is UserLoginFailed) {
+            return Text(state.error);
           }
           if (state is UsersLoaded) {
             return _userListView(state.userList);
+          }
+          if (state is UserLoginSuccessful) {
+            return Text('Eingeloggt');
           }
           return Text('Uppsie');
         },
@@ -49,16 +95,6 @@ Widget _bar(double size) {
         bottom: Radius.circular(30),
       ),
     ),
-  );
-}
-
-Widget _passwortInput() {
-  return TextFormField(
-    decoration: InputDecoration(
-      icon: Icon(Icons.security),
-      hintText: 'Passwort',
-    ),
-    validator: (value) => null,
   );
 }
 
