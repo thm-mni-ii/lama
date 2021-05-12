@@ -27,7 +27,7 @@ class SnakeComponent {
   double _deltaCounter = 0;
   int _direction = 1;
 
-  SnakeComponent(Position startPos, this.game) {
+  SnakeComponent(this.game, Position startPos, this.velocity) {
     snakeParts.add(Position(startPos.x, startPos.y + this.game.fieldOffsetY));
   }
 

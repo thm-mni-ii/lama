@@ -31,7 +31,8 @@ class SnakeGame extends Game with TapDetector {
   final maxFieldX = 31;
   final maxFieldY = 31;
   final fieldOffsetY = 3;
-  final maxApples = 100;
+  final maxApples = 200;
+  final snakeStartVelocity = 3.0;
 
   bool _finished = false;
   bool _initialized = false;
@@ -102,7 +103,7 @@ class SnakeGame extends Game with TapDetector {
   /// This method initialize the snake with its callback
   void spawnSnake() {
     // initialize a new snake
-    snake = SnakeComponent(Position(maxFieldX ~/ 2, maxFieldY ~/ 2), this);
+    snake = SnakeComponent(this, Position(maxFieldX ~/ 2, maxFieldY ~/ 2), 3);
     // callback when snake bites itself
     snake.callbackBiteItSelf = () => finishGame();
     // callback when the snake hits the border
@@ -112,6 +113,7 @@ class SnakeGame extends Game with TapDetector {
       score += 1;
       // respawn the eaten apple
       respawnApple(apple);
+      snake?.velocity = snakeStartVelocity + (score ~/ 5);
     };
 
     if (log) {
