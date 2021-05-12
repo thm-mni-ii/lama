@@ -61,6 +61,14 @@ class SnakeGame extends Game with TapDetector {
     }
   }
 
+  void despawnApple(Apple apple) {
+    if (apples == null || apples.length == 0) {
+      return;
+    }
+
+    apples.remove(apple);
+  }
+
   /// This method initialize the snake with its callback
   void spawnSnake() {
     // initialize a new snake
@@ -85,8 +93,8 @@ class SnakeGame extends Game with TapDetector {
   void update(double t) {
     if (!_finished && _initialized) {
       snake.update(t);
-      scoreDisplay.update(t);
       apples.forEach((element) => element.update(t));
+      scoreDisplay.update(t);
     }
   }
 
