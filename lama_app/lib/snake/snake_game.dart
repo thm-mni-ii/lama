@@ -40,6 +40,8 @@ class SnakeGame extends Game with TapDetector {
     initialize();
   }
 
+  /// This method is vor the initialization process of the game class.
+  /// It runs asynchron and it will flag the [_initialized] to true when its finished.
   void initialize() async {
     resize(await Flame.util.initialDimensions());
 
@@ -53,6 +55,33 @@ class SnakeGame extends Game with TapDetector {
     _initialized = true;
   }
 
+  /// This methos respawn the [apple] on a new free field. If there is none the [apple] will despawn.
+  void respawnApple(Apple apple) {
+    if (apple == null) {
+      return;
+    }
+
+    // despawn the apple when there is no avaiable space anymore
+    if ((maxFieldX * maxFieldY) - snake.snakeParts.length <= apples.length) {
+      despawnApple(apple);
+    } else {
+      if (log) {
+        developer.log("[SnakeGame][respawnApple] before [x=${apple.position.x}, y=${apple.position.y}]");
+      }
+
+      // get all Positions which are filled with the snake or apples
+      var excludePositions = apples.map((e) => e.position).toList();
+      excludePositions.addAll(snake?.snakeParts ?? []);
+      // set new Position of the eaten apple on a free field
+      apple.setRandomPosition(excludePositions);
+
+      if (log) {
+        developer.log("[SnakeGame][respawnApple] after  [x=${apple.position.x}, y=${apple.position.y}]");
+      }
+    }
+  }
+
+  /// This method spawns [maxApples] [Apple]s on the game field.
   void spawnApples() {
     while (apples.length < maxApples) {
       var excludePositions = apples.map((e) => e.position).toList();
@@ -61,6 +90,7 @@ class SnakeGame extends Game with TapDetector {
     }
   }
 
+  /// This method despawns the [apple] from the game.
   void despawnApple(Apple apple) {
     if (apples == null || apples.length == 0) {
       return;
@@ -73,9 +103,16 @@ class SnakeGame extends Game with TapDetector {
   void spawnSnake() {
     // initialize a new snake
     snake = SnakeComponent(Position(maxFieldX ~/ 2, maxFieldY ~/ 2), this);
+    // callback when snake bites itself
     snake.callbackBiteItSelf = () => finishGame();
+    // callback when the snake hits the border
     snake.callbackCollideWithBorder = () => finishGame();
-    snake.callbackEatsApple = (apple) => score += 1;
+    // callback when the snake eats an apple
+    snake.callbackEatsApple = (apple) {
+      score += 1;
+      // respawn the eaten apple
+      respawnApple(apple);
+    };
 
     if (log) {
       developer.log("[SnakeGame][spawnSnake] spawned");
