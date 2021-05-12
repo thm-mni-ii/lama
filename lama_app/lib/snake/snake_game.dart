@@ -20,7 +20,7 @@ class SnakeGame extends Game with TapDetector {
 
   Background background;
   SnakeComponent snake;
-  Apple apple;
+  List<Apple> apples = [];
   Random rnd = Random();
   ScoreDisplay scoreDisplay;
   int score = 9990;
@@ -31,6 +31,7 @@ class SnakeGame extends Game with TapDetector {
   final maxFieldX = 31;
   final maxFieldY = 41;
   final fieldOffsetY = 3;
+  final maxApples = 10;
 
   bool _finished = false;
   bool _initialized = false;
@@ -43,13 +44,21 @@ class SnakeGame extends Game with TapDetector {
     resize(await Flame.util.initialDimensions());
 
     background = Background(this);
-    apple = Apple(this);
+    spawnApples();
 
     // TODO - this has to move to the begin action of the main menu
     spawnSnake();
     scoreDisplay = ScoreDisplay(this);
 
     _initialized = true;
+  }
+
+  void spawnApples() {
+    while (apples.length < maxApples) {
+      var excludePositions = apples.map((e) => e.position).toList();
+      excludePositions.addAll(snake?.snakeParts ?? []);
+      apples.add(Apple(this, excludePositions));
+    }
   }
 
   /// This method initialize the snake with its callback
@@ -64,14 +73,10 @@ class SnakeGame extends Game with TapDetector {
     }
   }
 
-  ///Initialize the apple
-  void spawnApple() {
-  }
-
   void render(Canvas canvas) {
     if (_initialized) {
       background.render(canvas);
-      apple.render(canvas);
+      apples.forEach((element) => element.render(canvas));
       snake.render(canvas);
       scoreDisplay.render(canvas);
     }
@@ -81,7 +86,7 @@ class SnakeGame extends Game with TapDetector {
     if (!_finished && _initialized) {
       snake.update(t);
       scoreDisplay.update(t);
-      apple.update(t);
+      apples.forEach((element) => element.update(t));
     }
   }
 

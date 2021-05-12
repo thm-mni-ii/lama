@@ -15,8 +15,8 @@ class Apple {
   Paint _applePaint;
   Random _rnd = Random();
 
-  Apple(this.game) {
-    setRandomPosition();
+  Apple(this.game, [List<Position> excludePositions]) {
+    setRandomPosition(excludePositions);
 
     _applePaint = Paint();
     _applePaint.color = Color(0xe9ea0000);
