@@ -1,3 +1,4 @@
+import 'package:lama_app/app/model/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -56,8 +57,8 @@ class DatabaseProvider{
 
     return await openDatabase(
         join(dbPath, "userDB.db"),
-     version: 1,
-      onCreate: (Database database, int version) async{
+        version: 1,
+        onCreate: (Database database, int version) async{
           print("Creating User Table");
 
           await database.execute(
@@ -67,37 +68,81 @@ class DatabaseProvider{
                 "$columnPassword TEXT,"
                 "$columnGrade INTEGER,"
                 "$columnCoins INTEGER,"
-                "$columnIsAdmin INTEGER,"
-            ")"
-            "Create TABLE $tableAchievements("
-              "$columnAchievementsId INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$ColumnAchievementsName TEXT,"
-            ")"
-            "Create TABLE $tableUserHasAchievements("
-              "$ColumnUserId INTEGER,"
-                "$columnAchievementId INTEGER,"
-            ")"
-            "Create TABLE $tableGames("
-              "$columnGamesId INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$columnGamesName TEXT,"
-            ")"
-            "Create TABLE $tableHighscore("
-              "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$columnGameId INTEGER,"
-              "$columnScore INTEGER,"
-              "$ColumnUserId INTEGER,"
-            ")"
-            "Create TABLE $tableSubjects("
-              "$columnSubjectId INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$columnSubjectsName TEXT,"
-            ")"
-            "Create TABLE $tableUserSolvedTaskAmount("
-              "$ColumnUserId INTEGER,"
-              "$columnSubjectId INTEGER,"
-              "$columnAmount INTEGER"
-            ")",
+                "$columnIsAdmin INTEGER"
+                ");"
+                "Create TABLE $tableAchievements("
+                "$columnAchievementsId INTEGER PRIMARY KEY AUTOINCREMENT,"
+                "$ColumnAchievementsName TEXT"
+                ");"
+                "Create TABLE $tableUserHasAchievements("
+                "$ColumnUserId INTEGER,"
+                "$columnAchievementId INTEGER"
+                ");"
+                "Create TABLE $tableGames("
+                "$columnGamesId INTEGER PRIMARY KEY AUTOINCREMENT,"
+                "$columnGamesName TEXT"
+                ");"
+                "Create TABLE $tableHighscore("
+                "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
+                "$columnGameId INTEGER,"
+                "$columnScore INTEGER,"
+                "$ColumnUserId INTEGER"
+                ");"
+                "Create TABLE $tableSubjects("
+                "$columnSubjectId INTEGER PRIMARY KEY AUTOINCREMENT,"
+                "$columnSubjectsName TEXT"
+                ");"
+                "Create TABLE $tableUserSolvedTaskAmount("
+                "$ColumnUserId INTEGER,"
+                "$columnSubjectId INTEGER,"
+                "$columnAmount INTEGER"
+                ");",
           );
-      }
+        }
     );
+  }
+  Future<List<User>> getUser() async {
+    final db = await database;
+
+    var users = await db.query(
+        tableUser,
+        columns:[columnId, columnName, columnPassword, columnGrade, columnCoins, columnIsAdmin]
+    );
+
+    List<User> userList = <User>[];
+
+    users.forEach((currentUser) {
+      User user = User.fromMap(currentUser);
+
+      userList.add(user);
+    });
+
+    return userList;
+  }
+
+  Future<User> insertUser (User user) async {
+    final db = await database;
+    user.id = await db.insert(tableUser, user.toMap());
+    return user;
+  }
+
+  Future<int> deleteUser(int id) async {
+    final db = await database;
+
+    return await db.delete(
+        tableUser,
+        where: "id = ?",
+        whereArgs: [id]
+    );
+  }
+
+  Future<int> updateUser(User user) async {
+    final db = await database;
+
+    return await db.update(
+        tableUser,
+        user.toMap(),
+        where: " id = ?",
+        whereArgs: [user.id]);
   }
 }
