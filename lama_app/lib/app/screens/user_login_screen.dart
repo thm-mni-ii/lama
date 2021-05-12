@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
-import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/app/user.dart';
 
@@ -117,7 +116,16 @@ class UserSelectionState extends State<UserLoginScreen> {
           if (state is UsersLoaded) {
             return _userListView(state.userList);
           }
-          if (state is UserLoginSuccessful) {}
+          if (state is UserLoginSuccessful) {
+            return Container(
+              alignment: Alignment(0, 0),
+              child: Icon(
+                Icons.check,
+                color: Colors.green,
+                size: 100,
+              ),
+            );
+          }
           return Text('Uppsie');
         },
       ),
