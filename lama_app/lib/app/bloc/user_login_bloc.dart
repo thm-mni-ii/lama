@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
+import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
 
 import '../user.dart';
@@ -17,7 +19,9 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
 
   UserLoginState validateUserLogin(UserLogin event) {
     //TODO Validatin Login
-    if (event.pw == 'admin' && event.user.name == 'Lars') {
+    if (event.pw == 'admin' && event.user.name == 'admin') {
+      Navigator.push(
+          event.context, MaterialPageRoute(builder: (context) => HomeScreen()));
       return UserLoginSuccessful();
     } else {
       return UserLoginFailed(event.user,
@@ -28,8 +32,9 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   UsersLoaded loadUsers() {
     //TODO load all Users from Database
     List<User> userList = [
-      new User(1, 'Lars', 'path'),
-      new User(2, 'Kevin', 'path')
+      new User(1, 'admin', 'path'),
+      new User(2, 'Lars', 'path'),
+      new User(3, 'Kevin', 'path')
     ];
     return UsersLoaded(userList);
   }

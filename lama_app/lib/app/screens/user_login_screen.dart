@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
+import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/app/user.dart';
 
@@ -50,7 +51,7 @@ class UserSelectionState extends State<UserLoginScreen> {
                   onPressed: () {
                     context
                         .read<UserLoginBloc>()
-                        .add(UserLogin(state.user, _pass));
+                        .add(UserLogin(state.user, _pass, context));
                   },
                   child: Text('Einloggen'),
                   style: ElevatedButton.styleFrom(minimumSize: Size(400, 45)),
@@ -64,20 +65,59 @@ class UserSelectionState extends State<UserLoginScreen> {
                   },
                   child: Text('Abbrechen'),
                   style: ElevatedButton.styleFrom(
-                      minimumSize: Size(400, 45), primary: Colors.red),
+                      minimumSize: Size(screenSize.width, 45),
+                      primary: Colors.red),
                 ),
               ],
             );
           }
           if (state is UserLoginFailed) {
-            return Text(state.error);
+            return Column(
+              children: [
+                _userCard(state.user),
+                SizedBox(
+                  height: 50,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                      icon: Icon(Icons.security),
+                      hintText: 'Passwort',
+                      errorText: state.error),
+                  validator: (value) => null,
+                  onChanged: (value) => this._pass = value,
+                  obscureText: true,
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    context
+                        .read<UserLoginBloc>()
+                        .add(UserLogin(state.user, _pass, context));
+                  },
+                  child: Text('Einloggen'),
+                  style: ElevatedButton.styleFrom(minimumSize: Size(400, 45)),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<UserLoginBloc>().add(UserLoginAbort());
+                  },
+                  child: Text('Abbrechen'),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(screenSize.width, 45),
+                      primary: Colors.red),
+                ),
+              ],
+            );
           }
           if (state is UsersLoaded) {
             return _userListView(state.userList);
           }
-          if (state is UserLoginSuccessful) {
-            return Text('Eingeloggt');
-          }
+          if (state is UserLoginSuccessful) {}
           return Text('Uppsie');
         },
       ),
