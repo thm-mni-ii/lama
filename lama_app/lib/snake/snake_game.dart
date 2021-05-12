@@ -41,14 +41,14 @@ class SnakeGame extends Game with TapDetector {
 
   void initialize() async {
     resize(await Flame.util.initialDimensions());
+
     background = Background(this);
-    // snake with starting location
+    apple = Apple(this);
+
     // TODO - this has to move to the begin action of the main menu
     spawnSnake();
     scoreDisplay = ScoreDisplay(this);
 
-    // spawns random an apple
-    spawnApple();
     _initialized = true;
   }
 
@@ -66,14 +66,12 @@ class SnakeGame extends Game with TapDetector {
 
   ///Initialize the apple
   void spawnApple() {
-    //initialize an apple
-    apple = Apple(this, 0, 100);
   }
 
   void render(Canvas canvas) {
     if (_initialized) {
       background.render(canvas);
-    apple.render(canvas);
+      apple.render(canvas);
       snake.render(canvas);
       scoreDisplay.render(canvas);
     }
