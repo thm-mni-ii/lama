@@ -11,10 +11,11 @@ class DatabaseProvider{
   static const String columnGrade = "grade";
   static const String columnCoins = "coins";
   static const String columnIsAdmin = "isAdmin";
+  static const String columnAvatar = "avatar";
 
   static const String tableAchievements = "achievement";
   static const String columnAchievementsId = "id";
-  static const String columnAchievementsName = "achievementID";
+  static const String columnAchievementsName = "name";
 
   static const String tableUserHasAchievements = "user_has_achievement";
   static const String columnUserId = "userID";
@@ -60,7 +61,7 @@ class DatabaseProvider{
         join(dbPath, "userDB.db"),
         version: 1,
         onCreate: (Database database, int version) async{
-          print("Creating User Table");
+          print("Creating Table");
 
           await database.execute(
             "Create TABLE $tableUser("
@@ -70,34 +71,47 @@ class DatabaseProvider{
                 "$columnGrade INTEGER,"
                 "$columnCoins INTEGER,"
                 "$columnIsAdmin INTEGER"
+                "$columnAvatar TEXT"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableAchievements("
                 "$columnAchievementsId INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "$columnAchievementsName TEXT"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableUserHasAchievements("
                 "$columnUserId INTEGER,"
                 "$columnAchievementId INTEGER"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableGames("
                 "$columnGamesId INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "$columnGamesName TEXT"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableHighscore("
                 "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "$columnGameId INTEGER,"
                 "$columnScore INTEGER,"
                 "$columnUserId INTEGER"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableSubjects("
                 "$columnSubjectId INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "$columnSubjectsName TEXT"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableUserSolvedTaskAmount("
                 "$columnUserId INTEGER,"
                 "$columnSubjectId INTEGER,"
                 "$columnAmount INTEGER"
-                ");",
+                ");"
           );
         }
     );
@@ -107,7 +121,7 @@ class DatabaseProvider{
 
     var users = await db.query(
         tableUser,
-        columns:[columnId, columnName, columnPassword, columnGrade, columnCoins, columnIsAdmin]
+        columns:[columnId, columnName, columnPassword, columnGrade, columnCoins, columnIsAdmin, columnAvatar]
     );
 
     List<User> userList = <User>[];
