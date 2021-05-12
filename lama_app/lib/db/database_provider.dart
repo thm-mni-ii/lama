@@ -111,7 +111,7 @@ class DatabaseProvider{
                 "$columnUserId INTEGER,"
                 "$columnSubjectId INTEGER,"
                 "$columnAmount INTEGER"
-                ");"
+                ");"y
           );
         }
     );
