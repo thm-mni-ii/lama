@@ -13,6 +13,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   Stream<TaskState> mapEventToState(TaskEvent event) async* {
     if (event is ShowNextTaskEvent) {
       yield DisplayTaskState(tasksetSubject, tasks[curIndex++]);
+    } else if (event is AnswerTaskEvent) {
+      Task t = tasks[curIndex - 1];
+      if (t is Task4Cards) {
+        if (event.providedAnswer == t.rightAnswer) {
+          print("right answer");
+        } else
+          print("Wrong answer");
+      }
     }
   }
 }
