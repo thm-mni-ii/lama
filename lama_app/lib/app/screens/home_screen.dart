@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
-import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
@@ -12,6 +12,9 @@ class HomeScreen extends StatelessWidget {
   HomeScreen();
   @override
   Widget build(BuildContext context) {
+    print("DRAAAAAWN");
+    UserRepository userRepository =
+        RepositoryProvider.of<UserRepository>(context);
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 253, 74, 111),
@@ -59,7 +62,8 @@ class HomeScreen extends StatelessWidget {
                               create: (BuildContext context) =>
                                   ChooseTasksetBloc(
                                       context.read<TasksetRepository>()),
-                              child: ChooseTasksetScreen("Mathe"),
+                              child: ChooseTasksetScreen("Mathe",
+                                  userRepository.getGrade(), userRepository),
                             ),
                           ),
                         ),
@@ -100,7 +104,8 @@ class HomeScreen extends StatelessWidget {
                               create: (BuildContext context) =>
                                   ChooseTasksetBloc(
                                       context.read<TasksetRepository>()),
-                              child: ChooseTasksetScreen("Deutsch"),
+                              child: ChooseTasksetScreen("Deutsch",
+                                  userRepository.getGrade(), userRepository),
                             ),
                           ),
                         ),
@@ -141,7 +146,8 @@ class HomeScreen extends StatelessWidget {
                               create: (BuildContext context) =>
                                   ChooseTasksetBloc(
                                       context.read<TasksetRepository>()),
-                              child: ChooseTasksetScreen("Englisch"),
+                              child: ChooseTasksetScreen("Englisch",
+                                  userRepository.getGrade(), userRepository),
                             ),
                           ),
                         ),
@@ -244,12 +250,12 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "GigaKaninchen",
+                          userRepository.getUserName(),
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                         Row(children: [
                           Text(
-                            "450",
+                            userRepository.getLamaCoins().toString(),
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           SizedBox(width: 5),

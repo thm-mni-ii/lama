@@ -67,7 +67,7 @@ class DatabaseProvider {
           "$columnPassword TEXT,"
           "$columnGrade INTEGER,"
           "$columnCoins INTEGER,"
-          "$columnIsAdmin INTEGER"
+          "$columnIsAdmin INTEGER,"
           "$columnAvatar TEXT"
           ");");
       await database.execute("Create TABLE $tableAchievements("
