@@ -1,26 +1,38 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:lama_app/snake/components/start-button.dart';
 import 'package:lama_app/snake/snake_game.dart';
 
 class HomeView {
   final SnakeGame game;
-  Rect titleRect;
-  Paint titlePaint;
+
+  Rect bgRect;
+  Paint bgPaint;
+  Paint borderPaint;
+
+  StartButton startButton;
+  double _borderThickness = 3;
 
   HomeView(this.game) {
-    titleRect = Rect.fromLTWH(
-      game.tileSize * 5.5,
-      (game.screenSize.height / 2) - (game.tileSize * 11),
-      game.tileSize * 20,
-      game.tileSize * 11,
+    this.startButton = StartButton(game);
+    
+    bgRect = Rect.fromLTWH(
+      this.game.screenSize.width * 0.05,
+      this.game.screenSize.height * 0.05,
+      this.game.screenSize.width * 0.9,
+      this.game.screenSize.height * 0.8,
     );
-    titlePaint = Paint();
-    titlePaint.color = Color(0xFFFFFFFF);
+
+    bgPaint = Paint();
+    bgPaint.color = Color(0xFFFFFFFF);
+    borderPaint = Paint();
+    borderPaint.color = Color(0xFF000000);
   }
 
   void render(Canvas c) {
-    c.drawRect(titleRect, titlePaint);
+    c.drawRect(bgRect.inflate(_borderThickness), borderPaint);
+    c.drawRect(bgRect, bgPaint);
   }
 
   void update(double t) {}
