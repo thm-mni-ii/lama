@@ -1,3 +1,4 @@
+import 'package:lama_app/app/model/achievement_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -10,13 +11,14 @@ class DatabaseProvider{
   static const String columnGrade = "grade";
   static const String columnCoins = "coins";
   static const String columnIsAdmin = "isAdmin";
+  static const String columnAvatar = "avatar";
 
   static const String tableAchievements = "achievement";
   static const String columnAchievementsId = "id";
-  static const String ColumnAchievementsName = "achievementID";
+  static const String columnAchievementsName = "name";
 
   static const String tableUserHasAchievements = "user_has_achievement";
-  static const String ColumnUserId = "userID";
+  static const String columnUserId = "userID";
   static const String columnAchievementId = "achievementID";
 
   static const String tableGames = "game";
@@ -59,7 +61,7 @@ class DatabaseProvider{
         join(dbPath, "userDB.db"),
         version: 1,
         onCreate: (Database database, int version) async{
-          print("Creating User Table");
+          print("Creating Table");
 
           await database.execute(
             "Create TABLE $tableUser("
@@ -69,34 +71,47 @@ class DatabaseProvider{
                 "$columnGrade INTEGER,"
                 "$columnCoins INTEGER,"
                 "$columnIsAdmin INTEGER"
+                "$columnAvatar TEXT"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableAchievements("
                 "$columnAchievementsId INTEGER PRIMARY KEY AUTOINCREMENT,"
-                "$ColumnAchievementsName TEXT"
+                "$columnAchievementsName TEXT"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableUserHasAchievements("
-                "$ColumnUserId INTEGER,"
+                "$columnUserId INTEGER,"
                 "$columnAchievementId INTEGER"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableGames("
                 "$columnGamesId INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "$columnGamesName TEXT"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableHighscore("
                 "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "$columnGameId INTEGER,"
                 "$columnScore INTEGER,"
-                "$ColumnUserId INTEGER"
+                "$columnUserId INTEGER"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableSubjects("
                 "$columnSubjectId INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "$columnSubjectsName TEXT"
                 ");"
+          );
+          await database.execute(
                 "Create TABLE $tableUserSolvedTaskAmount("
-                "$ColumnUserId INTEGER,"
+                "$columnUserId INTEGER,"
                 "$columnSubjectId INTEGER,"
                 "$columnAmount INTEGER"
-                ");",
+                ");"y
           );
         }
     );
@@ -106,7 +121,7 @@ class DatabaseProvider{
 
     var users = await db.query(
         tableUser,
-        columns:[columnId, columnName, columnPassword, columnGrade, columnCoins, columnIsAdmin]
+        columns:[columnId, columnName, columnPassword, columnGrade, columnCoins, columnIsAdmin, columnAvatar]
     );
 
     List<User> userList = <User>[];
@@ -120,10 +135,35 @@ class DatabaseProvider{
     return userList;
   }
 
+  Future<List<Achievement>> getAchievements() async {
+    final db = await database;
+
+    var achievements = await db.query(
+        tableAchievements,
+        columns:[columnAchievementsId, columnAchievementsName]
+    );
+
+    List<Achievement> achievementList = <Achievement>[];
+
+    achievements.forEach((currentAchievement) {
+      Achievement achievement = Achievement.fromMap(currentAchievement);
+
+      achievementList.add(achievement);
+    });
+
+    return achievementList;
+  }
+
   Future<User> insertUser (User user) async {
     final db = await database;
     user.id = await db.insert(tableUser, user.toMap());
     return user;
+  }
+
+  Future<Achievement> insertAchievements (Achievement achievement) async {
+    final db = await database;
+    achievement.id = await db.insert(tableAchievements, achievement.toMap());
+    return achievement;
   }
 
   Future<int> deleteUser(int id) async {
@@ -131,6 +171,16 @@ class DatabaseProvider{
 
     return await db.delete(
         tableUser,
+        where: "id = ?",
+        whereArgs: [id]
+    );
+  }
+
+  Future<int> deleteAchievement(int id) async {
+    final db = await database;
+
+    return await db.delete(
+        tableAchievements,
         where: "id = ?",
         whereArgs: [id]
     );
@@ -145,4 +195,16 @@ class DatabaseProvider{
         where: " id = ?",
         whereArgs: [user.id]);
   }
+
+  Future<int> updateAchievement(Achievement achievement) async {
+    final db = await database;
+
+    return await db.update(
+        tableAchievements,
+        achievement.toMap(),
+        where: " id = ?",
+        whereArgs: [achievement.id]);
+  }
 }
+
+

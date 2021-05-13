@@ -1,4 +1,6 @@
 import '../../db/database_provider.dart';
+import '../../db/database_provider.dart';
+import '../../db/database_provider.dart';
 
 class User {
   int id;
@@ -7,8 +9,9 @@ class User {
   int grade;
   int coins;
   bool isAdmin;
+  String avatar;
 
-  User({this.name, this.password, this.grade, this.coins, this.isAdmin});
+  User({this.name, this.password, this.grade, this.coins, this.isAdmin, this.avatar});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -16,7 +19,8 @@ class User {
     DatabaseProvider.columnPassword: password,
     DatabaseProvider.columnGrade: grade,
     DatabaseProvider.columnCoins: coins,
-    DatabaseProvider.columnIsAdmin: isAdmin ? 1 : 0
+    DatabaseProvider.columnIsAdmin: isAdmin ? 1 : 0,
+    DatabaseProvider.columnAvatar: avatar
     };
     return map;
   }
@@ -28,5 +32,6 @@ class User {
     grade = map[DatabaseProvider.columnGrade];
     coins = map[DatabaseProvider.columnCoins];
     isAdmin = map[DatabaseProvider.columnIsAdmin] == 1;
+    avatar = map[DatabaseProvider.columnAvatar];
   }
 }
