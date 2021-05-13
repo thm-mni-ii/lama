@@ -1,5 +1,7 @@
+import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -89,13 +91,40 @@ class FourCardTaskScreen extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 50),
           Container(
-            color: Colors.green,
-            height: 75,
-            child: Center(child: Text(task.lamaText)),
+            padding: EdgeInsets.only(left: 15, right: 15),
+            height: 80,
+            child: Stack(children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: EdgeInsets.only(left: 75),
+                  height: 50,
+                  width: MediaQuery.of(context).size.width,
+                  child: Bubble(
+                    nip: BubbleNip.leftCenter,
+                    child: Center(
+                      child: Text(
+                        task.lamaText,
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SvgPicture.asset(
+                  "assets/images/svg/lama_head.svg",
+                  semanticsLabel: "Lama Anna",
+                  width: 75,
+                ),
+              ),
+            ]),
           ),
-          SizedBox(height: 25),
+          SizedBox(height: 10),
           Expanded(
               child: Padding(
                   padding: const EdgeInsets.only(
