@@ -91,7 +91,17 @@ class HomeScreen extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50)))),
-                        onPressed: () => {},
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (BuildContext context) =>
+                                  ChooseTasksetBloc(
+                                      context.read<TasksetRepository>()),
+                              child: ChooseTasksetScreen("Deutsch"),
+                            ),
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 10,
@@ -122,7 +132,17 @@ class HomeScreen extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50)))),
-                        onPressed: () => {},
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (BuildContext context) =>
+                                  ChooseTasksetBloc(
+                                      context.read<TasksetRepository>()),
+                              child: ChooseTasksetScreen("Englisch"),
+                            ),
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 10,
