@@ -6,24 +6,28 @@ import 'dart:developer' as developer;
 import 'package:lama_app/snake/models/position.dart';
 import 'package:lama_app/snake/snake_game.dart';
 
+import 'apple.dart';
+
 class SnakeComponent {
   final bool debugMovement = true;
   final bool log = true;
 
   Random rnd = Random();
   Queue<Position> snakeParts = Queue();
-  double velocity = 5;
+  double velocity = 2;
   /// callback when the snake bites itself
   Function callbackBiteItSelf;
   /// callback when the snake hits the border
   Function callbackCollideWithBorder;
+  /// callback when the snake hits the border
+  Function(Apple) callbackEatsApple;
 
   final SnakeGame game;
 
   double _deltaCounter = 0;
   int _direction = 1;
 
-  SnakeComponent(Position startPos, this.game) {
+  SnakeComponent(this.game, Position startPos, this.velocity) {
     snakeParts.add(Position(startPos.x, startPos.y + this.game.fieldOffsetY));
   }
 
@@ -40,7 +44,7 @@ class SnakeComponent {
 
   /// This method moves the snake by the given direction for 1 tile.
   /// [dir] 1 = north, 2 = west, 3 = south everything else = east
-  void moveSnake(int dir, [bool grow = false]) {
+  void moveSnake(int dir) {
     var newPosition = getNewPosition(dir);
 
     // no movement in between the field possible
@@ -62,24 +66,15 @@ class SnakeComponent {
         callbackBiteItSelf();
       }
     } else {
-      // only removes the tail when no growth
-      if (!grow) {
-        snakeParts.removeFirst();
-      }
-      else if (log) {
-        developer.log("[Snake][moveSnake] snake growths");
-      }
-
-      // adds the new head
-      snakeParts.add(newPosition);
+      snakeParts.addFirst(newPosition);
     }
   }
 
   /// This method checks if the head is on the given [position]
   bool collideWithHead(Position position) {
     return position != null &&
-        snakeParts.last.x == position.x &&
-        snakeParts.last.y == position.y;
+        snakeParts.first.x == position.x &&
+        snakeParts.first.y == position.y;
   }
 
   /// This method checks if there is an snakepart on the given [position]
@@ -92,7 +87,7 @@ class SnakeComponent {
   /// [dir] could be: 1 = north, 2 = west, 3 = south everything else = east
   /// return : hits the border = null, movement within the field = [Position]
   Position getNewPosition(int dir) {
-    Position headPos = snakeParts.last;
+    Position headPos = snakeParts.first;
 
     switch(dir) {
       case 3 : {
@@ -104,12 +99,12 @@ class SnakeComponent {
         return Position(headPos.x, headPos.y + 1);
       }
       case 2 : {
-        if (headPos.x >= this.game.maxFieldX) {
-          // headPos = Position(1, headPos.y);
+        if (headPos.x <= 1) {
+          // headPos = Position(this.game.maxFieldX, headPos.y);
           return null;
         }
 
-        return Position(headPos.x + 1, headPos.y);
+        return Position(headPos.x - 1, headPos.y);
       }
       case 1 : {
         if (headPos.y <= this.game.fieldOffsetY + 1) {
@@ -120,12 +115,12 @@ class SnakeComponent {
         return Position(headPos.x, headPos.y - 1);
       }
       default : {
-        if (headPos.x <= 1) {
-          // headPos = Position(this.game.maxFieldX, headPos.y);
+        if (headPos.x >= this.game.maxFieldX) {
+          // headPos = Position(1, headPos.y);
           return null;
         }
 
-        return Position(headPos.x - 1, headPos.y);
+        return Position(headPos.x + 1, headPos.y);
       }
     }
   }
@@ -142,13 +137,35 @@ class SnakeComponent {
 
       Paint bgPaint = Paint();
       // color the head different than the tail
-      bgPaint.color = Color(tmpSnake == snakeParts.last ? 0xFF208421 : 0xFF200021);
+      bgPaint.color = Color(tmpSnake == snakeParts.first ? 0xFF208421 : 0xFF200021);
 
       c.drawArc(bgRect, 0, 10, true, bgPaint);
     }
   }
 
-  void update(double t) {
+  void eatApples(List<Apple> apples) {
+    if (apples == null) {
+      // adds the new head
+      snakeParts.removeLast();
+      return;
+    }
+
+    for (Apple apple in apples) {
+      if (collideWithHead(apple.position)) {
+        if (callbackEatsApple != null) {
+          callbackEatsApple(apple);
+        }
+        developer.log("[SnakeComponent][eatApples] eat an apple");
+
+        return;
+      }
+    }
+
+    // adds the new head
+    snakeParts.removeLast();
+  }
+
+  void update(double t, List<Apple> apples) {
     // measures the time which has past
     _deltaCounter += t;
 
@@ -160,7 +177,8 @@ class SnakeComponent {
       }
 
       // debug_movement = snake growths with 10% chance
-      moveSnake(_direction, debugMovement ? rnd.nextInt(100) > 90 : false);
+      moveSnake(_direction);
+      eatApples(apples);
 
       // resets the deltaCounter
       _deltaCounter = 0;

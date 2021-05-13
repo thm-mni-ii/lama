@@ -23,15 +23,16 @@ class SnakeGame extends Game with TapDetector {
   List<Apple> apples = [];
   Random rnd = Random();
   ScoreDisplay scoreDisplay;
-  int score = 9990;
+  int score = 0;
 
   Size screenSize;
   double tileSize;
 
   final maxFieldX = 31;
-  final maxFieldY = 41;
+  final maxFieldY = 31;
   final fieldOffsetY = 3;
-  final maxApples = 10;
+  final maxApples = 200;
+  final snakeStartVelocity = 3.0;
 
   bool _finished = false;
   bool _initialized = false;
@@ -40,6 +41,8 @@ class SnakeGame extends Game with TapDetector {
     initialize();
   }
 
+  /// This method is vor the initialization process of the game class.
+  /// It runs asynchron and it will flag the [_initialized] to true when its finished.
   void initialize() async {
     resize(await Flame.util.initialDimensions());
 
@@ -53,6 +56,33 @@ class SnakeGame extends Game with TapDetector {
     _initialized = true;
   }
 
+  /// This methos respawn the [apple] on a new free field. If there is none the [apple] will despawn.
+  void respawnApple(Apple apple) {
+    if (apple == null) {
+      return;
+    }
+
+    // despawn the apple when there is no avaiable space anymore
+    if ((maxFieldX * maxFieldY) - snake.snakeParts.length <= apples.length) {
+      despawnApple(apple);
+    } else {
+      if (log) {
+        developer.log("[SnakeGame][respawnApple] before [x=${apple.position.x}, y=${apple.position.y}]");
+      }
+
+      // get all Positions which are filled with the snake or apples
+      var excludePositions = apples.map((e) => e.position).toList();
+      excludePositions.addAll(snake?.snakeParts ?? []);
+      // set new Position of the eaten apple on a free field
+      apple.setRandomPosition(excludePositions);
+
+      if (log) {
+        developer.log("[SnakeGame][respawnApple] after  [x=${apple.position.x}, y=${apple.position.y}]");
+      }
+    }
+  }
+
+  /// This method spawns [maxApples] [Apple]s on the game field.
   void spawnApples() {
     while (apples.length < maxApples) {
       var excludePositions = apples.map((e) => e.position).toList();
@@ -61,6 +91,7 @@ class SnakeGame extends Game with TapDetector {
     }
   }
 
+  /// This method despawns the [apple] from the game.
   void despawnApple(Apple apple) {
     if (apples == null || apples.length == 0) {
       return;
@@ -72,9 +103,18 @@ class SnakeGame extends Game with TapDetector {
   /// This method initialize the snake with its callback
   void spawnSnake() {
     // initialize a new snake
-    snake = SnakeComponent(Position(maxFieldX ~/ 2, maxFieldY ~/ 2), this);
+    snake = SnakeComponent(this, Position(maxFieldX ~/ 2, maxFieldY ~/ 2), 3);
+    // callback when snake bites itself
     snake.callbackBiteItSelf = () => finishGame();
+    // callback when the snake hits the border
     snake.callbackCollideWithBorder = () => finishGame();
+    // callback when the snake eats an apple
+    snake.callbackEatsApple = (apple) {
+      score += 1;
+      // respawn the eaten apple
+      respawnApple(apple);
+      snake?.velocity = snakeStartVelocity + (score ~/ 5);
+    };
 
     if (log) {
       developer.log("[SnakeGame][spawnSnake] spawned");
@@ -92,7 +132,7 @@ class SnakeGame extends Game with TapDetector {
 
   void update(double t) {
     if (!_finished && _initialized) {
-      snake.update(t);
+      snake.update(t, apples);
       apples.forEach((element) => element.update(t));
       scoreDisplay.update(t);
     }

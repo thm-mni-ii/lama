@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:ui';
-import 'dart:developer' as developer;
 
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/snake/snake_game.dart';
@@ -43,8 +42,6 @@ class Apple {
         (newPosition.y - 1) * this.game.tileSize,
         this.game.tileSize,
         this.game.tileSize);
-
-    developer.log("[Apple][newRandomPosition] position = [x = ${newPosition.x}, y = ${newPosition.y}]");
   }
 
   void render(Canvas c) {
