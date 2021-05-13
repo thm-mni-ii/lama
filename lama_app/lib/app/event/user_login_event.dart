@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:lama_app/app/user.dart';
+import 'package:lama_app/app/model/user_model.dart';
 
 abstract class UserLoginEvent {}
 

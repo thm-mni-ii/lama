@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
+import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
-import 'package:lama_app/app/user.dart';
 
 class UserLoginScreen extends StatefulWidget {
   @override
