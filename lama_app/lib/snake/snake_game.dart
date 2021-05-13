@@ -169,22 +169,22 @@ class SnakeGame extends Game with TapDetector {
   void onTapDown(TapDownDetails d) {
     
     if (arrowButtonDown.rectButton.contains(d.localPosition)){
-      arrowButtonDown.onTapDown();
+      //arrowButtonDown.onTapDown();
       snake.direction = 3;
 
     }
     if (arrowButtonUp.rectButton.contains(d.localPosition)){
-      arrowButtonUp.onTapDown();
+      //arrowButtonUp.onTapDown();
       snake.direction = 1;
 
     }
     if (arrowButtonLeft.rectButton.contains(d.localPosition)){
-      arrowButtonLeft.onTapDown();
+      //arrowButtonLeft.onTapDown();
       snake.direction = 4;
 
     }
     if (arrowButtonRight.rectButton.contains(d.localPosition)){
-      arrowButtonRight.onTapDown();
+      //arrowButtonRight.onTapDown();
       snake.direction = 2;
 
     }
