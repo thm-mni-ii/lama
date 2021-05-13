@@ -40,17 +40,19 @@ class TasksetLoader {
     for (int i = 1; i <= grades_supported; i++) {
       try {
         String tasksetMathe = await rootBundle.loadString(
-            'assets/standardTasksets/mathe' + i.toString() + '.json');
+            'assets/standardTasksets/mathe/mathe' + i.toString() + '.json');
         buildTasksetFromJson(tasksetMathe);
       } catch (e) {}
       try {
         String tasksetDeutsch = await rootBundle.loadString(
-            'assets/standardTasksets/deutsch' + i.toString() + '.json');
+            'assets/standardTasksets/deutsch/deutsch' + i.toString() + '.json');
         buildTasksetFromJson(tasksetDeutsch);
       } catch (e) {}
       try {
         String tasksetEnglisch = await rootBundle.loadString(
-            'assets/standardTasksets/englisch' + i.toString() + '.json');
+            'assets/standardTasksets/englisch/englisch' +
+                i.toString() +
+                '.json');
         buildTasksetFromJson(tasksetEnglisch);
       } catch (e) {}
     }

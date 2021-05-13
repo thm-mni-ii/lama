@@ -1,0 +1,15 @@
+{
+    "taskset_name":"Standardaufgaben Klasse 1",
+     "taskset_subject":"Mathe",
+      "taskset_grade":3,
+       "tasks": [
+           {
+           "task_type":"4Cards",
+            "task_reward":2,
+            "question":"Wer entdeckte America",
+            "lama_text":"Anna ist ein Annagramm! Tihi",
+            "right_answer":"Christoph Kolumbus",
+             "wrong_answers":["Lukas Podolski", "Willy Wonka", "Leonardo Di Caprio"]
+             }
+        ]
+}
