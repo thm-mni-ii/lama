@@ -34,8 +34,8 @@ class HomeView {
   }
 
   void render(Canvas c) {
-    c.drawRect(bgRect.inflate(_borderThickness), borderPaint);
-    c.drawRect(bgRect, bgPaint);
+    c.drawRRect(RRect.fromRectAndRadius(bgRect.inflate(_borderThickness), Radius.circular(35.0)), borderPaint);
+    c.drawRRect(RRect.fromRectAndRadius(bgRect, Radius.circular(35.0)), bgPaint);
     startButton.render(c);
   }
 
