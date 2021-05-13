@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
+import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/choose_taskset_events.dart';
 import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/state/choose_taskset_state.dart';
@@ -147,7 +148,10 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TaskScreen(taskset.tasks),
+                builder: (context) => BlocProvider<TaskBloc>(
+                  create: (context) => TaskBloc(taskset.tasks),
+                  child: TaskScreen(),
+                ),
               ),
             ),
             child: Column(
