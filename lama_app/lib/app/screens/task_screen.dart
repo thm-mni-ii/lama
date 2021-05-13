@@ -23,6 +23,9 @@ class TaskScreenState extends State<TaskScreen> {
       color: Colors.white,
       child: Center(
         child: BlocBuilder<TaskBloc, TaskState>(
+          buildWhen: (previous, current) =>
+              (previous is DisplayTaskState && current is DisplayTaskState) ||
+              (previous is TaskScreenEmptyState),
           builder: (context, state) {
             if (state is DisplayTaskState) {
               switch (state.task.type) {
