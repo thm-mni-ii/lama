@@ -36,8 +36,6 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   }
 
   Future<UsersLoaded> loadUsers() async {
-    await DatabaseProvider.db.insertUser(User(
-        name: 'admin', password: 'admin', grade: 1, coins: 500, isAdmin: true));
     List<User> userList = await DatabaseProvider.db.getUser();
     return UsersLoaded(userList);
   }

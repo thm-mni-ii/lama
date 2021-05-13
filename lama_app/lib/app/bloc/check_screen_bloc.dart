@@ -43,10 +43,13 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
   }
 
   void _navigateAdminExist(BuildContext context) {
-    MaterialPageRoute(
-      builder: (context) => BlocProvider(
-        create: (BuildContext context) => UserLoginBloc(),
-        child: UserLoginScreen(),
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (BuildContext context) => UserLoginBloc(),
+          child: UserLoginScreen(),
+        ),
       ),
     );
   }

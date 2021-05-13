@@ -26,31 +26,15 @@ class CheckScreenPage extends State<CheckScreen> {
       context.read<CheckScreenBloc>().add(CheckForAdmin(context));
     return Scaffold(
       body: BlocBuilder<CheckScreenBloc, CheckScreenState>(
-          builder: (context, state) {
-        if (state is AdminExist) {
-          return _check();
-        }
-        if (state is NoAdmin) {
-          return _check();
-        }
-        return Container(
-          alignment: Alignment.center,
-          child: SvgPicture.asset(
-            'assets/images/svg/lama_head.svg',
-            semanticsLabel: 'LAMA',
-          ),
-        );
-      }),
-    );
-  }
-
-  Container _check() {
-    return Container(
-      alignment: Alignment(0, 0),
-      child: Icon(
-        Icons.check,
-        color: Colors.green,
-        size: 100,
+        builder: (context, state) {
+          return Container(
+            alignment: Alignment.center,
+            child: SvgPicture.asset(
+              'assets/images/svg/lama_head.svg',
+              semanticsLabel: 'LAMA',
+            ),
+          );
+        },
       ),
     );
   }
