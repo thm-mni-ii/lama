@@ -10,6 +10,7 @@ class DisplayTaskState extends TaskState {
   DisplayTaskState(this.subject, this.task);
 }
 
-class CorrectTaskAnswerState extends TaskState {}
-
-class WrongTaskAnswerState extends TaskState {}
+class TaskAnswerResultState extends TaskState {
+  bool correct;
+  TaskAnswerResultState(this.correct);
+}

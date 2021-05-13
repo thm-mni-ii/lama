@@ -11,6 +11,7 @@ class FourCardTaskScreen extends StatelessWidget {
   final String subject;
   final Task4Cards task;
   final List<String> answers = [];
+
   FourCardTaskScreen(this.subject, this.task) {
     answers.addAll(task.wrongAnswers);
     answers.add(task.rightAnswer);
@@ -33,123 +34,116 @@ class FourCardTaskScreen extends StatelessWidget {
         break;
     }
     return Scaffold(
-      body: BlocListener<TaskBloc, TaskState>(
-        listener: (context, state) => {
-          if (state is CorrectTaskAnswerState)
-            showBottomSheet(
-                context: context, builder: (context) => Text("correct"))
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 90,
-              decoration: BoxDecoration(
-                  gradient: lg,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25))),
-              child: SafeArea(
-                  child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Positioned(
-                    left: 10,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => {Navigator.of(context).pop()},
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 90,
+            decoration: BoxDecoration(
+                gradient: lg,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25))),
+            child: SafeArea(
+                child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  left: 10,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      size: 40,
+                      color: Colors.white,
                     ),
+                    onPressed: () => {Navigator.of(context).pop()},
                   ),
-                  Text(
-                    subject,
-                    style: TextStyle(fontSize: 30, color: Colors.white),
-                  ),
-                ],
-              )),
-            ),
-            SizedBox(height: 25),
-            Container(
-              width: MediaQuery.of(context).size.width - 75,
-              height: 200,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                  gradient: LinearGradient(
-                      colors: [Colors.orangeAccent, Colors.deepOrange]),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3))
-                  ]),
-              child: Align(
-                child: Text(
-                  task.question,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.white,
-                  ),
+                ),
+                Text(
+                  subject,
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ],
+            )),
+          ),
+          SizedBox(height: 25),
+          Container(
+            width: MediaQuery.of(context).size.width - 75,
+            height: 200,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(50)),
+                gradient: LinearGradient(
+                    colors: [Colors.orangeAccent, Colors.deepOrange]),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3))
+                ]),
+            child: Align(
+              child: Text(
+                task.question,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.white,
                 ),
               ),
             ),
-            SizedBox(height: 50),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15),
-              height: 80,
-              child: Stack(children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 75),
-                    height: 50,
-                    width: MediaQuery.of(context).size.width,
-                    child: Bubble(
-                      nip: BubbleNip.leftCenter,
-                      child: Center(
-                        child: Text(
-                          task.lamaText,
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
+          ),
+          SizedBox(height: 50),
+          Container(
+            padding: EdgeInsets.only(left: 15, right: 15),
+            height: 80,
+            child: Stack(children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: EdgeInsets.only(left: 75),
+                  height: 50,
+                  width: MediaQuery.of(context).size.width,
+                  child: Bubble(
+                    nip: BubbleNip.leftCenter,
+                    child: Center(
+                      child: Text(
+                        task.lamaText,
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SvgPicture.asset(
-                    "assets/images/svg/lama_head.svg",
-                    semanticsLabel: "Lama Anna",
-                    width: 75,
-                  ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SvgPicture.asset(
+                  "assets/images/svg/lama_head.svg",
+                  semanticsLabel: "Lama Anna",
+                  width: 75,
                 ),
-              ]),
-            ),
-            SizedBox(height: 10),
-            Expanded(
-                child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 5,
-                      right: 5,
-                    ),
-                    child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1.6 / 1,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                        ),
-                        itemCount: 4,
-                        itemBuilder: (context, index) =>
-                            _buildCards(context, index))))
-          ],
-        ),
+              ),
+            ]),
+          ),
+          SizedBox(height: 10),
+          Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 5,
+                    right: 5,
+                  ),
+                  child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.6 / 1,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                      ),
+                      itemCount: 4,
+                      itemBuilder: (context, index) =>
+                          _buildCards(context, index))))
+        ],
       ),
     );
   }
