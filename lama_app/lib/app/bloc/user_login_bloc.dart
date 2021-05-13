@@ -4,16 +4,17 @@ import 'package:lama_app/app/event/user_login_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
+import 'package:lama_app/db/database_provider.dart';
 
 class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   UserLoginBloc({UserLoginState initialState}) : super(initialState);
 
   @override
   Stream<UserLoginState> mapEventToState(UserLoginEvent event) async* {
-    if (event is LoadUsers) yield loadUsers();
+    if (event is LoadUsers) yield await loadUsers();
     if (event is SelectUser) yield UserSelected(event.user);
     if (event is UserLogin) yield validateUserLogin(event);
-    if (event is UserLoginAbort) yield loadUsers();
+    if (event is UserLoginAbort) yield await loadUsers();
   }
 
   UserLoginState validateUserLogin(UserLogin event) {
@@ -28,13 +29,10 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
     }
   }
 
-  UsersLoaded loadUsers() {
-    //TODO load all Users from Database
-    List<User> userList = [
-      new User(name: 'admin', password: 'path'),
-      new User(name: 'Lars', password: 'path'),
-      new User(name: 'Kevin', password: 'path')
-    ];
+  Future<UsersLoaded> loadUsers() async {
+    await DatabaseProvider.db
+        .insertUser(User(name: 'admin', password: 'admin', isAdmin: true));
+    List<User> userList = await DatabaseProvider.db.getUser();
     return UsersLoaded(userList);
   }
 }
