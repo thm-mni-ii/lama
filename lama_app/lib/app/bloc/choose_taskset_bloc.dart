@@ -11,12 +11,14 @@ class ChooseTasksetBloc extends Bloc<ChooseTasksetEvent, ChooseTasksetState> {
 
   @override
   Stream<ChooseTasksetState> mapEventToState(ChooseTasksetEvent event) async* {
-    if (event is LoadAllTasksetsEvent) yield LoadingAllTasksetsState();
-    List<Taskset> tasksets =
-        repository.getTasksetsForSubjectAndGrade("Mathe", 3);
-    //TODO: Remove this TESTSTUFF
-    await Future.delayed(Duration(seconds: 1));
-    //
-    yield LoadedAllTasksetsState(tasksets);
+    if (event is LoadAllTasksetsEvent) {
+      yield LoadingAllTasksetsState();
+      List<Taskset> tasksets =
+          repository.getTasksetsForSubjectAndGrade(event.subject, 3);
+      //TODO: Remove this TESTSTUFF
+      await Future.delayed(Duration(seconds: 1));
+      //
+      yield LoadedAllTasksetsState(tasksets);
+    }
   }
 }

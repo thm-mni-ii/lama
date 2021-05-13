@@ -16,15 +16,19 @@ class ChooseTasksetScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return ChooseTasksetScreenState();
+    return ChooseTasksetScreenState(chosenSubject);
   }
 }
 
 class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
+  String chosenSubject;
+  ChooseTasksetScreenState(this.chosenSubject);
+
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ChooseTasksetBloc>(context).add(LoadAllTasksetsEvent());
+    BlocProvider.of<ChooseTasksetBloc>(context)
+        .add(LoadAllTasksetsEvent(chosenSubject));
   }
 
   @override
