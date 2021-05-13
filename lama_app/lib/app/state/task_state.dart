@@ -5,6 +5,7 @@ abstract class TaskState {}
 class TaskScreenEmptyState extends TaskState {}
 
 class DisplayTaskState extends TaskState {
+  String subject;
   Task task;
-  DisplayTaskState(this.task);
+  DisplayTaskState(this.subject, this.task);
 }

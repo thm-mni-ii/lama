@@ -27,7 +27,7 @@ class TaskScreenState extends State<TaskScreen> {
             if (state is DisplayTaskState) {
               switch (state.task.type) {
                 case "4Cards":
-                  return FourCardTaskScreen(state.task);
+                  return FourCardTaskScreen(state.subject, state.task);
                   break;
               }
             }
