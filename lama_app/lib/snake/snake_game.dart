@@ -36,16 +36,13 @@ class SnakeGame extends Game with TapDetector {
   List<Apple> apples = [];
   Random rnd = Random();
   ScoreDisplay scoreDisplay;
-
-  int score = 0;
-
-  
   ArrowButtons arrowButtonDown;
   ArrowButtons arrowButtonUp;
   ArrowButtons arrowButtonLeft;
   ArrowButtons arrowButtonRight;
-
   PauseButton pauseButton;
+
+  int score = 0;
 
   Size screenSize;
   double tileSize;
@@ -58,7 +55,7 @@ class SnakeGame extends Game with TapDetector {
 
   bool _finished = false;
   bool _initialized = false;
-  bool _started = false;
+  bool _running = false;
   bool _paused = false;
   bool _pauseWasPressed = false;
 
@@ -77,13 +74,14 @@ class SnakeGame extends Game with TapDetector {
     background = Background(this);
     spawnApples();
 
+    homeView = HomeView(this);
+
     arrowButtonDown = ArrowButtons(this, 0);
     arrowButtonUp = ArrowButtons(this, 1);
     arrowButtonLeft = ArrowButtons(this, 2);
     arrowButtonRight = ArrowButtons(this, 3);
-    homeView = HomeView(this);
-
     pauseButton = PauseButton(this);
+
     // TODO - this has to move to the begin action of the main menu
     spawnSnake();
     scoreDisplay = ScoreDisplay(this);
@@ -157,30 +155,31 @@ class SnakeGame extends Game with TapDetector {
   }
 
   void render(Canvas canvas) {
-    if (activeView == View.home) {
-      homeView.render(canvas);
-    }
-
-    if (_initialized && _started) {
+    if (_initialized) {
+      // draw background
       background.render(canvas);
-      apples.forEach((element) => element.render(canvas));
 
-      if (activeView == View.playing) {
+      // draw home screen
+      if (activeView == View.home) {
+        homeView.render(canvas);
+      }
+
+      if (_running && !_finished) {
         snake.render(canvas);
+        apples.forEach((element) => element.render(canvas));
+
+        arrowButtonDown.render(canvas);
+        arrowButtonUp.render(canvas);
+        arrowButtonLeft.render(canvas);
+        arrowButtonRight.render(canvas);
+        pauseButton.render(canvas);
         scoreDisplay.render(canvas);
       }
-      
-      arrowButtonDown.render(canvas);
-      arrowButtonUp.render(canvas);
-      arrowButtonLeft.render(canvas);
-      arrowButtonRight.render(canvas);
-      pauseButton.render(canvas);
-
     }
   }
 
   void update(double t) {
-    if (!_finished && _initialized && _started && !_paused) {
+    if (!_finished && _initialized && _running && !_paused) {
       snake.update(t, apples);
       apples.forEach((element) => element.update(t));
       scoreDisplay.update(t);
@@ -194,7 +193,8 @@ class SnakeGame extends Game with TapDetector {
       developer.log("[SnakeGame][finishGame] finished the game");
     }
   }
-/// [dir] 1 = north, 2 = west, 3 = south everything else = east
+
+  /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void onTapDown(TapDownDetails d) {
     bool isHandled = false;
 
@@ -202,7 +202,7 @@ class SnakeGame extends Game with TapDetector {
     if (!isHandled && homeView.startButton.rect.contains(d.localPosition)) {
       if (activeView == View.home) {
         homeView.startButton.onTapDown();
-        _started = true;
+        _running = true;
         isHandled = true;
       }
     }
@@ -210,23 +210,20 @@ class SnakeGame extends Game with TapDetector {
     if (arrowButtonDown.rectButton.contains(d.localPosition)){
       //arrowButtonDown.onTapDown();
       snake.direction = 3;
-
     }
     if (arrowButtonUp.rectButton.contains(d.localPosition)){
       //arrowButtonUp.onTapDown();
       snake.direction = 1;
-
     }
     if (arrowButtonLeft.rectButton.contains(d.localPosition)){
       //arrowButtonLeft.onTapDown();
       snake.direction = 2;
-
     }
     if (arrowButtonRight.rectButton.contains(d.localPosition)){
       //arrowButtonRight.onTapDown();
       snake.direction = 4;
-
     }
+
     if (pauseButton.rectButton.contains(d.localPosition)){
       if (!_pauseWasPressed){
         _paused = true;
@@ -236,9 +233,9 @@ class SnakeGame extends Game with TapDetector {
         _paused = false;
         _pauseWasPressed = false;
       }
-
     }
   }
+
   void resize(Size size) {
     screenSize = size;
     tileSize = screenSize.width / maxFieldX;
