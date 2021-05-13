@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/screens/task_type_screens/four_card_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class TaskScreenState extends State<TaskScreen> {
             if (state is DisplayTaskState) {
               switch (state.task.type) {
                 case "4Cards":
-                  return Text(state.task.question);
+                  return FourCardTaskScreen(state.task);
                   break;
               }
             }
