@@ -15,13 +15,16 @@ class HomeView {
   double _borderThickness = 3;
 
   HomeView(this.game) {
-    this.startButton = StartButton(game);
-    
+    var relativeX = 0.05;
+    var relativeY = 0.05;
+
+    this.startButton = StartButton(game, relativeX, relativeY);
+
     bgRect = Rect.fromLTWH(
-      this.game.screenSize.width * 0.05,
-      this.game.screenSize.height * 0.05,
-      this.game.screenSize.width * 0.9,
-      this.game.screenSize.height * 0.8,
+      this.game.screenSize.width * relativeX,
+      this.game.screenSize.height * relativeY,
+      this.game.screenSize.width * (1.0 - relativeX * 2),
+      this.game.screenSize.height * (1.0 - relativeY * 4),
     );
 
     bgPaint = Paint();
@@ -33,6 +36,7 @@ class HomeView {
   void render(Canvas c) {
     c.drawRect(bgRect.inflate(_borderThickness), borderPaint);
     c.drawRect(bgRect, bgPaint);
+    startButton.render(c);
   }
 
   void update(double t) {}

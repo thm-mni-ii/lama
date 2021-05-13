@@ -64,8 +64,6 @@ class SnakeGame extends Game with TapDetector {
   View activeView = View.home; // views added
   HomeView homeView;
 
-  StartButton startButton;
-
   SnakeGame() {
     initialize();
   }
@@ -82,9 +80,6 @@ class SnakeGame extends Game with TapDetector {
     arrowButtonUp = ArrowButtons(this, 1);
     arrowButtonLeft = ArrowButtons(this, 2);
     arrowButtonRight = ArrowButtons(this, 3);
-
-    startButton = StartButton(this);
-
     homeView = HomeView(this);
 
     pauseButton = PauseButton(this);
@@ -172,8 +167,6 @@ class SnakeGame extends Game with TapDetector {
       }
 
       if (activeView == View.home) homeView.render(canvas);
-
-      if (activeView == View.home) startButton.render(canvas);
       
       arrowButtonDown.render(canvas);
       arrowButtonUp.render(canvas);
@@ -204,9 +197,9 @@ class SnakeGame extends Game with TapDetector {
     bool isHandled = false;
 
     // start button
-    if (!isHandled && startButton.rect.contains(d.localPosition)) {
+    if (!isHandled && homeView.startButton.rect.contains(d.localPosition)) {
       if (activeView == View.home) {
-        startButton.onTapDown();
+        homeView.startButton.onTapDown();
         isHandled = true;
       }
     }

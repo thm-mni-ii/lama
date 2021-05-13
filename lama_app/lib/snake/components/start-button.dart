@@ -4,22 +4,27 @@ import '../views/view.dart';
 
 class StartButton {
   final SnakeGame game;
-  Rect rect;
+
+  RRect rect;
   Paint startPaint;
 
-  StartButton(this.game) {
-    rect = Rect.fromLTWH(
-      game.tileSize * 7.5,
-      (game.screenSize.height / 2) + (game.tileSize * 2.5),
-      game.tileSize * 16,
-      game.tileSize * 9,
+  StartButton(this.game, double relativeX, double relativeY) {
+    var buttonOffset = [0.7, 0.1, 0.1, 0.1];
+
+    rect = RRect.fromLTRBR(
+      this.game.screenSize.width * buttonOffset[1],
+      this.game.screenSize.height * buttonOffset[0],
+      this.game.screenSize.width * (1.0 - buttonOffset[2]),
+      this.game.screenSize.height * (buttonOffset[0] + buttonOffset[3]),
+      Radius.circular(20.0),
     );
+
     startPaint = Paint();
     startPaint.color = Color(0xff6dff4a);
   }
 
   void render(Canvas c) {
-    c.drawRect(rect, startPaint);
+    c.drawRRect(rect, startPaint);
   }
 
   void update(double t) {}
