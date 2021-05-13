@@ -9,7 +9,7 @@ import 'package:lama_app/app/screens/game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  User _user;
+  final User _user;
 
   HomeScreen(this._user);
   @override
