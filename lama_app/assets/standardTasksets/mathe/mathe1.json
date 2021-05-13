@@ -1,7 +1,7 @@
 {
     "taskset_name":"Standardaufgaben Klasse 1",
      "taskset_subject":"Mathe",
-      "taskset_grade":3,
+      "taskset_grade":1,
        "tasks": [
            {
            "task_type":"4Cards",
