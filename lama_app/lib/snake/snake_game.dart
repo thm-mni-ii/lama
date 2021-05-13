@@ -180,12 +180,12 @@ class SnakeGame extends Game with TapDetector {
     }
     if (arrowButtonLeft.rectButton.contains(d.localPosition)){
       //arrowButtonLeft.onTapDown();
-      snake.direction = 4;
+      snake.direction = 2;
 
     }
     if (arrowButtonRight.rectButton.contains(d.localPosition)){
       //arrowButtonRight.onTapDown();
-      snake.direction = 2;
+      snake.direction = 4;
 
     }
   }
