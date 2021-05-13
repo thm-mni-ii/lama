@@ -9,3 +9,8 @@ class DisplayTaskState extends TaskState {
   Task task;
   DisplayTaskState(this.subject, this.task);
 }
+
+class TaskAnswerResultState extends TaskState {
+  bool correct;
+  TaskAnswerResultState(this.correct);
+}

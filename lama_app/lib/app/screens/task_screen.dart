@@ -19,22 +19,20 @@ class TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: BlocBuilder<TaskBloc, TaskState>(
-          builder: (context, state) {
-            if (state is DisplayTaskState) {
-              switch (state.task.type) {
-                case "4Cards":
-                  return FourCardTaskScreen(state.subject, state.task);
-                  break;
-              }
-            }
-            return Text("No task passed");
-          },
-        ),
-      ),
+    return BlocBuilder<TaskBloc, TaskState>(
+      buildWhen: (previous, current) =>
+          (previous is DisplayTaskState && current is DisplayTaskState) ||
+          (previous is TaskScreenEmptyState),
+      builder: (context, state) {
+        if (state is DisplayTaskState) {
+          switch (state.task.type) {
+            case "4Cards":
+              return FourCardTaskScreen(state.subject, state.task);
+              break;
+          }
+        }
+        return Text("No task passed");
+      },
     );
   }
 }

@@ -4,12 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 
 class FourCardTaskScreen extends StatelessWidget {
   final String subject;
   final Task4Cards task;
   final List<String> answers = [];
+
   FourCardTaskScreen(this.subject, this.task) {
     answers.addAll(task.wrongAnswers);
     answers.add(task.rightAnswer);

@@ -162,7 +162,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
               children: [
                 Text(
                   taskset.name,
-                  style: TextStyle(color: Colors.white, fontSize: 30, shadows: [
+                  style: TextStyle(color: Colors.white, fontSize: 20, shadows: [
                     Shadow(
                         color: Colors.blueGrey,
                         offset: Offset(0, 1),

@@ -17,9 +17,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       Task t = tasks[curIndex - 1];
       if (t is Task4Cards) {
         if (event.providedAnswer == t.rightAnswer) {
+          yield TaskAnswerResultState(true);
           print("right answer");
-        } else
+        } else {
+          yield TaskAnswerResultState(false);
           print("Wrong answer");
+        }
       }
     }
   }
