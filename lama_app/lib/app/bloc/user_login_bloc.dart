@@ -24,7 +24,7 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
       return UserLoginSuccessful();
     } else {
       return UserLoginFailed(event.user,
-          error: 'Das Passwort ist wohl flasch!');
+          error: 'Das Passwort passt nicht zu diesem Nutzer!');
     }
   }
 
