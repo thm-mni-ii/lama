@@ -6,8 +6,13 @@ class Task {
     String taskType = json['task_type'];
     switch (taskType) {
       case "4Cards":
-        return Task4Cards(taskType, json['task_reward'], json['question'],
-            json['right_answer'], List<String>.from(json['wrong_answers']));
+        return Task4Cards(
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['question'],
+            json['right_answer'],
+            List<String>.from(json['wrong_answers']));
       default:
         return null;
     }
@@ -15,14 +20,15 @@ class Task {
   String type;
   int reward;
   String question;
-  Task(this.type, this.reward, this.question);
+  String lama_text;
+  Task(this.type, this.reward, this.question, this.lama_text);
 }
 
 class Task4Cards extends Task {
   String rightAnswer;
   List<String> wrongAnswers;
 
-  Task4Cards(String taskType, int reward, String question, this.rightAnswer,
-      this.wrongAnswers)
-      : super(taskType, reward, question);
+  Task4Cards(String taskType, int reward, String lama_text, String question,
+      this.rightAnswer, this.wrongAnswers)
+      : super(taskType, reward, question, lama_text);
 }

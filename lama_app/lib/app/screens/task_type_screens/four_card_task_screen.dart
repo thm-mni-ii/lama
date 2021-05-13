@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/app/task-system/task.dart';
 
 class FourCardTaskScreen extends StatelessWidget {
+  final String subject;
   final Task4Cards task;
-  FourCardTaskScreen(this.task);
+  FourCardTaskScreen(this.subject, this.task);
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +13,18 @@ class FourCardTaskScreen extends StatelessWidget {
     answers.add(task.rightAnswer);
     print(answers.length);
     answers.shuffle();
+    LinearGradient lg;
+    switch (subject) {
+      case "Mathe":
+        lg = LinearGradient(colors: [Colors.lightBlue, Colors.blue]);
+        break;
+      case "Englisch":
+        lg = LinearGradient(colors: [Colors.orange, Colors.deepOrange]);
+        break;
+      case "Deutsch":
+        lg = LinearGradient(colors: [Colors.pink, Colors.redAccent[400]]);
+        break;
+    }
     return Scaffold(
         body: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -20,8 +33,7 @@ class FourCardTaskScreen extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: 90,
           decoration: BoxDecoration(
-              color: Colors.blue,
-              gradient: LinearGradient(colors: [Colors.lightBlue, Colors.blue]),
+              gradient: lg,
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(25),
                   bottomRight: Radius.circular(25))),
@@ -31,14 +43,18 @@ class FourCardTaskScreen extends StatelessWidget {
             children: [
               Positioned(
                 left: 10,
-                child: Icon(
-                  Icons.arrow_back,
-                  size: 40,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    size: 40,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => {Navigator.of(context).pop()},
                 ),
               ),
               Text(
-                "Mathe",
-                style: TextStyle(fontSize: 30),
+                subject,
+                style: TextStyle(fontSize: 30, color: Colors.white),
               ),
             ],
           )),
@@ -71,8 +87,9 @@ class FourCardTaskScreen extends StatelessWidget {
         ),
         SizedBox(height: 30),
         Container(
+          color: Colors.green,
           height: 75,
-          child: Center(child: Text("Lama stuff")),
+          child: Center(child: Text(task.lama_text)),
         ),
         SizedBox(height: 25),
         Expanded(
@@ -161,8 +178,7 @@ class FourCardTaskScreen extends StatelessWidget {
                     ]),
                 child: Padding(
                   padding: EdgeInsets.all(5),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
+                  child: Center(
                     child: Text(
                       answers[3],
                       textAlign: TextAlign.center,

@@ -4,14 +4,15 @@ import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
+  String tasksetSubject;
   List<Task> tasks;
   int curIndex = 0;
-  TaskBloc(this.tasks) : super(TaskScreenEmptyState());
+  TaskBloc(this.tasksetSubject, this.tasks) : super(TaskScreenEmptyState());
 
   @override
   Stream<TaskState> mapEventToState(TaskEvent event) async* {
     if (event is ShowNextTaskEvent) {
-      yield DisplayTaskState(tasks[curIndex++]);
+      yield DisplayTaskState(tasksetSubject, tasks[curIndex++]);
     }
   }
 }
