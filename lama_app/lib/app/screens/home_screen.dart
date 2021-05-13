@@ -9,9 +9,7 @@ import 'package:lama_app/app/screens/game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  final User _user;
-
-  HomeScreen(this._user);
+  HomeScreen();
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;

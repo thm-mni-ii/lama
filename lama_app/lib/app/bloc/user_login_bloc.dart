@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/db/database_provider.dart';
@@ -20,8 +22,12 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   Future<UserLoginState> validateUserLogin(UserLogin event) async {
     //TODO Validatin Login
     if (event.user.password == event.pw) {
-      Navigator.push(event.context,
-          MaterialPageRoute(builder: (context) => HomeScreen(event.user)));
+      Navigator.push(
+          event.context,
+          MaterialPageRoute(
+              builder: (context) => RepositoryProvider<UserRepository>(
+                  create: (context) => UserRepository(event.user),
+                  child: HomeScreen())));
 
       return UserLoginSuccessful();
     } else {
