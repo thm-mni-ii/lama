@@ -20,7 +20,6 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   }
 
   Future<UserLoginState> validateUserLogin(UserLogin event) async {
-    //TODO Validatin Login
     if (event.user.password == event.pw) {
       UserRepository repository = UserRepository(event.user);
       Navigator.push(
