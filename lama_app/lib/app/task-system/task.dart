@@ -20,15 +20,15 @@ class Task {
   String type;
   int reward;
   String question;
-  String lama_text;
-  Task(this.type, this.reward, this.question, this.lama_text);
+  String lamaText;
+  Task(this.type, this.reward, this.question, this.lamaText);
 }
 
 class Task4Cards extends Task {
   String rightAnswer;
   List<String> wrongAnswers;
 
-  Task4Cards(String taskType, int reward, String lama_text, String question,
+  Task4Cards(String taskType, int reward, String lamaText, String question,
       this.rightAnswer, this.wrongAnswers)
-      : super(taskType, reward, question, lama_text);
+      : super(taskType, reward, question, lamaText);
 }

@@ -93,7 +93,7 @@ class FourCardTaskScreen extends StatelessWidget {
           Container(
             color: Colors.green,
             height: 75,
-            child: Center(child: Text(task.lama_text)),
+            child: Center(child: Text(task.lamaText)),
           ),
           SizedBox(height: 25),
           Expanded(
