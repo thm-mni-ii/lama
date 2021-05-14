@@ -31,9 +31,6 @@ class UserSelectionState extends State<UserLoginScreen> {
             return Column(
               children: [
                 _userCard(state.user),
-                SizedBox(
-                  height: 50,
-                ),
                 TextFormField(
                   decoration: InputDecoration(
                     icon: Icon(Icons.security),
@@ -44,7 +41,7 @@ class UserSelectionState extends State<UserLoginScreen> {
                   obscureText: true,
                 ),
                 SizedBox(
-                  height: 50,
+                  height: 25,
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -54,7 +51,9 @@ class UserSelectionState extends State<UserLoginScreen> {
                     _pass = null;
                   },
                   child: Text('Einloggen'),
-                  style: ElevatedButton.styleFrom(minimumSize: Size(400, 45)),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(screenSize.width, 45),
+                  ),
                 ),
                 SizedBox(
                   height: 15,
@@ -77,9 +76,6 @@ class UserSelectionState extends State<UserLoginScreen> {
             return Column(
               children: [
                 _userCard(state.user),
-                SizedBox(
-                  height: 50,
-                ),
                 TextFormField(
                   decoration: InputDecoration(
                       icon: Icon(Icons.security),
@@ -90,7 +86,7 @@ class UserSelectionState extends State<UserLoginScreen> {
                   obscureText: true,
                 ),
                 SizedBox(
-                  height: 50,
+                  height: 25,
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -99,7 +95,9 @@ class UserSelectionState extends State<UserLoginScreen> {
                         .add(UserLogin(state.user, _pass, context));
                   },
                   child: Text('Einloggen'),
-                  style: ElevatedButton.styleFrom(minimumSize: Size(400, 45)),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(screenSize.width, 45),
+                  ),
                 ),
                 SizedBox(
                   height: 15,

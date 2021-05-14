@@ -23,7 +23,6 @@ class CreateAdminScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          SizedBox(height: 50),
           Padding(
               padding: EdgeInsets.all(20.0),
               child: TextFormField(
@@ -48,7 +47,6 @@ class CreateAdminScreen extends StatelessWidget {
               onChanged: (value) => _user.password = value,
             ),
           ),
-          SizedBox(height: 60),
           ElevatedButton(
               style: ElevatedButton.styleFrom(minimumSize: Size(250, 45)),
               onPressed: () async {
