@@ -14,6 +14,7 @@ class Background {
 
   double _offsetX;
   double _offsetY;
+  bool _chessOptic = false;
 
   /// Constructor of this class
   ///
@@ -54,24 +55,26 @@ class Background {
 
   void render(Canvas c) {
     c.drawRect(backgroundRect, backgroundPaint);
-    c.drawRect(fieldBorderRect, fieldBorderPaint);
 
-    // each tile of the game field
-    for (var i = 0 ; i < fieldTiles.length; i++) {
-      // tile rectangle
-      var rect = Rect.fromLTWH(
-        fieldTiles[i].x * this.game.tileSize + _offsetX,
-        fieldTiles[i].y * this.game.tileSize + _offsetY,
-        game.tileSize,
-        game.tileSize,
-      );
+    if (_chessOptic) {
+      c.drawRect(fieldBorderRect, fieldBorderPaint);
+      // each tile of the game field
+      for (var i = 0 ; i < fieldTiles.length; i++) {
+        // tile rectangle
+        var rect = Rect.fromLTWH(
+          fieldTiles[i].x * this.game.tileSize + _offsetX,
+          fieldTiles[i].y * this.game.tileSize + _offsetY,
+          game.tileSize,
+          game.tileSize,
+        );
 
-      // tile paint
-      // altering the color depending on the index. odd field width and height x is necessary for chess pattern
-      var paint = Paint();
-      paint.color = i % 2 <= 0 ? Color(0xFFF9FBB6) : Color(0xFFCDCE97);
+        // tile paint
+        // altering the color depending on the index. odd field width and height x is necessary for chess pattern
+        var paint = Paint();
+        paint.color = i % 2 <= 0 ? Color(0xFFF9FBB6) : Color(0xFFCDCE97);
 
-      c.drawRect(rect, paint);
+        c.drawRect(rect, paint);
+      }
     }
   }
 
