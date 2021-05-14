@@ -10,9 +10,5 @@ class LamaApp extends MaterialApp {
             create: (BuildContext context) => CheckScreenBloc(),
             child: CheckScreen(),
           ),
-          /*BlocProvider(
-            create: (BuildContext context) => UserLoginBloc(),
-            child: UserLoginScreen(),
-          ),*/
         );
 }

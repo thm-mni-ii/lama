@@ -38,15 +38,16 @@ class CreateAdminScreen extends StatelessWidget {
                 },
               )),
           Padding(
-              padding: EdgeInsets.all(20.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                    hintText: 'Passwort', errorText: validatiorInputPassword()),
-                validator: (String value) {
-                  return validatiorInputPassword();
-                },
-                onChanged: (value) => _user.password = value,
-              )),
+            padding: EdgeInsets.all(20.0),
+            child: TextFormField(
+              decoration: InputDecoration(
+                  hintText: 'Passwort', errorText: validatiorInputPassword()),
+              validator: (String value) {
+                return validatiorInputPassword();
+              },
+              onChanged: (value) => _user.password = value,
+            ),
+          ),
           SizedBox(height: 60),
           ElevatedButton(
               style: ElevatedButton.styleFrom(minimumSize: Size(250, 45)),
@@ -54,14 +55,15 @@ class CreateAdminScreen extends StatelessWidget {
                 if (validatiorInputName() == null &&
                     validatiorInputPassword() == null) {
                   await DatabaseProvider.db.insertUser(_user);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                                create: (BuildContext context) =>
-                                    UserLoginBloc(),
-                                child: UserLoginScreen(),
-                              )));
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) => UserLoginBloc(),
+                        child: UserLoginScreen(),
+                      ),
+                    ),
+                  );
                 }
               },
               child: Text('Speichern')),
