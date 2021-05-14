@@ -138,7 +138,7 @@ class SnakeComponent {
 
       Paint bgPaint = Paint();
       // color the head different than the tail
-      bgPaint.color = Color(tmpSnake == snakeParts.first ? 0xFF208421 : 0xFF200021);
+      bgPaint.color = Color(tmpSnake == snakeParts.first ? 0xFF208421 : 0xFF34C935);
 
       c.drawArc(bgRect, 0, 10, true, bgPaint);
     }
