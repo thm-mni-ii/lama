@@ -14,7 +14,7 @@ class SnakeComponent {
 
   Random rnd = Random();
   Queue<Position> snakeParts = Queue();
-  double velocity = 2;
+  double velocity = 3;
   /// callback when the snake bites itself
   Function callbackBiteItSelf;
   /// callback when the snake hits the border
@@ -26,6 +26,7 @@ class SnakeComponent {
 
   double _deltaCounter = 0;
   int _direction = 1;
+  double _maxVelocity = 15;
 
   SnakeComponent(this.game, Position startPos, this.velocity) {
     snakeParts.add(Position(startPos.x, startPos.y + this.game.fieldOffsetY));
@@ -170,7 +171,7 @@ class SnakeComponent {
     _deltaCounter += t;
 
     // moves the snake depending on its velocity
-    if (_deltaCounter / (1 / velocity) > 1.0) {
+    if (_deltaCounter / (1 / (velocity > _maxVelocity ? _maxVelocity : velocity)) > 1.0) {
       // debug_movement = snake moves towards an random direction
       if (debugMovement) {
         direction = rnd.nextInt(5);
