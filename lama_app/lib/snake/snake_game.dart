@@ -42,8 +42,9 @@ class SnakeGame extends Game with TapDetector {
   Size screenSize;
   double tileSize;
 
-  final maxFieldX = 25;
-  final maxFieldY = 25;
+  int maxFieldX = 25;
+  int maxFieldY = 25;
+  final maxField = true;
   final fieldOffsetY = 0;
   final maxApples = 200;
   final snakeStartVelocity = 3.0;
@@ -240,7 +241,18 @@ class SnakeGame extends Game with TapDetector {
 
   void resize(Size size) {
     screenSize = size;
-    tileSize = screenSize.width / maxFieldX;
+
+    if (maxField && screenSize.width > 0 && screenSize.height > 0) {
+      if (screenSize.width < screenSize.height) {
+        tileSize = screenSize.width / maxFieldX;
+        
+        maxFieldY = ((screenSize.height - (tileSize * fieldOffsetY)) * 0.7) ~/ tileSize;
+      } else {
+        tileSize = screenSize.width / maxFieldX;
+
+        maxFieldX = screenSize.width ~/ tileSize;
+      }
+    }
 
     if (log) {
       developer.log("[SnakeGame] screensize = $screenSize");
