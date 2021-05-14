@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:lama_app/snake/components/description_text.dart';
 import 'package:lama_app/snake/components/start-button.dart';
 import 'package:lama_app/snake/snake_game.dart';
 
@@ -12,6 +13,7 @@ class HomeView {
   Paint borderPaint;
 
   StartButton startButton;
+  DescriptionText description;
   double _borderThickness = 3;
 
   HomeView(this.game) {
@@ -31,12 +33,15 @@ class HomeView {
     bgPaint.color = Color(0xFFFFFFFF);
     borderPaint = Paint();
     borderPaint.color = Color(0xFF000000);
+
+    description = DescriptionText(game, relativeX, relativeY);
   }
 
   void render(Canvas c) {
     c.drawRRect(RRect.fromRectAndRadius(bgRect.inflate(_borderThickness), Radius.circular(35.0)), borderPaint);
     c.drawRRect(RRect.fromRectAndRadius(bgRect, Radius.circular(35.0)), bgPaint);
     startButton.render(c);
+    description.render(c);
   }
 
   void update(double t) {}

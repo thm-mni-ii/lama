@@ -22,8 +22,6 @@ import 'models/position.dart';
 import 'package:lama_app/snake/views/view.dart';
 import 'package:lama_app/snake/views/home-view.dart';
 
-import 'components/start-button.dart';
-
 class SnakeGame extends Game with TapDetector {
   final bool log = true;
 
@@ -160,15 +158,18 @@ class SnakeGame extends Game with TapDetector {
         homeView.render(canvas);
       }
 
-      if (_running && !_finished) {
-        snake.render(canvas);
-        apples.forEach((element) => element.render(canvas));
+      if (_running) {
+        if (!_finished) {
+          snake.render(canvas);
+          apples.forEach((element) => element.render(canvas));
 
-        arrowButtonDown.render(canvas);
-        arrowButtonUp.render(canvas);
-        arrowButtonLeft.render(canvas);
-        arrowButtonRight.render(canvas);
-        pauseButton.render(canvas);
+          arrowButtonDown.render(canvas);
+          arrowButtonUp.render(canvas);
+          arrowButtonLeft.render(canvas);
+          arrowButtonRight.render(canvas);
+          pauseButton.render(canvas);
+        }
+
         scoreDisplay.render(canvas);
       }
     }
