@@ -9,7 +9,7 @@ class CreateAdminScreen extends StatelessWidget {
   final User _user = User(
     name: '',
     password: '',
-    grade: 0,
+    grade: 3,
     coins: 0,
     isAdmin: true,
     avatar: 'admin',
