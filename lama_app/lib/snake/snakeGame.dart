@@ -9,7 +9,7 @@ import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/background.dart';
-import 'package:lama_app/snake/components/score_display.dart';
+import 'package:lama_app/snake/components/scoreDisplay.dart';
 
 import 'components/apple.dart';
 import 'package:lama_app/snake/components/arrowButtons.dart';
@@ -20,7 +20,7 @@ import 'components/snake.dart';
 import 'models/position.dart';
 
 import 'package:lama_app/snake/views/view.dart';
-import 'package:lama_app/snake/views/home-view.dart';
+import 'package:lama_app/snake/views/homeView.dart';
 import 'package:lama_app/snake/views/gameOverView.dart';
 
 class SnakeGame extends Game with TapDetector {
@@ -171,10 +171,7 @@ class SnakeGame extends Game with TapDetector {
             arrowButtonUp.render(canvas);
             arrowButtonLeft.render(canvas);
             arrowButtonRight.render(canvas);
-
-            scoreDisplay.render(canvas);
           }
-          //neu
           else {
             activeView = View.gameOver;
             gameOverView.render(canvas);
@@ -183,6 +180,8 @@ class SnakeGame extends Game with TapDetector {
 
         if (!_finished) {
           pauseButton.render(canvas);
+
+          scoreDisplay.render(canvas);
         }
       }
     }

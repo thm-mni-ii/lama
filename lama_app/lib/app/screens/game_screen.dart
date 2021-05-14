@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lama_app/snake/snake_game.dart';
+import 'package:lama_app/snake/snakeGame.dart';
 
 class GameScreen extends StatelessWidget {
   @override

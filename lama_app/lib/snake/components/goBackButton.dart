@@ -1,5 +1,5 @@
 import 'dart:ui';
-import '../snake_game.dart';
+import '../snakeGame.dart';
 import '../views/view.dart';
 import 'package:flutter/painting.dart';
 
@@ -68,7 +68,5 @@ class GoBackButton {
 
   void update(double t) {}
 
-  void onTapDown() {
-    game.activeView = View.home;
-  }
+  void onTapDown() {}
 }
