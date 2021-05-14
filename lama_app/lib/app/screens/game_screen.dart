@@ -16,7 +16,7 @@ class GameScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 color: Colors.green,
-                child: SnakeGame().widget,
+                child: SnakeGame(context).widget,
               )
             )
           ]

@@ -58,8 +58,9 @@ class SnakeGame extends Game with TapDetector {
   View activeView = View.home; // views added
   HomeView homeView;
   GameOverView gameOverView;
+  BuildContext _context;
 
-  SnakeGame() {
+  SnakeGame(this._context) {
     initialize();
   }
 
@@ -206,8 +207,6 @@ class SnakeGame extends Game with TapDetector {
 
   /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void onTapDown(TapDownDetails d) {
-    bool isHandled = false;
-
     if (activeView != View.home) {
       if (arrowButtonDown.rectButton.contains(d.localPosition)) {
         //arrowButtonDown.onTapDown();
@@ -239,18 +238,18 @@ class SnakeGame extends Game with TapDetector {
     }
 
     // start button
-    if (!isHandled && homeView.startButton.rect.contains(d.localPosition)) {
+    if (homeView.startButton.rect.contains(d.localPosition)) {
       if (activeView == View.home) {
         homeView.startButton.onTapDown();
         _running = true;
-        isHandled = true;
       }
     }
+
     if (activeView == View.gameOver && gameOverView.goBackButton.rect.contains(d.localPosition)){
       gameOverView.goBackButton.onTapDown();
-      isHandled = false;
-      _running = false;
 
+      // close the game widget
+      Navigator.pop(_context);
     }
   }
 
