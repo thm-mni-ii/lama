@@ -51,6 +51,7 @@ class SnakeGame extends Game with TapDetector {
   bool _finished = false;
   bool _initialized = false;
   bool _running = false;
+  bool _started = false;
   bool _pauseWasPressed = false;
 
   View activeView = View.home; // views added
@@ -156,21 +157,24 @@ class SnakeGame extends Game with TapDetector {
       // draw home screen
       if (activeView == View.home) {
         homeView.render(canvas);
-      }
+      } else {
+        if (_running) {
+          if (!_finished) {
+            snake.render(canvas);
+            apples.forEach((element) => element.render(canvas));
 
-      if (_running) {
-        if (!_finished) {
-          snake.render(canvas);
-          apples.forEach((element) => element.render(canvas));
+            arrowButtonDown.render(canvas);
+            arrowButtonUp.render(canvas);
+            arrowButtonLeft.render(canvas);
+            arrowButtonRight.render(canvas);
+          }
 
-          arrowButtonDown.render(canvas);
-          arrowButtonUp.render(canvas);
-          arrowButtonLeft.render(canvas);
-          arrowButtonRight.render(canvas);
-          pauseButton.render(canvas);
+          scoreDisplay.render(canvas);
         }
 
-        scoreDisplay.render(canvas);
+        if (!_finished) {
+          pauseButton.render(canvas);
+        }
       }
     }
   }
