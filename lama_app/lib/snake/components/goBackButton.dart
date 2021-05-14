@@ -43,7 +43,7 @@ class GoBackButton {
     );
 
     _painter.text = TextSpan(
-      text: "Go Back",
+      text: "Spiel verlassen",
       style: _textStyle,
     );
 

@@ -18,10 +18,12 @@ class GameOverView {
   GoBackButton goBackButton;
   double _borderThickness = 3;
   Offset _position;
-
+  var relativeX = 0.15;
+  var relativeY = 0.15;
   GameOverView(this.game) {
-    var relativeX = 0.05;
-    var relativeY = 0.05;
+    var relativeSize = sqrt(this.game.screenSize.width * this.game.screenSize.height);
+
+    
 
     this.goBackButton = GoBackButton(game, relativeX, relativeY);
 
@@ -40,17 +42,13 @@ class GameOverView {
      _painter = TextPainter(
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
-      textScaleFactor: 5.0,
     );
 
     _textStyle = TextStyle(
       color: Color(0xff000000),
+      fontSize: relativeSize * 0.15,
     );
-
-    _position = Offset(
-          game.screenSize.width/2.3,
-          game.screenSize.height/2.5,
-    );
+    _position = Offset.zero;
   }
 
   void render(Canvas c) {
@@ -64,10 +62,14 @@ class GameOverView {
   void update(double t) {
     if ((_painter.text ?? '') != game.score.toString()) {
       _painter.text = TextSpan(
-        text: game.score.toString(),
+        text: "Punkte\n${game.score.toString()}",
         style: _textStyle,
       );
       _painter.layout();
+      _position = Offset(
+          game.screenSize.width/2 -_painter.width/2,
+          game.screenSize.height/2 -_painter.height/2 - (game.screenSize.height * (1.0 - relativeY * 4))/2,
+      );
     }
   }
 }

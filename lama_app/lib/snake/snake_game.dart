@@ -193,8 +193,11 @@ class SnakeGame extends Game with TapDetector {
       snake.update(t, apples);
       apples.forEach((element) => element.update(t));
       scoreDisplay.update(t);
-      gameOverView.update(t);
+     
     }
+    if(_finished && _initialized){
+      gameOverView.update(t);
+    } 
   }
 
   /// This method finish the actual game
