@@ -8,11 +8,15 @@ import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen();
+//Home Screen is a Stateful Widget so it can be reloaded using setState((){}) after Navigation
+class HomeScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    print("DRAAAAAWN");
     UserRepository userRepository =
         RepositoryProvider.of<UserRepository>(context);
     Size screenSize = MediaQuery.of(context).size;
@@ -66,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                                   userRepository.getGrade(), userRepository),
                             ),
                           ),
-                        ),
+                        ).then((value) => (setState(() {}))),
                       ),
                       SizedBox(
                         height: 10,
@@ -108,7 +112,7 @@ class HomeScreen extends StatelessWidget {
                                   userRepository.getGrade(), userRepository),
                             ),
                           ),
-                        ),
+                        ).then((value) => (setState(() {}))),
                       ),
                       SizedBox(
                         height: 10,
@@ -150,7 +154,7 @@ class HomeScreen extends StatelessWidget {
                                   userRepository.getGrade(), userRepository),
                             ),
                           ),
-                        ),
+                        ).then((value) => (setState(() {}))),
                       ),
                       SizedBox(
                         height: 10,
