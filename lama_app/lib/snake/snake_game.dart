@@ -19,13 +19,10 @@ import 'components/snake.dart';
 
 import 'models/position.dart';
 
-/*newly added classes */
 import 'package:lama_app/snake/views/view.dart';
 import 'package:lama_app/snake/views/home-view.dart';
 
 import 'components/start-button.dart';
-
-/*newly added classes*/
 
 class SnakeGame extends Game with TapDetector {
   final bool log = true;
@@ -56,7 +53,6 @@ class SnakeGame extends Game with TapDetector {
   bool _finished = false;
   bool _initialized = false;
   bool _running = false;
-  bool _paused = false;
   bool _pauseWasPressed = false;
 
   View activeView = View.home; // views added
@@ -179,7 +175,7 @@ class SnakeGame extends Game with TapDetector {
   }
 
   void update(double t) {
-    if (!_finished && _initialized && _running && !_paused) {
+    if (!_finished && _initialized && _running) {
       snake.update(t, apples);
       apples.forEach((element) => element.update(t));
       scoreDisplay.update(t);
@@ -207,30 +203,30 @@ class SnakeGame extends Game with TapDetector {
       }
     }
     
-    if (arrowButtonDown.rectButton.contains(d.localPosition)){
+    if (arrowButtonDown.rectButton.contains(d.localPosition)) {
       //arrowButtonDown.onTapDown();
       snake.direction = 3;
     }
-    if (arrowButtonUp.rectButton.contains(d.localPosition)){
+    else if (arrowButtonUp.rectButton.contains(d.localPosition)) {
       //arrowButtonUp.onTapDown();
       snake.direction = 1;
     }
-    if (arrowButtonLeft.rectButton.contains(d.localPosition)){
+    else if (arrowButtonLeft.rectButton.contains(d.localPosition)) {
       //arrowButtonLeft.onTapDown();
       snake.direction = 2;
     }
-    if (arrowButtonRight.rectButton.contains(d.localPosition)){
+    else if (arrowButtonRight.rectButton.contains(d.localPosition)) {
       //arrowButtonRight.onTapDown();
       snake.direction = 4;
     }
 
-    if (pauseButton.rectButton.contains(d.localPosition)){
-      if (!_pauseWasPressed){
-        _paused = true;
+    if (pauseButton.rectButton.contains(d.localPosition)) {
+      if (!_pauseWasPressed) {
+        _running = false;
         _pauseWasPressed = true;
       }
-      else{
-        _paused = false;
+      else {
+        _running = true;
         _pauseWasPressed = false;
       }
     }
