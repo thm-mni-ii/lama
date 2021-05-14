@@ -51,6 +51,7 @@ class UserSelectionState extends State<UserLoginScreen> {
                     context
                         .read<UserLoginBloc>()
                         .add(UserLogin(state.user, _pass, context));
+                    _pass = null;
                   },
                   child: Text('Einloggen'),
                   style: ElevatedButton.styleFrom(minimumSize: Size(400, 45)),
@@ -60,6 +61,7 @@ class UserSelectionState extends State<UserLoginScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    _pass = null;
                     context.read<UserLoginBloc>().add(UserLoginAbort());
                   },
                   child: Text('Abbrechen'),
@@ -71,6 +73,7 @@ class UserSelectionState extends State<UserLoginScreen> {
             );
           }
           if (state is UserLoginFailed) {
+            _pass = null;
             return Column(
               children: [
                 _userCard(state.user),
@@ -114,9 +117,11 @@ class UserSelectionState extends State<UserLoginScreen> {
             );
           }
           if (state is UsersLoaded) {
+            _pass = null;
             return _userListView(state.userList);
           }
           if (state is UserLoginSuccessful) {
+            _pass = null;
             return Container(
               alignment: Alignment(0, 0),
               child: Icon(
@@ -126,7 +131,7 @@ class UserSelectionState extends State<UserLoginScreen> {
               ),
             );
           }
-          return Text('Uppsie');
+          return Center(child: CircularProgressIndicator());
         },
       ),
     );

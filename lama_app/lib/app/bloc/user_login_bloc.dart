@@ -22,7 +22,7 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   Future<UserLoginState> validateUserLogin(UserLogin event) async {
     if (event.user.password == event.pw) {
       UserRepository repository = UserRepository(event.user);
-      Navigator.push(
+      Navigator.pushReplacement(
           event.context,
           MaterialPageRoute(
               builder: (context) => RepositoryProvider<UserRepository>(
