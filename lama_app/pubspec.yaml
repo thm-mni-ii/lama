@@ -36,6 +36,7 @@ dependencies:
   flutter_svg: ^0.22.0
   flame: ^0.29.4
   bubble: ^1.2.1
+  flutter_markdown: ^0.6.2
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +59,7 @@ flutter:
      - assets/standardTasksets/mathe/
      - assets/standardTasksets/deutsch/
      - assets/standardTasksets/englisch/
+     - assets/md/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

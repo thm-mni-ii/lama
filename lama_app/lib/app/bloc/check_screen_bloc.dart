@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/event/check_screen_event.dart';
@@ -15,13 +16,14 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
   @override
   Stream<CheckScreenState> mapEventToState(CheckScreenEvent event) async* {
     if (event is CheckForAdmin) yield await _hasAdmin(event.context);
+    if (event is DSGVOAccepted) yield _navigator(event.context);
   }
 
   Future<CheckScreenState> _hasAdmin(BuildContext context) async {
     List<User> userList = await DatabaseProvider.db.getUser();
     if (userList == null) {
-      _navigateNoAdmin(context);
-      return NoAdmin();
+      //_navigateNoAdmin(context);
+      return ShowDSGVO(await _readDSGVO());
     }
     for (User user in userList) {
       if (user.isAdmin) {
@@ -29,8 +31,17 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
         return AdminExist();
       }
     }
+    //_navigateNoAdmin(context);
+    return ShowDSGVO(await _readDSGVO());
+  }
+
+  CheckScreenState _navigator(BuildContext context) {
     _navigateNoAdmin(context);
-    return NoAdmin();
+    return CreateAdmin();
+  }
+
+  Future<String> _readDSGVO() async {
+    return await rootBundle.loadString('assets/md/DSGVO.md');
   }
 
   void _navigateNoAdmin(BuildContext context) {
