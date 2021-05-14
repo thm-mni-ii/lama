@@ -46,16 +46,6 @@ class CheckScreenPage extends State<CheckScreen> {
                   SizedBox(
                     height: 15,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<CheckScreenBloc>().add(DSGVODenied());
-                    },
-                    child: Text('Ablehnen'),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(400, 45),
-                      primary: Colors.red,
-                    ),
-                  ),
                 ],
               ),
             );
