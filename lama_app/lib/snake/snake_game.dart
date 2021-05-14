@@ -171,14 +171,14 @@ class SnakeGame extends Game with TapDetector {
             arrowButtonUp.render(canvas);
             arrowButtonLeft.render(canvas);
             arrowButtonRight.render(canvas);
+
+            scoreDisplay.render(canvas);
           }
           //neu
           else {
             activeView = View.gameOver;
             gameOverView.render(canvas);
           }
-
-          scoreDisplay.render(canvas);
         }
 
         if (!_finished) {
