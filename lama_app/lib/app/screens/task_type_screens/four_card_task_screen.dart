@@ -93,7 +93,6 @@ class FourCardTaskScreen extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 50),
           Container(
             padding: EdgeInsets.only(left: 15, right: 15),
             height: 80,
@@ -126,7 +125,6 @@ class FourCardTaskScreen extends StatelessWidget {
               ),
             ]),
           ),
-          SizedBox(height: 10),
           Expanded(
               child: Padding(
                   padding: const EdgeInsets.only(
