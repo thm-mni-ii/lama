@@ -6,6 +6,7 @@ import 'package:lama_app/app/screens/check_Screen.dart';
 class LamaApp extends MaterialApp {
   LamaApp()
       : super(
+          debugShowCheckedModeBanner: false,
           home: BlocProvider(
             create: (BuildContext context) => CheckScreenBloc(),
             child: CheckScreen(),
