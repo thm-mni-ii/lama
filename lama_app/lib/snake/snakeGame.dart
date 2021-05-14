@@ -9,7 +9,7 @@ import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/background.dart';
-import 'package:lama_app/snake/components/score_display.dart';
+import 'package:lama_app/snake/components/scoreDisplay.dart';
 
 import 'components/apple.dart';
 import 'package:lama_app/snake/components/arrowButtons.dart';
@@ -20,7 +20,7 @@ import 'components/snake.dart';
 import 'models/position.dart';
 
 import 'package:lama_app/snake/views/view.dart';
-import 'package:lama_app/snake/views/home-view.dart';
+import 'package:lama_app/snake/views/homeView.dart';
 import 'package:lama_app/snake/views/gameOverView.dart';
 
 class SnakeGame extends Game with TapDetector {
@@ -47,8 +47,8 @@ class SnakeGame extends Game with TapDetector {
   int maxFieldY = 25;
   final maxField = true;
   final fieldOffsetY = 0;
-  final maxApples = 120;
-  final snakeStartVelocity = 3.0;
+  final maxApples = 20;
+  final snakeStartVelocity = 2.0;
 
   bool _finished = false;
   bool _initialized = false;
@@ -135,7 +135,7 @@ class SnakeGame extends Game with TapDetector {
   /// This method initialize the snake with its callback
   void spawnSnake() {
     // initialize a new snake
-    snake = SnakeComponent(this, Position(maxFieldX ~/ 2, maxFieldY ~/ 2), 3);
+    snake = SnakeComponent(this, Position(maxFieldX ~/ 2, maxFieldY ~/ 2), snakeStartVelocity);
     // callback when snake bites itself
     snake.callbackBiteItSelf = () => finishGame();
     // callback when the snake hits the border
@@ -162,27 +162,22 @@ class SnakeGame extends Game with TapDetector {
       if (activeView == View.home) {
         homeView.render(canvas);
       } else {
-        if (_running) {
-          if (!_finished) {
-            snake.render(canvas);
-            apples.forEach((element) => element.render(canvas));
+        if (!_finished) {
+          snake.render(canvas);
+          apples.forEach((element) => element.render(canvas));
 
+          scoreDisplay.render(canvas);
+          pauseButton.render(canvas);
+
+          if (_running) {
             arrowButtonDown.render(canvas);
             arrowButtonUp.render(canvas);
             arrowButtonLeft.render(canvas);
             arrowButtonRight.render(canvas);
-
-            scoreDisplay.render(canvas);
           }
-          //neu
-          else {
-            activeView = View.gameOver;
-            gameOverView.render(canvas);
-          }
-        }
-
-        if (!_finished) {
-          pauseButton.render(canvas);
+        } else {
+          activeView = View.gameOver;
+          gameOverView.render(canvas);
         }
       }
     }
@@ -210,6 +205,10 @@ class SnakeGame extends Game with TapDetector {
 
   /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void onTapDown(TapDownDetails d) {
+    if (!_initialized) {
+      return;
+    }
+
     if (activeView != View.home) {
       if (arrowButtonDown.rectButton.contains(d.localPosition)) {
         //arrowButtonDown.onTapDown();

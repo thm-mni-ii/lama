@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/painting.dart';
-import 'package:lama_app/snake/snake_game.dart';
+import 'package:lama_app/snake/snakeGame.dart';
 
 class DescriptionText {
   final SnakeGame game;

@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/painting.dart';
-import 'package:lama_app/snake/snake_game.dart';
+import 'package:lama_app/snake/snakeGame.dart';
 
 class ScoreDisplay {
   final SnakeGame game;

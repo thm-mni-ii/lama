@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:lama_app/snake/components/description_text.dart';
-import 'package:lama_app/snake/components/start-button.dart';
-import 'package:lama_app/snake/snake_game.dart';
+import 'package:lama_app/snake/components/descriptionText.dart';
+import 'package:lama_app/snake/components/startButton.dart';
+import 'package:lama_app/snake/snakeGame.dart';
 
 class HomeView {
   final SnakeGame game;
