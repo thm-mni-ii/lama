@@ -6,10 +6,10 @@
            {
            "task_type":"4Cards",
             "task_reward":2,
-            "question":"Wer entdeckte America",
-            "lama_text":"Anna ist ein Annagramm! Tihi",
-            "right_answer":"Christoph Kolumbus",
-             "wrong_answers":["Lukas Podolski", "Willy Wonka", "Leonardo Di Caprio"]
+            "question":"Was ist kein Gedichtsmetrum?",
+            "lama_text":"Tippe die richtige Antwort an!",
+            "right_answer":"Pterodactyl",
+             "wrong_answers":["Daktylus", "Trochäus", "Jambus"]
              }
         ]
 }
