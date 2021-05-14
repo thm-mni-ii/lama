@@ -20,11 +20,9 @@ class GameOverView {
   Offset _position;
   var relativeX = 0.15;
   var relativeY = 0.15;
+
   GameOverView(this.game) {
     var relativeSize = sqrt(this.game.screenSize.width * this.game.screenSize.height);
-
-    
-
     this.goBackButton = GoBackButton(game, relativeX, relativeY);
 
     bgRect = Rect.fromLTWH(
@@ -54,6 +52,7 @@ class GameOverView {
   void render(Canvas c) {
     c.drawRRect(RRect.fromRectAndRadius(bgRect.inflate(_borderThickness), Radius.circular(35.0)), borderPaint);
     c.drawRRect(RRect.fromRectAndRadius(bgRect, Radius.circular(35.0)), bgPaint);
+
     _painter.paint(c, _position);
     goBackButton.render(c);
     
@@ -67,8 +66,8 @@ class GameOverView {
       );
       _painter.layout();
       _position = Offset(
-          game.screenSize.width/2 -_painter.width/2,
-          game.screenSize.height/2 -_painter.height/2 - (game.screenSize.height * (1.0 - relativeY * 4))/2,
+          game.screenSize.width/2 - _painter.width / 2,
+          (this.game.screenSize.height * (1.0 - relativeY * 4) / 2) + this.game.screenSize.height * relativeY -_painter.height / 2,
       );
     }
   }
