@@ -13,6 +13,7 @@ class Apple {
   Rect _appleRect;
   Paint _applePaint;
   Random _rnd = Random();
+  double _relativeToTile = 0.85;
 
   Apple(this.game, [List<Position> excludePositions]) {
     setRandomPosition(excludePositions);
@@ -45,7 +46,7 @@ class Apple {
   }
 
   void render(Canvas c) {
-    c.drawArc(_appleRect, 0, 10, true, _applePaint);
+    c.drawArc(_appleRect.deflate(this.game.tileSize * (1 - _relativeToTile)), 0, 10, true, _applePaint);
   }
 
   void update(double timeDelta) {}

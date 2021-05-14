@@ -47,8 +47,13 @@ class SnakeGame extends Game with TapDetector {
   int maxFieldY = 25;
   final maxField = true;
   final fieldOffsetY = 0;
-  final maxApples = 20;
-  final snakeStartVelocity = 2.0;
+<<<<<<< HEAD
+  final maxApples = 120;
+  final snakeStartVelocity = 3.0;
+=======
+  final maxApples = 200;
+  final snakeStartVelocity = 1.0;
+>>>>>>> bc0a8ea (Add max velocity)
 
   bool _finished = false;
   bool _initialized = false;
