@@ -20,9 +20,6 @@ class TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TaskBloc, TaskState>(
-      buildWhen: (previous, current) =>
-          (previous is DisplayTaskState && current is DisplayTaskState) ||
-          (previous is TaskScreenEmptyState),
       builder: (context, state) {
         if (state is DisplayTaskState) {
           switch (state.task.type) {
@@ -30,8 +27,37 @@ class TaskScreenState extends State<TaskScreen> {
               return FourCardTaskScreen(state.subject, state.task);
               break;
           }
+        } else if (state is TaskAnswerResultState) {
+          if (state.correct)
+            return Container(
+              color: Colors.white,
+              child: Center(
+                child: Icon(
+                  Icons.check,
+                  size: 100,
+                  color: Colors.green,
+                ),
+              ),
+            );
+          else
+            return Container(
+              color: Colors.white,
+              child: Center(
+                child: Icon(
+                  Icons.close,
+                  size: 100,
+                  color: Colors.red,
+                ),
+              ),
+            );
+        } else if (state is AllTasksCompletedState) {
+          Future.microtask(() => Navigator.pop(context));
+          return Container(
+            color: Colors.white,
+          );
+        } else {
+          return Text("No task passed");
         }
-        return Text("No task passed");
       },
     );
   }

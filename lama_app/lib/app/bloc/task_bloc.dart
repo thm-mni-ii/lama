@@ -23,12 +23,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         if (event.providedAnswer == t.rightAnswer) {
           userRepository.addLamaCoins(t.reward);
           yield TaskAnswerResultState(true);
-          print("right answer");
-        } else {
+        } else
           yield TaskAnswerResultState(false);
-          print("Wrong answer");
-        }
       }
+      await Future.delayed(Duration(seconds: 2));
+      if (curIndex >= tasks.length)
+        yield AllTasksCompletedState();
+      else
+        yield DisplayTaskState(tasksetSubject, tasks[curIndex++]);
     }
   }
 }

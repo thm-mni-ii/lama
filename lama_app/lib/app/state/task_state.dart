@@ -14,3 +14,5 @@ class TaskAnswerResultState extends TaskState {
   bool correct;
   TaskAnswerResultState(this.correct);
 }
+
+class AllTasksCompletedState extends TaskState {}
