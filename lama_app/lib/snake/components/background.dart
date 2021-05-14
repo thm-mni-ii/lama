@@ -8,13 +8,14 @@ class Background {
 
   Rect backgroundRect;
   Paint backgroundPaint;
-  Rect fieldBorderRect;
+  Rect fieldRect;
   Paint fieldBorderPaint;
   List<Position> fieldTiles;
 
   double _offsetX;
   double _offsetY;
   bool _chessOptic = false;
+  double _borderThickness = 2;
 
   /// Constructor of this class
   ///
@@ -46,18 +47,19 @@ class Background {
     fieldBorderPaint.color = Color(0xFF4C4C4C);
 
     // field border rect
-    fieldBorderRect = Rect.fromLTWH(
+    fieldRect = Rect.fromLTWH(
         _offsetX,
-        _offsetY - 2,
+        _offsetY,
         game.tileSize * this.game.maxFieldX,
-        game.tileSize * this.game.maxFieldY + 4);
+        game.tileSize * this.game.maxFieldY);
   }
 
   void render(Canvas c) {
     c.drawRect(backgroundRect, backgroundPaint);
+    c.drawRect(fieldRect.inflate(_borderThickness), fieldBorderPaint);
+    c.drawRect(fieldRect, backgroundPaint);
 
     if (_chessOptic) {
-      c.drawRect(fieldBorderRect, fieldBorderPaint);
       // each tile of the game field
       for (var i = 0 ; i < fieldTiles.length; i++) {
         // tile rectangle

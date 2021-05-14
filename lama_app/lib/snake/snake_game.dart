@@ -42,16 +42,15 @@ class SnakeGame extends Game with TapDetector {
   Size screenSize;
   double tileSize;
 
-  final maxFieldX = 31;
-  final maxFieldY = 31;
-  final fieldOffsetY = 3;
+  final maxFieldX = 25;
+  final maxFieldY = 25;
+  final fieldOffsetY = 0;
   final maxApples = 200;
   final snakeStartVelocity = 3.0;
 
   bool _finished = false;
   bool _initialized = false;
   bool _running = false;
-  bool _started = false;
   bool _pauseWasPressed = false;
 
   View activeView = View.home; // views added
@@ -199,40 +198,42 @@ class SnakeGame extends Game with TapDetector {
   void onTapDown(TapDownDetails d) {
     bool isHandled = false;
 
+    if (activeView != View.home) {
+      if (arrowButtonDown.rectButton.contains(d.localPosition)) {
+        //arrowButtonDown.onTapDown();
+        snake.direction = 3;
+      }
+      else if (arrowButtonUp.rectButton.contains(d.localPosition)) {
+        //arrowButtonUp.onTapDown();
+        snake.direction = 1;
+      }
+      else if (arrowButtonLeft.rectButton.contains(d.localPosition)) {
+        //arrowButtonLeft.onTapDown();
+        snake.direction = 2;
+      }
+      else if (arrowButtonRight.rectButton.contains(d.localPosition)) {
+        //arrowButtonRight.onTapDown();
+        snake.direction = 4;
+      }
+
+      if (pauseButton.rectButton.contains(d.localPosition)) {
+        if (!_pauseWasPressed) {
+          _running = false;
+          _pauseWasPressed = true;
+        }
+        else {
+          _running = true;
+          _pauseWasPressed = false;
+        }
+      }
+    }
+
     // start button
     if (!isHandled && homeView.startButton.rect.contains(d.localPosition)) {
       if (activeView == View.home) {
         homeView.startButton.onTapDown();
         _running = true;
         isHandled = true;
-      }
-    }
-    
-    if (arrowButtonDown.rectButton.contains(d.localPosition)) {
-      //arrowButtonDown.onTapDown();
-      snake.direction = 3;
-    }
-    else if (arrowButtonUp.rectButton.contains(d.localPosition)) {
-      //arrowButtonUp.onTapDown();
-      snake.direction = 1;
-    }
-    else if (arrowButtonLeft.rectButton.contains(d.localPosition)) {
-      //arrowButtonLeft.onTapDown();
-      snake.direction = 2;
-    }
-    else if (arrowButtonRight.rectButton.contains(d.localPosition)) {
-      //arrowButtonRight.onTapDown();
-      snake.direction = 4;
-    }
-
-    if (pauseButton.rectButton.contains(d.localPosition)) {
-      if (!_pauseWasPressed) {
-        _running = false;
-        _pauseWasPressed = true;
-      }
-      else {
-        _running = true;
-        _pauseWasPressed = false;
       }
     }
   }
