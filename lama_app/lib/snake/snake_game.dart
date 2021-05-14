@@ -210,6 +210,10 @@ class SnakeGame extends Game with TapDetector {
 
   /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void onTapDown(TapDownDetails d) {
+    if (!_initialized) {
+      return;
+    }
+
     if (activeView != View.home) {
       if (arrowButtonDown.rectButton.contains(d.localPosition)) {
         //arrowButtonDown.onTapDown();
