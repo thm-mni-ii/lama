@@ -3,13 +3,21 @@
      "taskset_subject":"Mathe",
       "taskset_grade":4,
        "tasks": [
-           {
-           "task_type":"4Cards",
-            "task_reward":2,
-            "question":"Wer entdeckte America",
-            "lama_text":"Anna ist ein Annagramm! Tihi",
-            "right_answer":"Christoph Kolumbus",
-             "wrong_answers":["Lukas Podolski", "Willy Wonka", "Leonardo Di Caprio"]
+        {
+            "task_type":"4Cards",
+             "task_reward":2,
+             "question":"15/5",
+             "lama_text":"Tippe die richtige Antwort an!",
+             "right_answer":"3",
+              "wrong_answers":["5", "10", "20"]
+              },
+              {
+                 "task_type":"4Cards",
+                  "task_reward":2,
+                  "question":"3*20",
+                  "lama_text":"Tippe die richtige Antwort an!",
+                  "right_answer":"60",
+                   "wrong_answers":["17", "23", "40"]
              }
         ]
 }

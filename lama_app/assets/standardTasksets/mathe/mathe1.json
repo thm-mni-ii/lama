@@ -6,18 +6,18 @@
            {
            "task_type":"4Cards",
             "task_reward":2,
-            "question":"Wer entdeckte America",
-            "lama_text":"Anna ist ein Annagramm! Tihi",
-            "right_answer":"Christoph Kolumbus",
-             "wrong_answers":["Lukas Podolski", "Willy Wonka", "Leonardo Di Caprio"]
+            "question":"3+4",
+            "lama_text":"Tippe die richtige Antwort an!",
+            "right_answer":"7",
+             "wrong_answers":["6", "1", "8"]
              },
              {
                 "task_type":"4Cards",
                  "task_reward":2,
-                 "question":"Wer entdeckte America nicht?",
-                 "lama_text":"Anna ist ein Annagramm! Tihi",
-                 "right_answer":"Lukas Podolski",
-                  "wrong_answers":["Christoph Kolumbus", "Christoph Kolumbus", "Christoph Kolumbus"]
-                  }
+                 "question":"3+1",
+                 "lama_text":"Tippe die richtige Antwort an!",
+                 "right_answer":"4",
+                  "wrong_answers":["2", "5", "3"]
+            }
         ]
 }
