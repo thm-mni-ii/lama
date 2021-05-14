@@ -21,6 +21,7 @@ import 'models/position.dart';
 
 import 'package:lama_app/snake/views/view.dart';
 import 'package:lama_app/snake/views/home-view.dart';
+import 'package:lama_app/snake/views/gameOverView.dart';
 
 class SnakeGame extends Game with TapDetector {
   final bool log = true;
@@ -56,6 +57,7 @@ class SnakeGame extends Game with TapDetector {
 
   View activeView = View.home; // views added
   HomeView homeView;
+  GameOverView gameOverView;
 
   SnakeGame() {
     initialize();
@@ -70,6 +72,7 @@ class SnakeGame extends Game with TapDetector {
     spawnApples();
 
     homeView = HomeView(this);
+    gameOverView = GameOverView(this);
 
     arrowButtonDown = ArrowButtons(this, 0);
     arrowButtonUp = ArrowButtons(this, 1);
@@ -168,6 +171,11 @@ class SnakeGame extends Game with TapDetector {
             arrowButtonLeft.render(canvas);
             arrowButtonRight.render(canvas);
           }
+          //neu
+          else {
+            activeView = View.gameOver;
+            gameOverView.render(canvas);
+          }
 
           scoreDisplay.render(canvas);
         }
@@ -184,6 +192,7 @@ class SnakeGame extends Game with TapDetector {
       snake.update(t, apples);
       apples.forEach((element) => element.update(t));
       scoreDisplay.update(t);
+      gameOverView.update(t);
     }
   }
 
@@ -236,6 +245,12 @@ class SnakeGame extends Game with TapDetector {
         _running = true;
         isHandled = true;
       }
+    }
+    if (activeView == View.gameOver && gameOverView.goBackButton.rect.contains(d.localPosition)){
+      gameOverView.goBackButton.onTapDown();
+      isHandled = false;
+      _running = false;
+
     }
   }
 
