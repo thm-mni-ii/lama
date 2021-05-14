@@ -20,7 +20,6 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   }
 
   Future<UserLoginState> validateUserLogin(UserLogin event) async {
-    //TODO Validatin Login
     if (event.user.password == event.pw) {
       UserRepository repository = UserRepository(event.user);
       Navigator.push(
@@ -37,8 +36,6 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   }
 
   Future<UsersLoaded> loadUsers() async {
-    await DatabaseProvider.db.insertUser(User(
-        name: 'admin', password: 'admin', grade: 1, coins: 500, isAdmin: true));
     List<User> userList = await DatabaseProvider.db.getUser();
     return UsersLoaded(userList);
   }
