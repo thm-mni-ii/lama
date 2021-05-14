@@ -162,26 +162,22 @@ class SnakeGame extends Game with TapDetector {
       if (activeView == View.home) {
         homeView.render(canvas);
       } else {
-        if (_running) {
-          if (!_finished) {
-            snake.render(canvas);
-            apples.forEach((element) => element.render(canvas));
+        if (!_finished) {
+          snake.render(canvas);
+          apples.forEach((element) => element.render(canvas));
 
+          scoreDisplay.render(canvas);
+          pauseButton.render(canvas);
+
+          if (_running) {
             arrowButtonDown.render(canvas);
             arrowButtonUp.render(canvas);
             arrowButtonLeft.render(canvas);
             arrowButtonRight.render(canvas);
           }
-          else {
-            activeView = View.gameOver;
-            gameOverView.render(canvas);
-          }
-        }
-
-        if (!_finished) {
-          pauseButton.render(canvas);
-
-          scoreDisplay.render(canvas);
+        } else {
+          activeView = View.gameOver;
+          gameOverView.render(canvas);
         }
       }
     }
