@@ -219,7 +219,7 @@ class SnakeGame extends Game with TapDetector {
       arrowButtonLeft.onTapDown(d);
       arrowButtonRight.onTapDown(d);
 
-      if (pauseButton.rectButton.contains(d.localPosition)) {
+      /*if (pauseButton.rectButton.contains(d.localPosition)) {
         if (!_pauseWasPressed) {
           _running = false;
           _pauseWasPressed = true;
@@ -228,7 +228,7 @@ class SnakeGame extends Game with TapDetector {
           _running = true;
           _pauseWasPressed = false;
         }
-      }
+      }*/
     }
 
     // start button

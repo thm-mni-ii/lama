@@ -7,13 +7,13 @@ class PauseButton{
   final SnakeGame game;
 
   Path pausePath;
-  Rect rectButton;
+  Rect _rectButton;
   Paint paintButton;
   Size screenSize;
   Paint paintPausePath = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 5.0;
-
+  Paint _paintShadow;
   int _position;
   double _relativeOffsetY;
   double _relativeSize = 0.15;
@@ -39,11 +39,28 @@ class PauseButton{
     pausePath = getPausePath(startX);
 
     // button rectangle
-    rectButton = Rect.fromLTWH(
+    _rectButton = Rect.fromLTWH(
         startX,
         this._relativeOffsetY * game.screenSize.height + ((this.game.screenSize.width * this._relativeSize) / 2),
         this.game.screenSize.width * _relativeSize,
         this.game.screenSize.width * _relativeSize);
+
+    // shader paint
+    _paintShadow = Paint();
+    _paintShadow.shader = LinearGradient(
+      begin: Alignment.bottomRight,
+      end: Alignment.topLeft,
+      colors: <Color>[
+        Color(0xff000000),
+        Color(0x0)
+      ],)
+        .createShader(
+        Rect.fromLTWH(
+            _rectButton.left,
+            _rectButton.top,
+            _rectButton.width,
+            _rectButton.height)
+    );
   }
 
   Path getPausePath(double startX) {
@@ -70,7 +87,9 @@ class PauseButton{
 
 
   void render(Canvas c){
-    c.drawRect(rectButton, paintButton);
+    // draw shadow
+    c.drawRect(_rectButton.translate(5, 5), _paintShadow);
+    c.drawRect(_rectButton, paintButton);
     c.drawPath(pausePath, paintPausePath);
   }
 
