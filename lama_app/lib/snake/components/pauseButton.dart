@@ -14,22 +14,58 @@ class PauseButton{
     ..style = PaintingStyle.stroke
     ..strokeWidth = 5.0;
 
-  PauseButton(this.game){
-    paintButton = Paint();
-    paintButton.color = Color(0xff00ff00);
+  int _position;
+  double _relativeOffsetY;
+  double _relativeSize = 0.15;
+  double _relativeOffsetX = 0.05;
+  Function _onTap;
+  double _spaceBetween;
 
+  PauseButton(this.game, this._relativeSize, this._position, this._relativeOffsetY, this._onTap){
+    // space of the button element
+    var spacePos = (this.game.screenSize.width -
+        ((this.game.screenSize.width * _relativeOffsetX) * 2)) / 5;
+    // starting x coordinate
+    var startX = (this._position * spacePos) +
+        ((spacePos - (this.game.screenSize.width * this._relativeSize)) / 2) +
+        (this.game.screenSize.width * _relativeOffsetX);
+    // space between the buttons
+    this._spaceBetween = (spacePos - this.game.screenSize.width * this._relativeSize);
+
+    paintButton = Paint();
+    paintButton.color = Color(0xffFBFEF5);
     paintPausePath.color = Color(0xff000000);
 
-    pausePath = Path();
-    pausePath.moveTo(0.5*game.screenSize.width - 0.005*game.screenSize.height , 0.77*game.screenSize.height);
-    pausePath.lineTo(0.5*game.screenSize.width - 0.005*game.screenSize.height, 0.80*game.screenSize.height);
-    pausePath.moveTo(0.5*game.screenSize.width + 0.005*game.screenSize.height, 0.77*game.screenSize.height);
-    pausePath.lineTo(0.5*game.screenSize.width + 0.005*game.screenSize.height, 0.80*game.screenSize.height);
+    pausePath = getPausePath(startX);
 
+    // button rectangle
+    rectButton = Rect.fromLTWH(
+        startX,
+        this._relativeOffsetY * game.screenSize.height + ((this.game.screenSize.width * this._relativeSize) / 2),
+        this.game.screenSize.width * _relativeSize,
+        this.game.screenSize.width * _relativeSize);
+  }
 
-   
-    rectButton = Rect.fromLTWH(0.5*game.screenSize.width - 0.04*game.screenSize.height,
-              0.745*game.screenSize.height, 0.08*game.screenSize.height, 0.08*game.screenSize.height);
+  Path getPausePath(double startX) {
+    var returnPath = Path();
+    var absoluteSize = _relativeSize * this.game.screenSize.width;
+    var startY = this._relativeOffsetY * game.screenSize.height + ((this.game.screenSize.width * this._relativeSize) / 2);
+
+    returnPath.moveTo(
+        startX + 0.85 * (absoluteSize / 2),
+        startY + (absoluteSize / 3));
+    returnPath.lineTo(
+        startX + 0.85 * (absoluteSize / 2),
+        startY + (2 * absoluteSize / 3));
+
+    returnPath.moveTo(
+        startX + 1.15 * (absoluteSize / 2),
+        startY + (absoluteSize / 3));
+    returnPath.lineTo(
+        startX + 1.15 * (absoluteSize / 2),
+        startY + (2 * absoluteSize / 3));
+
+    return returnPath;
   }
 
 
