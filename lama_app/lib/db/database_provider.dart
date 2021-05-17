@@ -1,5 +1,6 @@
 import 'package:lama_app/app/model/achievement_model.dart';
 import 'package:lama_app/app/model/game_model.dart';
+import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -159,6 +160,23 @@ class DatabaseProvider {
     return gameList;
   }
 
+  Future<List<Highscore>> getHighscores() async {
+    final db = await database;
+
+    var highscores = await db.query(tableHighscore,
+        columns: [columnId, columnGameId, columnScore, columnUserId]);
+
+    List<Highscore> highscoreList = <Highscore>[];
+
+    highscores.forEach((currentHighscore) {
+      Highscore highscore = Highscore.fromMap(currentHighscore);
+
+      highscoreList.add(highscore);
+    });
+
+    return highscoreList;
+  }
+
   Future<User> insertUser(User user) async {
     final db = await database;
     user.id = await db.insert(tableUser, user.toMap());
@@ -176,6 +194,13 @@ class DatabaseProvider {
     game.id = await db.insert(tableGames, game.toMap());
     return game;
   }
+
+  Future<Highscore> insertHighscore(Highscore highscore) async {
+    final db = await database;
+    highscore.id = await db.insert(tableHighscore, highscore.toMap());
+    return highscore;
+  }
+
   Future<int> deleteUser(int id) async {
     final db = await database;
 
@@ -192,6 +217,12 @@ class DatabaseProvider {
     final db = await database;
 
     return await db.delete(tableGames, where: "id = ?", whereArgs: [id]);
+  }
+
+  Future<int> deleteHighscore(int id) async {
+    final db = await database;
+
+    return await db.delete(tableHighscore, where: "id = ?", whereArgs: [id]);
   }
 
   Future<int> updateUser(User user) async {
@@ -213,5 +244,12 @@ class DatabaseProvider {
 
     return await db.update(tableGames, game.toMap(),
         where: " id = ?", whereArgs: [game.id]);
+  }
+
+  Future<int> updateHighscore(Highscore highscore) async {
+    final db = await database;
+
+    return await db.update(tableHighscore, highscore.toMap(),
+        where: " id = ?", whereArgs: [highscore.id]);
   }
 }
