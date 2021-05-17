@@ -1,4 +1,16 @@
 ### 0.2
+- learn app
+	- user database
+	- user login
+	- admin creation on first startup
+	- main menu
+	- taskset loader (json parsing)
+	- task screen
+	- standard tasksets (flutter assets)
+	- first tasktype implemented (4Cards)
+	- task navigation (next task, all tasks completed)
+	- simple standard tasksets
+	- simple feedback system for task completion
 - snake game  
 	- apple spawner  
 	- snake spawner  
