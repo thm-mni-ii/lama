@@ -54,6 +54,7 @@ class SnakeGame extends Game with TapDetector {
   bool _initialized = false;
   bool _running = false;
   bool _pauseWasPressed = false;
+  double _controlBarRelativeHeight = 0.25;
 
   View activeView = View.home; // views added
   HomeView homeView;
@@ -69,16 +70,16 @@ class SnakeGame extends Game with TapDetector {
   void initialize() async {
     resize(await Flame.util.initialDimensions());
 
-    background = Background(this, 0.225);
+    background = Background(this, _controlBarRelativeHeight);
     spawnApples();
 
     homeView = HomeView(this);
     gameOverView = GameOverView(this);
 
-    arrowButtonDown = ArrowButtons(this, 0.15, 3, 4, 0.8, () => snake.direction = 3);
-    arrowButtonUp = ArrowButtons(this, 0.15, 1, 3, 0.8, () => snake.direction = 1);
-    arrowButtonLeft = ArrowButtons(this, 0.15, 2, 0, 0.8, () => snake.direction = 2);
-    arrowButtonRight = ArrowButtons(this, 0.15, 4, 1, 0.8, () => snake.direction = 4);
+    arrowButtonDown = ArrowButtons(this, 0.15, 3, 4, 1.0 - _controlBarRelativeHeight + (0.1 * 0.15), () => snake.direction = 3);
+    arrowButtonUp = ArrowButtons(this, 0.15, 1, 3, 1.0 - _controlBarRelativeHeight + (0.1 * 0.15), () => snake.direction = 1);
+    arrowButtonLeft = ArrowButtons(this, 0.15, 2, 0, 1.0 - _controlBarRelativeHeight + (0.1 * 0.15), () => snake.direction = 2);
+    arrowButtonRight = ArrowButtons(this, 0.15, 4, 1, 1.0 - _controlBarRelativeHeight + (0.1 * 0.15), () => snake.direction = 4);
     pauseButton = PauseButton(this);
 
     // TODO - this has to move to the begin action of the main menu
@@ -252,7 +253,7 @@ class SnakeGame extends Game with TapDetector {
       if (screenSize.width < screenSize.height) {
         tileSize = screenSize.width / maxFieldX;
         
-        maxFieldY = ((screenSize.height - (tileSize * fieldOffsetY)) * 0.7) ~/ tileSize;
+        maxFieldY = ((screenSize.height * (1 - _controlBarRelativeHeight) - (tileSize * fieldOffsetY))) ~/ tileSize;
       } else {
         tileSize = screenSize.width / maxFieldX;
 

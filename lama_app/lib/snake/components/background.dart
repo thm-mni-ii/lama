@@ -68,7 +68,10 @@ class Background {
 
   void render(Canvas c) {
     c.drawRect(backgroundRect, backgroundPaint);
-    c.drawRect(fieldRect.inflate(_borderThickness), fieldBorderPaint);
+
+    if (!this.game.maxField) {
+      c.drawRect(fieldRect.inflate(_borderThickness), fieldBorderPaint);
+    }
     c.drawRect(fieldRect, backgroundPaint);
     c.drawRect(_controlBarRect, _controlBarPaint);
 
