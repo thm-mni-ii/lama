@@ -26,6 +26,7 @@ class SnakeComponent {
 
   double _deltaCounter = 0;
   int _direction = 1;
+  int _lastDirection = 1;
   double _maxVelocity = 15;
 
   SnakeComponent(this.game, Position startPos, this.velocity) {
@@ -36,8 +37,8 @@ class SnakeComponent {
   /// [dir] could be: 1 = north, 2 = west, 3 = south, 4 = east, else = not valid / ignored
   /// You cant move in the opposite direction so this will gets ignored.
   set direction(int dir) {
-    if (dir != _direction && dir <= 5 && dir > 0) {
-      if (!(_direction.isOdd && dir.isOdd || _direction.isEven && dir.isEven)) {
+    if (dir != _lastDirection && dir <= 5 && dir > 0) {
+      if (!(_lastDirection.isOdd && dir.isOdd || _lastDirection.isEven && dir.isEven)) {
         _direction = dir;
       }
     }
@@ -68,6 +69,7 @@ class SnakeComponent {
       }
     } else {
       snakeParts.addFirst(newPosition);
+      _lastDirection = _direction;
     }
   }
 
