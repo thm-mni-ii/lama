@@ -1,0 +1,15 @@
+{
+    "taskset_name":"Standardaufgaben Klasse 2",
+     "taskset_subject":"Deutsch",
+      "taskset_grade":2,
+       "tasks": [
+           {
+           "task_type":"4Cards",
+            "task_reward":2,
+            "question":"Was ist kein Nomen (Namenwort)",
+            "lama_text":"Tippe die richtige Antwort an!",
+            "right_answer":"aufgeben",
+             "wrong_answers":["Aufgabe", "Anfahrt", "Abgang"]
+             }
+        ]
+}

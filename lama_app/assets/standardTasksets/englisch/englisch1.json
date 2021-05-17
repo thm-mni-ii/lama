@@ -1,0 +1,15 @@
+{
+    "taskset_name":"Standardaufgaben Klasse 1",
+     "taskset_subject":"Englisch",
+      "taskset_grade":1,
+       "tasks": [
+           {
+           "task_type":"4Cards",
+            "task_reward":2,
+            "question":"What does 'apple' mean in german?",
+            "lama_text":"Tap the right Answer!",
+            "right_answer":"Apfel",
+             "wrong_answers":["Auto", "Buch", "Kran"]
+             }
+        ]
+}

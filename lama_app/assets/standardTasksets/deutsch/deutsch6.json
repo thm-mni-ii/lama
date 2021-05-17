@@ -1,0 +1,15 @@
+{
+    "taskset_name":"Standardaufgaben Klasse 6",
+     "taskset_subject":"Deutsch",
+      "taskset_grade":6,
+       "tasks": [
+           {
+           "task_type":"4Cards",
+            "task_reward":2,
+            "question":"Was ist kein Gedichtsmetrum?",
+            "lama_text":"Tippe die richtige Antwort an!",
+            "right_answer":"Pterodactyl",
+             "wrong_answers":["Daktylus", "Trochäus", "Jambus"]
+             }
+        ]
+}
