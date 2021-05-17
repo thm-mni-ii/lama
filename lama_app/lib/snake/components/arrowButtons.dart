@@ -7,9 +7,9 @@ import '../snakeGame.dart';
 class ArrowButtons {
   final SnakeGame game;
 
-  Rect rectButton;
-  Paint paintButton;
-  Paint paintShadow;
+  Rect _rectButton;
+  Paint _paintButton;
+  Paint _paintShadow;
   Paint _paintArrow = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0;
@@ -20,55 +20,60 @@ class ArrowButtons {
   double _relativeOffsetX = 0.05;
   double _spaceBetween;
   Function _onTap;
-  static const IconData arrow_back = IconData(0xe5a7, fontFamily: 'MaterialIcons', matchTextDirection: true);
+  bool _clickHandled = true;
+  Color _buttonColor = Color(0xff0088ff);
+  Color _buttonClickColor = Color(0xffbdcbd9);
 
 
   ArrowButtons(this.game, this._relativeSize, arrowDirection, this._position, this._relativeOffsetY, this._onTap) {
-
-    //lining out the path for the arrows
-    _arrowPath = Path();
-
+    // space of the button element
     var spacePos = (this.game.screenSize.width -
         ((this.game.screenSize.width * _relativeOffsetX) * 2)) / 5;
+    // starting x coordinate
     var startX = (this._position * spacePos) +
         ((spacePos - (this.game.screenSize.width * this._relativeSize)) / 2) +
         (this.game.screenSize.width * _relativeOffsetX);
+    // space between the buttons
     this._spaceBetween = (spacePos - this.game.screenSize.width * this._relativeSize);
 
-    rectButton = Rect.fromLTWH(
+    // button rectangle
+    _rectButton = Rect.fromLTWH(
         startX,
         this._relativeOffsetY * game.screenSize.height,
         this.game.screenSize.width * _relativeSize,
         this.game.screenSize.width * _relativeSize);
 
-    _arrowPath = getArrowPath(arrowDirection, this._position);
+    // arrow path
+    _arrowPath = getArrowPath(arrowDirection, startX);
 
-    paintShadow = Paint();
-    paintShadow.shader = RadialGradient(
+    // shader paint
+    _paintShadow = Paint();
+    _paintShadow.shader = RadialGradient(
       colors: [
         Color(0xff000000),
         Color(0x0),
       ],)
-        .createShader(Rect.fromCircle(
-        center: Offset(rectButton.left + rectButton.width / 2 + this._spaceBetween, rectButton.top + rectButton.height / 2 + this._spaceBetween), radius: (rectButton.width) / 2));
-    paintButton = Paint();
-    paintButton.color = Color(0xff0088ff);
+        .createShader(
+          Rect.fromCircle(
+              center: Offset(
+                  _rectButton.left + _rectButton.width / 2 + this._spaceBetween,
+                  _rectButton.top + _rectButton.height / 2 + this._spaceBetween),
+              radius: (_rectButton.width) / 2));
 
+    // button paint
+    _paintButton = Paint();
+    _paintButton.color = Color(0xff0088ff);
+
+    // arrow paint
     _paintArrow.color = Color(0xff000000);
   }
 
-  Path getArrowPath(int dir, int position) {
-    var spacePos = (this.game.screenSize.width -
-        ((this.game.screenSize.width * _relativeOffsetX) * 2)) / 5;
-    var startX = (position * spacePos) +
-        ((spacePos - (this.game.screenSize.width * this._relativeSize)) / 2) +
-        (this.game.screenSize.width * _relativeOffsetX);
-
+  Path getArrowPath(int dir, double startX) {
     Path arrowPath = Path();
     var absoluteSize = _relativeSize * this.game.screenSize.width;
 
+    // horizontal line
     if (dir.isEven) {
-      // horizontal line
       arrowPath.moveTo(
           startX + (2 * absoluteSize / 3),
           this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
@@ -90,8 +95,8 @@ class ArrowButtons {
       );
     }
 
+    // left up
     if (dir == 2 || dir == 3) {
-      // left up
       arrowPath.moveTo(startX + (absoluteSize / 3),
           this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2));
       arrowPath.lineTo(
@@ -100,8 +105,8 @@ class ArrowButtons {
               (2 * absoluteSize / 3));
     }
 
+    // left down
     if (dir == 2 || dir == 1) {
-      // left down
       arrowPath.moveTo(
           startX + (absoluteSize / 3),
           this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
@@ -112,8 +117,8 @@ class ArrowButtons {
       );
     }
 
+    // right down
     if (dir == 4 || dir == 1) {
-      // right down
       arrowPath.moveTo(
           startX + (2 * absoluteSize / 3),
           this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
@@ -124,8 +129,8 @@ class ArrowButtons {
       );
     }
 
+    // right up
     if (dir == 4 || dir == 3) {
-      // right up
       arrowPath.moveTo(
           startX + (2 * absoluteSize / 3),
           this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
@@ -139,17 +144,30 @@ class ArrowButtons {
     return arrowPath;
   }
 
-  void render(Canvas c){
-    //lining out the path for the arrows
-    c.drawArc(rectButton.inflate(this._spaceBetween * 1.1), 0, 17, true, paintShadow);
-    c.drawArc(rectButton, 0, 17, true, paintButton);
+  void render(Canvas c) {
+    // color when clickes
+    if (!_clickHandled) {
+      _paintButton.color = _buttonClickColor;
+      _clickHandled = true;
+    }
+    else {
+      _paintButton.color = _buttonColor;
+    }
+
+    // draw shadow
+    c.drawArc(_rectButton.inflate(this._spaceBetween * 1.1), 0, 17, true, _paintShadow);
+    // draw button
+    c.drawArc(_rectButton, 0, 17, true, _paintButton);
+    // draw arrow
     c.drawPath(_arrowPath, _paintArrow);
   }
 
   void onTapDown(TapDownDetails d) {
-    if (rectButton.contains(d.localPosition)) {
+    if (_rectButton.contains(d.localPosition)) {
       if (_onTap != null) {
         _onTap();
+        // click handler for rendering
+        _clickHandled = false;
       }
     }
   }
