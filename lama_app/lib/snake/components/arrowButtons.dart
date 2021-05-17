@@ -39,7 +39,7 @@ class ArrowButtons {
     // button rectangle
     _rectButton = Rect.fromLTWH(
         startX,
-        this._relativeOffsetY * game.screenSize.height,
+        this._relativeOffsetY * game.screenSize.height + ((this.game.screenSize.width * this._relativeSize) / 2),
         this.game.screenSize.width * _relativeSize,
         this.game.screenSize.width * _relativeSize);
 
@@ -71,49 +71,50 @@ class ArrowButtons {
   Path getArrowPath(int dir, double startX) {
     Path arrowPath = Path();
     var absoluteSize = _relativeSize * this.game.screenSize.width;
+    var startY = this._relativeOffsetY * game.screenSize.height + ((this.game.screenSize.width * this._relativeSize) / 2);
 
     // horizontal line
     if (dir.isEven) {
       arrowPath.moveTo(
           startX + (2 * absoluteSize / 3),
-          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
+          startY + (absoluteSize / 2)
       );
       arrowPath.lineTo(
           startX + (absoluteSize / 3),
-          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
+          startY + (absoluteSize / 2)
       );
     }
     else {
       // vertical line
       arrowPath.moveTo(
           startX + (absoluteSize / 2),
-          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 3)
+          startY + (absoluteSize / 3)
       );
       arrowPath.lineTo(
           startX + (absoluteSize / 2),
-          this._relativeOffsetY * game.screenSize.height + (2 * absoluteSize / 3)
+          startY + (2 * absoluteSize / 3)
       );
     }
 
     // left up
     if (dir == 2 || dir == 3) {
-      arrowPath.moveTo(startX + (absoluteSize / 3),
-          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2));
+      arrowPath.moveTo(
+          startX + (absoluteSize / 3),
+          startY + (absoluteSize / 2));
       arrowPath.lineTo(
           startX + (absoluteSize / 2),
-          this._relativeOffsetY * game.screenSize.height +
-              (2 * absoluteSize / 3));
+          startY + (2 * absoluteSize / 3));
     }
 
     // left down
     if (dir == 2 || dir == 1) {
       arrowPath.moveTo(
           startX + (absoluteSize / 3),
-          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
+          startY + (absoluteSize / 2)
       );
       arrowPath.lineTo(
           startX + (absoluteSize / 2),
-          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 3)
+          startY + (absoluteSize / 3)
       );
     }
 
@@ -121,11 +122,11 @@ class ArrowButtons {
     if (dir == 4 || dir == 1) {
       arrowPath.moveTo(
           startX + (2 * absoluteSize / 3),
-          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
+          startY + (absoluteSize / 2)
       );
       arrowPath.lineTo(
           startX + (absoluteSize / 2),
-          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 3)
+          startY + (absoluteSize / 3)
       );
     }
 
@@ -133,11 +134,11 @@ class ArrowButtons {
     if (dir == 4 || dir == 3) {
       arrowPath.moveTo(
           startX + (2 * absoluteSize / 3),
-          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
+          startY + (absoluteSize / 2)
       );
       arrowPath.lineTo(
           startX + (absoluteSize / 2),
-          this._relativeOffsetY * game.screenSize.height + (2 * absoluteSize / 3)
+          startY + (2 * absoluteSize / 3)
       );
     }
 
