@@ -8,7 +8,7 @@ class DescriptionText {
   Offset _position;
   Paint _textPaint;
 
-  DescriptionText(this.game, double relativeX, double relativeY) {
+  DescriptionText(this.game, double offsetY) {
     TextStyle _textStyle;
 
     // Style of the text
@@ -53,7 +53,7 @@ class DescriptionText {
     // set new offset depending on the text width
     _position = Offset(
       (this.game.screenSize.width / 2) - _painter.width / 2,
-      (this.game.screenSize.height * (1 - 2 * relativeY) / 2) - _painter.width / 2,
+      ((this.game.screenSize.height + offsetY) / 2) - _painter.width / 2,
     );
 
     _textPaint = Paint();

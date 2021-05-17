@@ -25,13 +25,6 @@ class HomeView {
 
     this.startButton = StartButton(game, relativeX, relativeY);
 
-    bgRect = Rect.fromLTWH(
-      this.game.screenSize.width * relativeX,
-      this.game.screenSize.height * relativeY,
-      this.game.screenSize.width * (1.0 - relativeX * 2),
-      this.game.screenSize.height * (1.0 - relativeY * 4),
-    );
-
     _imageSprite = Sprite('png/snake.png');
     var ratio = this.game.screenSize.width / this.game.screenSize.height;
 
@@ -42,12 +35,19 @@ class HomeView {
         this.game.screenSize.width * (1.0 - relativeX * 4) * ratio
     );
 
+    bgRect = Rect.fromLTWH(
+      this.game.screenSize.width * relativeX,
+      this.game.screenSize.height * relativeY,
+      this.game.screenSize.width * (1.0 - relativeX * 2),
+      this.game.screenSize.height * (1.0 - relativeY * 4),
+    );
+
     bgPaint = Paint();
     bgPaint.color = Color(0xFFFFFFFF);
     borderPaint = Paint();
     borderPaint.color = Color(0xFF000000);
 
-    description = DescriptionText(game, relativeX, relativeY);
+    description = DescriptionText(game, this.game.screenSize.width * (1.0 - relativeX * 4) * ratio);
   }
 
   void render(Canvas c) {
