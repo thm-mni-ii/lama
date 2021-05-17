@@ -1,4 +1,5 @@
 import 'package:lama_app/app/model/achievement_model.dart';
+import 'package:lama_app/app/model/game_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -141,18 +142,40 @@ class DatabaseProvider {
     return achievementList;
   }
 
+  Future<List<Game>> getGames() async {
+    final db = await database;
+
+    var games = await db.query(tableGames,
+        columns: [columnGamesId, columnGamesName]);
+
+    List<Game> gameList = <Game>[];
+
+    games.forEach((currentGame) {
+      Game game = Game.fromMap(currentGame);
+
+      gameList.add(game);
+    });
+
+    return gameList;
+  }
+
   Future<User> insertUser(User user) async {
     final db = await database;
     user.id = await db.insert(tableUser, user.toMap());
     return user;
   }
 
-  Future<Achievement> insertAchievements(Achievement achievement) async {
+  Future<Achievement> insertAchievement(Achievement achievement) async {
     final db = await database;
     achievement.id = await db.insert(tableAchievements, achievement.toMap());
     return achievement;
   }
 
+  Future<Game> insertGame(Game game) async {
+    final db = await database;
+    game.id = await db.insert(tableGames, game.toMap());
+    return game;
+  }
   Future<int> deleteUser(int id) async {
     final db = await database;
 
@@ -163,6 +186,12 @@ class DatabaseProvider {
     final db = await database;
 
     return await db.delete(tableAchievements, where: "id = ?", whereArgs: [id]);
+  }
+
+  Future<int> deleteGame(int id) async {
+    final db = await database;
+
+    return await db.delete(tableGames, where: "id = ?", whereArgs: [id]);
   }
 
   Future<int> updateUser(User user) async {
@@ -177,5 +206,12 @@ class DatabaseProvider {
 
     return await db.update(tableAchievements, achievement.toMap(),
         where: " id = ?", whereArgs: [achievement.id]);
+  }
+
+  Future<int> updateGame(Game game) async {
+    final db = await database;
+
+    return await db.update(tableGames, game.toMap(),
+        where: " id = ?", whereArgs: [game.id]);
   }
 }
