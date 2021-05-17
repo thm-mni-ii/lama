@@ -50,3 +50,11 @@ class TaskClozeTest extends Task {
    : super(taskType, reward, question, lamaText);
 }
 
+class TaskMarkWords extends Task {
+  String rightAnswer;
+  List<String> sentence;
+
+  TaskMarkWords(String taskType, int reward, String lamaText, String question,
+      this.rightAnswer, this.sentence)
+      : super(taskType, reward, question, lamaText);
+}
