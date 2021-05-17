@@ -9,6 +9,7 @@ class ArrowButtons {
 
   Rect rectButton;
   Paint paintButton;
+  Paint paintShadow;
   Paint _paintArrow = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0;
@@ -17,15 +18,12 @@ class ArrowButtons {
   double _relativeOffsetY;
   double _relativeSize = 0.15;
   double _relativeOffsetX = 0.05;
+  double _spaceBetween;
   Function _onTap;
   static const IconData arrow_back = IconData(0xe5a7, fontFamily: 'MaterialIcons', matchTextDirection: true);
 
 
   ArrowButtons(this.game, this._relativeSize, arrowDirection, this._position, this._relativeOffsetY, this._onTap) {
-    paintButton = Paint();
-    paintButton.color = Color(0xff0088ff);
-
-    _paintArrow.color = Color(0xff000000);
 
     //lining out the path for the arrows
     _arrowPath = Path();
@@ -35,6 +33,7 @@ class ArrowButtons {
     var startX = (this._position * spacePos) +
         ((spacePos - (this.game.screenSize.width * this._relativeSize)) / 2) +
         (this.game.screenSize.width * _relativeOffsetX);
+    this._spaceBetween = (spacePos - this.game.screenSize.width * this._relativeSize);
 
     rectButton = Rect.fromLTWH(
         startX,
@@ -43,6 +42,19 @@ class ArrowButtons {
         this.game.screenSize.width * _relativeSize);
 
     _arrowPath = getArrowPath(arrowDirection, this._position);
+
+    paintShadow = Paint();
+    paintShadow.shader = RadialGradient(
+      colors: [
+        Color(0xff000000),
+        Color(0x0),
+      ],)
+        .createShader(Rect.fromCircle(
+        center: Offset(rectButton.left + rectButton.width / 2 + this._spaceBetween, rectButton.top + rectButton.height / 2 + this._spaceBetween), radius: (rectButton.width) / 2));
+    paintButton = Paint();
+    paintButton.color = Color(0xff0088ff);
+
+    _paintArrow.color = Color(0xff000000);
   }
 
   Path getArrowPath(int dir, int position) {
@@ -129,6 +141,7 @@ class ArrowButtons {
 
   void render(Canvas c){
     //lining out the path for the arrows
+    c.drawArc(rectButton.inflate(this._spaceBetween * 1.1), 0, 17, true, paintShadow);
     c.drawArc(rectButton, 0, 17, true, paintButton);
     c.drawPath(_arrowPath, _paintArrow);
   }
