@@ -85,6 +85,8 @@ class SnakeGame extends Game with TapDetector {
     spawnSnake();
     scoreDisplay = ScoreDisplay(this);
 
+    Flame.images.load('png/snake.png');
+
     _initialized = true;
   }
 
