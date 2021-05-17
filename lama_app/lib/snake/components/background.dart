@@ -7,6 +7,7 @@ class Background {
   final SnakeGame game;
 
   Rect backgroundRect;
+  Rect _controlBarRect;
   Paint backgroundPaint;
   Rect fieldRect;
   Paint fieldBorderPaint;
@@ -16,15 +17,26 @@ class Background {
   double _offsetY;
   bool _chessOptic = false;
   double _borderThickness = 2;
+  double _controlBarRelativeHeight;
+  Paint _controlBarPaint = Paint()
+    ..color = Color(0xFF34C935);
 
   /// Constructor of this class
   ///
   /// Needs an instance of [SnakeGame] to determine the corresponding size of the screen.
-  Background(this.game) {
+  Background(this.game, this._controlBarRelativeHeight) {
     // background rectangle
     backgroundRect = Rect.fromLTWH(
       0,
       0,
+      game.screenSize.width,
+      game.screenSize.height,
+    );
+
+    // control bar rectangle
+    _controlBarRect = Rect.fromLTWH(
+      0,
+      game.screenSize.height - (_controlBarRelativeHeight * game.screenSize.height),
       game.screenSize.width,
       game.screenSize.height,
     );
@@ -56,8 +68,12 @@ class Background {
 
   void render(Canvas c) {
     c.drawRect(backgroundRect, backgroundPaint);
-    c.drawRect(fieldRect.inflate(_borderThickness), fieldBorderPaint);
+
+    if (!this.game.maxField) {
+      c.drawRect(fieldRect.inflate(_borderThickness), fieldBorderPaint);
+    }
     c.drawRect(fieldRect, backgroundPaint);
+    c.drawRect(_controlBarRect, _controlBarPaint);
 
     if (_chessOptic) {
       // each tile of the game field
