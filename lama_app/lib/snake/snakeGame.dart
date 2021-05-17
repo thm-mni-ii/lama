@@ -81,7 +81,16 @@ class SnakeGame extends Game with TapDetector {
     arrowButtonUp = ArrowButtons(this, _relativeButtonSize, 1, 3, 1.0 - _controlBarRelativeHeight, () => snake.direction = 1);
     arrowButtonLeft = ArrowButtons(this, _relativeButtonSize, 2, 0, 1.0 - _controlBarRelativeHeight, () => snake.direction = 2);
     arrowButtonRight = ArrowButtons(this, _relativeButtonSize, 4, 1, 1.0 - _controlBarRelativeHeight, () => snake.direction = 4);
-    pauseButton = PauseButton(this, _relativeButtonSize, 2, 1.0 - _controlBarRelativeHeight, null);
+    pauseButton = PauseButton(this, _relativeButtonSize, 2, 1.0 - _controlBarRelativeHeight, (tapped) {
+        if (tapped) {
+          _running = false;
+          _pauseWasPressed = true;
+        }
+        else {
+          _running = true;
+          _pauseWasPressed = false;
+        }
+    });
 
     // TODO - this has to move to the begin action of the main menu
     spawnSnake();
@@ -218,6 +227,7 @@ class SnakeGame extends Game with TapDetector {
       arrowButtonUp.onTapDown(d);
       arrowButtonLeft.onTapDown(d);
       arrowButtonRight.onTapDown(d);
+      pauseButton.onTapDown(d);
 
       /*if (pauseButton.rectButton.contains(d.localPosition)) {
         if (!_pauseWasPressed) {
