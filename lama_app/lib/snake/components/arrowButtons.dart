@@ -1,116 +1,152 @@
-
 import 'package:lama_app/snake/snakeGame.dart';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 
-
 import '../snakeGame.dart';
-
-
-
 
 class ArrowButtons{
   final SnakeGame game;
 
   Rect rectButton;
   Paint paintButton;
-  Paint paintArrow = Paint()
+  Paint _paintArrow = Paint()
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 3.5;
-  Size screenSize;
-  int arrowDirection;
-  Path arrowPath;
+    ..strokeWidth = 2.0;
+  Path _arrowPath;
+  int _position;
+  double _relativeOffsetY;
+  double _relativeSize = 0.15;
+  double _relativeOffsetX = 0.05;
+  Function _onTap;
   static const IconData arrow_back = IconData(0xe5a7, fontFamily: 'MaterialIcons', matchTextDirection: true);
-  
-  
 
-  ArrowButtons(this.game, this.arrowDirection){
-    
+
+  ArrowButtons(this.game, this._relativeSize, arrowDirection, this._position, this._relativeOffsetY, this._onTap) {
     paintButton = Paint();
     paintButton.color = Color(0xff0088ff);
-    
-    paintArrow.color = Color(0xff000000);
+
+    _paintArrow.color = Color(0xff000000);
 
     //lining out the path for the arrows
-    arrowPath = Path();
-    arrowPath.moveTo(0.01*game.screenSize.width + 0.07*game.screenSize.height , 0.785*game.screenSize.height);
-    arrowPath.lineTo(0.01*game.screenSize.width + 0.02*game.screenSize.height, 0.785*game.screenSize.height);
-    arrowPath.lineTo(0.01*game.screenSize.width + 0.04*game.screenSize.height, 0.795*game.screenSize.height);
-    arrowPath.moveTo(0.01*game.screenSize.width + 0.02*game.screenSize.height, 0.785*game.screenSize.height);
-    arrowPath.lineTo(0.01*game.screenSize.width + 0.04*game.screenSize.height, 0.775*game.screenSize.height);
-    
+    _arrowPath = Path();
 
-    arrowPath.moveTo(0.22*game.screenSize.width + 0.02*game.screenSize.height , 0.785*game.screenSize.height);
-    arrowPath.lineTo(0.22*game.screenSize.width + 0.07*game.screenSize.height, 0.785*game.screenSize.height);
-    arrowPath.lineTo(0.22*game.screenSize.width + 0.05*game.screenSize.height, 0.795*game.screenSize.height);
-    arrowPath.moveTo(0.22*game.screenSize.width + 0.07*game.screenSize.height, 0.785*game.screenSize.height);
-    arrowPath.lineTo(0.22*game.screenSize.width + 0.05*game.screenSize.height, 0.775*game.screenSize.height);
+    var spacePos = (this.game.screenSize.width -
+        ((this.game.screenSize.width * _relativeOffsetX) * 2)) / 5;
+    var startX = (this._position * spacePos) +
+        ((spacePos - (this.game.screenSize.width * this._relativeSize)) / 2) +
+        (this.game.screenSize.width * _relativeOffsetX);
 
-    arrowPath.moveTo(0.6*game.screenSize.width + 0.045*game.screenSize.height , 0.76*game.screenSize.height);
-    arrowPath.lineTo(0.6*game.screenSize.width + 0.045*game.screenSize.height, 0.81*game.screenSize.height);
-    arrowPath.lineTo(0.6*game.screenSize.width + 0.035*game.screenSize.height, 0.79*game.screenSize.height);
-    arrowPath.moveTo(0.6*game.screenSize.width + 0.045*game.screenSize.height, 0.81*game.screenSize.height);
-    arrowPath.lineTo(0.6*game.screenSize.width + 0.055*game.screenSize.height, 0.79*game.screenSize.height);
+    rectButton = Rect.fromLTWH(
+        startX,
+        this._relativeOffsetY * game.screenSize.height,
+        this.game.screenSize.width * _relativeSize,
+        this.game.screenSize.width * _relativeSize);
 
-    arrowPath.moveTo(0.81*game.screenSize.width + 0.045*game.screenSize.height , 0.81*game.screenSize.height);
-    arrowPath.lineTo(0.81*game.screenSize.width + 0.045*game.screenSize.height, 0.76*game.screenSize.height);
-    arrowPath.lineTo(0.81*game.screenSize.width + 0.035*game.screenSize.height, 0.78*game.screenSize.height);
-    arrowPath.moveTo(0.81*game.screenSize.width + 0.045*game.screenSize.height, 0.76*game.screenSize.height);
-    arrowPath.lineTo(0.81*game.screenSize.width + 0.055*game.screenSize.height, 0.78*game.screenSize.height);
+    _arrowPath = getArrowPath(arrowDirection, this._position);
+  }
 
+  Path getArrowPath(int dir, int position) {
+    var spacePos = (this.game.screenSize.width -
+        ((this.game.screenSize.width * _relativeOffsetX) * 2)) / 5;
+    var startX = (position * spacePos) +
+        ((spacePos - (this.game.screenSize.width * this._relativeSize)) / 2) +
+        (this.game.screenSize.width * _relativeOffsetX);
 
+    Path arrowPath = Path();
+    var absoluteSize = _relativeSize * this.game.screenSize.width;
 
-
-    switch(arrowDirection){
-      case 0: rectButton = Rect.fromLTWH(0.6*game.screenSize.width,
-              0.74*game.screenSize.height, 0.09*game.screenSize.height, 0.09*game.screenSize.height);
-              
-        break;
-      case 1: rectButton = Rect.fromLTWH(0.81*game.screenSize.width,
-              0.74*game.screenSize.height, 0.09*game.screenSize.height, 0.09*game.screenSize.height);
-              
-        break;
-      case 2: rectButton = Rect.fromLTWH(0.01*game.screenSize.width,
-             0.74*game.screenSize.height, 0.09*game.screenSize.height, 0.09*game.screenSize.height);
-            
-        break;
-      case 3: rectButton = Rect.fromLTWH(0.22*game.screenSize.width,
-             0.74*game.screenSize.height, 0.09*game.screenSize.height, 0.09*game.screenSize.height);
-             
-        break;
+    if (dir.isEven) {
+      // horizontal line
+      arrowPath.moveTo(
+          startX + (2 * absoluteSize / 3),
+          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
+      );
+      arrowPath.lineTo(
+          startX + (absoluteSize / 3),
+          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
+      );
     }
-    
+    else {
+      // vertical line
+      arrowPath.moveTo(
+          startX + (absoluteSize / 2),
+          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 3)
+      );
+      arrowPath.lineTo(
+          startX + (absoluteSize / 2),
+          this._relativeOffsetY * game.screenSize.height + (2 * absoluteSize / 3)
+      );
+    }
+
+    if (dir == 2 || dir == 1) {
+      // left up
+      arrowPath.moveTo(startX + (absoluteSize / 3),
+          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2));
+      arrowPath.lineTo(
+          startX + (absoluteSize / 2),
+          this._relativeOffsetY * game.screenSize.height +
+              (2 * absoluteSize / 3));
+    }
+
+    if (dir == 2 || dir == 3) {
+      // left down
+      arrowPath.moveTo(
+          startX + (absoluteSize / 3),
+          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
+      );
+      arrowPath.lineTo(
+          startX + (absoluteSize / 2),
+          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 3)
+      );
+    }
+
+    if (dir == 4 || dir == 3) {
+      // right down
+      arrowPath.moveTo(
+          startX + (2 * absoluteSize / 3),
+          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
+      );
+      arrowPath.lineTo(
+          startX + (absoluteSize / 2),
+          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 3)
+      );
+    }
+
+    if (dir == 4 || dir == 1) {
+      // right up
+      arrowPath.moveTo(
+          startX + (2 * absoluteSize / 3),
+          this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2)
+      );
+      arrowPath.lineTo(
+          startX + (absoluteSize / 2),
+          this._relativeOffsetY * game.screenSize.height + (2 * absoluteSize / 3)
+      );
+    }
+
+    return arrowPath;
   }
 
   void render(Canvas c){
-    //lining out the path for the arrows 
+    //lining out the path for the arrows
     c.drawArc(rectButton, 0, 17, true, paintButton);
-   
-    c.drawPath(arrowPath, paintArrow);
+    c.drawPath(_arrowPath, _paintArrow);
   }
-  
-
-
-    
-
-
 
   void onTapDown() {
     /*switch(arrowDirection){
-      case 0: 
-              
+      case 0:
+
         break;
-      case 1: 
-              
+      case 1:
+
         break;
-      case 2: 
-              
+      case 2:
+
         break;
-      case 3: 
-              
-        break; 
+      case 3:
+
+        break;
     }*/
   }
-
-
 }

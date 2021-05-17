@@ -75,10 +75,10 @@ class SnakeGame extends Game with TapDetector {
     homeView = HomeView(this);
     gameOverView = GameOverView(this);
 
-    arrowButtonDown = ArrowButtons(this, 0);
-    arrowButtonUp = ArrowButtons(this, 1);
-    arrowButtonLeft = ArrowButtons(this, 2);
-    arrowButtonRight = ArrowButtons(this, 3);
+    arrowButtonDown = ArrowButtons(this, 0.15, 1, 4, 0.8, () => snake.direction = 1);
+    arrowButtonUp = ArrowButtons(this, 0.15, 3, 3, 0.8, () => snake.direction = 3);
+    arrowButtonLeft = ArrowButtons(this, 0.15, 2, 0, 0.8, () => snake.direction = 2);
+    arrowButtonRight = ArrowButtons(this, 0.15, 4, 1, 0.8, () => snake.direction = 4);
     pauseButton = PauseButton(this);
 
     // TODO - this has to move to the begin action of the main menu
