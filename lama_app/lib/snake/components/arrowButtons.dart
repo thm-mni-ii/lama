@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../snakeGame.dart';
 
-class ArrowButtons{
+class ArrowButtons {
   final SnakeGame game;
 
   Rect rectButton;
@@ -78,7 +78,7 @@ class ArrowButtons{
       );
     }
 
-    if (dir == 2 || dir == 1) {
+    if (dir == 2 || dir == 3) {
       // left up
       arrowPath.moveTo(startX + (absoluteSize / 3),
           this._relativeOffsetY * game.screenSize.height + (absoluteSize / 2));
@@ -88,7 +88,7 @@ class ArrowButtons{
               (2 * absoluteSize / 3));
     }
 
-    if (dir == 2 || dir == 3) {
+    if (dir == 2 || dir == 1) {
       // left down
       arrowPath.moveTo(
           startX + (absoluteSize / 3),
@@ -100,7 +100,7 @@ class ArrowButtons{
       );
     }
 
-    if (dir == 4 || dir == 3) {
+    if (dir == 4 || dir == 1) {
       // right down
       arrowPath.moveTo(
           startX + (2 * absoluteSize / 3),
@@ -112,7 +112,7 @@ class ArrowButtons{
       );
     }
 
-    if (dir == 4 || dir == 1) {
+    if (dir == 4 || dir == 3) {
       // right up
       arrowPath.moveTo(
           startX + (2 * absoluteSize / 3),
@@ -133,20 +133,11 @@ class ArrowButtons{
     c.drawPath(_arrowPath, _paintArrow);
   }
 
-  void onTapDown() {
-    /*switch(arrowDirection){
-      case 0:
-
-        break;
-      case 1:
-
-        break;
-      case 2:
-
-        break;
-      case 3:
-
-        break;
-    }*/
+  void onTapDown(TapDownDetails d) {
+    if (rectButton.contains(d.localPosition)) {
+      if (_onTap != null) {
+        _onTap();
+      }
+    }
   }
 }

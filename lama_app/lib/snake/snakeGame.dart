@@ -75,8 +75,8 @@ class SnakeGame extends Game with TapDetector {
     homeView = HomeView(this);
     gameOverView = GameOverView(this);
 
-    arrowButtonDown = ArrowButtons(this, 0.15, 1, 4, 0.8, () => snake.direction = 1);
-    arrowButtonUp = ArrowButtons(this, 0.15, 3, 3, 0.8, () => snake.direction = 3);
+    arrowButtonDown = ArrowButtons(this, 0.15, 3, 4, 0.8, () => snake.direction = 3);
+    arrowButtonUp = ArrowButtons(this, 0.15, 1, 3, 0.8, () => snake.direction = 1);
     arrowButtonLeft = ArrowButtons(this, 0.15, 2, 0, 0.8, () => snake.direction = 2);
     arrowButtonRight = ArrowButtons(this, 0.15, 4, 1, 0.8, () => snake.direction = 4);
     pauseButton = PauseButton(this);
@@ -212,22 +212,10 @@ class SnakeGame extends Game with TapDetector {
     }
 
     if (activeView != View.home) {
-      if (arrowButtonDown.rectButton.contains(d.localPosition)) {
-        //arrowButtonDown.onTapDown();
-        snake.direction = 3;
-      }
-      else if (arrowButtonUp.rectButton.contains(d.localPosition)) {
-        //arrowButtonUp.onTapDown();
-        snake.direction = 1;
-      }
-      else if (arrowButtonLeft.rectButton.contains(d.localPosition)) {
-        //arrowButtonLeft.onTapDown();
-        snake.direction = 2;
-      }
-      else if (arrowButtonRight.rectButton.contains(d.localPosition)) {
-        //arrowButtonRight.onTapDown();
-        snake.direction = 4;
-      }
+      arrowButtonDown.onTapDown(d);
+      arrowButtonUp.onTapDown(d);
+      arrowButtonLeft.onTapDown(d);
+      arrowButtonRight.onTapDown(d);
 
       if (pauseButton.rectButton.contains(d.localPosition)) {
         if (!_pauseWasPressed) {
