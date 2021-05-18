@@ -188,6 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     BorderRadius.all(Radius.circular(50)))),
                         onPressed: () => Navigator.push(
                           context,
+                          //TODO: Change this to game screen 1
                           MaterialPageRoute(builder: (context) => GameScreen()),
                         ),
                       ),
@@ -222,6 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     BorderRadius.all(Radius.circular(50)))),
                         onPressed: () => Navigator.push(
                           context,
+                          //TODO: Change this to GameScreen for game 2
                           MaterialPageRoute(builder: (context) => GameScreen()),
                         ),
                       ),
