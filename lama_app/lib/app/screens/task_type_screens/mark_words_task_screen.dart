@@ -7,70 +7,25 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 
 class MarkWordsScreen extends StatelessWidget {
-  final String subject;
+  final BoxConstraints constraints;
   final TaskMarkWords task;
   final List<String> sentence = [];
 
-  MarkWordsScreen(this.subject, this.task) {
-    sentence.addAll(task.sentence);
+  MarkWordsScreen(this.task, this.constraints) {
+    sentence.addAll(task.sentence.split(" "));
     print(sentence.length);
   }
 
   @override
   Widget build(BuildContext context) {
-    LinearGradient lg;
-    switch(subject) {
-      case "Englisch":
-        lg = LinearGradient(colors: [Colors.orange, Colors.deepOrange]);
-        break;
-      case "Deutsch":
-        lg = LinearGradient(colors: [Colors.pink, Colors.redAccent[400]]);
-        break;
-    }
 
-    return Scaffold(
-    body: Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          width: MediaQuery.of(context).size.width,
-          height: 90,
-          decoration: BoxDecoration(
-            gradient: lg,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(25),
-              bottomRight: Radius.circular(25)
-            )
-          ),
-          child: SafeArea(
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned(
-                    left: 10,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => {Navigator.of(context).pop()},
-                    )),
-                Text(
-                  subject,
-                  style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.white
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 100),
-        Container(
           padding: EdgeInsets.only(left: 15, right: 15),
-          height: 80,
+          height: (constraints.maxHeight /100) * 40,
+          width: (constraints.maxWidth),
           child: Stack(
             children: [
               Align(
@@ -103,10 +58,34 @@ class MarkWordsScreen extends StatelessWidget {
             ],
           ),
         ),
-        /* Es fehlen noch die Boxen des Satzes */
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                color: Colors.white
+              ),
+              child: InkWell(
+                onTap: () {}, //Kommt in die Liste mit den richtigen Antworten
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(5, 2, 5, 2),
+                  child: Center(
+                    /* TODO: Sich mit Buildern auseinandersetzen um die Satzsteine zu bauen
+                    child: Text(
+                        sentence[]
+                    ),*/
+                  ),
+                ),
+              ),
+            )
+          ],
+
+        ),
         Container(
-          width: MediaQuery.of(context).size.width -200,
-          height: 100,
+          width: (constraints.maxWidth/100)*50,
+          height: (constraints.maxWidth/100) *15,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: Colors.green,
@@ -120,7 +99,7 @@ class MarkWordsScreen extends StatelessWidget {
             ]
           ),
           child: InkWell(
-            onTap: () {},
+            onTap: () => BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initMarkWords(task.rightWords)),
             child: Center(
               child: Text(
                 "Fertig!",
@@ -129,12 +108,12 @@ class MarkWordsScreen extends StatelessWidget {
               ),
             ),
           ),
+        ),
+        SizedBox(
+          height: (constraints.maxHeight/100)* 10,
         )
       ],
-    )
     );
-
-    throw UnimplementedError();
   }
 
 }
