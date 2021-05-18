@@ -51,7 +51,7 @@ class TaskClozeTest extends Task {
 }
 
 class TaskMarkWords extends Task {
-  String rightAnswer;
+  List<String> rightAnswer;
   List<String> sentence;
 
   TaskMarkWords(String taskType, int reward, String lamaText, String question,

@@ -120,7 +120,7 @@ class MarkWordsScreen extends StatelessWidget {
             ]
           ),
           child: InkWell(
-            onTap: () => BlocProvider(create: ), /* Hier muss hin das der Prozess abgeschlossen ist mit dem Klicken der Fertigbox */
+            onTap: () {},
             child: Center(
               child: Text(
                 "Fertig!",
