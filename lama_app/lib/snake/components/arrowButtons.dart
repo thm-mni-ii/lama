@@ -17,7 +17,7 @@ class ArrowButtons {
   int _position;
   double _relativeOffsetY;
   double _relativeSize = 0.15;
-  double _relativeOffsetX = 0.05;
+  double _relativeOffsetX = 0.00;
   double _spaceBetween;
   Function _onTap;
   bool _clickHandled = true;
