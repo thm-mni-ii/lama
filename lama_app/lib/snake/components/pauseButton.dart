@@ -2,28 +2,41 @@ import 'package:lama_app/snake/snakeGame.dart';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 
-
+/// This class represents a Pause and Play button.
 class PauseButton{
   final SnakeGame game;
 
-  Path pausePath;
-  Rect _rectButton;
-  Paint paintButton;
-  Size screenSize;
-  Paint paintPausePath = Paint()
+  final Paint _paintButton = Paint()
+    ..color = Color(0xffFBFEF5);
+  final Paint _paintPausePath = Paint()
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 2.0;
-  Paint _paintShadow;
+    ..strokeWidth = 2.0
+    ..color = Color(0xff000000);
+  final double _shadowWidth = 5;
+
   int _position;
   double _relativeOffsetY;
   double _relativeSize = 0.15;
   double _relativeOffsetX = 0.05;
   Function(bool) _onTap;
-  double _spaceBetween;
-  bool _tapped = false;
-  double _startX;
 
-  PauseButton(this.game, this._relativeSize, this._position, this._relativeOffsetY, this._onTap){
+  Path _signPath;
+  Rect _rectButton;
+  Paint _paintShadow;
+
+  double _startX;
+  bool _tapped = false;
+
+  /// The constructor needs following parameters:
+  /// - the parent [SnakeGame]
+  /// - the relative Size of the button related to the screensize
+  /// - the position of the button (1 to 5)
+  /// - the relative Offset to the Y axis relative to the screensize
+  /// - a [Function(bool)] which runs when the button gets tapped
+  PauseButton(this.game, this._relativeSize, this._position, this._relativeOffsetY, this._onTap) {
+    if (this._position > 5 || this._position <= 0) {
+      throw new FormatException("Position out of bounds");
+    }
     // space of the button element
     var spacePos = (this.game.screenSize.width -
         ((this.game.screenSize.width * _relativeOffsetX) * 2)) / 5;
@@ -31,14 +44,8 @@ class PauseButton{
     this._startX = (this._position * spacePos) +
         ((spacePos - (this.game.screenSize.width * this._relativeSize)) / 2) +
         (this.game.screenSize.width * _relativeOffsetX);
-    // space between the buttons
-    this._spaceBetween = (spacePos - this.game.screenSize.width * this._relativeSize);
 
-    paintButton = Paint();
-    paintButton.color = Color(0xffFBFEF5);
-    paintPausePath.color = Color(0xff000000);
-
-    pausePath = getPausePath();
+    _signPath = getPausePath();
 
     // button rectangle
     _rectButton = Rect.fromLTWH(
@@ -53,7 +60,7 @@ class PauseButton{
       begin: Alignment.bottomRight,
       end: Alignment.topLeft,
       colors: <Color>[
-        Color(0xff000000),
+        Color(0x72000000),
         Color(0x0)
       ],)
         .createShader(
@@ -65,6 +72,7 @@ class PauseButton{
     );
   }
 
+  /// This methods returns the [Path] of a sign which looks like the pause icon.
   Path getPausePath() {
     var returnPath = Path();
     var absoluteSize = _relativeSize * this.game.screenSize.width;
@@ -87,6 +95,7 @@ class PauseButton{
     return returnPath;
   }
 
+  /// This methods returns the [Path] of a sign which looks like the play icon.
   Path getPlayPath() {
     var returnPath = Path();
     var absoluteSize = _relativeSize * this.game.screenSize.width;
@@ -116,22 +125,26 @@ class PauseButton{
     return returnPath;
   }
 
-
   void render(Canvas c){
     // draw shadow
-    c.drawRect(_rectButton.translate(5, 5), _paintShadow);
-    c.drawRect(_rectButton, paintButton);
-    c.drawPath(pausePath, paintPausePath);
+    c.drawRect(_rectButton.translate(_shadowWidth, _shadowWidth), _paintShadow);
+    // draw button
+    c.drawRect(_rectButton, _paintButton);
+    // draw sign
+    c.drawPath(_signPath, _paintPausePath);
   }
 
   void onTapDown(TapDownDetails d) {
     if (_rectButton.contains(d.localPosition)) {
+      // tap switch
       _tapped = !_tapped;
 
       if (_onTap != null) {
         _onTap(_tapped);
       }
-      pausePath = _tapped ? getPlayPath() : getPausePath();
+
+      // alters the path between play and pause
+      _signPath = _tapped ? getPlayPath() : getPausePath();
     }
   }
 }
