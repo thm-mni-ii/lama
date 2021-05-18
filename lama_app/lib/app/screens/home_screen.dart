@@ -159,13 +159,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 10,
                       ),
+                      //TODO: Remove buttons and add button for game list
                       ElevatedButton(
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
                             Center(
                               child: Text(
-                                "Spiele",
+                                "Test Game 1",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 25),
                               ),
@@ -187,6 +188,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                     BorderRadius.all(Radius.circular(50)))),
                         onPressed: () => Navigator.push(
                           context,
+                          //TODO: Change this to game screen 1
+                          MaterialPageRoute(builder: (context) => GameScreen()),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Test Game 2",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 25),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Color.fromARGB(255, 239, 30, 50),
+                              ),
+                            )
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 253, 74, 111),
+                            minimumSize: Size(screenSize.width / 1.25, 60),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)))),
+                        onPressed: () => Navigator.push(
+                          context,
+                          //TODO: Change this to GameScreen for game 2
                           MaterialPageRoute(builder: (context) => GameScreen()),
                         ),
                       ),
