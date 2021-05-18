@@ -3,7 +3,6 @@ import 'dart:math';
 import 'dart:ui';
 import 'dart:developer' as developer;
 
-import 'package:flame/sprite.dart';
 import 'package:lama_app/snake/components/snakeSpriteComponent.dart';
 import 'package:lama_app/snake/models/position.dart';
 import 'package:lama_app/snake/snakeGame.dart';
@@ -15,7 +14,7 @@ class SnakeComponent {
   final bool log = true;
 
   Random rnd = Random();
-  Queue<Position> snakeParts = Queue();
+  Queue<SnakeSpriteComponent> snakeParts = Queue();
   double velocity = 3;
   /// callback when the snake bites itself
   Function callbackBiteItSelf;
@@ -30,11 +29,20 @@ class SnakeComponent {
   int _direction = 1;
   int _lastDirection = 1;
   double _maxVelocity = 15;
-  SnakeSpriteComponent _head;
 
   SnakeComponent(this.game, Position startPos, this.velocity) {
-    snakeParts.add(Position(startPos.x, startPos.y + this.game.fieldOffsetY));
-    _head = SnakeSpriteComponent(SnakePart.Head, this.game.tileSize);
+    snakeParts.addFirst(SnakeSpriteComponent(
+        SnakePart.Tail,
+        this.game.tileSize,
+        1)
+      ..fieldX = (startPos.x)
+      ..fieldY = (startPos.y + this.game.fieldOffsetY + 1));
+    snakeParts.addFirst(SnakeSpriteComponent(
+      SnakePart.Head,
+      this.game.tileSize,
+      1)
+      ..fieldX = (startPos.x)
+      ..fieldY = (startPos.y + this.game.fieldOffsetY));
   }
 
   /// This is the setter of [_direction]
@@ -50,11 +58,11 @@ class SnakeComponent {
 
   /// This method moves the snake by the given direction for 1 tile.
   /// [dir] 1 = north, 2 = west, 3 = south everything else = east
-  void moveSnake(int dir) {
-    var newPosition = getNewPosition(dir);
+  void moveSnake(int dir, List<Apple> apples) {
+    var newPart = getNewSnakeComponent(dir);
 
     // no movement in between the field possible
-    if (newPosition == null) {
+    if (newPart == null) {
       if (log) {
         developer.log("[Snake][moveSnake] collide with the border");
       }
@@ -63,7 +71,7 @@ class SnakeComponent {
         callbackCollideWithBorder();
       }
     }
-    else if (collideWithSnake(newPosition)) {
+    else if (collideWithSnake(newPart)) {
       if (log) {
         developer.log("[Snake][moveSnake] biteItSelf");
       }
@@ -72,111 +80,143 @@ class SnakeComponent {
         callbackBiteItSelf();
       }
     } else {
-      snakeParts.addFirst(newPosition);
+      if (_lastDirection != _direction) {
+        snakeParts.first.part = SnakePart.BodyCorner;
+
+        if ((_lastDirection == 1 && _direction == 2) || (_lastDirection == 4 && _direction == 3)) {
+          snakeParts.first.setDirection(2);
+        }
+        else if ((_lastDirection == 3 && _direction == 4) || (_lastDirection == 2 && _direction == 1)) {
+          snakeParts.first.setDirection(4);
+        }
+        else if ((_lastDirection == 3 && _direction == 2) || (_lastDirection == 4 && _direction == 1)) {
+          snakeParts.first.setDirection(1);
+        }
+        else if ((_lastDirection == 1 && _direction == 4) || (_lastDirection == 2 && _direction == 3)) {
+          snakeParts.first.setDirection(3);
+        }
+      } else {
+        snakeParts.first.part = SnakePart.Body;
+      }
+
+      developer.log("[SnakeComponent][moveSnake] x=${newPart.fieldX},y=${newPart.fieldY}");
+      snakeParts.addFirst(newPart);
       _lastDirection = _direction;
+      
+      growOnHittingApple(apples);
     }
+  }
+
+  void growOnHittingApple(List<Apple> apples) {
+    if (apples != null) {
+      for (Apple apple in apples) {
+        if (collideWithHead(apple.position)) {
+          if (callbackEatsApple != null) {
+            callbackEatsApple(apple);
+          }
+          developer.log("[SnakeComponent][eatApples] eat an apple");
+
+          return;
+        }
+      }
+    }
+
+    snakeParts.removeLast();
+    var tmp = snakeParts.removeLast();
+    tmp.setDirection(getDirection(Position(tmp.fieldX, tmp.fieldY), Position(snakeParts.last.fieldX, snakeParts.last.fieldY)));
+    tmp.part = SnakePart.Tail;
+    snakeParts.addLast(tmp);
   }
 
   /// This method checks if the head is on the given [position]
   bool collideWithHead(Position position) {
     return position != null &&
-        snakeParts.first.x == position.x &&
-        snakeParts.first.y == position.y;
+        snakeParts.first.fieldX == position.x &&
+        snakeParts.first.fieldY == position.y;
   }
 
   /// This method checks if there is an snakepart on the given [position]
-  bool collideWithSnake(Position position) {
-    return position != null &&
-        snakeParts.where((it) => it.x == position.x && it.y == position.y).isNotEmpty;
+  bool collideWithSnake(SnakeSpriteComponent part) {
+    return part != null &&
+        snakeParts.where((it) => it.fieldX == part.fieldX && it.fieldY == part.fieldY).isNotEmpty;
   }
 
-  /// This method returns the new Position by the given [dir].
-  /// [dir] could be: 1 = north, 2 = west, 3 = south everything else = east
-  /// return : hits the border = null, movement within the field = [Position]
-  Position getNewPosition(int dir) {
-    Position headPos = snakeParts.first;
+  SnakeSpriteComponent getNewSnakeComponent(int dir) {
+    SnakeSpriteComponent headPart = snakeParts.first;
 
     switch(dir) {
       case 3 : {
-        if (headPos.y >= this.game.maxFieldY + this.game.fieldOffsetY) {
-          // headPos = Position(headPos.x, this.game.fieldOffsetY + 1);
+        if (headPart.fieldY >= (this.game.maxFieldY + this.game.fieldOffsetY)) {
           return null;
         }
 
-        return Position(headPos.x, headPos.y + 1);
+        return SnakeSpriteComponent(
+            SnakePart.Head,
+            this.game.tileSize,
+            dir)
+          ..fieldX = headPart.fieldX
+          ..fieldY = headPart.fieldY + 1;
       }
       case 2 : {
-        if (headPos.x <= 1) {
-          // headPos = Position(this.game.maxFieldX, headPos.y);
+        if (headPart.fieldX <= 1) {
           return null;
         }
 
-        return Position(headPos.x - 1, headPos.y);
+        return SnakeSpriteComponent(
+            SnakePart.Head,
+            this.game.tileSize,
+            dir)
+          ..fieldX = headPart.fieldX - 1
+          ..fieldY = headPart.fieldY;
       }
       case 1 : {
-        if (headPos.y <= this.game.fieldOffsetY + 1) {
-          // headPos = Position(headPos.x, this.game.maxFieldY + this.game.fieldOffsetY);
+        if (headPart.fieldY <= (this.game.fieldOffsetY + 1)) {
           return null;
         }
 
-        return Position(headPos.x, headPos.y - 1);
+        return SnakeSpriteComponent(
+            SnakePart.Head,
+            this.game.tileSize,
+            dir)
+          ..fieldX = headPart.fieldX
+          ..fieldY = headPart.fieldY - 1;
       }
       default : {
-        if (headPos.x >= this.game.maxFieldX) {
-          // headPos = Position(1, headPos.y);
+        if (headPart.fieldX >= this.game.maxFieldX) {
           return null;
         }
 
-        return Position(headPos.x + 1, headPos.y);
+        return SnakeSpriteComponent(
+            SnakePart.Head,
+            this.game.tileSize,
+            dir)
+          ..fieldX = headPart.fieldX + 1
+          ..fieldY = headPart.fieldY;
       }
     }
+  }
+
+  int getDirection(Position from, Position to) {
+    if (to.x > from.x) {
+      return 4;
+    }
+    if (to.x < from.x) {
+      return 2;
+    }
+    if (to.y > from.y) {
+      return 3;
+    }
+    if (to.y < from.y) {
+      return 1;
+    }
+    return 0;
   }
 
   void render(Canvas c) {
     // render each part of the snake
-    for (Position tmpSnake in snakeParts) {
-      // rectangle for each part
-      Rect bgRect = Rect.fromLTWH(
-          (tmpSnake.x - 1) * this.game.tileSize,
-          (tmpSnake.y - 1) * this.game.tileSize,
-          this.game.tileSize,
-          this.game.tileSize);
-
-      Paint bgPaint = Paint();
-      // color the head different than the tail
-      bgPaint.color = Color(tmpSnake == snakeParts.first ? 0xFF208421 : 0xFF34C935);
-
-
-      if (tmpSnake == snakeParts.first) {
-        _head.x = bgRect.left;
-        _head.y = bgRect.top;
-        _head.render(c);
-      } else {
-        c.drawArc(bgRect, 0, 10, true, bgPaint);
-      }
+    for (SnakeSpriteComponent tmpSnake in snakeParts) {
+      tmpSnake.render(c);
     }
-  }
-
-  void eatApples(List<Apple> apples) {
-    if (apples == null) {
-      // adds the new head
-      snakeParts.removeLast();
-      return;
-    }
-
-    for (Apple apple in apples) {
-      if (collideWithHead(apple.position)) {
-        if (callbackEatsApple != null) {
-          callbackEatsApple(apple);
-        }
-        developer.log("[SnakeComponent][eatApples] eat an apple");
-
-        return;
-      }
-    }
-
-    // adds the new head
-    snakeParts.removeLast();
   }
 
   void update(double t, List<Apple> apples) {
@@ -185,14 +225,7 @@ class SnakeComponent {
 
     // moves the snake depending on its velocity
     if (_deltaCounter / (1 / (velocity > _maxVelocity ? _maxVelocity : velocity)) > 1.0) {
-      // debug_movement = snake moves towards an random direction
-      if (debugMovement) {
-        direction = rnd.nextInt(5);
-      }
-
-      // debug_movement = snake growths with 10% chance
-      moveSnake(_direction);
-      eatApples(apples);
+      moveSnake(_direction, apples);
 
       // resets the deltaCounter
       _deltaCounter = 0;

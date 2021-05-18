@@ -47,7 +47,7 @@ class SnakeGame extends Game with TapDetector {
   int maxFieldY = 25;
   final maxField = true;
   final fieldOffsetY = 0;
-  final maxApples = 20;
+  final maxApples = 1;
   final snakeStartVelocity = 2.0;
 
   bool _finished = false;
@@ -115,7 +115,7 @@ class SnakeGame extends Game with TapDetector {
 
       // get all Positions which are filled with the snake or apples
       var excludePositions = apples.map((e) => e.position).toList();
-      excludePositions.addAll(snake?.snakeParts ?? []);
+      excludePositions.addAll(snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
       // set new Position of the eaten apple on a free field
       apple.setRandomPosition(excludePositions);
 
@@ -129,7 +129,7 @@ class SnakeGame extends Game with TapDetector {
   void spawnApples() {
     while (apples.length < maxApples) {
       var excludePositions = apples.map((e) => e.position).toList();
-      excludePositions.addAll(snake?.snakeParts ?? []);
+      excludePositions.addAll(snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
       apples.add(Apple(this, excludePositions));
     }
   }
