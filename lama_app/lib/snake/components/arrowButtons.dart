@@ -21,7 +21,7 @@ class ArrowButtons {
   double _spaceBetween;
   Function _onTap;
   bool _clickHandled = true;
-  Color _buttonColor = Color(0xff0088ff);
+  Color _buttonColor = Color(0xff3CDFFF);
   Color _buttonClickColor = Color(0xffbdcbd9);
 
 
