@@ -3,6 +3,8 @@ import 'dart:math';
 import 'dart:ui';
 import 'dart:developer' as developer;
 
+import 'package:flame/sprite.dart';
+import 'package:lama_app/snake/components/snakeSpriteComponent.dart';
 import 'package:lama_app/snake/models/position.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
@@ -28,9 +30,11 @@ class SnakeComponent {
   int _direction = 1;
   int _lastDirection = 1;
   double _maxVelocity = 15;
+  SnakeSpriteComponent _head;
 
   SnakeComponent(this.game, Position startPos, this.velocity) {
     snakeParts.add(Position(startPos.x, startPos.y + this.game.fieldOffsetY));
+    _head = SnakeSpriteComponent(SnakePart.Head, this.game.tileSize);
   }
 
   /// This is the setter of [_direction]
@@ -142,7 +146,14 @@ class SnakeComponent {
       // color the head different than the tail
       bgPaint.color = Color(tmpSnake == snakeParts.first ? 0xFF208421 : 0xFF34C935);
 
-      c.drawArc(bgRect, 0, 10, true, bgPaint);
+
+      if (tmpSnake == snakeParts.first) {
+        _head.x = bgRect.left;
+        _head.y = bgRect.top;
+        _head.render(c);
+      } else {
+        c.drawArc(bgRect, 0, 10, true, bgPaint);
+      }
     }
   }
 

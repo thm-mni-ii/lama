@@ -89,7 +89,11 @@ class SnakeGame extends Game with TapDetector {
 
     Flame.images.loadAll([
       'png/snake.png',
-      'png/apple.png'
+      'png/apple.png',
+      'png/snake_body.png',
+      'png/snake_body_curve.png',
+      'png/snake_head.png',
+      'png/snake_tail.png'
     ]);
 
     _initialized = true;
