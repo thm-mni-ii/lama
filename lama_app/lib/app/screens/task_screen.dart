@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/four_card_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -141,6 +142,8 @@ class TaskScreenState extends State<TaskScreen> {
     switch (task.type) {
       case "4Cards":
         return FourCardTaskScreen(task, constraints);
+      case "ClozeTest":
+        return ClozeTestTaskScreen(task, constraints);
       default:
         return Container();
     }
