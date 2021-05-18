@@ -1,6 +1,7 @@
 import 'package:lama_app/app/model/achievement_model.dart';
 import 'package:lama_app/app/model/game_model.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
+import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -143,6 +144,23 @@ class DatabaseProvider {
     return achievementList;
   }
 
+  Future<List<UserHasAchievement>> getUserHasAchievements() async {
+    final db = await database;
+
+    var userHasAchievements = await db.query(tableUserHasAchievements,
+        columns: [columnUserId, columnAchievementId]);
+
+    List<UserHasAchievement> userHasAchievementList = <UserHasAchievement>[];
+
+    userHasAchievements.forEach((currentAchievement) {
+      UserHasAchievement userHasAchievement = UserHasAchievement.fromMap(currentAchievement);
+
+      userHasAchievementList.add(userHasAchievement);
+    });
+
+    return userHasAchievementList;
+  }
+
   Future<List<Game>> getGames() async {
     final db = await database;
 
@@ -189,6 +207,15 @@ class DatabaseProvider {
     return achievement;
   }
 
+    insertUserHasAchievement(User user, Achievement achievement) async {
+    final db = await database;
+    UserHasAchievement userHasAchievement = UserHasAchievement(
+      userID: user.id,
+      achievementID: achievement.id
+    );
+    await db.insert(tableUserHasAchievements, userHasAchievement.toMap());
+  }
+
   Future<Game> insertGame(Game game) async {
     final db = await database;
     game.id = await db.insert(tableGames, game.toMap());
@@ -211,6 +238,11 @@ class DatabaseProvider {
     final db = await database;
 
     return await db.delete(tableAchievements, where: "id = ?", whereArgs: [id]);
+  }
+
+  Future<int> deleteUserHasAchievement(User user, Achievement achievement) async {
+    final db = await database;
+    return await db.delete(tableUserHasAchievements, where: "userId = ? and achievementID = ? ", whereArgs: [user.id, achievement.id]);
   }
 
   Future<int> deleteGame(int id) async {
