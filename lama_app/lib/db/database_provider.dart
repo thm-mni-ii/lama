@@ -2,6 +2,7 @@ import 'package:lama_app/app/model/achievement_model.dart';
 import 'package:lama_app/app/model/game_model.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/model/userHasAchievement_model.dart';
+import 'package:lama_app/app/model/subject_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -37,7 +38,7 @@ class DatabaseProvider {
   static const String columnSubjectsName = "name";
 
   static const String tableUserSolvedTaskAmount = "user_solved_task_amount";
-  static const String columnSubjectId = "subjectID";
+  static const String columnSubjectId = "id";
   static const String columnAmount = "amount";
 
   DatabaseProvider._();
@@ -92,7 +93,7 @@ class DatabaseProvider {
           "$columnUserId INTEGER"
           ");");
       await database.execute("Create TABLE $tableSubjects("
-          "$columnSubjectId INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$columnSubjectsId INTEGER PRIMARY KEY AUTOINCREMENT,"
           "$columnSubjectsName TEXT"
           ");");
       await database.execute("Create TABLE $tableUserSolvedTaskAmount("
@@ -195,6 +196,23 @@ class DatabaseProvider {
     return highscoreList;
   }
 
+  Future<List<Subject>> getSubjects() async {
+    final db = await database;
+
+    var subjects = await db.query(tableSubjects,
+        columns: [columnSubjectsId, columnSubjectsName]);
+
+    List<Subject> subjectList = <Subject>[];
+
+    subjects.forEach((currentSubject) {
+      Subject subject = Subject.fromMap(currentSubject);
+
+      subjectList.add(subject);
+    });
+
+    return subjectList;
+  }
+
   Future<User> insertUser(User user) async {
     final db = await database;
     user.id = await db.insert(tableUser, user.toMap());
@@ -228,6 +246,12 @@ class DatabaseProvider {
     return highscore;
   }
 
+  Future<Subject> insertSubject(Subject subject) async {
+    final db = await database;
+    subject.id = await db.insert(tableSubjects, subject.toMap());
+    return subject;
+  }
+
   Future<int> deleteUser(int id) async {
     final db = await database;
 
@@ -257,6 +281,12 @@ class DatabaseProvider {
     return await db.delete(tableHighscore, where: "id = ?", whereArgs: [id]);
   }
 
+  Future<int> deleteSubject(int id) async {
+    final db = await database;
+
+    return await db.delete(tableSubjects, where: "id = ?", whereArgs: [id]);
+  }
+
   Future<int> updateUser(User user) async {
     final db = await database;
 
@@ -283,5 +313,11 @@ class DatabaseProvider {
 
     return await db.update(tableHighscore, highscore.toMap(),
         where: " id = ?", whereArgs: [highscore.id]);
+  }
+  Future<int> updateSubject(Subject subject) async {
+    final db = await database;
+
+    return await db.update(tableSubjects, subject.toMap(),
+        where: " id = ?", whereArgs: [subject.id]);
   }
 }
