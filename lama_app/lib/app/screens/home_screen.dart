@@ -6,6 +6,7 @@ import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/game_screen.dart';
+import 'package:lama_app/app/screens/flappy_game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 
 //Home Screen is a Stateful Widget so it can be reloaded using setState((){}) after Navigation
@@ -201,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Center(
                               child: Text(
-                                "Test Game 2",
+                                "Flappy Lama",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 25),
                               ),
@@ -224,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () => Navigator.push(
                           context,
                           //TODO: Change this to GameScreen for game 2
-                          MaterialPageRoute(builder: (context) => GameScreen()),
+                          MaterialPageRoute(builder: (context) => FlappyGameScreen()),
                         ),
                       ),
                     ],
