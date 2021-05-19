@@ -76,10 +76,10 @@ class SnakeGame extends Game with TapDetector {
     homeView = HomeView(this);
     gameOverView = GameOverView(this);
 
-    arrowButtonDown = ArrowButtons(this, _relativeButtonSize, 3, 4, 1.0 - _controlBarRelativeHeight, () => snake.direction = 3);
-    arrowButtonUp = ArrowButtons(this, _relativeButtonSize, 1, 3, 1.0 - _controlBarRelativeHeight, () => snake.direction = 1);
-    arrowButtonLeft = ArrowButtons(this, _relativeButtonSize, 2, 0, 1.0 - _controlBarRelativeHeight, () => snake.direction = 2);
-    arrowButtonRight = ArrowButtons(this, _relativeButtonSize, 4, 1, 1.0 - _controlBarRelativeHeight, () => snake.direction = 4);
+    arrowButtonDown = ArrowButtons(this, _relativeButtonSize, 3, 4, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.South);
+    arrowButtonUp = ArrowButtons(this, _relativeButtonSize, 1, 3, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.North);
+    arrowButtonLeft = ArrowButtons(this, _relativeButtonSize, 2, 0, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.West);
+    arrowButtonRight = ArrowButtons(this, _relativeButtonSize, 4, 1, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.East);
 
     pauseButton = PauseButton(this, _relativeButtonSize, 2, 1.0 - _controlBarRelativeHeight, (tapped) => _running = !tapped);
 
@@ -89,7 +89,11 @@ class SnakeGame extends Game with TapDetector {
 
     Flame.images.loadAll([
       'png/snake.png',
-      'png/apple.png'
+      'png/apple.png',
+      'png/snake_body.png',
+      'png/snake_body_curve.png',
+      'png/snake_head.png',
+      'png/snake_tail.png'
     ]);
 
     _initialized = true;
@@ -111,7 +115,7 @@ class SnakeGame extends Game with TapDetector {
 
       // get all Positions which are filled with the snake or apples
       var excludePositions = apples.map((e) => e.position).toList();
-      excludePositions.addAll(snake?.snakeParts ?? []);
+      excludePositions.addAll(snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
       // set new Position of the eaten apple on a free field
       apple.setRandomPosition(excludePositions);
 
@@ -125,7 +129,7 @@ class SnakeGame extends Game with TapDetector {
   void spawnApples() {
     while (apples.length < maxApples) {
       var excludePositions = apples.map((e) => e.position).toList();
-      excludePositions.addAll(snake?.snakeParts ?? []);
+      excludePositions.addAll(snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
       apples.add(Apple(this, excludePositions));
     }
   }
