@@ -4,21 +4,22 @@ import 'dart:ui';
 import 'package:flame/anchor.dart';
 import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
+import 'package:lama_app/snake/components/snake.dart';
 
 class SnakeSpriteComponent extends SpriteComponent {
-  int direction = 0;
+  SnakeDirection _direction = SnakeDirection.North;
   int _fieldX = 0;
   int _fieldY = 0;
-  double _tilesize;
+  double _tileSize;
   SnakePart _part;
 
-  SnakeSpriteComponent(SnakePart part, this._tilesize, int direction) {
-    width = _tilesize;
-    height = _tilesize;
+  SnakeSpriteComponent(SnakePart part, this._tileSize, SnakeDirection direction) {
+    width = _tileSize;
+    height = _tileSize;
     anchor = Anchor.center;
 
     this.part = part;
-    setDirection(direction);
+    this.direction = direction;
   }
 
   set part(SnakePart part) {
@@ -40,47 +41,56 @@ class SnakeSpriteComponent extends SpriteComponent {
     this._part = part;
   }
 
+  get part => _part;
+
+  /// This setter will also calculate the [x] Value of the class with the [tilesize].
   set fieldX(int x) {
     _fieldX = x;
-    this.x = (x - 1) * this._tilesize;
+    this.x = (x - 1) * this._tileSize;
   }
 
   get fieldX => _fieldX;
 
+  /// This setter will also calculate the [y] Value of the class with the [tilesize].
   set fieldY(int y) {
     _fieldY = y;
-    this.y = (y - 1) * this._tilesize;
+    this.y = (y - 1) * this._tileSize;
   }
 
   get fieldY => _fieldY;
 
-  void setDirection(int dir) {
+  /// This setter also determines the rotation angle of the sprite.
+  set direction(SnakeDirection dir) {
     switch (dir) {
-      case 1:
+      case SnakeDirection.North:
         // 180
         angle = pi;
         break;
-      case 2:
+      case SnakeDirection.West:
         // 90
         angle =  pi / 2;
         break;
-      case 3:
+      case SnakeDirection.South:
         // 0
         angle = 0;
         break;
-      case 4:
+      case SnakeDirection.East:
         // 270
         angle = - pi / 2;
         break;
-      default:
-        break;
     }
+
+    _direction = dir;
   }
 
+  SnakeDirection get direction => _direction;
+
   void render(Canvas canvas) {
+    // save the actual canvas
     canvas.save();
     canvas.translate(width * 0.5, height * 0.5);
     super.render(canvas);
+    // restores the old canvas
     canvas.restore();
   }
 }

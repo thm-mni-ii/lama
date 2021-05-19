@@ -47,7 +47,7 @@ class SnakeGame extends Game with TapDetector {
   int maxFieldY = 25;
   final maxField = true;
   final fieldOffsetY = 0;
-  final maxApples = 1;
+  final maxApples = 20;
   final snakeStartVelocity = 2.0;
 
   bool _finished = false;
@@ -76,10 +76,10 @@ class SnakeGame extends Game with TapDetector {
     homeView = HomeView(this);
     gameOverView = GameOverView(this);
 
-    arrowButtonDown = ArrowButtons(this, _relativeButtonSize, 3, 4, 1.0 - _controlBarRelativeHeight, () => snake.direction = 3);
-    arrowButtonUp = ArrowButtons(this, _relativeButtonSize, 1, 3, 1.0 - _controlBarRelativeHeight, () => snake.direction = 1);
-    arrowButtonLeft = ArrowButtons(this, _relativeButtonSize, 2, 0, 1.0 - _controlBarRelativeHeight, () => snake.direction = 2);
-    arrowButtonRight = ArrowButtons(this, _relativeButtonSize, 4, 1, 1.0 - _controlBarRelativeHeight, () => snake.direction = 4);
+    arrowButtonDown = ArrowButtons(this, _relativeButtonSize, 3, 4, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.South);
+    arrowButtonUp = ArrowButtons(this, _relativeButtonSize, 1, 3, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.North);
+    arrowButtonLeft = ArrowButtons(this, _relativeButtonSize, 2, 0, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.West);
+    arrowButtonRight = ArrowButtons(this, _relativeButtonSize, 4, 1, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.East);
 
     pauseButton = PauseButton(this, _relativeButtonSize, 2, 1.0 - _controlBarRelativeHeight, (tapped) => _running = !tapped);
 
