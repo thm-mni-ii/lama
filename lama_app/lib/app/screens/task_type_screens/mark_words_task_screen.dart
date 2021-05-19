@@ -10,6 +10,7 @@ class MarkWordsScreen extends StatelessWidget {
   final BoxConstraints constraints;
   final TaskMarkWords task;
   final List<String> sentence = [];
+  List<String> providedanswerWords;
 
   MarkWordsScreen(this.task, this.constraints) {
     sentence.addAll(task.sentence.split(" "));
@@ -18,13 +19,12 @@ class MarkWordsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
           padding: EdgeInsets.only(left: 15, right: 15),
-          height: (constraints.maxHeight /100) * 40,
+          height: (constraints.maxHeight / 100) * 30,
           width: (constraints.maxWidth),
           child: Stack(
             children: [
@@ -40,8 +40,7 @@ class MarkWordsScreen extends StatelessWidget {
                       child: Text(
                         task.lamaText,
                         style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.bold
-                        ),
+                            fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -62,44 +61,27 @@ class MarkWordsScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              height: 30,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.white
-              ),
-              child: InkWell(
-                onTap: () {}, //Kommt in die Liste mit den richtigen Antworten
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(5, 2, 5, 2),
-                  child: Center(
-                    /* TODO: Sich mit Buildern auseinandersetzen um die Satzsteine zu bauen
-                    child: Text(
-                        sentence[]
-                    ),*/
-                  ),
-                ),
-              ),
-            )
+                width: constraints.maxWidth,
+                height: (constraints.maxHeight / 100) * 50,
+                child: _sentence(sentence))
           ],
-
         ),
         Container(
-          width: (constraints.maxWidth/100)*50,
-          height: (constraints.maxWidth/100) *15,
+          width: (constraints.maxWidth / 100) * 50,
+          height: (constraints.maxWidth / 100) * 15,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Colors.green,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: Offset(0, 3)
-              )
-            ]
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              color: Colors.green,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3))
+              ]),
           child: InkWell(
-            onTap: () => BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initMarkWords(task.rightWords)),
+            onTap: () => BlocProvider.of<TaskBloc>(context)
+                .add(AnswerTaskEvent.initMarkWords(providedanswerWords)),
             child: Center(
               child: Text(
                 "Fertig!",
@@ -110,10 +92,36 @@ class MarkWordsScreen extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: (constraints.maxHeight/100)* 10,
+          height: (constraints.maxHeight / 100) * 10,
         )
       ],
     );
   }
 
+  Widget _sentence(List<String> sentence) {
+    return ListView.builder(
+      itemCount: sentence.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.all(5),
+          child: Container(
+            width: constraints.maxWidth,
+            height: (constraints.maxHeight / 100) * 5,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              color: Colors.lightBlue,
+            ),
+            child: InkWell(
+              onTap: () {
+                providedanswerWords.add(sentence[index]);
+              },
+              child: Center(
+                child: Text(sentence[index], textAlign: TextAlign.center),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
