@@ -6,6 +6,7 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/screens/task_type_screens/four_card_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
+import 'package:lama_app/util/LamaColors.dart';
 
 class TaskScreen extends StatefulWidget {
   @override
@@ -26,13 +27,16 @@ class TaskScreenState extends State<TaskScreen> {
         if (state is DisplayTaskState) {
           switch (state.subject) {
             case "Mathe":
-              lg = LinearGradient(colors: [Colors.lightBlue, Colors.blue]);
+              lg = LinearGradient(
+                  colors: [LamaColors.blueAccent, LamaColors.bluePrimary]);
               break;
             case "Englisch":
-              lg = LinearGradient(colors: [Colors.orange, Colors.deepOrange]);
+              lg = LinearGradient(
+                  colors: [LamaColors.orangeAccent, LamaColors.orangePrimary]);
               break;
             case "Deutsch":
-              lg = LinearGradient(colors: [Colors.pink, Colors.redAccent[400]]);
+              lg = LinearGradient(
+                  colors: [LamaColors.redAccent, LamaColors.redPrimary]);
               break;
           }
           return Scaffold(

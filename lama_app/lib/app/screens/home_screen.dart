@@ -8,6 +8,7 @@ import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/game_screen.dart';
 import 'package:lama_app/app/screens/flappy_game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
+import 'package:lama_app/util/LamaColors.dart';
 
 //Home Screen is a Stateful Widget so it can be reloaded using setState((){}) after Navigation
 class HomeScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
         RepositoryProvider.of<UserRepository>(context);
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 253, 74, 111),
+      backgroundColor: LamaColors.mainPink,
       body: SafeArea(
         child: Stack(
           children: [
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 112, 231, 255),
+                            primary: LamaColors.blueAccent,
                             minimumSize: Size(screenSize.width / 1.25, 60),
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -97,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 239, 30, 6),
+                            primary: LamaColors.redAccent,
                             minimumSize: Size(screenSize.width / 1.25, 60),
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -139,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 253, 130, 53),
+                            primary: LamaColors.orangeAccent,
                             minimumSize: Size(screenSize.width / 1.25, 60),
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -182,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 253, 74, 111),
+                            primary: LamaColors.greenAccent,
                             minimumSize: Size(screenSize.width / 1.25, 60),
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -217,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 253, 74, 111),
+                            primary: LamaColors.greenAccent,
                             minimumSize: Size(screenSize.width / 1.25, 60),
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -225,7 +226,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () => Navigator.push(
                           context,
                           //TODO: Change this to GameScreen for game 2
-                          MaterialPageRoute(builder: (context) => FlappyGameScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => FlappyGameScreen()),
                         ),
                       ),
                     ],
@@ -239,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: screenSize.width,
                 height: 75,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 253, 74, 111),
+                  color: LamaColors.mainPink,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(25),
                     bottomRight: Radius.circular(25),
