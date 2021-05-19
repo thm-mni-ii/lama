@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'dart:developer' as developer;
 import 'dart:math';
 
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -153,6 +155,7 @@ class SnakeGame extends Game with TapDetector {
     snake.callbackCollideWithBorder = () => finishGame();
     // callback when the snake eats an apple
     snake.callbackEatsApple = (apple) {
+      playAppleBiteSound();
       score += 1;
       // respawn the eaten apple
       respawnApple(apple);
@@ -162,6 +165,11 @@ class SnakeGame extends Game with TapDetector {
     if (log) {
       developer.log("[SnakeGame][spawnSnake] spawned");
     }
+  }
+
+  static Future<void> playAppleBiteSound() async {
+    var track = AudioCache(prefix: 'assets/sounds/', fixedPlayer: AudioPlayer());
+    track.play('apple_bite.mp3');
   }
 
   void render(Canvas canvas) {

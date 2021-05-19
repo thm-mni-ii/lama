@@ -37,6 +37,7 @@ dependencies:
   flame: ^0.29.4
   bubble: ^1.2.1
   flutter_markdown: ^0.6.2
+  audioplayers: ^0.18.3
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +58,7 @@ flutter:
   assets:
      - assets/images/svg/
      - assets/images/png/
+     - assets/sounds/
      - assets/standardTasksets/mathe/
      - assets/standardTasksets/deutsch/
      - assets/standardTasksets/englisch/
