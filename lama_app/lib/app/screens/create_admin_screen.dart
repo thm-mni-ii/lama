@@ -40,7 +40,10 @@ class CreateAdminScreen extends StatelessWidget {
             padding: EdgeInsets.all(20.0),
             child: TextFormField(
               decoration: InputDecoration(
-                  hintText: 'Passwort', errorText: validatiorInputPassword()),
+                hintText: 'Passwort',
+                errorText: validatiorInputPassword(),
+              ),
+              obscureText: true,
               validator: (String value) {
                 return validatiorInputPassword();
               },
