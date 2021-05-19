@@ -6,6 +6,7 @@ import 'package:flame/flame.dart';
 
 import 'package:flutter/material.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
+import 'package:lama_app/flappyLama/components/flappyLama.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
 import 'package:lama_app/flappyLama/widgets/pauseMode.dart';
@@ -15,6 +16,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   Size screenSize;
   double tileSize;
   int score = 0;
+  FlappyLama flappyLama;
 
   BuildContext _context;
   bool _paused = false;
@@ -52,6 +54,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     resize(await Flame.util.initialDimensions());
     // add ground
     add(FlappyGround(this));
+    flappyLama = FlappyLama(this);
     // add obstacles
     add(FlappyObstacle(this));
     // add score
@@ -62,6 +65,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     screenSize = Size(
         MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
         MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
+    flappyLama.render(canvas);
     tileSize = screenSize.width / 9;
 
     super.resize(size);
