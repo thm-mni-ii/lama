@@ -1,7 +1,10 @@
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lama_app/app/bloc/task_bloc.dart';
+import 'package:lama_app/app/event/task_events.dart';
 
 import '../../task-system/task.dart';
 
@@ -67,77 +70,89 @@ class ClozeTestTaskScreen extends StatelessWidget {
         ),
       ),
       Container(
-        height: (constraints.maxHeight / 100) * 50,
+          height: (constraints.maxHeight / 100) * 50,
           alignment: Alignment.bottomCenter,
-          padding: EdgeInsets.only(top:20),
+          padding: EdgeInsets.only(top: 20),
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            height: 55,
-            width: 250,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.lightGreen,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3)),
-                ]),
-            child: Center(
-              child: Text(
-                  answers[0],
-                style:
-                TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                height: 55,
+                width: 250,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.lightGreen,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3)),
+                    ]),
+                child: InkWell(
+                  onTap: () => BlocProvider.of<TaskBloc>(context)
+                      .add(AnswerTaskEvent(answers[0])),
+                  child: Center(
+                    child: Text(
+                      answers[0],
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Container(
-            height: 55,
-            width: 250,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.lightBlue,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3))
-                ]),
-            child: Center(
-              child: Text(
-                answers[1],
-                style:
-                TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              Container(
+                height: 55,
+                width: 250,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.lightBlue,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3))
+                    ]),
+                child: InkWell(
+                  onTap: () => BlocProvider.of<TaskBloc>(context)
+                      .add(AnswerTaskEvent(answers[1])),
+                  child: Center(
+                    child: Text(
+                      answers[1],
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Container(
-            height: 55,
-            width: 250,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.lightGreen,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3))
-                ]),
-            child: Center(
-              child: Text(
-                answers[2],
-                style:
-                TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-            ),
-          )
-        ],
-      ))
+              Container(
+                height: 55,
+                width: 250,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.lightGreen,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3))
+                    ]),
+                child: InkWell(
+                  onTap: () => BlocProvider.of<TaskBloc>(context)
+                      .add(AnswerTaskEvent(answers[2])),
+                  child: Center(
+                    child: Text(
+                      answers[2],
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ))
     ]);
   }
 }
