@@ -1,6 +1,7 @@
 import 'package:lama_app/app/model/achievement_model.dart';
 import 'package:lama_app/app/model/game_model.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
+import 'package:lama_app/app/model/password_model.dart';
 import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/subject_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
@@ -110,7 +111,6 @@ class DatabaseProvider {
     var users = await db.query(tableUser, columns: [
       columnId,
       columnName,
-      columnPassword,
       columnGrade,
       columnCoins,
       columnIsAdmin,
@@ -314,10 +314,36 @@ class DatabaseProvider {
     return await db.update(tableHighscore, highscore.toMap(),
         where: " id = ?", whereArgs: [highscore.id]);
   }
+
   Future<int> updateSubject(Subject subject) async {
     final db = await database;
 
     return await db.update(tableSubjects, subject.toMap(),
         where: " id = ?", whereArgs: [subject.id]);
+  }
+
+  Future<int> checkPassword(String password, User user) async{
+    final db = await database;
+
+    var passwords = await db.query(tableUser,
+        columns: [columnPassword],
+        where: "id = ?",
+        whereArgs: [user.id]);
+
+    Password pswd = Password.fromMap(passwords.first);
+
+    if (password.length > 0){
+      return (password.compareTo(pswd.password) == 0 ? 1 : 0);
+    }
+    return null;
+  }
+
+  Future<int> updatePassword(String newPassword, User user) async{
+    final db = await database;
+    Password password = Password( password: newPassword);
+    return await db.update(tableUser,
+        password.toMap(),
+        where: "id = ?",
+        whereArgs: [user.id]);
   }
 }
