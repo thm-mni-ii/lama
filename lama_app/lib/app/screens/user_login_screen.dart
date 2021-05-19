@@ -30,7 +30,23 @@ class UserSelectionState extends State<UserLoginScreen> {
           if (state is UserSelected) {
             return Column(
               children: [
-                _userCard(state.user),
+                Padding(
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        //TODO should be backgrundImage.
+                        //You can use path to get the User Image.
+                        backgroundColor: Color(0xFFF48FB1),
+                        radius: 20,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(state.user.name),
+                    ],
+                  ),
+                  padding: EdgeInsets.fromLTRB(20, 15, 0, 0),
+                ),
                 TextFormField(
                   decoration: InputDecoration(
                     icon: Icon(Icons.security),
