@@ -34,6 +34,18 @@ class AdminScreenState extends State<AdminScreen> {
           return Center(child: CircularProgressIndicator());
         },
       ),
+      floatingActionButton: BlocBuilder<AdminScreenBloc, AdminState>(
+        builder: (context, state) {
+          if (state is Loaded) {
+            return new FloatingActionButton(
+              onPressed: () => {},
+              tooltip: 'Nutzer hinzufügen',
+              child: new Icon(Icons.add),
+            );
+          }
+          return null;
+        },
+      ),
     );
   }
 }
