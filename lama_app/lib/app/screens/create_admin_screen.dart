@@ -24,7 +24,7 @@ class CreateAdminScreen extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(10.0),
               child: TextFormField(
                 decoration: InputDecoration(
                     hintText: 'Nutzername', errorText: validatiorInputName()),
@@ -37,14 +37,17 @@ class CreateAdminScreen extends StatelessWidget {
                 },
               )),
           Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(10.0),
             child: TextFormField(
               decoration: InputDecoration(
-                  hintText: 'Passwort', errorText: validatiorInputPassword()),
+                hintText: 'Passwort',
+                errorText: validatiorInputPassword(),
+              ),
               validator: (String value) {
                 return validatiorInputPassword();
               },
               onChanged: (value) => _user.password = value,
+              obscureText: true,
             ),
           ),
           ElevatedButton(
