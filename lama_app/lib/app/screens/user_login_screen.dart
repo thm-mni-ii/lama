@@ -132,19 +132,21 @@ Widget _userListView(List<User> list) {
 }
 
 Widget _userCard(User user) {
-  return BlocBuilder<UserLoginBloc, UserLoginState>(builder: (context, state) {
-    return Card(
-      child: ListTile(
-        onTap: () {
-          context.read<UserLoginBloc>().add(SelectUser(user));
-        },
-        title: Text(user.name),
-        leading: CircleAvatar(
-          //TODO should be backgrundImage.
-          //You can use path to get the User Image.
-          backgroundColor: Color(0xFFF48FB1),
+  return BlocBuilder<UserLoginBloc, UserLoginState>(
+    builder: (context, state) {
+      return Card(
+        child: ListTile(
+          onTap: () {
+            context.read<UserLoginBloc>().add(SelectUser(user));
+          },
+          title: Text(user.name),
+          leading: CircleAvatar(
+            //TODO should be backgrundImage.
+            //You can use path to get the User Image.
+            backgroundColor: Color(0xFFF48FB1),
+          ),
         ),
-      ),
-    );
-  });
+      );
+    },
+  );
 }
