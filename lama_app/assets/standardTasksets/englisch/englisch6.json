@@ -1,0 +1,15 @@
+{
+    "taskset_name":"Standardaufgaben Klasse 6",
+     "taskset_subject":"Englisch",
+      "taskset_grade":6,
+       "tasks": [
+           {
+           "task_type":"4Cards",
+            "task_reward":2,
+            "question":"What does 'to trust' mean in german?",
+            "lama_text":"Tap the right Answer!",
+            "right_answer":"vertrauen",
+             "wrong_answers":["drücken", "brauchen", "rosten"]
+             }
+        ]
+}

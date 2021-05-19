@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
+import 'package:lama_app/app/bloc/user_login_bloc.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/game_screen.dart';
+import 'package:lama_app/app/screens/flappy_game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+//Home Screen is a Stateful Widget so it can be reloaded using setState((){}) after Navigation
+class HomeScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    UserRepository userRepository =
+        RepositoryProvider.of<UserRepository>(context);
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 253, 74, 111),
@@ -56,10 +67,11 @@ class HomeScreen extends StatelessWidget {
                               create: (BuildContext context) =>
                                   ChooseTasksetBloc(
                                       context.read<TasksetRepository>()),
-                              child: ChooseTasksetScreen("Mathe"),
+                              child: ChooseTasksetScreen("Mathe",
+                                  userRepository.getGrade(), userRepository),
                             ),
                           ),
-                        ),
+                        ).then((value) => (setState(() {}))),
                       ),
                       SizedBox(
                         height: 10,
@@ -90,7 +102,18 @@ class HomeScreen extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50)))),
-                        onPressed: () => {},
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (BuildContext context) =>
+                                  ChooseTasksetBloc(
+                                      context.read<TasksetRepository>()),
+                              child: ChooseTasksetScreen("Deutsch",
+                                  userRepository.getGrade(), userRepository),
+                            ),
+                          ),
+                        ).then((value) => (setState(() {}))),
                       ),
                       SizedBox(
                         height: 10,
@@ -121,18 +144,30 @@ class HomeScreen extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50)))),
-                        onPressed: () => {},
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (BuildContext context) =>
+                                  ChooseTasksetBloc(
+                                      context.read<TasksetRepository>()),
+                              child: ChooseTasksetScreen("Englisch",
+                                  userRepository.getGrade(), userRepository),
+                            ),
+                          ),
+                        ).then((value) => (setState(() {}))),
                       ),
                       SizedBox(
                         height: 10,
                       ),
+                      //TODO: Remove buttons and add button for game list
                       ElevatedButton(
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
                             Center(
                               child: Text(
-                                "Spiele",
+                                "Test Game 1",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 25),
                               ),
@@ -154,7 +189,43 @@ class HomeScreen extends StatelessWidget {
                                     BorderRadius.all(Radius.circular(50)))),
                         onPressed: () => Navigator.push(
                           context,
+                          //TODO: Change this to game screen 1
                           MaterialPageRoute(builder: (context) => GameScreen()),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Flappy Lama",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 25),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Color.fromARGB(255, 239, 30, 50),
+                              ),
+                            )
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 253, 74, 111),
+                            minimumSize: Size(screenSize.width / 1.25, 60),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)))),
+                        onPressed: () => Navigator.push(
+                          context,
+                          //TODO: Change this to GameScreen for game 2
+                          MaterialPageRoute(builder: (context) => FlappyGameScreen()),
                         ),
                       ),
                     ],
@@ -221,12 +292,12 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "GigaKaninchen",
+                          userRepository.getUserName(),
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                         Row(children: [
                           Text(
-                            "450",
+                            userRepository.getLamaCoins().toString(),
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           SizedBox(width: 5),
@@ -244,7 +315,12 @@ class HomeScreen extends StatelessWidget {
                 child: Text("User select test"),
                 onPressed: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UserLoginScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (BuildContext context) => UserLoginBloc(),
+                      child: UserLoginScreen(),
+                    ),
+                  ),
                 ),
               ),
             )

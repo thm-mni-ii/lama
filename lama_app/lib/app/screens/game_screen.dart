@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lama_app/snake/snake_game.dart';
+import 'package:lama_app/snake/snakeGame.dart';
 
 class GameScreen extends StatelessWidget {
   @override
@@ -16,7 +16,7 @@ class GameScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 color: Colors.green,
-                child: SnakeGame().widget,
+                child: SnakeGame(context).widget,
               )
             )
           ]

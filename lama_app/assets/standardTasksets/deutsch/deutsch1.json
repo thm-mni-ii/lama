@@ -1,0 +1,15 @@
+{
+    "taskset_name":"Standardaufgaben Klasse 1",
+     "taskset_subject":"Deutsch",
+      "taskset_grade":1,
+       "tasks": [
+           {
+           "task_type":"4Cards",
+            "task_reward":2,
+            "question":"lesen",
+            "lama_text":"Tippe die richtige Silbentrennung an!",
+            "right_answer":"le-sen",
+             "wrong_answers":["lese-n", "les-en", "lesen"]
+             }
+        ]
+}

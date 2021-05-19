@@ -1,29 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
+import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/choose_taskset_events.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/state/choose_taskset_state.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 
 class ChooseTasksetScreen extends StatefulWidget {
   final String chosenSubject;
+  final int userGrade;
+  final UserRepository userRepository;
 
-  ChooseTasksetScreen(this.chosenSubject) {
+  ChooseTasksetScreen(this.chosenSubject, this.userGrade, this.userRepository) {
     //TasksetProvider: get all TasksetNames for Subject and class
   }
 
   @override
   State<StatefulWidget> createState() {
-    return ChooseTasksetScreenState();
+    return ChooseTasksetScreenState(chosenSubject, userGrade, userRepository);
   }
 }
 
 class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
+  String chosenSubject;
+  int userGrade;
+  UserRepository userRepository;
+  ChooseTasksetScreenState(
+      this.chosenSubject, this.userGrade, this.userRepository);
+
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ChooseTasksetBloc>(context).add(LoadAllTasksetsEvent());
+    BlocProvider.of<ChooseTasksetBloc>(context)
+        .add(LoadAllTasksetsEvent(chosenSubject, userGrade));
   }
 
   @override
@@ -147,14 +158,18 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TaskScreen(taskset.tasks),
+                builder: (context) => BlocProvider<TaskBloc>(
+                  create: (context) =>
+                      TaskBloc(taskset.subject, taskset.tasks, userRepository),
+                  child: TaskScreen(),
+                ),
               ),
             ),
             child: Column(
               children: [
                 Text(
                   taskset.name,
-                  style: TextStyle(color: Colors.white, fontSize: 30, shadows: [
+                  style: TextStyle(color: Colors.white, fontSize: 20, shadows: [
                     Shadow(
                         color: Colors.blueGrey,
                         offset: Offset(0, 1),
