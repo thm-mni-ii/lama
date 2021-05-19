@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
-
 class FlappyBackground {
   final FlappyLamaGame game;
   Rect bgRect;
@@ -15,12 +14,8 @@ class FlappyBackground {
   }
 
   void render(Canvas c) {
-    
     c.drawRect(bgRect, bgPaint);
-    
   }
-
-
 
   void update(double t) {}
 }
