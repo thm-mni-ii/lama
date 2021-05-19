@@ -66,26 +66,6 @@ class ClozeTestTaskScreen extends StatelessWidget {
           ],
         ),
       ),
-      /* Container(
-        height: (constraints.maxHeight / 100) * 50,
-        child: Align(
-          alignment: Alignment.center,
-          child: Container(
-            height: 55,
-            width: 250,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.lightGreen,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3))
-                ]),
-          ),
-        ),
-      )*/
       Container(
         height: (constraints.maxHeight / 100) * 50,
           alignment: Alignment.bottomCenter,
@@ -104,8 +84,36 @@ class ClozeTestTaskScreen extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 7,
+                      offset: Offset(0, 3)),
+                ]),
+            child: Center(
+              child: Text(
+                  answers[0],
+                style:
+                TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          Container(
+            height: 55,
+            width: 250,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                color: Colors.lightBlue,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
                       offset: Offset(0, 3))
                 ]),
+            child: Center(
+              child: Text(
+                answers[1],
+                style:
+                TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
           Container(
             height: 55,
@@ -120,20 +128,13 @@ class ClozeTestTaskScreen extends StatelessWidget {
                       blurRadius: 7,
                       offset: Offset(0, 3))
                 ]),
-          ),
-          Container(
-            height: 55,
-            width: 250,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.lightGreen,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3))
-                ]),
+            child: Center(
+              child: Text(
+                answers[2],
+                style:
+                TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ),
           )
         ],
       ))
