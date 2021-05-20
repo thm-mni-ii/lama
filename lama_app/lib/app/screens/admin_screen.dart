@@ -14,6 +14,8 @@ class AdminScreen extends StatefulWidget {
 }
 
 class AdminScreenState extends State<AdminScreen> {
+  var _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -23,7 +25,6 @@ class AdminScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    // TODO: implement build
     return Scaffold(
       appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<AdminScreenBloc, AdminState>(
@@ -31,62 +32,156 @@ class AdminScreenState extends State<AdminScreen> {
           if (state is Loaded) {
             return _userListView(state.userList);
           }
+          if (state is CreateUserState) {
+            return _userOptions(context);
+          }
           return Center(child: CircularProgressIndicator());
         },
       ),
       floatingActionButton: BlocBuilder<AdminScreenBloc, AdminState>(
         builder: (context, state) {
           if (state is Loaded) {
-            return new FloatingActionButton(
-              onPressed: () => {},
+            return FloatingActionButton(
+              onPressed: () =>
+                  {context.read<AdminScreenBloc>().add(CreateUser())},
               tooltip: 'Nutzer hinzufügen',
-              child: new Icon(Icons.add),
+              child: Icon(Icons.add),
             );
           }
-          return null;
+          if (state is CreateUserState) {
+            return _userOptionsButtons(context);
+          }
+          return Container();
         },
       ),
     );
   }
-}
 
-Widget _bar(double size) {
-  return AppBar(
-    title: Text('Nutzerauswahl'),
-    toolbarHeight: size,
-    backgroundColor: Color.fromARGB(255, 253, 74, 111),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        bottom: Radius.circular(30),
+  Widget _userOptions(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: 'Nutzername',
+              ),
+              validator: (value) {
+                return _emptyValidation(value);
+              },
+              onChanged: (value) {
+                context.read<AdminScreenBloc>().add(UsernameChange(value));
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(25, 25, 25, 0),
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: 'Password',
+              ),
+              validator: (value) {
+                return _emptyValidation(value);
+              },
+              onChanged: (value) {},
+              obscureText: true,
+            ),
+          ),
+        ],
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget _userListView(List<User> list) {
-  return ListView.builder(
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        return _userCard(list[index]);
-      });
-}
-
-Widget _userCard(User user) {
-  return BlocBuilder<AdminScreenBloc, AdminState>(
-    builder: (context, state) {
-      return Card(
-        child: ListTile(
-          onTap: () {
-            context.read<AdminScreenBloc>().add(SelectUser(user));
-          },
-          title: Text(user.name),
-          leading: CircleAvatar(
-            //TODO should be backgrundImage.
-            //You can use path to get the User Image.
-            backgroundColor: Color(0xFFF48FB1),
+  Widget _userOptionsButtons(BuildContext context) {
+    return Row(
+      children: [
+        Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            child: Ink(
+              decoration: ShapeDecoration(
+                color: Colors.green,
+                shape: CircleBorder(),
+              ),
+              padding: EdgeInsets.all(7.0),
+              child: IconButton(
+                icon: Icon(Icons.check_rounded),
+                color: Colors.white,
+                tooltip: 'Bestätigen',
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    context.read<AdminScreenBloc>().add(CreateUserPush());
+                  }
+                },
+              ),
+            )),
+        Ink(
+          decoration: ShapeDecoration(
+            color: Colors.red,
+            shape: CircleBorder(),
+          ),
+          padding: EdgeInsets.all(2.0),
+          child: IconButton(
+            icon: Icon(Icons.close_rounded),
+            color: Colors.white,
+            tooltip: 'Abbrechen',
+            onPressed: () {
+              context.read<AdminScreenBloc>().add(CreateUserAbort());
+            },
           ),
         ),
-      );
-    },
-  );
+      ],
+      mainAxisAlignment: MainAxisAlignment.end,
+    );
+  }
+
+  Widget _bar(double size) {
+    return AppBar(
+      title: Text('Nutzerverwaltung'),
+      toolbarHeight: size,
+      backgroundColor: Color.fromARGB(255, 253, 74, 111),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
+    );
+  }
+
+  Widget _userListView(List<User> list) {
+    return ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          return _userCard(list[index]);
+        });
+  }
+
+  Widget _userCard(User user) {
+    return BlocBuilder<AdminScreenBloc, AdminState>(
+      builder: (context, state) {
+        return Card(
+          child: ListTile(
+            onTap: () {
+              context.read<AdminScreenBloc>().add(SelectUser(user));
+            },
+            title: Text(user.name),
+            leading: CircleAvatar(
+              //TODO should be backgrundImage.
+              //You can use path to get the User Image.
+              backgroundColor: Color(0xFFF48FB1),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String _emptyValidation(String value) {
+    if (value != null && value != '' && value != ' ') {
+      return null;
+    } else {
+      return 'Dieses Feld darf nicht leer sein!';
+    }
+  }
 }

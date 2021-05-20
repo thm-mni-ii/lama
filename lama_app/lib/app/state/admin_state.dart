@@ -7,4 +7,4 @@ class Loaded extends AdminState {
   Loaded(this.userList);
 }
 
-class AddUserState extends AdminState {}
+class CreateUserState extends AdminState {}
