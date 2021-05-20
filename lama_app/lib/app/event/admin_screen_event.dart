@@ -23,3 +23,8 @@ class UsernameChange extends AdminScreenEvent {
   String name;
   UsernameChange(this.name);
 }
+
+class UserPasswortChange extends AdminScreenEvent {
+  String passwort;
+  UserPasswortChange(this.passwort);
+}

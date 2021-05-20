@@ -17,10 +17,14 @@ class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
     if (event is LoadAllUsers) yield await _loadUsers();
     if (event is CreateUser) yield CreateUserState();
     if (event is CreateUserAbort) yield await _loadUsers();
-    if (event is UsernameChange) user.name = event.name;
     if (event is CreateUserPush) {
       print(user.name);
+      print(user.password);
     }
+
+    //Change BLoc User events
+    if (event is UsernameChange) user.name = event.name;
+    if (event is UserPasswortChange) user.password = event.passwort;
   }
 
   Future<Loaded> _loadUsers() async {

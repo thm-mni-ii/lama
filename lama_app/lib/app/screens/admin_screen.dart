@@ -85,7 +85,9 @@ class AdminScreenState extends State<AdminScreen> {
               validator: (value) {
                 return _emptyValidation(value);
               },
-              onChanged: (value) {},
+              onChanged: (value) {
+                context.read<AdminScreenBloc>().add(UserPasswortChange(value));
+              },
               obscureText: true,
             ),
           ),
