@@ -4,6 +4,7 @@ import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/model/password_model.dart';
 import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/subject_model.dart';
+import 'package:lama_app/app/model/userSolvedTaskAmount_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -213,6 +214,23 @@ class DatabaseProvider {
     return subjectList;
   }
 
+  Future<List<UserSolvedTaskAmount>> getUserSolvedTaskAmount() async {
+    final db = await database;
+
+    var userSolvedTaskAmounts = await db.query(tableUserSolvedTaskAmount,
+        columns: [columnUserId, columnSubjectId, columnAmount]);
+
+    List<UserSolvedTaskAmount> userSolvedTaskAmountList = <UserSolvedTaskAmount>[];
+
+    userSolvedTaskAmounts.forEach((currentUserSolvedTaskAmount) {
+      UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount.fromMap(currentUserSolvedTaskAmount);
+
+      userSolvedTaskAmountList.add(userSolvedTaskAmount);
+    });
+
+    return userSolvedTaskAmountList;
+  }
+
   Future<User> insertUser(User user) async {
     final db = await database;
     user.id = await db.insert(tableUser, user.toMap());
@@ -252,74 +270,102 @@ class DatabaseProvider {
     return subject;
   }
 
+  insertUserSolvedTaskAmount(User user,Subject subject, int amount) async {
+    final db = await database;
+    UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount(
+        userId: user.id,
+        subjectId: subject.id,
+        amount: amount
+    );
+    await db.insert(tableUserSolvedTaskAmount, userSolvedTaskAmount.toMap());
+  }
+
   Future<int> deleteUser(int id) async {
     final db = await database;
 
-    return await db.delete(tableUser, where: "id = ?", whereArgs: [id]);
+    return await db.delete(tableUser, where: "$columnId = ?", whereArgs: [id]);
   }
 
   Future<int> deleteAchievement(int id) async {
     final db = await database;
 
-    return await db.delete(tableAchievements, where: "id = ?", whereArgs: [id]);
+    return await db.delete(tableAchievements, where: "$columnAchievementsId = ?", whereArgs: [id]);
   }
 
   Future<int> deleteUserHasAchievement(User user, Achievement achievement) async {
     final db = await database;
-    return await db.delete(tableUserHasAchievements, where: "userId = ? and achievementID = ? ", whereArgs: [user.id, achievement.id]);
+    return await db.delete(tableUserHasAchievements, where: "$columnUserId = ? and $columnAchievementId = ? ", whereArgs: [user.id, achievement.id]);
   }
 
   Future<int> deleteGame(int id) async {
     final db = await database;
 
-    return await db.delete(tableGames, where: "id = ?", whereArgs: [id]);
+    return await db.delete(tableGames, where: "$columnGamesId = ?", whereArgs: [id]);
   }
 
   Future<int> deleteHighscore(int id) async {
     final db = await database;
 
-    return await db.delete(tableHighscore, where: "id = ?", whereArgs: [id]);
+    return await db.delete(tableHighscore, where: "$columnGameId = ?", whereArgs: [id]);
   }
 
   Future<int> deleteSubject(int id) async {
     final db = await database;
 
-    return await db.delete(tableSubjects, where: "id = ?", whereArgs: [id]);
+    return await db.delete(tableSubjects, where: "$columnSubjectsId = ?", whereArgs: [id]);
+  }
+
+  Future<int> deleteUserSolvedTaskAmount(User user, Subject subject) async {
+    final db = await database;
+
+    return await db.delete(tableUserSolvedTaskAmount, where: "$columnSubjectsId = ? and $columnUserId = ?", whereArgs: [subject.id, user.id]);
   }
 
   Future<int> updateUser(User user) async {
     final db = await database;
 
     return await db.update(tableUser, user.toMap(),
-        where: " id = ?", whereArgs: [user.id]);
+        where: " $columnId = ?", whereArgs: [user.id]);
   }
 
   Future<int> updateAchievement(Achievement achievement) async {
     final db = await database;
 
     return await db.update(tableAchievements, achievement.toMap(),
-        where: " id = ?", whereArgs: [achievement.id]);
+        where: " $columnAchievementsId = ?", whereArgs: [achievement.id]);
   }
 
   Future<int> updateGame(Game game) async {
     final db = await database;
 
     return await db.update(tableGames, game.toMap(),
-        where: " id = ?", whereArgs: [game.id]);
+        where: "$columnGamesId = ?", whereArgs: [game.id]);
   }
 
   Future<int> updateHighscore(Highscore highscore) async {
     final db = await database;
 
     return await db.update(tableHighscore, highscore.toMap(),
-        where: " id = ?", whereArgs: [highscore.id]);
+        where: "$columnGameId = ?", whereArgs: [highscore.id]);
   }
 
   Future<int> updateSubject(Subject subject) async {
     final db = await database;
 
     return await db.update(tableSubjects, subject.toMap(),
-        where: " id = ?", whereArgs: [subject.id]);
+        where: "$columnSubjectsId  = ?", whereArgs: [subject.id]);
+  }
+
+  Future<int> updateUserSolvedTaskAmount(User user, Subject subject, int amount) async {
+    final db = await database;
+    UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount(
+      userId: user.id,
+      subjectId: subject.id,
+      amount: amount
+    );
+
+    return await db.update(tableUserSolvedTaskAmount, userSolvedTaskAmount.toMap(),
+        where: "$columnSubjectsId  = ? and $columnUserId = ?", whereArgs: [subject.id, user.id]);
   }
 
   Future<int> checkPassword(String password, User user) async{
