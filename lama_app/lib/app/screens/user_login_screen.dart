@@ -125,10 +125,11 @@ Widget _bar(double size) {
 
 Widget _userListView(List<User> list) {
   return ListView.builder(
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        return _userCard(list[index]);
-      });
+    itemCount: list.length,
+    itemBuilder: (context, index) {
+      return _userCard(list[index]);
+    },
+  );
 }
 
 Widget _userCard(User user) {

@@ -7,4 +7,7 @@ class Loaded extends AdminState {
   Loaded(this.userList);
 }
 
-class CreateUserState extends AdminState {}
+class CreateUserState extends AdminState {
+  List<String> grades;
+  CreateUserState(this.grades);
+}

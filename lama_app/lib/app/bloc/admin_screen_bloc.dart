@@ -9,13 +9,22 @@ import 'package:lama_app/db/database_provider.dart';
 class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
   UserRepository userRepo;
   User user = User();
+  List<String> _grades = [
+    'Klasse 1',
+    'Klasse 2',
+    'Klasse 3',
+    'Klasse 4',
+    'Klasse 5',
+    'Klasse 6',
+  ];
+
   AdminScreenBloc({AdminState initialState, this.userRepo})
       : super(initialState);
 
   @override
   Stream<AdminState> mapEventToState(AdminScreenEvent event) async* {
     if (event is LoadAllUsers) yield await _loadUsers();
-    if (event is CreateUser) yield CreateUserState();
+    if (event is CreateUser) yield CreateUserState(_grades);
     if (event is CreateUserAbort) yield await _loadUsers();
     if (event is CreateUserPush) {
       print(user.name);

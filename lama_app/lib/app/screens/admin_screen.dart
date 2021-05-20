@@ -33,7 +33,7 @@ class AdminScreenState extends State<AdminScreen> {
             return _userListView(state.userList);
           }
           if (state is CreateUserState) {
-            return _userOptions(context);
+            return _userOptions(context, state);
           }
           return Center(child: CircularProgressIndicator());
         },
@@ -57,7 +57,7 @@ class AdminScreenState extends State<AdminScreen> {
     );
   }
 
-  Widget _userOptions(BuildContext context) {
+  Widget _userOptions(BuildContext context, CreateUserState state) {
     return Form(
       key: _formKey,
       child: Column(
@@ -91,7 +91,29 @@ class AdminScreenState extends State<AdminScreen> {
               obscureText: true,
             ),
           ),
+          Expanded(child: _gradesList(context, state.grades))
         ],
+      ),
+    );
+  }
+
+  Widget _gradesList(BuildContext context, List<String> grades) {
+    return ListView.builder(
+      //scrollDirection: Axis.horizontal,
+      itemCount: grades.length,
+      itemBuilder: (context, index) {
+        return _gradesListElement(context, grades[index], index);
+      },
+    );
+  }
+
+  Widget _gradesListElement(BuildContext context, String grade, int index) {
+    return Card(
+      child: ListTile(
+        onTap: () {
+          print(index);
+        },
+        title: Text(grade),
       ),
     );
   }
