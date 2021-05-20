@@ -35,6 +35,17 @@ class AdminScreenState extends State<AdminScreen> {
           if (state is CreateUserState) {
             return _userOptions(context, state);
           }
+          if (state is UserPushSuccessfull) {
+            context.read<AdminScreenBloc>().add(LoadAllUsers());
+            return Container(
+              alignment: Alignment(0, 0),
+              child: Icon(
+                Icons.check,
+                color: Colors.green,
+                size: 100,
+              ),
+            );
+          }
           return Center(child: CircularProgressIndicator());
         },
       ),
@@ -61,6 +72,7 @@ class AdminScreenState extends State<AdminScreen> {
     return Form(
       key: _formKey,
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
@@ -91,29 +103,39 @@ class AdminScreenState extends State<AdminScreen> {
               obscureText: true,
             ),
           ),
-          Expanded(child: _gradesList(context, state.grades))
+          _gradesList(context, state.grades),
+          SizedBox(
+            height: 100,
+          )
         ],
       ),
     );
   }
 
   Widget _gradesList(BuildContext context, List<String> grades) {
-    return ListView.builder(
-      //scrollDirection: Axis.horizontal,
-      itemCount: grades.length,
-      itemBuilder: (context, index) {
-        return _gradesListElement(context, grades[index], index);
-      },
+    return Flexible(
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: grades.length,
+        itemBuilder: (context, index) {
+          return _gradesListElement(context, grades[index], index);
+        },
+      ),
     );
   }
 
   Widget _gradesListElement(BuildContext context, String grade, int index) {
-    return Card(
-      child: ListTile(
-        onTap: () {
-          print(index);
-        },
-        title: Text(grade),
+    return SizedBox(
+      width: 150,
+      height: 50,
+      child: Card(
+        child: ListTile(
+          onTap: () {
+            context.read<AdminScreenBloc>().add(UserGradeChange(index + 1));
+          },
+          title: Text(grade),
+        ),
       ),
     );
   }

@@ -11,3 +11,5 @@ class CreateUserState extends AdminState {
   List<String> grades;
   CreateUserState(this.grades);
 }
+
+class UserPushSuccessfull extends AdminState {}

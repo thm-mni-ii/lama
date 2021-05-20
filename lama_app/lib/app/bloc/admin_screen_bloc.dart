@@ -8,7 +8,7 @@ import 'package:lama_app/db/database_provider.dart';
 
 class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
   UserRepository userRepo;
-  User user = User();
+  User user = User(coins: 0, isAdmin: false, avatar: 'lama');
   List<String> _grades = [
     'Klasse 1',
     'Klasse 2',
@@ -26,18 +26,21 @@ class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
     if (event is LoadAllUsers) yield await _loadUsers();
     if (event is CreateUser) yield CreateUserState(_grades);
     if (event is CreateUserAbort) yield await _loadUsers();
-    if (event is CreateUserPush) {
-      print(user.name);
-      print(user.password);
-    }
+    if (event is CreateUserPush) yield await _pushUser();
 
     //Change BLoc User events
     if (event is UsernameChange) user.name = event.name;
     if (event is UserPasswortChange) user.password = event.passwort;
+    if (event is UserGradeChange) user.grade = event.grade;
   }
 
   Future<Loaded> _loadUsers() async {
     List<User> userList = await DatabaseProvider.db.getUser();
     return Loaded(userList);
+  }
+
+  Future<UserPushSuccessfull> _pushUser() async {
+    await DatabaseProvider.db.insertUser(user);
+    return UserPushSuccessfull();
   }
 }
