@@ -33,6 +33,8 @@ class HomeView {
 
     var ratio = this.game.screenSize.width / this.game.screenSize.height;
     description = DescriptionText(game, this.game.screenSize.width * (1.0 - relativeX * 4) * ratio);
+
+    resize();
   }
 
   void resize() {
