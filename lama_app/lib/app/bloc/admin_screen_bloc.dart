@@ -8,7 +8,6 @@ import 'package:lama_app/db/database_provider.dart';
 
 class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
   UserRepository userRepo;
-  User user = User(coins: 0, isAdmin: false, avatar: 'lama');
   List<String> _grades = [
     'Klasse 1',
     'Klasse 2',
@@ -17,6 +16,7 @@ class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
     'Klasse 5',
     'Klasse 6',
   ];
+  User user = User(grade: 1, coins: 0, isAdmin: false, avatar: 'lama');
 
   AdminScreenBloc({AdminState initialState, this.userRepo})
       : super(initialState);

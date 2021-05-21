@@ -15,7 +15,7 @@ class AdminScreen extends StatefulWidget {
 
 class AdminScreenState extends State<AdminScreen> {
   var _formKey = GlobalKey<FormState>();
-  String _dropDown;
+  String _dropDown = 'Klasse 1';
 
   @override
   void initState() {
