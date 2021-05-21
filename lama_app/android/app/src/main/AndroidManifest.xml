@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.lama_app">
    <application
-        android:label="lama_app"
+        android:label="LAMA"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
