@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Center(
                               child: Text(
-                                "Test Game 1",
+                                "Snake",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 25),
                               ),

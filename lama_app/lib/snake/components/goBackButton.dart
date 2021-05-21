@@ -1,6 +1,5 @@
 import 'dart:ui';
 import '../snakeGame.dart';
-import '../views/view.dart';
 import 'package:flutter/painting.dart';
 
 class GoBackButton {
