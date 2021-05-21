@@ -6,19 +6,26 @@ class GoBackButton {
   final SnakeGame game;
 
   RRect rect;
-  Paint startPaint;
-  TextPainter _painter;
+  Paint _startPaint = Paint()
+    ..color = Color(0xff6dff4a);
+  TextPainter _painter = TextPainter(
+    textAlign: TextAlign.center,
+    textDirection: TextDirection.ltr,
+  );
   TextStyle _textStyle;
   Offset _position;
+  final _buttonOffset = [0.7, 0.1, 0.1, 0.1];
 
-  GoBackButton(this.game, double relativeX, double relativeY) {
-    var buttonOffset = [0.7, 0.1, 0.1, 0.1];
+  GoBackButton(this.game) {
+    resize();
+  }
 
+  void resize() {
     rect = RRect.fromLTRBR(
-      this.game.screenSize.width * buttonOffset[1],
-      this.game.screenSize.height * buttonOffset[0],
-      this.game.screenSize.width * (1.0 - buttonOffset[2]),
-      this.game.screenSize.height * (buttonOffset[0] + buttonOffset[3]),
+      this.game.screenSize.width * _buttonOffset[1],
+      this.game.screenSize.height * _buttonOffset[0],
+      this.game.screenSize.width * (1.0 - _buttonOffset[2]),
+      this.game.screenSize.height * (_buttonOffset[0] + _buttonOffset[3]),
       Radius.circular(20.0),
     );
 
@@ -35,12 +42,6 @@ class GoBackButton {
       ],
     );
 
-    // Paint for the text
-    _painter = TextPainter(
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-
     _painter.text = TextSpan(
       text: "Spiel verlassen",
       style: _textStyle,
@@ -53,13 +54,10 @@ class GoBackButton {
       (rect.left) + (rect.width / 2) - _painter.width / 2,
       (rect.top) + (rect.height / 2) - _painter.height / 2,
     );
-
-    startPaint = Paint();
-    startPaint.color = Color(0xff6dff4a);
   }
 
   void render(Canvas c) {
-    c.drawRRect(rect, startPaint);
+    c.drawRRect(rect, _startPaint);
     
     // draw text
     _painter.paint(c, _position);

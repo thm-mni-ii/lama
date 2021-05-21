@@ -108,6 +108,7 @@ class SnakeGame extends Game with TapDetector {
   void resizeComponents() {
     background?.resize();
     homeView?.resize();
+    gameOverView?.resize();
     arrowButtonDown?.resize();
     arrowButtonUp?.resize();
     arrowButtonLeft?.resize();
