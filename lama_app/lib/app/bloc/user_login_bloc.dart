@@ -24,7 +24,8 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   }
 
   Future<UserLoginState> validateUserLogin(UserLogin event) async {
-    if (await DatabaseProvider.db.checkPassword(_pass, event.user) == 1) {
+    if ((_pass != null && event.user != null) &&
+        await DatabaseProvider.db.checkPassword(_pass, event.user) == 1) {
       UserRepository repository = UserRepository(event.user);
       if (event.user.isAdmin) {
         Navigator.pushReplacement(
