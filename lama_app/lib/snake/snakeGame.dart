@@ -113,6 +113,7 @@ class SnakeGame extends Game with TapDetector {
     arrowButtonUp?.resize();
     arrowButtonLeft?.resize();
     arrowButtonRight?.resize();
+    pauseButton?.resize();
   }
 
   /// This methos respawn the [apple] on a new free field. If there is none the [apple] will despawn.
