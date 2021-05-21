@@ -23,6 +23,10 @@ class ScoreDisplay {
 
   /// This class displays the [score] of the [SnakeGame] class.
   ScoreDisplay(this.game, [this._offsetYPercent = 0.025, this._radiusPercent = 0.15, this._borderThickness = 1.5]) {
+    resize();
+  }
+
+  void resize() {
     // relative length related to the screensize
     var relativeSize = sqrt(this.game.screenSize.width * this.game.screenSize.height);
 
