@@ -54,11 +54,25 @@ class AdminScreenState extends State<AdminScreen> {
       floatingActionButton: BlocBuilder<AdminScreenBloc, AdminState>(
         builder: (context, state) {
           if (state is Loaded) {
-            return FloatingActionButton(
-              onPressed: () =>
-                  {context.read<AdminScreenBloc>().add(CreateUser())},
-              tooltip: 'Nutzer hinzufügen',
-              child: Icon(Icons.add),
+            return Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                  child: FloatingActionButton(
+                    onPressed: () =>
+                        {context.read<AdminScreenBloc>().add(CreateUser())},
+                    tooltip: 'Ausloggen',
+                    child: Icon(Icons.logout),
+                  ),
+                ),
+                Spacer(),
+                FloatingActionButton(
+                    onPressed: () =>
+                        {context.read<AdminScreenBloc>().add(CreateUser())},
+                    tooltip: 'Nutzer hinzufügen',
+                    child: Icon(Icons.add)),
+              ],
+              mainAxisAlignment: MainAxisAlignment.end,
             );
           }
           if (state is CreateUserState) {
