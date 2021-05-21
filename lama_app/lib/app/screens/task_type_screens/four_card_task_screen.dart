@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
+import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 class FourCardTaskScreen extends StatelessWidget {
   final Task4Cards task;
@@ -31,8 +33,10 @@ class FourCardTaskScreen extends StatelessWidget {
         child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(50)),
-                gradient: LinearGradient(
-                    colors: [Colors.orangeAccent, Colors.deepOrange]),
+                gradient: LinearGradient(colors: [
+                  LamaColors.orangeAccent,
+                  LamaColors.orangePrimary
+                ]),
                 boxShadow: [
                   BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
@@ -41,14 +45,9 @@ class FourCardTaskScreen extends StatelessWidget {
                       offset: Offset(0, 3))
                 ]),
             child: Align(
-              child: Text(
-                task.question,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.white,
-                ),
-              ),
+              child: Text(task.question,
+                  textAlign: TextAlign.center,
+                  style: LamaTextTheme.getStyle(fontSize: 30)),
             )),
       ),
       Container(
@@ -104,7 +103,8 @@ class FourCardTaskScreen extends StatelessWidget {
   }
 
   Widget _buildCards(context, index) {
-    Color color = index % 3 == 0 ? Colors.lightGreen : Colors.lightBlue;
+    Color color =
+        index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;
     return Container(
       height: 50,
       decoration: BoxDecoration(
@@ -126,7 +126,7 @@ class FourCardTaskScreen extends StatelessWidget {
             child: Text(
               answers[index],
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 25),
+              style: LamaTextTheme.getStyle(),
             ),
           ),
         ),
