@@ -14,9 +14,9 @@ class GameScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Expanded(
-              child: Container(
-                color: Colors.green,
+              child: SafeArea(
                 child: SnakeGame(context).widget,
+                bottom: true,
               )
             )
           ]

@@ -105,6 +105,14 @@ class SnakeGame extends Game with TapDetector {
     _initialized = true;
   }
 
+  void resizeComponents() {
+    background?.resize();
+    arrowButtonDown?.resize();
+    arrowButtonUp?.resize();
+    arrowButtonLeft?.resize();
+    arrowButtonRight?.resize();
+  }
+
   /// This methos respawn the [apple] on a new free field. If there is none the [apple] will despawn.
   void respawnApple(Apple apple) {
     if (apple == null) {
@@ -268,6 +276,8 @@ class SnakeGame extends Game with TapDetector {
 
         maxFieldX = screenSize.width ~/ tileSize;
       }
+
+      resizeComponents();
     }
 
     if (log) {
