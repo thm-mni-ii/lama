@@ -69,49 +69,49 @@ class DatabaseProvider {
 
     return await openDatabase(join(dbPath, "userDB.db"), version: 1,
         onCreate: (Database database, int version) async {
-          print("Creating Table");
+      print("Creating Table");
 
-          await database.execute("Create TABLE $tableUser("
-              "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$columnSubjectsName TEXT,"
-              "$columnPassword TEXT,"
-              "$columnGrade INTEGER,"
-              "$columnCoins INTEGER,"
-              "$columnIsAdmin INTEGER,"
-              "$columnAvatar TEXT"
-              ");");
-          await database.execute("Create TABLE $tableAchievements("
-              "$columnAchievementsId INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$columnAchievementsName TEXT"
-              ");");
-          await database.execute("Create TABLE $tableUserHasAchievements("
-              "$columnUserId INTEGER,"
-              "$columnAchievementId INTEGER"
-              ");");
-          await database.execute("Create TABLE $tableGames("
-              "$columnGamesId INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$columnGamesName TEXT"
-              ");");
-          await database.execute("Create TABLE $tableHighscore("
-              "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$columnGameId INTEGER,"
-              "$columnScore INTEGER,"
-              "$columnUserId INTEGER"
-              ");");
-          await database.execute("Create TABLE $tableSubjects("
-              "$columnSubjectsId INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$columnSubjectsName TEXT"
-              ");");
-          await database.execute("Create TABLE $tableUserSolvedTaskAmount("
-              "$columnUserId INTEGER,"
-              "$columnSubjectId INTEGER,"
-              "$columnAmount INTEGER"
-              ");");
-          await database.execute("Create TABLE $tableTaskUrl("
-              "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$columnTaskUrl TEXT,"
-              ");");
-        });
+      await database.execute("Create TABLE $tableUser("
+          "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$columnSubjectsName TEXT,"
+          "$columnPassword TEXT,"
+          "$columnGrade INTEGER,"
+          "$columnCoins INTEGER,"
+          "$columnIsAdmin INTEGER,"
+          "$columnAvatar TEXT"
+          ");");
+      await database.execute("Create TABLE $tableAchievements("
+          "$columnAchievementsId INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$columnAchievementsName TEXT"
+          ");");
+      await database.execute("Create TABLE $tableUserHasAchievements("
+          "$columnUserId INTEGER,"
+          "$columnAchievementId INTEGER"
+          ");");
+      await database.execute("Create TABLE $tableGames("
+          "$columnGamesId INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$columnGamesName TEXT"
+          ");");
+      await database.execute("Create TABLE $tableHighscore("
+          "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$columnGameId INTEGER,"
+          "$columnScore INTEGER,"
+          "$columnUserId INTEGER"
+          ");");
+      await database.execute("Create TABLE $tableSubjects("
+          "$columnSubjectsId INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$columnSubjectsName TEXT"
+          ");");
+      await database.execute("Create TABLE $tableUserSolvedTaskAmount("
+          "$columnUserId INTEGER,"
+          "$columnSubjectId INTEGER,"
+          "$columnAmount INTEGER"
+          ");");
+      await database.execute("Create TABLE $tableTaskUrl("
+          "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$columnTaskUrl TEXT"
+          ");");
+    });
   }
 
   Future<List<User>> getUser() async {
@@ -163,7 +163,8 @@ class DatabaseProvider {
     List<UserHasAchievement> userHasAchievementList = <UserHasAchievement>[];
 
     userHasAchievements.forEach((currentAchievement) {
-      UserHasAchievement userHasAchievement = UserHasAchievement.fromMap(currentAchievement);
+      UserHasAchievement userHasAchievement =
+          UserHasAchievement.fromMap(currentAchievement);
 
       userHasAchievementList.add(userHasAchievement);
     });
@@ -174,8 +175,8 @@ class DatabaseProvider {
   Future<List<Game>> getGames() async {
     final db = await database;
 
-    var games = await db.query(tableGames,
-        columns: [columnGamesId, columnGamesName]);
+    var games =
+        await db.query(tableGames, columns: [columnGamesId, columnGamesName]);
 
     List<Game> gameList = <Game>[];
 
@@ -208,8 +209,8 @@ class DatabaseProvider {
   Future<List<Subject>> getSubjects() async {
     final db = await database;
 
-    var subjects = await db.query(tableSubjects,
-        columns: [columnSubjectsId, columnSubjectsName]);
+    var subjects = await db
+        .query(tableSubjects, columns: [columnSubjectsId, columnSubjectsName]);
 
     List<Subject> subjectList = <Subject>[];
 
@@ -228,10 +229,12 @@ class DatabaseProvider {
     var userSolvedTaskAmounts = await db.query(tableUserSolvedTaskAmount,
         columns: [columnUserId, columnSubjectId, columnAmount]);
 
-    List<UserSolvedTaskAmount> userSolvedTaskAmountList = <UserSolvedTaskAmount>[];
+    List<UserSolvedTaskAmount> userSolvedTaskAmountList =
+        <UserSolvedTaskAmount>[];
 
     userSolvedTaskAmounts.forEach((currentUserSolvedTaskAmount) {
-      UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount.fromMap(currentUserSolvedTaskAmount);
+      UserSolvedTaskAmount userSolvedTaskAmount =
+          UserSolvedTaskAmount.fromMap(currentUserSolvedTaskAmount);
 
       userSolvedTaskAmountList.add(userSolvedTaskAmount);
     });
@@ -239,11 +242,11 @@ class DatabaseProvider {
     return userSolvedTaskAmountList;
   }
 
-    Future<List<TaskUrl>> getTaskUrl() async {
+  Future<List<TaskUrl>> getTaskUrl() async {
     final db = await database;
 
-    var taskUrl = await db.query(tableTaskUrl,
-        columns: [columnId, columnTaskUrl]);
+    var taskUrl =
+        await db.query(tableTaskUrl, columns: [columnId, columnTaskUrl]);
 
     List<TaskUrl> taskUrlList = <TaskUrl>[];
 
@@ -255,6 +258,7 @@ class DatabaseProvider {
 
     return taskUrlList;
   }
+
   Future<User> insertUser(User user) async {
     final db = await database;
     user.id = await db.insert(tableUser, user.toMap());
@@ -269,10 +273,8 @@ class DatabaseProvider {
 
   insertUserHasAchievement(User user, Achievement achievement) async {
     final db = await database;
-    UserHasAchievement userHasAchievement = UserHasAchievement(
-        userID: user.id,
-        achievementID: achievement.id
-    );
+    UserHasAchievement userHasAchievement =
+        UserHasAchievement(userID: user.id, achievementID: achievement.id);
     await db.insert(tableUserHasAchievements, userHasAchievement.toMap());
   }
 
@@ -294,17 +296,14 @@ class DatabaseProvider {
     return subject;
   }
 
-  insertUserSolvedTaskAmount(User user,Subject subject, int amount) async {
+  insertUserSolvedTaskAmount(User user, Subject subject, int amount) async {
     final db = await database;
     UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount(
-        userId: user.id,
-        subjectId: subject.id,
-        amount: amount
-    );
+        userId: user.id, subjectId: subject.id, amount: amount);
     await db.insert(tableUserSolvedTaskAmount, userSolvedTaskAmount.toMap());
   }
-  
-    Future<TaskUrl> insertTaskUrl(TaskUrl taskUrl) async {
+
+  Future<TaskUrl> insertTaskUrl(TaskUrl taskUrl) async {
     final db = await database;
     taskUrl.id = await db.insert(tableTaskUrl, taskUrl.toMap());
     return taskUrl;
@@ -319,42 +318,52 @@ class DatabaseProvider {
   Future<int> deleteAchievement(int id) async {
     final db = await database;
 
-    return await db.delete(tableAchievements, where: "$columnAchievementsId = ?", whereArgs: [id]);
+    return await db.delete(tableAchievements,
+        where: "$columnAchievementsId = ?", whereArgs: [id]);
   }
 
-  Future<int> deleteUserHasAchievement(User user, Achievement achievement) async {
+  Future<int> deleteUserHasAchievement(
+      User user, Achievement achievement) async {
     final db = await database;
-    return await db.delete(tableUserHasAchievements, where: "$columnUserId = ? and $columnAchievementId = ? ", whereArgs: [user.id, achievement.id]);
+    return await db.delete(tableUserHasAchievements,
+        where: "$columnUserId = ? and $columnAchievementId = ? ",
+        whereArgs: [user.id, achievement.id]);
   }
 
   Future<int> deleteGame(int id) async {
     final db = await database;
 
-    return await db.delete(tableGames, where: "$columnGamesId = ?", whereArgs: [id]);
+    return await db
+        .delete(tableGames, where: "$columnGamesId = ?", whereArgs: [id]);
   }
 
   Future<int> deleteHighscore(int id) async {
     final db = await database;
 
-    return await db.delete(tableHighscore, where: "$columnGameId = ?", whereArgs: [id]);
+    return await db
+        .delete(tableHighscore, where: "$columnGameId = ?", whereArgs: [id]);
   }
 
   Future<int> deleteSubject(int id) async {
     final db = await database;
 
-    return await db.delete(tableSubjects, where: "$columnSubjectsId = ?", whereArgs: [id]);
+    return await db
+        .delete(tableSubjects, where: "$columnSubjectsId = ?", whereArgs: [id]);
   }
 
   Future<int> deleteUserSolvedTaskAmount(User user, Subject subject) async {
     final db = await database;
 
-    return await db.delete(tableUserSolvedTaskAmount, where: "$columnSubjectsId = ? and $columnUserId = ?", whereArgs: [subject.id, user.id]);
+    return await db.delete(tableUserSolvedTaskAmount,
+        where: "$columnSubjectsId = ? and $columnUserId = ?",
+        whereArgs: [subject.id, user.id]);
   }
 
   Future<int> deleteTaskUrl(int id) async {
     final db = await database;
 
-    return await db.delete(tableTaskUrl, where: "$columnId = ?", whereArgs: [id]);
+    return await db
+        .delete(tableTaskUrl, where: "$columnId = ?", whereArgs: [id]);
   }
 
   Future<int> updateUser(User user) async {
@@ -392,47 +401,43 @@ class DatabaseProvider {
         where: "$columnSubjectsId  = ?", whereArgs: [subject.id]);
   }
 
-  Future<int> updateUserSolvedTaskAmount(User user, Subject subject, int amount) async {
+  Future<int> updateUserSolvedTaskAmount(
+      User user, Subject subject, int amount) async {
     final db = await database;
     UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount(
-      userId: user.id,
-      subjectId: subject.id,
-      amount: amount
-    );
+        userId: user.id, subjectId: subject.id, amount: amount);
 
-    return await db.update(tableUserSolvedTaskAmount, userSolvedTaskAmount.toMap(),
-        where: "$columnSubjectsId  = ? and $columnUserId = ?", whereArgs: [subject.id, user.id]);
+    return await db.update(
+        tableUserSolvedTaskAmount, userSolvedTaskAmount.toMap(),
+        where: "$columnSubjectsId  = ? and $columnUserId = ?",
+        whereArgs: [subject.id, user.id]);
   }
-  
-    Future<int> updateTaskUrl(TaskUrl taskUrl) async {
+
+  Future<int> updateTaskUrl(TaskUrl taskUrl) async {
     final db = await database;
 
     return await db.update(tableTaskUrl, taskUrl.toMap(),
         where: " $columnId = ?", whereArgs: [taskUrl.id]);
+  }
 
-
-  Future<int> checkPassword(String password, User user) async{
+  Future<int> checkPassword(String password, User user) async {
     final db = await database;
 
     var passwords = await db.query(tableUser,
-        columns: [columnPassword],
-        where: "id = ?",
-        whereArgs: [user.id]);
+        columns: [columnPassword], where: "id = ?", whereArgs: [user.id]);
 
     Password pswd = Password.fromMap(passwords.first);
 
-    if (password.length > 0){
+    if (password.length > 0) {
       return (password.compareTo(pswd.password) == 0 ? 1 : 0);
     }
     return null;
   }
 
-  Future<int> updatePassword(String newPassword, User user) async{
+  Future<int> updatePassword(String newPassword, User user) async {
     final db = await database;
-    Password password = Password( password: newPassword);
-    return await db.update(tableUser,
-        password.toMap(),
-        where: "id = ?",
-        whereArgs: [user.id]);
+    Password password = Password(password: newPassword);
+    return await db.update(tableUser, password.toMap(),
+        where: "id = ?", whereArgs: [user.id]);
   }
 }
