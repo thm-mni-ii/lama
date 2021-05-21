@@ -9,6 +9,7 @@ import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/db/database_provider.dart';
 
 class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
+  String _pass;
   UserLoginBloc({UserLoginState initialState}) : super(initialState);
 
   @override
@@ -17,17 +18,18 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
     if (event is SelectUser) yield UserSelected(event.user);
     if (event is UserLogin) yield await validateUserLogin(event);
     if (event is UserLoginAbort) yield await loadUsers();
+    if (event is UserLoginChangePass) _pass = event.pass;
   }
 
   Future<UserLoginState> validateUserLogin(UserLogin event) async {
-    if (event.user.password == event.pw) {
+    if (await DatabaseProvider.db.checkPassword(_pass, event.user) == 1) {
       UserRepository repository = UserRepository(event.user);
       Navigator.pushReplacement(
           event.context,
           MaterialPageRoute(
               builder: (context) => RepositoryProvider<UserRepository>(
                   create: (context) => repository, child: HomeScreen())));
-
+      _pass = null;
       return UserLoginSuccessful();
     } else {
       return UserLoginFailed(event.user,

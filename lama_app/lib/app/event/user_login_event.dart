@@ -7,9 +7,8 @@ class LoadUsers extends UserLoginEvent {}
 
 class UserLogin extends UserLoginEvent {
   User user;
-  String pw;
   BuildContext context;
-  UserLogin(this.user, this.pw, this.context);
+  UserLogin(this.user, this.context);
 }
 
 class SelectUser extends UserLoginEvent {
@@ -18,3 +17,8 @@ class SelectUser extends UserLoginEvent {
 }
 
 class UserLoginAbort extends UserLoginEvent {}
+
+class UserLoginChangePass extends UserLoginEvent {
+  String pass;
+  UserLoginChangePass(this.pass);
+}

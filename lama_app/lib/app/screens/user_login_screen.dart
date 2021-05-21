@@ -13,7 +13,6 @@ class UserLoginScreen extends StatefulWidget {
 }
 
 class UserSelectionState extends State<UserLoginScreen> {
-  String _pass;
   @override
   void initState() {
     super.initState();
@@ -28,114 +27,15 @@ class UserSelectionState extends State<UserLoginScreen> {
       body: BlocBuilder<UserLoginBloc, UserLoginState>(
         builder: (context, state) {
           if (state is UserSelected) {
-            return Column(
-              children: [
-                Padding(
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        //TODO should be backgrundImage.
-                        //You can use path to get the User Image.
-                        backgroundColor: Color(0xFFF48FB1),
-                        radius: 20,
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(state.user.name),
-                    ],
-                  ),
-                  padding: EdgeInsets.fromLTRB(20, 15, 0, 0),
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.security),
-                    hintText: 'Passwort',
-                  ),
-                  validator: (value) => null,
-                  onChanged: (value) => this._pass = value,
-                  obscureText: true,
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    context
-                        .read<UserLoginBloc>()
-                        .add(UserLogin(state.user, _pass, context));
-                    _pass = null;
-                  },
-                  child: Text('Einloggen'),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(screenSize.width, 45),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _pass = null;
-                    context.read<UserLoginBloc>().add(UserLoginAbort());
-                  },
-                  child: Text('Abbrechen'),
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: Size(screenSize.width, 45),
-                      primary: Colors.red),
-                ),
-              ],
-            );
+            return _input(context, null, state.user, screenSize.width);
           }
           if (state is UserLoginFailed) {
-            _pass = null;
-            return Column(
-              children: [
-                _userCard(state.user),
-                TextFormField(
-                  decoration: InputDecoration(
-                      icon: Icon(Icons.security),
-                      hintText: 'Passwort',
-                      errorText: state.error),
-                  validator: (value) => null,
-                  onChanged: (value) => this._pass = value,
-                  obscureText: true,
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    context
-                        .read<UserLoginBloc>()
-                        .add(UserLogin(state.user, _pass, context));
-                  },
-                  child: Text('Einloggen'),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(screenSize.width, 45),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<UserLoginBloc>().add(UserLoginAbort());
-                  },
-                  child: Text('Abbrechen'),
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: Size(screenSize.width, 45),
-                      primary: Colors.red),
-                ),
-              ],
-            );
+            return _input(context, state.error, state.user, screenSize.width);
           }
           if (state is UsersLoaded) {
-            _pass = null;
             return _userListView(state.userList);
           }
           if (state is UserLoginSuccessful) {
-            _pass = null;
             return Container(
               alignment: Alignment(0, 0),
               child: Icon(
@@ -150,6 +50,64 @@ class UserSelectionState extends State<UserLoginScreen> {
       ),
     );
   }
+}
+
+Widget _input(BuildContext context, String error, User user, double size) {
+  return Column(
+    children: [
+      Padding(
+        child: Row(
+          children: [
+            CircleAvatar(
+              //TODO should be backgrundImage.
+              //You can use path to get the User Image.
+              backgroundColor: Color(0xFFF48FB1),
+              radius: 20,
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Text(user.name),
+          ],
+        ),
+        padding: EdgeInsets.fromLTRB(20, 15, 0, 0),
+      ),
+      TextFormField(
+        decoration: InputDecoration(
+          icon: Icon(Icons.security),
+          hintText: 'Passwort',
+          errorText: error,
+        ),
+        validator: (value) => null,
+        onChanged: (value) =>
+            context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
+        obscureText: true,
+      ),
+      SizedBox(
+        height: 25,
+      ),
+      ElevatedButton(
+        onPressed: () {
+          context.read<UserLoginBloc>().add(UserLogin(user, context));
+        },
+        child: Text('Einloggen'),
+        style: ElevatedButton.styleFrom(
+          minimumSize: Size(size, 45),
+        ),
+      ),
+      SizedBox(
+        height: 15,
+      ),
+      ElevatedButton(
+        onPressed: () {
+          context.read<UserLoginBloc>().add(UserLoginAbort());
+        },
+        child: Text('Abbrechen'),
+        style: ElevatedButton.styleFrom(
+            minimumSize: Size(size, 45), primary: Colors.red),
+      ),
+    ],
+  );
 }
 
 Widget _bar(double size) {
