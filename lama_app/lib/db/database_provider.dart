@@ -2,6 +2,7 @@ import 'package:lama_app/app/model/achievement_model.dart';
 import 'package:lama_app/app/model/game_model.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/model/password_model.dart';
+import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/subject_model.dart';
 import 'package:lama_app/app/model/userSolvedTaskAmount_model.dart';
@@ -43,6 +44,9 @@ class DatabaseProvider {
   static const String columnSubjectId = "id";
   static const String columnAmount = "amount";
 
+  static const String tableTaskUrl = "task_url";
+  static const String columnTaskUrl = "url";
+
   DatabaseProvider._();
   static final DatabaseProvider db = DatabaseProvider._();
 
@@ -65,45 +69,49 @@ class DatabaseProvider {
 
     return await openDatabase(join(dbPath, "userDB.db"), version: 1,
         onCreate: (Database database, int version) async {
-      print("Creating Table");
+          print("Creating Table");
 
-      await database.execute("Create TABLE $tableUser("
-          "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$columnSubjectsName TEXT,"
-          "$columnPassword TEXT,"
-          "$columnGrade INTEGER,"
-          "$columnCoins INTEGER,"
-          "$columnIsAdmin INTEGER,"
-          "$columnAvatar TEXT"
-          ");");
-      await database.execute("Create TABLE $tableAchievements("
-          "$columnAchievementsId INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$columnAchievementsName TEXT"
-          ");");
-      await database.execute("Create TABLE $tableUserHasAchievements("
-          "$columnUserId INTEGER,"
-          "$columnAchievementId INTEGER"
-          ");");
-      await database.execute("Create TABLE $tableGames("
-          "$columnGamesId INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$columnGamesName TEXT"
-          ");");
-      await database.execute("Create TABLE $tableHighscore("
-          "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$columnGameId INTEGER,"
-          "$columnScore INTEGER,"
-          "$columnUserId INTEGER"
-          ");");
-      await database.execute("Create TABLE $tableSubjects("
-          "$columnSubjectsId INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$columnSubjectsName TEXT"
-          ");");
-      await database.execute("Create TABLE $tableUserSolvedTaskAmount("
-          "$columnUserId INTEGER,"
-          "$columnSubjectId INTEGER,"
-          "$columnAmount INTEGER"
-          ");");
-    });
+          await database.execute("Create TABLE $tableUser("
+              "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
+              "$columnSubjectsName TEXT,"
+              "$columnPassword TEXT,"
+              "$columnGrade INTEGER,"
+              "$columnCoins INTEGER,"
+              "$columnIsAdmin INTEGER,"
+              "$columnAvatar TEXT"
+              ");");
+          await database.execute("Create TABLE $tableAchievements("
+              "$columnAchievementsId INTEGER PRIMARY KEY AUTOINCREMENT,"
+              "$columnAchievementsName TEXT"
+              ");");
+          await database.execute("Create TABLE $tableUserHasAchievements("
+              "$columnUserId INTEGER,"
+              "$columnAchievementId INTEGER"
+              ");");
+          await database.execute("Create TABLE $tableGames("
+              "$columnGamesId INTEGER PRIMARY KEY AUTOINCREMENT,"
+              "$columnGamesName TEXT"
+              ");");
+          await database.execute("Create TABLE $tableHighscore("
+              "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
+              "$columnGameId INTEGER,"
+              "$columnScore INTEGER,"
+              "$columnUserId INTEGER"
+              ");");
+          await database.execute("Create TABLE $tableSubjects("
+              "$columnSubjectsId INTEGER PRIMARY KEY AUTOINCREMENT,"
+              "$columnSubjectsName TEXT"
+              ");");
+          await database.execute("Create TABLE $tableUserSolvedTaskAmount("
+              "$columnUserId INTEGER,"
+              "$columnSubjectId INTEGER,"
+              "$columnAmount INTEGER"
+              ");");
+          await database.execute("Create TABLE $tableTaskUrl("
+              "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
+              "$columnTaskUrl TEXT,"
+              ");");
+        });
   }
 
   Future<List<User>> getUser() async {
@@ -231,6 +239,22 @@ class DatabaseProvider {
     return userSolvedTaskAmountList;
   }
 
+    Future<List<TaskUrl>> getTaskUrl() async {
+    final db = await database;
+
+    var taskUrl = await db.query(tableTaskUrl,
+        columns: [columnId, columnTaskUrl]);
+
+    List<TaskUrl> taskUrlList = <TaskUrl>[];
+
+    taskUrl.forEach((currentTaskUrl) {
+      TaskUrl taskUrl = TaskUrl.fromMap(currentTaskUrl);
+
+      taskUrlList.add(taskUrl);
+    });
+
+    return taskUrlList;
+  }
   Future<User> insertUser(User user) async {
     final db = await database;
     user.id = await db.insert(tableUser, user.toMap());
@@ -243,11 +267,11 @@ class DatabaseProvider {
     return achievement;
   }
 
-    insertUserHasAchievement(User user, Achievement achievement) async {
+  insertUserHasAchievement(User user, Achievement achievement) async {
     final db = await database;
     UserHasAchievement userHasAchievement = UserHasAchievement(
-      userID: user.id,
-      achievementID: achievement.id
+        userID: user.id,
+        achievementID: achievement.id
     );
     await db.insert(tableUserHasAchievements, userHasAchievement.toMap());
   }
@@ -278,6 +302,12 @@ class DatabaseProvider {
         amount: amount
     );
     await db.insert(tableUserSolvedTaskAmount, userSolvedTaskAmount.toMap());
+  }
+  
+    Future<TaskUrl> insertTaskUrl(TaskUrl taskUrl) async {
+    final db = await database;
+    taskUrl.id = await db.insert(tableTaskUrl, taskUrl.toMap());
+    return taskUrl;
   }
 
   Future<int> deleteUser(int id) async {
@@ -319,6 +349,12 @@ class DatabaseProvider {
     final db = await database;
 
     return await db.delete(tableUserSolvedTaskAmount, where: "$columnSubjectsId = ? and $columnUserId = ?", whereArgs: [subject.id, user.id]);
+  }
+
+  Future<int> deleteTaskUrl(int id) async {
+    final db = await database;
+
+    return await db.delete(tableTaskUrl, where: "$columnId = ?", whereArgs: [id]);
   }
 
   Future<int> updateUser(User user) async {
@@ -367,6 +403,13 @@ class DatabaseProvider {
     return await db.update(tableUserSolvedTaskAmount, userSolvedTaskAmount.toMap(),
         where: "$columnSubjectsId  = ? and $columnUserId = ?", whereArgs: [subject.id, user.id]);
   }
+  
+    Future<int> updateTaskUrl(TaskUrl taskUrl) async {
+    final db = await database;
+
+    return await db.update(tableTaskUrl, taskUrl.toMap(),
+        where: " $columnId = ?", whereArgs: [taskUrl.id]);
+
 
   Future<int> checkPassword(String password, User user) async{
     final db = await database;
