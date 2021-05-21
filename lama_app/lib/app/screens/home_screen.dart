@@ -288,6 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(width: 10),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           userRepository.getUserName(),
