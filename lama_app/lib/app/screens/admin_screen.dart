@@ -105,9 +105,6 @@ class AdminScreenState extends State<AdminScreen> {
             ),
           ),
           _gradesList(context, state.grades),
-          SizedBox(
-            height: 100,
-          )
         ],
       ),
     );
