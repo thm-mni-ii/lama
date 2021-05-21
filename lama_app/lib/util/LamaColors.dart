@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LamaColors {
+  //Mirroring colors from Colors.class to avoid confusion and mixed usage
+  static Color white = Colors.white;
+  static Color black = Colors.black;
+
   //Colors used for math
   static Color bluePrimary = Color.fromARGB(255, 0, 117, 255);
   static Color blueAccent = Color.fromARGB(255, 0, 194, 255);
