@@ -31,7 +31,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
             child: Text(task.question,
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,)),
-            alignment: Alignment.centerLeft,
+            //alignment: Alignment.centerLeft,
           )),
       // Lama Speechbubble
       Container(

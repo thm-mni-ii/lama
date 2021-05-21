@@ -1,23 +1,50 @@
 {
-    "taskset_name":"Standardaufgaben Klasse 4",
-     "taskset_subject":"Englisch",
-      "taskset_grade":4,
-       "tasks": [
-           {
-           "task_type":"4Cards",
-            "task_reward":2,
-            "question":"What does 'shoe' mean in german?",
-            "lama_text":"Tap the right Answer!",
-            "right_answer":"Schuh",
-             "wrong_answers":["Schatten", "Schule", "Fisch"]
-             },
-             {
-                "task_type":"4Cards",
-                 "task_reward":2,
-                 "question":"Who discovered America",
-                 "lama_text":"Tap the right Answer!",
-                 "right_answer":"Christoph Kolumbus",
-                  "wrong_answers":["Lukas Podolski", "Willy Wonka", "Leonardo Di Caprio"]
-            }
-        ]
+  "taskset_name": "Standardaufgaben Klasse 4",
+  "taskset_subject": "Englisch",
+  "taskset_grade": 4,
+  "tasks": [
+    {
+      "task_type": "4Cards",
+      "task_reward": 2,
+      "question": "What does 'shoe' mean in german?",
+      "lama_text": "Tap the right Answer!",
+      "right_answer": "Schuh",
+      "wrong_answers": [
+        "Schatten",
+        "Schule",
+        "Fisch"
+      ]
+    },
+    {
+      "task_type": "4Cards",
+      "task_reward": 2,
+      "question": "Who discovered America",
+      "lama_text": "Tap the right Answer!",
+      "right_answer": "Christoph Kolumbus",
+      "wrong_answers": [
+        "Lukas Podolski",
+        "Willy Wonka",
+        "Leonardo Di Caprio"
+      ]
+    },
+    {
+      "task_type": "ClozeTest",
+      "task_reward": 2,
+      "question": "I am __ to school",
+      "lama_text": "Tap the right Answer!",
+      "right_answer": "going",
+      "wrong_answers": [
+        "go",
+        "horse"
+      ]
+    },
+    {
+      "task_type":"ClozeTest",
+      "task_reward":2,
+      "question":"I __ learning english",
+      "lama_text":"Tap the right Answer!",
+      "right_answer":"am",
+      "wrong_answers":["be", "horse"]
+    }
+  ]
 }
