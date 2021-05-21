@@ -15,6 +15,7 @@ class AdminScreen extends StatefulWidget {
 
 class AdminScreenState extends State<AdminScreen> {
   var _formKey = GlobalKey<FormState>();
+  String _dropDown;
 
   @override
   void initState() {
@@ -113,31 +114,25 @@ class AdminScreenState extends State<AdminScreen> {
   }
 
   Widget _gradesList(BuildContext context, List<String> grades) {
-    return Flexible(
-      child: ListView.builder(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: grades.length,
-        itemBuilder: (context, index) {
-          return _gradesListElement(context, grades[index], index);
-        },
-      ),
-    );
-  }
-
-  Widget _gradesListElement(BuildContext context, String grade, int index) {
-    return SizedBox(
-      width: 150,
-      height: 50,
-      child: Card(
-        child: ListTile(
-          onTap: () {
-            context.read<AdminScreenBloc>().add(UserGradeChange(index + 1));
+    return Padding(
+        padding: EdgeInsets.all(20),
+        child: DropdownButton<String>(
+          items: grades.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (value) {
+            context
+                .read<AdminScreenBloc>()
+                .add(UserGradeChange(grades.indexOf(value) + 1));
+            setState(() {
+              _dropDown = value;
+            });
           },
-          title: Text(grade),
-        ),
-      ),
-    );
+          value: _dropDown,
+        ));
   }
 
   Widget _userOptionsButtons(BuildContext context) {

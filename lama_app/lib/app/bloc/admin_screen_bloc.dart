@@ -31,7 +31,10 @@ class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
     //Change BLoc User events
     if (event is UsernameChange) user.name = event.name;
     if (event is UserPasswortChange) user.password = event.passwort;
-    if (event is UserGradeChange) user.grade = event.grade;
+    if (event is UserGradeChange) {
+      user.grade = event.grade;
+      print(user.grade);
+    }
   }
 
   Future<Loaded> _loadUsers() async {
