@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
@@ -294,14 +295,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           userRepository.getUserName(),
                           style: LamaTextTheme.getStyle(fontSize: 20),
                         ),
-                        Row(children: [
-                          Text(
-                            userRepository.getLamaCoins().toString(),
-                            style: LamaTextTheme.getStyle(fontSize: 20),
-                          ),
-                          SizedBox(width: 5),
-                          CircleAvatar(radius: 10)
-                        ])
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                userRepository.getLamaCoins().toString(),
+                                style: LamaTextTheme.getStyle(fontSize: 20),
+                              ),
+                              SizedBox(width: 5),
+                              SvgPicture.asset(
+                                "assets/images/svg/lama_coin.svg",
+                                semanticsLabel: "Lama Coin",
+                                width: 20,
+                              )
+                            ])
                       ],
                     )
                   ],
