@@ -59,8 +59,11 @@ class AdminScreenState extends State<AdminScreen> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                   child: FloatingActionButton(
-                    onPressed: () =>
-                        {context.read<AdminScreenBloc>().add(CreateUser())},
+                    onPressed: () => {
+                      context
+                          .read<AdminScreenBloc>()
+                          .add(LogoutAdminScreen(context))
+                    },
                     tooltip: 'Ausloggen',
                     child: Icon(Icons.logout),
                   ),
