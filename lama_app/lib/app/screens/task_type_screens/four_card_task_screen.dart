@@ -6,6 +6,7 @@ import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 class FourCardTaskScreen extends StatelessWidget {
   final Task4Cards task;
@@ -44,14 +45,9 @@ class FourCardTaskScreen extends StatelessWidget {
                       offset: Offset(0, 3))
                 ]),
             child: Align(
-              child: Text(
-                task.question,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.white,
-                ),
-              ),
+              child: Text(task.question,
+                  textAlign: TextAlign.center,
+                  style: LamaTextTheme.getStyle(fontSize: 30)),
             )),
       ),
       Container(
@@ -130,7 +126,7 @@ class FourCardTaskScreen extends StatelessWidget {
             child: Text(
               answers[index],
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 25),
+              style: LamaTextTheme.getStyle(),
             ),
           ),
         ),

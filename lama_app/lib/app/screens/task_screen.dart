@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/screens/task_type_screens/four_card_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 class TaskScreen extends StatefulWidget {
   @override
@@ -74,8 +76,13 @@ class TaskScreenState extends State<TaskScreen> {
                                 ),
                               ),
                               Text(state.subject,
-                                  style: TextStyle(
-                                      fontSize: 30, color: Colors.white)),
+                                  style: LamaTextTheme.getStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight
+                                          .w500) /*TextStyle(
+                                      fontSize: 30, color: Colors.white)*/
+                                  ),
                             ],
                           ),
                         ),

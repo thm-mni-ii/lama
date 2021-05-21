@@ -7,6 +7,8 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/state/choose_taskset_state.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
+import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 class ChooseTasksetScreen extends StatefulWidget {
   final String chosenSubject;
@@ -62,7 +64,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
     );*/
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 253, 74, 111),
+      backgroundColor: LamaColors.mainPink,
       body: SafeArea(
         child: Stack(
           children: [
@@ -104,7 +106,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                 child: Center(
                   child: Text(
                     "Aufgaben-Set auswählen",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    style: LamaTextTheme.getStyle(fontSize: 22.5),
                   ),
                 ),
               ),
@@ -145,7 +147,8 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
         width: screenSize.width,
         height: screenSize.height / 8,
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [Colors.orange, Colors.pink]),
+          gradient: LinearGradient(
+              colors: [LamaColors.orangeAccent, LamaColors.redAccent]),
           borderRadius: BorderRadius.all(Radius.circular(15)),
           boxShadow: [
             BoxShadow(
@@ -169,7 +172,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
               children: [
                 Text(
                   taskset.name,
-                  style: TextStyle(color: Colors.white, fontSize: 20, shadows: [
+                  style: LamaTextTheme.getStyle(fontSize: 20, shadows: [
                     Shadow(
                         color: Colors.blueGrey,
                         offset: Offset(0, 1),
@@ -179,7 +182,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                 SizedBox(height: 10),
                 Text(
                   "Aufgaben: " + taskset.tasks.length.toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 15, shadows: [
+                  style: LamaTextTheme.getStyle(fontSize: 15, shadows: [
                     Shadow(
                         color: Colors.blueGrey,
                         offset: Offset(0, 1),

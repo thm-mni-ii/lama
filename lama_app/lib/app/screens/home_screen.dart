@@ -9,6 +9,7 @@ import 'package:lama_app/app/screens/game_screen.dart';
 import 'package:lama_app/app/screens/flappy_game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 //Home Screen is a Stateful Widget so it can be reloaded using setState((){}) after Navigation
 class HomeScreen extends StatefulWidget {
@@ -42,8 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Text(
                                 "Mathe",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
+                                style: LamaTextTheme.getStyle(),
                               ),
                             ),
                             Align(
@@ -84,8 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Text(
                                 "Deutsch",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
+                                style: LamaTextTheme.getStyle(),
                               ),
                             ),
                             Align(
@@ -126,8 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Text(
                                 "Englisch",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
+                                style: LamaTextTheme.getStyle(),
                               ),
                             ),
                             Align(
@@ -169,8 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Text(
                                 "Snake",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
+                                style: LamaTextTheme.getStyle(),
                               ),
                             ),
                             Align(
@@ -204,8 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Text(
                                 "Flappy Lama",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
+                                style: LamaTextTheme.getStyle(),
                               ),
                             ),
                             Align(
@@ -257,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Center(
                   child: Text(
                     "Lerne alles mit Anna",
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: LamaTextTheme.getStyle(),
                   ),
                 ),
               ),
@@ -295,12 +291,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text(
                           userRepository.getUserName(),
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          style: LamaTextTheme.getStyle(fontSize: 20),
                         ),
                         Row(children: [
                           Text(
                             userRepository.getLamaCoins().toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+                            style: LamaTextTheme.getStyle(fontSize: 20),
                           ),
                           SizedBox(width: 5),
                           CircleAvatar(radius: 10)
