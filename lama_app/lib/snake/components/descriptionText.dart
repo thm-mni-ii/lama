@@ -9,21 +9,6 @@ class DescriptionText {
   Paint _textPaint;
 
   DescriptionText(this.game, double offsetY) {
-    TextStyle _textStyle;
-
-    // Style of the text
-    _textStyle = TextStyle(
-      color: Color(0xbb19721d),
-      fontSize: this.game.screenSize.height * 0.05,
-      shadows: <Shadow>[
-        Shadow(
-          blurRadius: 10,
-          color: Color(0xff000000),
-          offset: Offset(2, 2),
-        ),
-      ],
-    );
-
     // Paint for the text
     _painter = TextPainter(
       textAlign: TextAlign.center,
