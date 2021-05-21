@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 
+import '../../../util/LamaColors.dart';
+import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
 
 class ClozeTestTaskScreen extends StatelessWidget {
@@ -22,18 +24,16 @@ class ClozeTestTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      // Task Question
       Container(
           height: (constraints.maxHeight / 100) * 30,
           child: Align(
             child: Text(task.question,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                )),
+                style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,)),
             alignment: Alignment.centerLeft,
           )),
+      // Lama Speechbubble
       Container(
         height: (constraints.maxHeight / 100) * 15,
         padding: EdgeInsets.only(left: 15, right: 15),
@@ -52,7 +52,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                     child: Text(
                       task.lamaText,
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 15),
                     ),
                   ),
                 ),
@@ -69,6 +69,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
           ],
         ),
       ),
+      // Task Answers
       Container(
           height: (constraints.maxHeight / 100) * 50,
           alignment: Alignment.bottomCenter,
@@ -81,7 +82,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                 width: 250,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.lightGreen,
+                    color: LamaColors.greenAccent,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -95,8 +96,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   child: Center(
                     child: Text(
                       answers[0],
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,),
                     ),
                   ),
                 ),
@@ -106,7 +106,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                 width: 250,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.lightBlue,
+                    color: LamaColors.blueAccent,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -120,8 +120,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   child: Center(
                     child: Text(
                       answers[1],
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,),
                     ),
                   ),
                 ),
@@ -131,7 +130,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                 width: 250,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.lightGreen,
+                    color: LamaColors.greenAccent,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -145,8 +144,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   child: Center(
                     child: Text(
                       answers[2],
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,),
                     ),
                   ),
                 ),
