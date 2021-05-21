@@ -43,6 +43,9 @@ class FlappyLamaGame extends Game with TapDetector {
   @override
   void update(double t) {
     // TODO: implement update
+     if(_initialized){
+      obstacle.update(t);
+    }
   }
 
   @override
