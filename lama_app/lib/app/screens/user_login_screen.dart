@@ -133,6 +133,7 @@ Widget _userListView(List<User> list) {
 }
 
 Widget _userCard(User user) {
+  String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
   return BlocBuilder<UserLoginBloc, UserLoginState>(
     builder: (context, state) {
       return Card(
@@ -140,7 +141,7 @@ Widget _userCard(User user) {
           onTap: () {
             context.read<UserLoginBloc>().add(SelectUser(user));
           },
-          title: Text(user.name),
+          title: Text(_nameDisplay),
           leading: CircleAvatar(
             //TODO should be backgrundImage.
             //You can use path to get the User Image.

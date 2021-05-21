@@ -197,6 +197,7 @@ class AdminScreenState extends State<AdminScreen> {
   }
 
   Widget _userCard(User user) {
+    String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
     return BlocBuilder<AdminScreenBloc, AdminState>(
       builder: (context, state) {
         return Card(
@@ -204,7 +205,7 @@ class AdminScreenState extends State<AdminScreen> {
             onTap: () {
               context.read<AdminScreenBloc>().add(SelectUser(user));
             },
-            title: Text(user.name),
+            title: Text(_nameDisplay),
             leading: CircleAvatar(
               //TODO should be backgrundImage.
               //You can use path to get the User Image.
