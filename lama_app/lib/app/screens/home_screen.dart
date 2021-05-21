@@ -293,7 +293,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text(
                           userRepository.getUserName(),
-                          style: LamaTextTheme.getStyle(fontSize: 20),
+                          style: LamaTextTheme.getStyle(
+                              fontSize: 22.5,
+                              fontWeight: FontWeight.w600,
+                              monospace: true),
                         ),
                         Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
