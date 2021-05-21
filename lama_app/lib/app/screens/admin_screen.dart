@@ -27,6 +27,7 @@ class AdminScreenState extends State<AdminScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<AdminScreenBloc, AdminState>(
         builder: (context, state) {
