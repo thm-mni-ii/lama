@@ -5,6 +5,7 @@ import 'package:lama_app/app/bloc/admin_screen_bloc.dart';
 import 'package:lama_app/app/event/admin_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/admin_state.dart';
+import 'package:lama_app/util/LamaColors.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -59,6 +60,7 @@ class AdminScreenState extends State<AdminScreen> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                   child: FloatingActionButton(
+                    backgroundColor: LamaColors.bluePrimary,
                     onPressed: () => {
                       context
                           .read<AdminScreenBloc>()
@@ -70,6 +72,7 @@ class AdminScreenState extends State<AdminScreen> {
                 ),
                 Spacer(),
                 FloatingActionButton(
+                    backgroundColor: LamaColors.bluePrimary,
                     onPressed: () =>
                         {context.read<AdminScreenBloc>().add(CreateUser())},
                     tooltip: 'Nutzer hinzufügen',
@@ -157,7 +160,7 @@ class AdminScreenState extends State<AdminScreen> {
             padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
             child: Ink(
               decoration: ShapeDecoration(
-                color: Colors.green,
+                color: LamaColors.greenAccent,
                 shape: CircleBorder(),
               ),
               padding: EdgeInsets.all(7.0),
@@ -174,7 +177,7 @@ class AdminScreenState extends State<AdminScreen> {
             )),
         Ink(
           decoration: ShapeDecoration(
-            color: Colors.red,
+            color: LamaColors.redPrimary,
             shape: CircleBorder(),
           ),
           padding: EdgeInsets.all(2.0),
@@ -194,9 +197,9 @@ class AdminScreenState extends State<AdminScreen> {
 
   Widget _bar(double size) {
     return AppBar(
-      title: Text('Nutzerverwaltung'),
+      title: Text('Verwalte deine Nutzer'),
       toolbarHeight: size,
-      backgroundColor: Color.fromARGB(255, 253, 74, 111),
+      backgroundColor: LamaColors.bluePrimary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(30),
