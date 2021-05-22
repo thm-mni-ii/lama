@@ -10,9 +10,9 @@ class FlappyGround {
   Paint paintGrass;
 
   FlappyGround(this.game) {
-    rectGrnd = Rect.fromLTWH(0, game.screenSize.height - game.tileSize * 7,
+    rectGrnd = Rect.fromLTWH(0, 0.75*game.screenSize.height,
         game.screenSize.width, game.tileSize * 6.5);
-    rectGrass = Rect.fromLTWH(0, game.screenSize.height - game.tileSize * 7,
+    rectGrass = Rect.fromLTWH(0, 0.75*game.screenSize.height,
         game.screenSize.width, game.tileSize * 0.75);
     paintGrnd = Paint();
     paintGrass = Paint();
