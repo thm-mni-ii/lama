@@ -7,15 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/flappyLama/components/flappyBackground.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
+import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
+import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
 
 class FlappyLamaGame extends Game with TapDetector {
   Size screenSize;
   double tileSize;
+  int score;
 
   FlappyBackground background;
   FlappyGround ground;
   BuildContext _context;
   FlappyObstacle obstacle;
+  FlappyScoreDisplay scoreDisplay;
 
   bool _initialized = false;
 
@@ -28,6 +32,7 @@ class FlappyLamaGame extends Game with TapDetector {
     background = FlappyBackground(this);
     ground = FlappyGround(this);
     obstacle = FlappyObstacle(this);
+    scoreDisplay = FlappyScoreDisplay(this);
     _initialized = true;
   }
 
@@ -37,6 +42,7 @@ class FlappyLamaGame extends Game with TapDetector {
       background.render(canvas);
       ground.render(canvas);
       obstacle.render(canvas);
+      scoreDisplay.render(canvas);
     }
   }
 
@@ -45,6 +51,8 @@ class FlappyLamaGame extends Game with TapDetector {
     // TODO: implement update
      if(_initialized){
       obstacle.update(t);
+      scoreDisplay.update(t);
+      score = obstacle.score;
     }
   }
 
