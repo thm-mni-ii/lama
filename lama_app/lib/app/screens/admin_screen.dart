@@ -60,6 +60,7 @@ class AdminScreenState extends State<AdminScreen> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                   child: FloatingActionButton(
+                    heroTag: "back",
                     backgroundColor: LamaColors.bluePrimary,
                     onPressed: () => {
                       context
@@ -72,6 +73,7 @@ class AdminScreenState extends State<AdminScreen> {
                 ),
                 Spacer(),
                 FloatingActionButton(
+                    heroTag: "addUser",
                     backgroundColor: LamaColors.bluePrimary,
                     onPressed: () =>
                         {context.read<AdminScreenBloc>().add(CreateUser())},
