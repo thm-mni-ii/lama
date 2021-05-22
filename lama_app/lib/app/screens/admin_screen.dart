@@ -7,10 +7,7 @@ import 'package:lama_app/app/event/admin_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/admin_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
-<<<<<<< HEAD
 import 'package:lama_app/util/LamaTextTheme.dart';
-=======
->>>>>>> Add avatars to the user selection and admin screen
 
 class AdminScreen extends StatefulWidget {
   @override
