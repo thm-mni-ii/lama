@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
+import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 class UserLoginScreen extends StatefulWidget {
   @override
@@ -40,7 +43,7 @@ class UserSelectionState extends State<UserLoginScreen> {
               alignment: Alignment(0, 0),
               child: Icon(
                 Icons.check,
-                color: Colors.green,
+                color: LamaColors.greenAccent,
                 size: 100,
               ),
             );
@@ -53,24 +56,35 @@ class UserSelectionState extends State<UserLoginScreen> {
 }
 
 Widget _input(BuildContext context, String error, User user, double size) {
+  String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
   return Column(
     children: [
       Padding(
         child: Row(
           children: [
             CircleAvatar(
-              //TODO should be backgrundImage.
-              //You can use path to get the User Image.
-              backgroundColor: Color(0xFFF48FB1),
-              radius: 20,
+              child: SvgPicture.asset(
+                'assets/images/svg/avatars/${user.avatar}.svg',
+                semanticsLabel: 'LAMA',
+              ),
+              radius: 25,
+              backgroundColor: LamaColors.mainPink,
             ),
             SizedBox(
               width: 15,
             ),
-            Text(user.name),
+            Text(
+              _nameDisplay,
+              style: LamaTextTheme.getStyle(
+                fontSize: 20,
+                color: LamaColors.black,
+                monospace: true,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
-        padding: EdgeInsets.fromLTRB(20, 15, 0, 0),
+        padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
       ),
       TextFormField(
         decoration: InputDecoration(
@@ -112,9 +126,9 @@ Widget _input(BuildContext context, String error, User user, double size) {
 
 Widget _bar(double size) {
   return AppBar(
-    title: Text('Nutzerauswahl'),
+    title: Text('Nutzerauswahl', style: LamaTextTheme.getStyle(fontSize: 18)),
     toolbarHeight: size,
-    backgroundColor: Color.fromARGB(255, 253, 74, 111),
+    backgroundColor: LamaColors.mainPink,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         bottom: Radius.circular(30),
@@ -141,11 +155,22 @@ Widget _userCard(User user) {
           onTap: () {
             context.read<UserLoginBloc>().add(SelectUser(user));
           },
-          title: Text(_nameDisplay),
+          title: Text(
+            _nameDisplay,
+            style: LamaTextTheme.getStyle(
+              fontSize: 20,
+              color: LamaColors.black,
+              monospace: true,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           leading: CircleAvatar(
-            //TODO should be backgrundImage.
-            //You can use path to get the User Image.
-            backgroundColor: Color(0xFFF48FB1),
+            child: SvgPicture.asset(
+              'assets/images/svg/avatars/${user.avatar}.svg',
+              semanticsLabel: 'LAMA',
+            ),
+            radius: 25,
+            backgroundColor: LamaColors.mainPink,
           ),
         ),
       );

@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/admin_screen_bloc.dart';
 import 'package:lama_app/app/event/admin_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/admin_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
+<<<<<<< HEAD
 import 'package:lama_app/util/LamaTextTheme.dart';
+=======
+>>>>>>> Add avatars to the user selection and admin screen
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -249,9 +253,12 @@ class AdminScreenState extends State<AdminScreen> {
               ),
             ),
             leading: CircleAvatar(
-              //TODO should be backgrundImage.
-              //You can use path to get the User Image.
-              backgroundColor: Color(0xFFF48FB1),
+              child: SvgPicture.asset(
+                'assets/images/svg/avatars/${user.avatar}.svg',
+                semanticsLabel: 'LAMA',
+              ),
+              radius: 25,
+              backgroundColor: LamaColors.mainPink,
             ),
           ),
         );
