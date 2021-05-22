@@ -96,7 +96,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   child: Center(
                     child: Text(
                       answers[0],
-                      style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,),
+                      style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
                     ),
                   ),
                 ),
@@ -120,7 +120,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   child: Center(
                     child: Text(
                       answers[1],
-                      style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,),
+                      style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
                     ),
                   ),
                 ),
@@ -144,7 +144,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   child: Center(
                     child: Text(
                       answers[2],
-                      style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,),
+                      style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
                     ),
                   ),
                 ),
