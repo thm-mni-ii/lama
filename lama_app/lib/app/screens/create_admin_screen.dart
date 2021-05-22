@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
@@ -41,6 +42,9 @@ class CreateAdminScreen extends StatelessWidget {
           Padding(
               padding: EdgeInsets.all(10.0),
               child: TextFormField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                ],
                 decoration: InputDecoration(hintText: 'Nutzername'),
                 validator: (String value) {
                   return InputValidation.inputUsernameValidation(value);
@@ -50,6 +54,9 @@ class CreateAdminScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(10.0),
             child: TextFormField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+              ],
               decoration: InputDecoration(hintText: 'Passwort'),
               validator: (String value) {
                 return InputValidation.inputPasswortValidation(value);

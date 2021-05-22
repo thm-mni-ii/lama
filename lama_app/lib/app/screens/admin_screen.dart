@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/admin_screen_bloc.dart';
@@ -104,6 +105,9 @@ class AdminScreenState extends State<AdminScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
             child: TextFormField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+              ],
               decoration: InputDecoration(
                 hintText: 'Nutzername',
               ),
@@ -118,6 +122,9 @@ class AdminScreenState extends State<AdminScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(25, 25, 25, 0),
             child: TextFormField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+              ],
               decoration: InputDecoration(
                 hintText: 'Password',
               ),
