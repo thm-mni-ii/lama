@@ -42,7 +42,7 @@ class CreateAdminScreen extends StatelessWidget {
               child: TextFormField(
                 decoration: InputDecoration(hintText: 'Nutzername'),
                 validator: (String value) {
-                  return validatiorInputPassword();
+                  return validatiorInputName();
                 },
                 onChanged: (value) => _user.name = value,
               )),
