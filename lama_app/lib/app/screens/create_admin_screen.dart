@@ -42,9 +42,7 @@ class CreateAdminScreen extends StatelessWidget {
           Padding(
               padding: EdgeInsets.all(10.0),
               child: TextFormField(
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-                ],
+                //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
                 decoration: InputDecoration(hintText: 'Nutzername'),
                 validator: (String value) {
                   return InputValidation.inputUsernameValidation(value);
@@ -54,9 +52,7 @@ class CreateAdminScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(10.0),
             child: TextFormField(
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-              ],
+              //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
               decoration: InputDecoration(hintText: 'Passwort'),
               validator: (String value) {
                 return InputValidation.inputPasswortValidation(value);

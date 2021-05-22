@@ -105,9 +105,7 @@ class AdminScreenState extends State<AdminScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
             child: TextFormField(
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-              ],
+              //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
               decoration: InputDecoration(
                 hintText: 'Nutzername',
               ),
@@ -122,9 +120,7 @@ class AdminScreenState extends State<AdminScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(25, 25, 25, 0),
             child: TextFormField(
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-              ],
+              //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
               decoration: InputDecoration(
                 hintText: 'Password',
               ),

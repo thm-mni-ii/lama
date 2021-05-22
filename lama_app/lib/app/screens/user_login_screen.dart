@@ -7,6 +7,7 @@ import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/util/input_validation.dart';
 
 class UserLoginScreen extends StatefulWidget {
   @override
@@ -57,6 +58,7 @@ class UserSelectionState extends State<UserLoginScreen> {
 
 Widget _input(BuildContext context, String error, User user, double size) {
   String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
+  var _formKey = GlobalKey<FormState>();
   return Column(
     children: [
       Padding(
@@ -86,23 +88,27 @@ Widget _input(BuildContext context, String error, User user, double size) {
         ),
         padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
       ),
-      TextFormField(
-        decoration: InputDecoration(
-          icon: Icon(Icons.security),
-          hintText: 'Passwort',
-          errorText: error,
+      Form(
+        key: _formKey,
+        child: TextFormField(
+          decoration: InputDecoration(
+            icon: Icon(Icons.security),
+            hintText: 'Passwort',
+            errorText: error,
+          ),
+          validator: (value) => InputValidation.isEmpty(value) ? 'Eingabe darf nicht leer sein!' : null;,
+          onChanged: (value) =>
+              context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
+          obscureText: true,
         ),
-        validator: (value) => null,
-        onChanged: (value) =>
-            context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
-        obscureText: true,
       ),
       SizedBox(
         height: 25,
       ),
       ElevatedButton(
         onPressed: () {
-          context.read<UserLoginBloc>().add(UserLogin(user, context));
+          if (_formKey.currentState.validate())
+            context.read<UserLoginBloc>().add(UserLogin(user, context));
         },
         child: Text('Einloggen'),
         style: ElevatedButton.styleFrom(
