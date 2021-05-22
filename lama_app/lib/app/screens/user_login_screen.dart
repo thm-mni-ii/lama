@@ -59,38 +59,38 @@ class UserSelectionState extends State<UserLoginScreen> {
 Widget _input(BuildContext context, String error, User user, double size) {
   String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
   var _formKey = GlobalKey<FormState>();
-  return Column(
-    children: [
-      Padding(
-        child: Row(
-          children: [
-            CircleAvatar(
-              child: SvgPicture.asset(
-                'assets/images/svg/avatars/${user.avatar}.svg',
-                semanticsLabel: 'LAMA',
+  return Form(
+    //key: _formKey,
+    child: Column(
+      children: [
+        Padding(
+          child: Row(
+            children: [
+              CircleAvatar(
+                child: SvgPicture.asset(
+                  'assets/images/svg/avatars/${user.avatar}.svg',
+                  semanticsLabel: 'LAMA',
+                ),
+                radius: 25,
+                backgroundColor: LamaColors.mainPink,
               ),
-              radius: 25,
-              backgroundColor: LamaColors.mainPink,
-            ),
-            SizedBox(
-              width: 15,
-            ),
-            Text(
-              _nameDisplay,
-              style: LamaTextTheme.getStyle(
-                fontSize: 20,
-                color: LamaColors.black,
-                monospace: true,
-                fontWeight: FontWeight.w500,
+              SizedBox(
+                width: 15,
               ),
-            ),
-          ],
+              Text(
+                _nameDisplay,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 20,
+                  color: LamaColors.black,
+                  monospace: true,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
         ),
-        padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-      ),
-      Form(
-        key: _formKey,
-        child: TextFormField(
+        TextFormField(
           decoration: InputDecoration(
             icon: Icon(Icons.security),
             hintText: 'Passwort',
@@ -103,32 +103,32 @@ Widget _input(BuildContext context, String error, User user, double size) {
               context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
           obscureText: true,
         ),
-      ),
-      SizedBox(
-        height: 25,
-      ),
-      ElevatedButton(
-        onPressed: () {
-          if (_formKey.currentState.validate())
-            context.read<UserLoginBloc>().add(UserLogin(user, context));
-        },
-        child: Text('Einloggen'),
-        style: ElevatedButton.styleFrom(
-          minimumSize: Size(size, 45),
+        SizedBox(
+          height: 25,
         ),
-      ),
-      SizedBox(
-        height: 15,
-      ),
-      ElevatedButton(
-        onPressed: () {
-          context.read<UserLoginBloc>().add(UserLoginAbort());
-        },
-        child: Text('Abbrechen'),
-        style: ElevatedButton.styleFrom(
-            minimumSize: Size(size, 45), primary: Colors.red),
-      ),
-    ],
+        ElevatedButton(
+          onPressed: () {
+            //if (_formKey.currentState.validate())
+            context.read<UserLoginBloc>().add(UserLogin(user, context));
+          },
+          child: Text('Einloggen'),
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size(size, 45),
+          ),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        ElevatedButton(
+          onPressed: () {
+            context.read<UserLoginBloc>().add(UserLoginAbort());
+          },
+          child: Text('Abbrechen'),
+          style: ElevatedButton.styleFrom(
+              minimumSize: Size(size, 45), primary: Colors.red),
+        ),
+      ],
+    ),
   );
 }
 
