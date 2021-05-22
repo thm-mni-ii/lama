@@ -18,6 +18,14 @@
            "lama_text":"Tippe die richtige Antwort an!",
            "right_answer":"dass",
            "wrong_answers":["Das", "das"]
-         }
+         },
+            {
+          "task_type":"MarkWords",
+          "task_reward":2,
+          "question":"",
+          "lama_text":"Tippe alle Verben an!",
+          "sentence": "Eine Pflanze wächst auf der Wiese!",
+          "right_words": ["wächst"]
+            }
         ]
 }

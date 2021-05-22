@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -25,6 +26,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           yield TaskAnswerResultState(true);
         } else
           yield TaskAnswerResultState(false);
+      } else if(t is TaskMarkWords) {
+        if(equals(t.rightWords, event.providedanswerWords)) { // TODO: Listen müssen verglichen werden (Ob das funktioniert???)
+          userRepository.addLamaCoins(t.reward);
+          yield TaskAnswerResultState(true);
+        } else {
+          yield TaskAnswerResultState(false);
+        }
       }
       else if(t is TaskClozeTest){
         if(event.providedAnswer == t.rightAnswer){
@@ -39,5 +47,19 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       else
         yield DisplayTaskState(tasksetSubject, tasks[curIndex++]);
     }
+  }
+
+  bool equals(List<String> list1, List<String> list2) {
+    if(!(list1 is List<String> && list2 is List<String>) || list1.length!=list2.length) {
+      return false;
+    }
+    list1.sort();
+    list2.sort();
+    for(int i =0; i<list1.length; i++) {
+      if(list1[i]!=list2[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 }
