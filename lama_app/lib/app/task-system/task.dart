@@ -13,6 +13,14 @@ class Task {
             json['question'],
             json['right_answer'],
             List<String>.from(json['wrong_answers']));
+      case "ClozeTest":
+        return TaskClozeTest(
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['question'],
+            json['right_answer'],
+            List<String>.from(json['wrong_answers']));
       default:
         return null;
     }
@@ -32,3 +40,13 @@ class Task4Cards extends Task {
       this.rightAnswer, this.wrongAnswers)
       : super(taskType, reward, question, lamaText);
 }
+
+class TaskClozeTest extends Task {
+  String rightAnswer;
+  List<String> wrongAnswers;
+
+  TaskClozeTest(String taskType, int reward, String lamaText, String question,
+    this.rightAnswer, this.wrongAnswers)
+   : super(taskType, reward, question, lamaText);
+}
+

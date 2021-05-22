@@ -10,6 +10,14 @@
             "lama_text":"Tippe die richtige Antwort an!",
             "right_answer":"grün",
              "wrong_answers":["begrünen", "reden", "lesen"]
-             }
+             },
+         {
+           "task_type":"ClozeTest",
+           "task_reward":2,
+           "question":"Wusstest du, ___ Lamas spucken können?",
+           "lama_text":"Tippe die richtige Antwort an!",
+           "right_answer":"dass",
+           "wrong_answers":["Das", "das"]
+         }
         ]
 }
