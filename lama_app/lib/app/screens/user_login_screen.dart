@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
+import 'package:lama_app/util/LamaColors.dart';
 
 class UserLoginScreen extends StatefulWidget {
   @override
@@ -59,10 +61,12 @@ Widget _input(BuildContext context, String error, User user, double size) {
         child: Row(
           children: [
             CircleAvatar(
-              //TODO should be backgrundImage.
-              //You can use path to get the User Image.
-              backgroundColor: Color(0xFFF48FB1),
-              radius: 20,
+              child: SvgPicture.asset(
+                'assets/images/svg/avatars/${user.avatar}.svg',
+                semanticsLabel: 'LAMA',
+              ),
+              radius: 25,
+              backgroundColor: LamaColors.mainPink,
             ),
             SizedBox(
               width: 15,
@@ -70,7 +74,7 @@ Widget _input(BuildContext context, String error, User user, double size) {
             Text(user.name),
           ],
         ),
-        padding: EdgeInsets.fromLTRB(20, 15, 0, 0),
+        padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
       ),
       TextFormField(
         decoration: InputDecoration(
@@ -143,9 +147,12 @@ Widget _userCard(User user) {
           },
           title: Text(_nameDisplay),
           leading: CircleAvatar(
-            //TODO should be backgrundImage.
-            //You can use path to get the User Image.
-            backgroundColor: Color(0xFFF48FB1),
+            child: SvgPicture.asset(
+              'assets/images/svg/avatars/${user.avatar}.svg',
+              semanticsLabel: 'LAMA',
+            ),
+            radius: 25,
+            backgroundColor: LamaColors.mainPink,
           ),
         ),
       );
