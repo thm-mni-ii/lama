@@ -4,6 +4,8 @@ import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
+import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 class CreateAdminScreen extends StatelessWidget {
   final User _user = User(
@@ -19,7 +21,11 @@ class CreateAdminScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Administrator erstellen'),
+        backgroundColor: LamaColors.bluePrimary,
+        title: Text(
+          'Administrator erstellen',
+          style: LamaTextTheme.getStyle(fontSize: 18),
+        ),
       ),
       body: _form(context),
     );
@@ -52,7 +58,8 @@ class CreateAdminScreen extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(minimumSize: Size(250, 45)),
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(250, 45), primary: LamaColors.bluePrimary),
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 await DatabaseProvider.db.insertUser(_user);
@@ -67,7 +74,10 @@ class CreateAdminScreen extends StatelessWidget {
                 );
               }
             },
-            child: Text('Speichern'),
+            child: Text(
+              'Speichern',
+              style: LamaTextTheme.getStyle(fontSize: 14),
+            ),
           ),
         ],
       ),
