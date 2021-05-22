@@ -75,7 +75,7 @@ class MarkWordsScreen extends StatelessWidget {
             ),
             Container(
               width: (constraints.maxWidth / 100) * 50,
-              height: (constraints.maxWidth / 100) * 15,
+              height: (constraints.maxHeight / 100) * 15,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: LamaColors.greenAccent,
