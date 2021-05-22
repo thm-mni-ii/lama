@@ -20,6 +20,10 @@ class UserRepository {
     return authenticatedUser.grade;
   }
 
+  String getAvatar() {
+    return authenticatedUser.avatar;
+  }
+
   void addLamaCoins(int coinsToAdd) {
     authenticatedUser.coins += coinsToAdd;
     DatabaseProvider.db.updateUser(authenticatedUser);
