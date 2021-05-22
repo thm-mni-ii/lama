@@ -6,6 +6,7 @@ import 'package:lama_app/app/event/admin_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/admin_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -140,7 +141,15 @@ class AdminScreenState extends State<AdminScreen> {
           items: grades.map((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Text(
+                value,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 16,
+                  color: LamaColors.black,
+                  monospace: true,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             );
           }).toList(),
           onChanged: (value) {
@@ -199,7 +208,10 @@ class AdminScreenState extends State<AdminScreen> {
 
   Widget _bar(double size) {
     return AppBar(
-      title: Text('Verwalte deine Nutzer'),
+      title: Text(
+        'Verwalte deine Nutzer',
+        style: LamaTextTheme.getStyle(fontSize: 18),
+      ),
       toolbarHeight: size,
       backgroundColor: LamaColors.bluePrimary,
       shape: RoundedRectangleBorder(
@@ -227,7 +239,15 @@ class AdminScreenState extends State<AdminScreen> {
             onTap: () {
               context.read<AdminScreenBloc>().add(SelectUser(user));
             },
-            title: Text(_nameDisplay),
+            title: Text(
+              _nameDisplay,
+              style: LamaTextTheme.getStyle(
+                fontSize: 16,
+                color: LamaColors.black,
+                monospace: true,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             leading: CircleAvatar(
               //TODO should be backgrundImage.
               //You can use path to get the User Image.
