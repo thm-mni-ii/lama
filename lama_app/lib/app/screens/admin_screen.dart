@@ -5,6 +5,8 @@ import 'package:lama_app/app/bloc/admin_screen_bloc.dart';
 import 'package:lama_app/app/event/admin_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/admin_state.dart';
+import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -54,11 +56,32 @@ class AdminScreenState extends State<AdminScreen> {
       floatingActionButton: BlocBuilder<AdminScreenBloc, AdminState>(
         builder: (context, state) {
           if (state is Loaded) {
-            return FloatingActionButton(
-              onPressed: () =>
-                  {context.read<AdminScreenBloc>().add(CreateUser())},
-              tooltip: 'Nutzer hinzufügen',
-              child: Icon(Icons.add),
+            return Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                  child: FloatingActionButton(
+                    heroTag: "back",
+                    backgroundColor: LamaColors.bluePrimary,
+                    onPressed: () => {
+                      context
+                          .read<AdminScreenBloc>()
+                          .add(LogoutAdminScreen(context))
+                    },
+                    tooltip: 'Ausloggen',
+                    child: Icon(Icons.logout),
+                  ),
+                ),
+                Spacer(),
+                FloatingActionButton(
+                    heroTag: "addUser",
+                    backgroundColor: LamaColors.bluePrimary,
+                    onPressed: () =>
+                        {context.read<AdminScreenBloc>().add(CreateUser())},
+                    tooltip: 'Nutzer hinzufügen',
+                    child: Icon(Icons.add)),
+              ],
+              mainAxisAlignment: MainAxisAlignment.end,
             );
           }
           if (state is CreateUserState) {
@@ -118,7 +141,15 @@ class AdminScreenState extends State<AdminScreen> {
           items: grades.map((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Text(
+                value,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 16,
+                  color: LamaColors.black,
+                  monospace: true,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             );
           }).toList(),
           onChanged: (value) {
@@ -140,7 +171,7 @@ class AdminScreenState extends State<AdminScreen> {
             padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
             child: Ink(
               decoration: ShapeDecoration(
-                color: Colors.green,
+                color: LamaColors.greenAccent,
                 shape: CircleBorder(),
               ),
               padding: EdgeInsets.all(7.0),
@@ -157,7 +188,7 @@ class AdminScreenState extends State<AdminScreen> {
             )),
         Ink(
           decoration: ShapeDecoration(
-            color: Colors.red,
+            color: LamaColors.redPrimary,
             shape: CircleBorder(),
           ),
           padding: EdgeInsets.all(2.0),
@@ -177,9 +208,12 @@ class AdminScreenState extends State<AdminScreen> {
 
   Widget _bar(double size) {
     return AppBar(
-      title: Text('Nutzerverwaltung'),
+      title: Text(
+        'Verwalte deine Nutzer',
+        style: LamaTextTheme.getStyle(fontSize: 18),
+      ),
       toolbarHeight: size,
-      backgroundColor: Color.fromARGB(255, 253, 74, 111),
+      backgroundColor: LamaColors.bluePrimary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(30),
@@ -205,7 +239,15 @@ class AdminScreenState extends State<AdminScreen> {
             onTap: () {
               context.read<AdminScreenBloc>().add(SelectUser(user));
             },
-            title: Text(_nameDisplay),
+            title: Text(
+              _nameDisplay,
+              style: LamaTextTheme.getStyle(
+                fontSize: 16,
+                color: LamaColors.black,
+                monospace: true,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             leading: CircleAvatar(
               //TODO should be backgrundImage.
               //You can use path to get the User Image.
