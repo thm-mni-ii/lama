@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
-import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -14,16 +13,16 @@ class TasksetLoader {
   // Keep in mind youll have to add standard taskset for each subject for the new grade otherwise the app will crash on startup
   static const int GRADES_SUPPORTED = 6;
 
-  void loadAllTasksets() async {
+  Future<void> loadAllTasksets() async {
     //get path for the taskset directory (only accessible by this app)
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String tasksetPath = appDocDir.path + "/tasksets";
     //create the directory if it doesent exist yet
-    Directory(tasksetPath).create();
+    await Directory(tasksetPath).create();
     //get a reference to the taskset directory
     Directory dir = Directory(tasksetPath);
     //deleting all tasksets from the directory in case it already existet
-    dir.listSync().forEach((element) {
+    await dir.list().forEach((element) {
       element.delete();
     });
 
@@ -43,7 +42,7 @@ class TasksetLoader {
 
     //get all files in the taskset directory
     List<FileSystemEntity> tasksets = dir.listSync();
-    for (File f in tasksets) print(f.path);
+    //for (File f in tasksets) print(f.path);
 
     for (File file in tasksets) {
       String tasksetContent = await file.readAsString();
@@ -54,7 +53,7 @@ class TasksetLoader {
   void buildTasksetFromJson(tasksetContent) {
     Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
 
-    //LOGCODE
+    /*LOGCODE
     print("taskset_name: " + taskset.name);
     print("taskset_subject: " + taskset.subject);
     print("taskset_grade: " + taskset.grade.toString());
@@ -67,7 +66,7 @@ class TasksetLoader {
         for (String s in t.wrongAnswers) print("task_wrong_answer: " + s);
       }
     }
-    //
+    */
 
     SubjectGradeRelation sgr =
         SubjectGradeRelation(taskset.subject, taskset.grade);

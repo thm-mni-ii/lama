@@ -4,9 +4,9 @@ import 'package:lama_app/app/task-system/taskset_model.dart';
 class TasksetRepository {
   TasksetLoader tasksetLoader;
 
-  void initialize() {
+  Future<void> initialize() async {
     tasksetLoader = TasksetLoader();
-    tasksetLoader.loadAllTasksets();
+    await tasksetLoader.loadAllTasksets();
   }
 
   List<Taskset> getTasksetsForSubjectAndGrade(String subject, int grade) {
