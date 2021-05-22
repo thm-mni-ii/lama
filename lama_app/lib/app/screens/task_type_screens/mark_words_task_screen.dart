@@ -2,6 +2,7 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lama_app/app/bloc/taskBloc/markwords_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -10,7 +11,8 @@ class MarkWordsScreen extends StatelessWidget {
   final BoxConstraints constraints;
   final TaskMarkWords task;
   final List<String> sentence = [];
-  List<String> providedanswerWords;
+  List<String> providedanswerWords = [];
+  MarkWordsBloc neededBloc;
 
   MarkWordsScreen(this.task, this.constraints) {
     sentence.addAll(task.sentence.split(" "));
@@ -19,7 +21,9 @@ class MarkWordsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    neededBloc = MarkWordsBloc();
+    return BlocProvider(create: (context)=> neededBloc,
+        child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
@@ -81,7 +85,7 @@ class MarkWordsScreen extends StatelessWidget {
               ]),
           child: InkWell(
             onTap: () => BlocProvider.of<TaskBloc>(context)
-                .add(AnswerTaskEvent.initMarkWords(providedanswerWords)),
+                .add(AnswerTaskEvent.initMarkWords(neededBloc.givenAnswers)),
             child: Center(
               child: Text(
                 "Fertig!",
@@ -95,26 +99,32 @@ class MarkWordsScreen extends StatelessWidget {
           height: (constraints.maxHeight / 100) * 10,
         )
       ],
-    );
+    ));
   }
 
   Widget _sentence(List<String> sentence) {
-    return ListView.builder(
+    return BlocBuilder<MarkWordsBloc, MarkWordState>(
+        builder: (context, MarkWordState state) {
+       return ListView.builder(
       itemCount: sentence.length,
-      itemBuilder: (context, index) {
+      itemBuilder: (BuildContext context, index) {
+        Color boxcolor = Colors.lightBlue;
+          if(state.list.contains(sentence[index])) {
+            boxcolor = Colors.green;
+          }
+
+
         return Padding(
           padding: EdgeInsets.all(5),
-          child: Container(
-            width: constraints.maxWidth,
-            height: (constraints.maxHeight / 100) * 5,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: Colors.lightBlue,
-            ),
-            child: InkWell(
-              onTap: () {
-                providedanswerWords.add(sentence[index]);
-              },
+          child: InkWell(
+            onTap: () => BlocProvider.of<MarkWordsBloc>(context).add(AddAnswerToListEvent(sentence[index])),
+            child: Container(
+              width: constraints.maxWidth,
+              height: (constraints.maxHeight / 100) * 5,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                color: boxcolor,
+              ),
               child: Center(
                 child: Text(sentence[index], textAlign: TextAlign.center),
               ),
@@ -122,6 +132,7 @@ class MarkWordsScreen extends StatelessWidget {
           ),
         );
       },
-    );
+       );});
+
   }
 }
