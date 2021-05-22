@@ -60,7 +60,7 @@ class AdminScreenState extends State<AdminScreen> {
             return Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                  padding: EdgeInsets.only(left: 30),
                   child: FloatingActionButton(
                     heroTag: "back",
                     backgroundColor: LamaColors.bluePrimary,
@@ -145,7 +145,7 @@ class AdminScreenState extends State<AdminScreen> {
               child: Text(
                 value,
                 style: LamaTextTheme.getStyle(
-                  fontSize: 16,
+                  fontSize: 20,
                   color: LamaColors.black,
                   monospace: true,
                   fontWeight: FontWeight.w500,
@@ -169,7 +169,7 @@ class AdminScreenState extends State<AdminScreen> {
     return Row(
       children: [
         Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            padding: EdgeInsets.only(right: 10),
             child: Ink(
               decoration: ShapeDecoration(
                 color: LamaColors.greenAccent,
@@ -243,7 +243,7 @@ class AdminScreenState extends State<AdminScreen> {
             title: Text(
               _nameDisplay,
               style: LamaTextTheme.getStyle(
-                fontSize: 16,
+                fontSize: 20,
                 color: LamaColors.black,
                 monospace: true,
                 fontWeight: FontWeight.w500,
