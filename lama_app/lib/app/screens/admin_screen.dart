@@ -8,6 +8,7 @@ import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/admin_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/util/input_validation.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -107,7 +108,7 @@ class AdminScreenState extends State<AdminScreen> {
                 hintText: 'Nutzername',
               ),
               validator: (value) {
-                return _emptyValidation(value);
+                return InputValidation.inputUsernameValidation(value);
               },
               onChanged: (value) {
                 context.read<AdminScreenBloc>().add(UsernameChange(value));
@@ -121,7 +122,7 @@ class AdminScreenState extends State<AdminScreen> {
                 hintText: 'Password',
               ),
               validator: (value) {
-                return _emptyValidation(value);
+                return InputValidation.inputPasswortValidation(value);
               },
               onChanged: (value) {
                 context.read<AdminScreenBloc>().add(UserPasswortChange(value));
@@ -261,13 +262,5 @@ class AdminScreenState extends State<AdminScreen> {
         );
       },
     );
-  }
-
-  String _emptyValidation(String value) {
-    if (value != null && value != '' && value != ' ') {
-      return null;
-    } else {
-      return 'Dieses Feld darf nicht leer sein!';
-    }
   }
 }
