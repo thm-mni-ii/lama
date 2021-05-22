@@ -15,7 +15,6 @@ class FlappyObstacle{
   double _holeLength;
   double _movespeed = -30;
 
-  Paint _obstaclePaint2;
 
 //obstacle move and reset after they leave the screen (2 objects moving)
   Random _randomNumber = Random();
@@ -29,19 +28,19 @@ class FlappyObstacle{
     _holeLength = game.screenSize.height/6;
     _topObstacleLength = 1 + (0.7 * game.screenSize.height - _holeLength) * _randomNumber.nextDouble();
 
-    _topObstacle = Rect.fromLTWH(game.screenSize.width/2.8, 0, game.screenSize.width/5,
+    _topObstacle = Rect.fromLTWH(game.screenSize.width/2, 0, game.screenSize.width/5,
       _topObstacleLength);
-
-    _bottomObstacle = Rect.fromLTWH(game.screenSize.width/2.8, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-      game.screenSize.height - (_topObstacleLength + _holeLength));
+//3rd Parameter of the bottom obstacles is equal to the beginning of the ground(if we implement positions)
+    _bottomObstacle = Rect.fromLTWH(game.screenSize.width/2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
+      0.75*game.screenSize.height - (_topObstacleLength + _holeLength));
 
     _topObstacleLength = 1 + (0.7 * game.screenSize.height - _holeLength) * _randomNumber.nextDouble();
 
-    _topObstacle2 = Rect.fromLTWH(game.screenSize.width, 0, game.screenSize.width/5,
+    _topObstacle2 = Rect.fromLTWH(game.screenSize.width*1.2, 0, game.screenSize.width/5,
       _topObstacleLength);
 
-    _bottomObstacle2 = Rect.fromLTWH(game.screenSize.width, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-      game.screenSize.height - (_topObstacleLength + _holeLength));
+    _bottomObstacle2 = Rect.fromLTWH(game.screenSize.width*1.2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
+      0.75*game.screenSize.height - (_topObstacleLength + _holeLength));
   }
 
   void render(Canvas c){
@@ -56,22 +55,22 @@ class FlappyObstacle{
     if(_bottomObstacle.right < 0){
        _topObstacleLength = 1 + (0.7 * game.screenSize.height - _holeLength) * _randomNumber.nextDouble();
 
-      _topObstacle = Rect.fromLTWH(game.screenSize.width, 0, game.screenSize.width/5,
+      _topObstacle = Rect.fromLTWH(game.screenSize.width*1.2, 0, game.screenSize.width/5,
         _topObstacleLength);
 
-      _bottomObstacle = Rect.fromLTWH(game.screenSize.width, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-        game.screenSize.height - (_topObstacleLength + _holeLength));
+      _bottomObstacle = Rect.fromLTWH(game.screenSize.width*1.2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
+        0.75*game.screenSize.height - (_topObstacleLength + _holeLength));
 
     }
 
     if(_bottomObstacle2.right < 0){
       _topObstacleLength = 1 + (0.7 * game.screenSize.height - _holeLength) * _randomNumber.nextDouble();
 
-      _topObstacle2 = Rect.fromLTWH(game.screenSize.width, 0, game.screenSize.width/5,
+      _topObstacle2 = Rect.fromLTWH(game.screenSize.width*1.2, 0, game.screenSize.width/5,
         _topObstacleLength);
 
-      _bottomObstacle2 = Rect.fromLTWH(game.screenSize.width, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-        game.screenSize.height - (_topObstacleLength + _holeLength));
+      _bottomObstacle2 = Rect.fromLTWH(game.screenSize.width*1.2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
+        0.75*game.screenSize.height - (_topObstacleLength + _holeLength));
     }
    
     _bottomObstacle = _bottomObstacle.translate(_movespeed * t, 0);
