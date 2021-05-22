@@ -21,28 +21,29 @@ class CreateAdminScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Administrator erstellen'),
       ),
-      body: Column(
+      body: _form(context),
+    );
+  }
+
+  Widget _form(BuildContext context) {
+    var _formKey = GlobalKey<FormState>();
+    return Form(
+      key: _formKey,
+      child: Column(
         children: [
           Padding(
               padding: EdgeInsets.all(10.0),
               child: TextFormField(
-                decoration: InputDecoration(
-                    hintText: 'Nutzername', errorText: validatiorInputName()),
+                decoration: InputDecoration(hintText: 'Nutzername'),
                 validator: (String value) {
                   return validatiorInputPassword();
                 },
-                onChanged: (value) {
-                  _user.name = value;
-                  validatiorInputName();
-                },
+                onChanged: (value) => _user.name = value,
               )),
           Padding(
             padding: EdgeInsets.all(10.0),
             child: TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Passwort',
-                errorText: validatiorInputPassword(),
-              ),
+              decoration: InputDecoration(hintText: 'Passwort'),
               validator: (String value) {
                 return validatiorInputPassword();
               },
@@ -51,26 +52,25 @@ class CreateAdminScreen extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-              style: ElevatedButton.styleFrom(minimumSize: Size(250, 45)),
-              onPressed: () async {
-                if (validatiorInputName() == null &&
-                    validatiorInputPassword() == null) {
-                  await DatabaseProvider.db.insertUser(_user);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (BuildContext context) => UserLoginBloc(),
-                        child: UserLoginScreen(),
-                      ),
+            style: ElevatedButton.styleFrom(minimumSize: Size(250, 45)),
+            onPressed: () async {
+              if (_formKey.currentState.validate()) {
+                await DatabaseProvider.db.insertUser(_user);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (BuildContext context) => UserLoginBloc(),
+                      child: UserLoginScreen(),
                     ),
-                  );
-                }
-              },
-              child: Text('Speichern')),
+                  ),
+                );
+              }
+            },
+            child: Text('Speichern'),
+          ),
         ],
       ),
-      backgroundColor: Color(0xFFFFFFFF),
     );
   }
 
