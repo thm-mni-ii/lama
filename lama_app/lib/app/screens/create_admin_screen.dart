@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
@@ -6,6 +7,7 @@ import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/util/input_validation.dart';
 
 class CreateAdminScreen extends StatelessWidget {
   final User _user = User(
@@ -40,18 +42,20 @@ class CreateAdminScreen extends StatelessWidget {
           Padding(
               padding: EdgeInsets.all(10.0),
               child: TextFormField(
+                //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
                 decoration: InputDecoration(hintText: 'Nutzername'),
                 validator: (String value) {
-                  return validatiorInputName();
+                  return InputValidation.inputUsernameValidation(value);
                 },
                 onChanged: (value) => _user.name = value,
               )),
           Padding(
             padding: EdgeInsets.all(10.0),
             child: TextFormField(
+              //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
               decoration: InputDecoration(hintText: 'Passwort'),
               validator: (String value) {
-                return validatiorInputPassword();
+                return InputValidation.inputPasswortValidation(value);
               },
               onChanged: (value) => _user.password = value,
               obscureText: true,
@@ -82,21 +86,5 @@ class CreateAdminScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String validatiorInputName() {
-    if (_user.name == '' || _user.name.isEmpty || _user.name == null) {
-      return 'Der Nutzername darf nicht leer sein!';
-    }
-    return null;
-  }
-
-  String validatiorInputPassword() {
-    if (_user.password == '' ||
-        _user.password.isEmpty ||
-        _user.password == null) {
-      return 'Das Password darf nicht leer sein!';
-    }
-    return null;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/admin_screen_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/admin_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/util/input_validation.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -60,7 +62,7 @@ class AdminScreenState extends State<AdminScreen> {
             return Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                  padding: EdgeInsets.only(left: 30),
                   child: FloatingActionButton(
                     heroTag: "back",
                     backgroundColor: LamaColors.bluePrimary,
@@ -103,11 +105,12 @@ class AdminScreenState extends State<AdminScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
             child: TextFormField(
+              //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
               decoration: InputDecoration(
                 hintText: 'Nutzername',
               ),
               validator: (value) {
-                return _emptyValidation(value);
+                return InputValidation.inputUsernameValidation(value);
               },
               onChanged: (value) {
                 context.read<AdminScreenBloc>().add(UsernameChange(value));
@@ -117,11 +120,12 @@ class AdminScreenState extends State<AdminScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(25, 25, 25, 0),
             child: TextFormField(
+              //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
               decoration: InputDecoration(
                 hintText: 'Password',
               ),
               validator: (value) {
-                return _emptyValidation(value);
+                return InputValidation.inputPasswortValidation(value);
               },
               onChanged: (value) {
                 context.read<AdminScreenBloc>().add(UserPasswortChange(value));
@@ -145,7 +149,7 @@ class AdminScreenState extends State<AdminScreen> {
               child: Text(
                 value,
                 style: LamaTextTheme.getStyle(
-                  fontSize: 16,
+                  fontSize: 20,
                   color: LamaColors.black,
                   monospace: true,
                   fontWeight: FontWeight.w500,
@@ -169,7 +173,7 @@ class AdminScreenState extends State<AdminScreen> {
     return Row(
       children: [
         Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            padding: EdgeInsets.only(right: 10),
             child: Ink(
               decoration: ShapeDecoration(
                 color: LamaColors.greenAccent,
@@ -243,7 +247,7 @@ class AdminScreenState extends State<AdminScreen> {
             title: Text(
               _nameDisplay,
               style: LamaTextTheme.getStyle(
-                fontSize: 16,
+                fontSize: 20,
                 color: LamaColors.black,
                 monospace: true,
                 fontWeight: FontWeight.w500,
@@ -261,13 +265,5 @@ class AdminScreenState extends State<AdminScreen> {
         );
       },
     );
-  }
-
-  String _emptyValidation(String value) {
-    if (value != null && value != '' && value != ' ') {
-      return null;
-    } else {
-      return 'Dieses Feld darf nicht leer sein!';
-    }
   }
 }
