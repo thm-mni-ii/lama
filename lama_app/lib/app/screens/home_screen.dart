@@ -284,7 +284,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     CircleAvatar(
+                      child: SvgPicture.asset(
+                        'assets/images/svg/avatars/${userRepository.getAvatar()}.svg',
+                        semanticsLabel: 'LAMA',
+                      ),
                       radius: 25,
+                      backgroundColor: LamaColors.mainPink,
                     ),
                     SizedBox(width: 10),
                     Column(
