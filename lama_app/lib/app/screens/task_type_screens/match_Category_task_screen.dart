@@ -22,7 +22,7 @@ class MatchCategoryTaskScreen extends StatelessWidget{
     return Column(children: [
       // Lama Speechbubble
       Container(
-        height: (constraints.maxHeight / 100) * 20,
+        height: (constraints.maxHeight / 100) * 15,
         padding: EdgeInsets.only(left: 15, right: 15, top: 15),
         // create space between each childs
         child: Stack(
@@ -57,14 +57,60 @@ class MatchCategoryTaskScreen extends StatelessWidget{
         ),
       ),
 
+      Container(
+        height: (constraints.maxHeight / 100) * 60,
+        color: LamaColors.greenAccent,
+        child: Stack(children: [Positioned(
+                  bottom:(constraints.maxHeight / 100) * 50,
+                  left: (constraints.maxWidth/100)*60,
+                  child: Container(
+                    height: 50,
+                    width: 150,
+                    color: LamaColors.orangeAccent,
+                  ))],)
+      ),
+
+      //Category´s
+      Container(
+        height: (constraints.maxHeight / 100) * 15,
+        //color: LamaColors.blueAccent,
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: 60,
+              width: 185,
+              color: LamaColors.blueAccent,
+              child: Center(
+                child: Text(
+                  task.nameCatOne,
+                  style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
+                ),
+              ),
+            ),
+            Container(
+              height: 60,
+              width: 185,
+              color: LamaColors.orangeAccent,
+              child: Center(
+                child: Text(
+                  task.nameCatTwo,
+                  style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
       // Done Button
       Container(
-        height: (constraints.maxHeight / 100) * 70,
+        height: (constraints.maxHeight / 100) * 8,
         alignment: Alignment.bottomCenter,
-        padding: EdgeInsets.only(top: 20),
+        padding: EdgeInsets.only(top: 5),
         //color: LamaColors.greenAccent,
         child: Container(
-          height: 55,
+          height: 45,
           width: 200,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
