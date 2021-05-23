@@ -12,7 +12,7 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
 import 'package:lama_app/flappyLama/components/flappyLama.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
-import 'package:lama_app/snake/views/view.dart';
+
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
 import 'package:lama_app/flappyLama/widgets/pauseMode.dart';
 import 'package:lama_app/flappyLama/widgets/playMode.dart';
@@ -43,6 +43,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   FlappyLama _lama;
   Random _randomNumber = Random();
   UserRepository _userRepo;
+  GameOverView gameOverView;
 
 
   FlappyLamaGame(this._context, this._userRepo) {
@@ -120,6 +121,11 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
     tileSize = screenSize.width / tilesX;
     tilesY = screenSize.height ~/ tileSize;
+    //FOR TESTING :
+    if (activeView == View.playing) {
+      gameOverView.render(canvas);
+    }
+    //
 
     super.resize(size);
       if (activeView == View.playing) {

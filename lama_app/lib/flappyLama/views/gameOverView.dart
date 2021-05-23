@@ -22,7 +22,7 @@ class GameOverView {
       this.game.tileSize * 1,
       this.game.tileSize * 1,
       this.game.screenSize.width - this.game.tileSize * 2,
-      this.game.screenSize.height - this.game.tileSize * 2,
+      this.game.tileSize * 10,
     );
   }
 }
