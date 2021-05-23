@@ -67,6 +67,9 @@ class SnakeGame extends Game with TapDetector {
 
   SnakeGame(this._context) {
     initialize();
+    developer.log("${MediaQuery.of(_context).size.width}");
+    developer.log("${MediaQuery.of(_context).size.height}");
+    developer.log("${MediaQuery.of(_context).padding}");
   }
 
   /// This method is vor the initialization process of the game class.
@@ -268,7 +271,10 @@ class SnakeGame extends Game with TapDetector {
   }
 
   void resize(Size size) {
-    screenSize = size;
+    screenSize = Size(
+        MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
+        MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom
+    );
 
     if (maxField && screenSize.width > 0 && screenSize.height > 0) {
       if (screenSize.width < screenSize.height) {
