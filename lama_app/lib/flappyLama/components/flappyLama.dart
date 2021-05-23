@@ -8,14 +8,14 @@ class FlappyLama {
   Rect lamaRect;
   Size screenSize;
   Paint lamaPaint;
-  bool isJumping = false;
+  bool isGameStarted = false;
 
-  double maxY = 0.0;
+  double initY = 0.0;
   double speedY = 0.0;
   double x;
   double y;
 
-  static const double GRAVITY = 1000;
+  static const double GRAVITY = 100;
 
   FlappyLama(this.game) {
     resize();
@@ -28,20 +28,28 @@ class FlappyLama {
   }
 
   void update(double t) {
-    this.speedY += GRAVITY * t;
-    this.y += this.speedY * t;
+    if (isGameStarted == true) {
+      this.speedY += GRAVITY * t;
+      this.y += this.speedY * t;
 
-    if (isFalling()) {
-      this.y = this.maxY;
+      if (this.y > game.tileSize * 7) {
+        y = game.tileSize * 7;
+        speedY = 0.0;
+        isGameStarted = false;
+      }
 
-      this.speedY = 0.0;
+      if (this.y < 0) {
+        isGameStarted = false;
+        developer.log("[y=${this.y}, ymax=${initY} ");
+        this.y = initY;
+        speedY = 0.0;
+      }
     }
     lamaRect = Rect.fromLTWH(x, y, game.tileSize, game.tileSize);
-    //TODO:Make lama fall below from the starting point
   }
 
   void jump() {
-    this.speedY = -600;
+    this.speedY = -100;
   }
 
   void resize() {
@@ -49,19 +57,15 @@ class FlappyLama {
     this.y = game.tileSize * 4;
     lamaRect = Rect.fromLTWH(x, y, game.tileSize, game.tileSize);
 
-    this.maxY = this.y;
+    this.initY = this.y;
   }
 
   bool isFalling() {
-    developer.log("[y=${this.y}, maxY=${maxY} ");
-    return (this.y >= this.maxY);
+    return (this.y >= this.initY);
   }
 
   void onTapDown() {
-    isJumping = true;
-    //developer.log("[y=${this.y}, ymax=${maxY} ");
-    if (isFalling()) {
-      jump();
-    }
+    isGameStarted = true;
+    jump();
   }
 }
