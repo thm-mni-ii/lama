@@ -324,14 +324,25 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Align(
               alignment: Alignment.bottomLeft,
-              child: ElevatedButton(
-                child: Text("User select test"),
-                onPressed: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (BuildContext context) => UserLoginBloc(),
-                      child: UserLoginScreen(),
+              child: Padding(
+                padding: EdgeInsets.only(left: 15, bottom: 15),
+                child: Container(
+                  width: screenSize.width / 5,
+                  child: FittedBox(
+                    child: FloatingActionButton(
+                      heroTag: "back",
+                      backgroundColor: LamaColors.mainPink,
+                      onPressed: () => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (BuildContext context) => UserLoginBloc(),
+                            child: UserLoginScreen(),
+                          ),
+                        ),
+                      ),
+                      tooltip: 'Ausloggen',
+                      child: Icon(Icons.logout),
                     ),
                   ),
                 ),
