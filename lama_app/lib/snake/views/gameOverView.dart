@@ -5,57 +5,58 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/goBackButton.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
-
 class GameOverView {
   final SnakeGame game;
 
-  Rect bgRect;
-  Paint bgPaint;
-  Paint borderPaint;
-  TextPainter _painter;
-  TextStyle _textStyle;
+  final relativeX = 0.15;
+  final relativeY = 0.15;
 
   GoBackButton goBackButton;
+
+  Paint _bgPaint = Paint()
+    ..color = Color(0xFFFFFFFF);
+  Paint _borderPaint = Paint()
+    ..color = Color(0xFF000000);
+  TextPainter _painter = TextPainter(
+    textAlign: TextAlign.center,
+    textDirection: TextDirection.ltr,
+  );
   double _borderThickness = 3;
+  Rect _bgRect;
   Offset _position;
-  var relativeX = 0.15;
-  var relativeY = 0.15;
+  TextStyle _textStyle;
 
   GameOverView(this.game) {
-    var relativeSize = sqrt(this.game.screenSize.width * this.game.screenSize.height);
-    this.goBackButton = GoBackButton(game, relativeX, relativeY);
+    this.goBackButton = GoBackButton(game);
+    resize();
+  }
 
-    bgRect = Rect.fromLTWH(
+  void resize() {
+    this.goBackButton?.resize();
+
+    var relativeSize = sqrt(this.game.screenSize.width * this.game.screenSize.height);
+
+    _bgRect = Rect.fromLTWH(
       this.game.screenSize.width * relativeX,
       this.game.screenSize.height * relativeY,
       this.game.screenSize.width * (1.0 - relativeX * 2),
       this.game.screenSize.height * (1.0 - relativeY * 4),
     );
 
-    bgPaint = Paint();
-    bgPaint.color = Color(0xFFFFFFFF);
-    borderPaint = Paint();
-    borderPaint.color = Color(0xFF000000);
-
-     _painter = TextPainter(
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-
     _textStyle = TextStyle(
       color: Color(0xff000000),
       fontSize: relativeSize * 0.10,
     );
+
     _position = Offset.zero;
   }
 
   void render(Canvas c) {
-    c.drawRRect(RRect.fromRectAndRadius(bgRect.inflate(_borderThickness), Radius.circular(35.0)), borderPaint);
-    c.drawRRect(RRect.fromRectAndRadius(bgRect, Radius.circular(35.0)), bgPaint);
+    c.drawRRect(RRect.fromRectAndRadius(_bgRect.inflate(_borderThickness), Radius.circular(35.0)), _borderPaint);
+    c.drawRRect(RRect.fromRectAndRadius(_bgRect, Radius.circular(35.0)), _bgPaint);
 
     _painter.paint(c, _position);
     goBackButton.render(c);
-    
   }
 
   void update(double t) {

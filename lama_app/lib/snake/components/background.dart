@@ -25,6 +25,18 @@ class Background {
   ///
   /// Needs an instance of [SnakeGame] to determine the corresponding size of the screen.
   Background(this.game, this._controlBarRelativeHeight) {
+    resize();
+
+    // background paint
+    backgroundPaint = Paint();
+    backgroundPaint.color = Color(0xFFF9FBB6);
+
+    // field border paint
+    fieldBorderPaint = Paint();
+    fieldBorderPaint.color = Color(0xFF4C4C4C);
+  }
+
+  void resize() {
     // background rectangle
     backgroundRect = Rect.fromLTWH(
       0,
@@ -46,17 +58,9 @@ class Background {
         this.game.maxFieldX * this.game.maxFieldY,
             (index) => Position(index % this.game.maxFieldX, index ~/ this.game.maxFieldX));
 
-    // background paint
-    backgroundPaint = Paint();
-    backgroundPaint.color = Color(0xFFF9FBB6);
-
     // calculates the offset of the field depending on the [fieldOffsetY] of the SnakeGame
     _offsetX = game.screenSize.width > game.screenSize.height ? game.tileSize * this.game.fieldOffsetY : 0;
     _offsetY = game.screenSize.height > game.screenSize.width ? game.tileSize * this.game.fieldOffsetY : 0;
-
-    // field border paint
-    fieldBorderPaint = Paint();
-    fieldBorderPaint.color = Color(0xFF4C4C4C);
 
     // field border rect
     fieldRect = Rect.fromLTWH(

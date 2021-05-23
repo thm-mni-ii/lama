@@ -22,10 +22,21 @@ class ArrowButtons {
   bool _clickHandled = true;
   Color _buttonColor = Color(0xff3CDFFF);
   Color _buttonClickColor = Color(0xffbdcbd9);
+  int _arrowDirection = 0;
   final double _shadowWidth = 5;
 
+  ArrowButtons(this.game, this._relativeSize, this._arrowDirection, this._position, this._relativeOffsetY, this._onTap) {
+    // button paint
+    _paintButton = Paint();
+    _paintButton.color = Color(0xff0088ff);
 
-  ArrowButtons(this.game, this._relativeSize, arrowDirection, this._position, this._relativeOffsetY, this._onTap) {
+    // arrow paint
+    _paintArrow.color = Color(0xff000000);
+
+    resize();
+  }
+
+  void resize() {
     // space of the button element
     var spacePos = (this.game.screenSize.width -
         ((this.game.screenSize.width * _relativeOffsetX) * 2)) / 5;
@@ -42,7 +53,7 @@ class ArrowButtons {
         this.game.screenSize.width * _relativeSize);
 
     // arrow path
-    _arrowPath = getArrowPath(arrowDirection, startX);
+    _arrowPath = getArrowPath(_arrowDirection, startX);
 
     // shader paint
     _paintShadow = Paint();
@@ -60,13 +71,6 @@ class ArrowButtons {
             _rectButton.width,
             _rectButton.height)
     );
-
-    // button paint
-    _paintButton = Paint();
-    _paintButton.color = Color(0xff0088ff);
-
-    // arrow paint
-    _paintArrow.color = Color(0xff000000);
   }
 
   Path getArrowPath(int dir, double startX) {

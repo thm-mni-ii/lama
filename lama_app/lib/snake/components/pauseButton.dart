@@ -34,6 +34,10 @@ class PauseButton{
   /// - the relative Offset to the Y axis relative to the screensize
   /// - a [Function(bool)] which runs when the button gets tapped
   PauseButton(this.game, this._relativeSize, this._position, this._relativeOffsetY, this._onTap) {
+    resize();
+  }
+
+  void resize() {
     if (this._position > 5 || this._position <= 0) {
       throw new FormatException("Position out of bounds");
     }
