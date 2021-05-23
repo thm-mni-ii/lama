@@ -12,6 +12,7 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
 import 'package:lama_app/flappyLama/components/flappyLama.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
+import 'package:lama_app/snake/views/view.dart';
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
 import 'package:lama_app/flappyLama/widgets/pauseMode.dart';
 import 'package:lama_app/flappyLama/widgets/playMode.dart';
@@ -42,6 +43,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   FlappyLama _lama;
   Random _randomNumber = Random();
   UserRepository _userRepo;
+
 
   FlappyLamaGame(this._context, this._userRepo) {
     var back = ParallaxComponent(
@@ -120,6 +122,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     tilesY = screenSize.height ~/ tileSize;
 
     super.resize(size);
+      if (activeView == View.playing) {
   }
 
   void startGame(){
@@ -145,6 +148,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         PauseMode(
             onPlayPressed: resumeGame)
     );
+    }
   }
 
   /// This method resumes the game.
@@ -162,6 +166,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void onTapDown(TapDownDetails d) {
+    activeView = View.playing;
     _lama.onTapDown();
   }
 
