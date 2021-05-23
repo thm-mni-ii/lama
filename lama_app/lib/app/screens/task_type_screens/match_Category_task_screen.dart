@@ -81,7 +81,15 @@ class MatchCategoryTaskScreen extends StatelessWidget{
             Container(
               height: 60,
               width: 185,
-              color: LamaColors.blueAccent,
+              decoration: BoxDecoration(
+                  color: LamaColors.blueAccent,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 7,
+                        offset: Offset(0, 3)),
+                  ]),
               child: Center(
                 child: Text(
                   task.nameCatOne,
@@ -92,7 +100,15 @@ class MatchCategoryTaskScreen extends StatelessWidget{
             Container(
               height: 60,
               width: 185,
-              color: LamaColors.orangeAccent,
+              decoration: BoxDecoration(
+                  color: LamaColors.orangeAccent,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 7,
+                        offset: Offset(0, 3)),
+                  ]),
               child: Center(
                 child: Text(
                   task.nameCatTwo,
