@@ -29,6 +29,15 @@ class Task {
             json['question'],
             json['sentence'],
             List<String>.from(json['right_words']));
+      case "MatchCategory":
+        return TaskMatchCategory(taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['question'],
+            json['nameCatOne'],
+            json['nameCatTwo'],
+            List<String>.from(json['categoryOne']),
+            List<String>.from(json['categoryTwo']));
       default:
         return null;
     }
@@ -66,5 +75,16 @@ class TaskMarkWords extends Task {
 
   TaskMarkWords(String taskType, int reward, String lamaText, String question,
       this.sentence, this.rightWords)
+      : super(taskType, reward, question, lamaText);
+}
+
+class TaskMatchCategory extends Task {
+  List<String> categoryOne;
+  List<String> categoryTwo;
+  String nameCatOne;
+  String nameCatTwo;
+
+  TaskMatchCategory(String taskType, int reward, String lamaText, String question,
+      this.nameCatOne, this.nameCatTwo, this.categoryOne, this.categoryTwo)
       : super(taskType, reward, question, lamaText);
 }
