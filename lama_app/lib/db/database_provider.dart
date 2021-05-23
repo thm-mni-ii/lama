@@ -120,6 +120,7 @@ class DatabaseProvider {
     var users = await db.query(tableUser, columns: [
       columnId,
       columnName,
+      columnPassword,
       columnGrade,
       columnCoins,
       columnIsAdmin,
