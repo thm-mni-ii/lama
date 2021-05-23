@@ -32,6 +32,7 @@ class User {
   User.fromMap(Map<String, dynamic> map) {
     id = map[DatabaseProvider.columnId];
     name = map[DatabaseProvider.columnName];
+    password = map[DatabaseProvider.columnPassword];
     grade = map[DatabaseProvider.columnGrade];
     coins = map[DatabaseProvider.columnCoins];
     isAdmin = map[DatabaseProvider.columnIsAdmin] == 1;
