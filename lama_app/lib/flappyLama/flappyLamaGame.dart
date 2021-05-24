@@ -8,7 +8,6 @@ import 'package:lama_app/flappyLama/components/flappyBackground.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
-import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
 
 class FlappyLamaGame extends Game with TapDetector {
   Size screenSize;
