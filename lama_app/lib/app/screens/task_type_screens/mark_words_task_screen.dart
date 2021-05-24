@@ -64,15 +64,10 @@ class MarkWordsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                    width: constraints.maxWidth,
-                    height: (constraints.maxHeight / 100) * 50,
-                    child: _sentence(sentence))
-              ],
-            ),
+            Container(
+                width: constraints.maxWidth,
+                height: (constraints.maxHeight / 100) * 50,
+                child: _sentence(sentence)),
             Container(
               width: (constraints.maxWidth / 100) * 50,
               height: (constraints.maxHeight / 100) * 15,
@@ -99,7 +94,7 @@ class MarkWordsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: (constraints.maxHeight / 100) * 10,
+              height: (constraints.maxHeight / 100) * 5,
             )
           ],
         ));
