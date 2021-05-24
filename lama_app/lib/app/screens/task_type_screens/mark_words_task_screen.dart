@@ -99,7 +99,7 @@ class MarkWordsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: (constraints.maxHeight / 100) * 10,
+              height: (constraints.maxHeight / 100) * 5,
             )
           ],
         ));
