@@ -24,14 +24,15 @@ class UserRepository {
     return authenticatedUser.avatar;
   }
 
-  void addLamaCoins(int coinsToAdd) {
+  void addLamaCoins(int coinsToAdd) async {
     authenticatedUser.coins += coinsToAdd;
-    DatabaseProvider.db.updateUser(authenticatedUser);
+    authenticatedUser = await DatabaseProvider.db
+        .updateUserCoins(authenticatedUser, authenticatedUser.coins);
   }
 
-  void removeLamaCoins(int coinsToRemove) {
-    authenticatedUser.coins =
-        max(authenticatedUser.coins, authenticatedUser.coins - coinsToRemove);
-    DatabaseProvider.db.updateUser(authenticatedUser);
+  void removeLamaCoins(int coinsToRemove) async {
+    authenticatedUser.coins = max(0, authenticatedUser.coins - coinsToRemove);
+    authenticatedUser = await DatabaseProvider.db
+        .updateUserCoins(authenticatedUser, authenticatedUser.coins);
   }
 }
