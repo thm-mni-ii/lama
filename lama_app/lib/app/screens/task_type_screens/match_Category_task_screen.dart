@@ -175,6 +175,7 @@ class MatchCategoryTaskScreen extends StatelessWidget {
             bottom: positions[i][0],
             left: positions[i][1],
             child: Draggable(
+                data: task.categoryOne.contains(categorySum[i]) ? 1 : 2,
               child: Container(
                 height: 50,
                 width: 150,
