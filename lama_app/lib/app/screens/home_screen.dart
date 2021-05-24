@@ -194,7 +194,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      /*
                       ElevatedButton(
                         child: Stack(
                           alignment: Alignment.center,
@@ -225,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           MaterialPageRoute(
                               builder: (context) => FlappyGameScreen()),
                         ),
-                      ),*/
+                      ),
                     ],
                   ),
                 ),
