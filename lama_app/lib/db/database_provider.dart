@@ -120,7 +120,6 @@ class DatabaseProvider {
     var users = await db.query(tableUser, columns: [
       columnId,
       columnName,
-      columnPassword,
       columnGrade,
       columnCoins,
       columnIsAdmin,
@@ -367,11 +366,90 @@ class DatabaseProvider {
         .delete(tableTaskUrl, where: "$columnId = ?", whereArgs: [id]);
   }
 
-  Future<int> updateUser(User user) async {
+  Future<User> updateUser(User user) async {
     final db = await database;
 
-    return await db.update(tableUser, user.toMap(),
+    Password pswd = await _getPassword(user);
+    User newUser = User(
+        name: user.name,
+        password: pswd.password,
+        grade: user.grade,
+        coins: user.coins,
+        isAdmin: user.isAdmin,
+        avatar: user.avatar);
+
+    int updated = await db.update(tableUser, newUser.toMap(),
         where: " $columnId = ?", whereArgs: [user.id]);
+
+    if (updated != null) {
+      return await _getUser(user.id);
+    }
+    return null;
+  }
+
+  Future<User> updateUserName(User user, String name) async {
+    final db = await database;
+
+    int updated = await db.update(
+        tableUser, <String, dynamic>{DatabaseProvider.columnName: name},
+        where: " $columnId = ?", whereArgs: [user.id]);
+
+    if (updated != null) {
+      return await _getUser(user.id);
+    }
+    return null;
+  }
+
+  Future<User> updateUserGrade(User user, int grade) async {
+    final db = await database;
+
+    int updated = await db.update(
+        tableUser, <String, dynamic>{DatabaseProvider.columnGrade: grade},
+        where: " $columnId = ?", whereArgs: [user.id]);
+
+    if (updated != null) {
+      return await _getUser(user.id);
+    }
+    return null;
+  }
+
+  Future<User> updateUserCoins(User user, int coins) async {
+    final db = await database;
+
+    int updated = await db.update(
+        tableUser, <String, dynamic>{DatabaseProvider.columnCoins: coins},
+        where: " $columnId = ?", whereArgs: [user.id]);
+
+    if (updated != null) {
+      return await _getUser(user.id);
+    }
+    return null;
+  }
+
+  Future<User> updateUserIsAdmin(User user, bool isAdmin) async {
+    final db = await database;
+
+    int updated = await db.update(tableUser,
+        <String, dynamic>{DatabaseProvider.columnIsAdmin: isAdmin ? 1 : 0},
+        where: " $columnId = ?", whereArgs: [user.id]);
+
+    if (updated != null) {
+      return await _getUser(user.id);
+    }
+    return null;
+  }
+
+  Future<User> updateUserAvatar(User user, String avatar) async {
+    final db = await database;
+
+    int updated = await db.update(
+        tableUser, <String, dynamic>{DatabaseProvider.columnAvatar: avatar},
+        where: " $columnId = ?", whereArgs: [user.id]);
+
+    if (updated != null) {
+      return await _getUser(user.id);
+    }
+    return null;
   }
 
   Future<int> updateAchievement(Achievement achievement) async {
@@ -422,23 +500,49 @@ class DatabaseProvider {
   }
 
   Future<int> checkPassword(String password, User user) async {
-    final db = await database;
-
-    var passwords = await db.query(tableUser,
-        columns: [columnPassword], where: "id = ?", whereArgs: [user.id]);
-
-    Password pswd = Password.fromMap(passwords.first);
-
-    if (password.length > 0) {
-      return (password.compareTo(pswd.password) == 0 ? 1 : 0);
-    }
-    return null;
+    Password pswd = await _getPassword(user);
+    return (password.compareTo(pswd.password) == 0 ? 1 : 0);
   }
 
   Future<int> updatePassword(String newPassword, User user) async {
     final db = await database;
     Password password = Password(password: newPassword);
     return await db.update(tableUser, password.toMap(),
-        where: "id = ?", whereArgs: [user.id]);
+        where: "$columnId = ?", whereArgs: [user.id]);
+  }
+
+  Future<User> _getUser(int id) async {
+    final db = await database;
+
+    var users = await db.query(tableUser,
+        columns: [
+          columnId,
+          columnName,
+          columnGrade,
+          columnCoins,
+          columnIsAdmin,
+          columnAvatar
+        ],
+        where: "$columnId = ?",
+        whereArgs: [id]);
+
+    if (users.length > 0) {
+      User user = User.fromMap(users.first);
+      return user;
+    }
+    return null;
+  }
+
+  Future<Password> _getPassword(User user) async {
+    final db = await database;
+    var passwords = await db.query(tableUser,
+        columns: [columnPassword],
+        where: "$columnId = ?",
+        whereArgs: [user.id]);
+    if (passwords.length > 0) {
+      Password pswd = Password.fromMap(passwords.first);
+      return pswd;
+    }
+    return null;
   }
 }
