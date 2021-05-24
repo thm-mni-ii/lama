@@ -153,7 +153,6 @@ class MatchCategoryTaskScreen extends StatelessWidget {
   }
 
   List<Widget> generateItems() {
-
     List positions = [
       //Bottom , left
       [(constraints.maxHeight / 100) * 50, (constraints.maxWidth / 100) * 55],
@@ -167,7 +166,6 @@ class MatchCategoryTaskScreen extends StatelessWidget {
     ];
     positions.shuffle();
     List<Widget> output = [];
-
     for(int i = 0; i < categorySum.length; i++){
       output.add(
         Positioned(
@@ -176,7 +174,17 @@ class MatchCategoryTaskScreen extends StatelessWidget {
             child: Container(
                 height: 50,
                 width: 150,
-                color: LamaColors.greenAccent,
+                decoration: BoxDecoration(
+                  color: LamaColors.greenAccent,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3)),
+                    ]
+                ),
                 child: Center(
                   child: Text(
                       categorySum[i],
