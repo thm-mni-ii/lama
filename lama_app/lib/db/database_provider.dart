@@ -509,7 +509,8 @@ class DatabaseProvider {
     return await db.update(tableUser,
         password.toMap(),
         where: "$columnId = ?",
-  }
+        whereArgs: [user.id]);
+  }git 
 
   Future<User> _getUser(int id) async {
     final db = await database;
@@ -531,6 +532,7 @@ class DatabaseProvider {
     var passwords = await db.query(tableUser,
         columns: [columnPassword],
         where: "$columnId = ?",
+    );
     if (passwords.length > 0){
       Password pswd = Password.fromMap(passwords.first);
       return pswd;
