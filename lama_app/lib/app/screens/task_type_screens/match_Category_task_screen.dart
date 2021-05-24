@@ -61,9 +61,12 @@ class MatchCategoryTaskScreen extends StatelessWidget {
         Padding(
             padding: EdgeInsets.all(5),
             child: Container(
+
                 height: (constraints.maxHeight / 100) * 60,
                 //color: LamaColors.greenAccent,
-                child: Stack(children: generateItems()))),
+                child: Stack(children: generateItems()
+
+                ))),
         //Category´s
         Container(
           height: (constraints.maxHeight / 100) * 12,
@@ -171,7 +174,8 @@ class MatchCategoryTaskScreen extends StatelessWidget {
         Positioned(
             bottom: positions[i][0],
             left: positions[i][1],
-            child: Container(
+            child: Draggable(
+              child: Container(
                 height: 50,
                 width: 150,
                 decoration: BoxDecoration(
@@ -191,7 +195,50 @@ class MatchCategoryTaskScreen extends StatelessWidget {
                       style: LamaTextTheme.getStyle()
                   ),
                 )
-            ))
+            ),
+                feedback: Material(child: Container(
+                    height: 50,
+                    width: 150,
+                    decoration: BoxDecoration(
+                        color: LamaColors.mainPink,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 7,
+                              offset: Offset(0, 3)),
+                        ]
+                    ),
+                    child: Center(
+                      child: Text(
+                          categorySum[i],
+                          style: LamaTextTheme.getStyle()
+                      ),
+                    )
+                )),
+              childWhenDragging: Container(
+                  height: 50,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3)),
+                      ]
+                  ),
+                  child: Center(
+                    child: Text(
+                        categorySum[i],
+                        style: LamaTextTheme.getStyle()
+                    ),
+                  )
+              ),
+            )),
       );
     }
     return output;
