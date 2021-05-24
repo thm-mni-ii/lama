@@ -35,7 +35,7 @@ class FlappyObstacle{
       _topObstacleLength);
 //3rd Parameter of the bottom obstacles is equal to the beginning of the ground(if we implement positions)
     _bottomObstacle = Rect.fromLTWH(game.screenSize.width/2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-      0.75*game.screenSize.height - (_topObstacleLength + _holeLength));
+      0.65*game.screenSize.height - (_topObstacleLength + _holeLength));
 
     _topObstacleLength = 0.1 + (0.7 * game.screenSize.height - _holeLength) * _randomNumber.nextDouble();
 
@@ -43,7 +43,7 @@ class FlappyObstacle{
       _topObstacleLength);
 
     _bottomObstacle2 = Rect.fromLTWH(game.screenSize.width*1.2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-      0.75*game.screenSize.height - (_topObstacleLength + _holeLength));
+      0.65*game.screenSize.height - (_topObstacleLength + _holeLength));
   }
 
   int get score => _score;
@@ -76,7 +76,7 @@ class FlappyObstacle{
         _topObstacleLength);
 
       _bottomObstacle = Rect.fromLTWH(game.screenSize.width*1.2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-        0.75*game.screenSize.height - (_topObstacleLength + _holeLength));
+        0.65*game.screenSize.height - (_topObstacleLength + _holeLength));
 
     }
 
@@ -88,7 +88,7 @@ class FlappyObstacle{
         _topObstacleLength);
 
       _bottomObstacle2 = Rect.fromLTWH(game.screenSize.width*1.2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-        0.75*game.screenSize.height - (_topObstacleLength + _holeLength));
+        0.65*game.screenSize.height - (_topObstacleLength + _holeLength));
     }
    
     _bottomObstacle = _bottomObstacle.translate(_movespeed * t, 0);
