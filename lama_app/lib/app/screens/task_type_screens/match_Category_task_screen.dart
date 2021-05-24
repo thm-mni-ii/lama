@@ -153,126 +153,39 @@ class MatchCategoryTaskScreen extends StatelessWidget {
   }
 
   List<Widget> generateItems() {
-    String text = "test";
-    List<Widget> output = [];
-    List<Widget> positions = [
-      Positioned(
-          bottom: (constraints.maxHeight / 100) * 50,
-          left: (constraints.maxWidth / 100) * 55,
-          child: Container(
-            height: 50,
-            width: 150,
-            color: LamaColors.greenAccent,
-            child: Center(
-            child: Text(
-              text,
-              style: LamaTextTheme.getStyle()
-            ),
-          ))),
-      Positioned(
-          bottom: (constraints.maxHeight / 100) * 45,
-          left: (constraints.maxWidth / 100) * 10,
-          child: Container(
-            height: 50,
-            width: 150,
-              color: LamaColors.greenAccent,
-              child: Center(
-                child: Text(
-                    '$text',
-                    style: LamaTextTheme.getStyle()
-                ),
-              )
-          )),
-      Positioned(
-          bottom: (constraints.maxHeight / 100) * 32,
-          left: (constraints.maxWidth / 100) * 5,
-          child: Container(
-            height: 50,
-            width: 150,
-              color: LamaColors.greenAccent,
-              child: Center(
-                child: Text(
-                    text,
-                    style: LamaTextTheme.getStyle()
-                ),
-              )
-          )),
-      Positioned(
-          bottom: (constraints.maxHeight / 100) * 38,
-          left: (constraints.maxWidth / 100) * 50,
-          child: Container(
-            height: 50,
-            width: 150,
-              color: LamaColors.greenAccent,
-              child: Center(
-                child: Text(
-                    text,
-                    style: LamaTextTheme.getStyle()
-                ),
-              )
-          )),
-      Positioned(
-          bottom: (constraints.maxHeight / 100) * 25,
-          left: (constraints.maxWidth / 100) * 53,
-          child: Container(
-            height: 50,
-            width: 150,
-              color: LamaColors.greenAccent,
-              child: Center(
-                child: Text(
-                    text,
-                    style: LamaTextTheme.getStyle()
-                ),
-              )
-          )),
-      Positioned(
-          bottom: (constraints.maxHeight / 100) * 2,
-          left: (constraints.maxWidth / 100) * 58,
-          child: Container(
-            height: 50,
-            width: 150,
-              color: LamaColors.greenAccent,
-              child: Center(
-                child: Text(
-                    text,
-                    style: LamaTextTheme.getStyle()
-                ),
-              )
-          )),
-      Positioned(
-          bottom: (constraints.maxHeight / 100) * 15,
-          left: (constraints.maxWidth / 100) * 30,
-          child: Container(
-            height: 50,
-            width: 150,
-              color: LamaColors.greenAccent,
-              child: Center(
-                child: Text(
-                    text,
-                    style: LamaTextTheme.getStyle()
-                ),
-              )
-          )),
-      Positioned(
-          bottom: (constraints.maxHeight / 100) * 5,
-          left: (constraints.maxWidth / 100) * 9,
-          child: Container(
-            height: 50,
-            width: 150,
-              color: LamaColors.greenAccent,
-              child: Center(
-                child: Text(
-                    text,
-                    style: LamaTextTheme.getStyle()
-                ),
-              )
-          )),
+
+    List positions = [
+      //Bottom , left
+      [(constraints.maxHeight / 100) * 50, (constraints.maxWidth / 100) * 55],
+      [(constraints.maxHeight / 100) * 45, (constraints.maxWidth / 100) * 10],
+      [(constraints.maxHeight / 100) * 32, (constraints.maxWidth / 100) * 5],
+      [(constraints.maxHeight / 100) * 38, (constraints.maxWidth / 100) * 50],
+      [(constraints.maxHeight / 100) * 25, (constraints.maxWidth / 100) * 53],
+      [(constraints.maxHeight / 100) * 2, (constraints.maxWidth / 100) * 58],
+      [(constraints.maxHeight / 100) * 15, (constraints.maxWidth / 100) * 30,],
+      [(constraints.maxHeight / 100) * 5, (constraints.maxWidth / 100) * 9]
     ];
     positions.shuffle();
-    for(int i = 0; i <= categorySum.length; i++){
-      Widget tmp = positions.elementAt(i);
-    }
+    List<Widget> output = [];
 
-    return positions;
+    for(int i = 0; i < categorySum.length; i++){
+      output.add(
+        Positioned(
+            bottom: positions[i][0],
+            left: positions[i][1],
+            child: Container(
+                height: 50,
+                width: 150,
+                color: LamaColors.greenAccent,
+                child: Center(
+                  child: Text(
+                      categorySum[i],
+                      style: LamaTextTheme.getStyle()
+                  ),
+                )
+            ))
+      );
+    }
+    return output;
   }
 }
