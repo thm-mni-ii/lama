@@ -120,7 +120,6 @@ class DatabaseProvider {
     var users = await db.query(tableUser, columns: [
       columnId,
       columnName,
-      columnPassword,
       columnGrade,
       columnCoins,
       columnIsAdmin,
@@ -510,7 +509,7 @@ class DatabaseProvider {
         password.toMap(),
         where: "$columnId = ?",
         whereArgs: [user.id]);
-  }git 
+  }
 
   Future<User> _getUser(int id) async {
     final db = await database;
