@@ -50,8 +50,11 @@ class FlappyLamaGame extends Game with TapDetector {
 
   @override
   void resize(Size size) {
-    screenSize = size;
+    screenSize = Size( MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
+        MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
     tileSize = screenSize.width / 9;
+
+    
   }
 
   void onTapDown(TapDownDetails d) {
