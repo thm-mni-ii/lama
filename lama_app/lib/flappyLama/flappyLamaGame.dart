@@ -35,6 +35,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     ], baseSpeed: Offset(7, 0), layerDelta: Offset(10, 0));
     // add background
     add(back);
+    add(FlappyLama());
 
     // add PlayMode widget
     addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
@@ -53,9 +54,9 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     add(flappyLama);
 
     // add obstacles
-    add(FlappyObstacle(this));
+    //add(FlappyObstacle(this));
     // add score
-    add(FlappyScoreDisplay(this));
+    //add(FlappyScoreDisplay(this));
   }
 
   void resize(Size size) {

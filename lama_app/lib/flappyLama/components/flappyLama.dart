@@ -3,8 +3,13 @@ import 'dart:developer' as developer;
 import 'package:flame/components/component.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
+import 'package:flame/animation.dart';
+import 'package:flame/components/animation_component.dart';
+import 'package:flame/spritesheet.dart';
 
-class FlappyLama extends Component {
+class FlappyLama extends AnimationComponent {
+  Animation _idle;
+  
   final FlappyLamaGame game;
   Rect lamaRect;
   Size screenSize;
@@ -24,7 +29,24 @@ class FlappyLama extends Component {
 
   static const double GRAVITY = 1300;
 
-  FlappyLama(this.game) {
+  FlappyLama(this.game) : super.empty() {
+    final spriteSheet = SpriteSheet(
+        imageName: 'png/lama_animation.png',
+        textureWidth: 24,
+        textureHeight: 24,
+        columns: 4,
+        rows: 1,
+    );
+    
+    _idle = spriteSheet.createAnimation(
+        0,
+        from: 0,
+        to: 4,
+        stepTime: 0.1
+    );
+    
+    this.animation = _idle;
+    
     _lamaHeight = game.tileSize;
     _lamaWidth = game.tileSize;
     resize(this.game.screenSize);
@@ -62,6 +84,8 @@ class FlappyLama extends Component {
   }
 
   void resize(Size size) {
+    this.height = 48;
+    this.width = 48;
     this.x = (game.screenSize.width * relativeX);
     this.y = game.screenSize.height / 2 -
         (game.screenSize.height * relativeY) -
