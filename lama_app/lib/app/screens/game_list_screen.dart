@@ -12,11 +12,11 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 class GameListScreen extends StatelessWidget {
   final List<GameListItem> games = [
     GameListItem("Snake", 2,
-        "Steuer die Schlange mit den Pfeiltasten und sammle Früchte um länger zu werden!"),
+        "Steuer die Schlange mit den Pfeiltasten und sammle Äpfel, um länger zu werden!"),
     GameListItem("Flappy-Lama", 3,
-        "Tippe auf den Bildschrim um das Lama fliegen zu lassen und weiche dabei den Hindernissen aus!"),
+        "Tippe auf den Bildschirm, um das Lama fliegen zu lassen und weiche dabei den Hindernissen aus!"),
     /*GameListItem("Woodcutter", 2,
-        "Tippe die entsprechende Richtung an um den Baum zu fällen und dabei den Ästen auszuweichen!"),*/
+        "Tippe die entsprechende Richtung an, um den Baum zu fällen und dabei den Ästen auszuweichen!"),*/
   ];
 
   @override
