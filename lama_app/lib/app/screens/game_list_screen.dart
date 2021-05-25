@@ -121,9 +121,14 @@ class GameListScreen extends StatelessWidget {
     return Container(
       height: (constraints.maxHeight / 100) * 25,
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(25),
-      ),
+          color: color,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(
+                offset: Offset(0, 2),
+                blurRadius: 5,
+                color: LamaColors.black.withOpacity(0.5))
+          ]),
       child: InkWell(
         child: Padding(
           padding: EdgeInsets.all(25),
