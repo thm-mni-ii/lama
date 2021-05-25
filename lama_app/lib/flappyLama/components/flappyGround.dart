@@ -1,7 +1,8 @@
 import 'dart:ui';
+import 'package:flame/components/component.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
-class FlappyGround {
+class FlappyGround extends Component {
   final FlappyLamaGame game;
   Rect rectGrnd;
   Rect rectGrass;

@@ -1,9 +1,10 @@
 import 'dart:ui';
 import 'dart:math';
+import 'package:flame/components/component.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
 
-class FlappyObstacle{
+class FlappyObstacle extends Component{
   
   final FlappyLamaGame game;
   Paint _obstaclePaint;
@@ -61,11 +62,11 @@ class FlappyObstacle{
     //score increments when left side of lama passes right side of obstacle
 
     if (game.screenSize.width/4 >_bottomObstacle.right && _isHandled == false){
-      ++_score;
+      ++this.game.score;
       _isHandled = true;
     }
     if (game.screenSize.width/4 > _bottomObstacle2.right && _isHandled2 == false){
-      ++_score;
+      ++this.game.score;
       _isHandled2 = true;
     }
     if(_bottomObstacle.right < 0){

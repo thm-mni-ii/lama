@@ -66,6 +66,7 @@ flutter:
      - assets/images/svg/
      - assets/images/svg/avatars/
      - assets/images/png/
+     - assets/images/png/
      - assets/sounds/
      - assets/standardTasksets/mathe/
      - assets/standardTasksets/deutsch/
