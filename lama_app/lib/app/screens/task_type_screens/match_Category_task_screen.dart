@@ -6,10 +6,14 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+enum category{catOne, catTwo }
+
 class MatchCategoryTaskScreen extends StatelessWidget {
   final TaskMatchCategory task;
   final List<String> categorySum = [];
   final BoxConstraints constraints;
+  List<bool> results = [];
+
 
   MatchCategoryTaskScreen(this.task, this.constraints) {
     categorySum.addAll(task.categoryOne);
@@ -75,28 +79,10 @@ class MatchCategoryTaskScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
-                height: 60,
-                width: 185,
-                decoration:
-                    BoxDecoration(color: LamaColors.blueAccent, boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3)),
-                ]),
-                child: Center(
-                  child: Text(
-                    task.nameCatOne,
-                    style: LamaTextTheme.getStyle(
-                      color: LamaColors.white,
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
+              buildTargets(context, category.catOne, task.nameCatOne),
+              buildTargets(context, category.catOne, task.nameCatTwo)
+              /*
+               Container(
                 height: 60,
                 width: 185,
                 decoration:
@@ -117,6 +103,7 @@ class MatchCategoryTaskScreen extends StatelessWidget {
                   ),
                 ),
               )
+              */
             ],
           ),
         ),
@@ -174,8 +161,8 @@ class MatchCategoryTaskScreen extends StatelessWidget {
         Positioned(
             bottom: positions[i][0],
             left: positions[i][1],
-            child: Draggable(
-                data: task.categoryOne.contains(categorySum[i]) ? 1 : 2,
+            child: Draggable<category>(
+                data: task.categoryOne.contains(categorySum[i]) ? category.catOne : category.catTwo,
               child: Container(
                 height: 50,
                 width: 150,
@@ -243,5 +230,36 @@ class MatchCategoryTaskScreen extends StatelessWidget {
       );
     }
     return output;
+  }
+  Widget buildTargets(BuildContext context, category acceptType, String taskCategory){
+      return DragTarget<category>(
+          builder: (context, candidate, rejectedData) =>
+              Container(
+                height: 60,
+                width: 185,
+                decoration:
+                BoxDecoration(color: LamaColors.blueAccent, boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3)),
+                ]),
+                child: Center(
+                  child: Text(
+                    taskCategory,
+                    style: LamaTextTheme.getStyle(
+                      color: LamaColors.white,
+                      fontSize: 30,
+                    ),
+                  ),
+                ),
+              ),
+        onWillAccept: (data)=> true,
+        onAccept: (data){
+          data == acceptType ?  results.add(true) :  results.add(false);
+          print(results.toString());
+      },
+      );
   }
 }
