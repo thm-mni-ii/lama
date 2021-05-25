@@ -9,20 +9,26 @@ class PlayMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButton(
-          icon:
-            Icon(
-              Icons.pause,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          onPressed: () {
-            onPausePressed.call();
-          },
-        ),
-      ]);
+    return Align(
+        alignment: Alignment.bottomLeft,
+        child: Padding(
+            padding: EdgeInsets.only(bottom: 80),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon:
+                    Icon(
+                      Icons.pause,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                    onPressed: () {
+                      onPausePressed.call();
+                    },
+                  ),
+                ])
+        )
+    );
   }
 }

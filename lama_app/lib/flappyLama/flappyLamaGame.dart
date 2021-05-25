@@ -35,7 +35,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         'PlayMode',
         PlayMode(onPausePressed: pauseGame)
     );
-    
+
     initialize();
   }
 
