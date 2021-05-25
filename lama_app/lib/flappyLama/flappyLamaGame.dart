@@ -20,11 +20,12 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   FlappyGround flappyGround;
 
   BuildContext _context;
-  bool _paused = false;
   // name of the pauseMode widget
   String _pauseMode = "PauseMode";
   // name of the playMode widget
   String _playMode = "PlayMode";
+
+  bool _paused = false;
   FlappyLama _lama;
 
   FlappyLamaGame(this._context) {
@@ -37,7 +38,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // add background
     add(back);
 
-    _lama = FlappyLama();
+    // add lama
+    _lama = FlappyLama(48);
     add(_lama);
 
     // add PlayMode widget
@@ -57,9 +59,9 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     add(flappyLama);
 
     // add obstacles
-    //add(FlappyObstacle(this));
+    add(FlappyObstacle(this));
     // add score
-    //add(FlappyScoreDisplay(this));
+    add(FlappyScoreDisplay(this));
   }
 
   void resize(Size size) {
@@ -79,7 +81,6 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   void pauseGame() {
     pauseEngine();
     _paused = true;
-    _lama.fallDown();
 
     // removed the playMode widget
     removeWidgetOverlay(_playMode);

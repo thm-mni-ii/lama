@@ -7,10 +7,19 @@ import 'package:flame/animation.dart';
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
 
+/// This class extends [AnimationComponent] and describes a flying lama.
+/// It contains three different animations for idle, up and falling.
 class FlappyLama extends AnimationComponent {
   Animation _idle;
   Animation _up;
   Animation _fall;
+  double _size;
+
+  /// Initialize the class with the given [_size].
+  FlappyLama(this._size) : super.empty() {
+    // size
+    this.height = this._size;
+    this.width = this._size;
   
   final FlappyLamaGame game;
   Rect lamaRect;
@@ -40,6 +49,7 @@ class FlappyLama extends AnimationComponent {
         rows: 1,
     );
     
+    // idle / hover animation
     _idle = spriteSheet.createAnimation(
         0,
         from: 0,
@@ -47,6 +57,7 @@ class FlappyLama extends AnimationComponent {
         stepTime: 0.1
     );
     
+    // up animation
     _up = spriteSheet.createAnimation(
         0,
         from: 5,
@@ -54,6 +65,7 @@ class FlappyLama extends AnimationComponent {
         stepTime: 0.1
     );
 
+    // fall animation
     _fall = spriteSheet.createAnimation(
         0,
         from: 9,
@@ -61,7 +73,8 @@ class FlappyLama extends AnimationComponent {
         stepTime: 0.1
     );
 
-    this.animation = _up;
+    // start animation
+    this.animation = _idle;
     
     _lamaHeight = game.tileSize;
     _lamaWidth = game.tileSize;
@@ -70,16 +83,14 @@ class FlappyLama extends AnimationComponent {
     lamaPaint.color = Color(0xffffffff);
   }
 
-  void flyUp() {
+  /// This method let the lama fly up with an impuls.
+  void flap() {
     this.animation = _up;
   }
 
-  void flyIdle() {
+  /// This method let the lama fly steady on the actual height.
+  void hover() {
     this.animation = _idle;
-  }
-
-  void fallDown() {
-    this.animation = _fall;
   }
 
   void render(Canvas c) {
@@ -112,8 +123,7 @@ class FlappyLama extends AnimationComponent {
   }
 
   void resize(Size size) {
-    this.height = 48;
-    this.width = 48;
+    // start location
     this.x = (game.screenSize.width * relativeX);
     this.y = game.screenSize.height / 2 -
         (game.screenSize.height * relativeY) -
