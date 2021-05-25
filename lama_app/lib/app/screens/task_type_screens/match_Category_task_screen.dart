@@ -5,7 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
-
+bool firstStart = true;
+bool firstShuffel = true;
 
 class MatchCategoryTaskScreen extends StatefulWidget {
   final TaskMatchCategory task;
@@ -23,11 +24,16 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
   final TaskMatchCategory task;
   final List<String> categorySum = [];
   final List<bool> results = [];
+
   String latestDeletion = "";
+  List <String> deletinons = [];
   MatchCategoryState(this.task, this.constraints) {
     categorySum.addAll(task.categoryOne);
     categorySum.addAll(task.categoryTwo);
-    categorySum.shuffle();
+    if(firstShuffel) {
+      categorySum.shuffle();
+      firstShuffel = false;
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -142,7 +148,13 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
               ),
              color: LamaColors.black,
              onPressed: (){
-
+                setState(() {
+                  if(deletinons.isNotEmpty){
+                  results.removeLast();
+                  categorySum.add(deletinons.last);
+                  deletinons.removeLast();
+                  print(results.toString());
+                }});
              },
             ),
            ),
@@ -164,7 +176,10 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
       [(constraints.maxHeight / 100) * 15, (constraints.maxWidth / 100) * 30,],
       [(constraints.maxHeight / 100) * 5, (constraints.maxWidth / 100) * 9]
     ];
-    positions.shuffle();
+    if(firstStart) {
+      positions.shuffle();
+      firstStart = false;
+    }
     List<Widget> output = [];
     for(int i = 0; i < categorySum.length; i++){
       output.add(
@@ -270,9 +285,10 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
         onAccept: (data){
           categoryList.contains(data) ?  results.add(true) :  results.add(false);
             setState(() {
-              latestDeletion = data.toString();
+              deletinons.add(data.toString());
               categorySum.removeWhere((element) =>
               element.toString() == data.toString());
+              print(results.toString());
             });
       },
       );
