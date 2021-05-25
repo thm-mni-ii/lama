@@ -26,8 +26,10 @@ class GameListScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is NotEnoughCoinsState) {
             final snackBar = SnackBar(
+                backgroundColor: LamaColors.redAccent,
                 content: Text(
                   'Du hast nicht genug Lama Münzen!',
+                  textAlign: TextAlign.center,
                   style: LamaTextTheme.getStyle(fontSize: 15),
                 ),
                 duration: Duration(seconds: 1));
