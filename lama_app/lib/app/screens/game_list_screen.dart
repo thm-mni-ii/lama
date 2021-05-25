@@ -85,6 +85,36 @@ class GameListScreen extends StatelessWidget {
                               fontSize: 30,
                               fontWeight: FontWeight.w500),
                         ),
+                        /*Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              margin: EdgeInsets.only(right: 15),
+                              padding: EdgeInsets.only(left: 10),
+                              decoration: BoxDecoration(
+                                  color: LamaColors.greenPrimary,
+                                  borderRadius: BorderRadius.circular(25),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color:
+                                            LamaColors.black.withOpacity(0.5),
+                                        offset: Offset(0, 1))
+                                  ]),
+                              width: (constraints.maxWidth / 100) * 30,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "5000",
+                                    style: LamaTextTheme.getStyle(),
+                                  ),
+                                  SizedBox(width: 5),
+                                  SvgPicture.asset(
+                                    "assets/images/svg/lama_coin.svg",
+                                    semanticsLabel: "Lama Coin",
+                                    width: 25,
+                                  ),
+                                ],
+                              ),
+                            )),*/
                       ],
                     ),
                   ),
