@@ -6,21 +6,28 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
-enum category{catOne, catTwo }
 
-class MatchCategoryTaskScreen extends StatelessWidget {
+class MatchCategoryTaskScreen extends StatefulWidget {
+  final TaskMatchCategory task;
+  final BoxConstraints constraints;
+
+  MatchCategoryTaskScreen(this.task, this.constraints);
+
+  @override
+  State<StatefulWidget> createState() {
+    return MatchCategoryState(task, constraints);
+  }
+}
+class MatchCategoryState extends State<MatchCategoryTaskScreen>{
+  final BoxConstraints constraints;
   final TaskMatchCategory task;
   final List<String> categorySum = [];
-  final BoxConstraints constraints;
-  List<bool> results = [];
-
-
-  MatchCategoryTaskScreen(this.task, this.constraints) {
+  final List<bool> results = [];
+  MatchCategoryState(this.task, this.constraints) {
     categorySum.addAll(task.categoryOne);
     categorySum.addAll(task.categoryTwo);
     categorySum.shuffle();
   }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -79,8 +86,8 @@ class MatchCategoryTaskScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildTargets(context, category.catOne, task.nameCatOne),
-              buildTargets(context, category.catOne, task.nameCatTwo)
+              buildTargets(context, task.categoryOne, task.nameCatOne),
+              buildTargets(context, task.categoryTwo, task.nameCatTwo)
               /*
                Container(
                 height: 60,
@@ -161,8 +168,9 @@ class MatchCategoryTaskScreen extends StatelessWidget {
         Positioned(
             bottom: positions[i][0],
             left: positions[i][1],
-            child: Draggable<category>(
-                data: task.categoryOne.contains(categorySum[i]) ? category.catOne : category.catTwo,
+            child: Draggable(
+                //data: task.categoryOne.contains(categorySum[i]) ? categoryType.catOne : categoryType.catTwo,
+              data: categorySum[i],
               child: Container(
                 height: 50,
                 width: 150,
@@ -231,8 +239,8 @@ class MatchCategoryTaskScreen extends StatelessWidget {
     }
     return output;
   }
-  Widget buildTargets(BuildContext context, category acceptType, String taskCategory){
-      return DragTarget<category>(
+  Widget buildTargets(BuildContext context, List<String> categoryList , String taskCategory){
+      return DragTarget(
           builder: (context, candidate, rejectedData) =>
               Container(
                 height: 60,
@@ -257,8 +265,11 @@ class MatchCategoryTaskScreen extends StatelessWidget {
               ),
         onWillAccept: (data)=> true,
         onAccept: (data){
-          data == acceptType ?  results.add(true) :  results.add(false);
-          print(results.toString());
+          categoryList.contains(data) ?  results.add(true) :  results.add(false);
+            setState(() {
+              categorySum.removeWhere((element) =>
+              element.toString() == data.toString());
+            });
       },
       );
   }
