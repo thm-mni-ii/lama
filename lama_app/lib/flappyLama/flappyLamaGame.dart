@@ -14,6 +14,7 @@ class FlappyLamaGame extends BaseGame with TapDetector {
   double tileSize;
   int score = 0;
 
+  bool _paused = false;
   BuildContext _context;
 
   FlappyLamaGame(this._context) {
@@ -49,6 +50,16 @@ class FlappyLamaGame extends BaseGame with TapDetector {
     tileSize = screenSize.width / 9;
 
     super.resize(size);
+  }
+
+  void pauseGame() {
+    pauseEngine();
+    _paused = true;
+  }
+
+  void resumeGame() {
+    resumeEngine();
+    _paused = false;
   }
 
   void onTapDown(TapDownDetails d) {
