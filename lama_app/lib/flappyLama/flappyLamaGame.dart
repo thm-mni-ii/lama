@@ -17,6 +17,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   double tileSize;
   int score = 0;
   FlappyLama flappyLama;
+  FlappyGround flappyGround;
 
   BuildContext _context;
   bool _paused = false;
@@ -44,8 +45,13 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   void initialize() async {
     resize(await Flame.util.initialDimensions());
     // add ground
-    add(FlappyGround(this));
+    flappyGround = FlappyGround(this);
+    add(flappyGround);
+
+    //add flappyLama
     flappyLama = FlappyLama(this);
+    add(flappyLama);
+
     // add obstacles
     add(FlappyObstacle(this));
     // add score

@@ -1,9 +1,10 @@
 import 'dart:ui';
 import 'dart:developer' as developer;
+import 'package:flame/components/component.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
-class FlappyLama {
+class FlappyLama extends Component {
   final FlappyLamaGame game;
   Rect lamaRect;
   Size screenSize;
@@ -15,10 +16,18 @@ class FlappyLama {
   double x;
   double y;
 
-  static const double GRAVITY = 200;
+  final relativeX = 0.05;
+  final relativeY = 0.10;
+
+  double _lamaHeight;
+  double _lamaWidth;
+
+  static const double GRAVITY = 1300;
 
   FlappyLama(this.game) {
-    resize();
+    _lamaHeight = game.tileSize;
+    _lamaWidth = game.tileSize;
+    resize(this.game.screenSize);
     lamaPaint = Paint();
     lamaPaint.color = Color(0xffffffff);
   }
@@ -32,8 +41,8 @@ class FlappyLama {
       this.speedY += GRAVITY * t;
       this.y += this.speedY * t;
 
-      if (this.y > game.tileSize * 7) {
-        y = game.tileSize * 7;
+      if (this.y > game.flappyGround.groundY - _lamaHeight) {
+        y = game.flappyGround.groundY - _lamaHeight;
         speedY = 0.0;
         isGameStarted = false;
       }
@@ -45,17 +54,19 @@ class FlappyLama {
         this.y += this.speedY * t;
       }
     }
-    lamaRect = Rect.fromLTWH(x, y, game.tileSize, game.tileSize);
+    lamaRect = Rect.fromLTWH(x, y, _lamaWidth, _lamaHeight);
   }
 
   void jump() {
-    this.speedY = -170;
+    this.speedY = -600;
   }
 
-  void resize() {
-    this.x = game.tileSize * 0.5;
-    this.y = game.tileSize * 4;
-    lamaRect = Rect.fromLTWH(x, y, game.tileSize, game.tileSize);
+  void resize(Size size) {
+    this.x = (game.screenSize.width * relativeX);
+    this.y = game.screenSize.height / 2 -
+        (game.screenSize.height * relativeY) -
+        _lamaHeight;
+    lamaRect = Rect.fromLTWH(x, y, _lamaWidth, _lamaHeight);
 
     this.initY = this.y;
   }
