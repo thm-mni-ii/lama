@@ -9,6 +9,7 @@ import 'package:flame/spritesheet.dart';
 
 class FlappyLama extends AnimationComponent {
   Animation _idle;
+  Animation _up;
   
   final FlappyLamaGame game;
   Rect lamaRect;
@@ -34,7 +35,7 @@ class FlappyLama extends AnimationComponent {
         imageName: 'png/lama_animation.png',
         textureWidth: 24,
         textureHeight: 24,
-        columns: 4,
+        columns: 8,
         rows: 1,
     );
     
@@ -45,7 +46,14 @@ class FlappyLama extends AnimationComponent {
         stepTime: 0.1
     );
     
-    this.animation = _idle;
+    _up = spriteSheet.createAnimation(
+        0,
+        from: 5,
+        to: 8,
+        stepTime: 0.1
+    );
+
+    this.animation = _up;
     
     _lamaHeight = game.tileSize;
     _lamaWidth = game.tileSize;
