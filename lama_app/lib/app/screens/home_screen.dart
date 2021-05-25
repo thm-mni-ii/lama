@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
+import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -191,7 +192,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => GameListScreen()),
+                            builder: (context) => BlocProvider(
+                              create: (BuildContext context) =>
+                                  GameListScreenBloc(userRepository),
+                              child: GameListScreen(),
+                            ),
+                          ),
                         ),
                       ),
                     ],

@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
+import 'package:lama_app/app/event/game_list_screen_event.dart';
 import 'package:lama_app/app/model/game_list_item_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -11,8 +14,8 @@ class GameListScreen extends StatelessWidget {
         "Steuer die Schlange mit den Pfeiltasten und sammle Früchte um länger zu werden!"),
     GameListItem("Flappy-Lama", 3,
         "Tippe auf den Bildschrim um das Lama fliegen zu lassen und weiche dabei den Hindernissen aus!"),
-    GameListItem("Woodcutter", 2,
-        "Tippe die entsprechende Richtung an um den Baum zu fällen und dabei den Ästen auszuweichen!"),
+    /*GameListItem("Woodcutter", 2,
+        "Tippe die entsprechende Richtung an um den Baum zu fällen und dabei den Ästen auszuweichen!"),*/
   ];
 
   @override
@@ -101,42 +104,46 @@ class GameListScreen extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(25),
       ),
-      child: Padding(
-        padding: EdgeInsets.all(25),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  games[index].name,
-                  style: LamaTextTheme.getStyle(fontSize: 30),
-                ),
-                Container(
-                  child: Row(
-                    children: [
-                      Text(
-                        games[index].cost.toString(),
-                        style: LamaTextTheme.getStyle(),
-                      ),
-                      SizedBox(width: 5),
-                      SvgPicture.asset(
-                        "assets/images/svg/lama_coin.svg",
-                        semanticsLabel: "Lama Coin",
-                        width: 25,
-                      ),
-                    ],
+      child: InkWell(
+        child: Padding(
+          padding: EdgeInsets.all(25),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    games[index].name,
+                    style: LamaTextTheme.getStyle(fontSize: 30),
                   ),
-                )
-              ],
-            ),
-            Text(
-              games[index].desc,
-              style: LamaTextTheme.getStyle(fontSize: 15),
-            )
-          ],
+                  Container(
+                    child: Row(
+                      children: [
+                        Text(
+                          games[index].cost.toString(),
+                          style: LamaTextTheme.getStyle(),
+                        ),
+                        SizedBox(width: 5),
+                        SvgPicture.asset(
+                          "assets/images/svg/lama_coin.svg",
+                          semanticsLabel: "Lama Coin",
+                          width: 25,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Text(
+                games[index].desc,
+                style: LamaTextTheme.getStyle(fontSize: 15),
+              )
+            ],
+          ),
         ),
+        onTap: () => BlocProvider.of<GameListScreenBloc>(context).add(
+            TryStartGameEvent(games[index].cost, games[index].name, context)),
       ),
     );
   }

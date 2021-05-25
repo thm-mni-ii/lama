@@ -34,6 +34,7 @@ void navigateToGame(String gameName, BuildContext context) {
     case "Flappy-Lama":
       gameToLaunch = FlappyGameScreen();
       break;
+    //TODO: add case for Game 3
     default:
       throw Exception("Trying to launch game that does not exist");
   }
