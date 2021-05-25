@@ -14,6 +14,8 @@ import 'package:lama_app/flappyLama/components/flappyLama.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
 
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
+import 'package:lama_app/flappyLama/views/gameOverView.dart';
+import 'package:lama_app/flappyLama/views/view.dart';
 import 'package:lama_app/flappyLama/widgets/pauseMode.dart';
 import 'package:lama_app/flappyLama/widgets/playMode.dart';
 import 'package:lama_app/flappyLama/widgets/startScreen.dart';
@@ -47,16 +49,12 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
 
   FlappyLamaGame(this._context, this._userRepo) {
-    var back = ParallaxComponent(
-        [
-          ParallaxImage('png/himmel.png'),
-          ParallaxImage('png/clouds_3.png'),
-          ParallaxImage('png/clouds_2.png'),
-          ParallaxImage('png/clouds.png'),
-        ],
-        baseSpeed: Offset(7, 0),
-        layerDelta: Offset(10, 0)
-    );
+    var back = ParallaxComponent([
+      ParallaxImage('png/himmel.png'),
+      ParallaxImage('png/clouds_3.png'),
+      ParallaxImage('png/clouds_2.png'),
+      ParallaxImage('png/clouds.png'),
+    ], baseSpeed: Offset(7, 0), layerDelta: Offset(10, 0));
    
     // add background
     add(back); 
@@ -65,12 +63,11 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       ..onHitGround = () => developer.log("GROUND");
     add(_lama);
     loadPersonalHighscoreAsync();
-    addWidgetOverlay(
+    addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
       _startScreen,
       StartScreen(highScore: _highScore,
         onStartPressed: startGame
       )
-    );
    
   }
 
@@ -117,18 +114,14 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   void resize(Size size) {
     screenSize = Size(
-        MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
-        MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
+        MediaQuery.of(_context).size.width -
+            MediaQuery.of(_context).padding.left -
     tileSize = screenSize.width / tilesX;
     tilesY = screenSize.height ~/ tileSize;
-    //FOR TESTING :
-    if (activeView == View.playing) {
-      gameOverView.render(canvas);
-    }
-    //
+            MediaQuery.of(_context).padding.top -
+            MediaQuery.of(_context).padding.bottom);
 
     super.resize(size);
-      if (activeView == View.playing) {
   }
 
   void startGame(){
@@ -149,12 +142,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // removed the playMode widget
     removeWidgetOverlay(_playMode);
-    addWidgetOverlay(
-        _pauseMode,
-        PauseMode(
-            onPlayPressed: resumeGame)
-    );
-    }
+    addWidgetOverlay(_pauseMode, PauseMode(onPlayPressed: resumeGame));
   }
 
   /// This method resumes the game.
@@ -164,15 +152,11 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // removed the pauseMode widget
     removeWidgetOverlay(_pauseMode);
-    addWidgetOverlay(
-        _playMode,
-        PlayMode(
-            onPausePressed: pauseGame)
-    );
+    addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
   }
 
   void onTapDown(TapDownDetails d) {
-    activeView = View.playing;
+    //activeView = View.playing;
     _lama.onTapDown();
   }
 
@@ -181,5 +165,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     components.whereType<FlappyObstacle>().forEach((element) { element.collides(_lama?.toRect() ?? null); });
     
     super.update(t);
+    }
+
+    super.render(c);
   }
 }
