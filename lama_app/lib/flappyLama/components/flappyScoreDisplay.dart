@@ -1,9 +1,10 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:flame/components/component.dart';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
-class FlappyScoreDisplay {
+class FlappyScoreDisplay extends Component {
   final FlappyLamaGame game;
 
   double _sizePercent;

@@ -1,9 +1,10 @@
 import 'dart:ui';
 import 'dart:math';
+import 'package:flame/components/component.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
 
-class FlappyObstacle{
+class FlappyObstacle extends Component{
   
   final FlappyLamaGame game;
   Paint _obstaclePaint;
