@@ -23,6 +23,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
   final TaskMatchCategory task;
   final List<String> categorySum = [];
   final List<bool> results = [];
+  String latestDeletion = "";
   MatchCategoryState(this.task, this.constraints) {
     categorySum.addAll(task.categoryOne);
     categorySum.addAll(task.categoryTwo);
@@ -86,8 +87,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildTargets(context, task.categoryOne, task.nameCatOne),
-              buildTargets(context, task.categoryTwo, task.nameCatTwo)
+              buildTargets(context, task.categoryOne, task.nameCatOne, LamaColors.blueAccent),
+              buildTargets(context, task.categoryTwo, task.nameCatTwo, LamaColors.orangeAccent)
               /*
                Container(
                 height: 60,
@@ -114,36 +115,38 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
             ],
           ),
         ),
-        // Done Button
+        // refreshButton
         Container(
           height: (constraints.maxHeight / 100) * 9,
           alignment: Alignment.bottomCenter,
-          //color: LamaColors.greenAccent,
-          child: Container(
-            height: 45,
-            width: 200,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: LamaColors.greenAccent,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3)),
-                ]),
-            child: InkWell(
-              child: Center(
-                child: Text(
-                  "Fertig",
-                  style: LamaTextTheme.getStyle(
-                    color: LamaColors.white,
-                    fontSize: 30,
-                  ),
-                ),
+           //color: Colors.green,
+          child: Material(
+          color: Colors.transparent,
+           child: Ink(
+             decoration: ShapeDecoration(
+               color: LamaColors.blueAccent,
+               shape: CircleBorder(),
+               shadows: [BoxShadow(
+                   color: Colors.grey.withOpacity(0.5),
+                   spreadRadius: 2,
+                   blurRadius: 7,
+                   offset: Offset(0, 3)),
+               ]
+             ),
+             padding: EdgeInsets.all(5.0),
+           child: IconButton(
+             padding: EdgeInsets.all(1.0),
+              icon: Icon(
+                Icons.refresh,
+                size: 40,
               ),
+             color: LamaColors.black,
+             onPressed: (){
+
+             },
             ),
-          ),
+           ),
+          )
         )
       ],
     );
@@ -239,14 +242,14 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
     }
     return output;
   }
-  Widget buildTargets(BuildContext context, List<String> categoryList , String taskCategory){
+  Widget buildTargets(BuildContext context, List<String> categoryList , String taskCategory, Color color){
       return DragTarget(
           builder: (context, candidate, rejectedData) =>
               Container(
                 height: 60,
                 width: 185,
                 decoration:
-                BoxDecoration(color: LamaColors.blueAccent, boxShadow: [
+                BoxDecoration(color: color, boxShadow: [
                   BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
@@ -267,6 +270,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
         onAccept: (data){
           categoryList.contains(data) ?  results.add(true) :  results.add(false);
             setState(() {
+              latestDeletion = data.toString();
               categorySum.removeWhere((element) =>
               element.toString() == data.toString());
             });
