@@ -25,6 +25,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   String _pauseMode = "PauseMode";
   // name of the playMode widget
   String _playMode = "PlayMode";
+  FlappyLama _lama;
 
   FlappyLamaGame(this._context) {
     var back = ParallaxComponent([
@@ -35,7 +36,9 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     ], baseSpeed: Offset(7, 0), layerDelta: Offset(10, 0));
     // add background
     add(back);
-    add(FlappyLama());
+
+    _lama = FlappyLama();
+    add(_lama);
 
     // add PlayMode widget
     addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
@@ -76,6 +79,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   void pauseGame() {
     pauseEngine();
     _paused = true;
+    _lama.fallDown();
 
     // removed the playMode widget
     removeWidgetOverlay(_playMode);
