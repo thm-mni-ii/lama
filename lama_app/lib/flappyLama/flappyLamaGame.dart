@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
+import 'package:lama_app/flappyLama/widgets/playMode.dart';
 
-class FlappyLamaGame extends BaseGame with TapDetector {
+class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   Size screenSize;
   double tileSize;
   int score = 0;
@@ -29,6 +30,12 @@ class FlappyLamaGame extends BaseGame with TapDetector {
         layerDelta: Offset(10, 0)
     );
     add(back);
+
+    addWidgetOverlay(
+        'PlayMode',
+        PlayMode(onPausePressed: pauseGame)
+    );
+    
     initialize();
   }
 
