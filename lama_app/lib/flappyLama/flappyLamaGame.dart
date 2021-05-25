@@ -102,9 +102,6 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void onTapDown(TapDownDetails d) {
-
-    if (flappyLama.lamaRect.contains(d.localPosition)) {
       flappyLama.onTapDown();
-    }
   }
 }

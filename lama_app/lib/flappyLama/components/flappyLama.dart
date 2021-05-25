@@ -15,7 +15,7 @@ class FlappyLama {
   double x;
   double y;
 
-  static const double GRAVITY = 100;
+  static const double GRAVITY = 200;
 
   FlappyLama(this.game) {
     resize();
@@ -38,18 +38,18 @@ class FlappyLama {
         isGameStarted = false;
       }
 
-      if (this.y < 0) {
-        isGameStarted = false;
+      if (this.y <= 0) {
         developer.log("[y=${this.y}, ymax=${initY} ");
-        this.y = initY;
         speedY = 0.0;
+        this.speedY += GRAVITY * t;
+        this.y += this.speedY * t;
       }
     }
     lamaRect = Rect.fromLTWH(x, y, game.tileSize, game.tileSize);
   }
 
   void jump() {
-    this.speedY = -100;
+    this.speedY = -170;
   }
 
   void resize() {
