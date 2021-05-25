@@ -12,6 +12,8 @@ import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+import 'game_list_screen.dart';
+
 //Home Screen is a Stateful Widget so it can be reloaded using setState((){}) after Navigation
 class HomeScreen extends StatefulWidget {
   @override
@@ -167,40 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Center(
                               child: Text(
-                                "Snake",
-                                style: LamaTextTheme.getStyle(),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: CircleAvatar(
-                                backgroundColor:
-                                    Color.fromARGB(255, 239, 30, 50),
-                              ),
-                            )
-                          ],
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            primary: LamaColors.greenAccent,
-                            minimumSize: Size(screenSize.width / 1.25, 60),
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)))),
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => GameScreen()),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton(
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Center(
-                              child: Text(
-                                "Flappy Lama",
+                                "Spiele",
                                 style: LamaTextTheme.getStyle(),
                               ),
                             ),
@@ -222,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => FlappyGameScreen()),
+                              builder: (context) => GameListScreen()),
                         ),
                       ),
                     ],

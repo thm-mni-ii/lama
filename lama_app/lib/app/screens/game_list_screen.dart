@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
-class TaskScreen extends StatelessWidget {
+class GameListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
