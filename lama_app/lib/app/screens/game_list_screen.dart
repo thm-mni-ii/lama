@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
 import 'package:lama_app/app/event/game_list_screen_event.dart';
 import 'package:lama_app/app/model/game_list_item_model.dart';
+import 'package:lama_app/app/state/game_list_screen_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
@@ -21,74 +22,91 @@ class GameListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [LamaColors.greenAccent, LamaColors.greenPrimary],
+      body: BlocListener<GameListScreenBloc, GameListScreenState>(
+        listener: (context, state) {
+          if (state is NotEnoughCoinsState) {
+            final snackBar = SnackBar(
+                content: Text(
+                  'Du hast nicht genug Lama Münzen!',
+                  style: LamaTextTheme.getStyle(fontSize: 15),
+                ),
+                duration: Duration(seconds: 1));
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [LamaColors.greenAccent, LamaColors.greenPrimary],
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Container(
-            color: Colors.white,
-            child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-              return Column(children: [
-                Container(
-                  height: (constraints.maxHeight / 100) * 7.5,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [LamaColors.greenAccent, LamaColors.greenPrimary],
+          child: SafeArea(
+            child: Container(
+              color: Colors.white,
+              child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                return Column(children: [
+                  Container(
+                    height: (constraints.maxHeight / 100) * 7.5,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          LamaColors.greenAccent,
+                          LamaColors.greenPrimary
+                        ],
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25),
+                      ),
                     ),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25),
-                    ),
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: IconButton(
-                          padding: EdgeInsets.all(0),
-                          icon: Icon(
-                            Icons.arrow_back,
-                            size: 40,
-                            color: Colors.white,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(
+                              Icons.arrow_back,
+                              size: 40,
+                              color: Colors.white,
+                            ),
+                            onPressed: () => Navigator.of(context).pop(),
                           ),
-                          onPressed: () => Navigator.of(context).pop(),
                         ),
-                      ),
-                      Text(
-                        "Spiele",
-                        style: LamaTextTheme.getStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 20, right: 20, top: 20),
-                    child: LayoutBuilder(builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      return ListView.separated(
-                        itemCount: games.length,
-                        itemBuilder: (context, index) {
-                          return buildGameList(context, index, constraints);
-                        },
-                        separatorBuilder: (context, index) => SizedBox(
-                          height: (constraints.maxHeight / 100) * 5,
+                        Text(
+                          "Spiele",
+                          style: LamaTextTheme.getStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w500),
                         ),
-                      );
-                    }),
+                      ],
+                    ),
                   ),
-                ),
-              ]);
-            }),
+                  Expanded(
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, right: 20, top: 20),
+                      child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return ListView.separated(
+                          itemCount: games.length,
+                          itemBuilder: (context, index) {
+                            return buildGameList(context, index, constraints);
+                          },
+                          separatorBuilder: (context, index) => SizedBox(
+                            height: (constraints.maxHeight / 100) * 5,
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                ]);
+              }),
+            ),
           ),
         ),
       ),
