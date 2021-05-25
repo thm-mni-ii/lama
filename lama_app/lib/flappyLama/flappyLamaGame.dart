@@ -12,7 +12,7 @@ import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
 class FlappyLamaGame extends BaseGame with TapDetector {
   Size screenSize;
   double tileSize;
-  int score;
+  int score = 0;
 
   BuildContext _context;
 
