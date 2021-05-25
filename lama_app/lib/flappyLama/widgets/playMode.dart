@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// This class is a [StatelessWidget] for displaying the play Mode Hud of Flappy lama
+/// It needs the [onPausePressed] [Function] to ensure its workability.
 class PlayMode extends StatelessWidget {
   final Function onPausePressed;
 
