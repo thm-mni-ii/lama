@@ -28,11 +28,14 @@ class CreateUserScreenState extends State<CreateUserScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<CreateUserBloc, CreateUserState>(
           builder: (context, state) {
         if (state is CreateUserLoaded)
           return _userOptions(context, state.grades);
+        if (state is UserPushSuccessfull)
+          context.read<CreateUserBloc>().add(CreateUserAbort(context));
         return Center(child: CircularProgressIndicator());
       }),
       floatingActionButton: _userOptionsButtons(context),

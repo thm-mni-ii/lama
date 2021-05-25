@@ -20,9 +20,9 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateUserState> {
 
   @override
   Stream<CreateUserState> mapEventToState(CreateUserEvent event) async* {
+    if (event is LoadGrades) yield CreateUserLoaded(_grades);
     if (event is CreateUserAbort) _createUserReturn(event.context);
     if (event is CreateUserPush) yield await _pushUser();
-    if (event is LoadGrades) yield CreateUserLoaded(_grades);
 
     //Change Bloc User events
     if (event is UsernameChange) user.name = event.name;
@@ -32,8 +32,6 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateUserState> {
       print(user.grade);
     }
   }
-
-  //Change Screen
 
   void _createUserReturn(BuildContext context) {
     Navigator.pop(context);
