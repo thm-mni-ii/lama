@@ -17,6 +17,7 @@ class UserLoginScreen extends StatefulWidget {
 }
 
 class UserSelectionState extends State<UserLoginScreen> {
+  var _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -31,10 +32,12 @@ class UserSelectionState extends State<UserLoginScreen> {
       body: BlocBuilder<UserLoginBloc, UserLoginState>(
         builder: (context, state) {
           if (state is UserSelected) {
-            return _input(context, null, state.user, screenSize.width);
+            return _input(
+                context, null, state.user, screenSize.width, _formKey);
           }
           if (state is UserLoginFailed) {
-            return _input(context, state.error, state.user, screenSize.width);
+            return _input(
+                context, state.error, state.user, screenSize.width, _formKey);
           }
           if (state is UsersLoaded) {
             return _userListView(state.userList);
@@ -56,11 +59,11 @@ class UserSelectionState extends State<UserLoginScreen> {
   }
 }
 
-Widget _input(BuildContext context, String error, User user, double size) {
+Widget _input(BuildContext context, String error, User user, double size,
+    GlobalKey<FormState> key) {
   String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
-  var _formKey = GlobalKey<FormState>();
   return Form(
-    //key: _formKey,
+    key: key,
     child: Column(
       children: [
         Padding(
@@ -108,8 +111,8 @@ Widget _input(BuildContext context, String error, User user, double size) {
         ),
         ElevatedButton(
           onPressed: () {
-            //if (_formKey.currentState.validate())
-            context.read<UserLoginBloc>().add(UserLogin(user, context));
+            if (key.currentState.validate())
+              context.read<UserLoginBloc>().add(UserLogin(user, context));
           },
           child: Text('Einloggen'),
           style: ElevatedButton.styleFrom(
