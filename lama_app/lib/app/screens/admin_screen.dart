@@ -27,43 +27,42 @@ class AdminScreenState extends State<AdminScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: _bar(screenSize.width / 5),
-        body: BlocBuilder<AdminScreenBloc, AdminState>(
-          builder: (context, state) {
-            if (state is Loaded) {
-              return _userListView(state.userList);
-            }
-            return Center(child: CircularProgressIndicator());
-          },
-        ),
-        floatingActionButton: Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 30),
-              child: FloatingActionButton(
-                heroTag: "back",
-                backgroundColor: LamaColors.bluePrimary,
-                onPressed: () => {
-                  context
-                      .read<AdminScreenBloc>()
-                      .add(LogoutAdminScreen(context))
-                },
-                tooltip: 'Ausloggen',
-                child: Icon(Icons.logout),
-              ),
+      resizeToAvoidBottomInset: false,
+      appBar: _bar(screenSize.width / 5),
+      body: BlocBuilder<AdminScreenBloc, AdminState>(
+        builder: (context, state) {
+          if (state is Loaded) {
+            return _userListView(state.userList);
+          }
+          return Center(child: CircularProgressIndicator());
+        },
+      ),
+      floatingActionButton: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 30),
+            child: FloatingActionButton(
+              heroTag: "back",
+              backgroundColor: LamaColors.bluePrimary,
+              onPressed: () => {
+                context.read<AdminScreenBloc>().add(LogoutAdminScreen(context))
+              },
+              tooltip: 'Ausloggen',
+              child: Icon(Icons.logout),
             ),
-            Spacer(),
-            FloatingActionButton(
-                heroTag: "addUser",
-                backgroundColor: LamaColors.bluePrimary,
-                onPressed: () =>
-                    {context.read<AdminScreenBloc>().add(CreateUser(context))},
-                tooltip: 'Nutzer hinzufügen',
-                child: Icon(Icons.add)),
-          ],
-          mainAxisAlignment: MainAxisAlignment.end,
-        ));
+          ),
+          Spacer(),
+          FloatingActionButton(
+              heroTag: "addUser",
+              backgroundColor: LamaColors.bluePrimary,
+              onPressed: () =>
+                  {context.read<AdminScreenBloc>().add(CreateUser(context))},
+              tooltip: 'Nutzer hinzufügen',
+              child: Icon(Icons.add)),
+        ],
+        mainAxisAlignment: MainAxisAlignment.end,
+      ),
+    );
   }
 
   Widget _bar(double size) {

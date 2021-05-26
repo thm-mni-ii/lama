@@ -29,7 +29,7 @@ class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
           child: CreateUserScreen(),
         ),
       ),
-    );
+    ).then((value) => context.read<AdminScreenBloc>().add(LoadAllUsers()));
   }
 
   void _logout(BuildContext context) {
