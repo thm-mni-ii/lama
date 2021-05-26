@@ -132,7 +132,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
         ),
         // refreshButton
         Container(
-          height: (constraints.maxHeight / 100) * 9,
+          height: (constraints.maxHeight / 100) * 10,
           alignment: Alignment.bottomCenter,
            //color: Colors.green,
           child: Material(
@@ -301,8 +301,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
       return DragTarget<Item>(
           builder: (context, candidate, rejectedData) =>
               Container(
-                height: 60,
-                width: 185,
+                height: (constraints.maxHeight / 100) * 45,
+                width: (constraints.maxWidth / 100) * 40,
                 decoration:
                 BoxDecoration(color: color, boxShadow: [
                   BoxShadow(
