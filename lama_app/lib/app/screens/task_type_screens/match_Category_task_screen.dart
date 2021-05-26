@@ -8,8 +8,11 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+
 bool firstStart = true;
 bool firstShuffel = true;
+List<Item> items =[];
+
 
 class MatchCategoryTaskScreen extends StatefulWidget {
   final TaskMatchCategory task;
@@ -23,18 +26,21 @@ class MatchCategoryTaskScreen extends StatefulWidget {
   }
 }
 class MatchCategoryState extends State<MatchCategoryTaskScreen>{
+
   final BoxConstraints constraints;
   final TaskMatchCategory task;
   final List<String> categorySum = [];
   final List<bool> results = [];
 
   String latestDeletion = "";
-  List <String> deletinons = [];
+  List <Item> deletinons = [];
+
   MatchCategoryState(this.task, this.constraints) {
     categorySum.addAll(task.categoryOne);
     categorySum.addAll(task.categoryTwo);
     if(firstShuffel) {
       categorySum.shuffle();
+
       firstShuffel = false;
     }
   }
@@ -154,9 +160,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                 setState(() {
                   if(deletinons.isNotEmpty){
                   results.removeLast();
-                  categorySum.add(deletinons.last);
+                  items.add(deletinons.last);
                   deletinons.removeLast();
-                  print(results.toString());
                 }
                 else if(deletinons.isEmpty){
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -198,19 +203,32 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
       [(constraints.maxHeight / 100) * 15, (constraints.maxWidth / 100) * 30,],
       [(constraints.maxHeight / 100) * 5, (constraints.maxWidth / 100) * 9]
     ];
+
+
     if(firstStart) {
       positions.shuffle();
       firstStart = false;
+      double bottom;
+      double left;
+      for(int x = 0; x < categorySum.length; x++){
+        for(int y = 0; y < 2; y++){
+          if(y == 0){bottom = positions[x][y];}
+          if(y == 1){left = positions[x][y];}
+        }
+        items.add(Item(bottom, left, categorySum[x]));
+      }
+      print(items.length);
     }
+
     List<Widget> output = [];
-    for(int i = 0; i < categorySum.length; i++){
+    for(int i = 0; i < items.length; i++){
       output.add(
         Positioned(
-            bottom: positions[i][0],
-            left: positions[i][1],
-            child: Draggable(
+            bottom: items[i].bottom,
+            left: items[i].left,
+            child: Draggable<Item>(
                 //data: task.categoryOne.contains(categorySum[i]) ? categoryType.catOne : categoryType.catTwo,
-              data: categorySum[i],
+              data: items[i],
               child: Container(
                 height: 50,
                 width: 150,
@@ -227,7 +245,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                 ),
                 child: Center(
                   child: Text(
-                      categorySum[i],
+                      items[i].item,
                       style: LamaTextTheme.getStyle()
                   ),
                 )
@@ -248,7 +266,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                     ),
                     child: Center(
                       child: Text(
-                          categorySum[i],
+                          items[i].item,
                           style: LamaTextTheme.getStyle()
                       ),
                     )
@@ -269,7 +287,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                   ),
                   child: Center(
                     child: Text(
-                        categorySum[i],
+                        items[i].item,
                         style: LamaTextTheme.getStyle()
                     ),
                   )
@@ -280,7 +298,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
     return output;
   }
   Widget buildTargets(BuildContext context, List<String> categoryList , String taskCategory, Color color){
-      return DragTarget(
+      return DragTarget<Item>(
           builder: (context, candidate, rejectedData) =>
               Container(
                 height: 60,
@@ -306,16 +324,32 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
         onWillAccept: (data)=> true,
         onAccept: (data){
 
-          categoryList.contains(data) ?  results.add(true) :  results.add(false);
+          categoryList.contains(data.item) ?  results.add(true) :  results.add(false);
             setState(() {
-              deletinons.add(data.toString());
-              categorySum.removeWhere((element) =>
-              element.toString() == data.toString());
-              if(categorySum.isEmpty){
+              deletinons.add(data);
+
+                items.removeWhere((element) {
+                  print(element.item);
+                  print(data.item);
+                return element.item == data.item;
+            });
+          if(items.isEmpty){
+                firstStart = true;
+                firstShuffel = true;
                 BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initMatchCategory(results));
               }
             });
       },
       );
+  }
+}
+  class Item{
+  double bottom;
+  double left;
+  String item;
+  Item(double bottom, left, String item){
+    this.bottom =bottom;
+    this.left = left;
+    this.item = item;
   }
 }
