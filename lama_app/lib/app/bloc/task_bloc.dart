@@ -41,6 +41,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         } else
           yield TaskAnswerResultState(false);
       }
+      else if(t is TaskMatchCategory){
+        if(event.providedanswerStates.contains(false)){
+          yield TaskAnswerResultState(false);
+        }else
+          yield TaskAnswerResultState(true);
+      }
       await Future.delayed(Duration(seconds: 2));
       if (curIndex >= tasks.length)
         yield AllTasksCompletedState();

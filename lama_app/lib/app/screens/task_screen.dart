@@ -7,6 +7,7 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/four_card_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/mark_words_task_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/match_Category_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -147,6 +148,8 @@ class TaskScreenState extends State<TaskScreen> {
         return ClozeTestTaskScreen(task, constraints);
       case "MarkWords" :
         return MarkWordsScreen(task, constraints);
+      case "MatchCategory":
+        return MatchCategoryTaskScreen(task, constraints);
       default:
         return Container();
     }
