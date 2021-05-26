@@ -97,7 +97,7 @@ class AdminScreenState extends State<AdminScreen> {
         return Card(
           child: ListTile(
             onTap: () {
-              context.read<AdminScreenBloc>().add(SelectUser(user));
+              context.read<AdminScreenBloc>().add(EditUser(user, context));
             },
             title: Text(
               _nameDisplay,
