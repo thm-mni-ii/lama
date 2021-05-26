@@ -16,28 +16,42 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   Size screenSize;
   double tileSize;
   int score = 0;
-  FlappyLama flappyLama;
   FlappyGround flappyGround;
 
   BuildContext _context;
-  bool _paused = false;
   // name of the pauseMode widget
   String _pauseMode = "PauseMode";
   // name of the playMode widget
   String _playMode = "PlayMode";
 
+  bool _paused = false;
+  FlappyLama _lama;
+
   FlappyLamaGame(this._context) {
-    var back = ParallaxComponent([
-      ParallaxImage('png/himmel.png'),
-      ParallaxImage('png/clouds_3.png'),
-      ParallaxImage('png/clouds_2.png'),
-      ParallaxImage('png/clouds.png'),
-    ], baseSpeed: Offset(7, 0), layerDelta: Offset(10, 0));
+    var back = ParallaxComponent(
+        [
+          ParallaxImage('png/himmel.png'),
+          ParallaxImage('png/clouds_3.png'),
+          ParallaxImage('png/clouds_2.png'),
+          ParallaxImage('png/clouds.png'),
+        ],
+        baseSpeed: Offset(7, 0),
+        layerDelta: Offset(10, 0)
+    );
     // add background
     add(back);
 
+    // add lama
+    _lama = FlappyLama(this, 48);
+    add(_lama);
+
     // add PlayMode widget
-    addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
+    addWidgetOverlay(
+        _playMode,
+        PlayMode(
+            onPausePressed: pauseGame
+        )
+    );
 
     initialize();
   }
@@ -45,13 +59,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   void initialize() async {
     resize(await Flame.util.initialDimensions());
     // add ground
-    flappyGround = FlappyGround(this);
-    add(flappyGround);
-
-    //add flappyLama
-    flappyLama = FlappyLama(this);
-    add(flappyLama);
-
+    //add(FlappyGround(this));
     // add obstacles
     add(FlappyObstacle(this));
     // add score
@@ -60,12 +68,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   void resize(Size size) {
     screenSize = Size(
-        MediaQuery.of(_context).size.width -
-            MediaQuery.of(_context).padding.left -
-            MediaQuery.of(_context).padding.right,
-        MediaQuery.of(_context).size.height -
-            MediaQuery.of(_context).padding.top -
-            MediaQuery.of(_context).padding.bottom);
+        MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
+        MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
     tileSize = screenSize.width / 9;
 
     super.resize(size);
@@ -78,7 +82,11 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // removed the playMode widget
     removeWidgetOverlay(_playMode);
-    addWidgetOverlay(_pauseMode, PauseMode(onPlayPressed: resumeGame));
+    addWidgetOverlay(
+        _pauseMode,
+        PauseMode(
+            onPlayPressed: resumeGame)
+    );
   }
 
   /// This method resumes the game.
@@ -88,10 +96,14 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // removed the pauseMode widget
     removeWidgetOverlay(_pauseMode);
-    addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
+    addWidgetOverlay(
+        _playMode,
+        PlayMode(
+            onPausePressed: pauseGame)
+    );
   }
 
   void onTapDown(TapDownDetails d) {
-    flappyLama.onTapDown();
+    _lama.onTapDown();
   }
 }
