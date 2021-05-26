@@ -8,9 +8,23 @@ class LamaApp extends MaterialApp {
       : super(
           debugShowCheckedModeBanner: false,
           title: "LAMA",
+          builder: (context, child) {
+            return ScrollConfiguration(
+              behavior: LamaScrollBehaivour(),
+              child: child,
+            );
+          },
           home: BlocProvider(
             create: (BuildContext context) => CheckScreenBloc(),
             child: CheckScreen(),
           ),
         );
+}
+
+class LamaScrollBehaivour extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
+  }
 }
