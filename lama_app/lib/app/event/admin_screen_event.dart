@@ -18,24 +18,7 @@ class SelectUser extends AdminScreenEvent {
 }
 
 //Create new User events
-class CreateUser extends AdminScreenEvent {}
-
-class CreateUserPush extends AdminScreenEvent {}
-
-class CreateUserAbort extends AdminScreenEvent {}
-
-//Change User in Bloc events
-class UsernameChange extends AdminScreenEvent {
-  String name;
-  UsernameChange(this.name);
-}
-
-class UserPasswortChange extends AdminScreenEvent {
-  String passwort;
-  UserPasswortChange(this.passwort);
-}
-
-class UserGradeChange extends AdminScreenEvent {
-  int grade;
-  UserGradeChange(this.grade);
+class CreateUser extends AdminScreenEvent {
+  BuildContext context;
+  CreateUser(this.context);
 }
