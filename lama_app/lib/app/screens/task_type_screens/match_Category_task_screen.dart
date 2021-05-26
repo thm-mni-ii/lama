@@ -154,7 +154,26 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                   categorySum.add(deletinons.last);
                   deletinons.removeLast();
                   print(results.toString());
-                }});
+                }
+                else if(deletinons.isEmpty){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content:
+                        Container(
+                            height: (constraints.maxHeight / 100) * 4,
+                    alignment: Alignment.bottomCenter,
+                    child: Center(
+
+                      child: Text("Kein Item zum zurücksetzen gefunden",
+                        style: LamaTextTheme.getStyle(),
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
+                    backgroundColor: LamaColors.mainPink,
+                  ),
+                  );
+                  }
+    });
              },
             ),
            ),
