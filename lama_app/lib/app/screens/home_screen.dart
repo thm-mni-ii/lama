@@ -1,3 +1,4 @@
+import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -204,33 +205,61 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: screenSize.width,
-                height: 75,
-                decoration: BoxDecoration(
-                  color: LamaColors.mainPink,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+            Stack(children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: screenSize.width,
+                  height: 75,
+                  decoration: BoxDecoration(
+                    color: LamaColors.mainPink,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 2,
+                          offset: Offset(0, 2),
+                          spreadRadius: 1,
+                          color: Colors.grey)
+                    ],
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 2,
-                        offset: Offset(0, 2),
-                        spreadRadius: 1,
-                        color: Colors.grey)
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    "Lerne alles mit Anna",
-                    style: LamaTextTheme.getStyle(),
-                  ),
+                  child: Stack(children: [
+                    Center(
+                      child: Text(
+                        "Lerne alles mit Anna",
+                        style: LamaTextTheme.getStyle(),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: IconButton(
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(
+                            Icons.logout,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          onPressed: () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (BuildContext context) =>
+                                    UserLoginBloc(),
+                                child: UserLoginScreen(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]),
                 ),
               ),
-            ),
+            ]),
             Align(
               alignment: Alignment.topCenter,
               child: Container(
@@ -296,26 +325,34 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: EdgeInsets.only(right: 15, bottom: 15),
+                child: SvgPicture.asset(
+                  "assets/images/svg/lama_head.svg",
+                  semanticsLabel: "Lama Anna",
+                  width: (screenSize.width / 100) * 15,
+                ),
+              ),
+            ),
+            Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
-                padding: EdgeInsets.only(left: 15, bottom: 15),
+                padding: EdgeInsets.only(
+                    bottom: 20, right: (screenSize.width / 100) * 15),
                 child: Container(
-                  width: screenSize.width / 5,
-                  child: FittedBox(
-                    child: FloatingActionButton(
-                      heroTag: "back",
-                      backgroundColor: LamaColors.mainPink,
-                      onPressed: () => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (BuildContext context) => UserLoginBloc(),
-                            child: UserLoginScreen(),
-                          ),
-                        ),
+                  height: (screenSize.height / 100) * 10,
+                  width: (screenSize.width / 100) * 80,
+                  child: Bubble(
+                    nip: BubbleNip.rightCenter,
+                    color: LamaColors.mainPink,
+                    borderColor: LamaColors.mainPink,
+                    shadowColor: LamaColors.black,
+                    child: Center(
+                      child: Text(
+                        "Lamas können gut klettern!",
+                        style: LamaTextTheme.getStyle(fontSize: 15),
                       ),
-                      tooltip: 'Ausloggen',
-                      child: Icon(Icons.logout),
                     ),
                   ),
                 ),
