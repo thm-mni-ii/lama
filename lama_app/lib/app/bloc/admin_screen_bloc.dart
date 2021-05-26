@@ -20,7 +20,7 @@ class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
     if (event is LoadAllUsers) yield await _loadUsers();
     if (event is LogoutAdminScreen) _logout(event.context);
     if (event is CreateUser) _createUserScreen(event.context);
-    if (event is EditUser) _editUserScreen(event.context);
+    if (event is EditUser) _editUserScreen(event.context, event.user);
   }
 
   void _createUserScreen(BuildContext context) {
@@ -35,13 +35,13 @@ class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
     ).then((value) => context.read<AdminScreenBloc>().add(LoadAllUsers()));
   }
 
-  void _editUserScreen(BuildContext context) {
+  void _editUserScreen(BuildContext context, User user) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(
           create: (BuildContext context) => EditUserBloc(),
-          child: EditUserScreen(),
+          child: EditUserScreen(user),
         ),
       ),
     ).then((value) => context.read<AdminScreenBloc>().add(LoadAllUsers()));

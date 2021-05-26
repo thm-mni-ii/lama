@@ -2,21 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/edit_user_bloc.dart';
 import 'package:lama_app/app/event/edit_user_event.dart';
+import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/edit_user_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
 class EditUserScreen extends StatefulWidget {
+  User _user;
+
+  EditUserScreen(this._user);
   @override
   State<StatefulWidget> createState() {
-    return EditUserScreenState();
+    return EditUserScreenState(_user);
   }
 }
 
 class EditUserScreenState extends State<EditUserScreen> {
   var _formKey = GlobalKey<FormState>();
   //String _dropDown = 'Klasse 1';
+  User _user;
 
+  EditUserScreenState(this._user);
   @override
   void initState() {
     super.initState();
@@ -54,7 +60,7 @@ class EditUserScreenState extends State<EditUserScreen> {
                   Icon(Icons.delete_forever_rounded),
                 ],
               ),
-              onPressed: () => {},
+              onPressed: () => {context.read().add(EditUserDeleteUser(_user))},
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(50, 45),
                 primary: LamaColors.redAccent,
