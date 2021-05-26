@@ -163,7 +163,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      //TODO: Remove buttons and add button for game list
                       ElevatedButton(
                         child: Stack(
                           alignment: Alignment.center,
