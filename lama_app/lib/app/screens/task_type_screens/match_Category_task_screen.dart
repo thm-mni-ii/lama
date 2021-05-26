@@ -1,7 +1,10 @@
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/bloc/task_bloc.dart';
+import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -173,7 +176,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                   ),
                   );
                   }
-    });
+               });
              },
             ),
            ),
@@ -302,12 +305,15 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
               ),
         onWillAccept: (data)=> true,
         onAccept: (data){
+
           categoryList.contains(data) ?  results.add(true) :  results.add(false);
             setState(() {
               deletinons.add(data.toString());
               categorySum.removeWhere((element) =>
               element.toString() == data.toString());
-              print(results.toString());
+              if(categorySum.isEmpty){
+                BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initMatchCategory(results));
+              }
             });
       },
       );
