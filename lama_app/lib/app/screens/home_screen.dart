@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
+import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -11,6 +12,8 @@ import 'package:lama_app/app/screens/flappy_game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+
+import 'game_list_screen.dart';
 
 //Home Screen is a Stateful Widget so it can be reloaded using setState((){}) after Navigation
 class HomeScreen extends StatefulWidget {
@@ -167,40 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Center(
                               child: Text(
-                                "Snake",
-                                style: LamaTextTheme.getStyle(),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: CircleAvatar(
-                                backgroundColor:
-                                    Color.fromARGB(255, 239, 30, 50),
-                              ),
-                            )
-                          ],
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            primary: LamaColors.greenAccent,
-                            minimumSize: Size(screenSize.width / 1.25, 60),
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)))),
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => GameScreen()),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton(
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Center(
-                              child: Text(
-                                "Flappy Lama",
+                                "Spiele",
                                 style: LamaTextTheme.getStyle(),
                               ),
                             ),
@@ -222,8 +192,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => FlappyGameScreen()),
-                        ),
+                            builder: (context) => BlocProvider(
+                              create: (BuildContext context) =>
+                                  GameListScreenBloc(userRepository),
+                              child: GameListScreen(),
+                            ),
+                          ),
+                        ).then((value) => (setState(() {}))),
                       ),
                     ],
                   ),
