@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flame/components/parallax_component.dart';
 import 'package:flame/gestures.dart';
@@ -29,6 +30,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   bool _paused = false;
   FlappyLama _lama;
+  Random _randomNumber = Random();
 
   FlappyLamaGame(this._context) {
     var back = ParallaxComponent(
@@ -61,10 +63,17 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   void initialize() async {
     resize(await Flame.util.initialDimensions());
+
+    Flame.images.loadAll([
+      'png/kaktus_body.png',
+      'png/kaktus_end_bottom.png',
+      'png/kaktus_end_top.png',
+    ]);
+
     // add ground
     //add(FlappyGround(this));
     // add obstacles
-    add(FlappyObstacle(this));
+    add(FlappyObstacle(this, _randomNumber.nextInt(this.tilesX), _randomNumber.nextInt(2) + 1, 0));
     // add score
     add(FlappyScoreDisplay(this));
   }

@@ -1,14 +1,17 @@
 import 'dart:ui';
 import 'dart:math';
+import 'package:flame/anchor.dart';
 import 'package:flame/components/component.dart';
+import 'package:flame/sprite.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
-import 'package:lama_app/flappyLama/model/obstacle.dart';
 
 
 class FlappyObstacle extends Component {
-  List<Obstacle> obstacles = [];
-  final double _velocity = -30;
-  final int obstacleCount = 2;
+  final double _velocity = -70;
+  int _holeSize;
+  int _holePosition;
+  int _number;
+  List<SpriteComponent> _sprites;
   
   final FlappyLamaGame game;
   Paint _obstaclePaint;
@@ -26,7 +29,7 @@ class FlappyObstacle extends Component {
 //obstacle move and reset after they leave the screen (2 objects moving)
   Random _randomNumber = Random();
 
-  FlappyObstacle(this.game){
+  FlappyObstacle(this.game, this._holePosition, this._holeSize, this._number) {
     
     _obstaclePaint = Paint();
     _obstaclePaint.color = Color(0xFF654321);
@@ -58,12 +61,15 @@ class FlappyObstacle extends Component {
     c.drawRect(_bottomObstacle, _obstaclePaint);
     c.drawRect(_topObstacle2, _obstaclePaint);
     c.drawRect(_bottomObstacle2, _obstaclePaint);
+
+    // render each part of the snake
+    for (SpriteComponent obstacle in _sprites) {
+      c.save();
+      obstacle.render(c);
+    }
   }
 
   void update(double t){
-    for (var obstacle in obstacles) {
-      obstacle.x -= (obstacle.x > 0) ? _velocity * t : this.game.screenSize.width;
-    }
 
     //score increments when left side of lama passes right side of obstacle
 
@@ -102,20 +108,56 @@ class FlappyObstacle extends Component {
     _topObstacle = _topObstacle.translate(_velocity * t, 0);
     _bottomObstacle2 = _bottomObstacle2.translate(_velocity * t, 0);
     _topObstacle2 = _topObstacle2.translate(_velocity * t, 0);
-    
+
+    if (_sprites.isNotEmpty) {
+      _sprites[0]?.x += _sprites[0].x > -this.game.tileSize ? _velocity * t : this.game.screenSize.width + this.game.tileSize;
+    }
   }
 
   void resize(Size size) {
-    if (obstacles.isEmpty && this.game.tileSize > 0) {
-      // add obstacle
-      obstacles.add(
-          Obstacle(
-            _randomNumber.nextInt(this.game.tilesY),
-            _randomNumber.nextInt(2) + 1,
-            this.game.screenSize.width,
-            0
-          )
-      );
+    if (this.game.tileSize > 0) {
+      _sprites = [];
+      var h = 1;
+      for (int i = 0; i < this.game.tilesY; i++) {
+        if (this._holePosition == i + 1) {
+          var tmp = SpriteComponent()
+            ..height = this.game.tileSize
+            ..width = this.game.tileSize
+            ..sprite = Sprite('png/kaktus_end_top.png')
+            ..x = i == 0 ? this.game.screenSize.width + (this._number * 2 * this.game.tileSize) : 0
+            ..y = i == 0 ? 0 : this.game.tileSize * h
+            ..anchor = Anchor.topLeft;
+
+          _sprites.add(tmp);
+          h = 1;
+        }
+        else if (this._holePosition + this._holeSize + 1 == i) {
+          var tmp = SpriteComponent()
+            ..height = this.game.tileSize
+            ..width = this.game.tileSize
+            ..sprite = Sprite('png/kaktus_end_bottom.png')
+            ..x = i == 0 ? this.game.screenSize.width + (this._number * 2 * this.game.tileSize) : 0
+            ..y = i == 0 ? 0 : this.game.tileSize * h
+            ..anchor = Anchor.topLeft;
+
+          _sprites.add(tmp);
+          h = 1;
+        }
+        else if (!(i >= this._holePosition && i <= this._holePosition + this._holeSize)) {
+          var tmp = SpriteComponent()
+            ..height = this.game.tileSize
+            ..width = this.game.tileSize
+            ..sprite = Sprite('png/kaktus_body.png')
+            ..x = i == 0 ? this.game.screenSize.width + (this._number * 2 * this.game.tileSize) : 0
+            ..y = i == 0 ? 0 : this.game.tileSize * h
+            ..anchor = Anchor.topLeft;
+
+          _sprites.add(tmp);
+          h = 1;
+        } else {
+          h += 1;
+        }
+      }
     }
   }
 }
