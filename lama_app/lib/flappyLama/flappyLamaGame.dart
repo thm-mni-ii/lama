@@ -15,6 +15,9 @@ import 'package:lama_app/flappyLama/widgets/playMode.dart';
 class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   Size screenSize;
   double tileSize;
+  int tilesX = 9;
+  int tilesY;
+
   int score = 0;
   FlappyGround flappyGround;
 
@@ -70,7 +73,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     screenSize = Size(
         MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
         MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
-    tileSize = screenSize.width / 9;
+    tileSize = screenSize.width / tilesX;
+    tilesY = screenSize.height ~/ tileSize;
 
     super.resize(size);
   }
