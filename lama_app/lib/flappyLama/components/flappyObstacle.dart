@@ -57,23 +57,23 @@ class FlappyObstacle extends Component {
 
   void render(Canvas c) {
 
-    c.drawRect(_topObstacle, _obstaclePaint);
+    /*c.drawRect(_topObstacle, _obstaclePaint);
     c.drawRect(_bottomObstacle, _obstaclePaint);
     c.drawRect(_topObstacle2, _obstaclePaint);
-    c.drawRect(_bottomObstacle2, _obstaclePaint);
+    c.drawRect(_bottomObstacle2, _obstaclePaint);*/
 
     // render each part of the snake
     for (SpriteComponent obstacle in _sprites) {
       c.save();
       obstacle.render(c);
+      c.restore();
     }
   }
 
   void update(double t){
-
     //score increments when left side of lama passes right side of obstacle
 
-    if (game.screenSize.width/4 >_bottomObstacle.right && _isHandled == false){
+    /*if (game.screenSize.width/4 >_bottomObstacle.right && _isHandled == false){
       ++this.game.score;
       _isHandled = true;
     }
@@ -107,10 +107,13 @@ class FlappyObstacle extends Component {
     _bottomObstacle = _bottomObstacle.translate(_velocity * t, 0);
     _topObstacle = _topObstacle.translate(_velocity * t, 0);
     _bottomObstacle2 = _bottomObstacle2.translate(_velocity * t, 0);
-    _topObstacle2 = _topObstacle2.translate(_velocity * t, 0);
+    _topObstacle2 = _topObstacle2.translate(_velocity * t, 0);*/
 
     if (_sprites.isNotEmpty) {
-      _sprites[0]?.x += _sprites[0].x > -this.game.tileSize ? _velocity * t : this.game.screenSize.width + this.game.tileSize;
+      _sprites?.forEach(
+              (element) {
+                element.x += element.x > -this.game.tileSize * 2 ? _velocity * t : this.game.screenSize.width + this.game.tileSize * 2;
+              });
     }
   }
 
@@ -121,11 +124,11 @@ class FlappyObstacle extends Component {
       for (int i = 0; i < this.game.tilesY; i++) {
         if (this._holePosition == i + 1) {
           var tmp = SpriteComponent()
-            ..height = this.game.tileSize
-            ..width = this.game.tileSize
+            ..height = this.game.tileSize * 2
+            ..width = this.game.tileSize * 2
             ..sprite = Sprite('png/kaktus_end_top.png')
-            ..x = i == 0 ? this.game.screenSize.width + (this._number * 2 * this.game.tileSize) : 0
-            ..y = i == 0 ? 0 : this.game.tileSize * h
+            ..x = this.game.screenSize.width + (this._number * 4 * this.game.tileSize)
+            ..y = this.game.tileSize * i
             ..anchor = Anchor.topLeft;
 
           _sprites.add(tmp);
@@ -133,11 +136,11 @@ class FlappyObstacle extends Component {
         }
         else if (this._holePosition + this._holeSize + 1 == i) {
           var tmp = SpriteComponent()
-            ..height = this.game.tileSize
-            ..width = this.game.tileSize
+            ..height = this.game.tileSize * 2
+            ..width = this.game.tileSize * 2
             ..sprite = Sprite('png/kaktus_end_bottom.png')
-            ..x = i == 0 ? this.game.screenSize.width + (this._number * 2 * this.game.tileSize) : 0
-            ..y = i == 0 ? 0 : this.game.tileSize * h
+            ..x = this.game.screenSize.width + (this._number * 4 * this.game.tileSize)
+            ..y = this.game.tileSize * i
             ..anchor = Anchor.topLeft;
 
           _sprites.add(tmp);
@@ -145,11 +148,11 @@ class FlappyObstacle extends Component {
         }
         else if (!(i >= this._holePosition && i <= this._holePosition + this._holeSize)) {
           var tmp = SpriteComponent()
-            ..height = this.game.tileSize
-            ..width = this.game.tileSize
+            ..height = this.game.tileSize * 2
+            ..width = this.game.tileSize * 2
             ..sprite = Sprite('png/kaktus_body.png')
-            ..x = i == 0 ? this.game.screenSize.width + (this._number * 2 * this.game.tileSize) : 0
-            ..y = i == 0 ? 0 : this.game.tileSize * h
+            ..x = this.game.screenSize.width + (this._number * 4 * this.game.tileSize)
+            ..y = this.game.tileSize * i
             ..anchor = Anchor.topLeft;
 
           _sprites.add(tmp);
