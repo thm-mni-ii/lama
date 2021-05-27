@@ -2,9 +2,13 @@ import 'dart:ui';
 import 'dart:math';
 import 'package:flame/components/component.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
+import 'package:lama_app/flappyLama/model/obstacle.dart';
 
 
-class FlappyObstacle extends Component{
+class FlappyObstacle extends Component {
+  List<Obstacle> obstacles = [];
+  final double _velocity = -30;
+  final int obstacleCount = 2;
   
   final FlappyLamaGame game;
   Paint _obstaclePaint;
@@ -14,7 +18,6 @@ class FlappyObstacle extends Component{
   Rect _bottomObstacle2;
   double _topObstacleLength;
   double _holeLength;
-  double _movespeed = -30;
   int _score = 0;
   bool _isHandled = false;
   bool _isHandled2 = false;
@@ -49,7 +52,7 @@ class FlappyObstacle extends Component{
 
   int get score => _score;
 
-  void render(Canvas c){
+  void render(Canvas c) {
 
     c.drawRect(_topObstacle, _obstaclePaint);
     c.drawRect(_bottomObstacle, _obstaclePaint);
@@ -58,6 +61,9 @@ class FlappyObstacle extends Component{
   }
 
   void update(double t){
+    for (var obstacle in obstacles) {
+      obstacle.x -= (obstacle.x > 0) ? _velocity * t : this.game.screenSize.width;
+    }
 
     //score increments when left side of lama passes right side of obstacle
 
@@ -92,10 +98,24 @@ class FlappyObstacle extends Component{
         0.65*game.screenSize.height - (_topObstacleLength + _holeLength));
     }
    
-    _bottomObstacle = _bottomObstacle.translate(_movespeed * t, 0);
-    _topObstacle = _topObstacle.translate(_movespeed * t, 0);
-    _bottomObstacle2 = _bottomObstacle2.translate(_movespeed * t, 0);
-    _topObstacle2 = _topObstacle2.translate(_movespeed * t, 0);
+    _bottomObstacle = _bottomObstacle.translate(_velocity * t, 0);
+    _topObstacle = _topObstacle.translate(_velocity * t, 0);
+    _bottomObstacle2 = _bottomObstacle2.translate(_velocity * t, 0);
+    _topObstacle2 = _topObstacle2.translate(_velocity * t, 0);
     
+  }
+
+  void resize(Size size) {
+    if (obstacles.isEmpty && this.game.tileSize > 0) {
+      // add obstacle
+      obstacles.add(
+          Obstacle(
+            _randomNumber.nextInt(this.game.tilesY),
+            _randomNumber.nextInt(2) + 1,
+            this.game.screenSize.width,
+            0
+          )
+      );
+    }
   }
 }
