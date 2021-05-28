@@ -7,16 +7,24 @@ import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
 class FlappyObstacle extends Component {
   final double _velocity = -70;
+  // count of the tiles
+  final double _size = 1.5;
+  // will be multiplied by the _size
+  final double _minHoleTiles = 2;
+  // will be multiplied by the _size
+  final double _maxHoleTiles = 3;
+  // will be multiplied by the _size
   int _holeSize;
   int _holePosition;
-  int _number;
+  // alter start location
+  bool _alter;
   List<SpriteComponent> _sprites;
   
   final FlappyLamaGame game;
   //obstacle move and reset after they leave the screen (2 objects moving)
   Random _randomNumber = Random();
 
-  FlappyObstacle(this.game, this._holePosition, this._holeSize, this._number);
+  FlappyObstacle(this.game, this._alter);
 
   void render(Canvas c) {
     // render each part of the snake
@@ -29,61 +37,54 @@ class FlappyObstacle extends Component {
 
   void createObstacleParts() {
     _sprites = [];
-    for (int i = 0; i < this.game.tilesY; i++) {
-      if (this._holePosition == i + 1) {
-        var tmp = SpriteComponent()
-          ..height = this.game.tileSize * 2
-          ..width = this.game.tileSize * 2
-          ..sprite = Sprite('png/kaktus_end_top.png')
-          ..x = this.game.screenSize.width + (this._number * 4 * this.game.tileSize)
-          ..y = this.game.tileSize * i
-          ..anchor = Anchor.topLeft;
+    for (int i = 0; i < (this.game.tilesY / this._size); i++) {
+      var tmp = SpriteComponent()
+        ..height = this.game.tileSize * this._size
+        ..width = this.game.tileSize * this._size
+        ..x = this.game.screenSize.width + (this._alter ? (this.game.tilesX ~/ 2) * this.game.tileSize + this.game.tileSize * this._size : 0)
+        ..y = (this.game.tileSize * this._size) * i
+        ..anchor = Anchor.topLeft;
 
+      if (this._holePosition == i + 1) {
+        tmp.sprite = Sprite('png/kaktus_end_top.png');
         _sprites.add(tmp);
       }
-      else if (this._holePosition + this._holeSize + 1 == i) {
-        var tmp = SpriteComponent()
-          ..height = this.game.tileSize * 2
-          ..width = this.game.tileSize * 2
-          ..sprite = Sprite('png/kaktus_end_bottom.png')
-          ..x = this.game.screenSize.width + (this._number * 4 * this.game.tileSize)
-          ..y = this.game.tileSize * i
-          ..anchor = Anchor.topLeft;
-
+      else if (this._holePosition + this._holeSize == i) {
+        tmp.sprite = Sprite('png/kaktus_end_bottom.png');
         _sprites.add(tmp);
       }
       else if (!(i >= this._holePosition && i <= this._holePosition + this._holeSize)) {
-        var tmp = SpriteComponent()
-          ..height = this.game.tileSize * 2
-          ..width = this.game.tileSize * 2
-          ..sprite = Sprite('png/kaktus_body.png')
-          ..x = this.game.screenSize.width + (this._number * 4 * this.game.tileSize)
-          ..y = this.game.tileSize * i
-          ..anchor = Anchor.topLeft;
-
+        tmp.sprite = Sprite('png/kaktus_body.png');
         _sprites.add(tmp);
       }
     }
   }
 
+  void generateHole() {
+    this._holePosition = _randomNumber.nextInt((this.game.tilesY ~/ this._size) - 1);
+    this._holeSize =
+        _randomNumber.nextInt(((this._maxHoleTiles - this._minHoleTiles) / this._size).ceil() + 1) +
+            (_minHoleTiles / this._size).ceil();
+  }
+
   void update(double t) {
     if (_sprites.isNotEmpty) {
-      if (_sprites[0].x <= -this.game.tileSize * 2) {
-        this._holePosition = _randomNumber.nextInt(this.game.tilesX);
-        this._holeSize = _randomNumber.nextInt(3) + 2;
-        this._number = 0;
+      // reset the obstacle when moving out of the screen
+      if (_sprites[0].x <= -(this.game.tileSize * this._size)) {
+        // remove the initial offset
+        this._alter = false;
+        generateHole();
         createObstacleParts();
       }
 
-      _sprites?.forEach(
-              (element) {
-                element.x += _velocity * t;
-              });
+      // moves the obstacles
+      _sprites?.forEach((element) => element.x += _velocity * t);
     }
   }
 
   void resize(Size size) {
     if (this.game.tileSize > 0) {
+      generateHole();
       createObstacleParts();
     }
   }
