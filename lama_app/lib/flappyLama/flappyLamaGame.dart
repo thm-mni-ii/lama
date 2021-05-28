@@ -131,7 +131,9 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void update(double t) {
+    // check if the lama hits an obstacle
     components.whereType<FlappyObstacle>().forEach((element) { element.collides(_lama?.toRect() ?? null); });
+    
     super.update(t);
   }
 }

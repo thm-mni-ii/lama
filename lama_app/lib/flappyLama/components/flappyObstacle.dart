@@ -93,9 +93,11 @@ class FlappyObstacle extends Component {
     // X
     if (object.left > first.x &&
         object.left < first.x + first.width) {
+      var holeTop = this._holePosition * this.game.tileSize * this._size;
+      var holeBot = holeTop + (this._holeSize * this.game.tileSize * this._size);
       // Y
-      if (!(object.top >= _holePosition * this.game.tileSize * this._size &&
-          object.bottom <= (_holePosition * this.game.tileSize * this._size) + (_holeSize * this._size))) {
+      if (!(object.top >= holeTop &&
+          object.bottom <= holeBot)) {
         // callback
         onCollide?.call();
         return true;
