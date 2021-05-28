@@ -5,6 +5,8 @@ import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
+/// This class extends [Component] and describes an obstacle.
+/// It will move from the right end to the start and will generate a random hole at a random position each time.
 class FlappyObstacle extends Component {
   final double _velocity = -70;
   // count of the tiles
@@ -35,6 +37,9 @@ class FlappyObstacle extends Component {
     }
   }
 
+  /// This method will generate the obstacle [_sprites] for the rendering.
+  /// sideeffects:
+  ///   [_sprites]
   void createObstacleParts() {
     _sprites = [];
     for (int i = 0; i < (this.game.tilesY / this._size); i++) {
@@ -60,6 +65,10 @@ class FlappyObstacle extends Component {
     }
   }
 
+  /// This method generate a new hole depending on the [_minHoleTiles], [_maxHoleTiles] and [_size].
+  /// sideeffects:
+  ///   [_holePosition]
+  ///   [_holeSize]
   void generateHole() {
     this._holePosition = _randomNumber.nextInt((this.game.tilesY ~/ this._size) - 1);
     this._holeSize =
