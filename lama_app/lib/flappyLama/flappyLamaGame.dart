@@ -4,6 +4,7 @@ import 'package:flame/components/parallax_component.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
+import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
@@ -74,7 +75,14 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     //add(FlappyGround(this));
     // TODO: move to where the game will start (tap the first time)
     // add obstacles
-    add(FlappyObstacle(this, false, () => this.score++));
+    add(
+        FlappyObstacle(
+            this,
+            false,
+              () => this.score++,
+              () => developer.log("HIT"),
+        )
+    );
     add(FlappyObstacle(this, true, () => this.score++));
     // add score
     add(FlappyScoreDisplay(this));
@@ -120,5 +128,10 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   void onTapDown(TapDownDetails d) {
     _lama.onTapDown();
+  }
+
+  void update(double t) {
+    components.whereType<FlappyObstacle>().forEach((element) { element.collides(_lama?.toRect() ?? null); });
+    super.update(t);
   }
 }

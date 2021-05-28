@@ -22,12 +22,13 @@ class FlappyObstacle extends Component {
   bool _alter;
   List<SpriteComponent> _sprites;
   Function onObstacleResets;
+  Function onCollide;
   
   final FlappyLamaGame game;
   //obstacle move and reset after they leave the screen (2 objects moving)
   Random _randomNumber = Random();
 
-  FlappyObstacle(this.game, this._alter, this.onObstacleResets);
+  FlappyObstacle(this.game, this._alter, this.onObstacleResets, [this.onCollide]);
 
   void render(Canvas c) {
     // render each part of the snake
@@ -75,6 +76,33 @@ class FlappyObstacle extends Component {
     this._holeSize =
         _randomNumber.nextInt(((this._maxHoleTiles - this._minHoleTiles) / this._size).ceil() + 1) +
             (_minHoleTiles / this._size).ceil();
+  }
+
+  /// This method checks if the [object] hits the obstacle.
+  /// return:
+  ///   true = collides
+  ///   false = no collision
+  bool collides(Rect object) {
+    if (object == null || _sprites == null || _sprites.isEmpty || _sprites.length <= 0) {
+      return false;
+    }
+
+    // first for X
+    var first = _sprites[0];
+
+    // X
+    if (object.left > first.x &&
+        object.left < first.x + first.width) {
+      // Y
+      if (!(object.top >= _holePosition * this.game.tileSize * this._size &&
+          object.bottom <= (_holePosition * this.game.tileSize * this._size) + (_holeSize * this._size))) {
+        // callback
+        onCollide?.call();
+        return true;
+      }
+    }
+
+    return true;
   }
 
   void update(double t) {
