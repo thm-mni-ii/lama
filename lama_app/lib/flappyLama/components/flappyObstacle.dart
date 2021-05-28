@@ -1,101 +1,100 @@
 import 'dart:ui';
 import 'dart:math';
+import 'package:flame/anchor.dart';
 import 'package:flame/components/component.dart';
+import 'package:flame/sprite.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
-
-class FlappyObstacle extends Component{
+/// This class extends [Component] and describes an obstacle.
+/// It will move from the right end to the start and will generate a random hole at a random position each time.
+class FlappyObstacle extends Component {
+  final double _velocity = -70;
+  // count of the tiles
+  final double _size = 1.5;
+  // will be multiplied by the _size
+  final double _minHoleTiles = 2;
+  // will be multiplied by the _size
+  final double _maxHoleTiles = 3;
+  // will be multiplied by the _size
+  int _holeSize;
+  int _holePosition;
+  // alter start location
+  bool _alter;
+  List<SpriteComponent> _sprites;
   
   final FlappyLamaGame game;
-  Paint _obstaclePaint;
-  Rect _topObstacle;
-  Rect _bottomObstacle;
-  Rect _topObstacle2;
-  Rect _bottomObstacle2;
-  double _topObstacleLength;
-  double _holeLength;
-  double _movespeed = -30;
-  int _score = 0;
-  bool _isHandled = false;
-  bool _isHandled2 = false;
-
-
-//obstacle move and reset after they leave the screen (2 objects moving)
+  //obstacle move and reset after they leave the screen (2 objects moving)
   Random _randomNumber = Random();
 
-  FlappyObstacle(this.game){
-    
-    _obstaclePaint = Paint();
-    _obstaclePaint.color = Color(0xFF654321);
+  FlappyObstacle(this.game, this._alter);
 
-
-    _holeLength = game.screenSize.height/6;
-    _topObstacleLength = 0.1 + (0.7 * game.screenSize.height - _holeLength) * _randomNumber.nextDouble();
-
-    _topObstacle = Rect.fromLTWH(game.screenSize.width/2, 0, game.screenSize.width/5,
-      _topObstacleLength);
-//3rd Parameter of the bottom obstacles is equal to the beginning of the ground(if we implement positions)
-    _bottomObstacle = Rect.fromLTWH(game.screenSize.width/2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-      0.65*game.screenSize.height - (_topObstacleLength + _holeLength));
-
-    _topObstacleLength = 0.1 + (0.7 * game.screenSize.height - _holeLength) * _randomNumber.nextDouble();
-
-    _topObstacle2 = Rect.fromLTWH(game.screenSize.width*1.2, 0, game.screenSize.width/5,
-      _topObstacleLength);
-
-    _bottomObstacle2 = Rect.fromLTWH(game.screenSize.width*1.2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-      0.65*game.screenSize.height - (_topObstacleLength + _holeLength));
+  void render(Canvas c) {
+    // render each part of the snake
+    for (SpriteComponent obstacle in _sprites) {
+      c.save();
+      obstacle.render(c);
+      c.restore();
+    }
   }
 
-  int get score => _score;
+  /// This method will generate the obstacle [_sprites] for the rendering.
+  /// sideeffects:
+  ///   [_sprites]
+  void createObstacleParts() {
+    _sprites = [];
+    for (int i = 0; i < (this.game.tilesY / this._size); i++) {
+      var tmp = SpriteComponent()
+        ..height = this.game.tileSize * this._size
+        ..width = this.game.tileSize * this._size
+        ..x = this.game.screenSize.width + (this._alter ? (this.game.tilesX ~/ 2) * this.game.tileSize + this.game.tileSize * this._size : 0)
+        ..y = (this.game.tileSize * this._size) * i
+        ..anchor = Anchor.topLeft;
 
-  void render(Canvas c){
-
-    c.drawRect(_topObstacle, _obstaclePaint);
-    c.drawRect(_bottomObstacle, _obstaclePaint);
-    c.drawRect(_topObstacle2, _obstaclePaint);
-    c.drawRect(_bottomObstacle2, _obstaclePaint);
+      if (this._holePosition == i + 1) {
+        tmp.sprite = Sprite('png/kaktus_end_top.png');
+        _sprites.add(tmp);
+      }
+      else if (this._holePosition + this._holeSize == i) {
+        tmp.sprite = Sprite('png/kaktus_end_bottom.png');
+        _sprites.add(tmp);
+      }
+      else if (!(i >= this._holePosition && i <= this._holePosition + this._holeSize)) {
+        tmp.sprite = Sprite('png/kaktus_body.png');
+        _sprites.add(tmp);
+      }
+    }
   }
 
-  void update(double t){
+  /// This method generate a new hole depending on the [_minHoleTiles], [_maxHoleTiles] and [_size].
+  /// sideeffects:
+  ///   [_holePosition]
+  ///   [_holeSize]
+  void generateHole() {
+    this._holePosition = _randomNumber.nextInt((this.game.tilesY ~/ this._size) - 1);
+    this._holeSize =
+        _randomNumber.nextInt(((this._maxHoleTiles - this._minHoleTiles) / this._size).ceil() + 1) +
+            (_minHoleTiles / this._size).ceil();
+  }
 
-    //score increments when left side of lama passes right side of obstacle
+  void update(double t) {
+    if (_sprites.isNotEmpty) {
+      // reset the obstacle when moving out of the screen
+      if (_sprites[0].x <= -(this.game.tileSize * this._size)) {
+        // remove the initial offset
+        this._alter = false;
+        generateHole();
+        createObstacleParts();
+      }
 
-    if (game.screenSize.width/4 >_bottomObstacle.right && _isHandled == false){
-      ++this.game.score;
-      _isHandled = true;
+      // moves the obstacles
+      _sprites?.forEach((element) => element.x += _velocity * t);
     }
-    if (game.screenSize.width/4 > _bottomObstacle2.right && _isHandled2 == false){
-      ++this.game.score;
-      _isHandled2 = true;
+  }
+
+  void resize(Size size) {
+    if (this.game.tileSize > 0) {
+      generateHole();
+      createObstacleParts();
     }
-    if(_bottomObstacle.right < 0){
-      _isHandled = false;
-      _topObstacleLength = 0.1 + (0.7 * game.screenSize.height - _holeLength) * _randomNumber.nextDouble();
-
-      _topObstacle = Rect.fromLTWH(game.screenSize.width*1.2, 0, game.screenSize.width/5,
-        _topObstacleLength);
-
-      _bottomObstacle = Rect.fromLTWH(game.screenSize.width*1.2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-        0.65*game.screenSize.height - (_topObstacleLength + _holeLength));
-
-    }
-
-    if(_bottomObstacle2.right < 0){
-      _isHandled2 = false;
-      _topObstacleLength = 0.1 + (0.7 * game.screenSize.height - _holeLength) * _randomNumber.nextDouble();
-
-      _topObstacle2 = Rect.fromLTWH(game.screenSize.width*1.2, 0, game.screenSize.width/5,
-        _topObstacleLength);
-
-      _bottomObstacle2 = Rect.fromLTWH(game.screenSize.width*1.2, _topObstacleLength + _holeLength, game.screenSize.width/5, 
-        0.65*game.screenSize.height - (_topObstacleLength + _holeLength));
-    }
-   
-    _bottomObstacle = _bottomObstacle.translate(_movespeed * t, 0);
-    _topObstacle = _topObstacle.translate(_movespeed * t, 0);
-    _bottomObstacle2 = _bottomObstacle2.translate(_movespeed * t, 0);
-    _topObstacle2 = _topObstacle2.translate(_movespeed * t, 0);
-    
   }
 }
