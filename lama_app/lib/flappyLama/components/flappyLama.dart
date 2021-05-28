@@ -114,4 +114,8 @@ class FlappyLama extends AnimationComponent {
     _isGameStarted = true;
     flap();
   }
+
+  Rect toRect() {
+    return Rect.fromLTWH(this.x, this.y, this._size, this._size);
+  }
 }
