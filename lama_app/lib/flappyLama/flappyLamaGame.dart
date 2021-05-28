@@ -74,8 +74,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     //add(FlappyGround(this));
     // TODO: move to where the game will start (tap the first time)
     // add obstacles
-    add(FlappyObstacle(this, false));
-    add(FlappyObstacle(this, true));
+    add(FlappyObstacle(this, false, () => this.score++));
+    add(FlappyObstacle(this, true, () => this.score++));
     // add score
     add(FlappyScoreDisplay(this));
   }
