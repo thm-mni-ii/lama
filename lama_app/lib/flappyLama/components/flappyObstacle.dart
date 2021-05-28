@@ -23,12 +23,13 @@ class FlappyObstacle extends Component {
   List<SpriteComponent> _sprites;
   Function onObstacleResets;
   Function onCollide;
-  
+
   final FlappyLamaGame game;
   //obstacle move and reset after they leave the screen (2 objects moving)
   Random _randomNumber = Random();
 
-  FlappyObstacle(this.game, this._alter, this.onObstacleResets, [this.onCollide]);
+  FlappyObstacle(this.game, this._alter, this.onObstacleResets,
+      [this.onCollide]);
 
   void render(Canvas c) {
     // render each part of the snake
@@ -48,19 +49,22 @@ class FlappyObstacle extends Component {
       var tmp = SpriteComponent()
         ..height = this.game.tileSize * this._size
         ..width = this.game.tileSize * this._size
-        ..x = this.game.screenSize.width + (this._alter ? (this.game.tilesX ~/ 2) * this.game.tileSize + this.game.tileSize * this._size : 0)
+        ..x = this.game.screenSize.width +
+            (this._alter
+                ? (this.game.tilesX ~/ 2) * this.game.tileSize +
+                    this.game.tileSize * this._size
+                : 0)
         ..y = (this.game.tileSize * this._size) * i
         ..anchor = Anchor.topLeft;
 
       if (this._holePosition == i + 1) {
         tmp.sprite = Sprite('png/kaktus_end_top.png');
         _sprites.add(tmp);
-      }
-      else if (this._holePosition + this._holeSize == i) {
+      } else if (this._holePosition + this._holeSize == i) {
         tmp.sprite = Sprite('png/kaktus_end_bottom.png');
         _sprites.add(tmp);
-      }
-      else if (!(i >= this._holePosition && i <= this._holePosition + this._holeSize)) {
+      } else if (!(i >= this._holePosition &&
+          i <= this._holePosition + this._holeSize)) {
         tmp.sprite = Sprite('png/kaktus_body.png');
         _sprites.add(tmp);
       }
@@ -72,10 +76,12 @@ class FlappyObstacle extends Component {
   ///   [_holePosition]
   ///   [_holeSize]
   void generateHole() {
-    this._holePosition = _randomNumber.nextInt((this.game.tilesY ~/ this._size) - 1);
-    this._holeSize =
-        _randomNumber.nextInt(((this._maxHoleTiles - this._minHoleTiles) / this._size).ceil() + 1) +
-            (_minHoleTiles / this._size).ceil();
+    this._holePosition =
+        _randomNumber.nextInt((this.game.tilesY ~/ this._size) - 1);
+    this._holeSize = _randomNumber.nextInt(
+            ((this._maxHoleTiles - this._minHoleTiles) / this._size).ceil() +
+                1) +
+        (_minHoleTiles / this._size).ceil();
   }
 
   /// This method checks if the [object] hits the obstacle.
@@ -83,7 +89,10 @@ class FlappyObstacle extends Component {
   ///   true = collides
   ///   false = no collision
   bool collides(Rect object) {
-    if (object == null || _sprites == null || _sprites.isEmpty || _sprites.length <= 0) {
+    if (object == null ||
+        _sprites == null ||
+        _sprites.isEmpty ||
+        _sprites.length <= 0) {
       return false;
     }
 
@@ -91,20 +100,19 @@ class FlappyObstacle extends Component {
     var first = _sprites[0];
 
     // X
-    if (object.left > first.x &&
-        object.left < first.x + first.width) {
+    if (object.left > first.x && object.left < first.x + first.width) {
       var holeTop = this._holePosition * this.game.tileSize * this._size;
-      var holeBot = holeTop + (this._holeSize * this.game.tileSize * this._size);
+      var holeBot =
+          holeTop + (this._holeSize * this.game.tileSize * this._size);
       // Y
-      if (!(object.top >= holeTop &&
-          object.bottom <= holeBot)) {
+      if (!(object.top >= holeTop && object.bottom <= holeBot)) {
         // callback
         onCollide?.call();
         return true;
       }
     }
 
-    return true;
+    return false;
   }
 
   void update(double t) {
