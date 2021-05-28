@@ -21,12 +21,13 @@ class FlappyObstacle extends Component {
   // alter start location
   bool _alter;
   List<SpriteComponent> _sprites;
+  Function onObstacleResets;
   
   final FlappyLamaGame game;
   //obstacle move and reset after they leave the screen (2 objects moving)
   Random _randomNumber = Random();
 
-  FlappyObstacle(this.game, this._alter);
+  FlappyObstacle(this.game, this._alter, this.onObstacleResets);
 
   void render(Canvas c) {
     // render each part of the snake
@@ -84,6 +85,8 @@ class FlappyObstacle extends Component {
         this._alter = false;
         generateHole();
         createObstacleParts();
+        // run callback
+        onObstacleResets?.call();
       }
 
       // moves the obstacles
