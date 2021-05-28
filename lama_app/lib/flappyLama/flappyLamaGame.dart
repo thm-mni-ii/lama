@@ -30,8 +30,10 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   FlappyGround flappyGround;
 
   BuildContext _context;
+
   // name of the pauseMode widget
   String _pauseMode = "PauseMode";
+
   // name of the playMode widget
   String _playMode = "PlayMode";
 
@@ -46,7 +48,6 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   Random _randomNumber = Random();
   UserRepository _userRepo;
   GameOverView gameOverView;
-
 
   FlappyLamaGame(this._context, this._userRepo) {
     var back = ParallaxComponent([
@@ -84,15 +85,13 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     //add(FlappyGround(this));
     // TODO: move to where the game will start (tap the first time)
     // add obstacles
-    add(
-        FlappyObstacle(
-            this,
-            false,
+    add(FlappyObstacle(
+      this,
+      false,
             48,
-              () => this.score++,
-              () => developer.log("HIT"),
-        )
-    );
+      () => this.score++,
+      () => developer.log("HIT"),
+    ));
     add(FlappyObstacle(this, true, 48, () => this.score++));
     // add score
     add(FlappyScoreDisplay(this));
@@ -116,10 +115,12 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     screenSize = Size(
         MediaQuery.of(_context).size.width -
             MediaQuery.of(_context).padding.left -
-    tileSize = screenSize.width / tilesX;
-    tilesY = screenSize.height ~/ tileSize;
+            MediaQuery.of(_context).padding.right,
+        MediaQuery.of(_context).size.height -
             MediaQuery.of(_context).padding.top -
             MediaQuery.of(_context).padding.bottom);
+    tileSize = screenSize.width / tilesX;
+    tilesY = screenSize.height ~/ tileSize;
 
     super.resize(size);
   }
@@ -156,17 +157,24 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void onTapDown(TapDownDetails d) {
-    //activeView = View.playing;
+    activeView = View.playing;
     _lama.onTapDown();
   }
 
   void update(double t) {
     // check if the lama hits an obstacle
-    components.whereType<FlappyObstacle>().forEach((element) { element.collides(_lama?.toRect() ?? null); });
-    
-    super.update(t);
+    components.whereType<FlappyObstacle>().forEach((element) {
+      if (element.collides(_lama?.toRect() ?? null) == false) {
+        activeView = View.gameOver;
+      }
+    });
+    if (activeView == View.gameOver) {
+      gameOver();
     }
+    super.update(t);
+  }
 
-    super.render(c);
+  void gameOver() {
+    add(gameOverView);
   }
 }
