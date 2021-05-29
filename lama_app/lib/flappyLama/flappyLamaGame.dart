@@ -14,8 +14,6 @@ import 'package:lama_app/flappyLama/components/flappyLama.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
 
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
-import 'package:lama_app/flappyLama/views/gameOverView.dart';
-import 'package:lama_app/flappyLama/views/view.dart';
 import 'package:lama_app/flappyLama/widgets/pauseMode.dart';
 import 'package:lama_app/flappyLama/widgets/playMode.dart';
 import 'package:lama_app/flappyLama/widgets/startScreen.dart';
@@ -41,13 +39,16 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   int _gameId = 2;
   bool _started = false;
+  //name of the gameOver widget
+  String _gameOverMode = "GameOverMode";
+
   bool _paused = false;
   bool _savedHighscore = false;
+  bool _gameover = false;
   int _highScore = 0;
   FlappyLama _lama;
   Random _randomNumber = Random();
   UserRepository _userRepo;
-  GameOverView gameOverView;
 
   FlappyLamaGame(this._context, this._userRepo) {
     var back = ParallaxComponent([
@@ -96,7 +97,6 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // add score
     add(FlappyScoreDisplay(this));
   }
-
   void saveHighscore() {
     if (!this._savedHighscore) {
       this._savedHighscore = true;
@@ -156,8 +156,32 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
   }
 
+  ///This method finishes the game.
+  void gameOver() {
+    pauseEngine();
+    _gameover = true;
+
+    //
+    addWidgetOverlay(
+        _gameOverMode,
+        GameOverMode(
+          score: score,
+          onRestartPressed: reset,
+        ));
+  }
+
+  void reset() {
+    removeWidgetOverlay(_gameOverMode);
+    _gameover = false;
+
+    FlappyLamaGame(this._context);
+
+    //TODO:Find a way to reset obstacles
+    this.initialize();
+    resumeEngine();
+  }
+
   void onTapDown(TapDownDetails d) {
-    activeView = View.playing;
     _lama.onTapDown();
   }
 
@@ -165,18 +189,14 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // check if the lama hits an obstacle
     components.whereType<FlappyObstacle>().forEach((element) {
       if (element.collides(_lama?.toRect() ?? null) == true) {
-        activeView = View.gameOver;
+        _gameover = true;
       }
     });
-    if (activeView == View.gameOver) {
-      gameOver();
-    }
 
     super.update(t);
-  }
 
-  void gameOver() {
-    add(gameOverView);
-    pauseGame();
+    if (_gameover == true) {
+      gameOver();
+    }
   }
 }
