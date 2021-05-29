@@ -40,7 +40,7 @@ class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(
-          create: (BuildContext context) => EditUserBloc(),
+          create: (BuildContext context) => EditUserBloc(user),
           child: EditUserScreen(user),
         ),
       ),

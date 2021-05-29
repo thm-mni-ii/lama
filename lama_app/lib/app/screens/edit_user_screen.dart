@@ -8,7 +8,7 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
 class EditUserScreen extends StatefulWidget {
-  User _user;
+  final User _user;
 
   EditUserScreen(this._user);
   @override
@@ -18,11 +18,12 @@ class EditUserScreen extends StatefulWidget {
 }
 
 class EditUserScreenState extends State<EditUserScreen> {
-  var _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //String _dropDown = 'Klasse 1';
   User _user;
 
   EditUserScreenState(this._user);
+
   @override
   void initState() {
     super.initState();
@@ -31,13 +32,19 @@ class EditUserScreenState extends State<EditUserScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: _bar(screenSize.width / 5),
-      body: BlocBuilder<EditUserBloc, EditUserState>(builder: (context, state) {
-        return _userEditOptions(context);
-      }),
-      floatingActionButton: _userOptionsButtons(context),
+    return BlocBuilder<EditUserBloc, EditUserState>(
+      builder: (context, state) {
+        if (!(state is EditUserDeleteCheck)) {
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: _bar(screenSize.width / 5),
+            body: _userEditOptions(context),
+            floatingActionButton: _userOptionsButtons(context),
+          );
+        } else {
+          return _deleteUserCheck(context, screenSize.width, state);
+        }
+      },
     );
   }
 
@@ -60,7 +67,8 @@ class EditUserScreenState extends State<EditUserScreen> {
                   Icon(Icons.delete_forever_rounded),
                 ],
               ),
-              onPressed: () => {context.read().add(EditUserDeleteUser(_user))},
+              onPressed: () =>
+                  {context.read<EditUserBloc>().add(EditUserDeleteUserCheck())},
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(50, 45),
                 primary: LamaColors.redAccent,
@@ -88,9 +96,8 @@ class EditUserScreenState extends State<EditUserScreen> {
                 color: Colors.white,
                 tooltip: 'Bestätigen',
                 onPressed: () {
-                  //if (_formKey.currentState.validate()) {
+                  //if (_formKey.currentState.validate())
                   //context.read<EditUserBloc>().add(EditUserPush());
-                  //}
                 },
               ),
             )),
@@ -112,6 +119,57 @@ class EditUserScreenState extends State<EditUserScreen> {
       ],
       mainAxisAlignment: MainAxisAlignment.end,
     );
+  }
+
+  Widget _deleteUserCheck(
+      BuildContext context, double size, EditUserDeleteCheck state) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: _bar(size / 5),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              state.message,
+              style: LamaTextTheme.getStyle(
+                color: LamaColors.black,
+                fontSize: 18,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  child: Icon(Icons.check_rounded),
+                  onPressed: () => {
+                    context
+                        .read<EditUserBloc>()
+                        .add(EditUserDeleteUserAbrove(context))
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(50, 45),
+                    primary: LamaColors.greenAccent,
+                  ),
+                ),
+                SizedBox(width: 5),
+                ElevatedButton(
+                  child: Icon(Icons.close_rounded),
+                  onPressed: () => {
+                    context.read<EditUserBloc>().add(EditUserDeleteUserAbort())
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(50, 45),
+                    primary: LamaColors.redAccent,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ));
   }
 
   Widget _bar(double size) {
