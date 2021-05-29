@@ -397,7 +397,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     padding: EdgeInsets.all(0),
                                     icon: Icon(
                                       Icons.logout,
-                                      size: 40,
+                                      size: 30,
                                       color: Colors.white,
                                     ),
                                     onPressed: () => Navigator.pushReplacement(
