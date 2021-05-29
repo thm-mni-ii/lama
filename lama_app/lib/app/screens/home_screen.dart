@@ -10,6 +10,7 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/game_screen.dart';
 import 'package:lama_app/app/screens/flappy_game_screen.dart';
+import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -23,11 +24,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  UserRepository userRepository;
   @override
   Widget build(BuildContext context) {
-    UserRepository userRepository =
-        RepositoryProvider.of<UserRepository>(context);
-    Size screenSize = MediaQuery.of(context).size;
+    userRepository = RepositoryProvider.of<UserRepository>(context);
     /*return Scaffold(
       backgroundColor: LamaColors.mainPink,
       body: SafeArea(
@@ -443,7 +443,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 SizedBox(width: 5),
                                 Text(
-                                  "RoterAffe3",
+                                  userRepository.getUserName(),
                                   style: LamaTextTheme.getStyle(
                                       fontSize: 22.5,
                                       fontWeight: FontWeight.w600,
@@ -466,6 +466,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: (constraints.maxWidth / 100) * 75,
                                 height: (constraints.maxHeight / 100) * 75,
                                 child: _buildMenuButtonColumn(constraints)),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 15, bottom: 15),
+                              child: SvgPicture.asset(
+                                "assets/images/svg/lama_head.svg",
+                                semanticsLabel: "Lama Anna",
+                                width: (constraints.maxWidth / 100) * 15,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: 20,
+                                  right: (constraints.maxWidth / 100) * 15),
+                              child: Container(
+                                height: (constraints.maxHeight / 100) * 10,
+                                width: (constraints.maxWidth / 100) * 80,
+                                child: Bubble(
+                                  nip: BubbleNip.rightCenter,
+                                  color: LamaColors.mainPink,
+                                  borderColor: LamaColors.mainPink,
+                                  shadowColor: LamaColors.black,
+                                  child: Center(
+                                    child: Text(
+                                      "Lamas können gut klettern!",
+                                      style:
+                                          LamaTextTheme.getStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       );
@@ -509,7 +545,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(50)))),
-          onPressed: () {},
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (BuildContext context) =>
+                    ChooseTasksetBloc(context.read<TasksetRepository>()),
+                child: ChooseTasksetScreen(
+                    "Mathe", userRepository.getGrade(), userRepository),
+              ),
+            ),
+          ).then((value) => (setState(() {}))),
         ),
         SizedBox(height: (constraints.maxHeight / 100) * 2.5),
         ElevatedButton(
@@ -538,7 +584,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(50)))),
-          onPressed: () {},
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (BuildContext context) =>
+                    ChooseTasksetBloc(context.read<TasksetRepository>()),
+                child: ChooseTasksetScreen(
+                    "Deutsch", userRepository.getGrade(), userRepository),
+              ),
+            ),
+          ).then((value) => (setState(() {}))),
         ),
         SizedBox(height: (constraints.maxHeight / 100) * 2.5),
         ElevatedButton(
@@ -567,7 +623,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(50)))),
-          onPressed: () {},
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (BuildContext context) =>
+                    ChooseTasksetBloc(context.read<TasksetRepository>()),
+                child: ChooseTasksetScreen(
+                    "Englisch", userRepository.getGrade(), userRepository),
+              ),
+            ),
+          ).then((value) => (setState(() {}))),
         ),
         SizedBox(height: (constraints.maxHeight / 100) * 2.5),
         Container(
@@ -600,7 +666,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       primary: LamaColors.greenAccent,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(50)))),
-                  onPressed: () {},
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) =>
+                            GameListScreenBloc(userRepository),
+                        child: GameListScreen(),
+                      ),
+                    ),
+                  ).then((value) => (setState(() {}))),
                 ),
               ),
               Align(
@@ -625,7 +700,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 semanticsLabel: 'LAMA'),
                           ),
                         ),
-                        Text("5000",
+                        Text(userRepository.getLamaCoins().toString(),
                             style: LamaTextTheme.getStyle(fontSize: 22.5)),
                       ],
                     ),
