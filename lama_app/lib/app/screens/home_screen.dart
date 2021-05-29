@@ -10,6 +10,7 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/game_screen.dart';
 import 'package:lama_app/app/screens/flappy_game_screen.dart';
+import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -23,12 +24,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  UserRepository userRepository;
   @override
   Widget build(BuildContext context) {
-    UserRepository userRepository =
-        RepositoryProvider.of<UserRepository>(context);
-    Size screenSize = MediaQuery.of(context).size;
-    return Scaffold(
+    userRepository = RepositoryProvider.of<UserRepository>(context);
+    /*return Scaffold(
       backgroundColor: LamaColors.mainPink,
       body: SafeArea(
         child: Stack(
@@ -361,6 +361,356 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );*/
+    return Scaffold(
+      body: Container(
+        color: LamaColors.mainPink,
+        child: SafeArea(
+          child: Container(
+            color: Colors.white,
+            child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+              return Column(
+                children: [
+                  Container(
+                    height: (constraints.maxHeight / 100) * 17.5,
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: (constraints.maxHeight / 100) * 10,
+                          decoration: BoxDecoration(
+                            color: LamaColors.mainPink,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(25),
+                              bottomRight: Radius.circular(25),
+                            ),
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: ((constraints.maxWidth / 100) * 2.5)),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: IconButton(
+                                    padding: EdgeInsets.all(0),
+                                    icon: Icon(
+                                      Icons.logout,
+                                      size: 30,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () => Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BlocProvider(
+                                          create: (BuildContext context) =>
+                                              UserLoginBloc(),
+                                          child: UserLoginScreen(),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Text("Lerne alles mit Anna",
+                                  style: LamaTextTheme.getStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: (constraints.maxHeight / 100) * 10,
+                            width: (constraints.maxWidth / 100) * 60,
+                            decoration: BoxDecoration(
+                              color: LamaColors.mainPink,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50)),
+                            ),
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  child: SvgPicture.asset(
+                                    'assets/images/svg/avatars/${userRepository.getAvatar()}.svg',
+                                    semanticsLabel: 'LAMA',
+                                  ),
+                                  radius: 25,
+                                  backgroundColor: LamaColors.mainPink,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  userRepository.getUserName(),
+                                  style: LamaTextTheme.getStyle(
+                                      fontSize: 22.5,
+                                      fontWeight: FontWeight.w600,
+                                      monospace: true),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return Stack(
+                        children: [
+                          Center(
+                            child: Container(
+                                width: (constraints.maxWidth / 100) * 75,
+                                height: (constraints.maxHeight / 100) * 75,
+                                child: _buildMenuButtonColumn(constraints)),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 15, bottom: 15),
+                              child: SvgPicture.asset(
+                                "assets/images/svg/lama_head.svg",
+                                semanticsLabel: "Lama Anna",
+                                width: (constraints.maxWidth / 100) * 15,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: 20,
+                                  right: (constraints.maxWidth / 100) * 15),
+                              child: Container(
+                                height: (constraints.maxHeight / 100) * 10,
+                                width: (constraints.maxWidth / 100) * 80,
+                                child: Bubble(
+                                  nip: BubbleNip.rightCenter,
+                                  color: LamaColors.mainPink,
+                                  borderColor: LamaColors.mainPink,
+                                  shadowColor: LamaColors.black,
+                                  child: Center(
+                                    child: Text(
+                                      "Lamas können gut klettern!",
+                                      style:
+                                          LamaTextTheme.getStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                ],
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuButtonColumn(BoxConstraints constraints) {
+    return Column(
+      children: [
+        ElevatedButton(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Mathe",
+                  style: LamaTextTheme.getStyle(),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  backgroundColor: LamaColors.mainPink,
+                ),
+              )
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+              primary: LamaColors.blueAccent,
+              minimumSize: Size(
+                (constraints.maxWidth / 100) * 80,
+                ((constraints.maxHeight / 100) * 10),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (BuildContext context) =>
+                    ChooseTasksetBloc(context.read<TasksetRepository>()),
+                child: ChooseTasksetScreen(
+                    "Mathe", userRepository.getGrade(), userRepository),
+              ),
+            ),
+          ).then((value) => (setState(() {}))),
+        ),
+        SizedBox(height: (constraints.maxHeight / 100) * 2.5),
+        ElevatedButton(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Deutsch",
+                  style: LamaTextTheme.getStyle(),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  backgroundColor: LamaColors.mainPink,
+                ),
+              )
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+              primary: LamaColors.redAccent,
+              minimumSize: Size(
+                (constraints.maxWidth / 100) * 80,
+                ((constraints.maxHeight / 100) * 10),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (BuildContext context) =>
+                    ChooseTasksetBloc(context.read<TasksetRepository>()),
+                child: ChooseTasksetScreen(
+                    "Deutsch", userRepository.getGrade(), userRepository),
+              ),
+            ),
+          ).then((value) => (setState(() {}))),
+        ),
+        SizedBox(height: (constraints.maxHeight / 100) * 2.5),
+        ElevatedButton(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Englisch",
+                  style: LamaTextTheme.getStyle(),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  backgroundColor: LamaColors.mainPink,
+                ),
+              )
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+              primary: LamaColors.orangeAccent,
+              minimumSize: Size(
+                (constraints.maxWidth / 100) * 80,
+                ((constraints.maxHeight / 100) * 10),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (BuildContext context) =>
+                    ChooseTasksetBloc(context.read<TasksetRepository>()),
+                child: ChooseTasksetScreen(
+                    "Englisch", userRepository.getGrade(), userRepository),
+              ),
+            ),
+          ).then((value) => (setState(() {}))),
+        ),
+        SizedBox(height: (constraints.maxHeight / 100) * 2.5),
+        Container(
+          height: ((constraints.maxHeight / 100) * 16),
+          width: (constraints.maxWidth / 100) * 80,
+          child: Stack(
+            children: [
+              Container(
+                height: ((constraints.maxHeight / 100) * 10),
+                width: (constraints.maxWidth / 100) * 80,
+                child: ElevatedButton(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          "Spiele",
+                          style: LamaTextTheme.getStyle(),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: CircleAvatar(
+                          backgroundColor: LamaColors.mainPink,
+                        ),
+                      )
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      primary: LamaColors.greenAccent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(50)))),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) =>
+                            GameListScreenBloc(userRepository),
+                        child: GameListScreen(),
+                      ),
+                    ),
+                  ).then((value) => (setState(() {}))),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: ((constraints.maxHeight / 100) * 7.5),
+                  width: (constraints.maxWidth / 100) * 40,
+                  decoration: BoxDecoration(
+                      color: LamaColors.greenPrimary,
+                      borderRadius: BorderRadius.all(Radius.circular(50))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            width: 25,
+                            child: SvgPicture.asset(
+                                'assets/images/svg/lama_coin.svg',
+                                semanticsLabel: 'LAMA'),
+                          ),
+                        ),
+                        Text(userRepository.getLamaCoins().toString(),
+                            style: LamaTextTheme.getStyle(fontSize: 22.5)),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        )
+      ],
     );
   }
 }
