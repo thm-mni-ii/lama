@@ -130,15 +130,17 @@ class EditUserScreenState extends State<EditUserScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              state.message,
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 18,
+            Padding(
+              padding: EdgeInsets.fromLTRB(7, 0, 7, 15),
+              child: Text(
+                'Sind Sie sicher, dass Sie diesen Nutzer Löschen möchten?',
+                style: LamaTextTheme.getStyle(
+                  color: LamaColors.black,
+                  fontSize: 14,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -151,7 +153,7 @@ class EditUserScreenState extends State<EditUserScreen> {
                         .add(EditUserDeleteUserAbrove(context))
                   },
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(50, 45),
+                    minimumSize: Size(150, 45),
                     primary: LamaColors.greenAccent,
                   ),
                 ),
@@ -162,11 +164,23 @@ class EditUserScreenState extends State<EditUserScreen> {
                     context.read<EditUserBloc>().add(EditUserDeleteUserAbort())
                   },
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(50, 45),
+                    minimumSize: Size(150, 45),
                     primary: LamaColors.redAccent,
                   ),
                 ),
               ],
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(7, 25, 7, 25),
+              child: Text(
+                state.message,
+                style: LamaTextTheme.getStyle(
+                  monospace: true,
+                  color: LamaColors.black,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ));

@@ -21,8 +21,12 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   }
 
   Future<EditUserState> _deleteUserCheck() async {
-    return EditUserDeleteCheck(
-        'Sind sie sicher, dass sie den Nutzer ${_user.name} löschen möchten?');
+    if (_user.isAdmin && await _checkForLastAdmin())
+      return EditUserDeleteCheck(
+          'HINWEIS: \n Sie sind im Begriff den letzten Admin zu löschen. \n Sind keine Nutzer dieser Art vorhanden, werden Sie nach dem Neustart der App aufgefordert einen neuen Admin Nutzer zu erstellen. \n Dies hat KEINE auswirkungen auf andere Nutzer.');
+    else
+      return EditUserDeleteCheck(
+          'Sie möchten den Nutzer (${_user.name}) löschen.');
   }
 
   Future<void> _deleteUser(BuildContext context) async {
@@ -35,6 +39,12 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   }
 
   Future<bool> _checkForLastAdmin() async {
-    await DatabaseProvider.db.getUser();
+    List<User> list = await DatabaseProvider.db.getUser();
+    int count = 0;
+    list.forEach((element) {
+      if (element.isAdmin) count++;
+      if (count >= 2) return false;
+    });
+    return true;
   }
 }
