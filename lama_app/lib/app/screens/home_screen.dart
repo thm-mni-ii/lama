@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     UserRepository userRepository =
         RepositoryProvider.of<UserRepository>(context);
     Size screenSize = MediaQuery.of(context).size;
-    return Scaffold(
+    /*return Scaffold(
       backgroundColor: LamaColors.mainPink,
       body: SafeArea(
         child: Stack(
@@ -361,6 +361,244 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );*/
+    return Scaffold(
+      body: Container(
+        color: LamaColors.mainPink,
+        child: SafeArea(
+          child: Container(
+            color: Colors.white,
+            child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+              return Column(
+                children: [
+                  Container(
+                    height: (constraints.maxHeight / 100) * 17.5,
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: (constraints.maxHeight / 100) * 10,
+                          decoration: BoxDecoration(
+                            color: LamaColors.mainPink,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(25),
+                              bottomRight: Radius.circular(25),
+                            ),
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: ((constraints.maxWidth / 100) * 2.5)),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: IconButton(
+                                    padding: EdgeInsets.all(0),
+                                    icon: Icon(
+                                      Icons.logout,
+                                      size: 40,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () => Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BlocProvider(
+                                          create: (BuildContext context) =>
+                                              UserLoginBloc(),
+                                          child: UserLoginScreen(),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Text("Lerne alles mit Anna",
+                                  style: LamaTextTheme.getStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: (constraints.maxHeight / 100) * 10,
+                            width: (constraints.maxWidth / 100) * 60,
+                            decoration: BoxDecoration(
+                              color: LamaColors.mainPink,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50)),
+                            ),
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  child: SvgPicture.asset(
+                                    'assets/images/svg/avatars/${userRepository.getAvatar()}.svg',
+                                    semanticsLabel: 'LAMA',
+                                  ),
+                                  radius: 25,
+                                  backgroundColor: LamaColors.mainPink,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  "RoterAffe3",
+                                  style: LamaTextTheme.getStyle(
+                                      fontSize: 22.5,
+                                      fontWeight: FontWeight.w600,
+                                      monospace: true),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return Stack(
+                        children: [
+                          Center(
+                            child: Container(
+                                width: (constraints.maxWidth / 100) * 75,
+                                height: (constraints.maxHeight / 100) * 75,
+                                child: _buildMenuButtonColumn(constraints)),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                ],
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuButtonColumn(BoxConstraints constraints) {
+    return Column(
+      children: [
+        ElevatedButton(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Mathe",
+                  style: LamaTextTheme.getStyle(),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  backgroundColor: LamaColors.mainPink,
+                ),
+              )
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+              primary: LamaColors.blueAccent,
+              minimumSize: Size(
+                (constraints.maxWidth / 100) * 80,
+                ((constraints.maxHeight / 100) * 10),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+          onPressed: () {},
+        ),
+        SizedBox(height: (constraints.maxHeight / 100) * 2.5),
+        ElevatedButton(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Deutsch",
+                  style: LamaTextTheme.getStyle(),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  backgroundColor: LamaColors.mainPink,
+                ),
+              )
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+              primary: LamaColors.redAccent,
+              minimumSize: Size(
+                (constraints.maxWidth / 100) * 80,
+                ((constraints.maxHeight / 100) * 10),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+          onPressed: () {},
+        ),
+        SizedBox(height: (constraints.maxHeight / 100) * 2.5),
+        ElevatedButton(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Englisch",
+                  style: LamaTextTheme.getStyle(),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  backgroundColor: LamaColors.mainPink,
+                ),
+              )
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+              primary: LamaColors.orangeAccent,
+              minimumSize: Size(
+                (constraints.maxWidth / 100) * 80,
+                ((constraints.maxHeight / 100) * 10),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+          onPressed: () {},
+        ),
+        SizedBox(height: (constraints.maxHeight / 100) * 2.5),
+        ElevatedButton(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Spiele",
+                  style: LamaTextTheme.getStyle(),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  backgroundColor: LamaColors.mainPink,
+                ),
+              )
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+              primary: LamaColors.greenAccent,
+              minimumSize: Size(
+                (constraints.maxWidth / 100) * 80,
+                ((constraints.maxHeight / 100) * 10),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+          onPressed: () {},
+        )
+      ],
     );
   }
 }
