@@ -570,33 +570,70 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {},
         ),
         SizedBox(height: (constraints.maxHeight / 100) * 2.5),
-        ElevatedButton(
+        Container(
+          height: ((constraints.maxHeight / 100) * 16),
+          width: (constraints.maxWidth / 100) * 80,
           child: Stack(
-            alignment: Alignment.center,
             children: [
-              Center(
-                child: Text(
-                  "Spiele",
-                  style: LamaTextTheme.getStyle(),
+              Container(
+                height: ((constraints.maxHeight / 100) * 10),
+                width: (constraints.maxWidth / 100) * 80,
+                child: ElevatedButton(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          "Spiele",
+                          style: LamaTextTheme.getStyle(),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: CircleAvatar(
+                          backgroundColor: LamaColors.mainPink,
+                        ),
+                      )
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      primary: LamaColors.greenAccent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(50)))),
+                  onPressed: () {},
                 ),
               ),
               Align(
-                alignment: Alignment.centerLeft,
-                child: CircleAvatar(
-                  backgroundColor: LamaColors.mainPink,
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: ((constraints.maxHeight / 100) * 7.5),
+                  width: (constraints.maxWidth / 100) * 40,
+                  decoration: BoxDecoration(
+                      color: LamaColors.greenPrimary,
+                      borderRadius: BorderRadius.all(Radius.circular(50))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            width: 25,
+                            child: SvgPicture.asset(
+                                'assets/images/svg/lama_coin.svg',
+                                semanticsLabel: 'LAMA'),
+                          ),
+                        ),
+                        Text("5000",
+                            style: LamaTextTheme.getStyle(fontSize: 22.5)),
+                      ],
+                    ),
+                  ),
                 ),
               )
             ],
           ),
-          style: ElevatedButton.styleFrom(
-              primary: LamaColors.greenAccent,
-              minimumSize: Size(
-                (constraints.maxWidth / 100) * 80,
-                ((constraints.maxHeight / 100) * 10),
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(50)))),
-          onPressed: () {},
         )
       ],
     );
