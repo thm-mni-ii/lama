@@ -50,7 +50,7 @@ class TaskScreenState extends State<TaskScreen> {
               decoration: BoxDecoration(gradient: lg),
               child: SafeArea(
                 child: Container(
-                  color: Colors.white,
+                  color: LamaColors.white,
                   child: LayoutBuilder(
                     builder:
                         (BuildContext context, BoxConstraints constraints) {
@@ -74,19 +74,16 @@ class TaskScreenState extends State<TaskScreen> {
                                   icon: Icon(
                                     Icons.arrow_back,
                                     size: 40,
-                                    color: Colors.white,
+                                    color: LamaColors.white,
                                   ),
                                   onPressed: () => Navigator.of(context).pop(),
                                 ),
                               ),
                               Text(state.subject,
                                   style: LamaTextTheme.getStyle(
-                                      color: Colors.white,
+                                      color: LamaColors.white,
                                       fontSize: 30,
-                                      fontWeight: FontWeight
-                                          .w500) /*TextStyle(
-                                      fontSize: 30, color: Colors.white)*/
-                                  ),
+                                      fontWeight: FontWeight.w500)),
                             ],
                           ),
                         ),
@@ -107,36 +104,33 @@ class TaskScreenState extends State<TaskScreen> {
         } else if (state is TaskAnswerResultState) {
           if (state.correct)
             return Container(
-              color: Colors.white,
+              color: LamaColors.white,
               child: Center(
                 child: Icon(
                   Icons.check,
                   size: 100,
-                  color: Colors.green,
+                  color: LamaColors.greenAccent,
                 ),
               ),
             );
           else
             return Container(
-              color: Colors.white,
+              color: LamaColors.white,
               child: Center(
                 child: Icon(
                   Icons.close,
                   size: 100,
-                  color: Colors.red,
+                  color: LamaColors.redAccent,
                 ),
               ),
             );
         } else if (state is AllTasksCompletedState) {
-          /*Future.microtask(() => Navigator.pop(context));
-          return Container(
-            color: Colors.white,
-          );*/
           return Scaffold(
             body: Container(
+              color: LamaColors.mainPink,
               child: SafeArea(
                 child: Container(
-                  color: Colors.white,
+                  color: LamaColors.white,
                   child: LayoutBuilder(builder:
                       (BuildContext context, BoxConstraints constraints) {
                     return buildCompletionScreen(
@@ -172,32 +166,100 @@ class TaskScreenState extends State<TaskScreen> {
 
   Widget buildCompletionScreen(
       List<Task> tasks, List<bool> results, BoxConstraints constraints) {
+    int rightAnswers = 0;
+    int coinsEarned = 0;
+    for (int i = 0; i < results.length; i++) {
+      if (results[i]) {
+        rightAnswers++;
+        coinsEarned += tasks[i].reward;
+      }
+    }
     return Column(
       children: [
         Container(
           height: (constraints.maxHeight / 100) * 10,
+          decoration: BoxDecoration(
+            color: LamaColors.mainPink,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(25),
+              bottomRight: Radius.circular(25),
+            ),
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0, 1),
+                  color: LamaColors.black.withOpacity(0.5))
+            ],
+          ),
           child: Center(
-            child: Text("Abschlussbericht",
-                style: LamaTextTheme.getStyle(color: LamaColors.black)),
+            child: Text("Abschlussbericht", style: LamaTextTheme.getStyle()),
           ),
         ),
         Container(
-          height: (constraints.maxHeight / 100) * 70,
+          height: (constraints.maxHeight / 100) * 60,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-            child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return buildListItem(
-                      index, constraints, results[index], tasks[index]);
-                },
-                separatorBuilder: (builder, index) {
-                  return SizedBox(height: (constraints.maxHeight / 100) * 2.5);
-                },
-                itemCount: tasks.length),
+            padding: const EdgeInsets.only(left: 10, right: 5),
+            child: Scrollbar(
+              isAlwaysShown: true,
+              child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    return buildListItem(
+                        index, constraints, results[index], tasks[index]);
+                  },
+                  separatorBuilder: (builder, index) {
+                    return SizedBox(
+                        height: (constraints.maxHeight / 100) * 2.5);
+                  },
+                  itemCount: tasks.length),
+            ),
           ),
         ),
         Container(
-          height: (constraints.maxHeight / 100) * 20,
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: LamaColors.mainPink,
+                width: 3,
+              ),
+            ),
+          ),
+          height: (constraints.maxHeight / 100) * 15,
+          width: constraints.maxWidth,
+          child: Padding(
+            padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Gesamt:",
+                    style: LamaTextTheme.getStyle(color: LamaColors.black)),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Aufgaben richtig: ",
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 20)),
+                      Text(
+                          rightAnswers.toString() +
+                              "/" +
+                              results.length.toString(),
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 20)),
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Münzen verdient: ",
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 20)),
+                      Text(coinsEarned.toString(),
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 20)),
+                    ]),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          height: (constraints.maxHeight / 100) * 15,
           child: Center(
             child: InkWell(
               child: Container(
@@ -208,6 +270,11 @@ class TaskScreenState extends State<TaskScreen> {
                     Radius.circular(25),
                   ),
                   color: LamaColors.greenAccent,
+                  boxShadow: [
+                    BoxShadow(
+                        offset: Offset(0, 2),
+                        color: LamaColors.black.withOpacity(0.5))
+                  ],
                 ),
                 child: Center(
                   child: Text(

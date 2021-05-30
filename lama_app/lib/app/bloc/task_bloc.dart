@@ -59,7 +59,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           yield TaskAnswerResultState(true);
         }
       }
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       if (curIndex >= tasks.length)
         yield AllTasksCompletedState(tasks, answerResults);
       else
