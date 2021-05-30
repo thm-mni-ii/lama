@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
@@ -127,9 +128,23 @@ class TaskScreenState extends State<TaskScreen> {
               ),
             );
         } else if (state is AllTasksCompletedState) {
-          Future.microtask(() => Navigator.pop(context));
+          /*Future.microtask(() => Navigator.pop(context));
           return Container(
             color: Colors.white,
+          );*/
+          return Scaffold(
+            body: Container(
+              child: SafeArea(
+                child: Container(
+                  color: Colors.white,
+                  child: LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    return buildCompletionScreen(
+                        state.tasks, state.answerResults, constraints);
+                  }),
+                ),
+              ),
+            ),
           );
         }
         return Text("No task passed");
@@ -146,12 +161,111 @@ class TaskScreenState extends State<TaskScreen> {
         return FourCardTaskScreen(task, constraints);
       case "ClozeTest":
         return ClozeTestTaskScreen(task, constraints);
-      case "MarkWords" :
+      case "MarkWords":
         return MarkWordsScreen(task, constraints);
       case "MatchCategory":
         return MatchCategoryTaskScreen(task, constraints);
       default:
         return Container();
     }
+  }
+
+  Widget buildCompletionScreen(
+      List<Task> tasks, List<bool> results, BoxConstraints constraints) {
+    return Column(
+      children: [
+        Container(
+          height: (constraints.maxHeight / 100) * 10,
+          child: Center(
+            child: Text("Abschlussbericht",
+                style: LamaTextTheme.getStyle(color: LamaColors.black)),
+          ),
+        ),
+        Container(
+          height: (constraints.maxHeight / 100) * 70,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+            child: ListView.separated(
+                itemBuilder: (context, index) {
+                  return buildListItem(
+                      index, constraints, results[index], tasks[index]);
+                },
+                separatorBuilder: (builder, index) {
+                  return SizedBox(height: (constraints.maxHeight / 100) * 2.5);
+                },
+                itemCount: tasks.length),
+          ),
+        ),
+        Container(
+          height: (constraints.maxHeight / 100) * 20,
+          child: Center(
+            child: InkWell(
+              child: Container(
+                height: (constraints.maxHeight / 100) * 10,
+                width: (constraints.maxWidth / 100) * 70,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(25),
+                  ),
+                  color: LamaColors.greenAccent,
+                ),
+                child: Center(
+                  child: Text(
+                    "Fertig",
+                    style: LamaTextTheme.getStyle(
+                      fontSize: 30,
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () => Navigator.pop(context),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildListItem(
+      int index, BoxConstraints constraints, bool result, Task task) {
+    Icon icon = result
+        ? Icon(Icons.check, color: LamaColors.greenAccent, size: 50)
+        : Icon(Icons.close, color: LamaColors.redAccent, size: 50);
+    Text coinText = result
+        ? Text("+" + task.reward.toString(),
+            style: LamaTextTheme.getStyle(color: LamaColors.greenAccent))
+        : Text("+" + "0",
+            style: LamaTextTheme.getStyle(color: LamaColors.redAccent));
+    return Container(
+      height: (constraints.maxHeight / 100) * 10,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text("Aufgabe " + (index + 1).toString(),
+                style: LamaTextTheme.getStyle(
+                    fontSize: 20, color: LamaColors.black)),
+          ),
+          icon,
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+                width: (constraints.maxWidth / 100) * 25,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    coinText,
+                    Container(
+                      width: (constraints.maxWidth / 100) * 10,
+                      child: SvgPicture.asset('assets/images/svg/lama_coin.svg',
+                          semanticsLabel: 'lama_coins'),
+                    ),
+                  ],
+                )),
+          )
+        ],
+      ),
+    );
   }
 }
