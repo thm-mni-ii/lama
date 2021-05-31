@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/admin_screen_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/admin_screen.dart';
 import 'package:lama_app/app/screens/home_screen.dart';
@@ -38,11 +39,17 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
           ),
         );
       } else {
+        LamaFactsRepository lamaFactsRepository = LamaFactsRepository();
+        await lamaFactsRepository.loadFacts();
         Navigator.pushReplacement(
             event.context,
             MaterialPageRoute(
-                builder: (context) => RepositoryProvider<UserRepository>(
-                    create: (context) => repository, child: HomeScreen())));
+                builder: (context) => MultiRepositoryProvider(providers: [
+                      RepositoryProvider<UserRepository>(
+                          create: (context) => repository),
+                      RepositoryProvider<LamaFactsRepository>(
+                          create: (context) => lamaFactsRepository)
+                    ], child: HomeScreen())));
       }
       _pass = null;
       return UserLoginSuccessful();

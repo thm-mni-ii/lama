@@ -4,13 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
 import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
+import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
-import 'package:lama_app/app/screens/game_screen.dart';
-import 'package:lama_app/app/screens/flappy_game_screen.dart';
-import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -494,7 +492,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   shadowColor: LamaColors.black,
                                   child: Center(
                                     child: Text(
-                                      "Lamas können gut klettern!",
+                                      RepositoryProvider.of<
+                                              LamaFactsRepository>(context)
+                                          .getRandomLamaFact(),
                                       style:
                                           LamaTextTheme.getStyle(fontSize: 15),
                                     ),
