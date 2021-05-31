@@ -20,3 +20,8 @@ class EditUser extends AdminScreenEvent {
   User user;
   EditUser(this.user, this.context);
 }
+
+class TasksetOption extends AdminScreenEvent {
+  BuildContext context;
+  TasksetOption(this.context);
+}

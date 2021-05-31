@@ -71,6 +71,16 @@ class AdminScreenState extends State<AdminScreen> {
         'Verwalte deine Nutzer',
         style: LamaTextTheme.getStyle(fontSize: 18),
       ),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.settings_rounded,
+            color: LamaColors.white,
+          ),
+          onPressed: () =>
+              {context.read<AdminScreenBloc>().add(TasksetOption(context))},
+        ),
+      ],
       toolbarHeight: size,
       backgroundColor: LamaColors.bluePrimary,
       shape: RoundedRectangleBorder(
