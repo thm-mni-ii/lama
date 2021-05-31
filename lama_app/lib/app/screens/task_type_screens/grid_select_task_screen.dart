@@ -92,7 +92,7 @@ class GridSelectTaskScreen extends StatelessWidget {
         height: (constraints.maxWidth / 100) * 10,
         child: Center(
           child: Text(
-            char.toUpperCase(),
+            char,
             style:
                 LamaTextTheme.getStyle(fontSize: 20, color: LamaColors.black),
           ),
@@ -162,7 +162,8 @@ class GridSelectTaskScreen extends StatelessWidget {
             continue;
           }
           for (int i = 0; i < wordLength; i++) {
-            characterPositions.putIfAbsent(cordList[i], () => word[i]);
+            characterPositions.putIfAbsent(
+                cordList[i], () => word[i].toUpperCase());
           }
           wordAdded = true;
         }
@@ -185,14 +186,15 @@ class GridSelectTaskScreen extends StatelessWidget {
   String getRandomLetter(bool excludeLettersInWordsToFind) {
     var rnd = Random();
     String char = "";
-    if (!excludeLettersInWordsToFind)
+    if (!excludeLettersInWordsToFind) {
       char =
           String.fromCharCode(letters.codeUnitAt(rnd.nextInt(letters.length)));
-    else
+    } else {
       do {
         char = String.fromCharCode(
             letters.codeUnitAt(rnd.nextInt(letters.length)));
       } while (characterPositions.containsValue(char));
+    }
     return char;
   }
 }
