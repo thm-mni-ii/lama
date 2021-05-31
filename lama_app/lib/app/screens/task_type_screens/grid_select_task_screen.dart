@@ -12,6 +12,7 @@ class GridSelectTaskScreen extends StatelessWidget {
   BoxConstraints constraints;
 
   Map<Pair, String> characterPositions = Map();
+  String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   GridSelectTaskScreen(this.task, this.constraints);
 
@@ -82,7 +83,10 @@ class GridSelectTaskScreen extends StatelessWidget {
     return List.generate(9, (columnNumber) {
       Pair cord = Pair(columnNumber, rowNumber);
       String char = "";
-      if (characterPositions.containsKey(cord)) char = characterPositions[cord];
+      if (characterPositions.containsKey(cord))
+        char = characterPositions[cord];
+      else
+        char = getTableItemLetter(cord);
       return Container(
         width: (constraints.maxWidth / 100) * 10,
         height: (constraints.maxWidth / 100) * 10,
@@ -120,16 +124,11 @@ class GridSelectTaskScreen extends StatelessWidget {
             cordList = [];
             int x = rnd.nextInt(9);
             for (int y = start; y < start + wordLength; y++) {
-              print("Added " + x.toString() + " " + y.toString());
               cords = Pair(x, y);
               cordList.add(cords);
             }
             cordList.forEach((element) {
               if (characterPositions.containsKey(element)) {
-                print("Already contains" +
-                    element.a.toString() +
-                    " " +
-                    element.b.toString());
                 succesfullyGenerated = false;
               }
             });
@@ -169,5 +168,31 @@ class GridSelectTaskScreen extends StatelessWidget {
         }
       } while (!wordAdded);
     });
+  }
+
+  String getTableItemLetter(Pair position) {
+    Pair left = Pair(position.a - 1, position.b);
+    Pair right = Pair(position.a + 1, position.b);
+    Pair up = Pair(position.a, position.b + 1);
+    Pair down = Pair(position.a, position.b - 1);
+
+    return getRandomLetter(characterPositions.containsKey(left) ||
+        characterPositions.containsKey(up) ||
+        characterPositions.containsKey(right) ||
+        characterPositions.containsKey(down));
+  }
+
+  String getRandomLetter(bool excludeLettersInWordsToFind) {
+    var rnd = Random();
+    String char = "";
+    if (!excludeLettersInWordsToFind)
+      char =
+          String.fromCharCode(letters.codeUnitAt(rnd.nextInt(letters.length)));
+    else
+      do {
+        char = String.fromCharCode(
+            letters.codeUnitAt(rnd.nextInt(letters.length)));
+      } while (characterPositions.containsValue(char));
+    return char;
   }
 }
