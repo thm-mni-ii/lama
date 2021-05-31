@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_user_bloc.dart';
 import 'package:lama_app/app/bloc/edit_user_bloc.dart';
+import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/event/admin_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/screens/create_user_screen.dart';
 import 'package:lama_app/app/screens/edit_user_screen.dart';
+import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/app/state/admin_state.dart';
 import 'package:lama_app/db/database_provider.dart';
@@ -21,6 +23,7 @@ class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
     if (event is LogoutAdminScreen) _logout(event.context);
     if (event is CreateUser) _createUserScreen(event.context);
     if (event is EditUser) _editUserScreen(event.context, event.user);
+    if (event is TasksetOption) _tasksetOption(event.context);
   }
 
   void _createUserScreen(BuildContext context) {
@@ -57,6 +60,18 @@ class AdminScreenBloc extends Bloc<AdminScreenEvent, AdminState> {
         ),
       ),
     );
+  }
+
+  void _tasksetOption(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (BuildContext context) => TasksetOprionsBloc(),
+          child: OptionTaskScreen(),
+        ),
+      ),
+    ).then((value) => context.read<AdminScreenBloc>().add(LoadAllUsers()));
   }
 
   //Operations
