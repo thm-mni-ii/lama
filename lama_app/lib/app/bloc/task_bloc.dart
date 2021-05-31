@@ -10,6 +10,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   List<Task> tasks;
   int curIndex = 0;
 
+  List<bool> answerResults = [];
+
   UserRepository userRepository;
   TaskBloc(this.tasksetSubject, this.tasks, this.userRepository)
       : super(TaskScreenEmptyState());
@@ -23,46 +25,57 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       if (t is Task4Cards) {
         if (event.providedAnswer == t.rightAnswer) {
           userRepository.addLamaCoins(t.reward);
-          yield TaskAnswerResultState(true);
-        } else
-          yield TaskAnswerResultState(false);
-      } else if(t is TaskMarkWords) {
-        if(equals(t.rightWords, event.providedanswerWords)) { // TODO: Listen müssen verglichen werden (Ob das funktioniert???)
-          userRepository.addLamaCoins(t.reward);
+          answerResults.add(true);
           yield TaskAnswerResultState(true);
         } else {
+          answerResults.add(false);
           yield TaskAnswerResultState(false);
         }
-      }
-      else if(t is TaskClozeTest){
-        if(event.providedAnswer == t.rightAnswer){
+      } else if (t is TaskMarkWords) {
+        if (equals(t.rightWords, event.providedanswerWords)) {
+          // TODO: Listen müssen verglichen werden (Ob das funktioniert???)
           userRepository.addLamaCoins(t.reward);
+          answerResults.add(true);
           yield TaskAnswerResultState(true);
-        } else
+        } else {
+          answerResults.add(false);
           yield TaskAnswerResultState(false);
-      }
-      else if(t is TaskMatchCategory){
-        if(event.providedanswerStates.contains(false)){
-          yield TaskAnswerResultState(false);
-        }else
+        }
+      } else if (t is TaskClozeTest) {
+        if (event.providedAnswer == t.rightAnswer) {
+          userRepository.addLamaCoins(t.reward);
+          answerResults.add(true);
           yield TaskAnswerResultState(true);
+        } else {
+          answerResults.add(false);
+          yield TaskAnswerResultState(false);
+        }
+      } else if (t is TaskMatchCategory) {
+        if (event.providedanswerStates.contains(false)) {
+          answerResults.add(false);
+          yield TaskAnswerResultState(false);
+        } else {
+          answerResults.add(true);
+          yield TaskAnswerResultState(true);
+        }
       }
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       if (curIndex >= tasks.length)
-        yield AllTasksCompletedState();
+        yield AllTasksCompletedState(tasks, answerResults);
       else
         yield DisplayTaskState(tasksetSubject, tasks[curIndex++]);
     }
   }
 
   bool equals(List<String> list1, List<String> list2) {
-    if(!(list1 is List<String> && list2 is List<String>) || list1.length!=list2.length) {
+    if (!(list1 is List<String> && list2 is List<String>) ||
+        list1.length != list2.length) {
       return false;
     }
     list1.sort();
     list2.sort();
-    for(int i =0; i<list1.length; i++) {
-      if(list1[i]!=list2[i]) {
+    for (int i = 0; i < list1.length; i++) {
+      if (list1[i] != list2[i]) {
         return false;
       }
     }

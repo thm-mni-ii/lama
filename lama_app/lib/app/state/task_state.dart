@@ -15,4 +15,8 @@ class TaskAnswerResultState extends TaskState {
   TaskAnswerResultState(this.correct);
 }
 
-class AllTasksCompletedState extends TaskState {}
+class AllTasksCompletedState extends TaskState {
+  List<Task> tasks;
+  List<bool> answerResults;
+  AllTasksCompletedState(this.tasks, this.answerResults);
+}
