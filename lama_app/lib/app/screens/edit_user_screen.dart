@@ -82,11 +82,11 @@ class EditUserScreenState extends State<EditUserScreen> {
           initialValue: _user.coins.toString(),
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
-          validator: (value) => InputValidation.isEmpty(value)
-              ? 'Eingabe darf nicht leer sein!'
-              : null,
-          onChanged: (value) =>
-              {context.read<EditUserBloc>().add(EditUserChangeCoins(value))},
+          validator: (value) => InputValidation.inputNumberValidation(value),
+          onChanged: (value) => {
+            if (InputValidation.inputNumberValidation(value) == null)
+              context.read<EditUserBloc>().add(EditUserChangeCoins(value))
+          },
         ),
         SizedBox(height: 10),
         ElevatedButton(
