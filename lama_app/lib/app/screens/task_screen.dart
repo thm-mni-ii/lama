@@ -195,7 +195,7 @@ class TaskScreenState extends State<TaskScreen> {
           ),
         ),
         Container(
-          height: (constraints.maxHeight / 100) * 60,
+          height: (constraints.maxHeight / 100) * 55,
           child: Padding(
             padding: const EdgeInsets.only(left: 10, right: 5),
             child: Scrollbar(
@@ -222,7 +222,7 @@ class TaskScreenState extends State<TaskScreen> {
               ),
             ),
           ),
-          height: (constraints.maxHeight / 100) * 15,
+          height: (constraints.maxHeight / 100) * 20,
           width: constraints.maxWidth,
           child: Padding(
             padding: EdgeInsets.only(top: 10, left: 20, right: 20),
