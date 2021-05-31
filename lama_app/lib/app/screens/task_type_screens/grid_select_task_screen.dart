@@ -2,6 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/bloc/taskBloc/gridselecttask_bloc.dart';
+import 'package:lama_app/app/bloc/task_bloc.dart';
+import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -14,62 +18,73 @@ class GridSelectTaskScreen extends StatelessWidget {
   Map<Pair, String> characterPositions = Map();
   String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-  GridSelectTaskScreen(this.task, this.constraints);
+  GridSelectTaskBloc gridSelectTaskBloc;
+
+  GridSelectTaskScreen(this.task, this.constraints) {
+    gridSelectTaskBloc = GridSelectTaskBloc();
+    _generateWordPlacement();
+  }
 
   @override
   Widget build(BuildContext context) {
-    _generateWordPlacement();
-    return Column(
-      children: [
-        Container(
-          color: Colors.yellow,
-          height: (constraints.maxHeight / 100) * 60,
-          child: Padding(
-            padding: EdgeInsets.all((constraints.maxWidth / 100) * 5),
-            child: Table(
-              border: TableBorder.all(color: Colors.black, width: 2),
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: _getTableRows(),
+    return BlocProvider<GridSelectTaskBloc>(
+      create: (context) => gridSelectTaskBloc,
+      child: Column(
+        children: [
+          Container(
+            height: (constraints.maxHeight / 100) * 60,
+            child: Padding(
+              padding: EdgeInsets.all((constraints.maxWidth / 100) * 5),
+              child: Table(
+                border: TableBorder.all(color: LamaColors.white, width: 2),
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                children: _getTableRows(),
+              ),
             ),
           ),
-        ),
-        Container(
-          color: Colors.red,
-          height: (constraints.maxHeight / 100) * 25,
-        ),
-        Container(
-          color: Colors.purple,
-          height: (constraints.maxHeight / 100) * 15,
-          child: Center(
-            child: InkWell(
-              child: Container(
-                height: (constraints.maxHeight / 100) * 10,
-                width: (constraints.maxWidth / 100) * 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(25),
+          Container(
+            color: Colors.red,
+            height: (constraints.maxHeight / 100) * 25,
+          ),
+          Container(
+            color: Colors.purple,
+            height: (constraints.maxHeight / 100) * 15,
+            child: Center(
+              child: InkWell(
+                child: Container(
+                  height: (constraints.maxHeight / 100) * 10,
+                  width: (constraints.maxWidth / 100) * 70,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(25),
+                    ),
+                    color: LamaColors.greenAccent,
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, 2),
+                          color: LamaColors.black.withOpacity(0.5))
+                    ],
                   ),
-                  color: LamaColors.greenAccent,
-                  boxShadow: [
-                    BoxShadow(
-                        offset: Offset(0, 2),
-                        color: LamaColors.black.withOpacity(0.5))
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    "Fertig",
-                    style: LamaTextTheme.getStyle(
-                      fontSize: 30,
+                  child: Center(
+                    child: Text(
+                      "Fertig",
+                      style: LamaTextTheme.getStyle(
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                 ),
+                onTap: () => {
+                  BlocProvider.of<TaskBloc>(context).add(
+                      AnswerTaskEvent.initGridSelect(
+                          characterPositions.keys.toList(),
+                          gridSelectTaskBloc.selectedTableItems))
+                },
               ),
-              onTap: () => {},
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 
@@ -87,14 +102,24 @@ class GridSelectTaskScreen extends StatelessWidget {
         char = characterPositions[cord];
       else
         char = getTableItemLetter(cord);
-      return Container(
-        width: (constraints.maxWidth / 100) * 10,
-        height: (constraints.maxWidth / 100) * 10,
-        child: Center(
-          child: Text(
-            char,
-            style:
-                LamaTextTheme.getStyle(fontSize: 20, color: LamaColors.black),
+      return BlocBuilder<GridSelectTaskBloc, GridSelectTaskState>(
+        builder: (context, state) => Container(
+          color: state.selectedWords.contains(cord)
+              ? LamaColors.greenAccent
+              : LamaColors.blueAccent,
+          width: (constraints.maxWidth / 100) * 10,
+          height: (constraints.maxWidth / 100) * 10,
+          child: InkWell(
+            onTap: () => BlocProvider.of<GridSelectTaskBloc>(context)
+                .add(SelectGridLetterEvent(cord)),
+            child: Center(
+              child: Text(
+                char,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 20,
+                ),
+              ),
+            ),
           ),
         ),
       );
@@ -139,7 +164,8 @@ class GridSelectTaskScreen extends StatelessWidget {
             continue;
           }
           for (int i = 0; i < wordLength; i++) {
-            characterPositions.putIfAbsent(cordList[i], () => word[i]);
+            characterPositions.putIfAbsent(
+                cordList[i], () => word[i].toUpperCase());
           }
           wordAdded = true;
         } else {

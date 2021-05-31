@@ -4,6 +4,7 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
+import 'package:collection/collection.dart';
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   String tasksetSubject;
@@ -58,6 +59,16 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           answerResults.add(true);
           yield TaskAnswerResultState(true);
         }
+      } else if (t is TaskGridSelect) {
+        Function eq = const ListEquality().equals;
+        event.rightPositions.sort();
+        event.markedPositions.sort();
+        if (!eq(event.rightPositions, event.markedPositions))
+          answerResults.add(false);
+        yield TaskAnswerResultState(false);
+      } else {
+        answerResults.add(true);
+        yield TaskAnswerResultState(true);
       }
       await Future.delayed(Duration(seconds: 1));
       if (curIndex >= tasks.length)
