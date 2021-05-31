@@ -7,11 +7,10 @@ import 'package:lama_app/db/database_provider.dart';
 
 class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   User _user;
-  User _changedUser;
+  User _changedUser = User();
 
   EditUserBloc(User user, {EditUserState initialState}) : super(initialState) {
     this._user = user;
-    this._changedUser = user;
   }
 
   @override

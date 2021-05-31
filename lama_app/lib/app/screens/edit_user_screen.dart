@@ -43,7 +43,8 @@ class EditUserScreenState extends State<EditUserScreen> {
         else {
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: _bar(screenSize.width / 5),
+            appBar: _bar(screenSize.width / 5, 'Editiere den Nutzer',
+                LamaColors.bluePrimary),
             body: _userEditOptions(context),
             floatingActionButton: _userOptionsButtons(context),
           );
@@ -111,28 +112,35 @@ class EditUserScreenState extends State<EditUserScreen> {
   }
 
   Widget _showChanges(BuildContext context, EditUserChangeSuccess state) {
-    return Column(
-      children: [
-        Text('Was: ${state.user.coins} => Is: ${state.changedUser.coins}'),
-        ElevatedButton(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Weiter'),
-              SizedBox(
-                width: 5,
+    return Scaffold(
+      appBar: _bar(MediaQuery.of(context).size.width / 5, 'Ihre Änderungen',
+          LamaColors.greenAccent),
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
+        child: Column(
+          children: [
+            Text('Was: ${state.user.coins} => Is: ${state.changedUser.coins}'),
+            ElevatedButton(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Weiter'),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(Icons.delete_forever_rounded),
+                ],
               ),
-              Icon(Icons.delete_forever_rounded),
-            ],
-          ),
-          onPressed: () =>
-              {context.read<EditUserBloc>().add(EditUserReturn(context))},
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size(50, 45),
-            primary: LamaColors.redAccent,
-          ),
+              onPressed: () =>
+                  {context.read<EditUserBloc>().add(EditUserReturn(context))},
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(50, 45),
+                primary: LamaColors.redAccent,
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -181,7 +189,7 @@ class EditUserScreenState extends State<EditUserScreen> {
       BuildContext context, double size, EditUserDeleteCheck state) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: _bar(size / 5),
+        appBar: _bar(size / 5, 'Nutzer löschen', LamaColors.redPrimary),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -242,14 +250,14 @@ class EditUserScreenState extends State<EditUserScreen> {
         ));
   }
 
-  Widget _bar(double size) {
+  Widget _bar(double size, String titel, Color colors) {
     return AppBar(
       title: Text(
-        'Editiere den Nutzer',
+        titel,
         style: LamaTextTheme.getStyle(fontSize: 18),
       ),
       toolbarHeight: size,
-      backgroundColor: LamaColors.bluePrimary,
+      backgroundColor: colors,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(30),
