@@ -10,5 +10,11 @@ class TasksetOprionsBloc
 
   @override
   Stream<TasksetOptionsState> mapEventToState(
-      TasksetOptionsEvent event) async* {}
+      TasksetOptionsEvent event) async* {
+    if (event is TasksetOptionsAbort) _return(event.context);
+  }
+
+  void _return(BuildContext context) {
+    Navigator.pop(context);
+  }
 }

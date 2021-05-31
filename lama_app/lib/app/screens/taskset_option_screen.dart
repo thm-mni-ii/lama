@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
+import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/state/taskset_options_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -14,6 +15,7 @@ class OptionTaskScreen extends StatefulWidget {
 }
 
 class OptionTaskScreennState extends State<OptionTaskScreen> {
+  //GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -65,7 +67,9 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             color: Colors.white,
             tooltip: 'Abbrechen',
             onPressed: () {
-              //context.read<EditUserBloc>().add(EditUserAbort(context));
+              context
+                  .read<TasksetOprionsBloc>()
+                  .add(TasksetOptionsAbort(context));
             },
           ),
         ),
