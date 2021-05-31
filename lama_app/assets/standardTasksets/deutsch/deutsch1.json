@@ -3,6 +3,13 @@
      "taskset_subject":"Deutsch",
       "taskset_grade":1,
        "tasks": [
+        {
+          "task_type":"GridSelect",
+           "task_reward":2,
+           "question":"Markiere alle Farben",
+           "lama_text":"Markiere horizontale & vertikale Wörter!",
+           "wordsToFind":["rot", "blau", "aquamarin"]
+            },
            {
            "task_type":"4Cards",
             "task_reward":2,
