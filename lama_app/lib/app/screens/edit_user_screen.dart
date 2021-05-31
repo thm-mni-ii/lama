@@ -21,6 +21,7 @@ class EditUserScreen extends StatefulWidget {
 
 class EditUserScreenState extends State<EditUserScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Size screenSize;
   //String _dropDown = 'Klasse 1';
   User _user;
 
@@ -33,7 +34,7 @@ class EditUserScreenState extends State<EditUserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
+    screenSize = MediaQuery.of(context).size;
     return BlocBuilder<EditUserBloc, EditUserState>(
       builder: (context, state) {
         if (state is EditUserDeleteCheck)
@@ -93,7 +94,10 @@ class EditUserScreenState extends State<EditUserScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Nutzer Löschen'),
+              Text(
+                'Nutzer Löschen',
+                style: LamaTextTheme.getStyle(fontSize: 14),
+              ),
               SizedBox(
                 width: 5,
               ),
@@ -113,29 +117,161 @@ class EditUserScreenState extends State<EditUserScreen> {
 
   Widget _showChanges(BuildContext context, EditUserChangeSuccess state) {
     return Scaffold(
-      appBar: _bar(MediaQuery.of(context).size.width / 5, 'Ihre Änderungen',
-          LamaColors.greenAccent),
+      appBar: _bar(
+        MediaQuery.of(context).size.width / 5,
+        'Ihre Änderungen',
+        LamaColors.bluePrimary,
+      ),
       body: Padding(
         padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
         child: Column(
           children: [
-            Text('Was: ${state.user.coins} => Is: ${state.changedUser.coins}'),
+            _changesHeadRow('Alt', 'Neu'),
+            //Coins ROW
+            _changesHeadline('Lamamünzen'),
+            _changeRow(state.user.coins, state.changedUser.coins),
+            _changesHeadline('Nutzername'),
+            _changeRow(state.user.name, state.changedUser.name),
+            SizedBox(
+              height: 15,
+            ),
             ElevatedButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Weiter'),
-                  SizedBox(
-                    width: 5,
+                  Text(
+                    'Weiter',
+                    style: LamaTextTheme.getStyle(fontSize: 14),
                   ),
-                  Icon(Icons.delete_forever_rounded),
+                  Icon(
+                    Icons.arrow_right_rounded,
+                    size: 35,
+                  ),
                 ],
               ),
               onPressed: () =>
                   {context.read<EditUserBloc>().add(EditUserReturn(context))},
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(50, 45),
-                primary: LamaColors.redAccent,
+                primary: LamaColors.greenPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _changeRow(var oldValue, var newValue) {
+    if (oldValue.toString() != newValue.toString() && newValue != null) {
+      return Padding(
+        padding: EdgeInsets.only(
+            left: screenSize.width / 100 * 20,
+            right: screenSize.width / 100 * 20),
+        child: Container(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  oldValue.toString(),
+                  style: LamaTextTheme.getStyle(
+                    fontSize: 16,
+                    color: LamaColors.black,
+                    monospace: true,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Icon(
+                  Icons.arrow_right_rounded,
+                  size: 35,
+                  color: LamaColors.bluePrimary,
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  newValue.toString(),
+                  style: LamaTextTheme.getStyle(
+                    fontSize: 16,
+                    color: LamaColors.black,
+                    monospace: true,
+                  ),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            oldValue.toString(),
+            style: LamaTextTheme.getStyle(
+                fontSize: 16, color: LamaColors.black, monospace: true),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget _changesHeadline(String str) {
+    return Text(
+      str.toString(),
+      style:
+          LamaTextTheme.getStyle(fontSize: 18, color: LamaColors.bluePrimary),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _changesHeadRow(String left, String right) {
+    return Padding(
+      padding: EdgeInsets.only(
+          left: screenSize.width / 100 * 20,
+          right: screenSize.width / 100 * 20),
+      child: Container(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                left,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 16,
+                  color: LamaColors.redPrimary,
+                  monospace: true,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.arrow_right_rounded,
+                size: 35,
+                color: LamaColors.bluePrimary,
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                right,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 16,
+                  color: LamaColors.bluePrimary,
+                  monospace: true,
+                ),
+                textAlign: TextAlign.right,
               ),
             ),
           ],
