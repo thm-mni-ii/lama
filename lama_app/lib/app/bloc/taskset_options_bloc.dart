@@ -12,9 +12,14 @@ class TasksetOprionsBloc
   Stream<TasksetOptionsState> mapEventToState(
       TasksetOptionsEvent event) async* {
     if (event is TasksetOptionsAbort) _return(event.context);
+    if (event is TasksetOptionsPush) yield _tasksetOptionsPush();
   }
 
   void _return(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  TasksetOptionsPushSuccess _tasksetOptionsPush() {
+    return TasksetOptionsPushSuccess();
   }
 }

@@ -25,14 +25,44 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: _bar(screenSize.width / 5),
-        body: BlocBuilder<TasksetOprionsBloc, TasksetOptionsState>(
+      resizeToAvoidBottomInset: false,
+      appBar: _bar(screenSize.width / 5),
+      body: BlocListener(
+        bloc: BlocProvider.of<TasksetOprionsBloc>(context),
+        listener: (context, state) {
+          if (state is TasksetOptionsPushSuccess)
+            ScaffoldMessenger.of(context).showSnackBar(_saveSuccess(context));
+        },
+        child: BlocBuilder<TasksetOprionsBloc, TasksetOptionsState>(
           builder: (context, state) {
             return Center(child: CircularProgressIndicator());
           },
         ),
-        floatingActionButton: _userOptionsButtons(context));
+      ),
+      floatingActionButton: _userOptionsButtons(context),
+    );
+  }
+
+  Widget _saveSuccess(BuildContext context) {
+    return SnackBar(
+      content: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(5),
+            child: Icon(
+              Icons.check_rounded,
+              size: 25,
+              color: LamaColors.white,
+            ),
+          ),
+          Text(
+            'Änderung erfogreich!',
+            style: LamaTextTheme.getStyle(fontSize: 14),
+          ),
+        ],
+      ),
+      backgroundColor: LamaColors.greenPrimary,
+    );
   }
 
   Widget _userOptionsButtons(BuildContext context) {
@@ -52,7 +82,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 tooltip: 'Bestätigen',
                 onPressed: () {
                   //if (_formKey.currentState.validate())
-                  //context.read<EditUserBloc>().add(EditUserPush());
+                  context.read<TasksetOprionsBloc>().add(TasksetOptionsPush());
                 },
               ),
             )),
