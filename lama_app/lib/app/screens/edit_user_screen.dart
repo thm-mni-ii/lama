@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/edit_user_bloc.dart';
 import 'package:lama_app/app/event/edit_user_event.dart';
@@ -6,6 +7,7 @@ import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/edit_user_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/util/input_validation.dart';
 
 class EditUserScreen extends StatefulWidget {
   final User _user;
@@ -19,6 +21,7 @@ class EditUserScreen extends StatefulWidget {
 
 class EditUserScreenState extends State<EditUserScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Size screenSize;
   //String _dropDown = 'Klasse 1';
   User _user;
 
@@ -31,18 +34,21 @@ class EditUserScreenState extends State<EditUserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
+    screenSize = MediaQuery.of(context).size;
     return BlocBuilder<EditUserBloc, EditUserState>(
       builder: (context, state) {
-        if (!(state is EditUserDeleteCheck)) {
+        if (state is EditUserDeleteCheck)
+          return _deleteUserCheck(context, screenSize.width, state);
+        if (state is EditUserChangeSuccess)
+          return _showChanges(context, state);
+        else {
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: _bar(screenSize.width / 5),
+            appBar: _bar(screenSize.width / 5, 'Editiere den Nutzer',
+                LamaColors.bluePrimary),
             body: _userEditOptions(context),
             floatingActionButton: _userOptionsButtons(context),
           );
-        } else {
-          return _deleteUserCheck(context, screenSize.width, state);
         }
       },
     );
@@ -50,28 +56,222 @@ class EditUserScreenState extends State<EditUserScreen> {
 
   Widget _userEditOptions(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10),
-      child: Container(
-        width: double.infinity,
+      padding: EdgeInsets.all(15),
+      child: Form(
+        key: _formKey,
+        child: Container(
+          width: double.infinity,
+          child: _userTextForms(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _userTextForms(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Lamamünzen',
+            labelStyle: LamaTextTheme.getStyle(
+                color: LamaColors.bluePrimary, fontSize: 14),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: LamaColors.bluePrimary),
+            ),
+          ),
+          initialValue: _user.coins.toString(),
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
+          validator: (value) => InputValidation.inputNumberValidation(value),
+          onChanged: (value) => {
+            if (InputValidation.inputNumberValidation(value) == null)
+              context.read<EditUserBloc>().add(EditUserChangeCoins(value))
+          },
+        ),
+        SizedBox(height: 10),
+        ElevatedButton(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Nutzer Löschen',
+                style: LamaTextTheme.getStyle(fontSize: 14),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Icon(Icons.delete_forever_rounded),
+            ],
+          ),
+          onPressed: () =>
+              {context.read<EditUserBloc>().add(EditUserDeleteUserCheck())},
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size(50, 45),
+            primary: LamaColors.redAccent,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _showChanges(BuildContext context, EditUserChangeSuccess state) {
+    return Scaffold(
+      appBar: _bar(
+        MediaQuery.of(context).size.width / 5,
+        'Ihre Änderungen',
+        LamaColors.bluePrimary,
+      ),
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            _changesHeadRow('Alt', 'Neu'),
+            //Coins ROW
+            _changesHeadline('Lamamünzen'),
+            _changeRow(state.user.coins, state.changedUser.coins),
+            _changesHeadline('Nutzername'),
+            _changeRow(state.user.name, state.changedUser.name),
+            SizedBox(
+              height: 15,
+            ),
             ElevatedButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Nutzer Löschen'),
-                  SizedBox(
-                    width: 5,
+                  Text(
+                    'Weiter',
+                    style: LamaTextTheme.getStyle(fontSize: 14),
                   ),
-                  Icon(Icons.delete_forever_rounded),
+                  Icon(
+                    Icons.arrow_right_rounded,
+                    size: 35,
+                  ),
                 ],
               ),
               onPressed: () =>
-                  {context.read<EditUserBloc>().add(EditUserDeleteUserCheck())},
+                  {context.read<EditUserBloc>().add(EditUserReturn(context))},
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(50, 45),
-                primary: LamaColors.redAccent,
+                primary: LamaColors.greenPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _changeRow(var oldValue, var newValue) {
+    if (oldValue.toString() != newValue.toString() && newValue != null) {
+      return Padding(
+        padding: EdgeInsets.only(
+            left: screenSize.width / 100 * 20,
+            right: screenSize.width / 100 * 20),
+        child: Container(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  oldValue.toString(),
+                  style: LamaTextTheme.getStyle(
+                    fontSize: 16,
+                    color: LamaColors.black,
+                    monospace: true,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Icon(
+                  Icons.arrow_right_rounded,
+                  size: 35,
+                  color: LamaColors.bluePrimary,
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  newValue.toString(),
+                  style: LamaTextTheme.getStyle(
+                    fontSize: 16,
+                    color: LamaColors.black,
+                    monospace: true,
+                  ),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            oldValue.toString(),
+            style: LamaTextTheme.getStyle(
+                fontSize: 16, color: LamaColors.black, monospace: true),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget _changesHeadline(String str) {
+    return Text(
+      str.toString(),
+      style:
+          LamaTextTheme.getStyle(fontSize: 18, color: LamaColors.bluePrimary),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _changesHeadRow(String left, String right) {
+    return Padding(
+      padding: EdgeInsets.only(
+          left: screenSize.width / 100 * 20,
+          right: screenSize.width / 100 * 20),
+      child: Container(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                left,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 16,
+                  color: LamaColors.redPrimary,
+                  monospace: true,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.arrow_right_rounded,
+                size: 35,
+                color: LamaColors.bluePrimary,
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                right,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 16,
+                  color: LamaColors.bluePrimary,
+                  monospace: true,
+                ),
+                textAlign: TextAlign.right,
               ),
             ),
           ],
@@ -96,8 +296,8 @@ class EditUserScreenState extends State<EditUserScreen> {
                 color: Colors.white,
                 tooltip: 'Bestätigen',
                 onPressed: () {
-                  //if (_formKey.currentState.validate())
-                  //context.read<EditUserBloc>().add(EditUserPush());
+                  if (_formKey.currentState.validate())
+                    context.read<EditUserBloc>().add(EditUserPush());
                 },
               ),
             )),
@@ -125,7 +325,7 @@ class EditUserScreenState extends State<EditUserScreen> {
       BuildContext context, double size, EditUserDeleteCheck state) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: _bar(size / 5),
+        appBar: _bar(size / 5, 'Nutzer löschen', LamaColors.redPrimary),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -186,14 +386,14 @@ class EditUserScreenState extends State<EditUserScreen> {
         ));
   }
 
-  Widget _bar(double size) {
+  Widget _bar(double size, String titel, Color colors) {
     return AppBar(
       title: Text(
-        'Editiere den Nutzer',
+        titel,
         style: LamaTextTheme.getStyle(fontSize: 18),
       ),
       toolbarHeight: size,
-      backgroundColor: LamaColors.bluePrimary,
+      backgroundColor: colors,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(30),
