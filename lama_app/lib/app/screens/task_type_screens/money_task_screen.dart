@@ -1,5 +1,6 @@
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -11,7 +12,7 @@ class MoneyTaskScreen extends StatelessWidget{
 
   double finalMoneyAmount;
   double currentAmountDouble;
-  String currentAmountString;
+  String currentAmountString = "0,00€";
 
   MoneyTaskScreen(this.task, this.constraints){
     finalMoneyAmount = task.moneyAmount;
@@ -24,7 +25,7 @@ class MoneyTaskScreen extends StatelessWidget{
     return Column(children: [
       // Lama Speechbubble
       Container(
-        height: (constraints.maxHeight / 100) * 15,
+        height: (constraints.maxHeight / 100) * 20,
         padding: EdgeInsets.only(left: 15, right: 15),
         // create space between each childs
         child: Stack(
@@ -58,13 +59,32 @@ class MoneyTaskScreen extends StatelessWidget{
           ],
         ),
       ),
+      // Money Balance display
       Container(
-        height: (constraints.maxHeight / 100) * 20,
-        padding: EdgeInsets.all(5),
+        height: (constraints.maxHeight / 100) * 12,
+        padding: EdgeInsets.only(top: 15),
+        //color: LamaColors.greenAccent,
         child: Container(
-          height: (constraints.maxHeight / 100) * 6,
-          width: (constraints.maxHeight / 100) * 30,
-          color: LamaColors.orangeAccent,
+          alignment: Alignment.bottomCenter,
+          height: (constraints.maxHeight / 100) * 1,
+          width: (constraints.maxHeight / 100) * 40,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              color: LamaColors.orangeAccent,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 7,
+                    offset: Offset(0, 3)),
+              ]),
+
+          child: Center(
+            child: Text(
+              currentAmountString,
+              style: LamaTextTheme.getStyle(fontSize: 50, color: LamaColors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
         ),
       )
     ]);
