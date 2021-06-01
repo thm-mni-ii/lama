@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/gridselecttask_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
@@ -32,7 +34,7 @@ class GridSelectTaskScreen extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: (constraints.maxHeight / 100) * 70,
+            height: (constraints.maxHeight / 100) * 65,
             child: Padding(
               padding: EdgeInsets.all((constraints.maxWidth / 100) * 5),
               child: Table(
@@ -43,11 +45,38 @@ class GridSelectTaskScreen extends StatelessWidget {
             ),
           ),
           Container(
-            color: Colors.red,
-            height: (constraints.maxHeight / 100) * 15,
+            height: (constraints.maxHeight / 100) * 20,
+            padding: EdgeInsets.only(left: 15, right: 15),
+            child: Stack(children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: EdgeInsets.only(left: 75),
+                  height: 50,
+                  width: MediaQuery.of(context).size.width,
+                  child: Bubble(
+                    nip: BubbleNip.leftCenter,
+                    child: Center(
+                      child: Text(
+                        task.lamaText,
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SvgPicture.asset(
+                  "assets/images/svg/lama_head.svg",
+                  semanticsLabel: "Lama Anna",
+                  width: 75,
+                ),
+              ),
+            ]),
           ),
           Container(
-            color: Colors.purple,
             height: (constraints.maxHeight / 100) * 15,
             child: Center(
               child: InkWell(
@@ -102,27 +131,7 @@ class GridSelectTaskScreen extends StatelessWidget {
         char = characterPositions[cord];
       else
         char = getTableItemLetter(cord);
-      return BlocBuilder<GridSelectTaskBloc, GridSelectTaskState>(
-        builder: (context, state) => Container(
-          color: state.selectedWords.contains(cord)
-              ? LamaColors.greenAccent
-              : LamaColors.blueAccent,
-          width: (constraints.maxWidth / 100) * 10,
-          height: (constraints.maxWidth / 100) * 10,
-          child: InkWell(
-            onTap: () => BlocProvider.of<GridSelectTaskBloc>(context)
-                .add(SelectGridLetterEvent(cord)),
-            child: Center(
-              child: Text(
-                char,
-                style: LamaTextTheme.getStyle(
-                  fontSize: 20,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
+      return TableItem(cord, constraints, char);
     });
   }
 
@@ -222,5 +231,37 @@ class GridSelectTaskScreen extends StatelessWidget {
       } while (characterPositions.containsValue(char));
     }
     return char;
+  }
+}
+
+class TableItem extends StatelessWidget {
+  final BoxConstraints constraints;
+  final Pair cord;
+  final String char;
+  TableItem(this.cord, this.constraints, this.char);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GridSelectTaskBloc, GridSelectTaskState>(
+      builder: (context, state) => Container(
+        color: state.selectedWords.contains(cord)
+            ? LamaColors.greenAccent
+            : LamaColors.blueAccent,
+        width: (constraints.maxWidth / 100) * 10,
+        height: (constraints.maxWidth / 100) * 10,
+        child: InkWell(
+          onTap: () => BlocProvider.of<GridSelectTaskBloc>(context)
+              .add(SelectGridLetterEvent(cord)),
+          child: Center(
+            child: Text(
+              char,
+              style: LamaTextTheme.getStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
