@@ -580,4 +580,17 @@ class DatabaseProvider {
     }
     return null;
   }
+
+  Future deleteDatabase() async{
+    final db = await database;
+    await db.delete(tableUser);
+    await db.delete(tableAchievements);
+    await db.delete(tableUserHasAchievements);
+    await db.delete(tableGames);
+    await db.delete(tableHighscore);
+    await db.delete(tableHighscore);
+    await db.delete(tableSubjects);
+    await db.delete(tableUserSolvedTaskAmount);
+    await db.delete(tableTaskUrl);
+  }
 }
