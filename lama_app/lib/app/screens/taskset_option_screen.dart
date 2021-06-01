@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
+import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/state/taskset_options_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/util/input_validation.dart';
 
 class OptionTaskScreen extends StatefulWidget {
   @override
@@ -15,7 +17,7 @@ class OptionTaskScreen extends StatefulWidget {
 }
 
 class OptionTaskScreennState extends State<OptionTaskScreen> {
-  //GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -30,16 +32,66 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
       body: BlocListener(
         bloc: BlocProvider.of<TasksetOprionsBloc>(context),
         listener: (context, state) {
-          if (state is TasksetOptionsPushSuccess)
+          if (state is TasksetOptionsPushSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(_saveSuccess(context));
+            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
+          }
         },
         child: BlocBuilder<TasksetOprionsBloc, TasksetOptionsState>(
           builder: (context, state) {
+            if (state is TasksetOptionsDefault) {
+              return Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    _inputFields(context),
+                    _tasksetUrlList(state.urls)
+                  ],
+                ),
+              );
+            }
+            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
             return Center(child: CircularProgressIndicator());
           },
         ),
       ),
       floatingActionButton: _userOptionsButtons(context),
+    );
+  }
+
+  Widget _inputFields(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          TextFormField(
+            decoration: InputDecoration(
+                labelText: 'Taskset URL',
+                hintText: 'https://beispiel.de/taskset.json',
+                suffixIcon: Icon(Icons.add_link)),
+            onChanged: (value) => {
+              context
+                  .read<TasksetOprionsBloc>()
+                  .add(TasksetOptionsChangeURL(value))
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tasksetUrlList(List<TaskUrl> urls) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: urls.length,
+        itemBuilder: (context, index) {
+          return Row(
+            children: [
+              Text(urls[index].url),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -81,8 +133,10 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 color: Colors.white,
                 tooltip: 'Bestätigen',
                 onPressed: () {
-                  //if (_formKey.currentState.validate())
-                  context.read<TasksetOprionsBloc>().add(TasksetOptionsPush());
+                  if (_formKey.currentState.validate())
+                    context
+                        .read<TasksetOprionsBloc>()
+                        .add(TasksetOptionsPush());
                 },
               ),
             )),

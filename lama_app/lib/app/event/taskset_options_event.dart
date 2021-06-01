@@ -8,3 +8,11 @@ class TasksetOptionsAbort extends TasksetOptionsEvent {
 }
 
 class TasksetOptionsPush extends TasksetOptionsEvent {}
+
+class TasksetOptionsReload extends TasksetOptionsEvent {}
+
+//Change Events
+class TasksetOptionsChangeURL extends TasksetOptionsEvent {
+  String tasksetUrl;
+  TasksetOptionsChangeURL(this.tasksetUrl);
+}
