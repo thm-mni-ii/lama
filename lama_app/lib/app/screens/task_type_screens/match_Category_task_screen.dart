@@ -148,12 +148,13 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                                 height: (constraints.maxHeight / 100) * 4,
                                 alignment: Alignment.bottomCenter,
                                 child: Center(
-
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
                                   child: Text("Kein Item zum zurücksetzen gefunden",
                                     style: LamaTextTheme.getStyle(),
                                     textAlign: TextAlign.center,
                                   ),
-                                )),
+                                ))),
                             backgroundColor: LamaColors.mainPink,
                           ),
                         );
