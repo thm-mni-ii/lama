@@ -104,88 +104,65 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
             children: [
               buildTargets(context, task.categoryOne, task.nameCatOne, LamaColors.blueAccent),
               buildTargets(context, task.categoryTwo, task.nameCatTwo, LamaColors.orangeAccent)
-              /*
-               Container(
-                height: 60,
-                width: 185,
-                decoration:
-                    BoxDecoration(color: LamaColors.orangeAccent, boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3)),
-                ]),
-                child: Center(
-                  child: Text(
-                    task.nameCatTwo,
-                    style: LamaTextTheme.getStyle(
-                      color: LamaColors.white,
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              )
-              */
             ],
           ),
         ),
         // refreshButton
         Container(
-          height: (constraints.maxHeight / 100) * 10,
-          alignment: Alignment.bottomCenter,
-           //color: Colors.green,
-          child: Material(
-          color: Colors.transparent,
-           child: Ink(
-             decoration: ShapeDecoration(
-               color: LamaColors.blueAccent,
-               shape: CircleBorder(),
-               shadows: [BoxShadow(
-                   color: Colors.grey.withOpacity(0.5),
-                   spreadRadius: 2,
-                   blurRadius: 7,
-                   offset: Offset(0, 3)),
-               ]
-             ),
-             padding: EdgeInsets.all(5.0),
-           child: IconButton(
-             padding: EdgeInsets.all(1.0),
-              icon: Icon(
-                Icons.refresh,
-                size: 40,
-              ),
-             color: LamaColors.black,
-             onPressed: (){
-                setState(() {
-                  if(deletinons.isNotEmpty){
-                  results.removeLast();
-                  items.add(deletinons.last);
-                  deletinons.removeLast();
-                }
-                else if(deletinons.isEmpty){
-                  ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content:
-                        Container(
-                            height: (constraints.maxHeight / 100) * 4,
-                    alignment: Alignment.bottomCenter,
-                    child: Center(
-
-                      child: Text("Kein Item zum zurücksetzen gefunden",
-                        style: LamaTextTheme.getStyle(),
-                        textAlign: TextAlign.center,
-                      ),
-                    )),
-                    backgroundColor: LamaColors.mainPink,
+            height: (constraints.maxHeight / 100) * 10,
+            alignment: Alignment.bottomCenter,
+            //color: Colors.green,
+            child: Material(
+              color: Colors.transparent,
+              child: Ink(
+                decoration: ShapeDecoration(
+                    color: LamaColors.blueAccent,
+                    shape: CircleBorder(),
+                    shadows: [BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 7,
+                        offset: Offset(0, 3)),
+                    ]
+                ),
+                padding: EdgeInsets.all(5.0),
+                child: IconButton(
+                  padding: EdgeInsets.all(1.0),
+                  icon: Icon(
+                    Icons.refresh,
+                    size: 40,
                   ),
-                  );
-                  }
-               });
-             },
-            ),
-           ),
-          )
+                  color: LamaColors.black,
+                  onPressed: (){
+                    setState(() {
+                      if(deletinons.isNotEmpty){
+                        results.removeLast();
+                        items.add(deletinons.last);
+                        deletinons.removeLast();
+                      }
+                      else if(deletinons.isEmpty){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                            Container(
+                                height: (constraints.maxHeight / 100) * 4,
+                                alignment: Alignment.bottomCenter,
+                                child: Center(
+
+                                  child: Text("Kein Item zum zurücksetzen gefunden",
+                                    style: LamaTextTheme.getStyle(),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )),
+                            backgroundColor: LamaColors.mainPink,
+                          ),
+                        );
+                      }
+                    });
+                  },
+                ),
+              ),
+            )
         )
       ],
     );
@@ -195,11 +172,11 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
     List positions = [
       //Bottom , left
       [(constraints.maxHeight / 100) * 50, (constraints.maxWidth / 100) * 55],
-      [(constraints.maxHeight / 100) * 45, (constraints.maxWidth / 100) * 10],
+      [(constraints.maxHeight / 100) * 45, (constraints.maxWidth / 100) * 7],
       [(constraints.maxHeight / 100) * 32, (constraints.maxWidth / 100) * 5],
       [(constraints.maxHeight / 100) * 38, (constraints.maxWidth / 100) * 50],
       [(constraints.maxHeight / 100) * 25, (constraints.maxWidth / 100) * 53],
-      [(constraints.maxHeight / 100) * 2, (constraints.maxWidth / 100) * 58],
+      [(constraints.maxHeight / 100) * 3, (constraints.maxWidth / 100) * 56],
       [(constraints.maxHeight / 100) * 15, (constraints.maxWidth / 100) * 30,],
       [(constraints.maxHeight / 100) * 5, (constraints.maxWidth / 100) * 9]
     ];
@@ -227,50 +204,50 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
             bottom: items[i].bottom,
             left: items[i].left,
             child: Draggable<Item>(
-                //data: task.categoryOne.contains(categorySum[i]) ? categoryType.catOne : categoryType.catTwo,
+              //data: task.categoryOne.contains(categorySum[i]) ? categoryType.catOne : categoryType.catTwo,
               data: items[i],
               child: Container(
-                height: 50,
-                width: 150,
-                decoration: BoxDecoration(
-                  color: LamaColors.greenAccent,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3)),
-                    ]
-                ),
-                child: Center(
-                  child: Text(
-                      items[i].item,
-                      style: LamaTextTheme.getStyle()
+                  height: (constraints.maxHeight / 100) * 8,
+                  width: (constraints.maxWidth / 100) * 38,
+                  decoration: BoxDecoration(
+                      color: LamaColors.greenAccent,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3)),
+                      ]
                   ),
-                )
-            ),
-                feedback: Material(child: Container(
-                    height: 50,
-                    width: 150,
-                    decoration: BoxDecoration(
-                        color: LamaColors.mainPink,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 7,
-                              offset: Offset(0, 3)),
-                        ]
+                  child: Center(
+                    child: Text(
+                        items[i].item,
+                        style: LamaTextTheme.getStyle()
                     ),
-                    child: Center(
-                      child: Text(
-                          items[i].item,
-                          style: LamaTextTheme.getStyle()
-                      ),
-                    )
-                )),
+                  )
+              ),
+              feedback: Material(child: Container(
+                  height: 50,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      color: LamaColors.mainPink,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3)),
+                      ]
+                  ),
+                  child: Center(
+                    child: Text(
+                        items[i].item,
+                        style: LamaTextTheme.getStyle()
+                    ),
+                  )
+              )),
               childWhenDragging: Container(
                   height: 50,
                   width: 150,
@@ -298,52 +275,53 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
     return output;
   }
   Widget buildTargets(BuildContext context, List<String> categoryList , String taskCategory, Color color){
-      return DragTarget<Item>(
-          builder: (context, candidate, rejectedData) =>
-              Container(
-                height: (constraints.maxHeight / 100) * 45,
-                width: (constraints.maxWidth / 100) * 40,
-                decoration:
-                BoxDecoration(color: color, boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3)),
-                ]),
-                child: Center(
-                  child: Text(
-                    taskCategory,
-                    style: LamaTextTheme.getStyle(
-                      color: LamaColors.white,
-                      fontSize: 30,
-                    ),
-                  ),
+    return DragTarget<Item>(
+      builder: (context, candidate, rejectedData) =>
+          Container(
+            height: (constraints.maxHeight / 100) * 45,
+            width: (constraints.maxWidth / 100) * 45,
+            decoration:
+            BoxDecoration(color: color, boxShadow: [
+              BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: Offset(0, 3)),
+            ],
+              borderRadius: BorderRadius.all(Radius.circular(5)),),
+            child: Center(
+              child: Text(
+                taskCategory,
+                style: LamaTextTheme.getStyle(
+                  color: LamaColors.white,
+                  fontSize: 30,
                 ),
               ),
-        onWillAccept: (data)=> true,
-        onAccept: (data){
+            ),
+          ),
+      onWillAccept: (data)=> true,
+      onAccept: (data){
 
-          categoryList.contains(data.item) ?  results.add(true) :  results.add(false);
-            setState(() {
-              deletinons.add(data);
+        categoryList.contains(data.item) ?  results.add(true) :  results.add(false);
+        setState(() {
+          deletinons.add(data);
 
-                items.removeWhere((element) {
-                  print(element.item);
-                  print(data.item);
-                return element.item == data.item;
-            });
+          items.removeWhere((element) {
+            print(element.item);
+            print(data.item);
+            return element.item == data.item;
+          });
           if(items.isEmpty){
-                firstStart = true;
-                firstShuffel = true;
-                BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initMatchCategory(results));
-              }
-            });
+            firstStart = true;
+            firstShuffel = true;
+            BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initMatchCategory(results));
+          }
+        });
       },
-      );
+    );
   }
 }
-  class Item{
+class Item{
   double bottom;
   double left;
   String item;
