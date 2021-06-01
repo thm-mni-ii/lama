@@ -60,15 +60,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           yield TaskAnswerResultState(true);
         }
       } else if (t is TaskGridSelect) {
-        Function eq = const ListEquality().equals;
-        event.rightPositions.sort();
-        event.markedPositions.sort();
-        if (!eq(event.rightPositions, event.markedPositions))
+        if (!DeepCollectionEquality.unordered()
+            .equals(event.rightPositions, event.markedPositions)) {
           answerResults.add(false);
-        yield TaskAnswerResultState(false);
-      } else {
-        answerResults.add(true);
-        yield TaskAnswerResultState(true);
+          yield TaskAnswerResultState(false);
+        } else {
+          answerResults.add(true);
+          yield TaskAnswerResultState(true);
+        }
       }
       await Future.delayed(Duration(seconds: 1));
       if (curIndex >= tasks.length)

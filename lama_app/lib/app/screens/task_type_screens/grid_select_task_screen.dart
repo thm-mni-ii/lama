@@ -32,7 +32,7 @@ class GridSelectTaskScreen extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: (constraints.maxHeight / 100) * 60,
+            height: (constraints.maxHeight / 100) * 70,
             child: Padding(
               padding: EdgeInsets.all((constraints.maxWidth / 100) * 5),
               child: Table(
@@ -44,7 +44,7 @@ class GridSelectTaskScreen extends StatelessWidget {
           ),
           Container(
             color: Colors.red,
-            height: (constraints.maxHeight / 100) * 25,
+            height: (constraints.maxHeight / 100) * 15,
           ),
           Container(
             color: Colors.purple,
