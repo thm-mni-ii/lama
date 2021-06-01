@@ -18,6 +18,13 @@
                   "lama_text":"Tippe die richtige Antwort an!",
                   "right_answer":"10",
                    "wrong_answers":["25", "7", "3"]
-             }
+             },
+        {
+         "task_type":"MoneyTask",
+         "task_reward":2,
+         "question":"irgendwas",
+         "lama_text":"Sammle 3,59€ mit den Münzen zusammen",
+         "moneyAmount": 3.5915612318
+        }
         ]
 }
