@@ -45,6 +45,19 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 child: Column(
                   children: [
                     _inputFields(context),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: Text(
+                          'Taskset URLs',
+                          style: LamaTextTheme.getStyle(
+                            fontSize: 12,
+                            color: LamaColors.bluePrimary,
+                          ),
+                        ),
+                      ),
+                    ),
                     _tasksetUrlList(state.urls)
                   ],
                 ),
@@ -66,9 +79,10 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         children: [
           TextFormField(
             decoration: InputDecoration(
-                labelText: 'Taskset URL',
-                hintText: 'https://beispiel.de/taskset.json',
-                suffixIcon: Icon(Icons.add_link)),
+              labelText: 'Taskset URL',
+              hintText: 'https://beispiel.de/taskset.json',
+              suffixIcon: Icon(Icons.add_link),
+            ),
             onChanged: (value) => {
               context
                   .read<TasksetOprionsBloc>()
@@ -87,7 +101,19 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         itemBuilder: (context, index) {
           return Row(
             children: [
-              Text(urls[index].url),
+              Text(
+                urls[index].url,
+                style: LamaTextTheme.getStyle(
+                    color: LamaColors.black, fontSize: 18, monospace: true),
+              ),
+              Spacer(),
+              IconButton(
+                  icon: Icon(
+                    Icons.delete_forever_rounded,
+                    color: LamaColors.redAccent,
+                    size: 30,
+                  ),
+                  onPressed: () {})
             ],
           );
         },
