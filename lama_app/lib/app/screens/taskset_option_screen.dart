@@ -85,6 +85,9 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                   .read<TasksetOprionsBloc>()
                   .add(TasksetOptionsChangeURL(value))
             },
+            validator: (value) => InputValidation.isEmpty(value)
+                ? 'Feld darf nicht leer sein!'
+                : null,
             onFieldSubmitted: (value) => {
               if (_formKey.currentState.validate())
                 context.read<TasksetOprionsBloc>().add(TasksetOptionsPush())
