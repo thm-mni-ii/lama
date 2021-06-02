@@ -4,7 +4,8 @@ abstract class TasksetOptionsState {}
 
 class TasksetOptionsDefault extends TasksetOptionsState {
   List<TaskUrl> urls;
-  TasksetOptionsDefault(this.urls);
+  List<TaskUrl> deletedUrls;
+  TasksetOptionsDefault(this.urls, this.deletedUrls);
 }
 
 class TasksetOptionsPushSuccess extends TasksetOptionsState {}

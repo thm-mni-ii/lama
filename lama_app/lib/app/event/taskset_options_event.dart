@@ -10,6 +10,11 @@ class TasksetOptionsAbort extends TasksetOptionsEvent {
 
 class TasksetOptionsPush extends TasksetOptionsEvent {}
 
+class TasksetOptionsPushUrl extends TasksetOptionsEvent {
+  TaskUrl url;
+  TasksetOptionsPushUrl(this.url);
+}
+
 class TasksetOptionsDelete extends TasksetOptionsEvent {
   TaskUrl url;
   TasksetOptionsDelete(this.url);

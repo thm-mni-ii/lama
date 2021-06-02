@@ -33,10 +33,12 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         bloc: BlocProvider.of<TasksetOprionsBloc>(context),
         listener: (context, state) {
           if (state is TasksetOptionsPushSuccess) {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(_saveSuccess(context));
             context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
           }
           if (state is TasksetOptionsDeleteSuccess) {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess(context));
             context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
           }
@@ -46,23 +48,14 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             if (state is TasksetOptionsDefault) {
               return Padding(
                 padding: EdgeInsets.all(20),
-                child: Column(
+                child: ListView(
+                  shrinkWrap: true,
                   children: [
                     _inputFields(context),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Text(
-                          'Taskset URLs',
-                          style: LamaTextTheme.getStyle(
-                            fontSize: 12,
-                            color: LamaColors.bluePrimary,
-                          ),
-                        ),
-                      ),
-                    ),
-                    _tasksetUrlList(state.urls)
+                    _headline('Taskset URLs'),
+                    _tasksetUrlList(state.urls),
+                    _headline('Kürzlich gelöscht'),
+                    _tasksetUrlDeletedList(state.deletedUrls),
                   ],
                 ),
               );
@@ -99,39 +92,72 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
   }
 
   Widget _tasksetUrlList(List<TaskUrl> urls) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: urls.length,
-        itemBuilder: (context, index) {
-          return Row(
-            children: [
-              Text(
-                urls[index].url,
-                style: LamaTextTheme.getStyle(
-                    color: LamaColors.black, fontSize: 18, monospace: true),
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: urls.length,
+      itemBuilder: (context, index) {
+        return Row(
+          children: [
+            Text(
+              urls[index].url,
+              style: LamaTextTheme.getStyle(
+                  color: LamaColors.black, fontSize: 18, monospace: true),
+            ),
+            Spacer(),
+            IconButton(
+              icon: Icon(
+                Icons.delete_forever_rounded,
+                color: LamaColors.redAccent,
+                size: 25,
               ),
-              Spacer(),
-              IconButton(
-                icon: Icon(
-                  Icons.delete_forever_rounded,
-                  color: LamaColors.redAccent,
-                  size: 25,
-                ),
-                onPressed: () {
-                  context
-                      .read<TasksetOprionsBloc>()
-                      .add(TasksetOptionsDelete(urls[index]));
-                },
-              )
-            ],
-          );
-        },
-      ),
+              onPressed: () {
+                context
+                    .read<TasksetOprionsBloc>()
+                    .add(TasksetOptionsDelete(urls[index]));
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _tasksetUrlDeletedList(List<TaskUrl> urls) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: urls.length,
+      itemBuilder: (context, index) {
+        return Row(
+          children: [
+            Text(
+              urls[index].url,
+              style: LamaTextTheme.getStyle(
+                  color: Colors.grey, fontSize: 18, monospace: true),
+            ),
+            Spacer(),
+            IconButton(
+              icon: Icon(
+                Icons.replay_rounded,
+                color: LamaColors.bluePrimary,
+                size: 25,
+              ),
+              onPressed: () {
+                context
+                    .read<TasksetOprionsBloc>()
+                    .add(TasksetOptionsPushUrl(urls[index]));
+              },
+            )
+          ],
+        );
+      },
     );
   }
 
   Widget _deleteSuccess(BuildContext context) {
     return SnackBar(
+      duration: Duration(seconds: 1, milliseconds: 0),
       content: Row(
         children: [
           Padding(
@@ -154,6 +180,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
 
   Widget _saveSuccess(BuildContext context) {
     return SnackBar(
+      duration: Duration(seconds: 1, milliseconds: 0),
       content: Row(
         children: [
           Padding(
@@ -216,6 +243,22 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         ),
       ],
       mainAxisAlignment: MainAxisAlignment.end,
+    );
+  }
+
+  Widget _headline(String headline) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: EdgeInsets.only(top: 20),
+        child: Text(
+          headline,
+          style: LamaTextTheme.getStyle(
+            fontSize: 12,
+            color: LamaColors.bluePrimary,
+          ),
+        ),
+      ),
     );
   }
 
