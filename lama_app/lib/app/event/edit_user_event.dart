@@ -14,6 +14,11 @@ class EditUserChangeUsername extends EditUserEvent {
   EditUserChangeUsername(this.name);
 }
 
+class EditUserChangePasswort extends EditUserEvent {
+  String passwort;
+  EditUserChangePasswort(this.passwort);
+}
+
 class EditUserAbort extends EditUserEvent {
   BuildContext context;
   EditUserAbort(this.context);

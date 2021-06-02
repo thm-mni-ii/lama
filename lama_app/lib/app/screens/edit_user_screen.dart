@@ -65,6 +65,7 @@ class EditUserScreenState extends State<EditUserScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _usernameTextField(context),
+              _passwortTextField(context),
               _coinsTextField(context),
               SizedBox(height: 10),
               _deletUserButoon(context),
@@ -89,6 +90,29 @@ class EditUserScreenState extends State<EditUserScreen> {
       validator: (value) => InputValidation.inputUsernameValidation(value),
       onChanged: (value) =>
           {context.read<EditUserBloc>().add(EditUserChangeUsername(value))},
+    );
+  }
+
+  Widget _passwortTextField(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Password',
+        hintText: 'Password',
+        labelStyle:
+            LamaTextTheme.getStyle(color: LamaColors.bluePrimary, fontSize: 14),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: LamaColors.bluePrimary),
+        ),
+      ),
+      validator: (value) {
+        if (InputValidation.inputPasswortValidation(value) == null ||
+            InputValidation.isEmpty(value))
+          return null;
+        else
+          return InputValidation.inputPasswortValidation(value);
+      },
+      onChanged: (value) =>
+          {context.read<EditUserBloc>().add(EditUserChangePasswort(value))},
     );
   }
 
@@ -149,11 +173,12 @@ class EditUserScreenState extends State<EditUserScreen> {
         child: Column(
           children: [
             _changesHeadRow('Alt', 'Neu'),
-            //Coins ROW
-            _changesHeadline('Lamamünzen'),
-            _changeRow(state.user.coins, state.changedUser.coins),
             _changesHeadline('Nutzername'),
             _changeRow(state.user.name, state.changedUser.name),
+            _changesHeadline('Password'),
+            _changeRow('******', state.changedUser.password),
+            _changesHeadline('Lamamünzen'),
+            _changeRow(state.user.coins, state.changedUser.coins),
             SizedBox(
               height: 15,
             ),
