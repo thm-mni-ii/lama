@@ -65,7 +65,6 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
           },
         ),
       ),
-      floatingActionButton: _userOptionsButtons(context),
     );
   }
 
@@ -75,6 +74,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
       child: Column(
         children: [
           TextFormField(
+            textInputAction: TextInputAction.done,
             decoration: InputDecoration(
               labelText: 'Taskset URL',
               hintText: 'https://beispiel.de/taskset.json',
@@ -84,6 +84,10 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               context
                   .read<TasksetOprionsBloc>()
                   .add(TasksetOptionsChangeURL(value))
+            },
+            onFieldSubmitted: (value) => {
+              if (_formKey.currentState.validate())
+                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush())
             },
           ),
         ],
@@ -198,51 +202,6 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         ],
       ),
       backgroundColor: LamaColors.greenPrimary,
-    );
-  }
-
-  Widget _userOptionsButtons(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Ink(
-              decoration: ShapeDecoration(
-                color: LamaColors.greenAccent,
-                shape: CircleBorder(),
-              ),
-              padding: EdgeInsets.all(7.0),
-              child: IconButton(
-                icon: Icon(Icons.check_rounded),
-                color: Colors.white,
-                tooltip: 'Bestätigen',
-                onPressed: () {
-                  if (_formKey.currentState.validate())
-                    context
-                        .read<TasksetOprionsBloc>()
-                        .add(TasksetOptionsPush());
-                },
-              ),
-            )),
-        Ink(
-          decoration: ShapeDecoration(
-            color: LamaColors.redPrimary,
-            shape: CircleBorder(),
-          ),
-          padding: EdgeInsets.all(2.0),
-          child: IconButton(
-            icon: Icon(Icons.close_rounded),
-            color: Colors.white,
-            tooltip: 'Abbrechen',
-            onPressed: () {
-              context
-                  .read<TasksetOprionsBloc>()
-                  .add(TasksetOptionsAbort(context));
-            },
-          ),
-        ),
-      ],
-      mainAxisAlignment: MainAxisAlignment.end,
     );
   }
 
