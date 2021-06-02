@@ -9,6 +9,11 @@ class EditUserChangeCoins extends EditUserEvent {
   EditUserChangeCoins(this.coins);
 }
 
+class EditUserChangeUsername extends EditUserEvent {
+  String name;
+  EditUserChangeUsername(this.name);
+}
+
 class EditUserAbort extends EditUserEvent {
   BuildContext context;
   EditUserAbort(this.context);

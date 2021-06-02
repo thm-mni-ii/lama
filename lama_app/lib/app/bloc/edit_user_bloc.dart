@@ -24,6 +24,7 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
     if (event is EditUserReturn) _editUserReturn(event.context);
 
     //Change Bloc User
+    if (event is EditUserChangeUsername) _changedUser.name = event.name;
     if (event is EditUserChangeCoins) {
       _changedUser.coins = (int.parse(event.coins));
       print(_changedUser.coins.toString());
@@ -31,6 +32,8 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   }
 
   Future<EditUserState> _pushUserChanges() async {
+    if (_changedUser.name != _user.name && _changedUser.name != null)
+      await DatabaseProvider.db.updateUserName(_user, _changedUser.name);
     if (_changedUser.coins != _user.coins && _changedUser.coins != null)
       await DatabaseProvider.db.updateUserCoins(_user, _changedUser.coins);
     return EditUserChangeSuccess(_user, _changedUser);
