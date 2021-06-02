@@ -34,8 +34,8 @@
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
            "nameCatOne": "Verben",
            "nameCatTwo": "Nomen",
-           "categoryOne": ["laufen", "gehen", "schweben"],
-           "categoryTwo": ["Haus", "Straße", "Baum"]
+           "categoryOne": ["laufen", "gehen", "schweben", "fallen"],
+           "categoryTwo": ["Haus", "Straße", "Baum", "Auto"]
          }
         ]
 }
