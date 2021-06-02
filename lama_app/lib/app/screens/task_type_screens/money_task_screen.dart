@@ -153,6 +153,57 @@ class MoneyTaskScreen extends StatelessWidget{
           ),
         ),
       ),
+      Container(
+        height: (constraints.maxHeight / 100) * 20,
+        child: Align(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                height: (constraints.maxHeight / 100) * 12,
+                width: (constraints.maxWidth / 100) * 35,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: LamaColors.blueAccent,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3)),
+                    ]),
+                child: Center(
+                  child: Text(
+                    "Reset",
+                    style: LamaTextTheme.getStyle(fontSize: 25, color: LamaColors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              Container(
+                height: (constraints.maxHeight / 100) * 12,
+                width: (constraints.maxWidth / 100) * 35,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: LamaColors.greenAccent,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3)),
+                    ]),
+                child: Center(
+                  child: Text(
+                    "Fertig",
+                    style: LamaTextTheme.getStyle(fontSize: 25, color: LamaColors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     ]);
   }
 
