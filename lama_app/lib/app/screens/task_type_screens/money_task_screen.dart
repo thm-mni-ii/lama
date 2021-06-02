@@ -86,8 +86,75 @@ class MoneyTaskScreen extends StatelessWidget{
             ),
           ),
         ),
-      )
+      ),
+      //2, 1, 50, 20
+      Container(
+        height: (constraints.maxHeight / 100) * 25,
+      //color: LamaColors.orangeAccent,
+      child: Align(
+        alignment: Alignment.bottomCenter,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SvgPicture.asset(
+              "assets/images/svg/EuroCoins/2_Euro.svg",
+              semanticsLabel: "Zwei Euro",
+              width: 100,
+            ),
+            SvgPicture.asset(
+              "assets/images/svg/EuroCoins/1_Euro.svg",
+              semanticsLabel: "Ein Euro",
+              width: 90,
+            ),
+            SvgPicture.asset(
+              "assets/images/svg/EuroCoins/50_Cent.svg",
+              semanticsLabel: "Fünfzig Cent",
+              width: 90,
+            ),
+            SvgPicture.asset(
+              "assets/images/svg/EuroCoins/20_Cent.svg",
+              semanticsLabel: "Zwanzig Cent",
+              width: 80,
+            ),
+          ],
+        ),
+      ),
+      ),
+      //10, 5, 2, 1
+      Container(
+        height: (constraints.maxHeight / 100) * 20,
+        //color: LamaColors.orangeAccent,
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SvgPicture.asset(
+                "assets/images/svg/EuroCoins/10_Cent.svg",
+                semanticsLabel: "Zehn Cent",
+                width: 75,
+              ),
+              SvgPicture.asset(
+                "assets/images/svg/EuroCoins/5_Cent.svg",
+                semanticsLabel: "Fünf Cent",
+                width: 75,
+              ),
+              SvgPicture.asset(
+                "assets/images/svg/EuroCoins/2_Cent.svg",
+                semanticsLabel: "Zwei Cent",
+                width: 65,
+              ),
+              SvgPicture.asset(
+                "assets/images/svg/EuroCoins/1_Cent.svg",
+                semanticsLabel: "Ein Cent",
+                width: 55,
+              ),
+            ],
+          ),
+        ),
+      ),
     ]);
   }
+
 
 }
