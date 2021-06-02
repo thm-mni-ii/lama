@@ -18,11 +18,16 @@ class TasksetOprionsBloc
     if (event is TasksetOptionsPush) yield await _tasksetOptionsPush();
     if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
     if (event is TasksetOptionsReload) yield await _reload();
-    print(_tasksetUrl);
+    if (event is TasksetOptionsDelete) yield await _deleteUrl(event.url);
   }
 
   void _return(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  Future<TasksetOptionsDeleteSuccess> _deleteUrl(TaskUrl url) async {
+    await DatabaseProvider.db.deleteTaskUrl(url.id);
+    return TasksetOptionsDeleteSuccess();
   }
 
   Future<TasksetOptionsPushSuccess> _tasksetOptionsPush() async {

@@ -36,6 +36,10 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             ScaffoldMessenger.of(context).showSnackBar(_saveSuccess(context));
             context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
           }
+          if (state is TasksetOptionsDeleteSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess(context));
+            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
+          }
         },
         child: BlocBuilder<TasksetOprionsBloc, TasksetOptionsState>(
           builder: (context, state) {
@@ -108,16 +112,43 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               ),
               Spacer(),
               IconButton(
-                  icon: Icon(
-                    Icons.delete_forever_rounded,
-                    color: LamaColors.redAccent,
-                    size: 30,
-                  ),
-                  onPressed: () {})
+                icon: Icon(
+                  Icons.delete_forever_rounded,
+                  color: LamaColors.redAccent,
+                  size: 25,
+                ),
+                onPressed: () {
+                  context
+                      .read<TasksetOprionsBloc>()
+                      .add(TasksetOptionsDelete(urls[index]));
+                },
+              )
             ],
           );
         },
       ),
+    );
+  }
+
+  Widget _deleteSuccess(BuildContext context) {
+    return SnackBar(
+      content: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(5),
+            child: Icon(
+              Icons.delete_forever_rounded,
+              size: 25,
+              color: LamaColors.white,
+            ),
+          ),
+          Text(
+            'URL erfolgreich gelöscht!',
+            style: LamaTextTheme.getStyle(fontSize: 14),
+          ),
+        ],
+      ),
+      backgroundColor: LamaColors.redAccent,
     );
   }
 

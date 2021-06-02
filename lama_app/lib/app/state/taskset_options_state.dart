@@ -8,3 +8,5 @@ class TasksetOptionsDefault extends TasksetOptionsState {
 }
 
 class TasksetOptionsPushSuccess extends TasksetOptionsState {}
+
+class TasksetOptionsDeleteSuccess extends TasksetOptionsState {}
