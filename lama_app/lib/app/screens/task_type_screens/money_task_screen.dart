@@ -271,6 +271,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                             currentAmountDouble - deletions.last;
                         deletions.removeLast();
                       } else {
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Container(
@@ -286,6 +287,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                                   ),
                                 ))),
                             backgroundColor: LamaColors.mainPink,
+                              duration: Duration(seconds: 1)
                           ),
                         );
                       }
