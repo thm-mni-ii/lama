@@ -61,57 +61,103 @@ class EditUserScreenState extends State<EditUserScreen> {
         key: _formKey,
         child: Container(
           width: double.infinity,
-          child: _userTextForms(context),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _usernameTextField(context),
+              _passwortTextField(context),
+              _coinsTextField(context),
+              SizedBox(height: 10),
+              _deletUserButoon(context),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _userTextForms(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Lamamünzen',
-            labelStyle: LamaTextTheme.getStyle(
-                color: LamaColors.bluePrimary, fontSize: 14),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: LamaColors.bluePrimary),
-            ),
-          ),
-          initialValue: _user.coins.toString(),
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
-          validator: (value) => InputValidation.inputNumberValidation(value),
-          onChanged: (value) => {
-            if (InputValidation.inputNumberValidation(value) == null)
-              context.read<EditUserBloc>().add(EditUserChangeCoins(value))
-          },
+  Widget _usernameTextField(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Nutzername',
+        labelStyle:
+            LamaTextTheme.getStyle(color: LamaColors.bluePrimary, fontSize: 14),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: LamaColors.bluePrimary),
         ),
-        SizedBox(height: 10),
-        ElevatedButton(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Nutzer Löschen',
-                style: LamaTextTheme.getStyle(fontSize: 14),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Icon(Icons.delete_forever_rounded),
-            ],
-          ),
-          onPressed: () =>
-              {context.read<EditUserBloc>().add(EditUserDeleteUserCheck())},
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size(50, 45),
-            primary: LamaColors.redAccent,
-          ),
+      ),
+      initialValue: _user.name,
+      validator: (value) => InputValidation.inputUsernameValidation(value),
+      onChanged: (value) =>
+          {context.read<EditUserBloc>().add(EditUserChangeUsername(value))},
+    );
+  }
+
+  Widget _passwortTextField(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Password',
+        hintText: 'Password',
+        labelStyle:
+            LamaTextTheme.getStyle(color: LamaColors.bluePrimary, fontSize: 14),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: LamaColors.bluePrimary),
         ),
-      ],
+      ),
+      validator: (value) {
+        if (InputValidation.inputPasswortValidation(value) == null ||
+            InputValidation.isEmpty(value))
+          return null;
+        else
+          return InputValidation.inputPasswortValidation(value);
+      },
+      onChanged: (value) =>
+          {context.read<EditUserBloc>().add(EditUserChangePasswort(value))},
+    );
+  }
+
+  Widget _coinsTextField(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Lamamünzen',
+        labelStyle:
+            LamaTextTheme.getStyle(color: LamaColors.bluePrimary, fontSize: 14),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: LamaColors.bluePrimary),
+        ),
+      ),
+      initialValue: _user.coins.toString(),
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
+      validator: (value) => InputValidation.inputNumberValidation(value),
+      onChanged: (value) => {
+        if (InputValidation.inputNumberValidation(value) == null)
+          context.read<EditUserBloc>().add(EditUserChangeCoins(value))
+      },
+    );
+  }
+
+  Widget _deletUserButoon(BuildContext context) {
+    return ElevatedButton(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Nutzer Löschen',
+            style: LamaTextTheme.getStyle(fontSize: 14),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Icon(Icons.delete_forever_rounded),
+        ],
+      ),
+      onPressed: () =>
+          {context.read<EditUserBloc>().add(EditUserDeleteUserCheck())},
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(50, 45),
+        primary: LamaColors.redAccent,
+      ),
     );
   }
 
@@ -127,11 +173,12 @@ class EditUserScreenState extends State<EditUserScreen> {
         child: Column(
           children: [
             _changesHeadRow('Alt', 'Neu'),
-            //Coins ROW
-            _changesHeadline('Lamamünzen'),
-            _changeRow(state.user.coins, state.changedUser.coins),
             _changesHeadline('Nutzername'),
             _changeRow(state.user.name, state.changedUser.name),
+            _changesHeadline('Password'),
+            _changeRow('******', state.changedUser.password),
+            _changesHeadline('Lamamünzen'),
+            _changeRow(state.user.coins, state.changedUser.coins),
             SizedBox(
               height: 15,
             ),
