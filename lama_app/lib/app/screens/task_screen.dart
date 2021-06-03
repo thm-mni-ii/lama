@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lama_app/app/bloc/taskBloc/gridselecttask_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
@@ -161,7 +162,7 @@ class TaskScreenState extends State<TaskScreen> {
       case "MatchCategory":
         return MatchCategoryTaskScreen(task, constraints);
       case "GridSelect":
-        return GridSelectTaskScreen(task, constraints);
+        return GridSelectTaskScreen(task, constraints, GridSelectTaskBloc());
       default:
         return Container();
     }

@@ -14,18 +14,18 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/pair.dart';
 
 class GridSelectTaskScreen extends StatelessWidget {
-  TaskGridSelect task;
-  BoxConstraints constraints;
+  final TaskGridSelect task;
+  final BoxConstraints constraints;
 
-  Map<Pair, String> characterPositions = Map();
-  String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  final Map<Pair, String> characterPositions = Map();
+  //some letter appear more often (loosely based on letter frequency) so they have a higher chance of being chosen
+  final String letters = "AAABCDDEEEEFFGGHHIIIJKKLLMMNNNOOPPQRRSSSTTTUUVWXYZ";
 
-  Map<Pair, String> gridLayout = Map();
+  final Map<Pair, String> gridLayout = Map();
 
-  GridSelectTaskBloc gridSelectTaskBloc;
+  final GridSelectTaskBloc gridSelectTaskBloc;
 
-  GridSelectTaskScreen(this.task, this.constraints) {
-    gridSelectTaskBloc = GridSelectTaskBloc();
+  GridSelectTaskScreen(this.task, this.constraints, this.gridSelectTaskBloc) {
     _generateWordPlacement();
   }
 
@@ -224,6 +224,9 @@ class GridSelectTaskScreen extends StatelessWidget {
     var rnd = Random();
     String char = "";
 
+    int triesTillTimeout = 10;
+    int curTries = 0;
+
     String leftValue, upValue, rightValue, downValue;
     leftValue = gridLayout[left];
     upValue = gridLayout[up];
@@ -240,7 +243,8 @@ class GridSelectTaskScreen extends StatelessWidget {
       do {
         char = String.fromCharCode(
             letters.codeUnitAt(rnd.nextInt(letters.length)));
-      } while (characterPositions.containsValue(char));
+      } while (characterPositions.containsValue(char) &&
+          curTries < triesTillTimeout);
     } else {
       char =
           String.fromCharCode(letters.codeUnitAt(rnd.nextInt(letters.length)));
