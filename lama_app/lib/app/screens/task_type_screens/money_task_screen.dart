@@ -27,13 +27,10 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
   final TaskMoney task;
   final BoxConstraints constraints;
   double finalMoneyAmount;
-  List <double> deletinons = [];
-
-  //String currentAmountString;
+  List<double> deletions = [];
 
   MoneyTaskState(this.task, this.constraints) {
     finalMoneyAmount = currentAmountDouble;
-    //currentAmountString = currentAmountDouble.toString() + "€";
   }
 
   @override
@@ -118,11 +115,11 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 child: SvgPicture.asset(
                   "assets/images/svg/EuroCoins/2_Euro.svg",
                   semanticsLabel: "Zwei Euro",
-                  width: 100,
+                  width: (constraints.maxWidth / 100) * 25,
                 ),
                 onTap: () {
                   setState(() {
-                    deletinons.add(2);
+                    deletions.add(2);
                     currentAmountDouble = currentAmountDouble + 2;
                   });
                 },
@@ -131,11 +128,11 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 child: SvgPicture.asset(
                   "assets/images/svg/EuroCoins/1_Euro.svg",
                   semanticsLabel: "Ein Euro",
-                  width: 90,
+                  width: (constraints.maxWidth / 100) * 23,
                 ),
                 onTap: () {
                   setState(() {
-                    deletinons.add(1);
+                    deletions.add(1);
                     currentAmountDouble = currentAmountDouble + 1;
                   });
                 },
@@ -144,11 +141,11 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 child: SvgPicture.asset(
                   "assets/images/svg/EuroCoins/50_Cent.svg",
                   semanticsLabel: "Fünfzig Cent",
-                  width: 90,
+                  width: (constraints.maxWidth / 100) * 23,
                 ),
                 onTap: () {
                   setState(() {
-                    deletinons.add(0.5);
+                    deletions.add(0.5);
                     currentAmountDouble = currentAmountDouble + 0.5;
                   });
                 },
@@ -157,11 +154,11 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 child: SvgPicture.asset(
                   "assets/images/svg/EuroCoins/20_Cent.svg",
                   semanticsLabel: "Zwanzig Cent",
-                  width: 80,
+                  width: (constraints.maxWidth / 100) * 20,
                 ),
                 onTap: () {
                   setState(() {
-                    deletinons.add(0.2);
+                    deletions.add(0.2);
                     currentAmountDouble = currentAmountDouble + 0.2;
                   });
                 },
@@ -173,6 +170,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
       //10, 5, 2, 1
       Container(
         height: (constraints.maxHeight / 100) * 20,
+        padding: EdgeInsets.only(bottom: 20),
         //color: LamaColors.orangeAccent,
         child: Align(
           alignment: Alignment.bottomCenter,
@@ -183,11 +181,11 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 child: SvgPicture.asset(
                   "assets/images/svg/EuroCoins/10_Cent.svg",
                   semanticsLabel: "Zehn Cent",
-                  width: 75,
+                  width: (constraints.maxWidth / 100) * 20,
                 ),
                 onTap: () {
                   setState(() {
-                    deletinons.add(0.1);
+                    deletions.add(0.1);
                     currentAmountDouble = currentAmountDouble + 0.1;
                   });
                 },
@@ -196,11 +194,11 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 child: SvgPicture.asset(
                   "assets/images/svg/EuroCoins/5_Cent.svg",
                   semanticsLabel: "Fünf Cent",
-                  width: 70,
+                  width: (constraints.maxWidth / 100) * 19,
                 ),
                 onTap: () {
                   setState(() {
-                    deletinons.add(0.05);
+                    deletions.add(0.05);
                     currentAmountDouble = currentAmountDouble + 0.05;
                   });
                 },
@@ -209,11 +207,11 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 child: SvgPicture.asset(
                   "assets/images/svg/EuroCoins/2_Cent.svg",
                   semanticsLabel: "Zwei Cent",
-                  width: 65,
+                  width: (constraints.maxWidth / 100) * 16,
                 ),
                 onTap: () {
                   setState(() {
-                    deletinons.add(0.02);
+                    deletions.add(0.02);
                     currentAmountDouble = currentAmountDouble + 0.02;
                   });
                 },
@@ -222,11 +220,11 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 child: SvgPicture.asset(
                   "assets/images/svg/EuroCoins/1_Cent.svg",
                   semanticsLabel: "Ein Cent",
-                  width: 55,
+                  width: (constraints.maxWidth / 100) * 13,
                 ),
                 onTap: () {
                   setState(() {
-                    deletinons.add(0.01);
+                    deletions.add(0.01);
                     currentAmountDouble = currentAmountDouble + 0.01;
                   });
                 },
@@ -268,25 +266,25 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                   ),
                   onTap: () {
                     setState(() {
-                      if(deletinons.isNotEmpty) {
-                        currentAmountDouble = currentAmountDouble - deletinons.last;
-                        deletinons.removeLast();
-                      }
-                      else{
+                      if (deletions.isNotEmpty) {
+                        currentAmountDouble =
+                            currentAmountDouble - deletions.last;
+                        deletions.removeLast();
+                      } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content:
-                            Container(
+                            content: Container(
                                 height: (constraints.maxHeight / 100) * 4,
                                 alignment: Alignment.bottomCenter,
                                 child: Center(
                                     child: FittedBox(
-                                      fit: BoxFit.fitWidth,
-                                      child: Text("Füge zuerst einen Betrag hinzu",
-                                        style: LamaTextTheme.getStyle(),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ))),
+                                  fit: BoxFit.fitWidth,
+                                  child: Text(
+                                    "Füge zuerst einen Betrag hinzu",
+                                    style: LamaTextTheme.getStyle(),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ))),
                             backgroundColor: LamaColors.mainPink,
                           ),
                         );
@@ -309,21 +307,22 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                           offset: Offset(0, 3)),
                     ]),
                 child: InkWell(
-                child: Center(
-                  child: Text(
-                    "Fertig",
-                    style: LamaTextTheme.getStyle(
-                        fontSize: 25,
-                        color: LamaColors.white,
-                        fontWeight: FontWeight.bold),
+                  child: Center(
+                    child: Text(
+                      "Fertig",
+                      style: LamaTextTheme.getStyle(
+                          fontSize: 25,
+                          color: LamaColors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
                   onTap: () {
-                  finalMoneyAmount = currentAmountDouble;
-                  currentAmountDouble = 0;
-                  deletinons.clear();
-                  print(finalMoneyAmount);
-                  BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initMoneyTask(finalMoneyAmount));
+                    finalMoneyAmount = currentAmountDouble;
+                    currentAmountDouble = 0;
+                    deletions.clear();
+                    print(finalMoneyAmount);
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(AnswerTaskEvent.initMoneyTask(finalMoneyAmount));
                   },
                 ),
               )
