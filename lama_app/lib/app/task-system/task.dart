@@ -103,7 +103,7 @@ class TaskMatchCategory extends Task {
 class TaskGridSelect extends Task {
   List<String> wordsToFind;
 
-  TaskGridSelect(String taskType, int reward, String question, String lamaText,
+  TaskGridSelect(String taskType, int reward, String lamaText, String question,
       this.wordsToFind)
       : super(taskType, reward, question, lamaText);
 }

@@ -18,5 +18,5 @@ class AnswerTaskEvent extends TaskEvent {
   AnswerTaskEvent.initMatchCategory(List<bool> providedanswerStates) {
     this.providedanswerStates = providedanswerStates;
   }
-  AnswerTaskEvent.initGridSelect(this.rightPositions, this.markedPositions) {}
+  AnswerTaskEvent.initGridSelect(this.rightPositions, this.markedPositions);
 }

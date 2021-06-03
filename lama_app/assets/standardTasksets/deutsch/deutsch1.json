@@ -6,8 +6,8 @@
         {
           "task_type":"GridSelect",
            "task_reward":2,
-           "question":"Markiere alle Farben",
-           "lama_text":"Markiere horizontale & vertikale Wörter!",
+           "question":"",
+           "lama_text":"Markiere drei Farben!",
            "wordsToFind":["rot", "blau", "aquamarin"]
             },
            {

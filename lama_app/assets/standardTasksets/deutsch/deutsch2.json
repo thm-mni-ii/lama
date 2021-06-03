@@ -3,6 +3,13 @@
      "taskset_subject":"Deutsch",
       "taskset_grade":2,
        "tasks": [
+        {
+          "task_type":"GridSelect",
+           "task_reward":3,
+           "question":"",
+           "lama_text":"Markiere vier Fahrzeuge",
+           "wordsToFind":["auto", "Lastkran", "Bus", "Flugzeug"]
+            },
            {
            "task_type":"4Cards",
             "task_reward":2,

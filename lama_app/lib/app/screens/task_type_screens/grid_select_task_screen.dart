@@ -20,6 +20,8 @@ class GridSelectTaskScreen extends StatelessWidget {
   Map<Pair, String> characterPositions = Map();
   String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+  Map<Pair, String> gridLayout = Map();
+
   GridSelectTaskBloc gridSelectTaskBloc;
 
   GridSelectTaskScreen(this.task, this.constraints) {
@@ -127,9 +129,14 @@ class GridSelectTaskScreen extends StatelessWidget {
     return List.generate(9, (columnNumber) {
       Pair cord = Pair(columnNumber, rowNumber);
       String char = "";
-      if (characterPositions.containsKey(cord))
+      print("generating: Column: " +
+          columnNumber.toString() +
+          " Row: " +
+          rowNumber.toString());
+      if (characterPositions.containsKey(cord)) {
         char = characterPositions[cord];
-      else
+        print("isInCord therefore generating: " + char);
+      } else
         char = getTableItemLetter(cord);
       return TableItem(cord, constraints, char);
     });
@@ -175,6 +182,7 @@ class GridSelectTaskScreen extends StatelessWidget {
           for (int i = 0; i < wordLength; i++) {
             characterPositions.putIfAbsent(
                 cordList[i], () => word[i].toUpperCase());
+            gridLayout.putIfAbsent(cordList[i], () => word[i].toUpperCase());
           }
           wordAdded = true;
         } else {
@@ -197,8 +205,14 @@ class GridSelectTaskScreen extends StatelessWidget {
             continue;
           }
           for (int i = 0; i < wordLength; i++) {
+            //print(word[i] +
+            // " added at" +
+            // cordList[i].a.toString() +
+            // " " +
+            //  cordList[i].b.toString());
             characterPositions.putIfAbsent(
                 cordList[i], () => word[i].toUpperCase());
+            gridLayout.putIfAbsent(cordList[i], () => word[i].toUpperCase());
           }
           wordAdded = true;
         }
@@ -211,24 +225,37 @@ class GridSelectTaskScreen extends StatelessWidget {
     Pair right = Pair(position.a + 1, position.b);
     Pair up = Pair(position.a, position.b + 1);
     Pair down = Pair(position.a, position.b - 1);
-
-    return getRandomLetter(characterPositions.containsKey(left) ||
-        characterPositions.containsKey(up) ||
-        characterPositions.containsKey(right) ||
-        characterPositions.containsKey(down));
+    String char = getRandomLetter(left, up, right, down);
+    gridLayout.putIfAbsent(position, () => char);
+    return char;
   }
 
-  String getRandomLetter(bool excludeLettersInWordsToFind) {
+  String getRandomLetter(Pair left, Pair up, Pair right, Pair down) {
     var rnd = Random();
     String char = "";
-    if (!excludeLettersInWordsToFind) {
-      char =
-          String.fromCharCode(letters.codeUnitAt(rnd.nextInt(letters.length)));
-    } else {
+
+    String leftValue, upValue, rightValue, downValue;
+    leftValue = gridLayout[left];
+    upValue = gridLayout[up];
+    rightValue = gridLayout[right];
+    downValue = gridLayout[down];
+
+    bool shouldExcludeRightCharacters =
+        characterPositions.containsValue(leftValue) ||
+            characterPositions.containsValue(upValue) ||
+            characterPositions.containsValue(rightValue) ||
+            characterPositions.containsValue(downValue);
+
+    if (shouldExcludeRightCharacters) {
       do {
         char = String.fromCharCode(
             letters.codeUnitAt(rnd.nextInt(letters.length)));
+        //print("trying: " + char);
       } while (characterPositions.containsValue(char));
+      //print("notInCord and neighbours occupied therefore generating: " + char);
+    } else {
+      char =
+          String.fromCharCode(letters.codeUnitAt(rnd.nextInt(letters.length)));
     }
     return char;
   }
