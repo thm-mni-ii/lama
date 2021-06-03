@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/bloc/task_bloc.dart';
+import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -25,13 +27,12 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
   final TaskMoney task;
   final BoxConstraints constraints;
   double finalMoneyAmount;
+  List <double> deletinons = [];
 
   //String currentAmountString;
 
   MoneyTaskState(this.task, this.constraints) {
-    print(currentAmountDouble);
-    finalMoneyAmount = task.moneyAmount;
-    print(finalMoneyAmount.toStringAsFixed(2));
+    finalMoneyAmount = currentAmountDouble;
     //currentAmountString = currentAmountDouble.toString() + "€";
   }
 
@@ -121,6 +122,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
+                    deletinons.add(2);
                     currentAmountDouble = currentAmountDouble + 2;
                   });
                 },
@@ -133,6 +135,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
+                    deletinons.add(1);
                     currentAmountDouble = currentAmountDouble + 1;
                   });
                 },
@@ -145,6 +148,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
+                    deletinons.add(0.5);
                     currentAmountDouble = currentAmountDouble + 0.5;
                   });
                 },
@@ -157,6 +161,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
+                    deletinons.add(0.2);
                     currentAmountDouble = currentAmountDouble + 0.2;
                   });
                 },
@@ -182,6 +187,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
+                    deletinons.add(0.1);
                     currentAmountDouble = currentAmountDouble + 0.1;
                   });
                 },
@@ -194,6 +200,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
+                    deletinons.add(0.05);
                     currentAmountDouble = currentAmountDouble + 0.05;
                   });
                 },
@@ -206,6 +213,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
+                    deletinons.add(0.02);
                     currentAmountDouble = currentAmountDouble + 0.02;
                   });
                 },
@@ -218,6 +226,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
+                    deletinons.add(0.01);
                     currentAmountDouble = currentAmountDouble + 0.01;
                   });
                 },
@@ -226,6 +235,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
           ),
         ),
       ),
+      // reset and finish Button
       Container(
         height: (constraints.maxHeight / 100) * 20,
         child: Align(
@@ -246,14 +256,43 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                           blurRadius: 7,
                           offset: Offset(0, 3)),
                     ]),
-                child: Center(
-                  child: Text(
-                    "Reset",
-                    style: LamaTextTheme.getStyle(
-                        fontSize: 25,
-                        color: LamaColors.white,
-                        fontWeight: FontWeight.bold),
+                child: InkWell(
+                  child: Center(
+                    child: Text(
+                      "Reset",
+                      style: LamaTextTheme.getStyle(
+                          fontSize: 25,
+                          color: LamaColors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
+                  onTap: () {
+                    setState(() {
+                      if(deletinons.isNotEmpty) {
+                        currentAmountDouble = currentAmountDouble - deletinons.last;
+                        deletinons.removeLast();
+                      }
+                      else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                            Container(
+                                height: (constraints.maxHeight / 100) * 4,
+                                alignment: Alignment.bottomCenter,
+                                child: Center(
+                                    child: FittedBox(
+                                      fit: BoxFit.fitWidth,
+                                      child: Text("Füge zuerst einen Betrag hinzu",
+                                        style: LamaTextTheme.getStyle(),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ))),
+                            backgroundColor: LamaColors.mainPink,
+                          ),
+                        );
+                      }
+                    });
+                  },
                 ),
               ),
               Container(
@@ -269,6 +308,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                           blurRadius: 7,
                           offset: Offset(0, 3)),
                     ]),
+                child: InkWell(
                 child: Center(
                   child: Text(
                     "Fertig",
@@ -277,6 +317,14 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                         color: LamaColors.white,
                         fontWeight: FontWeight.bold),
                   ),
+                ),
+                  onTap: () {
+                  finalMoneyAmount = currentAmountDouble;
+                  currentAmountDouble = 0;
+                  deletinons.clear();
+                  print(finalMoneyAmount);
+                  BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initMoneyTask(finalMoneyAmount));
+                  },
                 ),
               )
             ],
