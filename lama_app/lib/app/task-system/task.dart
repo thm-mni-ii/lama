@@ -30,7 +30,8 @@ class Task {
             json['sentence'],
             List<String>.from(json['right_words']));
       case "MatchCategory":
-        return TaskMatchCategory(taskType,
+        return TaskMatchCategory(
+            taskType,
             json['task_reward'],
             json['lama_text'],
             json['question'],
@@ -38,6 +39,9 @@ class Task {
             json['nameCatTwo'],
             List<String>.from(json['categoryOne']),
             List<String>.from(json['categoryTwo']));
+      case "GridSelect":
+        return TaskGridSelect(taskType, json['task_reward'], json['lama_text'],
+            json['question'], List<String>.from(json['wordsToFind']));
       default:
         return null;
     }
@@ -84,7 +88,22 @@ class TaskMatchCategory extends Task {
   String nameCatOne;
   String nameCatTwo;
 
-  TaskMatchCategory(String taskType, int reward, String lamaText, String question,
-      this.nameCatOne, this.nameCatTwo, this.categoryOne, this.categoryTwo)
+  TaskMatchCategory(
+      String taskType,
+      int reward,
+      String lamaText,
+      String question,
+      this.nameCatOne,
+      this.nameCatTwo,
+      this.categoryOne,
+      this.categoryTwo)
+      : super(taskType, reward, question, lamaText);
+}
+
+class TaskGridSelect extends Task {
+  List<String> wordsToFind;
+
+  TaskGridSelect(String taskType, int reward, String lamaText, String question,
+      this.wordsToFind)
       : super(taskType, reward, question, lamaText);
 }
