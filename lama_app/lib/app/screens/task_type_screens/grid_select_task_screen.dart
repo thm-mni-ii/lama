@@ -129,13 +129,8 @@ class GridSelectTaskScreen extends StatelessWidget {
     return List.generate(9, (columnNumber) {
       Pair cord = Pair(columnNumber, rowNumber);
       String char = "";
-      print("generating: Column: " +
-          columnNumber.toString() +
-          " Row: " +
-          rowNumber.toString());
       if (characterPositions.containsKey(cord)) {
         char = characterPositions[cord];
-        print("isInCord therefore generating: " + char);
       } else
         char = getTableItemLetter(cord);
       return TableItem(cord, constraints, char);
@@ -205,11 +200,6 @@ class GridSelectTaskScreen extends StatelessWidget {
             continue;
           }
           for (int i = 0; i < wordLength; i++) {
-            //print(word[i] +
-            // " added at" +
-            // cordList[i].a.toString() +
-            // " " +
-            //  cordList[i].b.toString());
             characterPositions.putIfAbsent(
                 cordList[i], () => word[i].toUpperCase());
             gridLayout.putIfAbsent(cordList[i], () => word[i].toUpperCase());
@@ -250,9 +240,7 @@ class GridSelectTaskScreen extends StatelessWidget {
       do {
         char = String.fromCharCode(
             letters.codeUnitAt(rnd.nextInt(letters.length)));
-        //print("trying: " + char);
       } while (characterPositions.containsValue(char));
-      //print("notInCord and neighbours occupied therefore generating: " + char);
     } else {
       char =
           String.fromCharCode(letters.codeUnitAt(rnd.nextInt(letters.length)));
