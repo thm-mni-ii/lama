@@ -65,6 +65,7 @@ flutter:
   assets:
      - assets/images/svg/
      - assets/images/svg/avatars/
+     - assets/images/svg/EuroCoins/
      - assets/images/png/
      - assets/images/png/
      - assets/sounds/

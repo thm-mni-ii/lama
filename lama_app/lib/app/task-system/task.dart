@@ -42,6 +42,12 @@ class Task {
       case "GridSelect":
         return TaskGridSelect(taskType, json['task_reward'], json['lama_text'],
             json['question'], List<String>.from(json['wordsToFind']));
+      case "MoneyTask":
+        return TaskMoney(taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['question'],
+            json['moneyAmount']);
       default:
         return null;
     }
@@ -106,4 +112,11 @@ class TaskGridSelect extends Task {
   TaskGridSelect(String taskType, int reward, String lamaText, String question,
       this.wordsToFind)
       : super(taskType, reward, question, lamaText);
+}
+
+class TaskMoney extends Task {
+  double moneyAmount;
+
+  TaskMoney(String taskType, int reward, String lamaText, String question, this.moneyAmount)
+  : super(taskType, reward, question, lamaText);
 }

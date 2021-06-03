@@ -6,6 +6,7 @@ class ShowNextTaskEvent extends TaskEvent {}
 
 class AnswerTaskEvent extends TaskEvent {
   String providedAnswer;
+  double providedAnswerDouble;
   List<String> providedanswerWords;
   List<bool> providedanswerStates;
 
@@ -19,4 +20,9 @@ class AnswerTaskEvent extends TaskEvent {
     this.providedanswerStates = providedanswerStates;
   }
   AnswerTaskEvent.initGridSelect(this.rightPositions, this.markedPositions);
+
+  AnswerTaskEvent.initMoneyTask(double providedAnswerDouble){
+    this.providedAnswerDouble = providedAnswerDouble;
+  }
 }
+

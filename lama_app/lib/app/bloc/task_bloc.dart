@@ -69,6 +69,15 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           yield TaskAnswerResultState(true);
         }
       }
+      else if (t is TaskMoney) {
+        if (event.providedAnswerDouble == t.moneyAmount) {
+          answerResults.add(true);
+          yield TaskAnswerResultState(true);
+        } else {
+          answerResults.add(false);
+          yield TaskAnswerResultState(false);
+        }
+      }
       await Future.delayed(Duration(seconds: 1));
       if (curIndex >= tasks.length)
         yield AllTasksCompletedState(tasks, answerResults);
