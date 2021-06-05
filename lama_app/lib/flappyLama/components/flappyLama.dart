@@ -28,36 +28,21 @@ class FlappyLama extends AnimationComponent {
     this.width = this._size;
 
     final spriteSheet = SpriteSheet(
-        imageName: 'png/lama_animation.png',
-        textureWidth: 24,
-        textureHeight: 24,
-        columns: 12,
-        rows: 1,
-    );
-    
-    // idle / hover animation
-    _idle = spriteSheet.createAnimation(
-        0,
-        from: 0,
-        to: 4,
-        stepTime: 0.1
-    );
-    
-    // up animation
-    _up = spriteSheet.createAnimation(
-        0,
-        from: 5,
-        to: 8,
-        stepTime: 0.1
+      imageName: 'png/lama_animation.png',
+      textureWidth: 24,
+      textureHeight: 24,
+      columns: 12,
+      rows: 1,
     );
 
+    // idle / hover animation
+    _idle = spriteSheet.createAnimation(0, from: 0, to: 4, stepTime: 0.1);
+
+    // up animation
+    _up = spriteSheet.createAnimation(0, from: 5, to: 8, stepTime: 0.1);
+
     // fall animation
-    _fall = spriteSheet.createAnimation(
-        0,
-        from: 9,
-        to: 12,
-        stepTime: 0.1
-    );
+    _fall = spriteSheet.createAnimation(0, from: 9, to: 12, stepTime: 0.1);
 
     // start animation
     this.animation = _idle;
@@ -69,8 +54,7 @@ class FlappyLama extends AnimationComponent {
   }
 
   /// This method let the lama fly steady on the actual height.
-  void hover() {
-  }
+  void hover() {}
 
   /// This method checks if the [object] hits the obstacle.
   /// return:
@@ -126,8 +110,7 @@ class FlappyLama extends AnimationComponent {
       // choose animation
       if (lastY > this.y) {
         this.animation = _up;
-      }
-      else if (lastY < this.y) {
+      } else if (lastY < this.y) {
         this.animation = _fall;
       } else {
         this.animation = _idle;
@@ -150,5 +133,13 @@ class FlappyLama extends AnimationComponent {
 
   Rect toRect() {
     return Rect.fromLTWH(this.x, this.y, this._size, this._size);
+  }
+
+  bool collides(Object object) {
+    if (this.y + this.height == object) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

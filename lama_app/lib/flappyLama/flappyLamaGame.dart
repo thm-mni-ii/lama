@@ -193,6 +193,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       }
     });
 
+    if (_lama.collides(this.screenSize.height) == true) _gameover = true;
+
     super.update(t);
 
     if (_gameover == true) {
