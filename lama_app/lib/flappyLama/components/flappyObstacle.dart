@@ -18,6 +18,7 @@ class FlappyObstacle extends Component {
   // will be multiplied by the _size
   int _holeSize;
   int _holePosition;
+  double lamaX;
   // alter start location
   bool _alter;
   bool _isHandled = false;
@@ -30,7 +31,7 @@ class FlappyObstacle extends Component {
   //obstacle move and reset after they leave the screen (2 objects moving)
   Random _randomNumber = Random();
 
-  FlappyObstacle(this.game, this._alter, this.onPassing,
+  FlappyObstacle(this.game, this._alter, this.lamaX, this.onPassing, 
       [this.onCollide]);
 
   void render(Canvas c) {
@@ -129,7 +130,7 @@ class FlappyObstacle extends Component {
         // run callback
         _isHandled = false;
       }
-      if (48 > _first.x + _first.width && !_isHandled){
+      if (lamaX > _first.x + _first.width && !_isHandled){
         onPassing?.call();
         _isHandled = true;
       }
