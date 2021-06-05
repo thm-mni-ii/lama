@@ -66,6 +66,7 @@ class SnakeGame extends Game with TapDetector {
   GameOverView gameOverView;
   BuildContext _context;
   UserRepository _userRepo;
+  bool _saved = false;
 
   SnakeGame(this._context, this._userRepo) {
     initialize();
@@ -231,11 +232,14 @@ class SnakeGame extends Game with TapDetector {
     }
     if (_finished && _initialized){
       gameOverView.update(t);
-      _userRepo.addHighscore(Highscore(
-        gameID: 1,
-        score: this.score,
-        userID: this._userRepo.authenticatedUser.id
-      ));
+
+      if (!this._saved) {
+        this._saved = true;
+        _userRepo.addHighscore(Highscore(
+            gameID: 1,
+            score: this.score,
+            userID: this._userRepo.authenticatedUser.id));
+      }
     } 
   }
 
