@@ -11,6 +11,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/model/highscore_model.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/snake/components/background.dart';
 import 'package:lama_app/snake/components/scoreDisplay.dart';
 
@@ -64,8 +66,9 @@ class SnakeGame extends Game with TapDetector {
   HomeView homeView;
   GameOverView gameOverView;
   BuildContext _context;
+  UserRepository _userRepo;
 
-  SnakeGame(this._context) {
+  SnakeGame(this._context, this._userRepo) {
     initialize();
     developer.log("${MediaQuery.of(_context).size.width}");
     developer.log("${MediaQuery.of(_context).size.height}");
