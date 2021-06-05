@@ -7,6 +7,7 @@ import 'package:flame/flame.dart';
 import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
 import 'package:lama_app/flappyLama/components/flappyLama.dart';
@@ -31,6 +32,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   String _playMode = "PlayMode";
 
   bool _paused = false;
+  bool _savedHighscore = false;
   FlappyLama _lama;
   Random _randomNumber = Random();
   UserRepository _userRepo;
@@ -89,6 +91,16 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     add(FlappyObstacle(this, true, () => this.score++));
     // add score
     add(FlappyScoreDisplay(this));
+  }
+
+  void saveHighscore() {
+    if (!this._savedHighscore) {
+      this._savedHighscore = true;
+      _userRepo.addHighscore(Highscore(
+          gameID: 2,
+          score: this.score,
+          userID: this._userRepo.authenticatedUser.id));
+    }
   }
 
   void resize(Size size) {
