@@ -31,8 +31,10 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   // name of the playMode widget
   String _playMode = "PlayMode";
 
+  int _gameId = 2;
   bool _paused = false;
   bool _savedHighscore = false;
+  int _highScore = 0;
   FlappyLama _lama;
   Random _randomNumber = Random();
   UserRepository _userRepo;
@@ -97,10 +99,14 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     if (!this._savedHighscore) {
       this._savedHighscore = true;
       _userRepo.addHighscore(Highscore(
-          gameID: 2,
+          gameID: _gameId,
           score: this.score,
           userID: this._userRepo.authenticatedUser.id));
     }
+  }
+
+  void loadPersonalHighscoreAsync() async {
+    this._highScore = await _userRepo.getMyHighscore(_gameId);
   }
 
   void resize(Size size) {
