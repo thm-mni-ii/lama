@@ -1,3 +1,24 @@
+### 0.3
+- learn app
+	- added cloze tasktype
+	- added markwords tasktype
+	- added proper app icons and titles
+	- added admin menu
+	- added user avatars
+	- changed how the screen for tasks is built (responsiveness)
+	- added user creation through admin menu
+	- unified colors and text theme
+	- fixed a bug where tasksets dont get loaded on first startup
+	- fixed some layout problems
+- sname game
+	- changed order of control buttons
+	- added screen resizing
+	- added sprites
+	- added sounds
+- flappy lama
+	- started work on flappy lama
+	- disabled in release
+	
 ### 0.2
 - learn app
 	- user database
