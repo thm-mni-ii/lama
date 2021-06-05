@@ -7,6 +7,9 @@ import 'package:flame/spritesheet.dart';
 /// This class extends [AnimationComponent] and describes a flying lama.
 /// It contains three different animations for idle, up and falling.
 class FlappyLama extends AnimationComponent {
+  Function onCollide;
+  Function onHitGround;
+
   Animation _idle;
   Animation _up;
   Animation _fall;
@@ -69,6 +72,35 @@ class FlappyLama extends AnimationComponent {
   void hover() {
   }
 
+  /// This method checks if the [object] hits the obstacle.
+  /// return:
+  ///   true = collides
+  ///   false = no collision
+  bool collides(Rect object) {
+    if (object == null) {
+      return false;
+    }
+
+    // X
+    if ((object.left > this.x &&
+        object.left < this.x + this.width) ||
+        (object.right > this.x &&
+        object.right < this.x + this.width)) {
+      // Y
+      if ((object.top > this.y &&
+          object.top < this.y + this.height) ||
+          (object.bottom > this.y &&
+          object.bottom < this.y + this.height)
+      ) {
+        // callback
+        onCollide?.call();
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   void update(double t) {
     if (_isGameStarted == true) {
       // speed
@@ -82,6 +114,7 @@ class FlappyLama extends AnimationComponent {
       if (this.y > _game.screenSize.height - this._size) {
         y = _game.screenSize.height - this._size;
         _speedY = 0.0;
+        onHitGround?.call();
       }
       // hit top
       else if (this.y <= 0) {
