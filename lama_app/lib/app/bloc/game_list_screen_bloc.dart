@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/game_list_screen_event.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/flappy_game_screen.dart';
-import 'package:lama_app/app/screens/game_screen.dart';
+import 'package:lama_app/app/screens/snake_screen.dart';
 import 'package:lama_app/app/state/game_list_screen_state.dart';
 
 class GameListScreenBloc
@@ -29,10 +29,10 @@ void navigateToGame(String gameName, BuildContext context, UserRepository userRe
   Widget gameToLaunch;
   switch (gameName) {
     case "Snake":
-      gameToLaunch = GameScreen(userRepository);
+      gameToLaunch = SnakeScreen(userRepository);
       break;
     case "Flappy-Lama":
-      gameToLaunch = FlappyGameScreen();
+      gameToLaunch = FlappyGameScreen(userRepository);
       break;
     //TODO: add case for Game 3
     default:

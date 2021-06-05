@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
-class GameScreen extends StatelessWidget {
+class SnakeScreen extends StatelessWidget {
   final UserRepository userRepository;
 
-  const GameScreen(this.userRepository);
+  const SnakeScreen(this.userRepository);
 
   @override
   Widget build(BuildContext context) {

@@ -7,6 +7,7 @@ import 'package:flame/flame.dart';
 import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
 import 'package:lama_app/flappyLama/components/flappyLama.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
@@ -32,8 +33,9 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   bool _paused = false;
   FlappyLama _lama;
   Random _randomNumber = Random();
+  UserRepository _userRepo;
 
-  FlappyLamaGame(this._context) {
+  FlappyLamaGame(this._context, this._userRepo) {
     var back = ParallaxComponent(
         [
           ParallaxImage('png/himmel.png'),
