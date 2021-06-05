@@ -8,7 +8,7 @@
            "task_reward":2,
            "question":"",
            "lama_text":"Markiere drei Farben!",
-           "wordsToFind":["rot", "blau", "aquamarin"]
+           "wordsToFind":["rot", "blau", "gelb"]
             },
            {
            "task_type":"4Cards",
@@ -25,6 +25,16 @@
            "lama_text":"Tippe die richtige Antwort an!",
            "right_answer":"Der",
            "wrong_answers":["Die", "Das"]
+         },
+         {
+           "task_type": "MatchCategory",
+           "task_reward":2,
+           "question": "",
+           "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+           "nameCatOne": "Verben",
+           "nameCatTwo": "Nomen",
+           "categoryOne": ["laufen", "gehen", "schweben", "fallen"],
+           "categoryTwo": ["Haus", "Straße", "Baum", "Auto"]
          }
         ]
 }
