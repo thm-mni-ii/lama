@@ -100,10 +100,10 @@ class FlappyObstacle extends Component {
     var first = _sprites[0];
 
     // X
-    if (object.left > first.x &&
-        object.left < first.x + first.width &&
-        object.right > first.x &&
-        object.right < first.x + first.width) {
+    if ((object.left > first.x &&
+        object.left < first.x + first.width) ||
+        (object.right > first.x &&
+        object.right < first.x + first.width)) {
       var holeTop = this._holePosition * this.game.tileSize * this._size;
       var holeBot =
           holeTop + (this._holeSize * this.game.tileSize * this._size);
