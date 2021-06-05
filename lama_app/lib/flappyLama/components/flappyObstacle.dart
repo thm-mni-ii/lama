@@ -20,15 +20,17 @@ class FlappyObstacle extends Component {
   int _holePosition;
   // alter start location
   bool _alter;
+  bool _isHandled = false;
   List<SpriteComponent> _sprites;
-  Function onObstacleResets;
+  Function onPassing;
   Function onCollide;
+  SpriteComponent _first;
 
   final FlappyLamaGame game;
   //obstacle move and reset after they leave the screen (2 objects moving)
   Random _randomNumber = Random();
 
-  FlappyObstacle(this.game, this._alter, this.onObstacleResets,
+  FlappyObstacle(this.game, this._alter, this.onPassing,
       [this.onCollide]);
 
   void render(Canvas c) {
@@ -69,6 +71,7 @@ class FlappyObstacle extends Component {
         _sprites.add(tmp);
       }
     }
+    _first = _sprites[0];
   }
 
   /// This method generate a new hole depending on the [_minHoleTiles], [_maxHoleTiles] and [_size].
@@ -96,14 +99,11 @@ class FlappyObstacle extends Component {
       return false;
     }
 
-    // first for X
-    var first = _sprites[0];
-
     // X
-    if ((object.left > first.x &&
-        object.left < first.x + first.width) ||
-        (object.right > first.x &&
-        object.right < first.x + first.width)) {
+    if ((object.left > _first.x &&
+        object.left < _first.x + _first.width) ||
+        (object.right > _first.x &&
+        object.right < _first.x + _first.width)) {
       var holeTop = this._holePosition * this.game.tileSize * this._size;
       var holeBot =
           holeTop + (this._holeSize * this.game.tileSize * this._size);
@@ -127,7 +127,11 @@ class FlappyObstacle extends Component {
         generateHole();
         createObstacleParts();
         // run callback
-        onObstacleResets?.call();
+        _isHandled = false;
+      }
+      if (48 > _first.x + _first.width && !_isHandled){
+        onPassing?.call();
+        _isHandled = true;
       }
 
       // moves the obstacles
