@@ -43,6 +43,7 @@ class UserRepository {
   }
 
   Future<int> getMyHighscore(int gameId) async {
+    /* MANUEL WAY
     // get all scores
     var scores = await DatabaseProvider.db
         .getHighscores();
@@ -52,8 +53,9 @@ class UserRepository {
           .where((score) => score.userID == this.authenticatedUser.id && score.gameID == gameId)
           .map((e) => e.score)
           .reduce(max);
-    }
+    }*/
 
-    return 0;
+    return await DatabaseProvider.db
+        .getHighscoreOfUserInGame(authenticatedUser, gameId);
   }
 }
