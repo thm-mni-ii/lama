@@ -8,6 +8,7 @@ import 'package:flame/spritesheet.dart';
 /// It contains three different animations for idle, up and falling.
 class FlappyLama extends AnimationComponent {
   Function onCollide;
+  Function onHitGround;
 
   Animation _idle;
   Animation _up;
@@ -113,6 +114,7 @@ class FlappyLama extends AnimationComponent {
       if (this.y > _game.screenSize.height - this._size) {
         y = _game.screenSize.height - this._size;
         _speedY = 0.0;
+        onHitGround?.call();
       }
       // hit top
       else if (this.y <= 0) {

@@ -48,7 +48,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     add(back);
 
     // add lama
-    _lama = FlappyLama(this, 48);
+    _lama = FlappyLama(this, 48)
+      ..onHitGround = () => developer.log("GROUND");
     add(_lama);
 
     // add PlayMode widget
