@@ -323,6 +323,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                     currentAmountDouble = 0;
                     deletions.clear();
                     print(finalMoneyAmount);
+                    print(finalMoneyAmount.toStringAsFixed(2));
                     BlocProvider.of<TaskBloc>(context)
                         .add(AnswerTaskEvent.initMoneyTask(finalMoneyAmount));
                   },

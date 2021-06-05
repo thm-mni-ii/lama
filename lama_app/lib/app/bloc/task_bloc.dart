@@ -70,7 +70,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         }
       }
       else if (t is TaskMoney) {
-        if (event.providedAnswerDouble == t.moneyAmount) {
+        if (event.providedAnswerDouble.toStringAsFixed(2) == t.moneyAmount.toStringAsFixed(2)) {
           answerResults.add(true);
           yield TaskAnswerResultState(true);
         } else {
