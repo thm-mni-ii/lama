@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flame/flame_audio.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -230,8 +229,13 @@ class SnakeGame extends Game with TapDetector {
       scoreDisplay.update(t);
      
     }
-    if(_finished && _initialized){
+    if (_finished && _initialized){
       gameOverView.update(t);
+      _userRepo.addHighscore(Highscore(
+        gameID: 1,
+        score: this.score,
+        userID: this._userRepo.authenticatedUser.id
+      ));
     } 
   }
 
