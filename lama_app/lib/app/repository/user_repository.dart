@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/db/database_provider.dart';
 
@@ -34,5 +35,15 @@ class UserRepository {
     authenticatedUser.coins = max(0, authenticatedUser.coins - coinsToRemove);
     authenticatedUser = await DatabaseProvider.db
         .updateUserCoins(authenticatedUser, authenticatedUser.coins);
+  }
+
+  void addHighscore(Highscore score) async {
+    await DatabaseProvider.db
+        .insertHighscore(score);
+  }
+
+  Future<int> getMyHighscore(int gameId) async {
+    return await DatabaseProvider.db
+        .getHighscoreOfUserInGame(authenticatedUser, gameId);
   }
 }

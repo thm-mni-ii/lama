@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/achievement_model.dart';
 import 'package:lama_app/app/model/game_model.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
@@ -204,6 +205,23 @@ class DatabaseProvider {
     });
 
     return highscoreList;
+  }
+
+  Future<int> getHighscoreOfUserInGame(User user, int gameID) async {
+    final db = await database;
+
+    var highscore = await db.query(tableHighscore,
+      columns: [columnId, columnGameId, columnScore, columnUserId],
+      where: "$columnUserId = ? and $columnGameId = ?",
+      whereArgs: [user.id, gameID],
+      orderBy: columnScore,
+      limit: 1);
+
+    if (highscore.isNotEmpty) {
+      return Highscore.fromMap(highscore.first).score;
+    }
+
+    return 0;
   }
 
   Future<List<Subject>> getSubjects() async {

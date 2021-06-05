@@ -17,7 +17,7 @@ class GameListScreenBloc
     if (event is TryStartGameEvent) {
       if (userRepository.getLamaCoins() >= event.gameCost) {
         userRepository.removeLamaCoins(event.gameCost);
-        navigateToGame(event.gameToStart, event.context);
+        navigateToGame(event.gameToStart, event.context, userRepository);
       } else {
         yield NotEnoughCoinsState();
       }
@@ -25,11 +25,11 @@ class GameListScreenBloc
   }
 }
 
-void navigateToGame(String gameName, BuildContext context) {
+void navigateToGame(String gameName, BuildContext context, UserRepository userRepository) {
   Widget gameToLaunch;
   switch (gameName) {
     case "Snake":
-      gameToLaunch = GameScreen();
+      gameToLaunch = GameScreen(userRepository);
       break;
     case "Flappy-Lama":
       gameToLaunch = FlappyGameScreen();
