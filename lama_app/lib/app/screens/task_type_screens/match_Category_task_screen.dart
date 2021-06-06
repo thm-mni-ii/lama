@@ -290,6 +290,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                   offset: Offset(0, 3)),
             ],
               borderRadius: BorderRadius.all(Radius.circular(5)),),
+            child: FittedBox(
+              fit: BoxFit.fitWidth,
             child: Center(
               child: Text(
                 taskCategory,
@@ -299,7 +301,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                 ),
               ),
             ),
-          ),
+          )),
       onWillAccept: (data)=> true,
       onAccept: (data){
 

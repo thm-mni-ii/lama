@@ -45,6 +45,26 @@
       "lama_text":"Tap the right Answer!",
       "right_answer":"am",
       "wrong_answers":["be", "horse"]
+    },
+    {
+      "task_type": "MatchCategory",
+      "task_reward":2,
+      "question": "",
+      "lama_text": "Move each word in the correct category!",
+      "nameCatOne": "Simple Present",
+      "nameCatTwo": "Simple Past",
+      "categoryOne": ["work", "go", "see", "sell"],
+      "categoryTwo": ["worked", "went", "saw", "sold"]
+    },
+    {
+      "task_type": "MatchCategory",
+      "task_reward":2,
+      "question": "",
+      "lama_text": "Move each word in the correct category!",
+      "nameCatOne": "Simple Past",
+      "nameCatTwo": "Past Participle",
+      "categoryOne": ["was", "came", "did", "knew"],
+      "categoryTwo": ["been", "come", "done", "known"]
     }
   ]
 }

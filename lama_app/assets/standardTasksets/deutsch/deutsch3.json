@@ -35,7 +35,14 @@
            "nameCatOne": "Verben",
            "nameCatTwo": "Nomen",
            "categoryOne": ["laufen", "gehen", "schweben", "fallen"],
-           "categoryTwo": ["Haus", "Straße", "Baum", "Auto"]
+           "categoryTwo": ["haus", "straße", "baum", "auto"]
+         },
+         {
+           "task_type":"GridSelect",
+           "task_reward":3,
+           "question":"",
+           "lama_text":"Markiere vier Städte",
+           "wordsToFind":["Gießen", "Wetzlar", "Frankfurt", "Berlin"]
          }
         ]
 }
