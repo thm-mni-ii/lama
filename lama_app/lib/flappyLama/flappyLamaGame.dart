@@ -166,17 +166,14 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         _gameOverMode,
         GameOverMode(
           score: score,
-          onRestartPressed: reset,
+          onQuitPressed: quit,
         ));
   }
 
-  void reset() {
+  void quit() {
     removeWidgetOverlay(_gameOverMode);
     _gameover = false;
-
-    //TODO:Find a way to reset obstacles
-    this.initialize();
-    resumeEngine();
+    Navigator.pop(_context);
   }
 
   void onTapDown(TapDownDetails d) {

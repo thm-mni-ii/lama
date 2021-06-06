@@ -8,14 +8,14 @@ class GameOverMode extends StatelessWidget {
   final int score;
 
   // This function will be called when restart button is pressed.
-  final Function onRestartPressed;
+  final Function onQuitPressed;
 
   const GameOverMode({
     Key key,
     @required this.score,
-    @required this.onRestartPressed,
+    @required this.onQuitPressed,
   })  : assert(score != null),
-        assert(onRestartPressed != null),
+        assert(onQuitPressed != null),
         super(key: key);
 
   @override
@@ -55,14 +55,14 @@ class GameOverMode extends StatelessWidget {
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 15)),
                       child: Text(
-                        'Restart',
+                        'Quit',
                         style: TextStyle(
                           color: LamaColors.black,
                           fontSize: 15,
                         ),
                       ),
                       onPressed: () {
-                        onRestartPressed.call();
+                        onQuitPressed.call();
                       },
                     ),
                   ),
