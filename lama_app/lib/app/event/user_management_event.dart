@@ -1,27 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/model/user_model.dart';
 
-abstract class AdminScreenEvent {}
+abstract class UserManagementEvent {}
 
-class LoadAllUsers extends AdminScreenEvent {}
+class LoadAllUsers extends UserManagementEvent {}
 
-class LogoutAdminScreen extends AdminScreenEvent {
+class LogoutAdminScreen extends UserManagementEvent {
   BuildContext context;
   LogoutAdminScreen(this.context);
 }
 
-class CreateUser extends AdminScreenEvent {
+class CreateUser extends UserManagementEvent {
   BuildContext context;
   CreateUser(this.context);
 }
 
-class EditUser extends AdminScreenEvent {
+class EditUser extends UserManagementEvent {
   BuildContext context;
   User user;
   EditUser(this.user, this.context);
 }
 
-class TasksetOption extends AdminScreenEvent {
+class TasksetOption extends UserManagementEvent {
   BuildContext context;
   TasksetOption(this.context);
 }

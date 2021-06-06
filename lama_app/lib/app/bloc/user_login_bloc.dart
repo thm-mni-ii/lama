@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/bloc/admin_screen_bloc.dart';
+import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
-import 'package:lama_app/app/screens/admin_screen.dart';
+import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/db/database_provider.dart';
@@ -33,8 +33,8 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
           event.context,
           MaterialPageRoute(
             builder: (context) => BlocProvider(
-              create: (BuildContext context) => AdminScreenBloc(),
-              child: AdminScreen(),
+              create: (BuildContext context) => UserManagementBloc(),
+              child: UserManagementScreen(),
             ),
           ),
         );
