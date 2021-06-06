@@ -23,9 +23,18 @@ class StartScreen extends StatelessWidget{
           )
         ),
         child: Center(
+          widthFactor: 0.5,
+          heightFactor: 0.8,
           child: Card(
+            margin: 
+              EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 12.0
+              
+            ),
+            
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0)
+              borderRadius: BorderRadius.circular(35.0)
             ),
             color: Color(0xffffffff),
             child: Padding(
@@ -63,6 +72,17 @@ class StartScreen extends StatelessWidget{
                     style: TextStyle(fontSize: 20.0)
                   ),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0)
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30, 
+                        vertical: 10
+                      ),
+                    
+                      
+                    ),
                     child: Text(
                       "Start",
                       style: TextStyle(fontSize: 40.0),
