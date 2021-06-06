@@ -88,7 +88,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     add(FlappyObstacle(
       this,
       false,
-            48,
+      48,
       () => this.score++,
       () => developer.log("HIT"),
     ));
@@ -96,6 +96,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // add score
     add(FlappyScoreDisplay(this));
   }
+
   void saveHighscore() {
     if (!this._savedHighscore) {
       this._savedHighscore = true;
@@ -173,8 +174,6 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     removeWidgetOverlay(_gameOverMode);
     _gameover = false;
 
-    FlappyLamaGame(this._context);
-
     //TODO:Find a way to reset obstacles
     this.initialize();
     resumeEngine();
@@ -192,7 +191,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       }
     });
 
-    if (_lama.collides(this.screenSize.height) == true) _gameover = true;
+    if (_lama.collide(this.screenSize.height) == true) _gameover = true;
 
     super.update(t);
 
