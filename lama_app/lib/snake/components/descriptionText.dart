@@ -4,33 +4,19 @@ import 'package:lama_app/snake/snakeGame.dart';
 
 class DescriptionText {
   final SnakeGame game;
-  TextPainter _painter;
+  TextPainter _painter = TextPainter(
+    textAlign: TextAlign.center,
+    textDirection: TextDirection.ltr,
+    maxLines: 10,
+  );
   Offset _position;
-  Paint _textPaint;
+  double _offsetY;
 
-  DescriptionText(this.game, double relativeX, double relativeY) {
-    TextStyle _textStyle;
+  DescriptionText(this.game, this._offsetY) {
+    resize();
+  }
 
-    // Style of the text
-    _textStyle = TextStyle(
-      color: Color(0xbb19721d),
-      fontSize: this.game.screenSize.height * 0.05,
-      shadows: <Shadow>[
-        Shadow(
-          blurRadius: 10,
-          color: Color(0xff000000),
-          offset: Offset(2, 2),
-        ),
-      ],
-    );
-
-    // Paint for the text
-    _painter = TextPainter(
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-      maxLines: 10,
-    );
-
+  void resize() {
     _painter.text = TextSpan(
       text: "Snake\n",
       style: TextStyle(
@@ -53,11 +39,8 @@ class DescriptionText {
     // set new offset depending on the text width
     _position = Offset(
       (this.game.screenSize.width / 2) - _painter.width / 2,
-      (this.game.screenSize.height * (1 - 2 * relativeY) / 2) - _painter.width / 2,
+      ((this.game.screenSize.height + this._offsetY) / 2) - _painter.width / 2,
     );
-
-    _textPaint = Paint();
-    _textPaint.color = Color(0xff6dff4a);
   }
 
   void render(Canvas c) {

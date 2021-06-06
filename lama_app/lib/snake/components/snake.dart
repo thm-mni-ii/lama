@@ -1,19 +1,18 @@
 import 'dart:collection';
-import 'dart:math';
 import 'dart:ui';
 import 'dart:developer' as developer;
 
+import 'package:lama_app/snake/components/snakeSpriteComponent.dart';
 import 'package:lama_app/snake/models/position.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
 import 'apple.dart';
 
 class SnakeComponent {
-  final bool debugMovement = false;
   final bool log = true;
 
-  Random rnd = Random();
-  Queue<Position> snakeParts = Queue();
+  final SnakeGame game;
+  Queue<SnakeSpriteComponent> snakeParts = Queue();
   double velocity = 3;
   /// callback when the snake bites itself
   Function callbackBiteItSelf;
@@ -22,167 +21,277 @@ class SnakeComponent {
   /// callback when the snake hits the border
   Function(Apple) callbackEatsApple;
 
-  final SnakeGame game;
-
   double _deltaCounter = 0;
-  int _direction = 1;
-  double _maxVelocity = 15;
+  SnakeDirection _actualDirection = SnakeDirection.North;
+  SnakeDirection _lastDirection = SnakeDirection.North;
+  final double _maxVelocity = 15;
 
+  /// This class needs following parameters for initialisation:
+  /// [game] = [SnakeGame] where are fields which need this class to proceed
+  /// [startPos] = [Position] of the span location
+  /// [velocity] = initial speed of the snake
   SnakeComponent(this.game, Position startPos, this.velocity) {
-    snakeParts.add(Position(startPos.x, startPos.y + this.game.fieldOffsetY));
+    // add tail
+    snakeParts.addFirst(SnakeSpriteComponent(
+        SnakePart.Tail,
+        this.game.tileSize,
+        SnakeDirection.North)
+      ..fieldX = (startPos.x)
+      ..fieldY = (startPos.y + this.game.fieldOffsetY + 1));
+    // add head
+    snakeParts.addFirst(SnakeSpriteComponent(
+        SnakePart.Head,
+        this.game.tileSize,
+        SnakeDirection.North)
+      ..fieldX = (startPos.x)
+      ..fieldY = (startPos.y + this.game.fieldOffsetY));
   }
 
-  /// This is the setter of [_direction]
+  /// This is the setter of [_actualDirection]
   /// [dir] could be: 1 = north, 2 = west, 3 = south, 4 = east, else = not valid / ignored
   /// You cant move in the opposite direction so this will gets ignored.
-  set direction(int dir) {
-    if (dir != _direction && dir <= 5 && dir > 0) {
-      if (!(_direction.isOdd && dir.isOdd || _direction.isEven && dir.isEven)) {
-        _direction = dir;
+  set direction(SnakeDirection dir) {
+    if (dir != _lastDirection) {
+      // check the opposite direction
+      if (!(_lastDirection == SnakeDirection.North && dir == SnakeDirection.South) &&
+          !(_lastDirection == SnakeDirection.South && dir == SnakeDirection.North) &&
+          !(_lastDirection == SnakeDirection.West && dir == SnakeDirection.East) &&
+          !(_lastDirection == SnakeDirection.East && dir == SnakeDirection.West)) {
+        _actualDirection = dir;
       }
     }
   }
 
   /// This method moves the snake by the given direction for 1 tile.
   /// [dir] 1 = north, 2 = west, 3 = south everything else = east
-  void moveSnake(int dir) {
-    var newPosition = getNewPosition(dir);
+  void moveSnake(SnakeDirection dir, List<Apple> apples) {
+    var newPart = getNextHead(dir);
 
-    // no movement in between the field possible
-    if (newPosition == null) {
+    // snake would move out of the game field
+    if (newPart == null) {
       if (log) {
         developer.log("[Snake][moveSnake] collide with the border");
       }
 
+      // run collision callback
       if (callbackCollideWithBorder != null) {
         callbackCollideWithBorder();
       }
     }
-    else if (collideWithSnake(newPosition)) {
+    // snake would collide with itself
+    else if (collideWithSnake(Position(newPart.fieldX, newPart.fieldY))) {
       if (log) {
         developer.log("[Snake][moveSnake] biteItSelf");
       }
 
+      // run bite callback
       if (callbackBiteItSelf != null) {
         callbackBiteItSelf();
       }
-    } else {
-      snakeParts.addFirst(newPosition);
     }
+    else {
+      // when the snake changes direction
+      // a Snake corner is necessary and needs a different location calculation for the rotation
+      if (_lastDirection != _actualDirection) {
+        snakeParts.first.part = SnakePart.BodyCorner;
+
+        if ((_lastDirection == SnakeDirection.North && _actualDirection == SnakeDirection.West) ||
+            (_lastDirection == SnakeDirection.East && _actualDirection == SnakeDirection.South)) {
+          snakeParts.first.direction = SnakeDirection.West;
+        }
+        else if ((_lastDirection == SnakeDirection.South && _actualDirection == SnakeDirection.East) ||
+            (_lastDirection == SnakeDirection.West && _actualDirection == SnakeDirection.North)) {
+          snakeParts.first.direction = SnakeDirection.East;
+        }
+        else if ((_lastDirection == SnakeDirection.South && _actualDirection == SnakeDirection.West) ||
+            (_lastDirection == SnakeDirection.East && _actualDirection == SnakeDirection.North)) {
+          snakeParts.first.direction = SnakeDirection.North;
+        }
+        else if ((_lastDirection == SnakeDirection.North && _actualDirection == SnakeDirection.East) ||
+            (_lastDirection == SnakeDirection.West && _actualDirection == SnakeDirection.South)) {
+          snakeParts.first.direction = SnakeDirection.South;
+        }
+      }
+      else {
+        // switch the old head to a body part
+        snakeParts.first.part = SnakePart.Body;
+      }
+
+      if (log) {
+        developer.log("[SnakeComponent][moveSnake] x=${newPart.fieldX},y=${newPart.fieldY}");
+      }
+
+      snakeParts.addFirst(newPart);
+      _lastDirection = _actualDirection;
+      
+      growOnHittingApple(apples);
+    }
+  }
+
+  void growOnHittingApple(List<Apple> apples) {
+    if (apples != null) {
+      for (Apple apple in apples) {
+        if (collideWithHead(apple.position)) {
+          if (callbackEatsApple != null) {
+            callbackEatsApple(apple);
+          }
+          if (log) {
+            developer.log("[SnakeComponent][eatApples] eat an apple");
+          }
+
+          return;
+        }
+      }
+    }
+
+    // remove the old tail
+    snakeParts.removeLast();
+    // remove the part where the new tail will come
+    var tmp = snakeParts.removeLast()
+      ..part = SnakePart.Tail;
+    // get Direction of the new Tail part
+    // - necessary because the corners have a different direction than the others
+    tmp.direction =  getDirection(
+        Position(tmp.fieldX, tmp.fieldY),
+        Position(snakeParts.last.fieldX, snakeParts.last.fieldY)
+    );
+    // add the new tail at the end
+    snakeParts.addLast(tmp);
   }
 
   /// This method checks if the head is on the given [position]
   bool collideWithHead(Position position) {
     return position != null &&
-        snakeParts.first.x == position.x &&
-        snakeParts.first.y == position.y;
+        snakeParts.first.fieldX == position.x &&
+        snakeParts.first.fieldY == position.y;
   }
 
-  /// This method checks if there is an snakepart on the given [position]
+  /// This method checks if there is a part of the snake on the given [position]
   bool collideWithSnake(Position position) {
     return position != null &&
-        snakeParts.where((it) => it.x == position.x && it.y == position.y).isNotEmpty;
+        snakeParts.where((it) => it.fieldX == position.x && it.fieldY == position.y).isNotEmpty;
   }
 
-  /// This method returns the new Position by the given [dir].
-  /// [dir] could be: 1 = north, 2 = west, 3 = south everything else = east
-  /// return : hits the border = null, movement within the field = [Position]
-  Position getNewPosition(int dir) {
-    Position headPos = snakeParts.first;
+  /// This method needs a [dir] for the next [SnakeComponent].
+  /// return:
+  /// null = next location is outside the game field or [dir] is null
+  /// else = next Head Component with the new Head Position
+  SnakeSpriteComponent getNextHead(SnakeDirection dir) {
+    if (dir == null) {
+      return null;
+    }
+
+    // get the old head
+    var headPart = snakeParts.first;
 
     switch(dir) {
-      case 3 : {
-        if (headPos.y >= this.game.maxFieldY + this.game.fieldOffsetY) {
-          // headPos = Position(headPos.x, this.game.fieldOffsetY + 1);
+      case SnakeDirection.South : {
+        // collide with the border
+        if (headPart.fieldY >= (this.game.maxFieldY + this.game.fieldOffsetY)) {
           return null;
         }
 
-        return Position(headPos.x, headPos.y + 1);
+        return SnakeSpriteComponent(
+            SnakePart.Head,
+            this.game.tileSize,
+            dir)
+          ..fieldX = headPart.fieldX
+          ..fieldY = headPart.fieldY + 1;
       }
-      case 2 : {
-        if (headPos.x <= 1) {
-          // headPos = Position(this.game.maxFieldX, headPos.y);
+      case SnakeDirection.West : {
+        // collide with the border
+        if (headPart.fieldX <= 1) {
           return null;
         }
 
-        return Position(headPos.x - 1, headPos.y);
+        return SnakeSpriteComponent(
+            SnakePart.Head,
+            this.game.tileSize,
+            dir)
+          ..fieldX = headPart.fieldX - 1
+          ..fieldY = headPart.fieldY;
       }
-      case 1 : {
-        if (headPos.y <= this.game.fieldOffsetY + 1) {
-          // headPos = Position(headPos.x, this.game.maxFieldY + this.game.fieldOffsetY);
+      case SnakeDirection.North : {
+        // collide with the border
+        if (headPart.fieldY <= (this.game.fieldOffsetY + 1)) {
           return null;
         }
 
-        return Position(headPos.x, headPos.y - 1);
+        return SnakeSpriteComponent(
+            SnakePart.Head,
+            this.game.tileSize,
+            dir)
+          ..fieldX = headPart.fieldX
+          ..fieldY = headPart.fieldY - 1;
       }
-      default : {
-        if (headPos.x >= this.game.maxFieldX) {
-          // headPos = Position(1, headPos.y);
+      case SnakeDirection.East : {
+        // collide with the border
+        if (headPart.fieldX >= this.game.maxFieldX) {
           return null;
         }
 
-        return Position(headPos.x + 1, headPos.y);
+        return SnakeSpriteComponent(
+            SnakePart.Head,
+            this.game.tileSize,
+            dir)
+          ..fieldX = headPart.fieldX + 1
+          ..fieldY = headPart.fieldY;
       }
     }
+
+    return null;
+  }
+
+  /// This method decides which [SnakeDireciton] is necessary to reach the next [Position].
+  /// return:
+  /// null = [to] or [from] are null or [from] has the same coordinates as [to]
+  /// else = next [SnakeDirection]
+  SnakeDirection getDirection(Position from, Position to) {
+    if (to == null || from == null) {
+      return null;
+    }
+
+    if (to.x > from.x) {
+      return SnakeDirection.East;
+    }
+    if (to.x < from.x) {
+      return SnakeDirection.West;
+    }
+    if (to.y > from.y) {
+      return SnakeDirection.South;
+    }
+    if (to.y < from.y) {
+      return SnakeDirection.North;
+    }
+
+    return null;
   }
 
   void render(Canvas c) {
     // render each part of the snake
-    for (Position tmpSnake in snakeParts) {
-      // rectangle for each part
-      Rect bgRect = Rect.fromLTWH(
-          (tmpSnake.x - 1) * this.game.tileSize,
-          (tmpSnake.y - 1) * this.game.tileSize,
-          this.game.tileSize,
-          this.game.tileSize);
-
-      Paint bgPaint = Paint();
-      // color the head different than the tail
-      bgPaint.color = Color(tmpSnake == snakeParts.first ? 0xFF208421 : 0xFF34C935);
-
-      c.drawArc(bgRect, 0, 10, true, bgPaint);
+    for (SnakeSpriteComponent tmpSnake in snakeParts) {
+      tmpSnake.render(c);
     }
-  }
-
-  void eatApples(List<Apple> apples) {
-    if (apples == null) {
-      // adds the new head
-      snakeParts.removeLast();
-      return;
-    }
-
-    for (Apple apple in apples) {
-      if (collideWithHead(apple.position)) {
-        if (callbackEatsApple != null) {
-          callbackEatsApple(apple);
-        }
-        developer.log("[SnakeComponent][eatApples] eat an apple");
-
-        return;
-      }
-    }
-
-    // adds the new head
-    snakeParts.removeLast();
   }
 
   void update(double t, List<Apple> apples) {
-    // measures the time which has past
+    // measures the time which has past since the last reset
     _deltaCounter += t;
 
     // moves the snake depending on its velocity
     if (_deltaCounter / (1 / (velocity > _maxVelocity ? _maxVelocity : velocity)) > 1.0) {
-      // debug_movement = snake moves towards an random direction
-      if (debugMovement) {
-        direction = rnd.nextInt(5);
-      }
-
-      // debug_movement = snake growths with 10% chance
-      moveSnake(_direction);
-      eatApples(apples);
+      // moves the snake
+      moveSnake(_actualDirection, apples);
 
       // resets the deltaCounter
       _deltaCounter = 0;
     }
   }
+}
+
+enum SnakeDirection {
+  North,
+  West,
+  South,
+  East
 }

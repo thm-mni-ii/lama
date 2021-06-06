@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 import 'package:lama_app/snake/models/position.dart';
@@ -14,12 +15,15 @@ class Apple {
   Paint _applePaint;
   Random _rnd = Random();
   double _relativeToTile = 0.85;
+  Sprite _imageSprite;
 
   Apple(this.game, [List<Position> excludePositions]) {
     setRandomPosition(excludePositions);
 
     _applePaint = Paint();
     _applePaint.color = Color(0xe9ea0000);
+
+    _imageSprite = Sprite('png/apple.png');
   }
 
   /// This method sets a new random [Position] of the Apple.
@@ -46,7 +50,9 @@ class Apple {
   }
 
   void render(Canvas c) {
-    c.drawArc(_appleRect.deflate(this.game.tileSize * (1 - _relativeToTile)), 0, 10, true, _applePaint);
+    //c.drawArc(_appleRect.deflate(this.game.tileSize * (1 - _relativeToTile)), 0, 10, true, _applePaint);
+
+    _imageSprite.renderRect(c, _appleRect.deflate(this.game.tileSize * (1 - _relativeToTile)));
   }
 
   void update(double timeDelta) {}

@@ -8,17 +8,25 @@ class ScoreDisplay {
 
   double _offsetYPercent;
   double _radiusPercent;
-  int _borderThickness;
-  Rect _borderRect;
+  double _borderThickness;
+  Path _borderPath;
   Rect _fillRect;
-  Paint _borderPaint;
-  Paint _fillPaint;
+  final Paint _borderPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..color = Color(0x80000000);
+  final Paint _fillPaint = Paint()
+    ..color = Color(0x4DFD4A6F);
+  final Color _textColor = Color(0xbbffffff);
   TextPainter _painter;
   TextStyle _textStyle;
   Offset _position;
 
   /// This class displays the [score] of the [SnakeGame] class.
-  ScoreDisplay(this.game, [this._offsetYPercent = 0.1, this._radiusPercent = 0.15, this._borderThickness = 2]) {
+  ScoreDisplay(this.game, [this._offsetYPercent = 0.025, this._radiusPercent = 0.15, this._borderThickness = 1.5]) {
+    resize();
+  }
+
+  void resize() {
     // relative length related to the screensize
     var relativeSize = sqrt(this.game.screenSize.width * this.game.screenSize.height);
 
@@ -30,16 +38,19 @@ class ScoreDisplay {
 
     // Style of the text
     _textStyle = TextStyle(
-      color: Color(0xbbffffff),
+      color: _textColor,
       fontSize: relativeSize * this._radiusPercent * 0.4,
     );
 
     // rectangle for the border
-    _borderRect = Rect.fromLTWH(
+    var borderRect = Rect.fromLTWH(
         (game.screenSize.width / 2) - (relativeSize * this._radiusPercent) / 2,
         this._offsetYPercent * relativeSize,
         relativeSize * this._radiusPercent,
         relativeSize * this._radiusPercent);
+
+    // border path
+    _borderPath = Path()..arcTo(borderRect, 0.0, 1.999999 * pi, true);
 
     // rectangle for the background
     _fillRect = Rect.fromLTWH(
@@ -48,13 +59,7 @@ class ScoreDisplay {
         relativeSize * this._radiusPercent - _borderThickness * 2,
         relativeSize * this._radiusPercent - _borderThickness);
 
-    // background paint
-    _fillPaint = Paint();
-    _fillPaint.color = Color(0x66E87070);
-
-    // border paint
-    _borderPaint = Paint();
-    _borderPaint.color = Color(0x66000000);
+    _borderPaint.strokeWidth = _borderThickness;
 
     // initialize offset
     _position = Offset.zero;
@@ -80,7 +85,7 @@ class ScoreDisplay {
 
   void render(Canvas c) {
     // draw border
-    c.drawArc(_borderRect, 0, 10, true, _borderPaint);
+    c.drawPath(_borderPath, _borderPaint);
     // draw background
     c.drawArc(_fillRect, 0, 10, true, _fillPaint);
     // draw text

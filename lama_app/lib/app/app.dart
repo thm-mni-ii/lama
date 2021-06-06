@@ -7,6 +7,7 @@ class LamaApp extends MaterialApp {
   LamaApp()
       : super(
           debugShowCheckedModeBanner: false,
+          title: "LAMA",
           home: BlocProvider(
             create: (BuildContext context) => CheckScreenBloc(),
             child: CheckScreen(),

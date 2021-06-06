@@ -1,10 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/four_card_task_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/mark_words_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
+import 'package:lama_app/app/task-system/task.dart';
+import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 class TaskScreen extends StatefulWidget {
   @override
@@ -19,14 +25,83 @@ class TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    LinearGradient lg;
     return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
         if (state is DisplayTaskState) {
-          switch (state.task.type) {
-            case "4Cards":
-              return FourCardTaskScreen(state.subject, state.task);
+          switch (state.subject) {
+            case "Mathe":
+              lg = LinearGradient(
+                  colors: [LamaColors.blueAccent, LamaColors.bluePrimary]);
+              break;
+            case "Englisch":
+              lg = LinearGradient(
+                  colors: [LamaColors.orangeAccent, LamaColors.orangePrimary]);
+              break;
+            case "Deutsch":
+              lg = LinearGradient(
+                  colors: [LamaColors.redAccent, LamaColors.redPrimary]);
               break;
           }
+          return Scaffold(
+            body: Container(
+              decoration: BoxDecoration(gradient: lg),
+              child: SafeArea(
+                child: Container(
+                  color: Colors.white,
+                  child: LayoutBuilder(
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return Column(children: [
+                        Container(
+                          height: (constraints.maxHeight / 100) * 7.5,
+                          decoration: BoxDecoration(
+                            gradient: lg,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(25),
+                              bottomRight: Radius.circular(25),
+                            ),
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: IconButton(
+                                  padding: EdgeInsets.all(0),
+                                  icon: Icon(
+                                    Icons.arrow_back,
+                                    size: 40,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                              ),
+                              Text(state.subject,
+                                  style: LamaTextTheme.getStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight
+                                          .w500) /*TextStyle(
+                                      fontSize: 30, color: Colors.white)*/
+                                  ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                            height: (constraints.maxHeight / 100) * 92.5,
+                            child: LayoutBuilder(builder: (BuildContext context,
+                                BoxConstraints constraints) {
+                              return getScreenForTaskWithConstraints(
+                                  state.task, constraints);
+                            }))
+                      ]);
+                    },
+                  ),
+                ),
+              ),
+            ),
+          );
         } else if (state is TaskAnswerResultState) {
           if (state.correct)
             return Container(
@@ -55,10 +130,25 @@ class TaskScreenState extends State<TaskScreen> {
           return Container(
             color: Colors.white,
           );
-        } else {
-          return Text("No task passed");
         }
+        return Text("No task passed");
       },
     );
+  }
+
+  //Task is the loaded Task and the constraints constrain the space
+  // which the taskscreen can use to display its stuff
+  Widget getScreenForTaskWithConstraints(
+      Task task, BoxConstraints constraints) {
+    switch (task.type) {
+      case "4Cards":
+        return FourCardTaskScreen(task, constraints);
+      case "ClozeTest":
+        return ClozeTestTaskScreen(task, constraints);
+      case "MarkWords" :
+        return MarkWordsScreen(task, constraints);
+      default:
+        return Container();
+    }
   }
 }

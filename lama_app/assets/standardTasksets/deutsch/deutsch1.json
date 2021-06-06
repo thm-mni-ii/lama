@@ -10,6 +10,14 @@
             "lama_text":"Tippe die richtige Silbentrennung an!",
             "right_answer":"le-sen",
              "wrong_answers":["lese-n", "les-en", "lesen"]
-             }
+             },
+         {
+           "task_type":"ClozeTest",
+           "task_reward":2,
+           "question":"__ Dino ist groß",
+           "lama_text":"Tippe die richtige Antwort an!",
+           "right_answer":"Der",
+           "wrong_answers":["Die", "Das"]
+         }
         ]
 }

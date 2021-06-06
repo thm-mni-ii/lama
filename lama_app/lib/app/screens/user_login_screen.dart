@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
+import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/util/input_validation.dart';
 
 class UserLoginScreen extends StatefulWidget {
   @override
@@ -13,7 +17,6 @@ class UserLoginScreen extends StatefulWidget {
 }
 
 class UserSelectionState extends State<UserLoginScreen> {
-  String _pass;
   @override
   void initState() {
     super.initState();
@@ -28,103 +31,20 @@ class UserSelectionState extends State<UserLoginScreen> {
       body: BlocBuilder<UserLoginBloc, UserLoginState>(
         builder: (context, state) {
           if (state is UserSelected) {
-            return Column(
-              children: [
-                _userCard(state.user),
-                TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.security),
-                    hintText: 'Passwort',
-                  ),
-                  validator: (value) => null,
-                  onChanged: (value) => this._pass = value,
-                  obscureText: true,
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    context
-                        .read<UserLoginBloc>()
-                        .add(UserLogin(state.user, _pass, context));
-                    _pass = null;
-                  },
-                  child: Text('Einloggen'),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(screenSize.width, 45),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _pass = null;
-                    context.read<UserLoginBloc>().add(UserLoginAbort());
-                  },
-                  child: Text('Abbrechen'),
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: Size(screenSize.width, 45),
-                      primary: Colors.red),
-                ),
-              ],
-            );
+            return _input(context, null, state.user, screenSize.width);
           }
           if (state is UserLoginFailed) {
-            _pass = null;
-            return Column(
-              children: [
-                _userCard(state.user),
-                TextFormField(
-                  decoration: InputDecoration(
-                      icon: Icon(Icons.security),
-                      hintText: 'Passwort',
-                      errorText: state.error),
-                  validator: (value) => null,
-                  onChanged: (value) => this._pass = value,
-                  obscureText: true,
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    context
-                        .read<UserLoginBloc>()
-                        .add(UserLogin(state.user, _pass, context));
-                  },
-                  child: Text('Einloggen'),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(screenSize.width, 45),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<UserLoginBloc>().add(UserLoginAbort());
-                  },
-                  child: Text('Abbrechen'),
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: Size(screenSize.width, 45),
-                      primary: Colors.red),
-                ),
-              ],
-            );
+            return _input(context, state.error, state.user, screenSize.width);
           }
           if (state is UsersLoaded) {
-            _pass = null;
             return _userListView(state.userList);
           }
           if (state is UserLoginSuccessful) {
-            _pass = null;
             return Container(
               alignment: Alignment(0, 0),
               child: Icon(
                 Icons.check,
-                color: Colors.green,
+                color: LamaColors.greenAccent,
                 size: 100,
               ),
             );
@@ -136,11 +56,87 @@ class UserSelectionState extends State<UserLoginScreen> {
   }
 }
 
+Widget _input(BuildContext context, String error, User user, double size) {
+  String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
+  var _formKey = GlobalKey<FormState>();
+  return Form(
+    //key: _formKey,
+    child: Column(
+      children: [
+        Padding(
+          child: Row(
+            children: [
+              CircleAvatar(
+                child: SvgPicture.asset(
+                  'assets/images/svg/avatars/${user.avatar}.svg',
+                  semanticsLabel: 'LAMA',
+                ),
+                radius: 25,
+                backgroundColor: LamaColors.mainPink,
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Text(
+                _nameDisplay,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 20,
+                  color: LamaColors.black,
+                  monospace: true,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+            icon: Icon(Icons.security),
+            hintText: 'Passwort',
+            errorText: error,
+          ),
+          validator: (value) => InputValidation.isEmpty(value)
+              ? 'Eingabe darf nicht leer sein!'
+              : null,
+          onChanged: (value) =>
+              context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
+          obscureText: true,
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        ElevatedButton(
+          onPressed: () {
+            //if (_formKey.currentState.validate())
+            context.read<UserLoginBloc>().add(UserLogin(user, context));
+          },
+          child: Text('Einloggen'),
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size(size, 45),
+          ),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        ElevatedButton(
+          onPressed: () {
+            context.read<UserLoginBloc>().add(UserLoginAbort());
+          },
+          child: Text('Abbrechen'),
+          style: ElevatedButton.styleFrom(
+              minimumSize: Size(size, 45), primary: Colors.red),
+        ),
+      ],
+    ),
+  );
+}
+
 Widget _bar(double size) {
   return AppBar(
-    title: Text('Nutzerauswahl'),
+    title: Text('Nutzerauswahl', style: LamaTextTheme.getStyle(fontSize: 18)),
     toolbarHeight: size,
-    backgroundColor: Color.fromARGB(255, 253, 74, 111),
+    backgroundColor: LamaColors.mainPink,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         bottom: Radius.circular(30),
@@ -151,26 +147,41 @@ Widget _bar(double size) {
 
 Widget _userListView(List<User> list) {
   return ListView.builder(
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        return _userCard(list[index]);
-      });
+    itemCount: list.length,
+    itemBuilder: (context, index) {
+      return _userCard(list[index]);
+    },
+  );
 }
 
 Widget _userCard(User user) {
-  return BlocBuilder<UserLoginBloc, UserLoginState>(builder: (context, state) {
-    return Card(
-      child: ListTile(
-        onTap: () {
-          context.read<UserLoginBloc>().add(SelectUser(user));
-        },
-        title: Text(user.name),
-        leading: CircleAvatar(
-          //TODO should be backgrundImage.
-          //You can use path to get the User Image.
-          backgroundColor: Color(0xFFF48FB1),
+  String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
+  return BlocBuilder<UserLoginBloc, UserLoginState>(
+    builder: (context, state) {
+      return Card(
+        child: ListTile(
+          onTap: () {
+            context.read<UserLoginBloc>().add(SelectUser(user));
+          },
+          title: Text(
+            _nameDisplay,
+            style: LamaTextTheme.getStyle(
+              fontSize: 20,
+              color: LamaColors.black,
+              monospace: true,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          leading: CircleAvatar(
+            child: SvgPicture.asset(
+              'assets/images/svg/avatars/${user.avatar}.svg',
+              semanticsLabel: 'LAMA',
+            ),
+            radius: 25,
+            backgroundColor: LamaColors.mainPink,
+          ),
         ),
-      ),
-    );
-  });
+      );
+    },
+  );
 }

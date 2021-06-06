@@ -10,6 +10,17 @@
             "lama_text":"Tap the right Answer!",
             "right_answer":"vertrauen",
              "wrong_answers":["drücken", "brauchen", "rosten"]
-             }
+             },
+         {
+           "task_type": "ClozeTest",
+           "task_reward": 2,
+           "question": "Simple Past: I __ in the water",
+           "lama_text": "Tap the right Answer!",
+           "right_answer": "swam",
+           "wrong_answers": [
+             "swimming",
+             "swum"
+           ]
+         }
         ]
 }

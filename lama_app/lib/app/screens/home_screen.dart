@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/game_screen.dart';
+import 'package:lama_app/app/screens/flappy_game_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
+import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 //Home Screen is a Stateful Widget so it can be reloaded using setState((){}) after Navigation
 class HomeScreen extends StatefulWidget {
@@ -21,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
         RepositoryProvider.of<UserRepository>(context);
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 253, 74, 111),
+      backgroundColor: LamaColors.mainPink,
       body: SafeArea(
         child: Stack(
           children: [
@@ -40,8 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Text(
                                 "Mathe",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
+                                style: LamaTextTheme.getStyle(),
                               ),
                             ),
                             Align(
@@ -54,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 112, 231, 255),
+                            primary: LamaColors.blueAccent,
                             minimumSize: Size(screenSize.width / 1.25, 60),
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -82,8 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Text(
                                 "Deutsch",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
+                                style: LamaTextTheme.getStyle(),
                               ),
                             ),
                             Align(
@@ -96,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 239, 30, 6),
+                            primary: LamaColors.redAccent,
                             minimumSize: Size(screenSize.width / 1.25, 60),
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -124,8 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Text(
                                 "Englisch",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
+                                style: LamaTextTheme.getStyle(),
                               ),
                             ),
                             Align(
@@ -138,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 253, 130, 53),
+                            primary: LamaColors.orangeAccent,
                             minimumSize: Size(screenSize.width / 1.25, 60),
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -159,15 +160,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 10,
                       ),
+                      //TODO: Remove buttons and add button for game list
                       ElevatedButton(
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
                             Center(
                               child: Text(
-                                "Spiele",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
+                                "Snake",
+                                style: LamaTextTheme.getStyle(),
                               ),
                             ),
                             Align(
@@ -180,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 253, 74, 111),
+                            primary: LamaColors.greenAccent,
                             minimumSize: Size(screenSize.width / 1.25, 60),
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -190,6 +191,41 @@ class _HomeScreenState extends State<HomeScreen> {
                           MaterialPageRoute(builder: (context) => GameScreen()),
                         ),
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      /*
+                      ElevatedButton(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Flappy Lama",
+                                style: LamaTextTheme.getStyle(),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Color.fromARGB(255, 239, 30, 50),
+                              ),
+                            )
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: LamaColors.greenAccent,
+                            minimumSize: Size(screenSize.width / 1.25, 60),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)))),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FlappyGameScreen()),
+                        ),
+                      ),*/
                     ],
                   ),
                 ),
@@ -201,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: screenSize.width,
                 height: 75,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 253, 74, 111),
+                  color: LamaColors.mainPink,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(25),
                     bottomRight: Radius.circular(25),
@@ -217,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Center(
                   child: Text(
                     "Lerne alles mit Anna",
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: LamaTextTheme.getStyle(),
                   ),
                 ),
               ),
@@ -247,24 +283,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     CircleAvatar(
+                      child: SvgPicture.asset(
+                        'assets/images/svg/avatars/${userRepository.getAvatar()}.svg',
+                        semanticsLabel: 'LAMA',
+                      ),
                       radius: 25,
+                      backgroundColor: LamaColors.mainPink,
                     ),
                     SizedBox(width: 10),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           userRepository.getUserName(),
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          style: LamaTextTheme.getStyle(
+                              fontSize: 22.5,
+                              fontWeight: FontWeight.w600,
+                              monospace: true),
                         ),
-                        Row(children: [
-                          Text(
-                            userRepository.getLamaCoins().toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          SizedBox(width: 5),
-                          CircleAvatar(radius: 10)
-                        ])
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                userRepository.getLamaCoins().toString(),
+                                style: LamaTextTheme.getStyle(fontSize: 20),
+                              ),
+                              SizedBox(width: 5),
+                              SvgPicture.asset(
+                                "assets/images/svg/lama_coin.svg",
+                                semanticsLabel: "Lama Coin",
+                                width: 20,
+                              )
+                            ])
                       ],
                     )
                   ],
@@ -273,14 +324,25 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Align(
               alignment: Alignment.bottomLeft,
-              child: ElevatedButton(
-                child: Text("User select test"),
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (BuildContext context) => UserLoginBloc(),
-                      child: UserLoginScreen(),
+              child: Padding(
+                padding: EdgeInsets.only(left: 15, bottom: 15),
+                child: Container(
+                  width: screenSize.width / 5,
+                  child: FittedBox(
+                    child: FloatingActionButton(
+                      heroTag: "back",
+                      backgroundColor: LamaColors.mainPink,
+                      onPressed: () => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (BuildContext context) => UserLoginBloc(),
+                            child: UserLoginScreen(),
+                          ),
+                        ),
+                      ),
+                      tooltip: 'Ausloggen',
+                      child: Icon(Icons.logout),
                     ),
                   ),
                 ),

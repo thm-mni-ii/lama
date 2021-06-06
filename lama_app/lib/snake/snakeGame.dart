@@ -2,6 +2,9 @@ import 'dart:ui';
 import 'dart:developer' as developer;
 import 'dart:math';
 
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flame/flame_audio.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -53,7 +56,9 @@ class SnakeGame extends Game with TapDetector {
   bool _finished = false;
   bool _initialized = false;
   bool _running = false;
-  bool _pauseWasPressed = false;
+  double _controlBarRelativeHeight = 0.25;
+  double _relativeButtonSize = 0.16;
+  AudioCache _bitePlayer;
 
   View activeView = View.home; // views added
   HomeView homeView;
@@ -62,6 +67,9 @@ class SnakeGame extends Game with TapDetector {
 
   SnakeGame(this._context) {
     initialize();
+    developer.log("${MediaQuery.of(_context).size.width}");
+    developer.log("${MediaQuery.of(_context).size.height}");
+    developer.log("${MediaQuery.of(_context).padding}");
   }
 
   /// This method is vor the initialization process of the game class.
@@ -69,23 +77,47 @@ class SnakeGame extends Game with TapDetector {
   void initialize() async {
     resize(await Flame.util.initialDimensions());
 
-    background = Background(this);
+    background = Background(this, _controlBarRelativeHeight);
     spawnApples();
+
+    _bitePlayer = AudioCache(prefix: 'assets/sounds/', fixedPlayer: AudioPlayer());
 
     homeView = HomeView(this);
     gameOverView = GameOverView(this);
 
-    arrowButtonDown = ArrowButtons(this, 0);
-    arrowButtonUp = ArrowButtons(this, 1);
-    arrowButtonLeft = ArrowButtons(this, 2);
-    arrowButtonRight = ArrowButtons(this, 3);
-    pauseButton = PauseButton(this);
+    arrowButtonDown = ArrowButtons(this, _relativeButtonSize, 3, 1, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.South);
+    arrowButtonUp = ArrowButtons(this, _relativeButtonSize, 1, 3, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.North);
+    arrowButtonLeft = ArrowButtons(this, _relativeButtonSize, 2, 0, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.West);
+    arrowButtonRight = ArrowButtons(this, _relativeButtonSize, 4, 4, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.East);
+
+    pauseButton = PauseButton(this, _relativeButtonSize, 2, 1.0 - _controlBarRelativeHeight, (tapped) => _running = !tapped);
 
     // TODO - this has to move to the begin action of the main menu
     spawnSnake();
     scoreDisplay = ScoreDisplay(this);
 
+    Flame.images.loadAll([
+      'png/snake.png',
+      'png/apple.png',
+      'png/snake_body.png',
+      'png/snake_body_curve.png',
+      'png/snake_head.png',
+      'png/snake_tail.png'
+    ]);
+
     _initialized = true;
+  }
+
+  void resizeComponents() {
+    background?.resize();
+    homeView?.resize();
+    gameOverView?.resize();
+    arrowButtonDown?.resize();
+    arrowButtonUp?.resize();
+    arrowButtonLeft?.resize();
+    arrowButtonRight?.resize();
+    pauseButton?.resize();
+    scoreDisplay?.resize();
   }
 
   /// This methos respawn the [apple] on a new free field. If there is none the [apple] will despawn.
@@ -104,7 +136,7 @@ class SnakeGame extends Game with TapDetector {
 
       // get all Positions which are filled with the snake or apples
       var excludePositions = apples.map((e) => e.position).toList();
-      excludePositions.addAll(snake?.snakeParts ?? []);
+      excludePositions.addAll(snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
       // set new Position of the eaten apple on a free field
       apple.setRandomPosition(excludePositions);
 
@@ -118,7 +150,7 @@ class SnakeGame extends Game with TapDetector {
   void spawnApples() {
     while (apples.length < maxApples) {
       var excludePositions = apples.map((e) => e.position).toList();
-      excludePositions.addAll(snake?.snakeParts ?? []);
+      excludePositions.addAll(snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
       apples.add(Apple(this, excludePositions));
     }
   }
@@ -142,6 +174,7 @@ class SnakeGame extends Game with TapDetector {
     snake.callbackCollideWithBorder = () => finishGame();
     // callback when the snake eats an apple
     snake.callbackEatsApple = (apple) {
+      playAppleBiteSound();
       score += 1;
       // respawn the eaten apple
       respawnApple(apple);
@@ -151,6 +184,10 @@ class SnakeGame extends Game with TapDetector {
     if (log) {
       developer.log("[SnakeGame][spawnSnake] spawned");
     }
+  }
+
+  Future<void> playAppleBiteSound() async {
+    await _bitePlayer.play('apple_bite.mp3');
   }
 
   void render(Canvas canvas) {
@@ -210,33 +247,11 @@ class SnakeGame extends Game with TapDetector {
     }
 
     if (activeView != View.home) {
-      if (arrowButtonDown.rectButton.contains(d.localPosition)) {
-        //arrowButtonDown.onTapDown();
-        snake.direction = 3;
-      }
-      else if (arrowButtonUp.rectButton.contains(d.localPosition)) {
-        //arrowButtonUp.onTapDown();
-        snake.direction = 1;
-      }
-      else if (arrowButtonLeft.rectButton.contains(d.localPosition)) {
-        //arrowButtonLeft.onTapDown();
-        snake.direction = 2;
-      }
-      else if (arrowButtonRight.rectButton.contains(d.localPosition)) {
-        //arrowButtonRight.onTapDown();
-        snake.direction = 4;
-      }
-
-      if (pauseButton.rectButton.contains(d.localPosition)) {
-        if (!_pauseWasPressed) {
-          _running = false;
-          _pauseWasPressed = true;
-        }
-        else {
-          _running = true;
-          _pauseWasPressed = false;
-        }
-      }
+      arrowButtonDown.onTapDown(d);
+      arrowButtonUp.onTapDown(d);
+      arrowButtonLeft.onTapDown(d);
+      arrowButtonRight.onTapDown(d);
+      pauseButton.onTapDown(d);
     }
 
     // start button
@@ -256,18 +271,23 @@ class SnakeGame extends Game with TapDetector {
   }
 
   void resize(Size size) {
-    screenSize = size;
+    screenSize = Size(
+        MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
+        MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom
+    );
 
     if (maxField && screenSize.width > 0 && screenSize.height > 0) {
       if (screenSize.width < screenSize.height) {
         tileSize = screenSize.width / maxFieldX;
         
-        maxFieldY = ((screenSize.height - (tileSize * fieldOffsetY)) * 0.7) ~/ tileSize;
+        maxFieldY = ((screenSize.height * (1 - _controlBarRelativeHeight) - (tileSize * fieldOffsetY))) ~/ tileSize;
       } else {
         tileSize = screenSize.width / maxFieldX;
 
         maxFieldX = screenSize.width ~/ tileSize;
       }
+
+      resizeComponents();
     }
 
     if (log) {

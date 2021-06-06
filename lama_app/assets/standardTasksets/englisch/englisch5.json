@@ -10,6 +10,17 @@
             "lama_text":"Tap the right Answer!",
             "right_answer":"mutig",
              "wrong_answers":["Berg", "haben", "mögen"]
-             }
+             },
+         {
+           "task_type": "ClozeTest",
+           "task_reward": 2,
+           "question": "Get __ the road",
+           "lama_text": "Tap the right Answer!",
+           "right_answer": "of",
+           "wrong_answers": [
+             "off",
+             "ov"
+           ]
+         }
         ]
 }

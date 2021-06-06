@@ -30,7 +30,7 @@ class CheckScreenPage extends State<CheckScreen> {
         builder: (context, state) {
           if (state is ShowDSGVO) {
             return Scaffold(
-              appBar: AppBar(title: Text('Datenschutzgrunderordnung')),
+              appBar: AppBar(title: Text('Datenschutzgrundverordnung')),
               body: Column(
                 children: [
                   Expanded(child: Markdown(data: state.dsgvo)),

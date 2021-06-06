@@ -13,14 +13,32 @@ class Task {
             json['question'],
             json['right_answer'],
             List<String>.from(json['wrong_answers']));
+      case "ClozeTest":
+        return TaskClozeTest(
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['question'],
+            json['right_answer'],
+            List<String>.from(json['wrong_answers']));
+      case "MarkWords":
+        return TaskMarkWords(
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['question'],
+            json['sentence'],
+            List<String>.from(json['right_words']));
       default:
         return null;
     }
   }
+
   String type;
   int reward;
   String question;
   String lamaText;
+
   Task(this.type, this.reward, this.question, this.lamaText);
 }
 
@@ -30,5 +48,23 @@ class Task4Cards extends Task {
 
   Task4Cards(String taskType, int reward, String lamaText, String question,
       this.rightAnswer, this.wrongAnswers)
+      : super(taskType, reward, question, lamaText);
+}
+
+class TaskClozeTest extends Task {
+  String rightAnswer;
+  List<String> wrongAnswers;
+
+  TaskClozeTest(String taskType, int reward, String lamaText, String question,
+      this.rightAnswer, this.wrongAnswers)
+      : super(taskType, reward, question, lamaText);
+}
+
+class TaskMarkWords extends Task {
+  List<String> rightWords;
+  String sentence;
+
+  TaskMarkWords(String taskType, int reward, String lamaText, String question,
+      this.sentence, this.rightWords)
       : super(taskType, reward, question, lamaText);
 }
