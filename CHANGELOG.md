@@ -10,13 +10,16 @@
 	- unified colors and text theme
 	- fixed a bug where tasksets dont get loaded on first startup
 	- fixed some layout problems
-- sname game
-	- changed order of control buttons
-	- added screen resizing
+- snake game
+	- changed order and style of control buttons and background
+	- change pause layout and display
+	- added valid screen resizing
 	- added sprites
 	- added sounds
+	- update score display
 - flappy lama
-	- started work on flappy lama
+	- add basic game implementation
+	- add basic ground and obstacles
 	- disabled in release
 	
 ### 0.2
