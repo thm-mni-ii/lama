@@ -37,7 +37,8 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
     if (_changedUser.name != _user.name && _changedUser.name != null)
       await DatabaseProvider.db.updateUserName(_user, _changedUser.name);
     //Passwort
-    if (_changedUser.name != _user.password && _changedUser.name != null)
+    if (_changedUser.password != _user.password &&
+        _changedUser.password != null)
       await DatabaseProvider.db.updatePassword(_changedUser.password, _user);
     //Coins
     if (_changedUser.coins != _user.coins && _changedUser.coins != null)
