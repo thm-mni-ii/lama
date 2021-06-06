@@ -61,8 +61,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // add background
     add(back); 
     // add lama
-    _lama = FlappyLama(this, 48)
-      ..onHitGround = () => developer.log("GROUND");
+    _lama = FlappyLama(this, 48);
     add(_lama);
     loadPersonalHighscoreAsync();
     addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));

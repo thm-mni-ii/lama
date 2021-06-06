@@ -66,16 +66,11 @@ class FlappyLama extends AnimationComponent {
     }
 
     // X
-    if ((object.left > this.x &&
-        object.left < this.x + this.width) ||
-        (object.right > this.x &&
-        object.right < this.x + this.width)) {
+    if ((object.left > this.x && object.left < this.x + this.width) ||
+        (object.right > this.x && object.right < this.x + this.width)) {
       // Y
-      if ((object.top > this.y &&
-          object.top < this.y + this.height) ||
-          (object.bottom > this.y &&
-          object.bottom < this.y + this.height)
-      ) {
+      if ((object.top > this.y && object.top < this.y + this.height) ||
+          (object.bottom > this.y && object.bottom < this.y + this.height)) {
         // callback
         onCollide?.call();
         return true;
