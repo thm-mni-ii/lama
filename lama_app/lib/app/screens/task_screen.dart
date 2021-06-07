@@ -50,6 +50,7 @@ class TaskScreenState extends State<TaskScreen> {
               break;
           }
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             body: Container(
               decoration: BoxDecoration(gradient: lg),
               child: SafeArea(

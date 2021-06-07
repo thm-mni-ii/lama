@@ -7,7 +7,7 @@
             "task_type":"VocableTest",
             "task_reward":5,
             "question": "",
-            "lama_text": "Translate the shown word to englisch or german!",
+            "lama_text": "Translate the shown word!",
             "wordPairs": [{"word":"House","translation":"Haus"}, {"word":"Sun", "translation":"Sonne"}],
             "randomizeSide": true
           },
