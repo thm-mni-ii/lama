@@ -15,6 +15,7 @@ import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
 import 'package:lama_app/flappyLama/widgets/pauseMode.dart';
 import 'package:lama_app/flappyLama/widgets/playMode.dart';
+import 'package:lama_app/flappyLama/widgets/startScreen.dart';
 
 class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   Size screenSize;
@@ -31,7 +32,10 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   // name of the playMode widget
   String _playMode = "PlayMode";
 
+  String _startScreen = "StartScreen";
+
   int _gameId = 2;
+  bool _started = false;
   bool _paused = false;
   bool _savedHighscore = false;
   int _highScore = 0;
@@ -50,23 +54,21 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         baseSpeed: Offset(7, 0),
         layerDelta: Offset(10, 0)
     );
+   
     // add background
-    add(back);
-
+    add(back); 
     // add lama
     _lama = FlappyLama(this, 48)
       ..onHitGround = () => developer.log("GROUND");
     add(_lama);
-
-    // add PlayMode widget
+    loadPersonalHighscoreAsync();
     addWidgetOverlay(
-        _playMode,
-        PlayMode(
-            onPausePressed: pauseGame
-        )
+      _startScreen,
+      StartScreen(highScore: _highScore,
+        onStartPressed: startGame
+      )
     );
-
-    initialize();
+   
   }
 
   void initialize() async {
@@ -118,6 +120,17 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     tilesY = screenSize.height ~/ tileSize;
 
     super.resize(size);
+  }
+
+  void startGame(){
+    removeWidgetOverlay(_startScreen);
+    addWidgetOverlay(
+        _playMode,
+        PlayMode(
+            onPausePressed: pauseGame)
+    );
+    initialize();
+    _started = true;
   }
 
   /// This method pauses the game.
