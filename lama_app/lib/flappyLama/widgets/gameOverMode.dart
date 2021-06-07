@@ -7,7 +7,7 @@ class GameOverMode extends StatelessWidget {
   // Score to display on game over menu.
   final int score;
 
-  // This function will be called when restart button is pressed.
+  // This function will be called when quit button is pressed.
   final Function onQuitPressed;
 
   const GameOverMode({
@@ -55,7 +55,7 @@ class GameOverMode extends StatelessWidget {
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 15)),
                       child: Text(
-                        'Quit',
+                        'Quit Game',
                         style: TextStyle(
                           color: LamaColors.black,
                           fontSize: 15,

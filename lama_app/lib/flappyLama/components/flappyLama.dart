@@ -129,12 +129,4 @@ class FlappyLama extends AnimationComponent {
   Rect toRect() {
     return Rect.fromLTWH(this.x, this.y, this._size, this._size);
   }
-
-  bool collide(Object object) {
-    if (this.y + this.height == object) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 }
