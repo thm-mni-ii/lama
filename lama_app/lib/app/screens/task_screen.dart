@@ -12,6 +12,7 @@ import 'package:lama_app/app/screens/task_type_screens/grid_select_task_screen.d
 import 'package:lama_app/app/screens/task_type_screens/mark_words_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/match_Category_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/money_task_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/vocable_test_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -164,8 +165,10 @@ class TaskScreenState extends State<TaskScreen> {
         return MatchCategoryTaskScreen(task, constraints);
       case "GridSelect":
         return GridSelectTaskScreen(task, constraints, GridSelectTaskBloc());
-      case"MoneyTask":
+      case "MoneyTask":
         return MoneyTaskScreen(task, constraints);
+      case "VocableTest":
+        return VocableTestTaskScreen(task, constraints);
       default:
         return Container();
     }
