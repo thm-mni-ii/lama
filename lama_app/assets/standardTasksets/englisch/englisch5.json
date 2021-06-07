@@ -16,9 +16,9 @@
            "task_reward": 2,
            "question": "Get __ the road",
            "lama_text": "Tap the right Answer!",
-           "right_answer": "of",
+           "right_answer": "off",
            "wrong_answers": [
-             "off",
+             "of",
              "ov"
            ]
          },
