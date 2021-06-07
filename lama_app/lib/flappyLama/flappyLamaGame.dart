@@ -18,6 +18,8 @@ import 'package:lama_app/flappyLama/widgets/pauseMode.dart';
 import 'package:lama_app/flappyLama/widgets/playMode.dart';
 import 'package:lama_app/flappyLama/widgets/startScreen.dart';
 
+import 'widgets/gameOverMode.dart';
+
 class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   Size screenSize;
   double tileSize;
@@ -57,19 +59,15 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       ParallaxImage('png/clouds_2.png'),
       ParallaxImage('png/clouds.png'),
     ], baseSpeed: Offset(7, 0), layerDelta: Offset(10, 0));
-   
+
     // add background
-    add(back); 
+    add(back);
     // add lama
     _lama = FlappyLama(this, 48);
     add(_lama);
     loadPersonalHighscoreAsync();
-    addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
-      _startScreen,
-      StartScreen(highScore: _highScore,
-        onStartPressed: startGame
-      )
-   
+    addWidgetOverlay(_startScreen,
+        StartScreen(highScore: _highScore, onStartPressed: startGame));
   }
 
   void initialize() async {
@@ -125,13 +123,9 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     super.resize(size);
   }
 
-  void startGame(){
+  void startGame() {
     removeWidgetOverlay(_startScreen);
-    addWidgetOverlay(
-        _playMode,
-        PlayMode(
-            onPausePressed: pauseGame)
-    );
+    addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
     initialize();
     _started = true;
   }
