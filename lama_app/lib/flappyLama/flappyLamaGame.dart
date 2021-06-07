@@ -35,6 +35,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   String _startScreen = "StartScreen";
 
   int _gameId = 2;
+  bool _started = false;
   bool _paused = false;
   bool _savedHighscore = false;
   int _highScore = 0;
@@ -53,30 +54,20 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         baseSpeed: Offset(7, 0),
         layerDelta: Offset(10, 0)
     );
-    addWidgetOverlay(
-        _startScreen,
-        StartScreen(
-          
-          onStartPressed: startGame
-        )
-    );
+   
     // add background
-    add(back);
-
+    add(back); 
     // add lama
     _lama = FlappyLama(this, 48)
       ..onHitGround = () => developer.log("GROUND");
     add(_lama);
-
-    // add PlayMode widget
     addWidgetOverlay(
-        _playMode,
-        PlayMode(
-            onPausePressed: pauseGame
-        )
+      _startScreen,
+      StartScreen(
+        onStartPressed: startGame
+      )
     );
-
-    initialize();
+   
   }
 
   void initialize() async {
@@ -131,7 +122,14 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void startGame(){
-    
+    removeWidgetOverlay(_startScreen);
+    addWidgetOverlay(
+        _playMode,
+        PlayMode(
+            onPausePressed: pauseGame)
+    );
+    initialize();
+    _started = true;
   }
 
   /// This method pauses the game.
