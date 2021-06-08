@@ -66,9 +66,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     _lama = FlappyLama(this, 48);
     add(_lama);
     _lama.onHitGround = () => gameOver();
-    loadPersonalHighscoreAsync();
-    addWidgetOverlay(_startScreen,
-        StartScreen(highScore: _highScore, onStartPressed: startGame));
+    
+    loadStartScreen();
   }
 
   void initialize() async {
@@ -106,8 +105,11 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     }
   }
 
-  void loadPersonalHighscoreAsync() async {
+  void loadStartScreen() async {
     this._highScore = await _userRepo.getMyHighscore(_gameId);
+
+    addWidgetOverlay(_startScreen,
+        StartScreen(highScore: _highScore, onStartPressed: startGame));
   }
 
   void resize(Size size) {
@@ -155,6 +157,9 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   void gameOver() {
     pauseEngine();
     _gameover = true;
+
+    // save highscore
+    saveHighscore();
 
     //
     addWidgetOverlay(

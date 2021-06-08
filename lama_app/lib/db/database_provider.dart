@@ -214,7 +214,7 @@ class DatabaseProvider {
       columns: [columnId, columnGameId, columnScore, columnUserId],
       where: "$columnUserId = ? and $columnGameId = ?",
       whereArgs: [user.id, gameID],
-      orderBy: columnScore,
+      orderBy: "$columnScore DESC",
       limit: 1);
 
     if (highscore.isNotEmpty) {
