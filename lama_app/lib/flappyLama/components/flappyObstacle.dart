@@ -115,7 +115,6 @@ class FlappyObstacle extends Component {
         return true;
       }
     }
-
     return false;
   }
 
