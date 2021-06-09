@@ -35,10 +35,10 @@ class UserLoginScreenState extends State<UserLoginScreen> {
       appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<UserLoginBloc, UserLoginState>(
         builder: (context, state) {
-          if (state is UserSelected) {
+          /*if (state is UserSelected) {
             return _input(
                 context, null, state.user, screenSize.width, _formKey);
-          }
+          }*/
           if (state is UserLoginFailed) {
             return _input(
                 context, state.error, state.user, screenSize.width, _formKey);
