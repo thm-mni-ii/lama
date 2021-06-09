@@ -4,6 +4,11 @@ abstract class UserLoginState {
   User get user => null;
 }
 
+class UserLoginPulled extends UserLoginState {
+  User user;
+  UserLoginPulled(this.user);
+}
+
 class UserLoginFailed extends UserLoginState {
   User user;
   String error;

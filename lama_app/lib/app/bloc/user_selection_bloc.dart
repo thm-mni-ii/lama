@@ -27,7 +27,7 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(
-          create: (BuildContext context) => UserLoginBloc(),
+          create: (BuildContext context) => UserLoginBloc(user: user),
           child: UserLoginScreen(),
         ),
       ),

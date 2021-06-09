@@ -26,6 +26,7 @@ class UserLoginScreenState extends State<UserLoginScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<UserLoginBloc>().add(UserLoginPullUser());
   }
 
   @override
@@ -35,10 +36,10 @@ class UserLoginScreenState extends State<UserLoginScreen> {
       appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<UserLoginBloc, UserLoginState>(
         builder: (context, state) {
-          /*if (state is UserSelected) {
+          if (state is UserLoginPulled) {
             return _input(
                 context, null, state.user, screenSize.width, _formKey);
-          }*/
+          }
           if (state is UserLoginFailed) {
             return _input(
                 context, state.error, state.user, screenSize.width, _formKey);
@@ -137,7 +138,7 @@ Widget _input(BuildContext context, String error, User user, double size,
             ),
             ElevatedButton(
               onPressed: () {
-                context.read<UserLoginBloc>().add(UserLoginAbort());
+                context.read<UserLoginBloc>().add(UserLoginAbort(context));
               },
               child: Icon(Icons.close_rounded),
               style: ElevatedButton.styleFrom(
