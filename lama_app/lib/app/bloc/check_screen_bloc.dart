@@ -7,6 +7,7 @@ import 'package:lama_app/app/event/check_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/screens/create_admin_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
+import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
 import 'package:lama_app/db/database_provider.dart';
 
@@ -59,7 +60,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
       MaterialPageRoute(
         builder: (context) => BlocProvider(
           create: (BuildContext context) => UserLoginBloc(),
-          child: UserLoginScreen(),
+          child: UserSelectionScreen(),
         ),
       ),
     );

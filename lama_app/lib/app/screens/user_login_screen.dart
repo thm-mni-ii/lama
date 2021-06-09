@@ -12,16 +12,20 @@ import 'package:lama_app/util/input_validation.dart';
 class UserLoginScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return UserSelectionState();
+    return UserLoginScreenState();
   }
 }
 
+<<<<<<< HEAD
 class UserSelectionState extends State<UserLoginScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+=======
+class UserLoginScreenState extends State<UserLoginScreen> {
+  var _formKey = GlobalKey<FormState>();
+>>>>>>> Add UserSelectionScreen and redirect to it
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<UserLoginBloc>(context).add(LoadUsers());
   }
 
   @override
@@ -38,9 +42,6 @@ class UserSelectionState extends State<UserLoginScreen> {
           if (state is UserLoginFailed) {
             return _input(
                 context, state.error, state.user, screenSize.width, _formKey);
-          }
-          if (state is UsersLoaded) {
-            return _userListView(state.userList);
           }
           if (state is UserLoginSuccessful) {
             return Container(
@@ -150,47 +151,6 @@ Widget _input(BuildContext context, String error, User user, double size,
         )
       ],
     ),
-  );
-}
-
-Widget _userListView(List<User> list) {
-  return ListView.builder(
-    itemCount: list.length,
-    itemBuilder: (context, index) {
-      return _userCard(list[index]);
-    },
-  );
-}
-
-Widget _userCard(User user) {
-  String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
-  return BlocBuilder<UserLoginBloc, UserLoginState>(
-    builder: (context, state) {
-      return Card(
-        child: ListTile(
-          onTap: () {
-            context.read<UserLoginBloc>().add(SelectUser(user));
-          },
-          title: Text(
-            _nameDisplay,
-            style: LamaTextTheme.getStyle(
-              fontSize: 20,
-              color: LamaColors.black,
-              monospace: true,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          leading: CircleAvatar(
-            child: SvgPicture.asset(
-              'assets/images/svg/avatars/${user.avatar}.svg',
-              semanticsLabel: 'LAMA',
-            ),
-            radius: 25,
-            backgroundColor: LamaColors.mainPink,
-          ),
-        ),
-      );
-    },
   );
 }
 
