@@ -56,7 +56,7 @@ Widget _userCard(User user) {
       return Card(
         child: ListTile(
           onTap: () {
-            context.read<UserLoginBloc>().add(SelectUser(user));
+            context.read<UserLoginBloc>().add(SelectUser(user, context));
           },
           title: Text(
             _nameDisplay,

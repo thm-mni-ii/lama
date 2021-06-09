@@ -13,7 +13,8 @@ class UserLogin extends UserLoginEvent {
 
 class SelectUser extends UserLoginEvent {
   User user;
-  SelectUser(this.user);
+  BuildContext context;
+  SelectUser(this.user, this.context);
 }
 
 class UserLoginAbort extends UserLoginEvent {}

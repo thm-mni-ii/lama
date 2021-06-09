@@ -156,7 +156,7 @@ Widget _input(BuildContext context, String error, User user, double size,
 
 Widget _bar(double size) {
   return AppBar(
-    title: Text('Nutzerauswahl', style: LamaTextTheme.getStyle(fontSize: 18)),
+    title: Text('Anmeldung', style: LamaTextTheme.getStyle(fontSize: 18)),
     toolbarHeight: size,
     backgroundColor: LamaColors.mainPink,
     shape: RoundedRectangleBorder(

@@ -9,6 +9,7 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/home_screen.dart';
+import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/db/database_provider.dart';
 
@@ -19,10 +20,22 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   @override
   Stream<UserLoginState> mapEventToState(UserLoginEvent event) async* {
     if (event is LoadUsers) yield await _loadUsers();
-    if (event is SelectUser) yield UserSelected(event.user);
+    if (event is SelectUser) _userSelected(event.user, event.context);
     if (event is UserLogin) yield await validateUserLogin(event);
     if (event is UserLoginAbort) yield await _loadUsers();
     if (event is UserLoginChangePass) _pass = event.pass;
+  }
+
+  void _userSelected(User user, BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (BuildContext context) => UserLoginBloc(),
+          child: UserLoginScreen(),
+        ),
+      ),
+    ).then((value) => context.read<UserLoginBloc>().add(LoadUsers()));
   }
 
   Future<UserLoginState> validateUserLogin(UserLogin event) async {
