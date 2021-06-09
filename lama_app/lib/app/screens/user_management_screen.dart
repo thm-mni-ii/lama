@@ -37,33 +37,13 @@ class UserManagementScreenState extends State<UserManagementScreen> {
           return Center(child: CircularProgressIndicator());
         },
       ),
-      floatingActionButton: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 30),
-            child: FloatingActionButton(
-              heroTag: "back",
-              backgroundColor: LamaColors.bluePrimary,
-              onPressed: () => {
-                context
-                    .read<UserManagementBloc>()
-                    .add(LogoutAdminScreen(context))
-              },
-              tooltip: 'Ausloggen',
-              child: Icon(Icons.logout),
-            ),
-          ),
-          Spacer(),
-          FloatingActionButton(
-              heroTag: "addUser",
-              backgroundColor: LamaColors.bluePrimary,
-              onPressed: () =>
-                  {context.read<UserManagementBloc>().add(CreateUser(context))},
-              tooltip: 'Nutzer hinzufügen',
-              child: Icon(Icons.add)),
-        ],
-        mainAxisAlignment: MainAxisAlignment.end,
-      ),
+      floatingActionButton: FloatingActionButton(
+          heroTag: "addUser",
+          backgroundColor: LamaColors.bluePrimary,
+          onPressed: () =>
+              {context.read<UserManagementBloc>().add(CreateUser(context))},
+          tooltip: 'Nutzer hinzufügen',
+          child: Icon(Icons.add)),
     );
   }
 
@@ -73,16 +53,6 @@ class UserManagementScreenState extends State<UserManagementScreen> {
         'Verwalte deine Nutzer',
         style: LamaTextTheme.getStyle(fontSize: 18),
       ),
-      actions: [
-        IconButton(
-          icon: Icon(
-            Icons.settings_rounded,
-            color: LamaColors.white,
-          ),
-          onPressed: () =>
-              {context.read<UserManagementBloc>().add(TasksetOption(context))},
-        ),
-      ],
       toolbarHeight: size,
       backgroundColor: LamaColors.bluePrimary,
       shape: RoundedRectangleBorder(

@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
+import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -21,12 +23,13 @@ class AdminMenuScreen extends StatelessWidget {
   Widget _buttonColumne(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(50),
-      child: Column(
+      child: Wrap(
+        runSpacing: 5,
         children: [
           _menuButton(
             context,
-            Icon(Icons.logout),
-            'Logout',
+            Icon(Icons.group_add),
+            'Nutzerverwaltung',
             () => {
               Navigator.push(
                 context,
@@ -38,7 +41,23 @@ class AdminMenuScreen extends StatelessWidget {
                 ),
               )
             },
-          )
+          ),
+          _menuButton(
+            context,
+            Icon(Icons.add_link),
+            'Aufgaben Verwalten',
+            () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) => TasksetOprionsBloc(),
+                    child: OptionTaskScreen(),
+                  ),
+                ),
+              )
+            },
+          ),
         ],
       ),
     );
@@ -47,29 +66,52 @@ class AdminMenuScreen extends StatelessWidget {
   Widget _menuButton(
       BuildContext context, Icon icon, String text, VoidCallback route) {
     return ElevatedButton(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
         children: [
           icon,
-          SizedBox(
-            width: 5,
-          ),
-          Text(
-            text,
-            style: LamaTextTheme.getStyle(fontSize: 14),
-          ),
+          Align(
+            child: Padding(
+              child: Text(
+                text,
+                style: LamaTextTheme.getStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              padding: EdgeInsets.only(top: 3, bottom: 3),
+            ),
+            alignment: Alignment.center,
+          )
         ],
       ),
       onPressed: route,
       style: ElevatedButton.styleFrom(
         minimumSize: Size(50, 45),
         primary: LamaColors.bluePrimary,
+        shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(0)),
       ),
     );
   }
 
   Widget _bar(double size, String titel, Color colors) {
     return AppBar(
+      leading: Builder(
+        builder: (BuildContext context) {
+          return IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) => UserLoginBloc(),
+                    child: UserLoginScreen(),
+                  ),
+                ),
+              );
+            },
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          );
+        },
+      ),
       title: Text(
         titel,
         style: LamaTextTheme.getStyle(fontSize: 18),
