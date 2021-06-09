@@ -67,23 +67,24 @@ Widget _input(BuildContext context, String error, User user, double size,
     child: Column(
       children: [
         Padding(
-          child: Row(
+          padding: EdgeInsets.only(top: 30, bottom: 30),
+          child: Column(
             children: [
               CircleAvatar(
                 child: SvgPicture.asset(
                   'assets/images/svg/avatars/${user.avatar}.svg',
                   semanticsLabel: 'LAMA',
                 ),
-                radius: 25,
+                radius: 35,
                 backgroundColor: LamaColors.mainPink,
               ),
               SizedBox(
-                width: 15,
+                height: 15,
               ),
               Text(
                 _nameDisplay,
                 style: LamaTextTheme.getStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   color: LamaColors.black,
                   monospace: true,
                   fontWeight: FontWeight.w500,
@@ -91,59 +92,63 @@ Widget _input(BuildContext context, String error, User user, double size,
               ),
             ],
           ),
-          padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
         ),
-        TextFormField(
-          decoration: InputDecoration(
-            icon: Icon(Icons.security),
-            hintText: 'Passwort',
-            errorText: error,
-          ),
-          validator: (value) => InputValidation.isEmpty(value)
-              ? 'Eingabe darf nicht leer sein!'
-              : null,
-          onChanged: (value) =>
-              context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
-          obscureText: true,
-        ),
-        SizedBox(
-          height: 25,
-        ),
-        ElevatedButton(
-          onPressed: () {
-            if (key.currentState.validate())
-              context.read<UserLoginBloc>().add(UserLogin(user, context));
-          },
-          child: Text('Einloggen'),
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size(size, 45),
+        Padding(
+          padding: EdgeInsets.only(right: 20, left: 20, bottom: 30),
+          child: TextFormField(
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              hintText: 'Passwort',
+              errorText: error,
+            ),
+            validator: (value) => InputValidation.isEmpty(value)
+                ? 'Eingabe darf nicht leer sein!'
+                : null,
+            onChanged: (value) =>
+                context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
+            obscureText: true,
           ),
         ),
-        SizedBox(
-          height: 15,
-        ),
-        ElevatedButton(
-          onPressed: () {
-            context.read<UserLoginBloc>().add(UserLoginAbort());
-          },
-          child: Text('Abbrechen'),
-          style: ElevatedButton.styleFrom(
-              minimumSize: Size(size, 45), primary: Colors.red),
-        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                if (key.currentState.validate())
+                  context.read<UserLoginBloc>().add(UserLogin(user, context));
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.check_rounded),
+                  SizedBox(width: 10),
+                  Text('Einloggen'),
+                ],
+              ),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(250, 50),
+                primary: LamaColors.greenPrimary,
+                shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.read<UserLoginBloc>().add(UserLoginAbort());
+              },
+              child: Icon(Icons.close_rounded),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(50, 50),
+                primary: LamaColors.redAccent,
+                shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+              ),
+            ),
+          ],
+        )
       ],
-    ),
-  );
-}
-
-Widget _bar(double size) {
-  return AppBar(
-    title: Text('Nutzerauswahl', style: LamaTextTheme.getStyle(fontSize: 18)),
-    toolbarHeight: size,
-    backgroundColor: LamaColors.mainPink,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        bottom: Radius.circular(30),
-      ),
     ),
   );
 }
@@ -186,5 +191,18 @@ Widget _userCard(User user) {
         ),
       );
     },
+  );
+}
+
+Widget _bar(double size) {
+  return AppBar(
+    title: Text('Nutzerauswahl', style: LamaTextTheme.getStyle(fontSize: 18)),
+    toolbarHeight: size,
+    backgroundColor: LamaColors.mainPink,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        bottom: Radius.circular(30),
+      ),
+    ),
   );
 }
