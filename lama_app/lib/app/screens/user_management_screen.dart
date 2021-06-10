@@ -43,7 +43,7 @@ class UserManagementScreenState extends State<UserManagementScreen> {
           onPressed: () =>
               {context.read<UserManagementBloc>().add(CreateUser(context))},
           tooltip: 'Nutzer hinzufügen',
-          child: Icon(Icons.add)),
+          child: Icon(Icons.group_add)),
     );
   }
 
