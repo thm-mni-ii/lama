@@ -162,6 +162,13 @@ class EditUserScreenState extends State<EditUserScreen> {
   }
 
   Widget _showChanges(BuildContext context, EditUserChangeSuccess state) {
+    String passString = state.changedUser.password.length >= 9
+        ? state.changedUser.password.substring(0, 3) +
+            '***' +
+            state.changedUser.password.substring(
+                state.changedUser.password.length - 3,
+                state.changedUser.password.length)
+        : state.changedUser.password;
     return Scaffold(
       appBar: _bar(
         MediaQuery.of(context).size.width / 5,
@@ -176,7 +183,7 @@ class EditUserScreenState extends State<EditUserScreen> {
             _changesHeadline('Nutzername'),
             _changeRow(state.user.name, state.changedUser.name),
             _changesHeadline('Password'),
-            _changeRow('******', state.changedUser.password),
+            _changeRow('******', passString),
             _changesHeadline('Lamamünzen'),
             _changeRow(state.user.coins, state.changedUser.coins),
             SizedBox(
@@ -331,23 +338,24 @@ class EditUserScreenState extends State<EditUserScreen> {
     return Row(
       children: [
         Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Ink(
-              decoration: ShapeDecoration(
-                color: LamaColors.greenAccent,
-                shape: CircleBorder(),
-              ),
-              padding: EdgeInsets.all(7.0),
-              child: IconButton(
-                icon: Icon(Icons.check_rounded),
-                color: Colors.white,
-                tooltip: 'Bestätigen',
-                onPressed: () {
-                  if (_formKey.currentState.validate())
-                    context.read<EditUserBloc>().add(EditUserPush());
-                },
-              ),
-            )),
+          padding: EdgeInsets.only(right: 10),
+          child: Ink(
+            decoration: ShapeDecoration(
+              color: LamaColors.greenAccent,
+              shape: CircleBorder(),
+            ),
+            padding: EdgeInsets.all(7.0),
+            child: IconButton(
+              icon: Icon(Icons.check_rounded),
+              color: Colors.white,
+              tooltip: 'Bestätigen',
+              onPressed: () {
+                if (_formKey.currentState.validate())
+                  context.read<EditUserBloc>().add(EditUserPush());
+              },
+            ),
+          ),
+        ),
         Ink(
           decoration: ShapeDecoration(
             color: LamaColors.redPrimary,

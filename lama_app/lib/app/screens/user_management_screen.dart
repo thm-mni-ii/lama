@@ -2,25 +2,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lama_app/app/bloc/admin_screen_bloc.dart';
-import 'package:lama_app/app/event/admin_screen_event.dart';
+import 'package:lama_app/app/bloc/user_management_bloc.dart';
+import 'package:lama_app/app/event/user_management_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/state/admin_state.dart';
+import 'package:lama_app/app/state/user_management_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
-class AdminScreen extends StatefulWidget {
+class UserManagementScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return AdminScreenState();
+    return UserManagementScreenState();
   }
 }
 
-class AdminScreenState extends State<AdminScreen> {
+class UserManagementScreenState extends State<UserManagementScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<AdminScreenBloc>(context).add(LoadAllUsers());
+    BlocProvider.of<UserManagementBloc>(context).add(LoadAllUsers());
   }
 
   @override
@@ -29,7 +29,7 @@ class AdminScreenState extends State<AdminScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5),
-      body: BlocBuilder<AdminScreenBloc, AdminState>(
+      body: BlocBuilder<UserManagementBloc, UserManagementState>(
         builder: (context, state) {
           if (state is Loaded) {
             return _userListView(state.userList);
@@ -37,31 +37,13 @@ class AdminScreenState extends State<AdminScreen> {
           return Center(child: CircularProgressIndicator());
         },
       ),
-      floatingActionButton: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 30),
-            child: FloatingActionButton(
-              heroTag: "back",
-              backgroundColor: LamaColors.bluePrimary,
-              onPressed: () => {
-                context.read<AdminScreenBloc>().add(LogoutAdminScreen(context))
-              },
-              tooltip: 'Ausloggen',
-              child: Icon(Icons.logout),
-            ),
-          ),
-          Spacer(),
-          FloatingActionButton(
-              heroTag: "addUser",
-              backgroundColor: LamaColors.bluePrimary,
-              onPressed: () =>
-                  {context.read<AdminScreenBloc>().add(CreateUser(context))},
-              tooltip: 'Nutzer hinzufügen',
-              child: Icon(Icons.add)),
-        ],
-        mainAxisAlignment: MainAxisAlignment.end,
-      ),
+      floatingActionButton: FloatingActionButton(
+          heroTag: "addUser",
+          backgroundColor: LamaColors.bluePrimary,
+          onPressed: () =>
+              {context.read<UserManagementBloc>().add(CreateUser(context))},
+          tooltip: 'Nutzer hinzufügen',
+          child: Icon(Icons.group_add)),
     );
   }
 
@@ -71,16 +53,6 @@ class AdminScreenState extends State<AdminScreen> {
         'Verwalte deine Nutzer',
         style: LamaTextTheme.getStyle(fontSize: 18),
       ),
-      actions: [
-        IconButton(
-          icon: Icon(
-            Icons.settings_rounded,
-            color: LamaColors.white,
-          ),
-          onPressed: () =>
-              {context.read<AdminScreenBloc>().add(TasksetOption(context))},
-        ),
-      ],
       toolbarHeight: size,
       backgroundColor: LamaColors.bluePrimary,
       shape: RoundedRectangleBorder(
@@ -102,12 +74,12 @@ class AdminScreenState extends State<AdminScreen> {
 
   Widget _userCard(User user) {
     String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
-    return BlocBuilder<AdminScreenBloc, AdminState>(
+    return BlocBuilder<UserManagementBloc, UserManagementState>(
       builder: (context, state) {
         return Card(
           child: ListTile(
             onTap: () {
-              context.read<AdminScreenBloc>().add(EditUser(user, context));
+              context.read<UserManagementBloc>().add(EditUser(user, context));
             },
             title: Text(
               _nameDisplay,
