@@ -11,9 +11,8 @@ class TasksetOptionsAbort extends TasksetOptionsEvent {
 }
 
 class TasksetOptionsPush extends TasksetOptionsEvent {
-  TasksetRepository tasksetRepository;
-
-  TasksetOptionsPush(this.tasksetRepository);
+  BuildContext context;
+  TasksetOptionsPush(this.context);
 }
 
 class TasksetOptionsPushUrl extends TasksetOptionsEvent {

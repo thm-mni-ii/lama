@@ -36,6 +36,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         listener: (context, state) {
           if (state is TasksetOptionsPushSuccess) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            urlInitValue = null;
             ScaffoldMessenger.of(context).showSnackBar(_saveSuccess(context));
             context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
           }
@@ -102,8 +103,9 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             validator: (value) => InputValidation.inputURLValidation(value),
             onFieldSubmitted: (value) => {
               if (_formKey.currentState.validate())
-                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush(
-                    RepositoryProvider.of<TasksetRepository>(context)))
+                context
+                    .read<TasksetOprionsBloc>()
+                    .add(TasksetOptionsPush(context))
             },
           ),
         ],
