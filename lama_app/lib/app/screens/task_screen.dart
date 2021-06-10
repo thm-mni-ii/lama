@@ -107,28 +107,117 @@ class TaskScreenState extends State<TaskScreen> {
             ),
           );
         } else if (state is TaskAnswerResultState) {
-          if (state.correct)
-            return Container(
-              color: LamaColors.white,
-              child: Center(
-                child: Icon(
-                  Icons.check,
-                  size: 100,
-                  color: LamaColors.greenAccent,
+          if (state.correct) {
+            if (state.subTaskResult == null) {
+              return Container(
+                color: LamaColors.white,
+                child: Center(
+                  child: Icon(
+                    Icons.check,
+                    size: 100,
+                    color: LamaColors.greenAccent,
+                  ),
                 ),
-              ),
-            );
-          else
-            return Container(
-              color: LamaColors.white,
-              child: Center(
-                child: Icon(
-                  Icons.close,
-                  size: 100,
-                  color: LamaColors.redAccent,
+              );
+            } else {
+              return Container(
+                color: LamaColors.white,
+                child: Column(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height / 100 * 90,
+                      child: Icon(
+                        Icons.check,
+                        size: 100,
+                        color: LamaColors.greenAccent,
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 100 * 10,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: state.subTaskResult.length,
+                        itemBuilder: (context, index) {
+                          if (state.subTaskResult[index] == null) {
+                            return CircleAvatar(
+                              backgroundColor: Colors.grey,
+                            );
+                          } else if (!state.subTaskResult[index]) {
+                            return CircleAvatar(
+                              backgroundColor: LamaColors.redAccent,
+                            );
+                          } else if (state.subTaskResult[index]) {
+                            return CircleAvatar(
+                              backgroundColor: LamaColors.greenAccent,
+                            );
+                          }
+                          return CircleAvatar(
+                            backgroundColor: Colors.grey,
+                          );
+                        },
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    )
+                  ],
                 ),
-              ),
-            );
+              );
+            }
+          } else {
+            if (state.subTaskResult == null) {
+              return Container(
+                color: LamaColors.white,
+                child: Center(
+                  child: Icon(
+                    Icons.close,
+                    size: 100,
+                    color: LamaColors.redAccent,
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                color: LamaColors.white,
+                child: Column(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height / 100 * 90,
+                      child: Icon(
+                        Icons.close,
+                        size: 100,
+                        color: LamaColors.redAccent,
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 100 * 10,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: state.subTaskResult.length,
+                        itemBuilder: (context, index) {
+                          if (state.subTaskResult[index] == null) {
+                            return CircleAvatar(
+                              backgroundColor: Colors.grey,
+                            );
+                          } else if (!state.subTaskResult[index]) {
+                            return CircleAvatar(
+                              backgroundColor: LamaColors.redAccent,
+                            );
+                          } else if (state.subTaskResult[index]) {
+                            return CircleAvatar(
+                              backgroundColor: LamaColors.greenAccent,
+                            );
+                          }
+                          return CircleAvatar(
+                            backgroundColor: Colors.grey,
+                          );
+                        },
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+          }
         } else if (state is AllTasksCompletedState) {
           return Scaffold(
             body: Container(
