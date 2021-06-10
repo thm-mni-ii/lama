@@ -45,6 +45,16 @@
            "lama_text":"Markiere vier Städte",
            "left_to_solve": 3,
            "wordsToFind":["Gießen", "Wetzlar", "Frankfurt", "Berlin"]
+           "categoryTwo": ["Haus", "Straße", "Baum", "Auto"]
+         },
+         {
+           "task_type": "Connect",
+           "task_reward":2,
+           "left_to_solve": 3,
+           "lama_text": "Verbinde die zusammenhängenden Wörter",
+           "pair1": ["Affe", "Löwe", "Eisbär", "Strauch"],
+           "pair2": ["braun", "gelb", "weiß", "grün"],
+           "rightAnswers": ["Affe:braun", "Löwe:gelb", "Eisbär:weiß", "Strauch:grün"]
          }
         ]
 }

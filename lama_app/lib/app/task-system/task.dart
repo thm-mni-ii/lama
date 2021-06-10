@@ -54,6 +54,15 @@ class Task {
             wordPairs.map((pair) => Pair.fromJson(pair)).toList();
         return TaskVocableTest(taskType, json['task_reward'], json['lama_text'],
             json['left_to_solve'], wordPairList, json['randomizeSide']);
+      case "Connect":
+        return TaskConnect(
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            List<String>.from(json['pair1']),
+            List<String>.from(json['pair2']),
+            List<String>.from(json['rightAnswers']));
       default:
         return null;
     }
@@ -214,4 +223,14 @@ class TaskVocableTest extends Task {
     }
     return s + randomizeSide.toString();
   }
+}
+
+class TaskConnect extends Task {
+  List<String> pair1;
+  List<String> pair2;
+  List<String> rightAnswers;
+
+  TaskConnect(String taskType, int reward, String lamaText, int leftToSolve,
+      this.pair1, this.pair2, this.rightAnswers)
+      : super(taskType, reward, lamaText, leftToSolve);
 }
