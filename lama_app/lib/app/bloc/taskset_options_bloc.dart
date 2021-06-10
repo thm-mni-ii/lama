@@ -55,12 +55,13 @@ class TasksetOprionsBloc
 
   Future<TasksetOptionsState> _insertUrl(TaskUrl url) async {
     //Validation
-    /*  final response = await http.get(Uri.parse(url.url));
-
-      if (response.statusCode != 200) {
-        return TasksetOptionsPushFailed(
-            error: 'URL nicht erreichbar!', failedUrl: _tasksetUrl);
-      }*/
+    if (!Uri.tryParse(url.url).hasAbsolutePath)
+      return TasksetOptionsPushFailed(failedUrl: _tasksetUrl);
+    final response = await http.head(Uri.parse(url.url));
+    if (response.statusCode != 200) {
+      return TasksetOptionsPushFailed(
+          error: 'URL nicht erreichbar!', failedUrl: _tasksetUrl);
+    }
 
     //Insert URL in Database
     await DatabaseProvider.db.insertTaskUrl(url);

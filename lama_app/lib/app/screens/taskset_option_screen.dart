@@ -35,23 +35,21 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         bloc: BlocProvider.of<TasksetOprionsBloc>(context),
         listener: (context, state) {
           if (state is TasksetOptionsPushSuccess) {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
             urlInitValue = null;
-            ScaffoldMessenger.of(context).showSnackBar(_saveSuccess(context));
-            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(_saveSuccess());
           }
           if (state is TasksetOptionsPushFailed) {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
             urlInitValue = state.failedUrl;
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context)
-                .showSnackBar(_saveFailed(context, state.error));
-            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
+                .showSnackBar(_saveFailed(state.error));
           }
           if (state is TasksetOptionsDeleteSuccess) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess(context));
-            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
+            ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess());
           }
+          //context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
         },
         child: BlocBuilder<TasksetOprionsBloc, TasksetOptionsState>(
           builder: (context, state) {
@@ -181,73 +179,18 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
     );
   }
 
-  Widget _deleteSuccess(BuildContext context) {
-    return SnackBar(
-      duration: Duration(seconds: 1, milliseconds: 0),
-      content: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(5),
-            child: Icon(
-              Icons.delete_forever_rounded,
-              size: 25,
-              color: LamaColors.white,
-            ),
-          ),
-          Text(
-            'URL erfolgreich gelöscht!',
-            style: LamaTextTheme.getStyle(fontSize: 14),
-          ),
-        ],
-      ),
-      backgroundColor: LamaColors.redAccent,
-    );
+  Widget _deleteSuccess() {
+    return _snackbar(Icons.delete_forever_rounded, 'URL erfolgreich gelöscht!',
+        LamaColors.redAccent);
   }
 
-  Widget _saveSuccess(BuildContext context) {
-    return SnackBar(
-      duration: Duration(seconds: 1, milliseconds: 0),
-      content: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(5),
-            child: Icon(
-              Icons.check_rounded,
-              size: 25,
-              color: LamaColors.white,
-            ),
-          ),
-          Text(
-            'Änderung erfogreich!',
-            style: LamaTextTheme.getStyle(fontSize: 14),
-          ),
-        ],
-      ),
-      backgroundColor: LamaColors.greenPrimary,
-    );
+  Widget _saveSuccess() {
+    return _snackbar(
+        Icons.check_rounded, 'Änderung erfogreich!', LamaColors.greenPrimary);
   }
 
-  Widget _saveFailed(BuildContext context, String error) {
-    return SnackBar(
-      duration: Duration(seconds: 1, milliseconds: 0),
-      content: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(5),
-            child: Icon(
-              Icons.close_rounded,
-              size: 25,
-              color: LamaColors.white,
-            ),
-          ),
-          Text(
-            error,
-            style: LamaTextTheme.getStyle(fontSize: 14),
-          ),
-        ],
-      ),
-      backgroundColor: LamaColors.redAccent,
-    );
+  Widget _saveFailed(String error) {
+    return _snackbar(Icons.close_rounded, error, LamaColors.redAccent);
   }
 
   Widget _headline(String headline) {
@@ -263,6 +206,29 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _snackbar(IconData icon, String msg, Color color) {
+    return SnackBar(
+      duration: Duration(seconds: 1, milliseconds: 0),
+      content: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(5),
+            child: Icon(
+              icon,
+              size: 25,
+              color: LamaColors.white,
+            ),
+          ),
+          Text(
+            msg,
+            style: LamaTextTheme.getStyle(fontSize: 14),
+          ),
+        ],
+      ),
+      backgroundColor: color,
     );
   }
 
