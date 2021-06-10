@@ -1,5 +1,7 @@
 abstract class InputValidation {
   static int allowedNameLength = 12;
+  static int maxNumber = 99999;
+  static int passwortMaxLength = 16;
   static RegExp inputFilter = RegExp('[^a-zA-Z0-9]');
   static RegExp numberFilter = RegExp('[^0-9]');
 
@@ -14,12 +16,16 @@ abstract class InputValidation {
   static String inputPasswortValidation(String passwort) {
     if (isEmpty(passwort)) return 'Das Passwort darf nicht leer sein!';
     if (_regExpInvalide(passwort)) return 'Bitte keine Sonderzeichen!';
+    if (passwort.length > passwortMaxLength)
+      return 'Das Passwort darf maximal $passwortMaxLength Zeichen haben!';
     return null;
   }
 
   static String inputNumberValidation(String numbers) {
     if (isEmpty(numbers)) return 'Dieses Feld darf nicht leer sein!';
-    if (numberFilter.hasMatch(numbers)) return 'Es sind nur Nummern erlaubt';
+    if (numberFilter.hasMatch(numbers)) return 'Es sind nur Nummern erlaubt!';
+    if (int.parse(numbers) > maxNumber)
+      return 'Die Zahl überschreitet den Maximalwert ($maxNumber)!';
     return null;
   }
 

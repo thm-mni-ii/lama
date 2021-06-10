@@ -28,7 +28,6 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
     if (event is EditUserChangePasswort) _changedUser.password = event.passwort;
     if (event is EditUserChangeCoins) {
       _changedUser.coins = (int.parse(event.coins));
-      print(_changedUser.coins.toString());
     }
   }
 
