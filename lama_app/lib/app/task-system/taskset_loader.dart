@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
+import 'package:lama_app/db/database_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
+import 'dart:convert' show utf8;
 
 class TasksetLoader {
   Map<SubjectGradeRelation, List<Taskset>> loadedTasksets = {};
@@ -14,6 +18,7 @@ class TasksetLoader {
   static const int GRADES_SUPPORTED = 6;
 
   Future<void> loadAllTasksets() async {
+    /* ONLY NEEDED WHEN A LOCAL COPY SHOUL EXIST AND POSSIBLY PERSIST
     //get path for the taskset directory (only accessible by this app)
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String tasksetPath = appDocDir.path + "/tasksets";
@@ -25,6 +30,7 @@ class TasksetLoader {
     await dir.list().forEach((element) {
       element.delete();
     });
+    */
 
     //load all standard-tasksets for each subject and grade
     for (int i = 1; i <= GRADES_SUPPORTED; i++) {
@@ -38,8 +44,18 @@ class TasksetLoader {
           'assets/standardTasksets/englisch/englisch' + i.toString() + '.json');
       buildTasksetFromJson(tasksetEnglisch);
     }
-    //TODO: Download JSON-Tasksets from Server
 
+    List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
+
+    for (int i = 0; i < taskUrls.length; i++) {
+      var response = await http.get(Uri.parse(taskUrls[i].url),
+          headers: {'Content-type': 'application/json'});
+      if (response.statusCode == 200) {
+        buildTasksetFromJson(utf8.decode(response.bodyBytes));
+      }
+    }
+
+    /* ONLY NEEDED WHEN A LOCAL COPY SHOUL EXIST AND POSSIBLY PERSIST
     //get all files in the taskset directory
     List<FileSystemEntity> tasksets = dir.listSync();
     //for (File f in tasksets) print(f.path);
@@ -47,7 +63,7 @@ class TasksetLoader {
     for (File file in tasksets) {
       String tasksetContent = await file.readAsString();
       buildTasksetFromJson(tasksetContent);
-    }
+    }*/
   }
 
   void buildTasksetFromJson(tasksetContent) {
