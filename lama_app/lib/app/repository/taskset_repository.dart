@@ -12,4 +12,9 @@ class TasksetRepository {
   List<Taskset> getTasksetsForSubjectAndGrade(String subject, int grade) {
     return tasksetLoader.getLoadedTasksetsForSubjectAndGrade(subject, grade);
   }
+
+  void reloadTasksetLoader() async {
+    tasksetLoader = TasksetLoader();
+    await tasksetLoader.loadAllTasksets();
+  }
 }
