@@ -19,6 +19,7 @@ class OptionTaskScreen extends StatefulWidget {
 
 class OptionTaskScreennState extends State<OptionTaskScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String urlInitValue;
   @override
   void initState() {
     super.initState();
@@ -36,6 +37,13 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
           if (state is TasksetOptionsPushSuccess) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(_saveSuccess(context));
+            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
+          }
+          if (state is TasksetOptionsPushFailed) {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            urlInitValue = state.failedUrl;
+            ScaffoldMessenger.of(context)
+                .showSnackBar(_saveFailed(context, state.error));
             context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
           }
           if (state is TasksetOptionsDeleteSuccess) {
@@ -57,7 +65,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                       color: LamaColors.bluePrimary,
                       size: 30,
                     ),
-                    _inputFields(context),
+                    _inputFields(context, urlInitValue),
                     _headline('Taskset URLs'),
                     _tasksetUrlList(state.urls),
                     _headline('Kürzlich gelöscht'),
@@ -74,12 +82,13 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
     );
   }
 
-  Widget _inputFields(BuildContext context) {
+  Widget _inputFields(BuildContext context, String initValue) {
     return Form(
       key: _formKey,
       child: Column(
         children: [
           TextFormField(
+            initialValue: initValue,
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
               labelText: 'Taskset URL',
@@ -90,9 +99,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                   .read<TasksetOprionsBloc>()
                   .add(TasksetOptionsChangeURL(value))
             },
-            validator: (value) => InputValidation.isEmpty(value)
-                ? 'Feld darf nicht leer sein!'
-                : null,
+            validator: (value) => InputValidation.inputURLValidation(value),
             onFieldSubmitted: (value) => {
               if (_formKey.currentState.validate())
                 context.read<TasksetOprionsBloc>().add(TasksetOptionsPush(
@@ -215,6 +222,29 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         ],
       ),
       backgroundColor: LamaColors.greenPrimary,
+    );
+  }
+
+  Widget _saveFailed(BuildContext context, String error) {
+    return SnackBar(
+      duration: Duration(seconds: 1, milliseconds: 0),
+      content: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(5),
+            child: Icon(
+              Icons.close_rounded,
+              size: 25,
+              color: LamaColors.white,
+            ),
+          ),
+          Text(
+            error,
+            style: LamaTextTheme.getStyle(fontSize: 14),
+          ),
+        ],
+      ),
+      backgroundColor: LamaColors.redAccent,
     );
   }
 

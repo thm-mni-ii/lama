@@ -10,4 +10,11 @@ class TasksetOptionsDefault extends TasksetOptionsState {
 
 class TasksetOptionsPushSuccess extends TasksetOptionsState {}
 
+class TasksetOptionsPushFailed extends TasksetOptionsState {
+  String error;
+  String failedUrl;
+  TasksetOptionsPushFailed(
+      {this.error = 'Da ist wohl was schiefgelaufen', this.failedUrl});
+}
+
 class TasksetOptionsDeleteSuccess extends TasksetOptionsState {}

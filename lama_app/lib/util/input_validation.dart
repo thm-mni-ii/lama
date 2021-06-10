@@ -32,6 +32,11 @@ abstract class InputValidation {
     return null;
   }
 
+  static String inputURLValidation(String url) {
+    if (isEmpty(url)) return 'Dieses Feld darf nicht leer sein!';
+    return null;
+  }
+
   static bool _regExpInvalide(String str) {
     if (inputFilter.hasMatch(str)) return true;
     return false;

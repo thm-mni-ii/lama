@@ -40,7 +40,7 @@ class TasksetOprionsBloc
     return TasksetOptionsDeleteSuccess();
   }
 
-  Future<TasksetOptionsPushSuccess> _tasksetOptionsPush() async {
+  Future<TasksetOptionsState> _tasksetOptionsPush() async {
     return await _insertUrl(TaskUrl(url: _tasksetUrl));
   }
 
