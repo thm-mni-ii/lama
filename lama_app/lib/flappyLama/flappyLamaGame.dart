@@ -25,6 +25,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   double tileSize;
   int tilesX = 9;
   int tilesY;
+  int lifes = 3;
 
   int score = 0;
   FlappyGround flappyGround;
@@ -60,39 +61,23 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       ParallaxImage('png/clouds.png'),
     ], baseSpeed: Offset(7, 0), layerDelta: Offset(10, 0));
 
-    // add background
-    add(back);
-    // add lama
-    _lama = FlappyLama(this, 48);
-    add(_lama);
-    _lama.onHitGround = () => gameOver();
-    
-    loadStartScreen();
-  }
-
-  void initialize() async {
-    resize(await Flame.util.initialDimensions());
-
     Flame.images.loadAll([
       'png/kaktus_body.png',
       'png/kaktus_end_bottom.png',
       'png/kaktus_end_top.png',
     ]);
 
-    // add ground
-    //add(FlappyGround(this));
-    // TODO: move to where the game will start (tap the first time)
-    // add obstacles
-    add(FlappyObstacle(
-      this,
-      false,
-      48,
-      () => this.score++,
-      () => developer.log("HIT"),
-    ));
-    add(FlappyObstacle(this, true, 48, () => this.score++));
-    // add score
-    add(FlappyScoreDisplay(this));
+    // add background
+    add(back);
+
+    initialize();
+  }
+
+  void initialize() async {
+    // resize
+    resize(await Flame.util.initialDimensions());
+
+    loadStartScreen();
   }
 
   void saveHighscore() {
@@ -105,11 +90,42 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     }
   }
 
+  void resetGame() {
+    _gameover = false;
+    score = 0;
+
+    // remove gameOver widget
+    removeWidgetOverlay(_gameOverMode);
+
+    // removes score
+    components.removeWhere((element) => element is FlappyScoreDisplay);
+
+    // removes obstacles
+    components.removeWhere((element) => element is FlappyObstacle);
+
+    // removes lama
+    components.removeWhere((element) => element is FlappyLama);
+
+    loadStartScreen();
+  }
+
   void loadStartScreen() async {
+    // load highscore
     this._highScore = await _userRepo.getMyHighscore(_gameId);
 
-    addWidgetOverlay(_startScreen,
-        StartScreen(highScore: _highScore, onStartPressed: startGame));
+    // add lama
+    _lama = FlappyLama(this, 48)
+      ..onHitGround = gameOver;
+    add(_lama);
+
+    // add start widget
+    addWidgetOverlay(
+        _startScreen,
+        StartScreen(
+            highScore: _highScore,
+            onStartPressed: startGame
+        )
+    );
   }
 
   void resize(Size size) {
@@ -127,10 +143,22 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void startGame() {
+    resumeEngine();
+
+    // remove start widget
     removeWidgetOverlay(_startScreen);
+
+    // add playmode widget
     addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
-    initialize();
+
     _started = true;
+
+    // add obstacles
+    add(FlappyObstacle(this, false, 48, () => this.score++));
+    add(FlappyObstacle(this, true, 48, () => this.score++));
+
+    // add score
+    add(FlappyScoreDisplay(this));
   }
 
   /// This method pauses the game.
@@ -155,19 +183,25 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   ///This method finishes the game.
   void gameOver() {
+    developer.log("Game Over");
+    // reduces life
+    lifes--;
+
     pauseEngine();
     _gameover = true;
+    _started = false;
 
     // save highscore
     saveHighscore();
 
-    //
+    // add game over widget
     addWidgetOverlay(
         _gameOverMode,
         GameOverMode(
           score: score,
-          lifes: 3,
+          lifes: lifes,
           onQuitPressed: quit,
+          onRetryPressed: resetGame,
         ));
   }
 
@@ -182,17 +216,15 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void update(double t) {
-    // check if the lama hits an obstacle
-    components.whereType<FlappyObstacle>().forEach((element) {
-      if (element.collides(_lama?.toRect() ?? null) == true) {
-        _gameover = true;
-      }
-    });
-
     super.update(t);
 
-    if (_gameover == true) {
-      gameOver();
+    if (_started) {
+      // check if the lama hits an obstacle
+      components.whereType<FlappyObstacle>().forEach((element) {
+        if (element.collides(_lama?.toRect() ?? null) == true) {
+          gameOver();
+        }
+      });
     }
   }
 }
