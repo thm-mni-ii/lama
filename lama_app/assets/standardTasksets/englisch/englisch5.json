@@ -23,6 +23,14 @@
            ]
          },
          {
+          "task_type":"VocableTest",
+          "task_reward":5,
+          "question": "",
+          "lama_text": "Translate the shown word!",
+          "wordPairs": [{"word":"stone","translation":"Stein"}, {"word":"paper", "translation":"Papier"}],
+          "randomizeSide": true
+        },
+         {
            "task_type": "MatchCategory",
            "task_reward":2,
            "question": "",
