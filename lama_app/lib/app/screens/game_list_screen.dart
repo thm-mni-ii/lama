@@ -15,8 +15,9 @@ class GameListScreen extends StatelessWidget {
         "Steuer die Schlange mit den Pfeiltasten und sammle Äpfel, um länger zu werden!"),
     GameListItem("Flappy-Lama", 3,
         "Tippe auf den Bildschirm, um das Lama fliegen zu lassen und weiche dabei den Hindernissen aus!"),
-    /*GameListItem("Woodcutter", 2,
-        "Tippe die entsprechende Richtung an, um den Baum zu fällen und dabei den Ästen auszuweichen!"),*/
+    GameListItem("Affen Leiter", 2,
+        "Tippe die entsprechende Richtung an, um auf die andere Seite des Baumes zu springen und so den Ästen auszuweichen!"),
+
   ];
 
   @override
@@ -148,6 +149,7 @@ class GameListScreen extends StatelessWidget {
   Widget buildGameList(context, index, constraints) {
     Color color = LamaColors.orangeAccent;
     if (index % 2 == 0) color = LamaColors.blueAccent;
+    if (index % 3 == 0) color = LamaColors.redAccent;
     return Container(
       height: (constraints.maxHeight / 100) * 25,
       decoration: BoxDecoration(
