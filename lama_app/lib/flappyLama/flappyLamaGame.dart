@@ -214,7 +214,9 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void onTapDown(TapDownDetails d) {
-    _lama.onTapDown();
+    if (_started) {
+      _lama.onTapDown();
+    }
   }
 
   void update(double t) {
