@@ -14,6 +14,7 @@ class FlappyLama extends AnimationComponent {
   Animation _up;
   Animation _fall;
   double _size;
+  final double hitBoxPadding = 2.0;
 
   final FlappyLamaGame _game;
   bool _isGameStarted = false;
@@ -66,11 +67,11 @@ class FlappyLama extends AnimationComponent {
     }
 
     // X
-    if ((object.left > this.x && object.left < this.x + this.width) ||
-        (object.right > this.x && object.right < this.x + this.width)) {
+    if ((object.left > this.x + hitBoxPadding && object.left < this.x + this.width - hitBoxPadding) ||
+        (object.right > this.x + hitBoxPadding && object.right < this.x + this.width - hitBoxPadding)) {
       // Y
-      if ((object.top > this.y && object.top < this.y + this.height) ||
-          (object.bottom > this.y && object.bottom < this.y + this.height)) {
+      if ((object.top > this.y + hitBoxPadding && object.top < this.y + this.height - hitBoxPadding) ||
+          (object.bottom > this.y + hitBoxPadding && object.bottom < this.y + this.height - hitBoxPadding)) {
         // callback
         onCollide?.call();
         return true;
@@ -127,6 +128,6 @@ class FlappyLama extends AnimationComponent {
   }
 
   Rect toRect() {
-    return Rect.fromLTWH(this.x, this.y, this._size, this._size);
+    return Rect.fromLTWH(this.x + hitBoxPadding, this.y + hitBoxPadding, this._size - 2 * hitBoxPadding, this._size - 2 * hitBoxPadding);
   }
 }
