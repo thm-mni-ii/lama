@@ -50,6 +50,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   bool _savedHighscore = false;
   bool _gameover = false;
   int _highScore = 0;
+  int _alltimeHighScore = 0;
   FlappyLama _lama;
   Random _randomNumber = Random();
   UserRepository _userRepo;
@@ -114,6 +115,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   void loadStartScreen() async {
     // load highscore
     this._highScore = await _userRepo.getMyHighscore(_gameId);
+    // load alltimeHighscore
+    this._alltimeHighScore = 0;
 
     // add lama
     _lama = FlappyLama(this, 48)
