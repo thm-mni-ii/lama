@@ -6,14 +6,18 @@ import 'package:lama_app/util/LamaColors.dart';
 class GameOverMode extends StatelessWidget {
   // Score to display on game over menu.
   final int score;
+  final int lifes;
 
   // This function will be called when quit button is pressed.
   final Function onQuitPressed;
+  final Function onRetryPressed;
 
   const GameOverMode({
     Key key,
     @required this.score,
+    @required this.lifes,
     @required this.onQuitPressed,
+    @required this.onRetryPressed,
   })  : assert(score != null),
         assert(onQuitPressed != null),
         super(key: key);
@@ -81,14 +85,14 @@ class GameOverMode extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Neuer Versuch',
+                      'Neuer Versuch (noch $lifes)',
                       style: TextStyle(
                         color: LamaColors.white,
                         fontSize: 20,
                       ),
                     ),
                     onPressed: () {
-                      onQuitPressed.call();
+                      onRetryPressed?.call();
                     },
                   ),
                 ],
