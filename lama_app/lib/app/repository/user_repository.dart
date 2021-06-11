@@ -46,4 +46,9 @@ class UserRepository {
     return await DatabaseProvider.db
         .getHighscoreOfUserInGame(authenticatedUser, gameId);
   }
+
+  Future<int> getHighscore(int gameId) async {
+    return await DatabaseProvider.db
+        .getHighscoreOfGame(gameId);
+  }
 }

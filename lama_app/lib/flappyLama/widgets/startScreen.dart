@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
 
-class StartScreen extends StatelessWidget{
-
+class StartScreen extends StatelessWidget {
   final Function onStartPressed;
   final int highScore;
-  const StartScreen(
-    {this.highScore, @required this.onStartPressed}
+  final int alltimeHighScore;
+
+  const StartScreen({
+    this.highScore,
+    this.alltimeHighScore,
+    @required this.onStartPressed}
   );
+
   @override
   Widget build(BuildContext context){
     return Center(
@@ -61,7 +65,7 @@ class StartScreen extends StatelessWidget{
                   )
                 ),
                 Flexible(
-                  child: Text("Rekord:" ,
+                  child: Text("mein Rekord: ${highScore.toString()}\n",
                     style: TextStyle(
                       fontSize: 25.0,
                       fontWeight: FontWeight.bold,
@@ -70,11 +74,12 @@ class StartScreen extends StatelessWidget{
                   ),
                 ),
                 Flexible(
-                  child: Text(highScore.toString()+"\n", 
-                    style: TextStyle(
-                      fontSize: 30.0,
-                      color: LamaColors.black,
-                    )
+                  child: Text("Rekord: ${alltimeHighScore.toString()}\n",
+                      style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,
+                        color: LamaColors.redAccent,
+                      )
                   ),
                 ),
                 ElevatedButton(

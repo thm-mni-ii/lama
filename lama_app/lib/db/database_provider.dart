@@ -224,6 +224,23 @@ class DatabaseProvider {
     return 0;
   }
 
+  Future<int> getHighscoreOfGame(int gameID) async {
+    final db = await database;
+
+    var highscore = await db.query(tableHighscore,
+        columns: [columnId, columnGameId, columnScore, columnUserId],
+        where: "$columnGameId = ?",
+        whereArgs: [gameID],
+        orderBy: "$columnScore DESC",
+        limit: 1);
+
+    if (highscore.isNotEmpty) {
+      return Highscore.fromMap(highscore.first).score;
+    }
+
+    return 0;
+  }
+
   Future<List<Subject>> getSubjects() async {
     final db = await database;
 
