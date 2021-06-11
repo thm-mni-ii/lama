@@ -7,6 +7,7 @@ import 'package:flame/flame.dart';
 import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
@@ -92,6 +93,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   void resetGame() {
     _gameover = false;
+    _savedHighscore = false;
     score = 0;
 
     // remove gameOver widget
