@@ -84,6 +84,7 @@ class GameOverMode extends StatelessWidget {
                           vertical: 5
                       ),
                     ),
+
                     child: Text(
                       'Neuer Versuch (noch $lifes)',
                       style: TextStyle(
@@ -92,7 +93,9 @@ class GameOverMode extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      onRetryPressed?.call();
+                      if (lifes > 0) {
+                        onRetryPressed?.call();
+                      }
                     },
                   ),
                 ],
