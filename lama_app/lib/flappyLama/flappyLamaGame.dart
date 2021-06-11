@@ -166,6 +166,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         _gameOverMode,
         GameOverMode(
           score: score,
+          lifes: 3,
           onQuitPressed: quit,
         ));
   }

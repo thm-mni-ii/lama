@@ -6,14 +6,18 @@ import 'package:lama_app/util/LamaColors.dart';
 class GameOverMode extends StatelessWidget {
   // Score to display on game over menu.
   final int score;
+  final int lifes;
 
   // This function will be called when quit button is pressed.
   final Function onQuitPressed;
+  final Function onRetryPressed;
 
   const GameOverMode({
     Key key,
     @required this.score,
+    @required this.lifes,
     @required this.onQuitPressed,
+    @required this.onRetryPressed,
   })  : assert(score != null),
         assert(onQuitPressed != null),
         super(key: key);
@@ -23,48 +27,73 @@ class GameOverMode extends StatelessWidget {
     return Center(
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(35.0),
         ),
-        color: LamaColors.orangePrimary.withOpacity(0.5),
+        color: LamaColors.bluePrimary.withOpacity(0.8),
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: 100.0,
-            vertical: 50.0,
+            horizontal: 40.0,
+            vertical: 20.0,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Game Over',
-                style: TextStyle(fontSize: 30.0, color: LamaColors.white),
+                'Punkte',
+                style: TextStyle(fontSize: 25.0, color: LamaColors.white),
               ),
               Text(
-                'Score: $score ',
-                style: TextStyle(fontSize: 20.0, color: LamaColors.white),
+                '$score',
+                style: TextStyle(fontSize: 50.0, color: LamaColors.white),
               ),
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 2),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: LamaColors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 15)),
-                      child: Text(
-                        'Quit Game',
-                        style: TextStyle(
-                          color: LamaColors.black,
-                          fontSize: 15,
-                        ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: LamaColors.redAccent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0)
                       ),
-                      onPressed: () {
-                        onQuitPressed.call();
-                      },
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5
+                      ),
                     ),
+                    child: Text(
+                      'Beenden',
+                      style: TextStyle(
+                        color: LamaColors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                    onPressed: () {
+                      onQuitPressed.call();
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: LamaColors.redAccent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0)
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5
+                      ),
+                    ),
+                    child: Text(
+                      'Neuer Versuch (noch $lifes)',
+                      style: TextStyle(
+                        color: LamaColors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                    onPressed: () {
+                      onRetryPressed?.call();
+                    },
                   ),
                 ],
               )
