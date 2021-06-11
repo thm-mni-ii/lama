@@ -7,7 +7,6 @@ import 'package:flame/flame.dart';
 import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/flappyLama/components/flappyGround.dart';
@@ -15,8 +14,7 @@ import 'package:lama_app/flappyLama/components/flappyLama.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
 
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
-import 'package:lama_app/flappyLama/widgets/pauseMode.dart';
-import 'package:lama_app/flappyLama/widgets/playMode.dart';
+import 'package:lama_app/flappyLama/widgets/playModeWidget.dart';
 import 'package:lama_app/flappyLama/widgets/startScreen.dart';
 
 import 'widgets/gameOverMode.dart';
@@ -99,6 +97,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // remove gameOver widget
     removeWidgetOverlay(_gameOverMode);
+    removeWidgetOverlay(_playMode);
+    removeWidgetOverlay(_pauseMode);
 
     // removes score
     components.removeWhere((element) => element is FlappyScoreDisplay);
@@ -155,7 +155,12 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     removeWidgetOverlay(_startScreen);
 
     // add playmode widget
-    addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
+    addWidgetOverlay(
+        _playMode,
+        PlayModeButton(
+          playMode: true,
+          onButtonPressed: pauseGame)
+    );
 
     _started = true;
 
@@ -174,7 +179,12 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // removed the playMode widget
     removeWidgetOverlay(_playMode);
-    addWidgetOverlay(_pauseMode, PauseMode(onPlayPressed: resumeGame));
+    addWidgetOverlay(
+        _pauseMode,
+        PlayModeButton(
+            playMode: false,
+            onButtonPressed: resumeGame)
+    );
   }
 
   /// This method resumes the game.
@@ -184,7 +194,12 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // removed the pauseMode widget
     removeWidgetOverlay(_pauseMode);
-    addWidgetOverlay(_playMode, PlayMode(onPausePressed: pauseGame));
+    addWidgetOverlay(
+        _playMode,
+        PlayModeButton(
+            playMode: true,
+            onButtonPressed: pauseGame)
+    );
   }
 
   ///This method finishes the game.
