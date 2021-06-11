@@ -49,6 +49,14 @@
            "nameCatTwo": "Past Participle",
            "categoryOne": ["was", "came", "did", "knew"],
            "categoryTwo": ["been", "come", "done", "known"]
-         }
+         },
+         {
+          "task_type":"VocableTest",
+          "task_reward":5,
+          "question": "",
+          "lama_text": "Translate the shown word!",
+          "wordPairs": [{"word":"to draw","translation":"ziehen"}, {"word":"to breath", "translation":"atmen"}, {"word":"Katze", "translation": "cat"}],
+          "randomizeSide": true
+        }
         ]
 }

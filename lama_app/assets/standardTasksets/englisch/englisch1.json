@@ -8,7 +8,7 @@
             "task_reward":5,
             "question": "",
             "lama_text": "Translate the shown word!",
-            "wordPairs": [{"word":"House","translation":"Haus"}, {"word":"Sun", "translation":"Sonne"}],
+            "wordPairs": [{"word":"house","translation":"Haus"}, {"word":"sun", "translation":"Sonne"}],
             "randomizeSide": true
           },
            {
