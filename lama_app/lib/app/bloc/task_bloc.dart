@@ -57,6 +57,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           yield TaskAnswerResultState(false);
         } else {
           answerResults.add(true);
+          userRepository.addLamaCoins(t.reward);
           yield TaskAnswerResultState(true);
         }
       } else if (t is TaskGridSelect) {
@@ -66,16 +67,29 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           yield TaskAnswerResultState(false);
         } else {
           answerResults.add(true);
+          userRepository.addLamaCoins(t.reward);
           yield TaskAnswerResultState(true);
         }
-      }
-      else if (t is TaskMoney) {
-        if (event.providedAnswerDouble.toStringAsFixed(2) == t.moneyAmount.toStringAsFixed(2)) {
+      } else if (t is TaskMoney) {
+        if (event.providedAnswerDouble.toStringAsFixed(2) ==
+            t.moneyAmount.toStringAsFixed(2)) {
           answerResults.add(true);
+          userRepository.addLamaCoins(t.reward);
           yield TaskAnswerResultState(true);
         } else {
           answerResults.add(false);
           yield TaskAnswerResultState(false);
+        }
+      } else if (t is TaskVocableTest) {
+        if (event.providedanswerStates.contains(false)) {
+          answerResults.add(false);
+          yield TaskAnswerResultState(false,
+              subTaskResult: event.providedanswerStates);
+        } else {
+          answerResults.add(true);
+          userRepository.addLamaCoins(t.reward);
+          yield TaskAnswerResultState(true,
+              subTaskResult: event.providedanswerStates);
         }
       }
       await Future.delayed(Duration(seconds: 1));
