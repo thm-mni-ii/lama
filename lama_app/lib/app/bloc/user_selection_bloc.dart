@@ -13,11 +13,14 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
 
   @override
   Stream<UserSelectionState> mapEventToState(UserSelectionEvent event) async* {
-    if (event is LoadUsers) yield await _loadUsers();
-    if (event is SelectUser) _userSelected(event.user, event.context);
+    if (event is LoadUsers) yield await loadUsers();
+    if (event is SelectUser) {
+      _userSelected(event.user, event.context);
+      yield UserSelected(event.user);
+    }
   }
 
-  Future<UsersLoaded> _loadUsers() async {
+  Future<UsersLoaded> loadUsers() async {
     List<User> userList = await DatabaseProvider.db.getUser();
     return UsersLoaded(userList);
   }
