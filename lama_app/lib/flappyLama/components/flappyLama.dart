@@ -7,8 +7,18 @@ import 'package:flame/spritesheet.dart';
 /// This class extends [AnimationComponent] and describes a flying lama.
 /// It contains three different animations for idle, up and falling.
 class FlappyLama extends AnimationComponent {
+  // SETTINGS
+  // --------
   /// hitbox padding = [left, right, top, bottom] = negative move inwards / positive move outwards
   final hitBoxPadding = [-2.0, -2.0, -2.0, -2.0];
+  /// flag to show the hitbox as an rectangle
+  final bool showHitbox = true;
+  /// speed increase/decrease when [flap] gets called = flap height
+  double _flapSpeed = -320;
+  /// gravity of the lama = falling speed
+  static const double GRAVITY = 1000;
+  // --------
+  // SETTINGS
 
   /// callback when the lama hits an object in [collides(Rect object)]
   Function onCollide;
@@ -27,9 +37,8 @@ class FlappyLama extends AnimationComponent {
   double _size;
 
   final FlappyLamaGame _game;
-
+  /// actual speed of the lama
   double _speedY = 0.0;
-  static const double GRAVITY = 1000;
 
   /// Initialize the class with the given [_size].
   FlappyLama(this._game, this._size) : super.empty() {
@@ -37,6 +46,7 @@ class FlappyLama extends AnimationComponent {
     this.height = this._size;
     this.width = this._size;
 
+    // loads the spritesheet from assets
     final spriteSheet = SpriteSheet(
       imageName: 'png/lama_animation.png',
       textureWidth: 24,
@@ -59,8 +69,10 @@ class FlappyLama extends AnimationComponent {
   }
 
   /// This method let the lama fly up with an impuls.
+  /// sideffects:
+  ///   [_speedY] = [_flapSpeed]
   void flap() {
-    this._speedY = -320;
+    _speedY = _flapSpeed;
   }
 
   /// This method checks if the [object] hits the obstacle.
@@ -93,6 +105,9 @@ class FlappyLama extends AnimationComponent {
   /// return:
   ///   true = hits the ground
   ///   false = doesnt hits the ground
+  /// sideeffects:
+  ///   [_speedY] = 0 when hitting
+  ///   [y] = bottom of the screen when hitting
   bool isHittingGround() {
     if (y > _game.screenSize.height - _size) {
       // fix the lama
@@ -113,6 +128,9 @@ class FlappyLama extends AnimationComponent {
   /// return:
   ///   true = hits the top
   ///   false = doesnt hits the top
+  /// sideeffects:
+  ///   [_speedY] = resets when hitting
+  ///   [y]
   bool isHittingTop(double t) {
     if (y <= 0) {
       _speedY = 0.0;
@@ -128,10 +146,10 @@ class FlappyLama extends AnimationComponent {
   }
 
   void update(double t) {
-    if (this._game.started) {
+    if (_game.started) {
       // last y for animation selection
       var lastY = y;
-      
+
       // speed
       _speedY += GRAVITY * t;
       // new y
@@ -142,34 +160,50 @@ class FlappyLama extends AnimationComponent {
         // hit the top?
         isHittingTop(t);
       }
+
       // choose animation
-      if (lastY > this.y) {
-        this.animation = _up;
-      } else if (lastY < this.y) {
-        this.animation = _fall;
+      if (lastY > y) {
+        animation = _up;
+      } else if (lastY < y) {
+        animation = _fall;
       } else {
-        this.animation = _idle;
+        animation = _idle;
       }
     }
 
     super.update(t);
   }
 
+  void render(Canvas canvas) {
+    // draw the hitboxframe
+    if (showHitbox) {
+      var hitboxPaint = Paint()
+          ..color = Color.fromRGBO(255, 0, 0, 0.5);
+      canvas.drawRect(toRect(), hitboxPaint);
+    }
+
+    super.render(canvas);
+  }
+
   void resize(Size size) {
-    // start location
-    this.x = this._size;
-    this.y = size.height / 2 - this._size;
+    // start location in the center
+    x = _size;
+    y = size.height / 2 - _size;
   }
 
   void onTapDown() {
+    // simulates one flap
     flap();
   }
 
+  /// This method returns the rectangle of the lama.
+  /// return
+  ///   [Rect] of the hitbox.
   Rect toRect() {
     return Rect.fromLTWH(
-        this.x - hitBoxPadding[0],
-        this.y - hitBoxPadding[0],
-        this._size + 2 * hitBoxPadding[0],
-        this._size + 2 * hitBoxPadding[0]);
+        x - hitBoxPadding[0],
+        y - hitBoxPadding[2],
+        _size + hitBoxPadding[0] + hitBoxPadding[1],
+        _size + hitBoxPadding[2] + hitBoxPadding[3]);
   }
 }
