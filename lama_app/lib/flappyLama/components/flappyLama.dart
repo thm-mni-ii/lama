@@ -7,14 +7,19 @@ import 'package:flame/spritesheet.dart';
 /// This class extends [AnimationComponent] and describes a flying lama.
 /// It contains three different animations for idle, up and falling.
 class FlappyLama extends AnimationComponent {
+  /// hitbox padding = [left, right, top, bottom] = negative move inwards / positive move outwards
+  final hitBoxPadding = [-2.0, -2.0, -2.0, -2.0];
+
+  /// callback when the lama hits an object in [collides(Rect object)]
   Function onCollide;
+  /// callback when the lama hits the ground
   Function onHitGround;
 
   Animation _idle;
   Animation _up;
   Animation _fall;
+  /// width and height of the lama in pixel
   double _size;
-  final double hitBoxPadding = 2.0;
 
   final FlappyLamaGame _game;
   bool _isGameStarted = false;
@@ -58,6 +63,7 @@ class FlappyLama extends AnimationComponent {
   void hover() {}
 
   /// This method checks if the [object] hits the obstacle.
+  /// When a hit is triggered the [onCollide] Function gets called.
   /// return:
   ///   true = collides
   ///   false = no collision
@@ -67,11 +73,11 @@ class FlappyLama extends AnimationComponent {
     }
 
     // X
-    if ((object.left > this.x + hitBoxPadding && object.left < this.x + this.width - hitBoxPadding) ||
-        (object.right > this.x + hitBoxPadding && object.right < this.x + this.width - hitBoxPadding)) {
+    if ((object.left > this.x - hitBoxPadding[0] && object.left < this.x + this.width - hitBoxPadding[0]) ||
+        (object.right > this.x - hitBoxPadding[1] && object.right < this.x + this.width - hitBoxPadding[1])) {
       // Y
-      if ((object.top > this.y + hitBoxPadding && object.top < this.y + this.height - hitBoxPadding) ||
-          (object.bottom > this.y + hitBoxPadding && object.bottom < this.y + this.height - hitBoxPadding)) {
+      if ((object.top > this.y - hitBoxPadding[2] && object.top < this.y + this.height - hitBoxPadding[2]) ||
+          (object.bottom > this.y - hitBoxPadding[3] && object.bottom < this.y + this.height - hitBoxPadding[3])) {
         // callback
         onCollide?.call();
         return true;
@@ -128,6 +134,10 @@ class FlappyLama extends AnimationComponent {
   }
 
   Rect toRect() {
-    return Rect.fromLTWH(this.x + hitBoxPadding, this.y + hitBoxPadding, this._size - 2 * hitBoxPadding, this._size - 2 * hitBoxPadding);
+    return Rect.fromLTWH(
+        this.x - hitBoxPadding[0],
+        this.y - hitBoxPadding[0],
+        this._size + 2 * hitBoxPadding[0],
+        this._size + 2 * hitBoxPadding[0]);
   }
 }
