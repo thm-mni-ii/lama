@@ -97,8 +97,6 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // remove gameOver widget
     removeWidgetOverlay(_gameOverMode);
-    removeWidgetOverlay(_playMode);
-    removeWidgetOverlay(_pauseMode);
 
     // removes score
     components.removeWhere((element) => element is FlappyScoreDisplay);
@@ -205,6 +203,11 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   ///This method finishes the game.
   void gameOver() {
     developer.log("Game Over");
+
+    // removes playMode and pausemode widget
+    removeWidgetOverlay(_playMode);
+    removeWidgetOverlay(_pauseMode);
+
     // reduces life
     lifes--;
 

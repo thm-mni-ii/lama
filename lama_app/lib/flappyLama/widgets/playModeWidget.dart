@@ -23,7 +23,7 @@ class PlayModeButton extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: LamaColors.redAccent,
+                      primary: LamaColors.mainPink.withOpacity(0.7),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0)
                       ),

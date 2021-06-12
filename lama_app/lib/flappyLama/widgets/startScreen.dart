@@ -65,7 +65,7 @@ class StartScreen extends StatelessWidget {
                   )
                 ),
                 Flexible(
-                  child: Text("mein Rekord: ${highScore.toString()}\n",
+                  child: Text("Mein Rekord: ${highScore.toString()}\n",
                     style: TextStyle(
                       fontSize: 25.0,
                       fontWeight: FontWeight.bold,

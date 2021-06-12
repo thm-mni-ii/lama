@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/components/component.dart';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
+import 'package:lama_app/util/LamaColors.dart';
 
 class FlappyScoreDisplay extends Component {
   final FlappyLamaGame game;
@@ -10,7 +11,7 @@ class FlappyScoreDisplay extends Component {
   double _sizePercent;
   RRect _fillRRect;
   final Paint _fillPaint = Paint()
-    ..color = Color(0xff2b1d14);
+    ..color = LamaColors.bluePrimary.withOpacity(0.6);
   final Color _textColor = Color(0xffffffff);
   TextPainter _painter;
   TextStyle _textStyle;
