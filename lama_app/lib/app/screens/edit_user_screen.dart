@@ -105,14 +105,15 @@ class EditUserScreenState extends State<EditUserScreen> {
         ),
       ),
       validator: (value) {
-        if (InputValidation.inputPasswortValidation(value) == null ||
-            InputValidation.isEmpty(value))
+        if (InputValidation.isEmpty(value) ||
+            InputValidation.inputPasswortValidation(value) == null)
           return null;
         else
           return InputValidation.inputPasswortValidation(value);
       },
       onChanged: (value) =>
           {context.read<EditUserBloc>().add(EditUserChangePasswort(value))},
+      obscureText: true,
     );
   }
 
@@ -162,13 +163,17 @@ class EditUserScreenState extends State<EditUserScreen> {
   }
 
   Widget _showChanges(BuildContext context, EditUserChangeSuccess state) {
-    String passString = state.changedUser.password.length >= 9
-        ? state.changedUser.password.substring(0, 3) +
-            '***' +
-            state.changedUser.password.substring(
-                state.changedUser.password.length - 3,
-                state.changedUser.password.length)
-        : state.changedUser.password;
+    String passString;
+    if (InputValidation.isEmpty(state.changedUser.password))
+      passString = '******';
+    else
+      passString = state.changedUser.password.length >= 9
+          ? state.changedUser.password.substring(0, 3) +
+              '***' +
+              state.changedUser.password.substring(
+                  state.changedUser.password.length - 3,
+                  state.changedUser.password.length)
+          : state.changedUser.password;
     return Scaffold(
       appBar: _bar(
         MediaQuery.of(context).size.width / 5,

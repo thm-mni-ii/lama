@@ -2,7 +2,7 @@ abstract class InputValidation {
   static int allowedNameLength = 12;
   static int maxNumber = 99999;
   static int passwortMaxLength = 16;
-  static RegExp inputFilter = RegExp('[^a-zA-Z0-9]');
+  static RegExp inputFilter = RegExp('[^a-zA-Z0-9öÖäÄüÜßẞ]');
   static RegExp numberFilter = RegExp('[^0-9]');
 
   static String inputUsernameValidation(String username) {
