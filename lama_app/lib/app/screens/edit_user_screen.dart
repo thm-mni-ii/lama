@@ -107,11 +107,9 @@ class EditUserScreenState extends State<EditUserScreen> {
         ),
       ),
       validator: (value) {
-        if (InputValidation.isEmpty(value) ||
-            InputValidation.inputPasswortValidation(value) == null)
-          return null;
-        else
-          return InputValidation.inputPasswortValidation(value);
+        return InputValidation.isEmpty(value)
+            ? null
+            : InputValidation.inputPasswortValidation(value);
       },
       onChanged: (value) => {_pass = value},
       obscureText: true,
@@ -130,13 +128,9 @@ class EditUserScreenState extends State<EditUserScreen> {
         ),
       ),
       validator: (value) {
-        if (InputValidation.isEmpty(_pass) ||
-            InputValidation.inputPasswortValidation(value, secondPass: _pass) ==
-                null) {
-          return null;
-        } else
-          return InputValidation.inputPasswortValidation(value,
-              secondPass: _pass);
+        return InputValidation.isEmpty(_pass) && InputValidation.isEmpty(value)
+            ? null
+            : InputValidation.inputPasswortValidation(value, secondPass: _pass);
       },
       onChanged: (value) =>
           {context.read<EditUserBloc>().add(EditUserChangePasswort(value))},
