@@ -14,6 +14,8 @@ class FlappyLama extends AnimationComponent {
   Function onCollide;
   /// callback when the lama hits the ground
   Function onHitGround;
+  /// callback when the lama hits the top
+  Function onHitTop;
 
   /// animation in idle mode
   Animation _idle;
@@ -61,9 +63,6 @@ class FlappyLama extends AnimationComponent {
     this._speedY = -320;
   }
 
-  /// This method let the lama fly steady on the actual height.
-  void hover() {}
-
   /// This method checks if the [object] hits the obstacle.
   /// When a hit is triggered the [onCollide] Function gets called.
   /// return:
@@ -89,28 +88,60 @@ class FlappyLama extends AnimationComponent {
     return false;
   }
 
+  /// This method checks if the lama hits the ground.
+  /// If so the [onHitGround] Function gets called.
+  /// return:
+  ///   true = hits the ground
+  ///   false = doesnt hits the ground
+  bool isHittingGround() {
+    if (y > _game.screenSize.height - _size) {
+      // fix the lama
+      y = _game.screenSize.height - _size;
+      // remove the speed
+      _speedY = 0.0;
+      // callback
+      onHitGround?.call();
+      return true;
+    }
+
+    return false;
+  }
+
+  /// This method checks if the lama hits the top.
+  /// It need [t] which is the the time since the last update cycle to calculate the speed.
+  /// If so the [onHitTop] Function gets called.
+  /// return:
+  ///   true = hits the top
+  ///   false = doesnt hits the top
+  bool isHittingTop(double t) {
+    if (y <= 0) {
+      _speedY = 0.0;
+      _speedY += GRAVITY * t;
+      y += _speedY * t;
+
+      // callback
+      onHitTop?.call();
+      return true;
+    }
+
+    return false;
+  }
+
   void update(double t) {
     if (this._game.started) {
-      // speed
-      this._speedY += GRAVITY * t;
       // last y for animation selection
-      var lastY = this.y;
+      var lastY = y;
+      
+      // speed
+      _speedY += GRAVITY * t;
       // new y
-      this.y += this._speedY * t;
+      y += _speedY * t;
 
-      // fall off
-      if (this.y > _game.screenSize.height - this._size) {
-        y = _game.screenSize.height - this._size;
-        _speedY = 0.0;
-        onHitGround?.call();
+      // hits the ground?
+      if (!isHittingGround()) {
+        // hit the top?
+        isHittingTop(t);
       }
-      // hit top
-      else if (this.y <= 0) {
-        _speedY = 0.0;
-        this._speedY += GRAVITY * t;
-        this.y += this._speedY * t;
-      }
-
       // choose animation
       if (lastY > this.y) {
         this.animation = _up;
