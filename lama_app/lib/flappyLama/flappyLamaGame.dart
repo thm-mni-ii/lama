@@ -173,7 +173,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     addWidgetOverlay(
         _startScreen,
         StartScreen(
-            highScore: _userHighScore,
+            userHighScore: _userHighScore,
             alltimeHighScore: _alltimeHighScore,
             onStartPressed: startGame
         )

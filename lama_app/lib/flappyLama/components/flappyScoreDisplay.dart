@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
+
 import 'package:flame/components/component.dart';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
@@ -17,9 +18,9 @@ class FlappyScoreDisplay extends Component {
   /// Text color of the score
   final Color _textColor = Color(0xffffffff);
   /// Width relative to the screen
-  double _widthPercent = 0.25;
+  final double _widthPercent = 0.25;
   /// size of the font relative to the screensize {relativeSize * _sizePercent * _relativeFontSize}
-  double _relativeFontSize = 0.2;
+  final double _relativeFontSize = 0.2;
   /// padding : [top, bottom]
   final _padding = [0.83, 0.1];
   // --------

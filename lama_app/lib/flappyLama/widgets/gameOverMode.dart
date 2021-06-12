@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
 /// This class is a [StatelessWidget] for displaying the game over Mode Hud of Flappy lama
-
 class GameOverMode extends StatelessWidget {
-  // Score to display on game over menu.
+  /// Score to display on game over menu.
   final int score;
+  /// lifes to display and check if retry is possible
   final int lifes;
 
   // This function will be called when quit button is pressed.
   final Function onQuitPressed;
+  // This function will be called when retry button is pressed.
   final Function onRetryPressed;
 
   const GameOverMode({

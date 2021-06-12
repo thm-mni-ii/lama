@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:math';
+
 import 'package:flame/anchor.dart';
 import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
@@ -31,7 +32,7 @@ class FlappyObstacle extends Component {
   /// hole Index (index of the start of the hole)
   int _holeIndex;
   /// the x Coordinate of the object which will gets checked for passing in [_checkPassingObject]
-  double _passingObjectX;
+  final double _passingObjectX;
   /// alter start location (true = starts at 1.5 screenwidth; false = start at 1.0 screenwidth)
   bool _alter;
   /// indicates if the [_passingObjectX] already passed the obstacle (resets after [_resetObstacle] has called
@@ -40,14 +41,14 @@ class FlappyObstacle extends Component {
   List<SpriteComponent> _sprites;
   /// first component to get the position data
   SpriteComponent _first;
-
   final FlappyLamaGame _game;
-  Random _randomNumber = Random();
+  final Random _randomNumber = Random();
 
   FlappyObstacle(this._game, this._alter, this._passingObjectX, this.onPassing,
       [this.onCollide]);
 
   /// This method will generate the obstacle [_sprites] for the rendering.
+  ///
   /// sideeffects:
   ///   [_sprites]
   void _createObstacleParts() {
@@ -89,6 +90,7 @@ class FlappyObstacle extends Component {
   }
 
   /// This method generate a new hole depending on the [_minHoleSize], [_maxHoleSize] and [_size].
+  ///
   /// sideeffects:
   ///   [_holeIndex]
   ///   [_holeSize]
@@ -102,6 +104,7 @@ class FlappyObstacle extends Component {
   }
 
   /// This method checks if the [object] hits the obstacle.
+  ///
   /// It will call the [onCollide] function when a hit gets detected.
   /// return:
   ///   true = collides
@@ -135,6 +138,7 @@ class FlappyObstacle extends Component {
   }
 
   /// This method resets this obstacle and generates a new hole position and size as well as all the sprites.
+  ///
   /// sideeffects:
   ///   [_holeSize] = random
   ///   [_holeIndex] = random depending on [_maxHoleSize]and [_minHoleSize]
@@ -150,6 +154,7 @@ class FlappyObstacle extends Component {
   }
 
   /// This method checks if the [_passingObjectX] passed the [right] x coordinate of this obstacle.
+  ///
   /// When it passed than [onPassing] gets called.
   /// sideeffects:
   ///   [_objectPassed] = true when the object passed the obstacle
