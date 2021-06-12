@@ -123,7 +123,8 @@ class FlappyObstacle extends Component {
       var holeBot =
           holeTop + (_holeSize * _game.tileSize * _size);
       // Y
-      if (!(object.top >= holeTop && object.bottom <= holeBot)) {
+      if (!((object.top >= holeTop || _holeIndex == 0) &&
+          object.bottom <= holeBot)) {
         // callback
         onCollide?.call();
         return true;
