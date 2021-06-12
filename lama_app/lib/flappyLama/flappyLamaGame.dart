@@ -50,6 +50,11 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   Random _randomNumber = Random();
   UserRepository _userRepo;
 
+  /// Getter of [_started]
+  bool get started {
+    return _started;
+  }
+
   FlappyLamaGame(this._context, this._userRepo) {
     var back = ParallaxComponent([
       ParallaxImage('png/himmel.png'),

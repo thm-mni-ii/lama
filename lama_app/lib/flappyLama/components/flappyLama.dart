@@ -15,16 +15,18 @@ class FlappyLama extends AnimationComponent {
   /// callback when the lama hits the ground
   Function onHitGround;
 
+  /// animation in idle mode
   Animation _idle;
+  /// animation in flying up mode
   Animation _up;
+  /// animation in falling mode
   Animation _fall;
   /// width and height of the lama in pixel
   double _size;
 
   final FlappyLamaGame _game;
-  bool _isGameStarted = false;
-  double _speedY = 0.0;
 
+  double _speedY = 0.0;
   static const double GRAVITY = 1000;
 
   /// Initialize the class with the given [_size].
@@ -88,7 +90,7 @@ class FlappyLama extends AnimationComponent {
   }
 
   void update(double t) {
-    if (_isGameStarted == true) {
+    if (this._game.started) {
       // speed
       this._speedY += GRAVITY * t;
       // last y for animation selection
@@ -129,7 +131,6 @@ class FlappyLama extends AnimationComponent {
   }
 
   void onTapDown() {
-    _isGameStarted = true;
     flap();
   }
 
