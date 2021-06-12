@@ -8,37 +8,51 @@ import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 /// This class extends [Component] and describes an obstacle.
 /// It will move from the right end to the start and will generate a random hole at a random position each time.
 class FlappyObstacle extends Component {
+  // SETTINGS
+  // --------
+  /// speed of the obstacles [negative = right to left; positive = left to right]
   final double _velocity = -70;
-  // count of the tiles
+  /// amount of tiles = size of the sprites / width of the obstacle
   final double _size = 1.5;
-  // will be multiplied by the _size
-  final double _minHoleTiles = 2;
-  // will be multiplied by the _size
+  /// minimum size of the hole = multiples by [_size] {[_minHoleSize] * [_size]}
+  final double _minHoleSize = 2;
+  /// maximum size of the hole = multiples by [_size] {[_maxHoleTiles] * [_size]}
   final double _maxHoleTiles = 3;
-  // will be multiplied by the _size
+  // --------
+  // SETTINGS
+
+  /// This function gets called when an [Rect] passes this obstacle
+  Function onPassing;
+  /// This function gets called when an [Rect] collides with this obstacle
+  Function onCollide;
+
+  /// actual size of the hole = multiples by [_size] {[_holeSize] * [_size]}
   int _holeSize;
+  /// hole Position (index of the start of the hole)
   int _holePosition;
   double lamaX;
-  // alter start location
+  /// alter start location (true = starts at 1.5 screenwidth; false = start at 1.0 screenwidth)
   bool _alter;
   bool _isHandled = false;
+  /// list of all the single sprites of the component
   List<SpriteComponent> _sprites;
-  Function onPassing;
-  Function onCollide;
+  /// first component to get the position data
   SpriteComponent _first;
 
-  final FlappyLamaGame game;
-  //obstacle move and reset after they leave the screen (2 objects moving)
+  final FlappyLamaGame _game;
   Random _randomNumber = Random();
 
-  FlappyObstacle(this.game, this._alter, this.lamaX, this.onPassing, 
+  FlappyObstacle(this._game, this._alter, this.lamaX, this.onPassing,
       [this.onCollide]);
 
   void render(Canvas c) {
     // render each part of the snake
-    for (SpriteComponent obstacle in _sprites) {
+    for (SpriteComponent obstaclePart in _sprites) {
+      // has so save the canvas because else it will lead to a render problem by adding up the x and y fields
       c.save();
-      obstacle.render(c);
+      // render the part of the obstacle
+      obstaclePart.render(c);
+      // restore the canvas to the original data
       c.restore();
     }
   }
@@ -47,48 +61,58 @@ class FlappyObstacle extends Component {
   /// sideeffects:
   ///   [_sprites]
   void createObstacleParts() {
+    // reset the sprites
     _sprites = [];
-    for (int i = 0; i < (this.game.tilesY / this._size); i++) {
+
+    for (int i = 0; i < (this._game.tilesY / this._size); i++) {
+      // common sprite component
       var tmp = SpriteComponent()
-        ..height = this.game.tileSize * this._size
-        ..width = this.game.tileSize * this._size
-        ..x = this.game.screenSize.width +
-            (this._alter
-                ? (this.game.tilesX ~/ 2) * this.game.tileSize +
-                    this.game.tileSize * this._size
-                : 0)
-        ..y = (this.game.tileSize * this._size) * i
+        ..height = _game.tileSize * _size
+        ..width = _game.tileSize * _size
+        ..x = _game.screenSize.width +
+            (_alter ?
+              (_game.tilesX ~/ 2) * _game.tileSize + _game.tileSize * _size :
+              0)
+        ..y = (_game.tileSize * _size) * i
         ..anchor = Anchor.topLeft;
 
-      if (this._holePosition == i + 1) {
+      // start of the hole
+      if (_holePosition == i + 1) {
         tmp.sprite = Sprite('png/kaktus_end_top.png');
         _sprites.add(tmp);
-      } else if (this._holePosition + this._holeSize == i) {
+      }
+      // end of the hole
+      else if (_holePosition + _holeSize == i) {
         tmp.sprite = Sprite('png/kaktus_end_bottom.png');
         _sprites.add(tmp);
-      } else if (!(i >= this._holePosition &&
-          i <= this._holePosition + this._holeSize)) {
+      }
+      // body of the obstacle
+      else if (!(i >= _holePosition &&
+          i <= _holePosition + _holeSize)) {
         tmp.sprite = Sprite('png/kaktus_body.png');
         _sprites.add(tmp);
       }
     }
+
+    // sets the first part of the obstacle
     _first = _sprites[0];
   }
 
-  /// This method generate a new hole depending on the [_minHoleTiles], [_maxHoleTiles] and [_size].
+  /// This method generate a new hole depending on the [_minHoleSize], [_maxHoleTiles] and [_size].
   /// sideeffects:
   ///   [_holePosition]
   ///   [_holeSize]
   void generateHole() {
-    this._holePosition =
-        _randomNumber.nextInt((this.game.tilesY ~/ this._size) - 1);
-    this._holeSize = _randomNumber.nextInt(
-            ((this._maxHoleTiles - this._minHoleTiles) / this._size).ceil() +
-                1) +
-        (_minHoleTiles / this._size).ceil();
+    // index of the position of the hole
+    _holePosition = _randomNumber.nextInt((_game.tilesY ~/ _size) - 1);
+    // size of the hole
+    _holeSize = _randomNumber.nextInt(
+        ((_maxHoleTiles - _minHoleSize) / _size).ceil() + 1) +
+        (_minHoleSize / _size).ceil();
   }
 
   /// This method checks if the [object] hits the obstacle.
+  /// It will call the [onCollide] function when a hit gets detected.
   /// return:
   ///   true = collides
   ///   false = no collision
@@ -105,9 +129,9 @@ class FlappyObstacle extends Component {
         object.left < _first.x + _first.width) ||
         (object.right > _first.x &&
         object.right < _first.x + _first.width)) {
-      var holeTop = this._holePosition * this.game.tileSize * this._size;
+      var holeTop = _holePosition * _game.tileSize * _size;
       var holeBot =
-          holeTop + (this._holeSize * this.game.tileSize * this._size);
+          holeTop + (_holeSize * _game.tileSize * _size);
       // Y
       if (!(object.top >= holeTop && object.bottom <= holeBot)) {
         // callback
@@ -115,32 +139,37 @@ class FlappyObstacle extends Component {
         return true;
       }
     }
+
     return false;
+  }
+
+  void resetObstacle() {
+    // remove the initial offset
+    _alter = false;
+    generateHole();
+    createObstacleParts();
+    _isHandled = false;
   }
 
   void update(double t) {
     if (_sprites.isNotEmpty) {
-      // reset the obstacle when moving out of the screen
-      if (_sprites[0].x <= -(this.game.tileSize * this._size)) {
-        // remove the initial offset
-        this._alter = false;
-        generateHole();
-        createObstacleParts();
-        // run callback
-        _isHandled = false;
+      // generate new holeSize and position and all parts when moving out of the screen
+      if (_sprites[0].x <= -(_game.tileSize * _size)) {
+        resetObstacle();
       }
+
       if (lamaX > _first.x + _first.width && !_isHandled){
         onPassing?.call();
         _isHandled = true;
       }
 
-      // moves the obstacles
+      // moves the obstacles by [_velocity]
       _sprites?.forEach((element) => element.x += _velocity * t);
     }
   }
 
   void resize(Size size) {
-    if (this.game.tileSize > 0) {
+    if (this._game.tileSize > 0) {
       generateHole();
       createObstacleParts();
     }
