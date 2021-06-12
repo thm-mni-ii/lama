@@ -24,6 +24,7 @@ class EditUserScreenState extends State<EditUserScreen> {
   Size screenSize;
   //String _dropDown = 'Klasse 1';
   User _user;
+  String _pass;
 
   EditUserScreenState(this._user);
 
@@ -66,6 +67,7 @@ class EditUserScreenState extends State<EditUserScreen> {
             children: [
               _usernameTextField(context),
               _passwortTextField(context),
+              _passwortTextField2(context),
               _coinsTextField(context),
               SizedBox(height: 10),
               _deletUserButoon(context),
@@ -110,6 +112,31 @@ class EditUserScreenState extends State<EditUserScreen> {
           return null;
         else
           return InputValidation.inputPasswortValidation(value);
+      },
+      onChanged: (value) => {_pass = value},
+      obscureText: true,
+    );
+  }
+
+  Widget _passwortTextField2(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Password wiederholen',
+        hintText: 'Password wiederholen',
+        labelStyle:
+            LamaTextTheme.getStyle(color: LamaColors.bluePrimary, fontSize: 14),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: LamaColors.bluePrimary),
+        ),
+      ),
+      validator: (value) {
+        if (InputValidation.isEmpty(_pass) ||
+            InputValidation.inputPasswortValidation(value, secondPass: _pass) ==
+                null) {
+          return null;
+        } else
+          return InputValidation.inputPasswortValidation(value,
+              secondPass: _pass);
       },
       onChanged: (value) =>
           {context.read<EditUserBloc>().add(EditUserChangePasswort(value))},

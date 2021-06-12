@@ -13,11 +13,14 @@ abstract class InputValidation {
     return null;
   }
 
-  static String inputPasswortValidation(String passwort) {
+  static String inputPasswortValidation(String passwort, {String secondPass}) {
     if (isEmpty(passwort)) return 'Das Passwort darf nicht leer sein!';
     if (_regExpInvalide(passwort)) return 'Bitte keine Sonderzeichen!';
     if (passwort.length > passwortMaxLength)
       return 'Das Passwort darf maximal $passwortMaxLength Zeichen haben!';
+    if (secondPass != null && (passwort != secondPass)) {
+      return 'Die Passwörter stimmen nicht überein';
+    }
     return null;
   }
 
