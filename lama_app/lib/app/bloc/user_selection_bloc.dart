@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/event/user_selection_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/repository/lamafacts_repository.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
+import 'package:lama_app/app/screens/admin_menu_screen.dart';
+import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/app/state/user_selection_state.dart';
 import 'package:lama_app/db/database_provider.dart';
@@ -15,7 +19,7 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
   Stream<UserSelectionState> mapEventToState(UserSelectionEvent event) async* {
     if (event is LoadUsers) yield await loadUsers();
     if (event is SelectUser) {
-      _userSelected(event.user, event.context);
+      await _userSelected(event.user, event.context);
       yield UserSelected(event.user);
     }
   }
@@ -25,8 +29,8 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
     return UsersLoaded(userList);
   }
 
-  void _userSelected(User user, BuildContext context) {
-    Navigator.push(
+  Future<void> _userSelected(User user, BuildContext context) async {
+    User selectedUser = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(
@@ -34,6 +38,24 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
           child: UserLoginScreen(),
         ),
       ),
-    ).then((value) => context.read<UserSelectionBloc>().add(LoadUsers()));
+    );
+    if (selectedUser == null) return;
+    UserRepository repository = UserRepository(selectedUser);
+    if (selectedUser.isAdmin) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => AdminMenuScreen()));
+    } else {
+      LamaFactsRepository lamaFactsRepository = LamaFactsRepository();
+      await lamaFactsRepository.loadFacts();
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MultiRepositoryProvider(providers: [
+                    RepositoryProvider<UserRepository>(
+                        create: (context) => repository),
+                    RepositoryProvider<LamaFactsRepository>(
+                        create: (context) => lamaFactsRepository)
+                  ], child: HomeScreen())));
+    }
   }
 }

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
+import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
+import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
@@ -96,8 +98,14 @@ class AdminMenuScreen extends StatelessWidget {
           return IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              Navigator.pop(
+              Navigator.pushReplacement(
                 context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) => UserSelectionBloc(),
+                    child: UserSelectionScreen(),
+                  ),
+                ),
               );
             },
             tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,

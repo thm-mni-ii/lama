@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/repository/lamafacts_repository.dart';
-import 'package:lama_app/app/repository/user_repository.dart';
-import 'package:lama_app/app/screens/admin_menu_screen.dart';
-import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/db/database_provider.dart';
 
@@ -26,32 +22,14 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   Future<UserLoginState> validateUserLogin(UserLogin event) async {
     if ((_pass != null && event.user != null) &&
         await DatabaseProvider.db.checkPassword(_pass, event.user) == 1) {
-      UserRepository repository = UserRepository(event.user);
-      if (event.user.isAdmin) {
-        Navigator.pushReplacement(event.context,
-            MaterialPageRoute(builder: (context) => AdminMenuScreen()));
-      } else {
-        LamaFactsRepository lamaFactsRepository = LamaFactsRepository();
-        await lamaFactsRepository.loadFacts();
-        Navigator.pushReplacement(
-            event.context,
-            MaterialPageRoute(
-                builder: (context) => MultiRepositoryProvider(providers: [
-                      RepositoryProvider<UserRepository>(
-                          create: (context) => repository),
-                      RepositoryProvider<LamaFactsRepository>(
-                          create: (context) => lamaFactsRepository)
-                    ], child: HomeScreen())));
-      }
-      _pass = null;
+      Navigator.pop(event.context, user);
       return UserLoginSuccessful();
-    } else {
-      return UserLoginFailed(event.user,
-          error: 'Das Passwort passt nicht zu diesem Nutzer!');
     }
+    return UserLoginFailed(event.user,
+        error: 'Das Passwort passt nicht zu diesem Nutzer!');
   }
 
   void _abortLogin(BuildContext context) {
-    Navigator.pop(context);
+    Navigator.pop(context, null);
   }
 }

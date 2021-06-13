@@ -16,6 +16,8 @@ class UserSelectionScreen extends StatefulWidget {
 }
 
 class UserSelectionScreenState extends State<UserSelectionScreen> {
+  GlobalKey _scaffold = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +28,7 @@ class UserSelectionScreenState extends State<UserSelectionScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffold,
       appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<UserSelectionBloc, UserSelectionState>(
         builder: (context, state) {
@@ -38,58 +41,60 @@ class UserSelectionScreenState extends State<UserSelectionScreen> {
       ),
     );
   }
-}
 
-Widget _userListView(List<User> list) {
-  return ListView.builder(
-    itemCount: list.length,
-    itemBuilder: (context, index) {
-      return _userCard(list[index]);
-    },
-  );
-}
+  Widget _userListView(List<User> list) {
+    return ListView.builder(
+      itemCount: list.length,
+      itemBuilder: (context, index) {
+        return _userCard(list[index]);
+      },
+    );
+  }
 
-Widget _userCard(User user) {
-  String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
-  return BlocBuilder<UserSelectionBloc, UserSelectionState>(
-    builder: (context, state) {
-      return Card(
-        child: ListTile(
-          onTap: () {
-            context.read<UserSelectionBloc>().add(SelectUser(user, context));
-          },
-          title: Text(
-            _nameDisplay,
-            style: LamaTextTheme.getStyle(
-              fontSize: 20,
-              color: LamaColors.black,
-              monospace: true,
-              fontWeight: FontWeight.w500,
+  Widget _userCard(User user) {
+    String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
+    return BlocBuilder<UserSelectionBloc, UserSelectionState>(
+      builder: (context, state) {
+        return Card(
+          child: ListTile(
+            onTap: () {
+              _scaffold.currentContext
+                  .read<UserSelectionBloc>()
+                  .add(SelectUser(user, _scaffold.currentContext));
+            },
+            title: Text(
+              _nameDisplay,
+              style: LamaTextTheme.getStyle(
+                fontSize: 20,
+                color: LamaColors.black,
+                monospace: true,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            leading: CircleAvatar(
+              child: SvgPicture.asset(
+                'assets/images/svg/avatars/${user.avatar}.svg',
+                semanticsLabel: 'LAMA',
+              ),
+              radius: 25,
+              backgroundColor: LamaColors.mainPink,
             ),
           ),
-          leading: CircleAvatar(
-            child: SvgPicture.asset(
-              'assets/images/svg/avatars/${user.avatar}.svg',
-              semanticsLabel: 'LAMA',
-            ),
-            radius: 25,
-            backgroundColor: LamaColors.mainPink,
-          ),
+        );
+      },
+    );
+  }
+
+  Widget _bar(double size) {
+    return AppBar(
+      title: Text('Nutzerauswahl', style: LamaTextTheme.getStyle(fontSize: 18)),
+      toolbarHeight: size,
+      backgroundColor: LamaColors.mainPink,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
         ),
-      );
-    },
-  );
-}
-
-Widget _bar(double size) {
-  return AppBar(
-    title: Text('Nutzerauswahl', style: LamaTextTheme.getStyle(fontSize: 18)),
-    toolbarHeight: size,
-    backgroundColor: LamaColors.mainPink,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        bottom: Radius.circular(30),
       ),
-    ),
-  );
+    );
+  }
 }
