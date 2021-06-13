@@ -110,6 +110,10 @@ Widget _input(BuildContext context, String error, User user, double size,
             onChanged: (value) =>
                 context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
             obscureText: true,
+            onFieldSubmitted: (value) => {
+              if (key.currentState.validate())
+                context.read<UserLoginBloc>().add(UserLogin(user, context))
+            },
           ),
         ),
         Row(
