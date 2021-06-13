@@ -45,6 +45,26 @@
          "lama_text":"Sammle 3,59€ mit den Münzen zusammen",
          "left_to_solve": 3,
          "moneyAmount": 3.59
-        }
+        },
+              {
+                  "task_type": "Equation",
+                  "task_reward": 2,
+                  "lama_text": "Löse die Gleichung!",
+                  "left_to_solve": 4,
+                  "operator(1-2)": 2,
+                  "equation": ["?", "*", "7", "+", "?", "=", "50"],
+                  "missing_elements": ["7", "1"],
+                "wrong_answers": ["8", "9", "10", "11", "12", "13"]
+              },
+              {
+                "task_type": "Equation",
+                "task_reward": 2,
+                "lama_text": "Löse die Gleichung!",
+                "left_to_solve": 4,
+                "operator(1-2)": 1,
+                "equation": ["9", "?", "7", "=", "2"],
+                "missing_elements": ["-"],
+                "wrong_answers": ["8", "9", "10", "11", "12", "13"]
+              }
         ]
 }
