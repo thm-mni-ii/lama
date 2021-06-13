@@ -33,6 +33,7 @@ class UserLoginScreenState extends State<UserLoginScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<UserLoginBloc, UserLoginState>(
         builder: (context, state) {
