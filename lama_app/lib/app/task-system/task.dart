@@ -86,6 +86,7 @@ class Task4Cards extends Task {
   @override
   String toString() {
     String s = super.toString() + rightAnswer;
+    wrongAnswers.sort();
     for (int i = 0; i < wrongAnswers.length; i++) {
       s += wrongAnswers[i];
     }
@@ -105,6 +106,7 @@ class TaskClozeTest extends Task {
   @override
   String toString() {
     String s = super.toString() + rightAnswer;
+    wrongAnswers.sort();
     for (int i = 0; i < wrongAnswers.length; i++) {
       s += wrongAnswers[i];
     }
@@ -123,6 +125,7 @@ class TaskMarkWords extends Task {
   @override
   String toString() {
     String s = super.toString();
+    rightWords.sort();
     for (int i = 0; i < rightWords.length; i++) {
       s += rightWords[i];
     }
@@ -151,6 +154,8 @@ class TaskMatchCategory extends Task {
   @override
   String toString() {
     String s = super.toString();
+    categoryOne.sort();
+    categoryTwo.sort();
     for (int i = 0; i < categoryOne.length; i++) {
       s += categoryOne[i];
     }
@@ -173,6 +178,7 @@ class TaskGridSelect extends Task {
   @override
   String toString() {
     String s = super.toString();
+    wordsToFind.sort();
     for (int i = 0; i < wordsToFind.length; i++) {
       s += wordsToFind[i];
     }
@@ -204,6 +210,7 @@ class TaskVocableTest extends Task {
   @override
   String toString() {
     String s = super.toString();
+    vocablePairs.sort((a, b) => a.a.compareTo(b.a));
     for (int i = 0; i < vocablePairs.length; i++) {
       s += vocablePairs[i].a + vocablePairs[i].b;
     }

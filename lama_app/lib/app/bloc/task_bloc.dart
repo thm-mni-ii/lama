@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import 'dart:math';
+=======
+import 'dart:convert';
+>>>>>>> f31327b (Fixed limited repetition system)
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -99,14 +103,15 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     }
   }
 
-  void rightAnswerCallback(Task t) {
+  void rightAnswerCallback(Task t) async {
     if (t.leftToSolve > 0) {
       answerResults.add(true);
       userRepository.addLamaCoins(t.reward);
     } else
       answerResults.add(true);
-    DatabaseProvider.db.decrementLeftToSolve(t);
-    t.leftToSolve--;
+    int updatedRows = await DatabaseProvider.db.decrementLeftToSolve(t);
+    print("Updated " + updatedRows.toString() + "rows");
+    t.leftToSolve = await DatabaseProvider.db.getLeftToSolve(t.toString());
   }
 
   void wrongAnswerCallback(Task t) {

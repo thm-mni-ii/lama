@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/achievement_model.dart';
@@ -53,7 +54,7 @@ class DatabaseProvider {
 
   static const String tableLeftToSolve = "left_to_solve";
   static const String columnLeftToSolveID = "id";
-  static const String columnB64Task = "task_string";
+  static const String columnTaskString = "task_string";
   static const String columnLeftToSolve = "left_to_solve";
 
   DatabaseProvider._();
@@ -122,7 +123,7 @@ class DatabaseProvider {
           ");");
       await database.execute("CREATE TABLE $tableLeftToSolve("
           "$columnLeftToSolveID INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$columnB64Task TEXT,"
+          "$columnTaskString TEXT,"
           "$columnLeftToSolve INTEGER"
           ");");
     });
@@ -608,41 +609,41 @@ class DatabaseProvider {
     await db.delete(tableLeftToSolve);
   }
 
-  Future<void> insertLeftToSolve(String b64TaskString, int leftToSolve) async {
+  Future<int> insertLeftToSolve(String taskString, int leftToSolve) async {
     final db = await database;
     Map data = Map<String, dynamic>();
-    data[columnB64Task] = b64TaskString;
+    data[columnTaskString] = taskString;
     data[columnLeftToSolve] = leftToSolve;
-    await db.insert(tableLeftToSolve, data);
+    return await db.insert(tableLeftToSolve, data);
   }
 
-  Future<int> getLeftToSolve(String b64TaskString) async {
+  Future<int> getLeftToSolve(String taskString) async {
     final db = await database;
+    print("looking up task with: " + taskString);
     var leftToSolve = await db.query(tableLeftToSolve,
         columns: [columnLeftToSolve],
-        where: "$columnB64Task = ?",
-        whereArgs: [b64TaskString]);
+        where: "$columnTaskString = ?",
+        whereArgs: [taskString]);
     if (leftToSolve.length > 0) return leftToSolve.first[columnLeftToSolve];
-    return -1;
+    return Future.value(-3);
   }
 
   Future<void> removeUnusedLeftToSolveEntries(List<Task> loadedTasks) async {
     final db = await database;
-    db.delete(tableLeftToSolve);
+    db.delete(tableLeftToSolve, where: '1');
     loadedTasks.forEach((task) {
-      var bytes = utf8.encode(task.toString());
-      var base64Str = base64.encode(bytes);
-      insertLeftToSolve(base64Str, task.leftToSolve);
+      insertLeftToSolve(task.toString(), task.leftToSolve);
     });
   }
 
   Future<int> decrementLeftToSolve(Task t) async {
     final db = await database;
     Map values = Map<String, dynamic>();
-    var bytes = utf8.encode(t.toString());
-    var base64Str = base64.encode(bytes);
-    values[columnLeftToSolve] = t.leftToSolve - 1;
+    print("curVal: " + t.leftToSolve.toString());
+    int newVal = max(t.leftToSolve - 1, -2);
+    print("setting to: " + newVal.toString());
+    values[columnLeftToSolve] = newVal;
     return await db.update(tableLeftToSolve, values,
-        where: "$columnB64Task = ?", whereArgs: [base64Str]);
+        where: "$columnTaskString = ?", whereArgs: [t.toString()]);
   }
 }

@@ -37,13 +37,13 @@ class TasksetLoader {
     for (int i = 1; i <= GRADES_SUPPORTED; i++) {
       String tasksetMathe = await rootBundle.loadString(
           'assets/standardTasksets/mathe/mathe' + i.toString() + '.json');
-      buildTasksetFromJson(tasksetMathe);
+      await buildTasksetFromJson(tasksetMathe);
       String tasksetDeutsch = await rootBundle.loadString(
           'assets/standardTasksets/deutsch/deutsch' + i.toString() + '.json');
-      buildTasksetFromJson(tasksetDeutsch);
+      await buildTasksetFromJson(tasksetDeutsch);
       String tasksetEnglisch = await rootBundle.loadString(
           'assets/standardTasksets/englisch/englisch' + i.toString() + '.json');
-      buildTasksetFromJson(tasksetEnglisch);
+      await buildTasksetFromJson(tasksetEnglisch);
     }
 
     List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
@@ -52,7 +52,7 @@ class TasksetLoader {
       var response = await http.get(Uri.parse(taskUrls[i].url),
           headers: {'Content-type': 'application/json'});
       if (response.statusCode == 200) {
-        buildTasksetFromJson(utf8.decode(response.bodyBytes));
+        await buildTasksetFromJson(utf8.decode(response.bodyBytes));
       }
     }
 
@@ -76,17 +76,18 @@ class TasksetLoader {
     await DatabaseProvider.db.removeUnusedLeftToSolveEntries(tasks);
   }
 
-  void buildTasksetFromJson(tasksetContent) async {
+  Future<void> buildTasksetFromJson(tasksetContent) async {
     Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
 
     for (int i = 0; i < taskset.tasks.length; i++) {
       Task t = taskset.tasks[i];
-      var bytes = utf8.encode(t.toString());
-      var base64Str = base64.encode(bytes);
-      int leftToSolve = await DatabaseProvider.db.getLeftToSolve(base64Str);
-      if (leftToSolve == -1) {
-        DatabaseProvider.db.insertLeftToSolve(base64Str, t.leftToSolve);
+      int leftToSolve = await DatabaseProvider.db.getLeftToSolve(t.toString());
+      if (leftToSolve == -3) {
+        print("Not found - inserting");
+        await DatabaseProvider.db
+            .insertLeftToSolve(t.toString(), t.leftToSolve);
       } else {
+        print("found - setting to: " + leftToSolve.toString());
         t.leftToSolve = leftToSolve;
       }
     }

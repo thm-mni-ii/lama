@@ -432,7 +432,7 @@ class TaskScreenState extends State<TaskScreen> {
         : Icon(Icons.close, color: LamaColors.redAccent, size: 50);
     Text coinText;
     if (result) {
-      if (task.leftToSolve > -1)
+      if (task.leftToSolve > -2)
         coinText = Text("+" + task.reward.toString(),
             style: LamaTextTheme.getStyle(color: LamaColors.greenAccent));
       else
