@@ -7,7 +7,11 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:collection/collection.dart';
+<<<<<<< HEAD
 import 'package:lama_app/app/task-system/taskset_model.dart';
+=======
+import 'package:lama_app/db/database_provider.dart';
+>>>>>>> 1e9ec22 (Limited Repetition System via base64EncodedString)
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   String tasksetSubject;
@@ -28,69 +32,61 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       Task t = tasks[curIndex - 1];
       if (t is Task4Cards) {
         if (event.providedAnswer == t.rightAnswer) {
-          userRepository.addLamaCoins(t.reward);
-          answerResults.add(true);
+          rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         } else {
-          answerResults.add(false);
+          wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
       } else if (t is TaskMarkWords) {
         if (equals(t.rightWords, event.providedanswerWords)) {
-          // TODO: Listen müssen verglichen werden (Ob das funktioniert???)
-          userRepository.addLamaCoins(t.reward);
-          answerResults.add(true);
+          rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         } else {
-          answerResults.add(false);
+          wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
       } else if (t is TaskClozeTest) {
         if (event.providedAnswer == t.rightAnswer) {
-          userRepository.addLamaCoins(t.reward);
-          answerResults.add(true);
+          rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         } else {
-          answerResults.add(false);
+          wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
       } else if (t is TaskMatchCategory) {
         if (event.providedanswerStates.contains(false)) {
-          answerResults.add(false);
+          wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         } else {
-          answerResults.add(true);
-          userRepository.addLamaCoins(t.reward);
+          rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         }
       } else if (t is TaskGridSelect) {
         if (!DeepCollectionEquality.unordered()
             .equals(event.rightPositions, event.markedPositions)) {
-          answerResults.add(false);
+          wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         } else {
-          answerResults.add(true);
-          userRepository.addLamaCoins(t.reward);
+          rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         }
       } else if (t is TaskMoney) {
         if (event.providedAnswerDouble.toStringAsFixed(2) ==
             t.moneyAmount.toStringAsFixed(2)) {
-          answerResults.add(true);
-          userRepository.addLamaCoins(t.reward);
+          rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         } else {
-          answerResults.add(false);
+          wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
       } else if (t is TaskVocableTest) {
         if (event.providedanswerStates.contains(false)) {
-          answerResults.add(false);
+          wrongAnswerCallback(t);
           yield TaskAnswerResultState(false,
               subTaskResult: event.providedanswerStates);
         } else {
-          answerResults.add(true);
-          userRepository.addLamaCoins(t.reward);
+          rightAnswerCallback(t);
           yield TaskAnswerResultState(true,
               subTaskResult: event.providedanswerStates);
         }
@@ -101,6 +97,20 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       else
         yield DisplayTaskState(tasksetSubject, tasks[curIndex++]);
     }
+  }
+
+  void rightAnswerCallback(Task t) {
+    if (t.leftToSolve > 0) {
+      answerResults.add(true);
+      userRepository.addLamaCoins(t.reward);
+    } else
+      answerResults.add(true);
+    DatabaseProvider.db.decrementLeftToSolve(t);
+    t.leftToSolve--;
+  }
+
+  void wrongAnswerCallback(Task t) {
+    answerResults.add(false);
   }
 
   bool equals(List<String> list1, List<String> list2) {

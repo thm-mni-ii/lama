@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/achievement_model.dart';
 import 'package:lama_app/app/model/game_model.dart';
@@ -8,6 +10,7 @@ import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/subject_model.dart';
 import 'package:lama_app/app/model/userSolvedTaskAmount_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -47,6 +50,11 @@ class DatabaseProvider {
 
   static const String tableTaskUrl = "task_url";
   static const String columnTaskUrl = "url";
+
+  static const String tableLeftToSolve = "left_to_solve";
+  static const String columnLeftToSolveID = "id";
+  static const String columnB64Task = "task_string";
+  static const String columnLeftToSolve = "left_to_solve";
 
   DatabaseProvider._();
   static final DatabaseProvider db = DatabaseProvider._();
@@ -111,6 +119,11 @@ class DatabaseProvider {
       await database.execute("Create TABLE $tableTaskUrl("
           "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
           "$columnTaskUrl TEXT"
+          ");");
+      await database.execute("CREATE TABLE $tableLeftToSolve("
+          "$columnLeftToSolveID INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$columnB64Task TEXT,"
+          "$columnLeftToSolve INTEGER"
           ");");
     });
   }
@@ -211,11 +224,11 @@ class DatabaseProvider {
     final db = await database;
 
     var highscore = await db.query(tableHighscore,
-      columns: [columnId, columnGameId, columnScore, columnUserId],
-      where: "$columnUserId = ? and $columnGameId = ?",
-      whereArgs: [user.id, gameID],
-      orderBy: "$columnScore DESC",
-      limit: 1);
+        columns: [columnId, columnGameId, columnScore, columnUserId],
+        where: "$columnUserId = ? and $columnGameId = ?",
+        whereArgs: [user.id, gameID],
+        orderBy: "$columnScore DESC",
+        limit: 1);
 
     if (highscore.isNotEmpty) {
       return Highscore.fromMap(highscore.first).score;
@@ -581,7 +594,7 @@ class DatabaseProvider {
     return null;
   }
 
-  Future deleteDatabase() async{
+  Future deleteDatabase() async {
     final db = await database;
     await db.delete(tableUser);
     await db.delete(tableAchievements);
@@ -592,5 +605,44 @@ class DatabaseProvider {
     await db.delete(tableSubjects);
     await db.delete(tableUserSolvedTaskAmount);
     await db.delete(tableTaskUrl);
+    await db.delete(tableLeftToSolve);
+  }
+
+  Future<void> insertLeftToSolve(String b64TaskString, int leftToSolve) async {
+    final db = await database;
+    Map data = Map<String, dynamic>();
+    data[columnB64Task] = b64TaskString;
+    data[columnLeftToSolve] = leftToSolve;
+    await db.insert(tableLeftToSolve, data);
+  }
+
+  Future<int> getLeftToSolve(String b64TaskString) async {
+    final db = await database;
+    var leftToSolve = await db.query(tableLeftToSolve,
+        columns: [columnLeftToSolve],
+        where: "$columnB64Task = ?",
+        whereArgs: [b64TaskString]);
+    if (leftToSolve.length > 0) return leftToSolve.first[columnLeftToSolve];
+    return -1;
+  }
+
+  Future<void> removeUnusedLeftToSolveEntries(List<Task> loadedTasks) async {
+    final db = await database;
+    db.delete(tableLeftToSolve);
+    loadedTasks.forEach((task) {
+      var bytes = utf8.encode(task.toString());
+      var base64Str = base64.encode(bytes);
+      insertLeftToSolve(base64Str, task.leftToSolve);
+    });
+  }
+
+  Future<int> decrementLeftToSolve(Task t) async {
+    final db = await database;
+    Map values = Map<String, dynamic>();
+    var bytes = utf8.encode(t.toString());
+    var base64Str = base64.encode(bytes);
+    values[columnLeftToSolve] = t.leftToSolve - 1;
+    return await db.update(tableLeftToSolve, values,
+        where: "$columnB64Task = ?", whereArgs: [base64Str]);
   }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:path_provider/path_provider.dart';
@@ -64,10 +65,31 @@ class TasksetLoader {
       String tasksetContent = await file.readAsString();
       buildTasksetFromJson(tasksetContent);
     }*/
+
+    //Remove all leftToSolveEntries for deleted Tasksets
+    List<Task> tasks = [];
+    loadedTasksets.values.forEach((element) {
+      element.forEach((taskset) {
+        tasks.addAll(taskset.tasks);
+      });
+    });
+    await DatabaseProvider.db.removeUnusedLeftToSolveEntries(tasks);
   }
 
-  void buildTasksetFromJson(tasksetContent) {
+  void buildTasksetFromJson(tasksetContent) async {
     Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
+
+    for (int i = 0; i < taskset.tasks.length; i++) {
+      Task t = taskset.tasks[i];
+      var bytes = utf8.encode(t.toString());
+      var base64Str = base64.encode(bytes);
+      int leftToSolve = await DatabaseProvider.db.getLeftToSolve(base64Str);
+      if (leftToSolve == -1) {
+        DatabaseProvider.db.insertLeftToSolve(base64Str, t.leftToSolve);
+      } else {
+        t.leftToSolve = leftToSolve;
+      }
+    }
 
     /*LOGCODE
     print("taskset_name: " + taskset.name);
