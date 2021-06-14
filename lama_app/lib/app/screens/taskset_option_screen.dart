@@ -51,6 +51,11 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
+                    Icon(
+                      Icons.add_link,
+                      color: LamaColors.bluePrimary,
+                      size: 30,
+                    ),
                     _inputFields(context),
                     _headline('Taskset URLs'),
                     _tasksetUrlList(state.urls),
@@ -78,7 +83,6 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             decoration: InputDecoration(
               labelText: 'Taskset URL',
               hintText: 'https://beispiel.de/taskset.json',
-              suffixIcon: Icon(Icons.add_link),
             ),
             onChanged: (value) => {
               context
