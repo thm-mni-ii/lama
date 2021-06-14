@@ -55,6 +55,7 @@ class DatabaseProvider {
   static const String tableLeftToSolve = "left_to_solve";
   static const String columnLeftToSolveID = "id";
   static const String columnTaskString = "task_string";
+  static const String columnUserLTSId = "user_id";
   static const String columnLeftToSolve = "left_to_solve";
 
   DatabaseProvider._();
@@ -124,7 +125,8 @@ class DatabaseProvider {
       await database.execute("CREATE TABLE $tableLeftToSolve("
           "$columnLeftToSolveID INTEGER PRIMARY KEY AUTOINCREMENT,"
           "$columnTaskString TEXT,"
-          "$columnLeftToSolve INTEGER"
+          "$columnLeftToSolve INTEGER,"
+          "$columnUserLTSId INTEGER"
           ");");
     });
   }
@@ -609,34 +611,38 @@ class DatabaseProvider {
     await db.delete(tableLeftToSolve);
   }
 
-  Future<int> insertLeftToSolve(String taskString, int leftToSolve) async {
+  Future<int> insertLeftToSolve(
+      String taskString, int leftToSolve, User user) async {
     final db = await database;
     Map data = Map<String, dynamic>();
     data[columnTaskString] = taskString;
     data[columnLeftToSolve] = leftToSolve;
+    data[columnUserLTSId] = user.id;
     return await db.insert(tableLeftToSolve, data);
   }
 
-  Future<int> getLeftToSolve(String taskString) async {
+  Future<int> getLeftToSolve(String taskString, User user) async {
     final db = await database;
     print("looking up task with: " + taskString);
     var leftToSolve = await db.query(tableLeftToSolve,
         columns: [columnLeftToSolve],
-        where: "$columnTaskString = ?",
-        whereArgs: [taskString]);
+        where: "$columnTaskString = ? and $columnUserLTSId = ?",
+        whereArgs: [taskString, user.id]);
     if (leftToSolve.length > 0) return leftToSolve.first[columnLeftToSolve];
     return Future.value(-3);
   }
 
-  Future<void> removeUnusedLeftToSolveEntries(List<Task> loadedTasks) async {
+  Future<void> removeUnusedLeftToSolveEntries(
+      List<Task> loadedTasks, User user) async {
     final db = await database;
-    db.delete(tableLeftToSolve, where: '1');
+    db.delete(tableLeftToSolve,
+        where: "$columnUserLTSId = ?", whereArgs: [user.id]);
     loadedTasks.forEach((task) {
-      insertLeftToSolve(task.toString(), task.leftToSolve);
+      insertLeftToSolve(task.toString(), task.leftToSolve, user);
     });
   }
 
-  Future<int> decrementLeftToSolve(Task t) async {
+  Future<int> decrementLeftToSolve(Task t, User user) async {
     final db = await database;
     Map values = Map<String, dynamic>();
     print("curVal: " + t.leftToSolve.toString());
@@ -644,6 +650,7 @@ class DatabaseProvider {
     print("setting to: " + newVal.toString());
     values[columnLeftToSolve] = newVal;
     return await db.update(tableLeftToSolve, values,
-        where: "$columnTaskString = ?", whereArgs: [t.toString()]);
+        where: "$columnTaskString = ? and $columnUserLTSId = ?",
+        whereArgs: [t.toString(), user.id]);
   }
 }

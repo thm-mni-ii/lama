@@ -109,9 +109,11 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       userRepository.addLamaCoins(t.reward);
     } else
       answerResults.add(true);
-    int updatedRows = await DatabaseProvider.db.decrementLeftToSolve(t);
+    int updatedRows = await DatabaseProvider.db
+        .decrementLeftToSolve(t, userRepository.authenticatedUser);
     print("Updated " + updatedRows.toString() + "rows");
-    t.leftToSolve = await DatabaseProvider.db.getLeftToSolve(t.toString());
+    t.leftToSolve = await DatabaseProvider.db
+        .getLeftToSolve(t.toString(), userRepository.authenticatedUser);
   }
 
   void wrongAnswerCallback(Task t) {

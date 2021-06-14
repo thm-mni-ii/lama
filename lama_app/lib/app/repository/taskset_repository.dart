@@ -1,11 +1,12 @@
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/task-system/taskset_loader.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 
 class TasksetRepository {
   TasksetLoader tasksetLoader;
 
-  Future<void> initialize() async {
-    tasksetLoader = TasksetLoader();
+  Future<void> initialize(UserRepository repository) async {
+    tasksetLoader = TasksetLoader(repository);
     await tasksetLoader.loadAllTasksets();
   }
 
@@ -13,8 +14,8 @@ class TasksetRepository {
     return tasksetLoader.getLoadedTasksetsForSubjectAndGrade(subject, grade);
   }
 
-  void reloadTasksetLoader() async {
-    tasksetLoader = TasksetLoader();
+  void reloadTasksetLoader(UserRepository repository) async {
+    tasksetLoader = TasksetLoader(repository);
     await tasksetLoader.loadAllTasksets();
   }
 }
