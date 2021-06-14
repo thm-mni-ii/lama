@@ -17,7 +17,7 @@ class UserLoginScreen extends StatefulWidget {
 }
 
 class UserSelectionState extends State<UserLoginScreen> {
-  var _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();

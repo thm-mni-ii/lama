@@ -45,7 +45,7 @@ class AdminMenuScreen extends StatelessWidget {
           _menuButton(
             context,
             Icon(Icons.add_link),
-            'Aufgaben Verwalten',
+            'Aufgabenverwalten',
             () => {
               Navigator.push(
                 context,
