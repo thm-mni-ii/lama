@@ -111,8 +111,8 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         return Row(
           children: [
             Text(
-              urls[index].url.length > 32
-                  ? urls[index].url.substring(1, 30) + '...'
+              urls[index].url.length > 30
+                  ? urls[index].url.substring(7, 32) + '...'
                   : urls[index].url,
               style: LamaTextTheme.getStyle(
                   color: LamaColors.black, fontSize: 18, monospace: true),
@@ -145,8 +145,8 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         return Row(
           children: [
             Text(
-              urls[index].url.length > 32
-                  ? urls[index].url.substring(1, 30) + '...'
+              urls[index].url.length > 30
+                  ? urls[index].url.substring(7, 32) + '...'
                   : urls[index].url,
               style: LamaTextTheme.getStyle(
                   color: Colors.grey, fontSize: 18, monospace: true),
