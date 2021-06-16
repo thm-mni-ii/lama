@@ -39,7 +39,6 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
             child: Column(
               children: [
                 TextFormField(
-                    //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
                     decoration: InputDecoration(hintText: 'Nutzername'),
                     validator: (String value) {
                       return InputValidation.inputUsernameValidation(value);
@@ -49,24 +48,23 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
                         .add(CreateAdminChangeName(value))),
                 SizedBox(height: 25),
                 TextFormField(
-                  //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
                   decoration: InputDecoration(hintText: 'Passwort'),
                   validator: (String value) {
                     return InputValidation.inputPasswortValidation(value);
                   },
-                  onChanged: (value) => context
-                      .read<CreateAdminBloc>()
-                      .add(CreateAdminChangePassword(value)),
+                  onChanged: (value) => _secondPass = value,
                   obscureText: true,
                 ),
                 SizedBox(height: 10),
                 TextFormField(
-                  //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
                   decoration: InputDecoration(hintText: 'Passwort wiederholen'),
                   validator: (String value) {
-                    return InputValidation.inputPasswortValidation(_secondPass);
+                    return InputValidation.inputPasswortValidation(value,
+                        secondPass: _secondPass);
                   },
-                  onChanged: (value) => _secondPass = value,
+                  onChanged: (value) => context
+                      .read<CreateAdminBloc>()
+                      .add(CreateAdminChangePassword(value)),
                   obscureText: true,
                 ),
                 SizedBox(height: 10),
