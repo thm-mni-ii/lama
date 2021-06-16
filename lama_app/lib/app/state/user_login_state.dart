@@ -4,14 +4,9 @@ abstract class UserLoginState {
   User get user => null;
 }
 
-class UsersLoaded extends UserLoginState {
-  List<User> userList;
-  UsersLoaded(this.userList);
-}
-
-class UserSelected extends UserLoginState {
+class UserLoginPulled extends UserLoginState {
   User user;
-  UserSelected(this.user);
+  UserLoginPulled(this.user);
 }
 
 class UserLoginFailed extends UserLoginState {

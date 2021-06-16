@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
-import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
+import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/screens/taskset_option_screen.dart';
-import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
+import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
@@ -102,8 +102,8 @@ class AdminMenuScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
-                    create: (BuildContext context) => UserLoginBloc(),
-                    child: UserLoginScreen(),
+                    create: (BuildContext context) => UserSelectionBloc(),
+                    child: UserSelectionScreen(),
                   ),
                 ),
               );

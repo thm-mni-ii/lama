@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/bloc/user_login_bloc.dart';
+import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/screens/user_login_screen.dart';
+import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -70,8 +70,8 @@ class CreateAdminScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => BlocProvider(
-                      create: (BuildContext context) => UserLoginBloc(),
-                      child: UserLoginScreen(),
+                      create: (BuildContext context) => UserSelectionBloc(),
+                      child: UserSelectionScreen(),
                     ),
                   ),
                 );

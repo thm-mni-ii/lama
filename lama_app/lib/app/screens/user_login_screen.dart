@@ -12,35 +12,33 @@ import 'package:lama_app/util/input_validation.dart';
 class UserLoginScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return UserSelectionState();
+    return UserLoginScreenState();
   }
 }
 
-class UserSelectionState extends State<UserLoginScreen> {
+class UserLoginScreenState extends State<UserLoginScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<UserLoginBloc>(context).add(LoadUsers());
+    context.read<UserLoginBloc>().add(UserLoginPullUser());
   }
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<UserLoginBloc, UserLoginState>(
         builder: (context, state) {
-          if (state is UserSelected) {
+          if (state is UserLoginPulled) {
             return _input(
                 context, null, state.user, screenSize.width, _formKey);
           }
           if (state is UserLoginFailed) {
             return _input(
                 context, state.error, state.user, screenSize.width, _formKey);
-          }
-          if (state is UsersLoaded) {
-            return _userListView(state.userList);
           }
           if (state is UserLoginSuccessful) {
             return Container(
@@ -67,23 +65,24 @@ Widget _input(BuildContext context, String error, User user, double size,
     child: Column(
       children: [
         Padding(
-          child: Row(
+          padding: EdgeInsets.only(top: 30, bottom: 30),
+          child: Column(
             children: [
               CircleAvatar(
                 child: SvgPicture.asset(
                   'assets/images/svg/avatars/${user.avatar}.svg',
                   semanticsLabel: 'LAMA',
                 ),
-                radius: 25,
+                radius: 35,
                 backgroundColor: LamaColors.mainPink,
               ),
               SizedBox(
-                width: 15,
+                height: 15,
               ),
               Text(
                 _nameDisplay,
                 style: LamaTextTheme.getStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   color: LamaColors.black,
                   monospace: true,
                   fontWeight: FontWeight.w500,
@@ -91,45 +90,66 @@ Widget _input(BuildContext context, String error, User user, double size,
               ),
             ],
           ),
-          padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
         ),
-        TextFormField(
-          decoration: InputDecoration(
-            icon: Icon(Icons.security),
-            hintText: 'Passwort',
-            errorText: error,
-          ),
-          validator: (value) => InputValidation.isEmpty(value)
-              ? 'Eingabe darf nicht leer sein!'
-              : null,
-          onChanged: (value) =>
-              context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
-          obscureText: true,
-        ),
-        SizedBox(
-          height: 25,
-        ),
-        ElevatedButton(
-          onPressed: () {
-            if (key.currentState.validate())
-              context.read<UserLoginBloc>().add(UserLogin(user, context));
-          },
-          child: Text('Einloggen'),
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size(size, 45),
+        Padding(
+          padding: EdgeInsets.only(right: 20, left: 20, bottom: 30),
+          child: TextFormField(
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              hintText: 'Passwort',
+              errorText: error,
+            ),
+            validator: (value) => InputValidation.isEmpty(value)
+                ? 'Eingabe darf nicht leer sein!'
+                : null,
+            onChanged: (value) =>
+                context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
+            obscureText: true,
+            onFieldSubmitted: (value) => {
+              if (key.currentState.validate())
+                context.read<UserLoginBloc>().add(UserLogin(user, context))
+            },
           ),
         ),
-        SizedBox(
-          height: 15,
-        ),
-        ElevatedButton(
-          onPressed: () {
-            context.read<UserLoginBloc>().add(UserLoginAbort());
-          },
-          child: Text('Abbrechen'),
-          style: ElevatedButton.styleFrom(
-              minimumSize: Size(size, 45), primary: Colors.red),
-        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                if (key.currentState.validate())
+                  context.read<UserLoginBloc>().add(UserLogin(user, context));
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.check_rounded),
+                  SizedBox(width: 10),
+                  Text('Einloggen'),
+                ],
+              ),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(250, 50),
+                primary: LamaColors.greenPrimary,
+                shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.read<UserLoginBloc>().add(UserLoginAbort(context));
+              },
+              child: Icon(Icons.close_rounded),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(50, 50),
+                primary: LamaColors.redAccent,
+                shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+              ),
+            ),
+          ],
+        )
       ],
     ),
   );
@@ -137,7 +157,7 @@ Widget _input(BuildContext context, String error, User user, double size,
 
 Widget _bar(double size) {
   return AppBar(
-    title: Text('Nutzerauswahl', style: LamaTextTheme.getStyle(fontSize: 18)),
+    title: Text('Anmeldung', style: LamaTextTheme.getStyle(fontSize: 18)),
     toolbarHeight: size,
     backgroundColor: LamaColors.mainPink,
     shape: RoundedRectangleBorder(
@@ -145,46 +165,5 @@ Widget _bar(double size) {
         bottom: Radius.circular(30),
       ),
     ),
-  );
-}
-
-Widget _userListView(List<User> list) {
-  return ListView.builder(
-    itemCount: list.length,
-    itemBuilder: (context, index) {
-      return _userCard(list[index]);
-    },
-  );
-}
-
-Widget _userCard(User user) {
-  String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
-  return BlocBuilder<UserLoginBloc, UserLoginState>(
-    builder: (context, state) {
-      return Card(
-        child: ListTile(
-          onTap: () {
-            context.read<UserLoginBloc>().add(SelectUser(user));
-          },
-          title: Text(
-            _nameDisplay,
-            style: LamaTextTheme.getStyle(
-              fontSize: 20,
-              color: LamaColors.black,
-              monospace: true,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          leading: CircleAvatar(
-            child: SvgPicture.asset(
-              'assets/images/svg/avatars/${user.avatar}.svg',
-              semanticsLabel: 'LAMA',
-            ),
-            radius: 25,
-            backgroundColor: LamaColors.mainPink,
-          ),
-        ),
-      );
-    },
   );
 }
