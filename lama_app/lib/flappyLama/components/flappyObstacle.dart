@@ -27,6 +27,8 @@ class FlappyObstacle extends Component {
   Function onPassing;
   /// This function gets called when an [Rect] collides with this obstacle in [collides]
   Function onCollide;
+  /// This function gets called when the obstacle gets reseted (index, size).
+  Function(int, int) onResetting;
 
   int _refHoleIndex;
   int _refHoleSize;
@@ -170,6 +172,8 @@ class FlappyObstacle extends Component {
     _alter = false;
     _generateHole();
     _createObstacleParts();
+    // run callback
+    onResetting?.call(_holeIndex, _holeSize);
     _objectPassed = false;
   }
 
