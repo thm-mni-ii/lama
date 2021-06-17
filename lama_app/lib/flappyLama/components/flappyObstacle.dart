@@ -19,6 +19,7 @@ class FlappyObstacle extends Component {
   final double _minHoleSize = 2;
   /// maximum size of the hole = multiples by [_size] {[_maxHoleSize] * [_size]}
   final double _maxHoleSize = 3;
+  final int _maxHoleDistance = 3;
   // --------
   // SETTINGS
 
@@ -27,6 +28,8 @@ class FlappyObstacle extends Component {
   /// This function gets called when an [Rect] collides with this obstacle in [collides]
   Function onCollide;
 
+  int _refHoleIndex;
+  int _refHoleSize;
   /// actual size of the hole = multiples by [_size] {[_holeSize] * [_size]}
   int _holeSize;
   /// hole Index (index of the start of the hole)
@@ -43,6 +46,14 @@ class FlappyObstacle extends Component {
   SpriteComponent _first;
   final FlappyLamaGame _game;
   final Random _randomNumber = Random();
+
+  set refHoleIndex(int value) {
+    _refHoleIndex = value;
+  }
+
+  set refHoleSize(int value) {
+    _refHoleSize = value;
+  }
 
   FlappyObstacle(this._game, this._alter, this._passingObjectX, this.onPassing,
       [this.onCollide]);
@@ -95,12 +106,21 @@ class FlappyObstacle extends Component {
   ///   [_holeIndex]
   ///   [_holeSize]
   void _generateHole() {
-    // index of the position of the hole
-    _holeIndex = _randomNumber.nextInt((_game.tilesY ~/ _size) - 1);
     // size of the hole
     _holeSize = _randomNumber.nextInt(
         ((_maxHoleSize - _minHoleSize) / _size).ceil() + 1) +
         (_minHoleSize / _size).ceil();
+
+    // index of the position of the hole
+    _holeIndex = _randomNumber.nextInt((_game.tilesY ~/ _size) - 1);
+
+    if (_refHoleIndex != null && _refHoleSize != null) {
+      // loop while the correct distance achieved
+      while (((_holeIndex > _refHoleIndex) && (_holeIndex - (_refHoleIndex + _refHoleSize)).abs() > _maxHoleDistance) ||
+          ((_holeIndex <= _refHoleIndex) && ((_holeIndex + _holeSize) - (_refHoleIndex)).abs() > _maxHoleDistance)) {
+        _holeIndex = _randomNumber.nextInt((_game.tilesY ~/ _size) - 1);
+      }
+    }
   }
 
   /// This method checks if the [object] hits the obstacle.
