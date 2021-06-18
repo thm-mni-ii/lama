@@ -38,6 +38,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   // --------
   // SETTINGS
 
+  /// obstacle list
+  List<FlappyObstacle> obstacles = [];
   /// screensize of the game
   Size _screenSize;
   /// pixel of the quadratic tiles
@@ -210,8 +212,21 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     _started = true;
 
     // add obstacles
-    add(FlappyObstacle(this, false, _lamaSize, () => this.score++));
-    add(FlappyObstacle(this, true, _lamaSize, () => this.score++));
+    obstacles.clear();
+    obstacles.add(FlappyObstacle(this, false, _lamaSize, () => this.score++));
+    obstacles.add(FlappyObstacle(this, true, _lamaSize, () => this.score++));
+    add(obstacles[0]);
+    add(obstacles[1]);
+
+    // add reset function = set the ref hole to constraint the hole size and position
+    obstacles[0].onResetting = (i, s) {
+      obstacles[1].refHoleIndex = i;
+      obstacles[1].refHoleSize = s;
+    };
+    obstacles[1].onResetting = (i, s) {
+      obstacles[0].refHoleIndex = i;
+      obstacles[0].refHoleSize = s;
+    };
 
     // add score
     add(FlappyScoreDisplay(this));

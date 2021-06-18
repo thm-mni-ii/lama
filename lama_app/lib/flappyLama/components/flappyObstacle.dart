@@ -19,7 +19,7 @@ class FlappyObstacle extends Component {
   final double _minHoleSize = 2;
   /// maximum size of the hole = multiples by [_size] {[_maxHoleSize] * [_size]}
   final double _maxHoleSize = 3;
-  final int _maxHoleDistance = 3;
+  final int _maxHoleDistance = 1;
   // --------
   // SETTINGS
 
@@ -117,10 +117,13 @@ class FlappyObstacle extends Component {
     _holeIndex = _randomNumber.nextInt((_game.tilesY ~/ _size) - 1);
 
     if (_refHoleIndex != null && _refHoleSize != null) {
-      // loop while the correct distance achieved
-      while (((_holeIndex > _refHoleIndex) && (_holeIndex - (_refHoleIndex + _refHoleSize)).abs() > _maxHoleDistance) ||
-          ((_holeIndex <= _refHoleIndex) && ((_holeIndex + _holeSize) - (_refHoleIndex)).abs() > _maxHoleDistance)) {
-        _holeIndex = _randomNumber.nextInt((_game.tilesY ~/ _size) - 1);
+      // new hole lower ref && Distance to large
+      if (_holeIndex - (_refHoleIndex + _refHoleSize) > _maxHoleDistance) {
+        _holeIndex = (_refHoleIndex + _refHoleSize) + _maxHoleDistance > 0 ? (_refHoleIndex + _refHoleSize) + _maxHoleDistance : 0;
+      }
+      // new hole higher ref && Distance to large
+      else if (_holeIndex + _holeSize - _refHoleIndex > _maxHoleDistance) {
+        _holeIndex = _refHoleIndex - _maxHoleDistance > 0 ? _refHoleIndex - _maxHoleDistance : 0;
       }
     }
   }
@@ -223,6 +226,8 @@ class FlappyObstacle extends Component {
       // generates the hole and all the obstacle parts
       _generateHole();
       _createObstacleParts();
+      // run callback
+      onResetting?.call(_holeIndex, _holeSize);
     }
   }
 }
