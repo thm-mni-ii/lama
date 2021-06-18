@@ -19,6 +19,7 @@ class FlappyObstacle extends Component {
   final double _minHoleSize = 2;
   /// maximum size of the hole = multiples by [_size] {[_maxHoleSize] * [_size]}
   final double _maxHoleSize = 3;
+  final int _maxHoleDistance = 3;
   // --------
   // SETTINGS
 
@@ -26,7 +27,11 @@ class FlappyObstacle extends Component {
   Function onPassing;
   /// This function gets called when an [Rect] collides with this obstacle in [collides]
   Function onCollide;
+  /// This function gets called when the obstacle gets reset (holeIndex, holeSize).
+  Function(int, int) onResetting;
 
+  int _refHoleIndex;
+  int _refHoleSize;
   /// actual size of the hole = multiples by [_size] {[_holeSize] * [_size]}
   int _holeSize;
   /// hole Index (index of the start of the hole)
@@ -35,7 +40,7 @@ class FlappyObstacle extends Component {
   final double _passingObjectX;
   /// alter start location (true = starts at 1.5 screenwidth; false = start at 1.0 screenwidth)
   bool _alter;
-  /// indicates if the [_passingObjectX] already passed the obstacle (resets after [_resetObstacle] has called
+  /// indicates if the [_passingObjectX] already passed the obstacle (resets after [resetObstacle] has called
   bool _objectPassed = false;
   /// list of all the single sprites of the component
   List<SpriteComponent> _sprites;
@@ -43,6 +48,14 @@ class FlappyObstacle extends Component {
   SpriteComponent _first;
   final FlappyLamaGame _game;
   final Random _randomNumber = Random();
+
+  get holeIndex {
+    return _holeIndex;
+  }
+
+  get holeSize {
+    return _holeSize;
+  }
 
   FlappyObstacle(this._game, this._alter, this._passingObjectX, this.onPassing,
       [this.onCollide]);
@@ -89,18 +102,35 @@ class FlappyObstacle extends Component {
     _first = _sprites[0];
   }
 
+  void setConstraints(int alterHoleIndex, int alterHoleSize) {
+    _refHoleIndex = alterHoleIndex;
+    _refHoleSize = alterHoleSize;
+  }
+
   /// This method generate a new hole depending on the [_minHoleSize], [_maxHoleSize] and [_size].
   ///
   /// sideeffects:
   ///   [_holeIndex]
   ///   [_holeSize]
   void _generateHole() {
-    // index of the position of the hole
-    _holeIndex = _randomNumber.nextInt((_game.tilesY ~/ _size) - 1);
     // size of the hole
     _holeSize = _randomNumber.nextInt(
         ((_maxHoleSize - _minHoleSize) / _size).ceil() + 1) +
         (_minHoleSize / _size).ceil();
+
+    // index of the position of the hole
+    _holeIndex = _randomNumber.nextInt((_game.tilesY ~/ _size) - 1);
+
+    if (_refHoleIndex != null && _refHoleSize != null) {
+      // new hole lower ref && Distance to large
+      if ((_holeIndex > _refHoleIndex) && _holeIndex - (_refHoleIndex + _refHoleSize) > _maxHoleDistance) {
+        _holeIndex = (_refHoleIndex + _refHoleSize) + _maxHoleDistance > 0 ? (_refHoleIndex + _refHoleSize) + _maxHoleDistance : 0;
+      }
+      // new hole higher ref && Distance to large
+      else if ((_holeIndex < _refHoleIndex) && _refHoleIndex - (_holeIndex + _holeSize) > _maxHoleDistance) {
+        _holeIndex = _refHoleIndex - _maxHoleDistance > 0 ? _refHoleIndex - _holeSize - _maxHoleDistance : 0;
+      }
+    }
   }
 
   /// This method checks if the [object] hits the obstacle.
@@ -145,11 +175,11 @@ class FlappyObstacle extends Component {
   ///   [_sprites]
   ///   [_objectPassed] = false
   ///   [_alter] = false (removes the initial offset)
-  void _resetObstacle() {
-    // remove the initial offset
-    _alter = false;
+  void resetObstacle() {
     _generateHole();
     _createObstacleParts();
+    // run callback
+    onResetting?.call(_holeIndex, _holeSize);
     _objectPassed = false;
   }
 
@@ -171,7 +201,9 @@ class FlappyObstacle extends Component {
     if (_sprites.isNotEmpty) {
       // generate new holeSize and position and all parts when moving out of the screen
       if (_sprites[0].x <= -(_game.tileSize * _size)) {
-        _resetObstacle();
+        // remove the initial offset
+        _alter = false;
+        resetObstacle();
       }
 
       // check if the [_passingObjectX] passes the obstacle
@@ -199,6 +231,8 @@ class FlappyObstacle extends Component {
       // generates the hole and all the obstacle parts
       _generateHole();
       _createObstacleParts();
+      // run callback
+      onResetting?.call(_holeIndex, _holeSize);
     }
   }
 }
