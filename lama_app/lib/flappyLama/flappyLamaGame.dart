@@ -215,18 +215,17 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     obstacles.clear();
     obstacles.add(FlappyObstacle(this, false, _lamaSize, () => this.score++));
     obstacles.add(FlappyObstacle(this, true, _lamaSize, () => this.score++));
+
     add(obstacles[0]);
     add(obstacles[1]);
 
     // add reset function = set the ref hole to constraint the hole size and position
-    obstacles[0].onResetting = (i, s) {
-      obstacles[1].refHoleIndex = i;
-      obstacles[1].refHoleSize = s;
-    };
-    obstacles[1].onResetting = (i, s) {
-      obstacles[0].refHoleIndex = i;
-      obstacles[0].refHoleSize = s;
-    };
+    obstacles[0].onResetting = obstacles[1].setConstraints;
+    obstacles[1].onResetting = obstacles[0].setConstraints;
+
+    // initial change the second obstacle to avoid a to large gap
+    obstacles[1].setConstraints(obstacles[0].holeIndex, obstacles[0].holeSize);
+    obstacles[1].resetObstacle();
 
     // add score
     add(FlappyScoreDisplay(this));
