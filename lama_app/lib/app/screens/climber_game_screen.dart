@@ -11,7 +11,7 @@ class ClimberGameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Affen Leiter"),
+        title: Text("Affenleiter"),
       ),
       body: Center(
         child: Column(

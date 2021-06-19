@@ -1,7 +1,11 @@
+import 'package:flame/components/component.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
+import 'package:flame/components/parallax_component.dart';
 
+import 'package:lama_app/apeClimber/components/climberTree.dart';
+import 'package:lama_app/apeClimber/components/climberTree2.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/MonkeyTimer.dart';
 import 'package:lama_app/apeClimber/components/monkey.dart';
@@ -34,14 +38,31 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   double tileSize;
   /// amount of tiles on the y coordinate
   int _tilesY;
+  SpriteComponent tree1;
+  SpriteComponent tree2;
+  SpriteComponent tree3;
 
   int _gameId = 3;
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
 
   ClimberGame(this._context, this._userRepo) {
+    var back = ParallaxComponent([
+      ParallaxImage('png/himmel.png'),
+      ParallaxImage('png/clouds_3.png'),
+      ParallaxImage('png/clouds_2.png'),
+      ParallaxImage('png/clouds.png'),
+    ], baseSpeed: Offset(7, 0), layerDelta: Offset(10, 0));
+    Flame.images.loadAll([
+      'png/tree6th2.png',
+      'png/tree6th2top.png',
+    ]);
+    
+    add(back);
+
     initialize();
   }
+   
 
   void initialize() async {
     resize(await Flame.util.initialDimensions());
@@ -58,7 +79,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
             onStartPressed: _startGame)
     );
   }
-
   void _startGame() {
     _addComponents();
     removeWidgetOverlay(startWidgetName);
@@ -66,6 +86,12 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   void _addComponents() {
     components.clear();
+    tree1 = ClimberTree(this, 0);
+    tree2 = ClimberTree2(this, 1);
+    tree3 = ClimberTree(this, 2);
+    add(tree1);
+    add(tree2);
+    add(tree3);
 
     // initialize Timer Component
     _timer = MonkeyTimer(_onTimerFinished)
