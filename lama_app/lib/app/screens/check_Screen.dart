@@ -50,6 +50,18 @@ class CheckScreenPage extends State<CheckScreen> {
               ),
             );
           }
+          if (state is CreateAdmin) {
+            return Center(
+              child: TextButton(
+                child: Text('Admin erstellen!'),
+                onPressed: () {
+                  context
+                      .read<CheckScreenBloc>()
+                      .add(CreateAdminEvent(context));
+                },
+              ),
+            );
+          }
           return Container(
             alignment: Alignment.center,
             child: SvgPicture.asset(
