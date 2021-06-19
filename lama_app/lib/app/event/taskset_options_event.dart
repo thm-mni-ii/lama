@@ -26,6 +26,11 @@ class TasksetOptionsDelete extends TasksetOptionsEvent {
   TasksetOptionsDelete(this.url, this.tasksetRepository);
 }
 
+class TasksetOptionsSelectUrl extends TasksetOptionsEvent {
+  TaskUrl url;
+  TasksetOptionsSelectUrl(this.url);
+}
+
 class TasksetOptionsReload extends TasksetOptionsEvent {}
 
 //Change Events

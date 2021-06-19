@@ -19,21 +19,19 @@ class TasksetOprionsBloc
   Stream<TasksetOptionsState> mapEventToState(
       TasksetOptionsEvent event) async* {
     if (event is TasksetOptionsAbort) _return(event.context);
-<<<<<<< HEAD
     if (event is TasksetOptionsPush) {
+      yield await _tasksetOptionsPush(event.context);
       yield await _tasksetOptionsPush();
       event.tasksetRepository.reloadTasksetLoader();
     }
-=======
-    if (event is TasksetOptionsPush)
-      yield await _tasksetOptionsPush(event.context);
->>>>>>> Testing URL Validation
     if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
     if (event is TasksetOptionsReload) yield await _reload();
     if (event is TasksetOptionsDelete) {
       event.tasksetRepository.reloadTasksetLoader();
       yield await _deleteUrl(event.url);
     }
+    if (event is TasksetOptionsSelectUrl)
+      yield TasksetOptionsUrlSelected(event.url.url);
     if (event is TasksetOptionsPushUrl)
       yield await _tasksetOptionsReloadUrl(event.url);
   }
