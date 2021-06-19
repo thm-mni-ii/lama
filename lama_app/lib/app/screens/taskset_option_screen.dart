@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
+import 'package:lama_app/app/event/admin_screen_event.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
@@ -48,6 +49,24 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
           if (state is TasksetOptionsDeleteSuccess) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess());
+          }
+          if (state is TasksetOptionsUrlSelected) {
+            print('TasksetOptionsUrlSelected ALERT!');
+            showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Text('Taskset URL'),
+                content: SingleChildScrollView(child: Text(state.url)),
+                actions: [
+                  TextButton(
+                    child: Text('Schließen'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            );
           }
           //context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
         },
@@ -119,12 +138,19 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
       itemBuilder: (context, index) {
         return Row(
           children: [
-            Text(
-              urls[index].url.length > 30
-                  ? urls[index].url.substring(7, 32) + '...'
-                  : urls[index].url,
-              style: LamaTextTheme.getStyle(
-                  color: LamaColors.black, fontSize: 18, monospace: true),
+            TextButton(
+              child: Text(
+                urls[index].url.length > 30
+                    ? urls[index].url.substring(7, 32) + '...'
+                    : urls[index].url,
+                style: LamaTextTheme.getStyle(
+                    color: LamaColors.black, fontSize: 18, monospace: true),
+              ),
+              onPressed: () {
+                context
+                    .read<TasksetOprionsBloc>()
+                    .add(TasksetOptionsSelectUrl(urls[index]));
+              },
             ),
             Spacer(),
             IconButton(
