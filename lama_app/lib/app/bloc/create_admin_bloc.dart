@@ -17,7 +17,7 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
     if (event is CreateAdminChangeName) _user.name = event.name;
     if (event is CreateAdminChangePassword) _user.password = event.password;
   }
-  
+
   Future<void> _adminPush(User user, BuildContext context) async {
     await _insterAdmin(user);
     Navigator.pop(
