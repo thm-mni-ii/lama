@@ -25,8 +25,3 @@ class EditUser extends UserManagementEvent {
   User user;
   EditUser(this.user, this.context);
 }
-
-class TasksetOption extends UserManagementEvent {
-  BuildContext context;
-  TasksetOption(this.context);
-}
