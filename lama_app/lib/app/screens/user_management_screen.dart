@@ -37,13 +37,27 @@ class UserManagementScreenState extends State<UserManagementScreen> {
           return Center(child: CircularProgressIndicator());
         },
       ),
-      floatingActionButton: FloatingActionButton(
-          heroTag: "addUser",
-          backgroundColor: LamaColors.bluePrimary,
-          onPressed: () =>
-              {context.read<UserManagementBloc>().add(CreateUser(context))},
-          tooltip: 'Nutzer hinzufügen',
-          child: Icon(Icons.group_add)),
+      floatingActionButton: Wrap(
+        children: [
+          FloatingActionButton(
+            heroTag: "addUser",
+            backgroundColor: LamaColors.mainPink,
+            onPressed: () =>
+                {context.read<UserManagementBloc>().add(CreateUser(context))},
+            tooltip: 'Nutzer hinzufügen',
+            child: Icon(Icons.group_add),
+          ),
+          SizedBox(width: 10),
+          FloatingActionButton(
+            heroTag: "addAdmin",
+            backgroundColor: LamaColors.bluePrimary,
+            onPressed: () =>
+                {context.read<UserManagementBloc>().add(CreateAdmin(context))},
+            tooltip: 'Admin hinzufügen',
+            child: Icon(Icons.group_add),
+          ),
+        ],
+      ),
     );
   }
 

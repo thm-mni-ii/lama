@@ -54,8 +54,8 @@ class CheckScreenPage extends State<CheckScreen> {
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
-                      minimumSize: Size(50, 50),
-                      primary: LamaColors.greenPrimary,
+                      minimumSize: Size(50, 60),
+                      primary: LamaColors.bluePrimary,
                       shape: BeveledRectangleBorder(
                           borderRadius: BorderRadius.circular(0)),
                     ),
@@ -64,9 +64,6 @@ class CheckScreenPage extends State<CheckScreen> {
                           .read<CheckScreenBloc>()
                           .add(DSGVOAccepted(context));
                     },
-                  ),
-                  SizedBox(
-                    height: 15,
                   ),
                 ],
               ),
