@@ -1,88 +1,112 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/bloc/user_selection_bloc.dart';
-import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/screens/user_selection_screen.dart';
-import 'package:lama_app/db/database_provider.dart';
+import 'package:lama_app/app/bloc/create_admin_bloc.dart';
+import 'package:lama_app/app/event/create_admin_event.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
 
-class CreateAdminScreen extends StatelessWidget {
-  final User _user = User(
-    name: '',
-    password: '',
-    grade: 3,
-    coins: 0,
-    isAdmin: true,
-    avatar: 'admin',
-  );
+class CreateAdminScreen extends StatefulWidget {
+  @override
+  _CreateAdminScreenState createState() => _CreateAdminScreenState();
+}
+
+class _CreateAdminScreenState extends State<CreateAdminScreen> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String _secondPass;
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: LamaColors.bluePrimary,
-        title: Text(
-          'Administrator erstellen',
-          style: LamaTextTheme.getStyle(fontSize: 18),
-        ),
+      resizeToAvoidBottomInset: false,
+      appBar: _bar(
+        screenSize.width / 5,
+        'Administrator erstellen',
+        LamaColors.bluePrimary,
       ),
       body: _form(context),
     );
   }
 
   Widget _form(BuildContext context) {
-    var _formKey = GlobalKey<FormState>();
-    return Form(
-      key: _formKey,
+    return Padding(
+      padding: EdgeInsets.all(20.0),
       child: Column(
         children: [
-          Padding(
-              padding: EdgeInsets.all(10.0),
-              child: TextFormField(
-                //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
-                decoration: InputDecoration(hintText: 'Nutzername'),
-                validator: (String value) {
-                  return InputValidation.inputUsernameValidation(value);
-                },
-                onChanged: (value) => _user.name = value,
-              )),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: TextFormField(
-              //inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]"))],
-              decoration: InputDecoration(hintText: 'Passwort'),
-              validator: (String value) {
-                return InputValidation.inputPasswortValidation(value);
-              },
-              onChanged: (value) => _user.password = value,
-              obscureText: true,
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                    decoration: InputDecoration(hintText: 'Nutzername'),
+                    validator: (String value) {
+                      return InputValidation.inputUsernameValidation(value);
+                    },
+                    onChanged: (value) => context
+                        .read<CreateAdminBloc>()
+                        .add(CreateAdminChangeName(value))),
+                SizedBox(height: 25),
+                TextFormField(
+                  decoration: InputDecoration(hintText: 'Passwort'),
+                  validator: (String value) {
+                    return InputValidation.inputPasswortValidation(value);
+                  },
+                  onChanged: (value) => _secondPass = value,
+                  obscureText: true,
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  decoration: InputDecoration(hintText: 'Passwort wiederholen'),
+                  validator: (String value) {
+                    return InputValidation.inputPasswortValidation(value,
+                        secondPass: _secondPass);
+                  },
+                  onChanged: (value) => context
+                      .read<CreateAdminBloc>()
+                      .add(CreateAdminChangePassword(value)),
+                  obscureText: true,
+                ),
+                SizedBox(height: 10),
+              ],
             ),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                minimumSize: Size(250, 45), primary: LamaColors.bluePrimary),
-            onPressed: () async {
-              if (_formKey.currentState.validate()) {
-                await DatabaseProvider.db.insertUser(_user);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (BuildContext context) => UserSelectionBloc(),
-                      child: UserSelectionScreen(),
-                    ),
-                  ),
-                );
-              }
-            },
-            child: Text(
-              'Speichern',
-              style: LamaTextTheme.getStyle(fontSize: 14),
+            child: Row(
+              children: [
+                Icon(Icons.save_sharp),
+                SizedBox(width: 10),
+                Text('Speichern'),
+              ],
             ),
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(50, 50),
+              primary: LamaColors.greenPrimary,
+              shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
+            ),
+            onPressed: () {
+              if (_formKey.currentState.validate())
+                context.read<CreateAdminBloc>().add(CreateAdminPush(context));
+            },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _bar(double size, String titel, Color colors) {
+    return AppBar(
+      title: Text(
+        titel,
+        style: LamaTextTheme.getStyle(fontSize: 18),
+      ),
+      toolbarHeight: size,
+      backgroundColor: colors,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
       ),
     );
   }
