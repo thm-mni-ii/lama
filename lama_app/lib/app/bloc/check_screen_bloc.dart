@@ -30,7 +30,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
         return AdminExist();
       }
     }
-    return _navigator(context);
+    return ShowDSGVO(await _loadDSGVO());
   }
 
   CheckScreenState _navigator(BuildContext context) {
@@ -42,8 +42,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     return await rootBundle.loadString('assets/md/DSGVO.md');
   }
 
-  void _navigateNoAdmin(BuildContext context) {
-    Navigator.push(
+  Future<void> _navigateNoAdmin(BuildContext context) async {
+    User admin = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(
@@ -52,6 +52,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
         ),
       ),
     );
+    if (admin != null)
+      _navigateAdminExist(context);
   }
 
   void _navigateAdminExist(BuildContext context) {
