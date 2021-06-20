@@ -47,8 +47,9 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     _timer = MonkeyTimer(_onTimerFinished)
       ..onWidgetUpdated = _onTimerWidgetUpdated;
     add(_timer);
+
     // start timer
-    _timer.timer.start();
+    _timer.start();
   }
 
   /// This method is the handler when the timer finished.

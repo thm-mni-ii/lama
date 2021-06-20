@@ -12,6 +12,7 @@ class MonkeyTimer extends TimerComponent {
   // --------
   // SETTINGS
 
+  bool _started = false;
   /// This function gets called when the widget of the timer was updated
   Function(MonkeyTimerWidget) onWidgetUpdated;
   /// This function gets called when the timer finished.
@@ -27,6 +28,20 @@ class MonkeyTimer extends TimerComponent {
 
   void reset() {
     timer = Timer(_seconds);
+    _started = false;
+  }
+
+  void start() {
+    _started = true;
+    timer.start();
+  }
+
+  void pause() {
+    timer.pause();
+  }
+
+  void stop() {
+    timer.stop();
   }
 
   @override
@@ -39,6 +54,16 @@ class MonkeyTimer extends TimerComponent {
       // calls the onWidgetUpdated function
       onWidgetUpdated?.call(MonkeyTimerWidget(
         text: "${minLeft.toString().padLeft(2, '0')}:${secLeft.toStringAsFixed(0).padLeft(2, '0')}",
+        percent: timer.current,
+      ));
+    } else if (timer.isFinished()) {
+      onWidgetUpdated?.call(MonkeyTimerWidget(
+        text: "Stop",
+        percent: timer.current,
+      ));
+    } else if (_started) {
+      onWidgetUpdated?.call(MonkeyTimerWidget(
+        text: "Pause",
         percent: timer.current,
       ));
     }
