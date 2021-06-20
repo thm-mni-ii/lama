@@ -44,12 +44,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     components.clear();
 
     // initialize Timer Component
-    _timer = MonkeyTimer((widget) {
-      removeWidgetOverlay(timerWidgetName);
-      addWidgetOverlay(
-          timerWidgetName,
-          widget);
-    })
+    _timer = MonkeyTimer(onTimerFinished)
       ..onWidgetUpdated = (widget) {
         removeWidgetOverlay(timerWidgetName);
         addWidgetOverlay(
@@ -59,6 +54,14 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     add(_timer);
     // start timer
     _timer.timer.start();
+  }
+
+  /// This method is the handler when the timer finished.
+  void onTimerFinished(MonkeyTimerWidget widget) {
+    removeWidgetOverlay(timerWidgetName);
+    addWidgetOverlay(
+        timerWidgetName,
+        widget);
   }
 
   void resize(Size size) {
