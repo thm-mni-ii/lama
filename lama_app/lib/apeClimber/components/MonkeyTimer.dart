@@ -7,6 +7,10 @@ class MonkeyTimer extends TimerComponent {
   // --------
   /// string which gets displayed of the widget when timer finished.
   static const _endString = "Ende";
+  /// string which gets displayed of the widget when timer paused.
+  static const _pauseString = "Pause";
+  /// string which gets displayed of the widget when timer stopped.
+  static const _stopString = "Stop";
   /// seconds the timer will run
   static const _seconds = 12.0;
   // --------
@@ -58,12 +62,12 @@ class MonkeyTimer extends TimerComponent {
       ));
     } else if (timer.isFinished()) {
       onWidgetUpdated?.call(MonkeyTimerWidget(
-        text: "Stop",
+        text: _stopString,
         percent: timer.current,
       ));
     } else if (_started) {
       onWidgetUpdated?.call(MonkeyTimerWidget(
-        text: "Pause",
+        text: _pauseString,
         percent: timer.current,
       ));
     }
