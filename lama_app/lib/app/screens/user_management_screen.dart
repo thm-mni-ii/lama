@@ -102,7 +102,7 @@ class UserManagementScreenState extends State<UserManagementScreen> {
   Widget _floatingButton(BuildContext context) {
     return SpeedDial(
       icon: Icons.add,
-      backgroundColor: LamaColors.orangePrimary,
+      backgroundColor: LamaColors.mainPink,
       foregroundColor: LamaColors.white,
       children: [
         SpeedDialChild(
@@ -127,26 +127,5 @@ class UserManagementScreenState extends State<UserManagementScreen> {
         ),
       ],
     );
-    /*Wrap(
-      children: [
-        FloatingActionButton(
-          heroTag: "addUser",
-          backgroundColor: LamaColors.mainPink,
-          onPressed: () =>
-              {context.read<UserManagementBloc>().add(CreateUser(context))},
-          tooltip: 'Nutzer hinzufügen',
-          child: Icon(Icons.group_add),
-        ),
-        SizedBox(width: 10),
-        FloatingActionButton(
-          heroTag: "addAdmin",
-          backgroundColor: LamaColors.bluePrimary,
-          onPressed: () =>
-              {context.read<UserManagementBloc>().add(CreateAdmin(context))},
-          tooltip: 'Admin hinzufügen',
-          child: Icon(Icons.group_add),
-        ),
-      ],
-    );*/
   }
 }
