@@ -15,7 +15,7 @@ class GameListScreen extends StatelessWidget {
         "Steuer die Schlange mit den Pfeiltasten und sammle Äpfel, um länger zu werden!"),
     GameListItem("Flappy-Lama", 3,
         "Tippe auf den Bildschirm, um das Lama fliegen zu lassen und weiche dabei den Hindernissen aus!"),
-    GameListItem("Affen Leiter", 2,
+    GameListItem("Affen-Leiter", 2,
         "Tippe die entsprechende Richtung an, um auf die andere Seite des Baumes zu springen und so den Ästen auszuweichen!"),
 
   ];
