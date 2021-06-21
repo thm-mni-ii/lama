@@ -1,7 +1,10 @@
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/bloc/task_bloc.dart';
+import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -16,6 +19,7 @@ class EquationTaskScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+    fullAnswer.clear();
     return EquationState(task, constraints);
   }
 }
@@ -40,7 +44,6 @@ class EquationState extends State<EquationTaskScreen> {
     }
     task.wrongAnswers.shuffle();
     fullAnswer.addAll(task.equation);
-    print(fullAnswer);
   }
 
   @override
@@ -121,7 +124,7 @@ class EquationState extends State<EquationTaskScreen> {
                     offset: Offset(0, 3))
               ]),
           child: InkWell(
-            onTap: () => null,
+            onTap: () => BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initEquation(fullEquation, fullAnswer)),
             child: Center(
               child: Text(
                 "Fertig!",
@@ -215,8 +218,6 @@ class EquationState extends State<EquationTaskScreen> {
             shrinkWrap: true,
             itemCount: equation.length,
             itemBuilder: (BuildContext context, index) {
-              print(index);
-              print(fullAnswer);
               bool checked = (task.equation[index] != "?");
               return checked
                   ? _equationField(context, index)
@@ -243,7 +244,6 @@ class EquationState extends State<EquationTaskScreen> {
       onWillAccept: (data) => true,
       onAccept: (data) {
         setState(() {
-          print(data);
           fullAnswer.removeAt(index);
           fullAnswer.insert(index, data.toString());
         });
