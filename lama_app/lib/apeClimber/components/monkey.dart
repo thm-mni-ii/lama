@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/animation.dart';
@@ -21,13 +22,11 @@ class Monkey extends AnimationComponent {
       imageName: 'png/monkey_animation.png',
       textureWidth: 48,
       textureHeight: 48,
-      columns: 6,
+      columns: 10,
       rows: 1,
     );
-
     // idle / hover animation
-    _idle = spriteSheet.createAnimation(0, from: 2, to: 6, stepTime: 0.1);
-
+    _idle = spriteSheet.createAnimation(0, from: 2, to: 9, stepTime: 0.1);
     // start animation
     animation = _idle;
   }
