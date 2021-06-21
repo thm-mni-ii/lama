@@ -7,6 +7,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/MonkeyTimer.dart';
+import 'package:lama_app/apeClimber/widgets/monkeyStartWidget.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
@@ -16,6 +17,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   MonkeyTimer _timer;
   /// name of the timer widget
   final timerWidgetName = "timer";
+  /// name of the start screen widget
+  final startWidgetName = "start";
 
   Size screenSize;
   double tileSize;
@@ -37,7 +40,18 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   void initialize() async {
     resize(await Flame.util.initialDimensions());
 
+    addWidgetOverlay(
+        startWidgetName,
+        MonkeyStartWidget(
+            userHighScore: 0,
+            alltimeHighScore: 0,
+            onStartPressed: _startGame)
+    );
+  }
+
+  void _startGame() {
     _addComponents();
+    removeWidgetOverlay(startWidgetName);
   }
 
   void _addComponents() {
