@@ -19,6 +19,12 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   final timerWidgetName = "timer";
   /// name of the start screen widget
   final startWidgetName = "start";
+  /// a bool flag which indicates if the score of the game has been saved
+  bool _savedHighscore = false;
+  /// the personal highscore
+  int _userHighScore;
+  /// the all time highscore in this game
+  int _alltimeHighScore;
 
   Size screenSize;
   double tileSize;
@@ -39,12 +45,16 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   void initialize() async {
     resize(await Flame.util.initialDimensions());
+    // load highscore
+    _userHighScore = await _userRepo.getMyHighscore(_gameId);
+    // load alltimeHighscore
+    _alltimeHighScore = await _userRepo.getHighscore(_gameId);
 
     addWidgetOverlay(
         startWidgetName,
         MonkeyStartWidget(
-            userHighScore: 0,
-            alltimeHighScore: 0,
+            userHighScore: _userHighScore,
+            alltimeHighScore: _alltimeHighScore,
             onStartPressed: _startGame)
     );
   }
@@ -64,6 +74,20 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // start timer
     _timer.start();
+  }
+
+  /// This method saves the actual Score to the database for the user which is logged in.
+  ///
+  /// sideffects:
+  ///   [_savedHighscore] = true
+  void _saveHighscore() {
+    if (!_savedHighscore) {
+      _savedHighscore = true;
+      _userRepo.addHighscore(Highscore(
+          gameID: _gameId,
+          score: score,
+          userID: _userRepo.authenticatedUser.id));
+    }
   }
 
   /// This method is the handler when the timer finished.
