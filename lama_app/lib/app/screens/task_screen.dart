@@ -96,29 +96,14 @@ class TaskScreenState extends State<TaskScreen> {
                                 child: Padding(
                                   padding: EdgeInsets.only(right: 15),
                                   child: Container(
-                                      width: (constraints.maxWidth / 100) * 20,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Text(
-                                            max(state.task.leftToSolve, 0)
-                                                    .toString() +
-                                                "x",
-                                            style: LamaTextTheme.getStyle(),
-                                          ),
-                                          Container(
-                                            height:
-                                                (constraints.maxHeight / 100) *
-                                                    5,
-                                            child: FittedBox(
-                                              child: SvgPicture.asset(
-                                                  'assets/images/svg/lama_coin.svg',
-                                                  semanticsLabel: 'lama_coins'),
-                                            ),
-                                          ),
-                                        ],
-                                      )),
+                                    height: (constraints.maxHeight / 100) * 5,
+                                    child: FittedBox(
+                                      child: SvgPicture.asset(
+                                        'assets/images/svg/lama_coin.svg',
+                                        semanticsLabel: 'lama_coins',
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -303,7 +288,7 @@ class TaskScreenState extends State<TaskScreen> {
     for (int i = 0; i < results.length; i++) {
       if (results[i]) {
         rightAnswers++;
-        coinsEarned += tasks[i].reward;
+        if (tasks[i].leftToSolve > -1) coinsEarned += tasks[i].reward;
       }
     }
     return Column(
@@ -432,12 +417,12 @@ class TaskScreenState extends State<TaskScreen> {
         : Icon(Icons.close, color: LamaColors.redAccent, size: 50);
     Text coinText;
     if (result) {
-      if (task.leftToSolve > -2)
+      if (task.leftToSolve > -1)
         coinText = Text("+" + task.reward.toString(),
             style: LamaTextTheme.getStyle(color: LamaColors.greenAccent));
       else
-        coinText = Text("+0",
-            style: LamaTextTheme.getStyle(color: LamaColors.greenAccent));
+        coinText =
+            Text("+0", style: LamaTextTheme.getStyle(color: Colors.grey));
     } else {
       coinText = Text("+0",
           style: LamaTextTheme.getStyle(color: LamaColors.redAccent));
