@@ -21,12 +21,12 @@ class Monkey extends AnimationComponent {
       imageName: 'png/monkey_animation.png',
       textureWidth: 48,
       textureHeight: 48,
-      columns: 2,
+      columns: 6,
       rows: 1,
     );
 
     // idle / hover animation
-    _idle = spriteSheet.createAnimation(0, from: 0, to: 2, stepTime: 0.3);
+    _idle = spriteSheet.createAnimation(0, from: 2, to: 6, stepTime: 0.1);
 
     // start animation
     animation = _idle;
