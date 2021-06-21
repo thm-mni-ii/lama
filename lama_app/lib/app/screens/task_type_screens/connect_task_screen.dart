@@ -73,32 +73,34 @@ class ConnectState extends State<ConnectTaskScreen> {
         Row(
           children: [
             Container(
-              width: constraints.maxWidth/3,
+              padding: EdgeInsets.only(top: 20, left: 10),
+              width: (constraints.maxWidth/100)*37.5,
               height: (constraints.maxHeight/100)*60,
               child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 1,
-                  childAspectRatio: 1 / 1,
-                  mainAxisSpacing: 10,
+                  childAspectRatio: 3 / 1,
+                  mainAxisSpacing: 40,
                   ),
                 itemCount: task.pair1.length,
                 itemBuilder: (context, index) => _buildPair(context, index, task.pair1),
             )
           ),
             Container(
-              width: constraints.maxWidth/3,
+              width: (constraints.maxWidth/100)*25,
               height: (constraints.maxHeight/100)*60
             ),
             Container(
-                width: constraints.maxWidth/3,
+                padding: EdgeInsets.only(top: 20, right: 10),
+                width: (constraints.maxWidth/100)*37.5,
                 height: (constraints.maxHeight/100)*60,
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 1,
-                    childAspectRatio: 1 / 1,
-                    mainAxisSpacing: 10,
+                    childAspectRatio: 3 / 1,
+                    mainAxisSpacing: 40,
                   ),
-                  itemCount: task.pair1.length,
+                  itemCount: task.pair2.length,
                   itemBuilder: (context, index) => _buildPair(context, index, task.pair2),
                 )
             ),
@@ -145,12 +147,13 @@ class ConnectState extends State<ConnectTaskScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
         color: LamaColors.white,
+        border: Border.all(color: LamaColors.black)
       ),
       child: Center(
         child: Text(
           pair[index],
           textAlign: TextAlign.center,
-          style: LamaTextTheme.getStyle(fontSize: 15)
+          style: LamaTextTheme.getStyle(fontSize: 15, color: LamaColors.black)
         ),
       )
     );
