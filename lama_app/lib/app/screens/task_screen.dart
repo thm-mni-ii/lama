@@ -37,6 +37,12 @@ class TaskScreenState extends State<TaskScreen> {
     return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
         if (state is DisplayTaskState) {
+          SvgPicture coinImg = SvgPicture.asset(
+              'assets/images/svg/lama_coin.svg',
+              semanticsLabel: 'lama_coin');
+          if (state.task != null && state.task.leftToSolve <= 0)
+            coinImg = SvgPicture.asset('assets/images/svg/lama_coin_grey.svg',
+                semanticsLabel: 'lama_coin_grey');
           switch (state.subject) {
             case "Mathe":
               lg = LinearGradient(
@@ -97,12 +103,8 @@ class TaskScreenState extends State<TaskScreen> {
                                   padding: EdgeInsets.only(right: 15),
                                   child: Container(
                                     height: (constraints.maxHeight / 100) * 5,
-                                    child: FittedBox(
-                                      child: SvgPicture.asset(
-                                        'assets/images/svg/lama_coin.svg',
-                                        semanticsLabel: 'lama_coins',
-                                      ),
-                                    ),
+                                    width: (constraints.maxHeight / 100) * 5,
+                                    child: coinImg,
                                   ),
                                 ),
                               ),
