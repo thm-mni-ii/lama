@@ -6,6 +6,8 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+List<String> fullAnswer = [];
+
 class EquationTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
   final TaskEquation task;
@@ -22,8 +24,6 @@ class EquationState extends State<EquationTaskScreen> {
   final BoxConstraints constraints;
   final TaskEquation task;
   final List<String> fullEquation = [];
-  List<String> fullAnswer = [];
-  final List<String> printedAnswers = [];
 
   EquationState(this.task, this.constraints) {
     int j = 0;
@@ -35,7 +35,12 @@ class EquationState extends State<EquationTaskScreen> {
         fullEquation.add(task.equation[i]);
       }
     }
+    for (int i = 0; i<task.missingElements.length; i++) {
+      task.wrongAnswers.add(task.missingElements[i]);
+    }
     task.wrongAnswers.shuffle();
+    fullAnswer.addAll(task.equation);
+    print(fullAnswer);
   }
 
   @override
@@ -81,7 +86,7 @@ class EquationState extends State<EquationTaskScreen> {
         Container(
           width: constraints.maxWidth,
           height: (constraints.maxHeight / 100) * 7,
-          child: _buildEquation(task.equation),
+          child: _buildEquation(fullAnswer),
         ),
         SizedBox(
           height: (constraints.maxHeight / 100) * 10,
@@ -147,7 +152,7 @@ class EquationState extends State<EquationTaskScreen> {
             data: task.wrongAnswers[index],
             childWhenDragging: Container(
               width: (constraints.maxWidth / 100) * 12,
-              height: (constraints.maxHeight / 100) * 5,
+              height: (constraints.maxHeight / 100) * 7,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -163,7 +168,7 @@ class EquationState extends State<EquationTaskScreen> {
             ),
             child: Container(
               width: (constraints.maxWidth / 100) * 12,
-              height: (constraints.maxHeight / 100) * 5,
+              height: (constraints.maxHeight / 100) * 7,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -177,9 +182,10 @@ class EquationState extends State<EquationTaskScreen> {
                 ),
               ),
             ),
-            feedback: Container(
+            feedback: Material(
+            child: Container(
               width: (constraints.maxWidth / 100) * 12,
-              height: (constraints.maxHeight / 100) * 5,
+              height: (constraints.maxHeight / 100) * 7,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -193,7 +199,7 @@ class EquationState extends State<EquationTaskScreen> {
                 ),
               ),
             ),
-          );
+          ));
         },
       ),
     );
@@ -209,14 +215,16 @@ class EquationState extends State<EquationTaskScreen> {
             shrinkWrap: true,
             itemCount: equation.length,
             itemBuilder: (BuildContext context, index) {
+              print(index);
+              print(fullAnswer);
               bool checked = (task.equation[index] != "?");
               return checked
                   ? _equationField(context, index)
-                  : _equationTarget(context);
+                  : _equationTarget(context, index);
             }));
   }
 
-  Widget _equationTarget(BuildContext context) {
+  Widget _equationTarget(BuildContext context,int index) {
     return DragTarget(
       builder: (context, candidate, rejectedData) => Container(
         width: (constraints.maxWidth / 100) * 12,
@@ -224,10 +232,23 @@ class EquationState extends State<EquationTaskScreen> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
             color: LamaColors.blueAccent),
+        child: Center(
+          child: Text(
+            fullAnswer[index],
+            textAlign: TextAlign.center,
+            style: LamaTextTheme.getStyle(fontSize: 15),
+          ),
+        ),
       ),
       onWillAccept: (data) => true,
-      onAccept: (data) =>
-          fullAnswer.add(printedAnswers[printedAnswers.indexOf(data)]),
+      onAccept: (data) {
+        setState(() {
+          print(data);
+          fullAnswer.removeAt(index);
+          fullAnswer.insert(index, data.toString());
+        });
+      }
+
       //onLeave: fullAnswer.remove(fullAnswer[fullAnswer.indexOf(data)]),
     );
   }
@@ -280,7 +301,8 @@ class EquationState extends State<EquationTaskScreen> {
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(fontSize: 15),
               ))),
-          feedback: Container(
+          feedback: Material(
+              child: Container(
               width: (constraints.maxWidth / 100) * 12,
               height: (constraints.maxHeight / 100) * 7,
               alignment: Alignment.center,
@@ -292,7 +314,7 @@ class EquationState extends State<EquationTaskScreen> {
                 "+",
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(fontSize: 15),
-              )))),
+              ))))),
       Draggable(
           data: "-",
           child: Container(
@@ -308,7 +330,8 @@ class EquationState extends State<EquationTaskScreen> {
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(fontSize: 15),
               ))),
-          feedback: Container(
+          feedback: Material(
+          child: Container(
               width: (constraints.maxWidth / 100) * 12,
               height: (constraints.maxHeight / 100) * 7,
               alignment: Alignment.center,
@@ -320,7 +343,7 @@ class EquationState extends State<EquationTaskScreen> {
                 "-",
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(fontSize: 15),
-              )))),
+              ))))),
       Draggable(
           data: "*",
           child: Container(
@@ -336,7 +359,8 @@ class EquationState extends State<EquationTaskScreen> {
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(fontSize: 15),
               ))),
-          feedback: Container(
+          feedback: Material(
+    child: Container(
               width: (constraints.maxWidth / 100) * 12,
               height: (constraints.maxHeight / 100) * 7,
               alignment: Alignment.center,
@@ -348,7 +372,7 @@ class EquationState extends State<EquationTaskScreen> {
                 "*",
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(fontSize: 15),
-              )))),
+              ))))),
       Draggable(
           data: "/",
           child: Container(
@@ -364,7 +388,8 @@ class EquationState extends State<EquationTaskScreen> {
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(fontSize: 15),
               ))),
-          feedback: Container(
+          feedback: Material(
+    child: Container(
               width: (constraints.maxWidth / 100) * 12,
               height: (constraints.maxHeight / 100) * 7,
               alignment: Alignment.center,
@@ -376,7 +401,7 @@ class EquationState extends State<EquationTaskScreen> {
                 "/",
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(fontSize: 15),
-              )))),
+              ))))),
     ]);
   }
 }
