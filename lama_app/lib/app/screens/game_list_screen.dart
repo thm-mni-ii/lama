@@ -149,7 +149,6 @@ class GameListScreen extends StatelessWidget {
   Widget buildGameList(context, index, constraints) {
     Color color = LamaColors.orangeAccent;
     if (index % 2 == 0) color = LamaColors.blueAccent;
-    if (index % 3 == 0) color = LamaColors.redAccent;
     return Container(
       height: (constraints.maxHeight / 100) * 25,
       decoration: BoxDecoration(
