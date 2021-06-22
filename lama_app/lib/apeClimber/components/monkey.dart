@@ -16,6 +16,10 @@ class Monkey extends AnimationComponent {
 
   /// width and height of the lama in pixel
   final double _size;
+  /// animation of idling left
+  Animation _idleLeft;
+  /// animation of idling right
+  Animation _idleRight;
   /// animation of climbing left
   Animation _climbLeft;
   /// animation of climbing right
@@ -44,7 +48,7 @@ class Monkey extends AnimationComponent {
       imageName: 'png/monkey_animation.png',
       textureWidth: 48,
       textureHeight: 48,
-      columns: 10,
+      columns: 11,
       rows: 1,
     );
 
@@ -53,19 +57,23 @@ class Monkey extends AnimationComponent {
       imageName: 'png/monkey_animation_mirror.png',
       textureWidth: 48,
       textureHeight: 48,
-      columns: 10,
+      columns: 11,
       rows: 1,
     );
 
+    // idle
+    _idleLeft = spriteSheet.createAnimation(0, loop: true, from: 0, to: 2, stepTime: stepTime / 4);
+    _idleRight = spriteSheetMirror.createAnimation(0, loop: true, from: 0, to: 2, stepTime: stepTime / 4);
+
     // climb
-    _climbLeft = spriteSheet.createAnimation(0, loop: false, from: 2, to: 6, stepTime: stepTime / 4);
-    _climbRight = spriteSheetMirror.createAnimation(0, loop: false, from: 2, to: 6, stepTime: stepTime / 4);
+    _climbLeft = spriteSheet.createAnimation(0, loop: false, from: 3, to: 7, stepTime: stepTime / 4);
+    _climbRight = spriteSheetMirror.createAnimation(0, loop: false, from: 3, to: 7, stepTime: stepTime / 4);
 
     // change
-    _switchLeft = spriteSheet.createAnimation(0, loop: false, from: 6, to: 9, stepTime: stepTime / 4);
-    _switchRight = spriteSheetMirror.createAnimation(0, loop: false, from: 7, to: 10, stepTime: stepTime / 4);
+    _switchLeft = spriteSheet.createAnimation(0, loop: false, from: 8, to: 11, stepTime: stepTime / 4);
+    _switchRight = spriteSheetMirror.createAnimation(0, loop: false, from: 8, to: 11, stepTime: stepTime / 4);
 
-    animation = _climbLeft;
+    animation = _idleLeft;
   }
 
   void move(ClimbSide side) {
@@ -121,6 +129,7 @@ class Monkey extends AnimationComponent {
         _switching = false;
         _moving = false;
         _isLeft = !_isLeft;
+        animation = _isLeft ? _idleLeft : _idleRight;
       }
     }
 
