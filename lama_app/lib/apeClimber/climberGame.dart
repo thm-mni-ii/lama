@@ -4,6 +4,7 @@ import 'package:flame/flame.dart';
 
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/MonkeyTimer.dart';
+import 'package:lama_app/apeClimber/components/monkey.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyStartWidget.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -38,7 +39,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
 
-  ClimberGame(this._context, this._userRepo){
+  ClimberGame(this._context, this._userRepo) {
     initialize();
   }
 
@@ -70,6 +71,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     _timer = MonkeyTimer(_onTimerFinished)
       ..onWidgetUpdated = _onTimerWidgetUpdated;
     add(_timer);
+    add(Monkey(144));
 
     // start timer
     _timer.start();
@@ -116,5 +118,13 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     super.resize(size);
   }
 
-  void onTapDown(TapDownDetails d) { }
+  void onTapDown(TapDownDetails d) {
+    components.whereType<Monkey>().forEach((element) {
+      if (d.localPosition.dx < screenSize.width / 2) {
+        element.move(ClimbSide.Left);
+      } else {
+        element.move(ClimbSide.Right);
+      }
+    });
+  }
 }
