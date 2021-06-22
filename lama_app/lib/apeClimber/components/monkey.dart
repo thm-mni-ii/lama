@@ -76,6 +76,7 @@ class Monkey extends AnimationComponent {
     animation = _idleLeft;
   }
 
+  /// This method will activate the matching move animation to its [side] and its constraints.
   void move(ClimbSide side) {
     switch (side) {
       case ClimbSide.Left:
@@ -87,6 +88,11 @@ class Monkey extends AnimationComponent {
     }
   }
 
+  /// This method will activate the climb up animation one time to its corresponding side and set its constraints.
+  ///
+  /// sideeffects:
+  ///   [_moving] = true
+  ///   [_animation] = climb animation
   void climbUp() {
     if (_moving) {
       return;
@@ -99,6 +105,14 @@ class Monkey extends AnimationComponent {
       ..onCompleteAnimation = () => _moving = false;
   }
 
+
+  /// This method will activate the switch animation one time to its corresponding side and set its constraints.
+  ///
+  /// sideeffects:
+  ///   [_moving] = true
+  ///   [_switching] = true
+  ///   [_switchTimeLeft] = [stepTime]
+  ///   [_animation] = switch animation
   void switchSides() {
     if (_moving) {
       return;
@@ -137,7 +151,7 @@ class Monkey extends AnimationComponent {
   }
 
   void resize(Size size) {
-    // start location in the center
+    // start location in the center with the offset
     x = size.width / 2 - _size - relOffsetCenter[0] * _size;
     y = size.height / 2 - _size / 2 - relOffsetCenter[1] * _size;
   }
