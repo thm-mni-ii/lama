@@ -68,10 +68,10 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   Future<bool> _checkForLastAdmin() async {
     List<User> list = await DatabaseProvider.db.getUser();
     int count = 0;
-    list.forEach((element) {
-      if (element.isAdmin) count++;
-      if (count >= 2) return false;
-    });
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].isAdmin) count++;
+      if (count > 1) return false;
+    }
     return true;
   }
 }
