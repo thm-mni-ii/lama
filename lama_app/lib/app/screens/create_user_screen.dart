@@ -87,7 +87,7 @@ class CreateUserScreenState extends State<CreateUserScreen> {
     return Padding(
       padding: EdgeInsets.all(20),
       child: Container(
-        padding: EdgeInsets.only(left: 100, right: 100),
+        padding: EdgeInsets.symmetric(horizontal: 100),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(color: LamaColors.bluePrimary, width: 1),
