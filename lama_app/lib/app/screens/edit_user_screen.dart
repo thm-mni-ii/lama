@@ -180,30 +180,32 @@ class EditUserScreenState extends State<EditUserScreen> {
             bottom: BorderSide(color: LamaColors.bluePrimary, width: 1),
           ),
         ),
-        child: DropdownButton<String>(
-          items: grades.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(
-                value,
-                style: LamaTextTheme.getStyle(
-                  fontSize: 20,
-                  color: LamaColors.black,
-                  monospace: true,
-                  fontWeight: FontWeight.w500,
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            items: grades.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: LamaTextTheme.getStyle(
+                    fontSize: 20,
+                    color: LamaColors.black,
+                    monospace: true,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-            );
-          }).toList(),
-          onChanged: (value) {
-            context
-                .read<EditUserBloc>()
-                .add(EditUserChangeGrade(grades.indexOf(value) + 1));
-            setState(() {
-              _dropDown = value;
-            });
-          },
-          value: _dropDown,
+              );
+            }).toList(),
+            onChanged: (value) {
+              context
+                  .read<EditUserBloc>()
+                  .add(EditUserChangeGrade(grades.indexOf(value) + 1));
+              setState(() {
+                _dropDown = value;
+              });
+            },
+            value: _dropDown,
+          ),
         ),
       ),
     );
@@ -420,7 +422,7 @@ class EditUserScreenState extends State<EditUserScreen> {
           padding: EdgeInsets.only(right: 10),
           child: Ink(
             decoration: ShapeDecoration(
-              color: LamaColors.greenAccent,
+              color: LamaColors.greenPrimary,
               shape: CircleBorder(),
             ),
             padding: EdgeInsets.all(7.0),
