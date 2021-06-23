@@ -16,20 +16,20 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
     if (event is CreateAdminPush) _adminPush(_user, event.context);
     if (event is CreateAdminChangeName) _user.name = event.name;
     if (event is CreateAdminChangePassword) _user.password = event.password;
+    if (event is CreateAdminAbort) _adminAbort(event.context);
   }
 
   Future<void> _adminPush(User user, BuildContext context) async {
     await _insterAdmin(user);
-    Navigator.pop(
-      context,
-      _user
-    );
+    Navigator.pop(context, _user);
   }
 
   Future<void> _insterAdmin(User user) async {
     if (user.isAdmin != null || user.isAdmin)
       await DatabaseProvider.db.insertUser(user);
   }
+
+  void _adminAbort(BuildContext context) {
+    Navigator.pop(context, null);
+  }
 }
-
-
