@@ -15,7 +15,6 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
 
   @override
   Stream<EditUserState> mapEventToState(event) async* {
-    print(_user.coins);
     if (event is EditUserAbort) _editUserReturn(event.context);
     if (event is EditUserDeleteUserCheck) yield await _deleteUserCheck();
     if (event is EditUserDeleteUserAbrove) _deleteUser(event.context);

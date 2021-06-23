@@ -265,8 +265,11 @@ class EditUserScreenState extends State<EditUserScreen> {
             _changesHeadline('Lamamünzen'),
             _changeRow(state.user.coins, state.changedUser.coins),
             _changesHeadline('Klasse'),
-            _changeRow(_grades[state.user.grade - 1],
-                _grades[state.changedUser.grade - 1]),
+            _changeRow(
+                _grades[state.user.grade - 1],
+                state.changedUser.grade != null
+                    ? _grades[state.changedUser.grade - 1]
+                    : _grades[state.user.grade - 1]),
             SizedBox(
               height: 15,
             ),
@@ -427,7 +430,7 @@ class EditUserScreenState extends State<EditUserScreen> {
             ),
             padding: EdgeInsets.all(7.0),
             child: IconButton(
-              icon: Icon(Icons.check_rounded),
+              icon: Icon(Icons.save, size: 28),
               color: Colors.white,
               tooltip: 'Bestätigen',
               onPressed: () {
