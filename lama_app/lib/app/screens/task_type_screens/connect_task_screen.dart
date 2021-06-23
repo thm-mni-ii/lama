@@ -88,7 +88,13 @@ class ConnectState extends State<ConnectTaskScreen> {
           ),
             Container(
               width: (constraints.maxWidth/100)*25,
-              height: (constraints.maxHeight/100)*60
+              height: (constraints.maxHeight/100)*60,
+                child: CanvasTouchDetector(
+                builder: (context) =>
+                    CustomPaint(
+                      painter: LinePainter(context),
+                    )
+    )
             ),
             Container(
                 padding: EdgeInsets.only(top: 20, right: 10),
@@ -158,4 +164,17 @@ class ConnectState extends State<ConnectTaskScreen> {
       )
     );
   }
+}
+
+class LinePainter extends CustomPainter{
+  @override
+  void paint(Canvas canvas, Size size) {
+    // TODO: implement paint
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+
 }
