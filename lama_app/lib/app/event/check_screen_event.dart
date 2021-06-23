@@ -12,4 +12,9 @@ class DSGVOAccepted extends CheckScreenEvent {
   DSGVOAccepted(this.context);
 }
 
+class CreateAdminEvent extends CheckScreenEvent {
+  BuildContext context;
+  CreateAdminEvent(this.context);
+}
+
 class DSGVODenied extends CheckScreenEvent {}

@@ -16,3 +16,8 @@ class CreateAdminChangePassword extends CreateAdminEvent {
   String password;
   CreateAdminChangePassword(this.password);
 }
+
+class CreateAdminAbort extends CreateAdminEvent {
+  BuildContext context;
+  CreateAdminAbort(this.context);
+}

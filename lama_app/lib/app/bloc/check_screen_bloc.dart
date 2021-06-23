@@ -18,22 +18,19 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
   Stream<CheckScreenState> mapEventToState(CheckScreenEvent event) async* {
     if (event is CheckForAdmin) yield await _hasAdmin(event.context);
     if (event is DSGVOAccepted) yield _navigator(event.context);
+    if (event is CreateAdminEvent) yield _navigator(event.context);
   }
 
   Future<CheckScreenState> _hasAdmin(BuildContext context) async {
     List<User> userList = await DatabaseProvider.db.getUser();
-    if (userList == null) {
-      //_navigateNoAdmin(context);
-      return ShowDSGVO(await _readDSGVO());
-    }
+    if (userList == null) return ShowDSGVO(await _loadDSGVO());
     for (User user in userList) {
       if (user.isAdmin) {
         _navigateAdminExist(context);
         return AdminExist();
       }
     }
-    //_navigateNoAdmin(context);
-    return ShowDSGVO(await _readDSGVO());
+    return ShowDSGVO(await _loadDSGVO());
   }
 
   CheckScreenState _navigator(BuildContext context) {
@@ -41,12 +38,12 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     return CreateAdmin();
   }
 
-  Future<String> _readDSGVO() async {
+  Future<String> _loadDSGVO() async {
     return await rootBundle.loadString('assets/md/DSGVO.md');
   }
 
-  void _navigateNoAdmin(BuildContext context) {
-    Navigator.pushReplacement(
+  Future<void> _navigateNoAdmin(BuildContext context) async {
+    User admin = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(
@@ -55,6 +52,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
         ),
       ),
     );
+    if (admin != null)
+      _navigateAdminExist(context);
   }
 
   void _navigateAdminExist(BuildContext context) {

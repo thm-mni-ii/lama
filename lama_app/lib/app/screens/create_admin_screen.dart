@@ -26,6 +26,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
         LamaColors.bluePrimary,
       ),
       body: _form(context),
+      floatingActionButton: _userOptionsButtons(context),
     );
   }
 
@@ -71,27 +72,53 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
               ],
             ),
           ),
-          ElevatedButton(
-            child: Row(
-              children: [
-                Icon(Icons.save_sharp),
-                SizedBox(width: 10),
-                Text('Speichern'),
-              ],
-            ),
-            style: ElevatedButton.styleFrom(
-              minimumSize: Size(50, 50),
-              primary: LamaColors.greenPrimary,
-              shape: BeveledRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-            ),
-            onPressed: () {
-              if (_formKey.currentState.validate())
-                context.read<CreateAdminBloc>().add(CreateAdminPush(context));
-            },
-          ),
         ],
       ),
+    );
+  }
+
+  Widget _userOptionsButtons(BuildContext context) {
+    return Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Ink(
+            decoration: ShapeDecoration(
+              color: LamaColors.greenPrimary,
+              shape: CircleBorder(),
+            ),
+            padding: EdgeInsets.all(7.0),
+            child: IconButton(
+              icon: Icon(
+                Icons.save_rounded,
+                size: 25,
+              ),
+              color: Colors.white,
+              tooltip: 'Speichern',
+              onPressed: () {
+                if (_formKey.currentState.validate())
+                  context.read<CreateAdminBloc>().add(CreateAdminPush(context));
+              },
+            ),
+          ),
+        ),
+        Ink(
+          decoration: ShapeDecoration(
+            color: LamaColors.redPrimary,
+            shape: CircleBorder(),
+          ),
+          padding: EdgeInsets.all(2.0),
+          child: IconButton(
+            icon: Icon(Icons.close_rounded),
+            color: Colors.white,
+            tooltip: 'Abbrechen',
+            onPressed: () {
+              context.read<CreateAdminBloc>().add(CreateAdminAbort(context));
+            },
+          ),
+        ),
+      ],
+      mainAxisAlignment: MainAxisAlignment.end,
     );
   }
 

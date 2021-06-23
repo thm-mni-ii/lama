@@ -1,14 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/bloc/create_admin_bloc.dart';
 import 'package:lama_app/app/bloc/create_user_bloc.dart';
 import 'package:lama_app/app/bloc/edit_user_bloc.dart';
-import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/event/user_management_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/screens/create_admin_screen.dart';
 import 'package:lama_app/app/screens/create_user_screen.dart';
 import 'package:lama_app/app/screens/edit_user_screen.dart';
-import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/state/user_management_state.dart';
 import 'package:lama_app/db/database_provider.dart';
 
@@ -22,8 +22,8 @@ class UserManagementBloc
     if (event is LoadAllUsers) yield await _loadUsers();
     if (event is LogoutAdminScreen) _logout(event.context);
     if (event is CreateUser) _createUserScreen(event.context);
+    if (event is CreateAdmin) _createAdminScreen(event.context);
     if (event is EditUser) _editUserScreen(event.context, event.user);
-    if (event is TasksetOption) _tasksetOption(event.context);
   }
 
   void _createUserScreen(BuildContext context) {
@@ -33,6 +33,18 @@ class UserManagementBloc
         builder: (context) => BlocProvider(
           create: (BuildContext context) => CreateUserBloc(),
           child: CreateUserScreen(),
+        ),
+      ),
+    ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
+  }
+
+  void _createAdminScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (BuildContext context) => CreateAdminBloc(),
+          child: CreateAdminScreen(),
         ),
       ),
     ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
@@ -51,28 +63,7 @@ class UserManagementBloc
   }
 
   void _logout(BuildContext context) {
-    /*Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (BuildContext context) => UserSelectionBloc(),
-          child: UserSelectionScreen(),
-        ),
-      ),
-    );*/
     Navigator.pop(context);
-  }
-
-  void _tasksetOption(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (BuildContext context) => TasksetOprionsBloc(),
-          child: OptionTaskScreen(),
-        ),
-      ),
-    ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
   }
 
   //Operations
