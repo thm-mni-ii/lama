@@ -91,16 +91,17 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
-      }
-      else if (t is TaskEquation) {
+      } else if (t is TaskEquation) {
         if (equals(event.fullAnswer, event.providedanswerWords)) {
           userRepository.addLamaCoins(t.reward);
+          answerResults.add(true);
           yield TaskAnswerResultState(true);
         } else {
+          answerResults.add(false);
           yield TaskAnswerResultState(false);
         }
       }
-        await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 1));
       if (curIndex >= tasks.length)
         yield AllTasksCompletedState(tasks, answerResults);
       else
