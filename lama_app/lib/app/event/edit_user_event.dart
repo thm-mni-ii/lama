@@ -19,6 +19,11 @@ class EditUserChangePasswort extends EditUserEvent {
   EditUserChangePasswort(this.passwort);
 }
 
+class EditUserChangeGrade extends EditUserEvent {
+  int grade;
+  EditUserChangeGrade(this.grade);
+}
+
 class EditUserAbort extends EditUserEvent {
   BuildContext context;
   EditUserAbort(this.context);

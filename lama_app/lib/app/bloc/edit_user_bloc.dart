@@ -29,6 +29,7 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
     if (event is EditUserChangeCoins) {
       _changedUser.coins = (int.parse(event.coins));
     }
+    if (event is EditUserChangeGrade) _changedUser.grade = event.grade;
   }
 
   Future<EditUserState> _pushUserChanges() async {
@@ -42,6 +43,8 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
     //Coins
     if (_changedUser.coins != _user.coins && _changedUser.coins != null)
       await DatabaseProvider.db.updateUserCoins(_user, _changedUser.coins);
+    if (_changedUser.grade != _user.grade && _changedUser.grade != null)
+      await DatabaseProvider.db.updateUserGrade(_user, _changedUser.grade);
     return EditUserChangeSuccess(_user, _changedUser);
   }
 
