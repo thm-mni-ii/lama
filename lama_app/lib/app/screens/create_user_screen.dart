@@ -86,31 +86,33 @@ class CreateUserScreenState extends State<CreateUserScreen> {
   Widget _gradesList(BuildContext context, List<String> grades) {
     return Padding(
       padding: EdgeInsets.all(20),
-      child: DropdownButton<String>(
-        iconSize: 25,
-        items: grades.map((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(
-              value,
-              style: LamaTextTheme.getStyle(
-                fontSize: 20,
-                color: LamaColors.black,
-                monospace: true,
-                fontWeight: FontWeight.w500,
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          iconSize: 25,
+          items: grades.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 20,
+                  color: LamaColors.black,
+                  monospace: true,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-          );
-        }).toList(),
-        onChanged: (value) {
-          context
-              .read<CreateUserBloc>()
-              .add(UserGradeChange(grades.indexOf(value) + 1));
-          setState(() {
-            _dropDown = value;
-          });
-        },
-        value: _dropDown,
+            );
+          }).toList(),
+          onChanged: (value) {
+            context
+                .read<CreateUserBloc>()
+                .add(UserGradeChange(grades.indexOf(value) + 1));
+            setState(() {
+              _dropDown = value;
+            });
+          },
+          value: _dropDown,
+        ),
       ),
     );
   }
