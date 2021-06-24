@@ -17,21 +17,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   List<bool> answerResults = [];
 
   UserRepository userRepository;
-  TaskBloc(Taskset taskset, this.userRepository)
-      : super(TaskScreenEmptyState()) {
-    tasksetSubject = taskset.subject;
-
-    List<Task> tempTasks = [];
-    tempTasks.addAll(taskset.tasks);
-
-    var rng = new Random();
-
-    for (int i = taskset.randomTaskAmount; i > 0; i--) {
-      int index = rng.nextInt(tempTasks.length);
-      tasks.add(tempTasks[index]);
-      tempTasks.removeAt(index);
-    }
-  }
+  TaskBloc(this.tasksetSubject, this.tasks, this.userRepository)
+      : super(TaskScreenEmptyState()) {}
 
   @override
   Stream<TaskState> mapEventToState(TaskEvent event) async* {

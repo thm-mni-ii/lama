@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
@@ -6,6 +8,7 @@ import 'package:lama_app/app/event/choose_taskset_events.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/state/choose_taskset_state.dart';
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -151,7 +154,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
     return Container(
         padding: EdgeInsets.all(10),
         width: screenSize.width,
-        height: screenSize.height / 8,
+        height: (screenSize.height / 100) * 15,
         decoration: BoxDecoration(
           gradient: LinearGradient(
               colors: [LamaColors.orangeAccent, LamaColors.redAccent]),
@@ -164,15 +167,18 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider<TaskBloc>(
-                  create: (context) => TaskBloc(taskset, userRepository),
-                  child: TaskScreen(),
+            onTap: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider<TaskBloc>(
+                    create: (context) => TaskBloc(taskset.subject,
+                        generateTaskList(taskset), userRepository),
+                    child: TaskScreen(),
+                  ),
                 ),
               ),
-            ),
+            },
             child: Column(
               children: [
                 Text(
@@ -184,20 +190,48 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                         blurRadius: 2),
                   ]),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: (screenSize.height / 100) * 1.5),
                 Text(
-                  "Aufgaben: " + taskset.tasks.length.toString(),
+                  "Aufgaben insgesamt: " + taskset.tasks.length.toString(),
                   style: LamaTextTheme.getStyle(fontSize: 15, shadows: [
                     Shadow(
                         color: Colors.blueGrey,
                         offset: Offset(0, 1),
                         blurRadius: 1),
                   ]),
-                )
+                ),
+                SizedBox(height: (screenSize.height / 100) * 1.5),
+                Text(
+                  "Aufgaben pro Durchgang: " +
+                      taskset.randomTaskAmount.toString(),
+                  style: LamaTextTheme.getStyle(fontSize: 15, shadows: [
+                    Shadow(
+                        color: Colors.blueGrey,
+                        offset: Offset(0, 1),
+                        blurRadius: 1),
+                  ]),
+                ),
               ],
               crossAxisAlignment: CrossAxisAlignment.start,
             ),
           ),
         ));
+  }
+
+  List<Task> generateTaskList(Taskset taskset) {
+    List<Task> tasks = [];
+
+    List<Task> tempTasks = [];
+    tempTasks.addAll(taskset.tasks);
+
+    var rng = new Random();
+
+    for (int i = taskset.randomTaskAmount; i > 0; i--) {
+      int index = rng.nextInt(tempTasks.length);
+      tasks.add(tempTasks[index]);
+      tempTasks.removeAt(index);
+      print(index);
+    }
+    return tasks;
   }
 }
