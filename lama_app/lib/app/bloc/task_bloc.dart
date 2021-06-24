@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
@@ -5,6 +7,7 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:collection/collection.dart';
+import 'package:lama_app/app/task-system/taskset_model.dart';
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   String tasksetSubject;
@@ -14,8 +17,21 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   List<bool> answerResults = [];
 
   UserRepository userRepository;
-  TaskBloc(this.tasksetSubject, this.tasks, this.userRepository)
-      : super(TaskScreenEmptyState());
+  TaskBloc(Taskset taskset, this.userRepository)
+      : super(TaskScreenEmptyState()) {
+    tasksetSubject = taskset.subject;
+
+    List<Task> tempTasks = [];
+    tempTasks.addAll(taskset.tasks);
+
+    var rng = new Random();
+
+    for (int i = taskset.randomTaskAmount; i > 0; i--) {
+      int index = rng.nextInt(tempTasks.length);
+      tasks.add(tempTasks[index]);
+      tempTasks.removeAt(index);
+    }
+  }
 
   @override
   Stream<TaskState> mapEventToState(TaskEvent event) async* {

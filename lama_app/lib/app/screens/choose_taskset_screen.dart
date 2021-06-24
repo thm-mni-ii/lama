@@ -168,8 +168,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) => BlocProvider<TaskBloc>(
-                  create: (context) =>
-                      TaskBloc(taskset.subject, taskset.tasks, userRepository),
+                  create: (context) => TaskBloc(taskset, userRepository),
                   child: TaskScreen(),
                 ),
               ),
