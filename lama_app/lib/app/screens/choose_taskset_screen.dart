@@ -71,7 +71,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
             Container(
               color: Colors.white,
               child: Container(
-                margin: EdgeInsets.only(top: 50),
+                margin: EdgeInsets.only(top: (screenSize.height / 100) * 7.5),
                 child: Center(
                   child: BlocBuilder<ChooseTasksetBloc, ChooseTasksetState>(
                     builder: (context, state) {
