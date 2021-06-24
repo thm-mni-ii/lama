@@ -2,6 +2,7 @@
     "taskset_name":"Standardaufgaben Klasse 2",
      "taskset_subject":"Englisch",
       "taskset_grade":2,
+      "taskset_randomize_order":true,
        "tasks": [
            {
            "task_type":"4Cards",
@@ -14,7 +15,6 @@
              {
                 "task_type":"VocableTest",
                 "task_reward":5,
-                "question": "",
                 "lama_text": "Translate the shown word!",
                 "wordPairs": [{"word":"Window","translation":"fenster"}, {"word":"Eimer", "translation":"bucket"}],
                 "randomizeSide": true

@@ -6,7 +6,6 @@
         {
             "task_type":"VocableTest",
             "task_reward":5,
-            "question": "",
             "lama_text": "Translate the shown word!",
             "wordPairs": [{"word":"house","translation":"Haus"}, {"word":"sun", "translation":"Sonne"}],
             "randomizeSide": true

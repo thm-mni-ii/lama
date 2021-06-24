@@ -4,6 +4,8 @@ class Taskset {
   String name;
   String subject;
   int grade;
+  bool randomizeOrder;
+  int randomTaskAmount;
   List<Task> tasks;
 
   //This method creates a Taskset from the passed json
@@ -15,5 +17,14 @@ class Taskset {
     List<Task> tasksetTasksList =
         tasksetTasks.map((e) => Task.fromJson(e)).toList();
     tasks = tasksetTasksList;
+    if (!json.containsKey('taskset_choose_amount')) {
+      randomTaskAmount = tasks.length;
+      if (json.containsKey('taskset_randomize_order')) {
+        randomizeOrder = json["taskset_randomize_order"];
+      } else
+        randomizeOrder = false;
+    } else {
+      randomTaskAmount = json['taskset_choose_amount'];
+    }
   }
 }

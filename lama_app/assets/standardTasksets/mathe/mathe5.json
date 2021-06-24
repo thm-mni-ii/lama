@@ -6,7 +6,7 @@
         {
          "task_type":"4Cards",
          "task_reward":2,
-         "question":"Was ist das Ergebnis der Multiplikation ?",
+         "question":"Was ist das Ergebnis der Multiplikation?",
          "lama_text":"Tippe die richtige Antwort an!",
          "right_answer":"Produkt",
          "wrong_answers":["Summe", "Differenz", "Quotient"]
@@ -14,7 +14,7 @@
         {
          "task_type":"4Cards",
          "task_reward":2,
-         "question":"Was ist das Ergebnis der Division ?",
+         "question":"Was ist das Ergebnis der Division?",
          "lama_text":"Tippe die richtige Antwort an!",
          "right_answer":"Quotient",
          "wrong_answers":["Summe", "Differenz", "Produkt"]

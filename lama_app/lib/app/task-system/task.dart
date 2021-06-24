@@ -24,36 +24,30 @@ class Task {
             json['right_answer'],
             List<String>.from(json['wrong_answers']));
       case "MarkWords":
-        return TaskMarkWords(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['question'],
-            json['sentence'],
-            List<String>.from(json['right_words']));
+        return TaskMarkWords(taskType, json['task_reward'], json['lama_text'],
+            json['sentence'], List<String>.from(json['right_words']));
       case "MatchCategory":
         return TaskMatchCategory(
             taskType,
             json['task_reward'],
             json['lama_text'],
-            json['question'],
             json['nameCatOne'],
             json['nameCatTwo'],
             List<String>.from(json['categoryOne']),
             List<String>.from(json['categoryTwo']));
       case "GridSelect":
         return TaskGridSelect(taskType, json['task_reward'], json['lama_text'],
-            json['question'], List<String>.from(json['wordsToFind']));
+            List<String>.from(json['wordsToFind']));
       case "MoneyTask":
         return TaskMoney(taskType, json['task_reward'], json['lama_text'],
-            json['question'], json['moneyAmount']);
+            json['moneyAmount']);
       case "VocableTest":
         var wordPairs = json['wordPairs'] as List;
         print(wordPairs.runtimeType);
         List<Pair<String, String>> wordPairList =
             wordPairs.map((pair) => Pair.fromJson(pair)).toList();
         return TaskVocableTest(taskType, json['task_reward'], json['lama_text'],
-            json['question'], wordPairList, json['randomizeSide']);
+            wordPairList, json['randomizeSide']);
       default:
         return null;
     }
@@ -64,34 +58,36 @@ class Task {
   String question;
   String lamaText;
 
-  Task(this.type, this.reward, this.question, this.lamaText);
+  Task(this.type, this.reward, this.lamaText);
 }
 
 class Task4Cards extends Task {
+  String question;
   String rightAnswer;
   List<String> wrongAnswers;
 
-  Task4Cards(String taskType, int reward, String lamaText, String question,
+  Task4Cards(String taskType, int reward, String lamaText, this.question,
       this.rightAnswer, this.wrongAnswers)
-      : super(taskType, reward, question, lamaText);
+      : super(taskType, reward, lamaText);
 }
 
 class TaskClozeTest extends Task {
+  String question;
   String rightAnswer;
   List<String> wrongAnswers;
 
-  TaskClozeTest(String taskType, int reward, String lamaText, String question,
+  TaskClozeTest(String taskType, int reward, String lamaText, this.question,
       this.rightAnswer, this.wrongAnswers)
-      : super(taskType, reward, question, lamaText);
+      : super(taskType, reward, lamaText);
 }
 
 class TaskMarkWords extends Task {
   List<String> rightWords;
   String sentence;
 
-  TaskMarkWords(String taskType, int reward, String lamaText, String question,
-      this.sentence, this.rightWords)
-      : super(taskType, reward, question, lamaText);
+  TaskMarkWords(String taskType, int reward, String lamaText, this.sentence,
+      this.rightWords)
+      : super(taskType, reward, lamaText);
 }
 
 class TaskMatchCategory extends Task {
@@ -100,39 +96,30 @@ class TaskMatchCategory extends Task {
   String nameCatOne;
   String nameCatTwo;
 
-  TaskMatchCategory(
-      String taskType,
-      int reward,
-      String lamaText,
-      String question,
-      this.nameCatOne,
-      this.nameCatTwo,
-      this.categoryOne,
-      this.categoryTwo)
-      : super(taskType, reward, question, lamaText);
+  TaskMatchCategory(String taskType, int reward, String lamaText,
+      this.nameCatOne, this.nameCatTwo, this.categoryOne, this.categoryTwo)
+      : super(taskType, reward, lamaText);
 }
 
 class TaskGridSelect extends Task {
   List<String> wordsToFind;
 
-  TaskGridSelect(String taskType, int reward, String lamaText, String question,
-      this.wordsToFind)
-      : super(taskType, reward, question, lamaText);
+  TaskGridSelect(String taskType, int reward, String lamaText, this.wordsToFind)
+      : super(taskType, reward, lamaText);
 }
 
 class TaskMoney extends Task {
   double moneyAmount;
 
-  TaskMoney(String taskType, int reward, String lamaText, String question,
-      this.moneyAmount)
-      : super(taskType, reward, question, lamaText);
+  TaskMoney(String taskType, int reward, String lamaText, this.moneyAmount)
+      : super(taskType, reward, lamaText);
 }
 
 class TaskVocableTest extends Task {
   List<Pair<String, String>> vocablePairs;
   bool randomizeSide;
 
-  TaskVocableTest(String taskType, int reward, String lamaText, String question,
+  TaskVocableTest(String taskType, int reward, String lamaText,
       this.vocablePairs, this.randomizeSide)
-      : super(taskType, reward, question, lamaText);
+      : super(taskType, reward, lamaText);
 }

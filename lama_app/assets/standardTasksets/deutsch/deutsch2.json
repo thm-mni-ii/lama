@@ -6,7 +6,6 @@
         {
           "task_type":"GridSelect",
            "task_reward":3,
-           "question":"",
            "lama_text":"Markiere vier Fahrzeuge",
            "wordsToFind":["auto", "Bus", "Flugzeug", "Minivan"]
             },
@@ -21,7 +20,6 @@
          {
            "task_type": "MatchCategory",
            "task_reward":2,
-           "question": "",
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
            "nameCatOne": "Verben",
            "nameCatTwo": "Nomen",
@@ -39,7 +37,6 @@
          {
            "task_type":"MarkWords",
            "task_reward":2,
-           "question":"",
            "lama_text":"Tippe alle Verben an!",
            "sentence": "Eine Pflanze wächst auf der Wiese!",
            "right_words": ["wächst"]
