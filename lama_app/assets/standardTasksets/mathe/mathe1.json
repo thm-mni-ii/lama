@@ -38,7 +38,6 @@
         {
          "task_type":"MoneyTask",
          "task_reward":2,
-         "question":"irgendwas",
          "lama_text":"Sammle 7,50€ mit den Münzen zusammen",
          "moneyAmount": 7.5
         }

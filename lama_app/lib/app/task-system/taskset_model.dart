@@ -19,7 +19,7 @@ class Taskset {
     tasks = tasksetTasksList;
     if (!json.containsKey('taskset_choose_amount')) {
       randomTaskAmount = tasks.length;
-      if (json.containsKey('taskset_randomzie_order')) {
+      if (json.containsKey('taskset_randomize_order')) {
         randomizeOrder = json["taskset_randomize_order"];
       } else
         randomizeOrder = false;

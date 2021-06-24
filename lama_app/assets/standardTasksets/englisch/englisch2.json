@@ -15,7 +15,6 @@
              {
                 "task_type":"VocableTest",
                 "task_reward":5,
-                "question": "",
                 "lama_text": "Translate the shown word!",
                 "wordPairs": [{"word":"Window","translation":"fenster"}, {"word":"Eimer", "translation":"bucket"}],
                 "randomizeSide": true

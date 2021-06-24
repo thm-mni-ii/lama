@@ -235,7 +235,6 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
       int index = rng.nextInt(tempTasks.length);
       tasks.add(tempTasks[index]);
       tempTasks.removeAt(index);
-      print(index);
     }
     return tasks;
   }

@@ -6,7 +6,6 @@
         {
           "task_type":"GridSelect",
            "task_reward":2,
-           "question":"",
            "lama_text":"Markiere drei Farben!",
            "wordsToFind":["rot", "blau", "gelb"]
             },
@@ -29,7 +28,6 @@
          {
            "task_type": "MatchCategory",
            "task_reward":2,
-           "question": "",
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
            "nameCatOne": "Verben",
            "nameCatTwo": "Nomen",

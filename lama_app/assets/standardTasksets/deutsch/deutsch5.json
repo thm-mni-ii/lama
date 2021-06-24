@@ -22,14 +22,12 @@
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "question":"",
            "lama_text":"Markiere vier Länder",
            "wordsToFind":["Finnland", "Irland", "Belgien", "Ungarn"]
          },
          {
            "task_type": "MatchCategory",
            "task_reward":2,
-           "question": "",
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
            "nameCatOne": "Gegenwart",
            "nameCatTwo": "Vergangenheit",

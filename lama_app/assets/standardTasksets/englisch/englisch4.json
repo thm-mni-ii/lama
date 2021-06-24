@@ -49,7 +49,6 @@
     {
       "task_type": "MatchCategory",
       "task_reward":2,
-      "question": "",
       "lama_text": "Move each word in the correct category!",
       "nameCatOne": "Simple Present",
       "nameCatTwo": "Simple Past",
@@ -59,7 +58,6 @@
     {
       "task_type": "MatchCategory",
       "task_reward":2,
-      "question": "",
       "lama_text": "Move each word in the correct category!",
       "nameCatOne": "Simple Past",
       "nameCatTwo": "Past Participle",
@@ -69,7 +67,6 @@
     {
       "task_type":"VocableTest",
       "task_reward":5,
-      "question": "",
       "lama_text": "Translate the shown word!",
       "wordPairs": [{"word":"to jump","translation":"springen"}, {"word":"to sleep", "translation":"schlafen"}],
       "randomizeSide": true
