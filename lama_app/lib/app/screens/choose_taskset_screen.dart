@@ -158,24 +158,28 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
             },
             child: Column(
               children: [
-                Text(
-                  taskset.name,
-                  style: LamaTextTheme.getStyle(fontSize: 20, shadows: [
-                    Shadow(
-                        color: Colors.blueGrey,
-                        offset: Offset(0, 1),
-                        blurRadius: 2),
-                  ]),
+                FittedBox(
+                  child: Text(
+                    taskset.name,
+                    style: LamaTextTheme.getStyle(fontSize: 20, shadows: [
+                      Shadow(
+                          color: Colors.blueGrey,
+                          offset: Offset(0, 1),
+                          blurRadius: 2),
+                    ]),
+                  ),
                 ),
                 SizedBox(height: (screenSize.height / 100) * 1.5),
-                Text(
-                  "Aufgaben insgesamt: " + taskset.tasks.length.toString(),
-                  style: LamaTextTheme.getStyle(fontSize: 15, shadows: [
-                    Shadow(
-                        color: Colors.blueGrey,
-                        offset: Offset(0, 1),
-                        blurRadius: 1),
-                  ]),
+                FittedBox(
+                  child: Text(
+                    "Aufgaben insgesamt: " + taskset.tasks.length.toString(),
+                    style: LamaTextTheme.getStyle(fontSize: 15, shadows: [
+                      Shadow(
+                          color: Colors.blueGrey,
+                          offset: Offset(0, 1),
+                          blurRadius: 1),
+                    ]),
+                  ),
                 ),
                 SizedBox(height: (screenSize.height / 100) * 1.5),
                 Text(
