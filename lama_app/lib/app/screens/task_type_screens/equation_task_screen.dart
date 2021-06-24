@@ -10,6 +10,7 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
 List<String> fullAnswer = [];
+List<String> answers = [];
 
 class EquationTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
@@ -20,6 +21,7 @@ class EquationTaskScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     fullAnswer.clear();
+    answers.clear();
     return EquationState(task, constraints);
   }
 }
@@ -39,10 +41,9 @@ class EquationState extends State<EquationTaskScreen> {
         fullEquation.add(task.equation[i]);
       }
     }
-    for (int i = 0; i<task.missingElements.length; i++) {
-      task.wrongAnswers.add(task.missingElements[i]);
-    }
-    task.wrongAnswers.shuffle();
+    answers.addAll(task.wrongAnswers);
+    answers.addAll(task.missingElements);
+    answers.shuffle();
     fullAnswer.addAll(task.equation);
   }
 
@@ -105,7 +106,7 @@ class EquationState extends State<EquationTaskScreen> {
         Container(
           width: constraints.maxWidth,
           height: (constraints.maxHeight / 100) * 30,
-          child: _buildAnswers(task.wrongAnswers),
+          child: _buildAnswers(answers),
         ),
         SizedBox(
           height: (constraints.maxHeight / 100) * 1,
@@ -149,10 +150,10 @@ class EquationState extends State<EquationTaskScreen> {
             childAspectRatio: 0.01 / 0.01,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10),
-        itemCount: task.wrongAnswers.length,
+        itemCount: answers.length,
         itemBuilder: (context, index) {
           return Draggable<String>(
-            data: task.wrongAnswers[index],
+            data: answers[index],
             childWhenDragging: Container(
               width: (constraints.maxWidth / 100) * 12,
               height: (constraints.maxHeight / 100) * 7,

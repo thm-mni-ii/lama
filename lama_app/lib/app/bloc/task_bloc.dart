@@ -92,7 +92,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           yield TaskAnswerResultState(false);
         }
       } else if (t is TaskEquation) {
-        if (equals(event.fullAnswer, event.providedanswerWords)) {
+        if (fullequals(event.fullAnswer, event.providedanswerWords)) {
           userRepository.addLamaCoins(t.reward);
           answerResults.add(true);
           yield TaskAnswerResultState(true);
@@ -150,6 +150,18 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     }
     list1.sort();
     list2.sort();
+    for (int i = 0; i < list1.length; i++) {
+      if (list1[i] != list2[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+  bool fullequals(List<String> list1, List<String> list2) {
+    if (!(list1 is List<String> && list2 is List<String>) ||
+        list1.length != list2.length) {
+      return false;
+    }
     for (int i = 0; i < list1.length; i++) {
       if (list1[i] != list2[i]) {
         return false;
