@@ -376,7 +376,7 @@ class DatabaseProvider {
     final db = await database;
 
     return await db
-        .delete(tableHighscore, where: "$columnGameId = ?", whereArgs: [id]);
+        .delete(tableHighscore, where: "$columnId = ?", whereArgs: [id]);
   }
 
   Future<int> deleteSubject(int id) async {
@@ -505,7 +505,7 @@ class DatabaseProvider {
     final db = await database;
 
     return await db.update(tableHighscore, highscore.toMap(),
-        where: "$columnGameId = ?", whereArgs: [highscore.id]);
+        where: "$columnId = ?", whereArgs: [highscore.id]);
   }
 
   Future<int> updateSubject(Subject subject) async {
@@ -579,5 +579,18 @@ class DatabaseProvider {
       return pswd;
     }
     return null;
+  }
+
+  Future deleteDatabase() async{
+    final db = await database;
+    await db.delete(tableUser);
+    await db.delete(tableAchievements);
+    await db.delete(tableUserHasAchievements);
+    await db.delete(tableGames);
+    await db.delete(tableHighscore);
+    await db.delete(tableHighscore);
+    await db.delete(tableSubjects);
+    await db.delete(tableUserSolvedTaskAmount);
+    await db.delete(tableTaskUrl);
   }
 }
