@@ -18,9 +18,7 @@ class ChooseTasksetScreen extends StatefulWidget {
   final int userGrade;
   final UserRepository userRepository;
 
-  ChooseTasksetScreen(this.chosenSubject, this.userGrade, this.userRepository) {
-    //TasksetProvider: get all TasksetNames for Subject and class
-  }
+  ChooseTasksetScreen(this.chosenSubject, this.userGrade, this.userRepository);
 
   @override
   State<StatefulWidget> createState() {
@@ -44,27 +42,6 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /*return Container(
-      child: BlocBuilder<ChooseTasksetBloc, ChooseTasksetState>(
-        builder: (context, state) {
-          if (state is LoadingAllTasksetsState)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          if (state is LoadedAllTasksetsState) {
-            print("L:" + state.tasksets.length.toString());
-            return Center(
-              child: ListView.builder(
-                itemCount: state.tasksets.length,
-                itemBuilder: (context, index) =>
-                    Text(state.tasksets[index].name),
-              ),
-            );
-          } else
-            return Text("This should not happen");
-        },
-      ),
-    );*/
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: LamaColors.mainPink,
