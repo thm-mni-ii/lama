@@ -219,6 +219,11 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
   }
 
   List<Task> generateTaskList(Taskset taskset) {
+    if (taskset.randomTaskAmount == taskset.tasks.length &&
+        !taskset.randomizeOrder) {
+      return taskset.tasks;
+    }
+
     List<Task> tasks = [];
 
     List<Task> tempTasks = [];

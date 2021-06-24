@@ -18,7 +18,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   UserRepository userRepository;
   TaskBloc(this.tasksetSubject, this.tasks, this.userRepository)
-      : super(TaskScreenEmptyState()) {}
+      : super(TaskScreenEmptyState());
 
   @override
   Stream<TaskState> mapEventToState(TaskEvent event) async* {
