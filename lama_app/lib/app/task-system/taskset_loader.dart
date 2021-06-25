@@ -36,9 +36,11 @@ class TasksetLoader {
 
     //load all standard-tasksets for each subject and grade
     for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-      String tasksetMathe = await rootBundle.loadString(
-          'assets/standardTasksets/mathe/mathe' + i.toString() + '.json');
-      await buildTasksetFromJson(tasksetMathe);
+      try {
+        String tasksetMathe = await rootBundle.loadString(
+            'assets/standardTasksets/mathe/mathe' + i.toString() + '.json');
+        await buildTasksetFromJson(tasksetMathe);
+      } catch (e) {}
       String tasksetDeutsch = await rootBundle.loadString(
           'assets/standardTasksets/deutsch/deutsch' + i.toString() + '.json');
       await buildTasksetFromJson(tasksetDeutsch);
@@ -76,8 +78,12 @@ class TasksetLoader {
     });
     await DatabaseProvider.db.removeUnusedLeftToSolveEntries(
         tasks, userRepository.authenticatedUser);*/
-    await DatabaseProvider.db.removeAllNonExistent();
-    await DatabaseProvider.db.resetAllStillExistFlags();
+    print("Removed: " +
+        (await DatabaseProvider.db.removeAllNonExistent()).toString() +
+        "Entries");
+    print("Reset: " +
+        (await DatabaseProvider.db.resetAllStillExistFlags()).toString() +
+        "Entries");
   }
 
   Future<void> buildTasksetFromJson(tasksetContent) async {

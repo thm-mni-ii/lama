@@ -620,6 +620,7 @@ class DatabaseProvider {
     data[columnTaskString] = taskString;
     data[columnLeftToSolve] = leftToSolve;
     data[columnUserLTSId] = user.id;
+    data[columnDoesStillExist] = 0;
     return await db.insert(tableLeftToSolve, data);
   }
 
@@ -660,14 +661,16 @@ class DatabaseProvider {
     final db = await database;
     Map values = Map<String, dynamic>();
     values[columnDoesStillExist] = 1;
+    print("Set flag for " + t.toString());
     return await db.update(tableLeftToSolve, values,
         where: "$columnTaskString = ?", whereArgs: [t.toString()]);
   }
 
   Future<int> removeAllNonExistent() async {
     final db = await database;
+    int val = 0;
     return await db.delete(tableLeftToSolve,
-        where: "$columnDoesStillExist = ?", whereArgs: [0]);
+        where: "$columnDoesStillExist = ?", whereArgs: [val]);
   }
 
   Future<int> resetAllStillExistFlags() async {
