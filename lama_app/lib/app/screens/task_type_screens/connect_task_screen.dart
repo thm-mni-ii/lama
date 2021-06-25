@@ -24,11 +24,20 @@ class ConnectTaskScreen extends StatefulWidget {
 class ConnectState extends State<ConnectTaskScreen> {
   final TaskConnect task;
   final BoxConstraints constraints;
-  List<String> givenAnswers;
+  List<Item> leftWords = [];
+  List<Item> rightWords = [];
+  List<String> givenAnswers = [];
+
 
   ConnectState(this.task, this.constraints) {
     task.pair1.shuffle();
     task.pair2.shuffle();
+    task.pair1.forEach((element) {
+      leftWords.add(Item(false, element.toString()));
+    });
+    task.pair2.forEach((element) {
+      rightWords.add(Item(false, element.toString()));
+    });
   }
 
   @override
@@ -85,8 +94,8 @@ class ConnectState extends State<ConnectTaskScreen> {
                   childAspectRatio: 3 / 1,
                   mainAxisSpacing: 40,
                   ),
-                itemCount: task.pair1.length,
-                itemBuilder: (context, index) => _buildPair(context, index, task.pair1),
+                itemCount: leftWords.length,
+                itemBuilder: (context, index) => _buildPair(context, index, leftWords),
             )
           ),
             //Space between both containers
@@ -105,8 +114,8 @@ class ConnectState extends State<ConnectTaskScreen> {
                     childAspectRatio: 3 / 1,
                     mainAxisSpacing: 40,
                   ),
-                  itemCount: task.pair2.length,
-                  itemBuilder: (context, index) => _buildPair(context, index, task.pair2),
+                  itemCount: rightWords.length,
+                  itemBuilder: (context, index) => _buildPair(context, index, rightWords),
                 )
             ),
           ],
@@ -149,21 +158,52 @@ class ConnectState extends State<ConnectTaskScreen> {
   }
 
   // Method to build posible answers
-  Widget _buildPair(context, index, List<String> pair) {
-    return Container(
+  Widget _buildPair(context, index, List<Item> itemList) {
+    return
+    InkWell(
+      child: Container(
       height: 7,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
-        color: LamaColors.white,
+
+        color: itemList[index].touched ? LamaColors.redPrimary : LamaColors.white,
         border: Border.all(color: LamaColors.black)
       ),
       child: Center(
+
         child: Text(
-          pair[index],
+          itemList[index].content,
           textAlign: TextAlign.center,
           style: LamaTextTheme.getStyle(fontSize: 15, color: LamaColors.black)
         ),
       )
+    ),
+      onTap: (){
+        touch(index, itemList);
+    },
     );
+  }
+
+  void touch(int index, List<Item> itemlist){
+    if(itemlist[index].touched == false){
+      itemlist[index].touched = true;
+    }
+    else{
+      itemlist[index].touched = false;
+    }
+    setState(() {});
+  }
+
+
+
+}
+
+class Item{
+  bool touched;
+  String content;
+
+  Item(bool touched, String content){
+    this.touched = touched;
+    this.content = content;
   }
 }
