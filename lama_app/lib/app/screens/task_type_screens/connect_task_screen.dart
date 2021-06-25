@@ -35,6 +35,7 @@ class ConnectState extends State<ConnectTaskScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        //Creating lama + lamaspeechbubble
         Container(
           height: (constraints.maxHeight / 100) * 15,
           padding: EdgeInsets.only(left: 15, right: 15, top: 15),
@@ -70,8 +71,10 @@ class ConnectState extends State<ConnectTaskScreen> {
             ],
           ),
         ),
+        // positioning answers on the screen
         Row(
           children: [
+            //left words
             Container(
               padding: EdgeInsets.only(top: 20, left: 10),
               width: (constraints.maxWidth/100)*37.5,
@@ -86,16 +89,12 @@ class ConnectState extends State<ConnectTaskScreen> {
                 itemBuilder: (context, index) => _buildPair(context, index, task.pair1),
             )
           ),
+            //Space between both containers
             Container(
               width: (constraints.maxWidth/100)*25,
               height: (constraints.maxHeight/100)*60,
-                child: CanvasTouchDetector(
-                builder: (context) =>
-                    CustomPaint(
-                      painter: LinePainter(context),
-                    )
-    )
             ),
+            // Right words
             Container(
                 padding: EdgeInsets.only(top: 20, right: 10),
                 width: (constraints.maxWidth/100)*37.5,
@@ -112,9 +111,11 @@ class ConnectState extends State<ConnectTaskScreen> {
             ),
           ],
         ),
+        //space to "fertig" button
         SizedBox(
           height: (constraints.maxHeight/100)*5,
         ),
+        // "fertig" button
         Container(
           width: (constraints.maxWidth / 100) * 50,
           height: (constraints.maxHeight / 100) * 15,
@@ -147,6 +148,7 @@ class ConnectState extends State<ConnectTaskScreen> {
     );
   }
 
+  // Method to build posible answers
   Widget _buildPair(context, index, List<String> pair) {
     return Container(
       height: 7,
@@ -164,17 +166,4 @@ class ConnectState extends State<ConnectTaskScreen> {
       )
     );
   }
-}
-
-class LinePainter extends CustomPainter{
-  @override
-  void paint(Canvas canvas, Size size) {
-    // TODO: implement paint
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
-
 }
