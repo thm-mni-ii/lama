@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -26,42 +27,59 @@ class TasksetOprionsBloc
       yield await _tasksetOptionsPush();
       event.tasksetRepository.reloadTasksetLoader();
     }
-    if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
-    if (event is TasksetOptionsReload) yield await _reload();
     if (event is TasksetOptionsDelete) {
       event.tasksetRepository.reloadTasksetLoader();
-      yield await _deleteUrl(event.url);
+      yield TasksetOptionsWaiting();
+      yield await _tasksetOptionsPush();
+    }
+    if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
+    if (event is TasksetOptionsReload) {
+      yield TasksetOptionsWaiting();
+      yield await _reload();
     }
     if (event is TasksetOptionsSelectUrl)
       yield TasksetOptionsUrlSelected(event.url.url);
-    if (event is TasksetOptionsPushUrl)
-      yield await _tasksetOptionsReloadUrl(event.url);
+    if (event is TasksetOptionsReaddUrl) {
+      yield TasksetOptionsWaiting();
+      yield await _tasksetOptionsReaddUrl(event.url);
+    }
   }
 
   void _return(BuildContext context) {
     Navigator.pop(context);
   }
 
-  Future<TasksetOptionsState> _tasksetOptionsPush(BuildContext context) async {
+  Future<TasksetOptionsState> _tasksetOptionsPush() async {
     return await _insertUrl(TaskUrl(url: _tasksetUrl));
   }
 
-  Future<TasksetOptionsPushSuccess> _tasksetOptionsReloadUrl(
-      TaskUrl url) async {
+  Future<TasksetOptionsPushSuccess> _tasksetOptionsReaddUrl(TaskUrl url) async {
     TasksetOptionsState retValue = await _insertUrl(url);
     if (retValue is TasksetOptionsPushSuccess) deletedUrls.remove(url);
     return retValue;
   }
 
   Future<TasksetOptionsState> _insertUrl(TaskUrl url) async {
+    //Check if URL can be parsed
     if (!Uri.tryParse(url.url).hasAbsolutePath)
       return TasksetOptionsPushFailed(failedUrl: _tasksetUrl);
     try {
-      final response = await http.head(Uri.parse(url.url));
+      final response = await http.get(Uri.parse(url.url));
+      //Check if URL is reachable
       if (response.statusCode == 200) {
-        await DatabaseProvider.db.insertTaskUrl(url);
+        //Check if URL contains valid json code
+        try {
+          jsonDecode(response.body);
+        } on FormatException {
+          return TasksetOptionsPushFailed(
+              error: 'Der Inhalt der URL ist kein "json"!',
+              failedUrl: _tasksetUrl);
+        }
         //Reload Tasksets
         //RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
+
+        //Insert URL to Database
+        await DatabaseProvider.db.insertTaskUrl(url);
         return TasksetOptionsPushSuccess();
       } else {
         return TasksetOptionsPushFailed(

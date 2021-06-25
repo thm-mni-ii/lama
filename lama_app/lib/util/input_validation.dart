@@ -37,7 +37,8 @@ abstract class InputValidation {
     if (RegExp('http://').hasMatch(url))
       return 'URL darf aus Sicherheitsgründen keine "http" Adresse sein!';
     if (!urlFilter.hasMatch(url)) return 'Die URL muss mit "https://" beginen!';
-    if (!Uri.tryParse(url).hasAbsolutePath) return 'Diese URL ist Fehlerhaft!';
+    if (!Uri.tryParse(url).hasAbsolutePath)
+      return 'URL Fehlerhaft! Einige URLs müssen mit ".json" oder "/" enden.';
     if (isEmpty(url)) return 'Dieses Feld darf nicht leer sein!';
     return null;
   }

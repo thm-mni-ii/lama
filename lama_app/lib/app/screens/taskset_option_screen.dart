@@ -50,7 +50,6 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess());
           }
           if (state is TasksetOptionsUrlSelected) {
-            print('TasksetOptionsUrlSelected ALERT!');
             showDialog(
               context: context,
               builder: (_) => AlertDialog(
@@ -71,17 +70,20 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         },
         child: BlocBuilder<TasksetOprionsBloc, TasksetOptionsState>(
           builder: (context, state) {
+            Widget icon = state is TasksetOptionsWaiting
+                ? CircularProgressIndicator()
+                : Icon(
+                    Icons.add_link,
+                    color: LamaColors.bluePrimary,
+                    size: 30,
+                  );
             if (state is TasksetOptionsDefault) {
               return Padding(
                 padding: EdgeInsets.all(20),
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    Icon(
-                      Icons.add_link,
-                      color: LamaColors.bluePrimary,
-                      size: 30,
-                    ),
+                    icon,
                     _inputFields(context, urlInitValue),
                     _headline('Taskset URLs'),
                     _tasksetUrlList(state.urls),
@@ -119,9 +121,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             validator: (value) => InputValidation.inputURLValidation(value),
             onFieldSubmitted: (value) => {
               if (_formKey.currentState.validate())
-                context
-                    .read<TasksetOprionsBloc>()
-                    .add(TasksetOptionsPush(context))
+                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush())
             },
           ),
         ],
@@ -195,7 +195,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               onPressed: () {
                 context
                     .read<TasksetOprionsBloc>()
-                    .add(TasksetOptionsPushUrl(urls[index]));
+                    .add(TasksetOptionsReaddUrl(urls[index]));
               },
             )
           ],
@@ -236,7 +236,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
 
   Widget _snackbar(IconData icon, String msg, Color color) {
     return SnackBar(
-      duration: Duration(seconds: 1, milliseconds: 0),
+      duration: Duration(seconds: 2, milliseconds: 50),
       content: Row(
         children: [
           Padding(

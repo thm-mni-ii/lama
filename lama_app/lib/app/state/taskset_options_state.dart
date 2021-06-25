@@ -17,6 +17,8 @@ class TasksetOptionsPushFailed extends TasksetOptionsState {
       {this.error = 'Da ist wohl was gehörig schiefgelaufen', this.failedUrl});
 }
 
+class TasksetOptionsWaiting extends TasksetOptionsState {}
+
 class TasksetOptionsUrlSelected extends TasksetOptionsState {
   String url;
   TasksetOptionsUrlSelected(this.url);
