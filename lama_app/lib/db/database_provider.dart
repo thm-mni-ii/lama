@@ -57,6 +57,7 @@ class DatabaseProvider {
   static const String columnTaskString = "task_string";
   static const String columnUserLTSId = "user_id";
   static const String columnLeftToSolve = "left_to_solve";
+  static const String columnDoesStillExist = "does_still_exist";
 
   DatabaseProvider._();
   static final DatabaseProvider db = DatabaseProvider._();
@@ -126,7 +127,8 @@ class DatabaseProvider {
           "$columnLeftToSolveID INTEGER PRIMARY KEY AUTOINCREMENT,"
           "$columnTaskString TEXT,"
           "$columnLeftToSolve INTEGER,"
-          "$columnUserLTSId INTEGER"
+          "$columnUserLTSId INTEGER,"
+          "$columnDoesStillExist INTEGER"
           ");");
     });
   }
@@ -652,5 +654,26 @@ class DatabaseProvider {
     return await db.update(tableLeftToSolve, values,
         where: "$columnTaskString = ? and $columnUserLTSId = ?",
         whereArgs: [t.toString(), user.id]);
+  }
+
+  Future<int> setDoesStillExist(Task t) async {
+    final db = await database;
+    Map values = Map<String, dynamic>();
+    values[columnDoesStillExist] = 1;
+    return await db.update(tableLeftToSolve, values,
+        where: "$columnTaskString = ?", whereArgs: [t.toString()]);
+  }
+
+  Future<int> removeAllNonExistent() async {
+    final db = await database;
+    return await db.delete(tableLeftToSolve,
+        where: "$columnDoesStillExist = ?", whereArgs: [0]);
+  }
+
+  Future<int> resetAllStillExistFlags() async {
+    final db = await database;
+    Map values = Map<String, dynamic>();
+    values[columnDoesStillExist] = 0;
+    return await db.update(tableLeftToSolve, values);
   }
 }

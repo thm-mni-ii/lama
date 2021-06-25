@@ -97,6 +97,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     //wenn nich vorhanden => insert standardValue;
     int leftToSolve = await DatabaseProvider.db
         .getLeftToSolve(task.toString(), userRepository.authenticatedUser);
+    //Its -1 if the user just solves the task during this "run", its -2 when the task has not given coins once (important for summary screen) and -3 if the task is not found in the db
     if (leftToSolve == -3) {
       print("Not found - inserting");
       await DatabaseProvider.db.insertLeftToSolve(

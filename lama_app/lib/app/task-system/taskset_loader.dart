@@ -76,6 +76,8 @@ class TasksetLoader {
     });
     await DatabaseProvider.db.removeUnusedLeftToSolveEntries(
         tasks, userRepository.authenticatedUser);*/
+    await DatabaseProvider.db.removeAllNonExistent();
+    await DatabaseProvider.db.resetAllStillExistFlags();
   }
 
   Future<void> buildTasksetFromJson(tasksetContent) async {
