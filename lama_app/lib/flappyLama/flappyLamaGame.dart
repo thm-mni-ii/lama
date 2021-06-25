@@ -239,8 +239,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     score++;
 
     if (score > _difficultyScore) {
-      obstacle.maxHoleSize = 5;
-      obstacle.minHoleSize = 3;
+      obstacle.maxHoleSize = 3;
+      obstacle.minHoleSize = 2;
     }
   }
 
