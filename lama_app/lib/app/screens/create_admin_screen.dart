@@ -89,10 +89,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
             ),
             padding: EdgeInsets.all(7.0),
             child: IconButton(
-              icon: Icon(
-                Icons.save_rounded,
-                size: 25,
-              ),
+              icon: Icon(Icons.save, size: 28),
               color: Colors.white,
               tooltip: 'Speichern',
               onPressed: () {

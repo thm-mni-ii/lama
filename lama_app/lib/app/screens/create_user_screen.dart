@@ -86,31 +86,40 @@ class CreateUserScreenState extends State<CreateUserScreen> {
   Widget _gradesList(BuildContext context, List<String> grades) {
     return Padding(
       padding: EdgeInsets.all(20),
-      child: DropdownButton<String>(
-        iconSize: 25,
-        items: grades.map((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(
-              value,
-              style: LamaTextTheme.getStyle(
-                fontSize: 20,
-                color: LamaColors.black,
-                monospace: true,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          );
-        }).toList(),
-        onChanged: (value) {
-          context
-              .read<CreateUserBloc>()
-              .add(UserGradeChange(grades.indexOf(value) + 1));
-          setState(() {
-            _dropDown = value;
-          });
-        },
-        value: _dropDown,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 100),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: LamaColors.bluePrimary, width: 1),
+          ),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            items: grades.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: LamaTextTheme.getStyle(
+                    fontSize: 20,
+                    color: LamaColors.black,
+                    monospace: true,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            }).toList(),
+            onChanged: (value) {
+              context
+                  .read<CreateUserBloc>()
+                  .add(UserGradeChange(grades.indexOf(value) + 1));
+              setState(() {
+                _dropDown = value;
+              });
+            },
+            value: _dropDown,
+          ),
+        ),
       ),
     );
   }
@@ -127,10 +136,7 @@ class CreateUserScreenState extends State<CreateUserScreen> {
             ),
             padding: EdgeInsets.all(7.0),
             child: IconButton(
-              icon: Icon(
-                Icons.save_rounded,
-                size: 25,
-              ),
+              icon: Icon(Icons.save, size: 28),
               color: Colors.white,
               tooltip: 'Speichern',
               onPressed: () {
