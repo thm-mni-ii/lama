@@ -19,10 +19,6 @@ class TasksetLoader {
   // Keep in mind youll have to add standard taskset for each subject for the new grade otherwise the app will crash on startup
   static const int GRADES_SUPPORTED = 6;
 
-  UserRepository userRepository;
-
-  TasksetLoader(this.userRepository);
-
   Future<void> loadAllTasksets() async {
     /* ONLY NEEDED WHEN A LOCAL COPY SHOUL EXIST AND POSSIBLY PERSIST
     //get path for the taskset directory (only accessible by this app)
@@ -72,20 +68,20 @@ class TasksetLoader {
     }*/
 
     //Remove all leftToSolveEntries for deleted Tasksets
-    List<Task> tasks = [];
+    /*List<Task> tasks = [];
     loadedTasksets.values.forEach((element) {
       element.forEach((taskset) {
         tasks.addAll(taskset.tasks);
       });
     });
     await DatabaseProvider.db.removeUnusedLeftToSolveEntries(
-        tasks, userRepository.authenticatedUser);
+        tasks, userRepository.authenticatedUser);*/
   }
 
   Future<void> buildTasksetFromJson(tasksetContent) async {
     Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
 
-    for (int i = 0; i < taskset.tasks.length; i++) {
+    /*for (int i = 0; i < taskset.tasks.length; i++) {
       Task t = taskset.tasks[i];
       int leftToSolve = await DatabaseProvider.db
           .getLeftToSolve(t.toString(), userRepository.authenticatedUser);
@@ -97,7 +93,7 @@ class TasksetLoader {
         print("found - setting to: " + leftToSolve.toString());
         t.leftToSolve = leftToSolve;
       }
-    }
+    }*/
 
     /*LOGCODE
     print("taskset_name: " + taskset.name);

@@ -31,7 +31,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   @override
   Stream<TaskState> mapEventToState(TaskEvent event) async* {
     if (event is ShowNextTaskEvent) {
-      yield DisplayTaskState(tasksetSubject, tasks[curIndex++]);
+      yield await displayNextTask(tasksetSubject, tasks[curIndex++]);
     } else if (event is AnswerTaskEvent) {
       Task t = tasks[curIndex - 1];
       if (t is Task4Cards) {
@@ -99,8 +99,24 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       if (curIndex >= tasks.length)
         yield AllTasksCompletedState(tasks, answerResults);
       else
-        yield DisplayTaskState(tasksetSubject, tasks[curIndex++]);
+        yield await displayNextTask(tasksetSubject, tasks[curIndex++]);
     }
+  }
+
+  Future<TaskState> displayNextTask(String subject, Task task) async {
+    //lookup task for user and inject current leftToSolve
+    //wenn nich vorhanden => insert standardValue;
+    int leftToSolve = await DatabaseProvider.db
+        .getLeftToSolve(task.toString(), userRepository.authenticatedUser);
+    if (leftToSolve == -3) {
+      print("Not found - inserting");
+      await DatabaseProvider.db.insertLeftToSolve(
+          task.toString(), task.leftToSolve, userRepository.authenticatedUser);
+    } else {
+      print("found - setting to: " + leftToSolve.toString());
+      task.leftToSolve = leftToSolve;
+    }
+    return DisplayTaskState(subject, task);
   }
 
   void rightAnswerCallback(Task t) async {
