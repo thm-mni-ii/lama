@@ -14,17 +14,18 @@ class FlappyObstacle extends Component {
   /// velocity of the obstacles [negative = right to left; positive = left to right]
   final double _velocity = -70;
   /// amount of tiles = size of the sprites / width of the obstacle
-  final double _size = 1.5;
-  /// minimum size of the hole = multiples by [_size] {[_minHoleSize] * [_size]}
-  final double _minHoleSize = 2;
-  /// maximum size of the hole = multiples by [_size] {[_maxHoleSize] * [_size]}
-  final double _maxHoleSize = 3;
+  final double _sizeInTiles = 1.5;
+  /// minimum size of the hole = multiples by [_sizeInTiles] {[minHoleSize] * [_sizeInTiles]}
+  double minHoleSize = 2;
+  /// maximum size of the hole = multiples by [_sizeInTiles] {[maxHoleSize] * [_sizeInTiles]}
+  double maxHoleSize = 3;
+  /// maximum distance between the different holes
   final int _maxHoleDistance = 3;
   // --------
   // SETTINGS
 
   /// This function gets called when [_passingObjectX] passes this obstacles X coordinate
-  Function onPassing;
+  Function(FlappyObstacle) onPassing;
   /// This function gets called when an [Rect] collides with this obstacle in [collides]
   Function onCollide;
   /// This function gets called when the obstacle gets reset (holeIndex, holeSize).
@@ -32,7 +33,7 @@ class FlappyObstacle extends Component {
 
   int _refHoleIndex;
   int _refHoleSize;
-  /// actual size of the hole = multiples by [_size] {[_holeSize] * [_size]}
+  /// actual size of the hole = multiples by [_sizeInTiles] {[_holeSize] * [_sizeInTiles]}
   int _holeSize;
   /// hole Index (index of the start of the hole)
   int _holeIndex;
@@ -58,7 +59,7 @@ class FlappyObstacle extends Component {
   }
 
   FlappyObstacle(this._game, this._alter, this._passingObjectX, this.onPassing,
-      [this.onCollide]);
+      [this.onCollide, this.minHoleSize, this.maxHoleSize]);
 
   /// This method will generate the obstacle [_sprites] for the rendering.
   ///
@@ -68,16 +69,16 @@ class FlappyObstacle extends Component {
     // reset the sprites
     _sprites = [];
 
-    for (int i = 0; i < (this._game.tilesY / this._size); i++) {
+    for (int i = 0; i < (this._game.tilesY / this._sizeInTiles); i++) {
       // common sprite component
       var tmp = SpriteComponent()
-        ..height = _game.tileSize * _size
-        ..width = _game.tileSize * _size
+        ..height = _game.tileSize * _sizeInTiles
+        ..width = _game.tileSize * _sizeInTiles
         ..x = _game.screenSize.width +
             (_alter ?
-              (_game.tilesX ~/ 2) * _game.tileSize + _game.tileSize * _size :
+              (_game.tilesX ~/ 2) * _game.tileSize + _game.tileSize * _sizeInTiles :
               0)
-        ..y = (_game.tileSize * _size) * i
+        ..y = (_game.tileSize * _sizeInTiles) * i
         ..anchor = Anchor.topLeft;
 
       // start of the hole
@@ -107,7 +108,7 @@ class FlappyObstacle extends Component {
     _refHoleSize = alterHoleSize;
   }
 
-  /// This method generate a new hole depending on the [_minHoleSize], [_maxHoleSize] and [_size].
+  /// This method generate a new hole depending on the [minHoleSize], [maxHoleSize] and [_sizeInTiles].
   ///
   /// sideeffects:
   ///   [_holeIndex]
@@ -115,11 +116,11 @@ class FlappyObstacle extends Component {
   void _generateHole() {
     // size of the hole
     _holeSize = _randomNumber.nextInt(
-        ((_maxHoleSize - _minHoleSize) / _size).ceil() + 1) +
-        (_minHoleSize / _size).ceil();
+        ((maxHoleSize - minHoleSize) / _sizeInTiles).ceil() + 1) +
+        (minHoleSize / _sizeInTiles).ceil();
 
     // index of the position of the hole
-    _holeIndex = _randomNumber.nextInt((_game.tilesY ~/ _size) - 1);
+    _holeIndex = _randomNumber.nextInt((_game.tilesY ~/ _sizeInTiles) - _holeSize);
 
     if (_refHoleIndex != null && _refHoleSize != null) {
       // new hole lower ref && Distance to large
@@ -131,6 +132,8 @@ class FlappyObstacle extends Component {
         _holeIndex = _refHoleIndex - _maxHoleDistance > 0 ? _refHoleIndex - _holeSize - _maxHoleDistance : 0;
       }
     }
+
+    print("holeSize = $_holeSize");
   }
 
   /// This method checks if the [object] hits the obstacle.
@@ -152,9 +155,9 @@ class FlappyObstacle extends Component {
         object.left < _first.x + _first.width) ||
         (object.right > _first.x &&
         object.right < _first.x + _first.width)) {
-      var holeTop = _holeIndex * _game.tileSize * _size;
+      var holeTop = _holeIndex * _game.tileSize * _sizeInTiles;
       var holeBot =
-          holeTop + (_holeSize * _game.tileSize * _size);
+          holeTop + (_holeSize * _game.tileSize * _sizeInTiles);
       // Y
       if (!((object.top >= holeTop || _holeIndex == 0) &&
           object.bottom <= holeBot)) {
@@ -171,7 +174,7 @@ class FlappyObstacle extends Component {
   ///
   /// sideeffects:
   ///   [_holeSize] = random
-  ///   [_holeIndex] = random depending on [_maxHoleSize]and [_minHoleSize]
+  ///   [_holeIndex] = random depending on [maxHoleSize]and [minHoleSize]
   ///   [_sprites]
   ///   [_objectPassed] = false
   ///   [_alter] = false (removes the initial offset)
@@ -192,7 +195,7 @@ class FlappyObstacle extends Component {
     if (_passingObjectX != null &&
         !_objectPassed &&
         _passingObjectX > _first.x + _first.width) {
-      onPassing?.call();
+      onPassing?.call(this);
       _objectPassed = true;
     }
   }
@@ -200,7 +203,7 @@ class FlappyObstacle extends Component {
   void update(double t) {
     if (_sprites.isNotEmpty) {
       // generate new holeSize and position and all parts when moving out of the screen
-      if (_sprites[0].x <= -(_game.tileSize * _size)) {
+      if (_sprites[0].x <= -(_game.tileSize * _sizeInTiles)) {
         // remove the initial offset
         _alter = false;
         resetObstacle();

@@ -33,6 +33,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   final String _startScreen = "StartScreen";
   // name of the gameOver widget
   final String _gameOverMode = "GameOverMode";
+  /// score where the difficulty will increase
+  final int _difficultyScore = 5;
   /// how many times the user can play this game
   int _lifes = 3;
   // --------
@@ -213,8 +215,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // add obstacles
     obstacles.clear();
-    obstacles.add(FlappyObstacle(this, false, _lamaSize, () => this.score++));
-    obstacles.add(FlappyObstacle(this, true, _lamaSize, () => this.score++));
+    obstacles.add(FlappyObstacle(this, false, _lamaSize, addScore, null, 7, 8));
+    obstacles.add(FlappyObstacle(this, true, _lamaSize, addScore, null, 7, 8));
 
     add(obstacles[0]);
     add(obstacles[1]);
@@ -226,9 +228,20 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // initial change the second obstacle to avoid a to large gap
     obstacles[1].setConstraints(obstacles[0].holeIndex, obstacles[0].holeSize);
     obstacles[1].resetObstacle();
+    obstacles[0].resetObstacle();
 
     // add score
     add(FlappyScoreDisplay(this));
+  }
+
+  /// This methods adds up the score and changes the holesize depending on the score
+  void addScore(FlappyObstacle obstacle) {
+    score++;
+
+    if (score > _difficultyScore) {
+      obstacle.maxHoleSize = 3;
+      obstacle.minHoleSize = 2;
+    }
   }
 
   /// This method pauses the game.
