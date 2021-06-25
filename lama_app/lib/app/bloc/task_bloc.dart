@@ -1,21 +1,10 @@
-<<<<<<< HEAD
-import 'dart:math';
-=======
-import 'dart:convert';
->>>>>>> f31327b (Fixed limited repetition system)
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:collection/collection.dart';
-<<<<<<< HEAD
-import 'package:lama_app/app/task-system/taskset_model.dart';
-=======
 import 'package:lama_app/db/database_provider.dart';
->>>>>>> 1e9ec22 (Limited Repetition System via base64EncodedString)
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   String tasksetSubject;
