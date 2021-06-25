@@ -4,7 +4,7 @@ abstract class InputValidation {
   static int passwortMaxLength = 16;
   static RegExp inputFilter = RegExp('[^a-zA-Z0-9öÖäÄüÜßẞ]');
   static RegExp numberFilter = RegExp('[^0-9]');
-  static RegExp urlFilter = RegExp('((https://)' '.+' '(.json))');
+  static RegExp urlFilter = RegExp('((https://)' '.+)');
 
   static String inputUsernameValidation(String username) {
     if (isEmpty(username)) return 'Der Nutzername darf nicht leer sein!';
@@ -36,7 +36,7 @@ abstract class InputValidation {
   static String inputURLValidation(String url) {
     if (RegExp('http://').hasMatch(url))
       return 'URL darf aus Sicherheitsgründen keine "http" Adresse sein!';
-    if (!urlFilter.hasMatch(url)) return 'Die URL muss mit ".json" enden!';
+    if (!urlFilter.hasMatch(url)) return 'Die URL muss mit "https://" beginen!';
     if (!Uri.tryParse(url).hasAbsolutePath) return 'Diese URL ist Fehlerhaft!';
     if (isEmpty(url)) return 'Dieses Feld darf nicht leer sein!';
     return null;
