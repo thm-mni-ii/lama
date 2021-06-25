@@ -34,7 +34,6 @@ class TasksetOprionsBloc
     }
     if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
     if (event is TasksetOptionsReload) {
-      yield TasksetOptionsWaiting();
       yield await _reload();
     }
     if (event is TasksetOptionsSelectUrl)

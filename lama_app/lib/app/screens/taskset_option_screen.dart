@@ -53,8 +53,26 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             showDialog(
               context: context,
               builder: (_) => AlertDialog(
-                title: Text('Taskset URL'),
-                content: SingleChildScrollView(child: Text(state.url)),
+                title: Text(
+                  'Taskset URL',
+                  style: LamaTextTheme.getStyle(
+                    color: LamaColors.black,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                content: SingleChildScrollView(
+                  child: Text(
+                    state.url,
+                    style: LamaTextTheme.getStyle(
+                      color: LamaColors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      monospace: true,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
                 actions: [
                   TextButton(
                     child: Text('Schließen'),
@@ -66,24 +84,20 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               ),
             );
           }
-          //context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
         },
         child: BlocBuilder<TasksetOprionsBloc, TasksetOptionsState>(
           builder: (context, state) {
-            Widget icon = state is TasksetOptionsWaiting
-                ? CircularProgressIndicator()
-                : Icon(
-                    Icons.add_link,
-                    color: LamaColors.bluePrimary,
-                    size: 30,
-                  );
             if (state is TasksetOptionsDefault) {
               return Padding(
                 padding: EdgeInsets.all(20),
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    icon,
+                    Icon(
+                      Icons.add_link,
+                      color: LamaColors.bluePrimary,
+                      size: 30,
+                    ),
                     _inputFields(context, urlInitValue),
                     _headline('Taskset URLs'),
                     _tasksetUrlList(state.urls),
