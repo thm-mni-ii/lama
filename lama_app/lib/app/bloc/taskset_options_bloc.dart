@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -52,20 +54,24 @@ class TasksetOprionsBloc
   }
 
   Future<TasksetOptionsState> _insertUrl(TaskUrl url) async {
-    //Validation
     if (!Uri.tryParse(url.url).hasAbsolutePath)
       return TasksetOptionsPushFailed(failedUrl: _tasksetUrl);
-    final response = await http.head(Uri.parse(url.url));
-    if (response.statusCode != 200) {
+    try {
+      final response = await http.head(Uri.parse(url.url));
+      if (response.statusCode == 200) {
+        await DatabaseProvider.db.insertTaskUrl(url);
+        //Reload Tasksets
+        //RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
+        return TasksetOptionsPushSuccess();
+      } else {
+        return TasksetOptionsPushFailed(
+            error: 'URL nicht erreichbar!', failedUrl: _tasksetUrl);
+      }
+    } on SocketException {
       return TasksetOptionsPushFailed(
-          error: 'URL nicht erreichbar!', failedUrl: _tasksetUrl);
+          error: 'Da ist etwas gewaltig schiefgelaufen!',
+          failedUrl: _tasksetUrl);
     }
-
-    //Insert URL in Database
-    await DatabaseProvider.db.insertTaskUrl(url);
-    //Reload Tasksets
-    //RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
-    return TasksetOptionsPushSuccess();
   }
 
   Future<TasksetOptionsDeleteSuccess> _deleteUrl(TaskUrl url) async {
