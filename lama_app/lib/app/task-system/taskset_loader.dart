@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:lama_app/app/model/taskUrl_model.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:path_provider/path_provider.dart';
@@ -34,15 +36,17 @@ class TasksetLoader {
 
     //load all standard-tasksets for each subject and grade
     for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-      String tasksetMathe = await rootBundle.loadString(
-          'assets/standardTasksets/mathe/mathe' + i.toString() + '.json');
-      buildTasksetFromJson(tasksetMathe);
+      try {
+        String tasksetMathe = await rootBundle.loadString(
+            'assets/standardTasksets/mathe/mathe' + i.toString() + '.json');
+        await buildTasksetFromJson(tasksetMathe);
+      } catch (e) {}
       String tasksetDeutsch = await rootBundle.loadString(
           'assets/standardTasksets/deutsch/deutsch' + i.toString() + '.json');
-      buildTasksetFromJson(tasksetDeutsch);
+      await buildTasksetFromJson(tasksetDeutsch);
       String tasksetEnglisch = await rootBundle.loadString(
           'assets/standardTasksets/englisch/englisch' + i.toString() + '.json');
-      buildTasksetFromJson(tasksetEnglisch);
+      await buildTasksetFromJson(tasksetEnglisch);
     }
 
     List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
@@ -51,7 +55,7 @@ class TasksetLoader {
       var response = await http.get(Uri.parse(taskUrls[i].url),
           headers: {'Content-type': 'application/json'});
       if (response.statusCode == 200) {
-        buildTasksetFromJson(utf8.decode(response.bodyBytes));
+        await buildTasksetFromJson(utf8.decode(response.bodyBytes));
       }
     }
 
@@ -64,10 +68,40 @@ class TasksetLoader {
       String tasksetContent = await file.readAsString();
       buildTasksetFromJson(tasksetContent);
     }*/
+
+    //Remove all leftToSolveEntries for deleted Tasksets
+    /*List<Task> tasks = [];
+    loadedTasksets.values.forEach((element) {
+      element.forEach((taskset) {
+        tasks.addAll(taskset.tasks);
+      });
+    });
+    await DatabaseProvider.db.removeUnusedLeftToSolveEntries(
+        tasks, userRepository.authenticatedUser);*/
+    print("Removed: " +
+        (await DatabaseProvider.db.removeAllNonExistent()).toString() +
+        "Entries");
+    print("Reset: " +
+        (await DatabaseProvider.db.resetAllStillExistFlags()).toString() +
+        "Entries");
   }
 
-  void buildTasksetFromJson(tasksetContent) {
+  Future<void> buildTasksetFromJson(tasksetContent) async {
     Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
+
+    /*for (int i = 0; i < taskset.tasks.length; i++) {
+      Task t = taskset.tasks[i];
+      int leftToSolve = await DatabaseProvider.db
+          .getLeftToSolve(t.toString(), userRepository.authenticatedUser);
+      if (leftToSolve == -3) {
+        print("Not found - inserting");
+        await DatabaseProvider.db.insertLeftToSolve(
+            t.toString(), t.leftToSolve, userRepository.authenticatedUser);
+      } else {
+        print("found - setting to: " + leftToSolve.toString());
+        t.leftToSolve = leftToSolve;
+      }
+    }*/
 
     /*LOGCODE
     print("taskset_name: " + taskset.name);

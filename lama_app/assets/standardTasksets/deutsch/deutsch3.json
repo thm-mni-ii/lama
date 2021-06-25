@@ -8,6 +8,7 @@
             "task_reward":2,
             "question":"Was ist kein Verb (Tunwort)?",
             "lama_text":"Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
             "right_answer":"grün",
              "wrong_answers":["begrünen", "reden", "lesen"]
              },
@@ -16,6 +17,7 @@
            "task_reward":2,
            "question":"Wusstest du, ___ Lamas spucken können?",
            "lama_text":"Tippe die richtige Antwort an!",
+           "left_to_solve": 3,
            "right_answer":"dass",
            "wrong_answers":["Das", "das"]
          },
@@ -23,6 +25,7 @@
           "task_type":"MarkWords",
           "task_reward":2,
           "lama_text":"Tippe alle Verben an!",
+          "left_to_solve": 3,
           "sentence": "Eine Pflanze wächst auf der Wiese!",
           "right_words": ["wächst"]
             },
@@ -30,6 +33,7 @@
            "task_type": "MatchCategory",
            "task_reward":2,
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+           "left_to_solve": 3,
            "nameCatOne": "Verben",
            "nameCatTwo": "Nomen",
            "categoryOne": ["laufen", "gehen", "schweben", "fallen"],
@@ -39,6 +43,7 @@
            "task_type":"GridSelect",
            "task_reward":3,
            "lama_text":"Markiere vier Städte",
+           "left_to_solve": 3,
            "wordsToFind":["Gießen", "Wetzlar", "Frankfurt", "Berlin"]
          }
         ]

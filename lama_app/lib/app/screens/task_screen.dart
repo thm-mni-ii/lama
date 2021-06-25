@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +37,12 @@ class TaskScreenState extends State<TaskScreen> {
     return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
         if (state is DisplayTaskState) {
+          SvgPicture coinImg = SvgPicture.asset(
+              'assets/images/svg/lama_coin.svg',
+              semanticsLabel: 'lama_coin');
+          if (state.task != null && state.task.leftToSolve <= 0)
+            coinImg = SvgPicture.asset('assets/images/svg/lama_coin_grey.svg',
+                semanticsLabel: 'lama_coin_grey');
           switch (state.subject) {
             case "Mathe":
               lg = LinearGradient(
@@ -89,6 +97,17 @@ class TaskScreenState extends State<TaskScreen> {
                                       color: LamaColors.white,
                                       fontSize: 30,
                                       fontWeight: FontWeight.w500)),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 15),
+                                  child: Container(
+                                    height: (constraints.maxHeight / 100) * 5,
+                                    width: (constraints.maxHeight / 100) * 5,
+                                    child: coinImg,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -271,7 +290,7 @@ class TaskScreenState extends State<TaskScreen> {
     for (int i = 0; i < results.length; i++) {
       if (results[i]) {
         rightAnswers++;
-        coinsEarned += tasks[i].reward;
+        if (tasks[i].leftToSolve > -1) coinsEarned += tasks[i].reward;
       }
     }
     return Column(
@@ -398,11 +417,18 @@ class TaskScreenState extends State<TaskScreen> {
     Icon icon = result
         ? Icon(Icons.check, color: LamaColors.greenAccent, size: 50)
         : Icon(Icons.close, color: LamaColors.redAccent, size: 50);
-    Text coinText = result
-        ? Text("+" + task.reward.toString(),
-            style: LamaTextTheme.getStyle(color: LamaColors.greenAccent))
-        : Text("+" + "0",
-            style: LamaTextTheme.getStyle(color: LamaColors.redAccent));
+    Text coinText;
+    if (result) {
+      if (task.leftToSolve > -1)
+        coinText = Text("+" + task.reward.toString(),
+            style: LamaTextTheme.getStyle(color: LamaColors.greenAccent));
+      else
+        coinText =
+            Text("+0", style: LamaTextTheme.getStyle(color: Colors.grey));
+    } else {
+      coinText = Text("+0",
+          style: LamaTextTheme.getStyle(color: LamaColors.redAccent));
+    }
     return Container(
       height: (constraints.maxHeight / 100) * 10,
       child: Stack(

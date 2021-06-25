@@ -1,4 +1,5 @@
 import 'package:lama_app/app/task-system/task.dart';
+import 'package:lama_app/db/database_provider.dart';
 
 class Taskset {
   String name;
@@ -16,6 +17,9 @@ class Taskset {
     var tasksetTasks = json['tasks'] as List;
     List<Task> tasksetTasksList =
         tasksetTasks.map((e) => Task.fromJson(e)).toList();
+    for (int i = 0; i < tasksetTasksList.length; i++) {
+      DatabaseProvider.db.setDoesStillExist(tasksetTasksList[i]);
+    }
     tasks = tasksetTasksList;
     if (!json.containsKey('taskset_choose_amount')) {
       randomTaskAmount = tasks.length;

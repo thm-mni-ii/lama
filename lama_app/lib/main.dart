@@ -8,7 +8,7 @@ import 'package:lama_app/app/repository/taskset_repository.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   TasksetRepository tasksetRepository = TasksetRepository();
-  await tasksetRepository.initialize();
+  tasksetRepository.initialize();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await precacheEuroSvgs();
   runApp(RepositoryProvider(

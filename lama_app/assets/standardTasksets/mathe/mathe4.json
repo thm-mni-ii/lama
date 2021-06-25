@@ -8,6 +8,7 @@
          "task_reward":2,
          "question":"Was ist das Ergebnis der Multiplikation?",
          "lama_text":"Tippe die richtige Antwort an!",
+         "left_to_solve": 3,
          "right_answer":"Produkt",
          "wrong_answers":["Summe", "Differenz", "Quotient"]
         },
@@ -16,6 +17,7 @@
          "task_reward":2,
          "question":"Was ist das Ergebnis der Division?",
          "lama_text":"Tippe die richtige Antwort an!",
+         "left_to_solve": 3,
          "right_answer":"Quotient",
          "wrong_answers":["Summe", "Differenz", "Produkt"]
         },
@@ -24,6 +26,7 @@
              "task_reward":2,
              "question":"15/5",
              "lama_text":"Tippe die richtige Antwort an!",
+             "left_to_solve": 3,
              "right_answer":"3",
               "wrong_answers":["5", "10", "20"]
               },
@@ -32,6 +35,7 @@
                   "task_reward":2,
                   "question":"3*20",
                   "lama_text":"Tippe die richtige Antwort an!",
+                  "left_to_solve": 3,
                   "right_answer":"60",
                    "wrong_answers":["17", "23", "40"]
              },
@@ -39,6 +43,7 @@
          "task_type":"MoneyTask",
          "task_reward":2,
          "lama_text":"Sammle 13,87€ mit den Münzen zusammen",
+         "left_to_solve": 3,
          "moneyAmount": 13.87
         }
 
