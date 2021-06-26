@@ -69,6 +69,22 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           ),
           _menuButton(
             context,
+            Icon(Icons.assignment_ind_sharp),
+            'Nutzerliste einfügen',
+            () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) => TasksetOprionsBloc(),
+                    child: OptionTaskScreen(),
+                  ),
+                ),
+              )
+            },
+          ),
+          _menuButton(
+            context,
             Icon(Icons.add_link),
             'Aufgabenverwaltung',
             () => {
@@ -202,5 +218,21 @@ abstract class AdminUtils {
 
   static void reloadTasksets(BuildContext context) {
     RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
+  }
+
+  static Widget appbar(Size screenSize, Color color, String titel) {
+    return AppBar(
+      title: Text(
+        titel,
+        style: LamaTextTheme.getStyle(fontSize: 18),
+      ),
+      toolbarHeight: screenSize.width / 5,
+      backgroundColor: color,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
+    );
   }
 }
