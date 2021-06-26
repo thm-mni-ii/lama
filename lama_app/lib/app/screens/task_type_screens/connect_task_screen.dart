@@ -175,18 +175,15 @@ class ConnectState extends State<ConnectTaskScreen> {
                     fontSize: 15, color: LamaColors.black)),
           )),
       onTap: () {
-        choosenWords.add(itemList[index]);
+        if(!choosenWords.contains(itemList[index])) {
+          choosenWords.add(itemList[index]);
+        }
         touch(index, itemList);
       },
     );
   }
 
   void touch(int index, List<Item> itemlist) {
-    choosenWords.forEach((element) {
-      print(element.content);
-      print('\n');
-    });
-
     if (itemlist[index].touched) {
       itemlist[index].touched = false;
       choosenWords.removeLast();
@@ -200,7 +197,29 @@ class ConnectState extends State<ConnectTaskScreen> {
           element.touched = false;
         });
         choosenWords.clear();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 2),
+            content:
+            Container(
+                height: (constraints.maxHeight / 100) * 6,
+                alignment: Alignment.bottomCenter,
+                child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text("Zwei Wörter der gleichen Seite \n können nicht verbunden werden !",
+                        style: LamaTextTheme.getStyle(),
+                        textAlign: TextAlign.center,
+                      ),
+                    ))),
+            backgroundColor: LamaColors.mainPink,
+          ),
+        );
       }
+      else{
+        givenAnswers.add(choosenWords[0].content + ":" + choosenWords[1].content);
+        print(givenAnswers);
+    }
     }
     setState(() {});
   }
