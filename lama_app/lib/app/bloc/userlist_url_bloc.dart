@@ -25,7 +25,8 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
   }
 
   Future<String> _testingUrl() async {
-    if (!Uri.tryParse(_url).hasAbsolutePath) return 'Die Url ist fehlerhaft!';
+    if (!Uri.tryParse(_url).hasAbsolutePath)
+      return 'Die Url ist fehlerhaft! \n einige URLs enden mit ".json" oder einem "/"';
     try {
       final response = await http.get(Uri.parse(_url));
       //Check if URL is reachable
@@ -34,12 +35,12 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
         try {
           jsonDecode(response.body);
         } on FormatException {
-          return 'Der Inhalt der URL ist kein "json"!';
+          return 'Der Inhalt der URL ist kein "json" oder fehlerhaft!';
         }
         //Testing successfull
         return null;
       } else {
-        return 'URL nicht erreichbar!';
+        return 'URL ist nicht erreichbar!';
       }
     } on SocketException {
       return 'Da ist etwas gewaltig schiefgelaufen!';

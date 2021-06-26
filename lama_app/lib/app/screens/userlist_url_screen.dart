@@ -72,7 +72,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 30),
+            padding: EdgeInsets.only(top: 60, bottom: 10),
             child: Center(
               child: Icon(
                 Icons.watch_later_sharp,
@@ -90,6 +90,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
                   fontSize: 12,
                   color: LamaColors.bluePrimary,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
           ),
@@ -113,7 +114,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
           _headline('Nutzerlisten URL eingeben'),
           _inputFields(context),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 30),
+            padding: EdgeInsets.only(top: 60, bottom: 10),
             child: Center(
               child: Icon(
                 Icons.warning_amber_sharp,
@@ -131,6 +132,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
                   fontSize: 12,
                   color: LamaColors.redPrimary,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
           ),
