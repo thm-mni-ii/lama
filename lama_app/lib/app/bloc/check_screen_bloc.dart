@@ -17,8 +17,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
   @override
   Stream<CheckScreenState> mapEventToState(CheckScreenEvent event) async* {
     if (event is CheckForAdmin) yield await _hasAdmin(event.context);
-    if (event is DSGVOAccepted) yield _navigator(event.context);
-    if (event is CreateAdminEvent) yield _navigator(event.context);
+    if (event is DSGVOAccepted) yield await _navigator(event.context);
+    if (event is CreateAdminEvent) yield await _navigator(event.context);
   }
 
   Future<CheckScreenState> _hasAdmin(BuildContext context) async {
@@ -33,8 +33,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     return ShowDSGVO(await _loadDSGVO());
   }
 
-  CheckScreenState _navigator(BuildContext context) {
-    _navigateNoAdmin(context);
+  Future<CheckScreenState> _navigator(BuildContext context) async {
+    await _navigateNoAdmin(context);
     return CreateAdmin();
   }
 
@@ -52,8 +52,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
         ),
       ),
     );
-    if (admin != null)
-      _navigateAdminExist(context);
+    if (admin != null) _navigateAdminExist(context);
   }
 
   void _navigateAdminExist(BuildContext context) {
