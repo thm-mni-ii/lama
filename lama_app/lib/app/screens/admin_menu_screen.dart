@@ -94,7 +94,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
-                    create: (BuildContext context) => TasksetOprionsBloc(),
+                    create: (BuildContext context) => TasksetOptionsBloc(),
                     child: OptionTaskScreen(),
                   ),
                 ),

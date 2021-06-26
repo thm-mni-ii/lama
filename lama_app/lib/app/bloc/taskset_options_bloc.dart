@@ -12,9 +12,9 @@ import 'package:lama_app/app/state/taskset_options_state.dart';
 import 'package:lama_app/app/task-system/taskset_validator.dart';
 import 'package:lama_app/db/database_provider.dart';
 
-class TasksetOprionsBloc
+class TasksetOptionsBloc
     extends Bloc<TasksetOptionsEvent, TasksetOptionsState> {
-  TasksetOprionsBloc({TasksetOptionsState initialState}) : super(initialState);
+  TasksetOptionsBloc({TasksetOptionsState initialState}) : super(initialState);
 
   String _tasksetUrl;
   List<TaskUrl> deletedUrls = [];
