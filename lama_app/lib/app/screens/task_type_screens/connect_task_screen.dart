@@ -26,17 +26,17 @@ class ConnectState extends State<ConnectTaskScreen> {
   final BoxConstraints constraints;
   List<Item> leftWords = [];
   List<Item> rightWords = [];
+  List<Item> choosenWords = [];
   List<String> givenAnswers = [];
-
 
   ConnectState(this.task, this.constraints) {
     task.pair1.shuffle();
     task.pair2.shuffle();
     task.pair1.forEach((element) {
-      leftWords.add(Item(false, element.toString()));
+      leftWords.add(Item(false, element.toString(), true));
     });
     task.pair2.forEach((element) {
-      rightWords.add(Item(false, element.toString()));
+      rightWords.add(Item(false, element.toString(), false));
     });
   }
 
@@ -85,29 +85,29 @@ class ConnectState extends State<ConnectTaskScreen> {
           children: [
             //left words
             Container(
-              padding: EdgeInsets.only(top: 20, left: 10),
-              width: (constraints.maxWidth/100)*37.5,
-              height: (constraints.maxHeight/100)*60,
-              child: GridView.builder(
+                padding: EdgeInsets.only(top: 20, left: 10),
+                width: (constraints.maxWidth / 100) * 37.5,
+                height: (constraints.maxHeight / 100) * 60,
+                child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  childAspectRatio: 3 / 1,
-                  mainAxisSpacing: 40,
+                    crossAxisCount: 1,
+                    childAspectRatio: 3 / 1,
+                    mainAxisSpacing: 40,
                   ),
-                itemCount: leftWords.length,
-                itemBuilder: (context, index) => _buildPair(context, index, leftWords),
-            )
-          ),
+                  itemCount: leftWords.length,
+                  itemBuilder: (context, index) =>
+                      _buildPair(context, index, leftWords),
+                )),
             //Space between both containers
             Container(
-              width: (constraints.maxWidth/100)*25,
-              height: (constraints.maxHeight/100)*60,
+              width: (constraints.maxWidth / 100) * 25,
+              height: (constraints.maxHeight / 100) * 60,
             ),
             // Right words
             Container(
                 padding: EdgeInsets.only(top: 20, right: 10),
-                width: (constraints.maxWidth/100)*37.5,
-                height: (constraints.maxHeight/100)*60,
+                width: (constraints.maxWidth / 100) * 37.5,
+                height: (constraints.maxHeight / 100) * 60,
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 1,
@@ -115,14 +115,14 @@ class ConnectState extends State<ConnectTaskScreen> {
                     mainAxisSpacing: 40,
                   ),
                   itemCount: rightWords.length,
-                  itemBuilder: (context, index) => _buildPair(context, index, rightWords),
-                )
-            ),
+                  itemBuilder: (context, index) =>
+                      _buildPair(context, index, rightWords),
+                )),
           ],
         ),
         //space to "fertig" button
         SizedBox(
-          height: (constraints.maxHeight/100)*5,
+          height: (constraints.maxHeight / 100) * 5,
         ),
         // "fertig" button
         Container(
@@ -139,8 +139,8 @@ class ConnectState extends State<ConnectTaskScreen> {
                     offset: Offset(0, 3))
               ]),
           child: InkWell(
-            onTap: () => BlocProvider.of<TaskBloc>(context).add(
-                AnswerTaskEvent.initMarkWords(givenAnswers)),
+            onTap: () => BlocProvider.of<TaskBloc>(context)
+                .add(AnswerTaskEvent.initMarkWords(givenAnswers)),
             child: Center(
               child: Text(
                 "Fertig!",
@@ -159,51 +159,61 @@ class ConnectState extends State<ConnectTaskScreen> {
 
   // Method to build posible answers
   Widget _buildPair(context, index, List<Item> itemList) {
-    return
-    InkWell(
+    return InkWell(
       child: Container(
-      height: 7,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-
-        color: itemList[index].touched ? LamaColors.redPrimary : LamaColors.white,
-        border: Border.all(color: LamaColors.black)
-      ),
-      child: Center(
-
-        child: Text(
-          itemList[index].content,
-          textAlign: TextAlign.center,
-          style: LamaTextTheme.getStyle(fontSize: 15, color: LamaColors.black)
-        ),
-      )
-    ),
-      onTap: (){
+          height: 7,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              color: itemList[index].touched
+                  ? LamaColors.redPrimary
+                  : LamaColors.white,
+              border: Border.all(color: LamaColors.black)),
+          child: Center(
+            child: Text(itemList[index].content,
+                textAlign: TextAlign.center,
+                style: LamaTextTheme.getStyle(
+                    fontSize: 15, color: LamaColors.black)),
+          )),
+      onTap: () {
+        choosenWords.add(itemList[index]);
         touch(index, itemList);
-    },
+      },
     );
   }
 
-  void touch(int index, List<Item> itemlist){
-    if(itemlist[index].touched == false){
+  void touch(int index, List<Item> itemlist) {
+    choosenWords.forEach((element) {
+      print(element.content);
+      print('\n');
+    });
+
+    if (itemlist[index].touched) {
+      itemlist[index].touched = false;
+      choosenWords.removeLast();
+    } else if (!itemlist[index].touched) {
       itemlist[index].touched = true;
     }
-    else{
-      itemlist[index].touched = false;
+
+    if (choosenWords.length >= 2) {
+      if (choosenWords[0].left == itemlist[1].left) {
+        choosenWords.forEach((element) {
+          element.touched = false;
+        });
+        choosenWords.clear();
+      }
     }
     setState(() {});
   }
-
-
-
 }
 
-class Item{
+class Item {
   bool touched;
   String content;
+  bool left;
 
-  Item(bool touched, String content){
+  Item(bool touched, String content, bool left) {
     this.touched = touched;
     this.content = content;
+    this.left = left;
   }
 }
