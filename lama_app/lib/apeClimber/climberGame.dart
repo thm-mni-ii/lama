@@ -1,11 +1,7 @@
-import 'package:flame/components/component.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/components/parallax_component.dart';
-
-import 'package:lama_app/apeClimber/components/climberTree.dart';
-import 'package:lama_app/apeClimber/components/climberTree2.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/MonkeyTimer.dart';
 import 'package:lama_app/apeClimber/components/monkey.dart';
@@ -41,8 +37,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   double tileSize;
   /// amount of tiles on the y coordinate
   int _tilesY;
-  SpriteComponent tree1;
-  SpriteComponent tree2;
   double _offsety = 2;
   double _apeMoveY = 40;
   ParallaxComponent back;
@@ -90,11 +84,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   void _addComponents() {
     components.clear();
     add(back);
-
-    /*ree1 = ClimberTree(48, 0);
-    tree2 = ClimberTree2(this, 1);
-    add(tree1);
-    add(tree2);*/
 
     // initialize Timer Component
     _timer = MonkeyTimer(_onTimerFinished)
@@ -158,34 +147,9 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       } else {
         element.move(ClimbSide.Right);
       }
+
+      // move the tree
       tree?.move(48);
     });
-    /*if(d.localPosition.dx < screenSize.width/2){
-      //tree moves down on tap
-      tree2.y = tree2.y + _apeMoveY;
-      tree1.y = tree1.y + _apeMoveY;
-      //tree2 reset
-      if(tree2.y>=screenSize.height){
-        tree2.y = tree1.y - tree2.height;
-      }
-      //tree1 reset
-      if(tree1.y>=screenSize.height){
-        tree1.y = tree2.y - tree1.height;
-      }
-    }
-    else {
-      //tree moves down on tap
-      tree2.y = tree2.y + _apeMoveY;
-      tree1.y = tree1.y + _apeMoveY;
-      //tree2 reset
-      if(tree2.y>=screenSize.height){
-        tree2.y = tree1.y - tree2.height +_offsety;
-      }
-      //tree1 reset
-      if(tree1.y>=screenSize.height){
-        tree1.y = tree2.y - tree1.height +_offsety;
-      }
-
-    }*/
   }
 }

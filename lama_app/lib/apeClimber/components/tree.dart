@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:ui';
 
 import 'package:flame/components/component.dart';
-import 'package:lama_app/apeClimber/components/climberTree.dart';
+import 'package:lama_app/apeClimber/components/treeSprite.dart';
 
 class Tree extends PositionComponent {
   /// height of each components (constraints: [componentCount] and [_screenSize]
@@ -20,14 +20,14 @@ class Tree extends PositionComponent {
   /// number of components
   final int componentCount;
   /// all components of the tree
-  Queue<ClimberTree> _treeComponents = Queue<ClimberTree>();
+  Queue<TreeSprite> _treeComponents = Queue<TreeSprite>();
 
   Tree(this.componentCount);
 
   /// This method adds all components depending on the [componentCount].
   void _addTreeParts() {
     for (int i = 0; i < componentCount; i++) {
-      _treeComponents.addFirst(ClimberTree(
+      _treeComponents.addFirst(TreeSprite(
           width,
           _individualHeight,
           _screenSize.width / 2 - width / 2,
@@ -63,7 +63,7 @@ class Tree extends PositionComponent {
         // remove the part which moves out of the screen and add one on the top
         if (_treeComponents.first.y > _screenSize.height) {
           _treeComponents.removeFirst();
-          _treeComponents.add(ClimberTree(
+          _treeComponents.add(TreeSprite(
               width,
               _individualHeight,
               _screenSize.width / 2 - width / 2,
