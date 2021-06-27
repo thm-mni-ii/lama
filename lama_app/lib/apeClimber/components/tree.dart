@@ -5,6 +5,13 @@ import 'package:flame/components/component.dart';
 import 'package:lama_app/apeClimber/components/treeSprite.dart';
 
 class Tree extends PositionComponent {
+  // SETTINGS
+  // --------
+  /// Time how long the movements takes
+  final double _moveTime;
+  // --------
+  // SETTINGS
+
   /// height of each components (constraints: [componentCount] and [_screenSize]
   double _individualHeight;
   /// size of the screen
@@ -14,15 +21,13 @@ class Tree extends PositionComponent {
   /// pixel each component will move on the y coordinate
   double _moveWidth = 96;
   /// pixel left which the components has to move
-  double _moveTime = 0.2;
-  /// pixel left which the components has to move
   double _moveTimeLeft = 0;
   /// number of components
   final int componentCount;
   /// all components of the tree
   Queue<TreeSprite> _treeComponents = Queue<TreeSprite>();
 
-  Tree(this.componentCount);
+  Tree(this.componentCount, this._moveTime);
 
   /// This method adds all components depending on the [componentCount].
   void _addTreeParts() {
@@ -34,7 +39,6 @@ class Tree extends PositionComponent {
           (i - 1) * _individualHeight,
           i.isEven));
     }
-    this.width = width;
   }
 
   /// This methods flag the movement of the tree by [y] to the bottom in [_moveTime].
@@ -47,6 +51,7 @@ class Tree extends PositionComponent {
 
     _moveTimeLeft = _moveTime;
     _moving = true;
+    _moveWidth = y;
   }
 
   @override

@@ -8,7 +8,7 @@ class Monkey extends AnimationComponent {
   // SETTINGS
   // --------
   /// time which is needed to move
-  final stepTime = 0.2;
+  final stepTime;
   /// offset (x, y) of the monkey to the center of the screen relative to its size (value * _size)
   final relOffsetCenter = [0.3, 0.0];
   // --------
@@ -38,7 +38,7 @@ class Monkey extends AnimationComponent {
   bool _moving = false;
 
   /// Initialize the class with the given [_size] and [_game].
-  Monkey(this._size) : super.empty() {
+  Monkey(this._size, this.stepTime) : super.empty() {
     // size
     height = _size;
     width = _size;
