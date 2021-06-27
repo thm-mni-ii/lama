@@ -58,7 +58,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   double tileSize;
   List<SpriteComponent> branches = [];
   final Random _randomNumber = Random();
-  double _apeMoveY = 40;
+  double _apeMoveY = 96;
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
 

@@ -10,46 +10,42 @@ class ClimberBranches extends Component {
   final Random _randomNumber = Random();
   List<SpriteComponent> _branches;
   double _apemove;
+  double _branchCount;
   double _offsetX = 30;
   double _offsetY = 20;
-  double _branchDistance = 200;
+  int _branchDistance = 96;
   int _firstBranchPosition;
   bool initialize = false;
   bool _flagLeft = false;
-
+  SpriteComponent _lastBranch;
 
   ClimberBranches(this._game, this._firstBranchPosition, this._apemove, this._offsetX){
-    _branches = [];
-    var branch = SpriteComponent()
-      ..height = _game.tileSize
-      ..width = _game.tileSize*3
-      ..x = _game.screenSize.width/2 + this._offsetX
-      ..y = _game.screenSize.height/2
-      ..anchor = Anchor.topLeft;
-    _branches.add(branch);
-    branch.sprite = Sprite('png/stick_3.png');
-
-    branch = SpriteComponent()
-      ..height = _game.tileSize
-      ..width = _game.tileSize*3
-      ..x = _game.screenSize.width/2 - this._offsetX - branch.width
-      ..y = _game.screenSize.height/2 - _branchDistance
-      ..anchor = Anchor.topLeft;
-    _branches.add(branch);
-    branch.sprite = Sprite('png/stick_3m.png');
-
-    branch = SpriteComponent()
-      ..height = _game.tileSize
-      ..width = _game.tileSize*3
-      ..x = _game.screenSize.width/2 + this._offsetX
-      ..y = _game.screenSize.height/2 - _branchDistance*2
-      ..anchor = Anchor.topLeft;
-    _branches.add(branch);
-    branch.sprite = Sprite('png/stick_3.png');
+    _branchCount = ((_game.screenSize.height/1.5 - _branchDistance) / _branchDistance) + 1;
+    initializing();
   }
 
   List<SpriteComponent> getBranches(){
     return _branches;
+  }
+
+  void initializing(){
+    
+    _branches = [];
+    for(var i = 0; i < 2*_branchCount; i++){
+      var tmp = getSide();
+      var branch = SpriteComponent()
+        ..height = _game.tileSize
+        ..width = _game.tileSize*3
+        ..x = tmp
+        ..y = _game.screenSize.height/1.5 - (_branchDistance + i*_branchDistance)
+        ..anchor = Anchor.topLeft;
+      _branches.add(branch);
+      if(_flagLeft) branch.sprite = Sprite('png/stick_3m.png');
+      
+      else branch.sprite = Sprite('png/stick_3.png');
+      
+      _lastBranch = branch;
+    }
   }
 
   double getSide(){
@@ -79,7 +75,8 @@ class ClimberBranches extends Component {
           branchElement.sprite = Sprite('png/stick_3.png');
         }
         branchElement.x = tmp;
-        branchElement.y = 0 - _offsetY;
+        branchElement.y = _lastBranch.y - _branchDistance;
+        _lastBranch = branchElement;
       }
     }
   }
