@@ -15,6 +15,8 @@ import 'components/tree.dart';
 class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// amount of tiles on the x coordinate
   final int tilesX = 9;
+  /// size of the monkey
+  final double _monkeySize = 144;
   /// Timer component for display and organize the gametimer.
   MonkeyTimer _timer;
   /// name of the timer widget
@@ -90,9 +92,10 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       ..onWidgetUpdated = _onTimerWidgetUpdated;
     add(_timer);
     tree = Tree(5)
-      ..width = 144;
+      ..width = _monkeySize;
     add(tree);
-    add(Monkey(144));
+
+    add(Monkey(_monkeySize));
 
 
     // start timer
