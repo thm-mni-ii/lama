@@ -113,7 +113,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // remove monkey and timer
     components.whereType<Monkey>().forEach((element) => element.destroy());
     components.whereType<MonkeyTimer>().forEach((element) => element.destroy());
-    climberBranches = ClimberBranches(this, _monkeySize, 40);
+    climberBranches = ClimberBranches(this, _monkeySize, 30);
     branches = climberBranches.getBranches();
     for (SpriteComponent branchElement in branches){
       add(branchElement);
