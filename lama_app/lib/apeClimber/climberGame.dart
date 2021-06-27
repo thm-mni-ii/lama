@@ -14,6 +14,8 @@ import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 
+import 'components/tree.dart';
+
 class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// amount of tiles on the x coordinate
   final int tilesX = 9;
@@ -33,6 +35,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   int score = 0;
   /// necessary context for determine the actual screenSize
   BuildContext _context;
+  Tree tree;
 
   Size screenSize;
   double tileSize;
@@ -88,16 +91,20 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     components.clear();
     add(back);
 
-    tree1 = ClimberTree(this, 0);
+    /*ree1 = ClimberTree(48, 0);
     tree2 = ClimberTree2(this, 1);
     add(tree1);
-    add(tree2);
+    add(tree2);*/
 
     // initialize Timer Component
     _timer = MonkeyTimer(_onTimerFinished)
       ..onWidgetUpdated = _onTimerWidgetUpdated;
     add(_timer);
+    tree = Tree(5)
+      ..width = 144;
+    add(tree);
     add(Monkey(144));
+
 
     // start timer
     _timer.start();
@@ -151,8 +158,9 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       } else {
         element.move(ClimbSide.Right);
       }
+      tree?.move(48);
     });
-    if(d.localPosition.dx < screenSize.width/2){
+    /*if(d.localPosition.dx < screenSize.width/2){
       //tree moves down on tap
       tree2.y = tree2.y + _apeMoveY;
       tree1.y = tree1.y + _apeMoveY;
@@ -178,6 +186,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         tree1.y = tree2.y - tree1.height +_offsety;
       }
 
-    }
+    }*/
   }
 }
