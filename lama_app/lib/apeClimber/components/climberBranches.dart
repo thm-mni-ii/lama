@@ -9,17 +9,14 @@ class ClimberBranches extends Component {
   final ClimberGame _game;
   final Random _randomNumber = Random();
   List<SpriteComponent> _branches;
-  double _apemove;
   double _branchCount;
   double _offsetX = 30;
-  double _offsetY = 20;
-  int _branchDistance = 96;
-  int _firstBranchPosition;
+  double _branchDistance;
   bool initialize = false;
   bool _flagLeft = false;
   SpriteComponent _lastBranch;
 
-  ClimberBranches(this._game, this._firstBranchPosition, this._apemove, this._offsetX){
+  ClimberBranches(this._game, this._branchDistance, this._offsetX){
     _branchCount = ((_game.screenSize.height/1.5 - _branchDistance) / _branchDistance) + 1;
     initializing();
   }
@@ -83,7 +80,7 @@ class ClimberBranches extends Component {
 
   void onTapDown(){
     for (SpriteComponent branchElement in _branches){
-      branchElement.y += this._apemove;
+      branchElement.y += this._branchDistance;
     }
     resetting();
   }

@@ -2,7 +2,6 @@ import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/components/parallax_component.dart';
-import 'dart:math';
 import 'package:flame/components/component.dart';
 
 import 'package:flutter/material.dart';
@@ -22,7 +21,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// amount of tiles on the x coordinate
   final int tilesX = 9;
   /// size of the monkey
-  final double _monkeySize = 144;
+  final double _monkeySize = 96;
   /// name of the timer widget
   final timerWidgetName = "timer";
   /// name of the start screen widget
@@ -57,7 +56,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   ClimberBranches climberBranches;
   double tileSize;
   List<SpriteComponent> branches = [];
-  final Random _randomNumber = Random();
   double _apeMoveY = 96;
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
@@ -115,7 +113,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // remove monkey and timer
     components.whereType<Monkey>().forEach((element) => element.destroy());
     components.whereType<MonkeyTimer>().forEach((element) => element.destroy());
-    climberBranches = ClimberBranches(this, _randomNumber.nextInt(2), _apeMoveY, 40);
+    climberBranches = ClimberBranches(this, _monkeySize, 40);
     branches = climberBranches.getBranches();
     for (SpriteComponent branchElement in branches){
       add(branchElement);
@@ -167,6 +165,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     screenSize = Size(
         MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
         MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
+
+    tileSize = screenSize.width / tilesX;
 
     super.resize(size);
   }
