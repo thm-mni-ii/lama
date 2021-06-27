@@ -8,7 +8,7 @@ class Monkey extends AnimationComponent {
   // SETTINGS
   // --------
   /// time which is needed to move
-  final stepTime = 0.2;
+  final stepTime;
   /// offset (x, y) of the monkey to the center of the screen relative to its size (value * _size)
   final relOffsetCenter = [0.3, 0.0];
   // --------
@@ -33,12 +33,12 @@ class Monkey extends AnimationComponent {
   /// is the monkey switching the sides
   bool _switching = false;
   /// time left for the switching
-  double _switchTimeLeft = 0;
+  double _moveTimeLeft = 0;
   /// is the monkey moving (switching or climbing)
   bool _moving = false;
 
   /// Initialize the class with the given [_size] and [_game].
-  Monkey(this._size) : super.empty() {
+  Monkey(this._size, this.stepTime) : super.empty() {
     // size
     height = _size;
     width = _size;
@@ -99,10 +99,10 @@ class Monkey extends AnimationComponent {
     }
 
     _moving = true;
+    _moveTimeLeft = stepTime;
 
     animation = _isLeft ? _climbLeft : _climbRight
-      ..reset()
-      ..onCompleteAnimation = () => _moving = false;
+      ..reset();
   }
 
 
@@ -111,7 +111,7 @@ class Monkey extends AnimationComponent {
   /// sideeffects:
   ///   [_moving] = true
   ///   [_switching] = true
-  ///   [_switchTimeLeft] = [stepTime]
+  ///   [_moveTimeLeft] = [stepTime]
   ///   [_animation] = switch animation
   void switchSides() {
     if (_moving) {
@@ -120,7 +120,7 @@ class Monkey extends AnimationComponent {
 
     _moving = true;
     _switching = true;
-    _switchTimeLeft = stepTime;
+    _moveTimeLeft = stepTime;
 
     animation = _isLeft ? _switchLeft : _switchRight
       ..reset();
@@ -129,20 +129,25 @@ class Monkey extends AnimationComponent {
   @override
   void update(double t) {
     // monkey is switching the sides
-    if (_moving && _switching) {
-      if (_switchTimeLeft > 0) {
-        // calculate the width the monkey moves on the x coordinate in t
-        var stepWidth = (_size + 2 * relOffsetCenter[0] * _size) * ((t < _switchTimeLeft ? t : _switchTimeLeft) / stepTime);
-        // decrease or increase the x coordinate depending on the direction
-        x += (_isLeft) ? stepWidth : -stepWidth;
+    if (_moving) {
+      if (_moveTimeLeft > 0) {
+        if (_switching) {
+          // calculate the width the monkey moves on the x coordinate in t
+          var stepWidth = (_size + 2 * relOffsetCenter[0] * _size) * ((t < _moveTimeLeft ? t : _moveTimeLeft) / stepTime);
+          // decrease or increase the x coordinate depending on the direction
+          x += (_isLeft) ? stepWidth : -stepWidth;
+        }
         // decrease the switchTimeLeft
-        _switchTimeLeft -= t;
+        _moveTimeLeft -= t;
       }
       else {
+        if (_switching) {
+          _switching = false;
+          _isLeft = !_isLeft;
+        }
+
         // reset moving flags
-        _switching = false;
         _moving = false;
-        _isLeft = !_isLeft;
         animation = _isLeft ? _idleLeft : _idleRight;
       }
     }
