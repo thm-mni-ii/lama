@@ -2,6 +2,9 @@ import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/components/parallax_component.dart';
+import 'dart:math';
+import 'package:flame/components/component.dart';
+
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/monkeyTimer.dart';
 import 'package:lama_app/apeClimber/components/monkey.dart';
@@ -9,6 +12,7 @@ import 'package:lama_app/apeClimber/widgets/monkeyStartWidget.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
+import 'package:lama_app/apeClimber/components/climberBranches.dart';
 
 import 'components/tree.dart';
 
@@ -50,6 +54,11 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   Size screenSize;
   /// Background component
   ParallaxComponent _back;
+  ClimberBranches climberBranches;
+  double tileSize;
+  List<SpriteComponent> branches = [];
+  final Random _randomNumber = Random();
+  double _apeMoveY = 40;
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
 
@@ -64,6 +73,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     Flame.images.loadAll([
       'png/tree7th.png',
       'png/tree7th2.png',
+      'png/stick_3.png',
     ]);
 
     initialize();
@@ -105,6 +115,11 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // remove monkey and timer
     components.whereType<Monkey>().forEach((element) => element.destroy());
     components.whereType<MonkeyTimer>().forEach((element) => element.destroy());
+    climberBranches = ClimberBranches(this, _randomNumber.nextInt(2), _apeMoveY, 40);
+    branches = climberBranches.getBranches();
+    for (SpriteComponent branchElement in branches){
+      add(branchElement);
+    }
 
     // initialize Timer Component
     _timer = MonkeyTimer(_onTimerFinished)
@@ -156,7 +171,16 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     super.resize(size);
   }
 
+  void update(double t){
+    super.update(t);
+  }
+
+  void render(Canvas c){
+    super.render(c);
+  }
+
   void onTapDown(TapDownDetails d) {
+    climberBranches.onTapDown();
     components.whereType<Monkey>().forEach((element) {
       if (d.localPosition.dx < screenSize.width / 2) {
         element.move(ClimbSide.Left);
