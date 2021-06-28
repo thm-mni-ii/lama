@@ -8,6 +8,7 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/util/GlobalKeyExtension.dart';
 
 List<Pair> pairList = [];
 
@@ -87,56 +88,57 @@ class ConnectState extends State<ConnectTaskScreen> {
 
         CustomPaint(
           painter: CurvePainter(),
-        child: Container(
-          //color: LamaColors.redPrimary,
-        // positioning answers on the screen
-        child: Row(
-          children: [
-            //left words
+          child: Container(
+            //color: LamaColors.redPrimary,
+            // positioning answers on the screen
+            child: Row(
+              children: [
+                //left words
 
-            Container(
-              color: LamaColors.redPrimary,
-                padding: EdgeInsets.only(top: 20, left: 10),
-                width: (constraints.maxWidth / 100) * 37.5,
-                height: (constraints.maxHeight / 100) * 60,
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    childAspectRatio: 3 / 1,
-                    mainAxisSpacing: 40,
-                  ),
-                  itemCount: leftWords.length,
-                  itemBuilder: (context, index) =>
-                      _buildPair(context, index, leftWords),
-                )),
-            //Space between both containers
-            Container(
-              //color: LamaColors.redPrimary,
-              width: (constraints.maxWidth / 100) * 25,
-              height: (constraints.maxHeight / 100) * 60,
-              /*
+                Container(
+                    color: LamaColors.redPrimary,
+                    padding: EdgeInsets.only(top: 20, left: 10),
+                    width: (constraints.maxWidth / 100) * 37.5,
+                    height: (constraints.maxHeight / 100) * 60,
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        childAspectRatio: 3 / 1,
+                        mainAxisSpacing: 40,
+                      ),
+                      itemCount: leftWords.length,
+                      itemBuilder: (context, index) =>
+                          _buildPair(context, index, leftWords),
+                    )),
+                //Space between both containers
+                Container(
+                  //color: LamaColors.redPrimary,
+                  width: (constraints.maxWidth / 100) * 25,
+                  height: (constraints.maxHeight / 100) * 60,
+                  /*
               child: CustomPaint(
                 painter: CurvePainter(),
               ),*/
+                ),
+                // Right words
+                Container(
+                    padding: EdgeInsets.only(top: 20, right: 10),
+                    width: (constraints.maxWidth / 100) * 37.5,
+                    height: (constraints.maxHeight / 100) * 60,
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        childAspectRatio: 3 / 1,
+                        mainAxisSpacing: 40,
+                      ),
+                      itemCount: rightWords.length,
+                      itemBuilder: (context, index) =>
+                          _buildPair(context, index, rightWords),
+                    )),
+              ],
             ),
-            // Right words
-            Container(
-                padding: EdgeInsets.only(top: 20, right: 10),
-                width: (constraints.maxWidth / 100) * 37.5,
-                height: (constraints.maxHeight / 100) * 60,
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    childAspectRatio: 3 / 1,
-                    mainAxisSpacing: 40,
-                  ),
-                  itemCount: rightWords.length,
-                  itemBuilder: (context, index) =>
-                      _buildPair(context, index, rightWords),
-                )),
-
-          ],
-        ),),),
+          ),
+        ),
 
         //space to "fertig" button
         SizedBox(
@@ -179,7 +181,7 @@ class ConnectState extends State<ConnectTaskScreen> {
   Widget _buildPair(context, index, List<Item> itemList) {
     return InkWell(
       child: Container(
-        key: itemList[index].key,
+          key: itemList[index].key,
           height: 7,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -196,10 +198,10 @@ class ConnectState extends State<ConnectTaskScreen> {
       onTap: () {
         RenderBox box = itemList[index].key.currentContext.findRenderObject();
         Offset position = box.localToGlobal(Offset.zero);
-        itemList[index].xValue = position.dx;
-        itemList[index].yValue = position.dy;
+        itemList[index].xValue = itemList[index].key.globalPaintBounds.right;
+        itemList[index].yValue = itemList[index].key.globalPaintBounds.bottom;
 
-        if(!choosenWords.contains(itemList[index])) {
+        if (!choosenWords.contains(itemList[index])) {
           choosenWords.add(itemList[index]);
         }
         touch(index, itemList);
@@ -224,27 +226,27 @@ class ConnectState extends State<ConnectTaskScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             duration: Duration(seconds: 2),
-            content:
-            Container(
+            content: Container(
                 height: (constraints.maxHeight / 100) * 6,
                 alignment: Alignment.bottomCenter,
                 child: Center(
                     child: FittedBox(
-                      fit: BoxFit.fitWidth,
-                      child: Text("Zwei Wörter der gleichen Seite \n können nicht verbunden werden !",
-                        style: LamaTextTheme.getStyle(),
-                        textAlign: TextAlign.center,
-                      ),
-                    ))),
+                  fit: BoxFit.fitWidth,
+                  child: Text(
+                    "Zwei Wörter der gleichen Seite \n können nicht verbunden werden !",
+                    style: LamaTextTheme.getStyle(),
+                    textAlign: TextAlign.center,
+                  ),
+                ))),
             backgroundColor: LamaColors.mainPink,
           ),
         );
-      }
-      else{
-        givenAnswers.add(choosenWords[0].content + ":" + choosenWords[1].content);
+      } else {
+        givenAnswers
+            .add(choosenWords[0].content + ":" + choosenWords[1].content);
         pairList.add(Pair(choosenWords[0], choosenWords[1]));
         choosenWords.clear();
-    }
+      }
     }
     setState(() {});
   }
@@ -265,16 +267,20 @@ class Item {
     this.key = key;
   }
 }
-class Pair{
+
+class Pair {
   Item itemOne;
   Item itemTwo;
+
   Pair(this.itemOne, this.itemTwo);
 }
 
-class CurvePainter extends CustomPainter{
+class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    if(pairList.isEmpty){return;}
+    if (pairList.isEmpty) {
+      return;
+    }
     var paint = Paint();
     paint.color = Colors.black;
     paint.strokeWidth = 5;
@@ -286,14 +292,12 @@ class CurvePainter extends CustomPainter{
           Offset(element.itemTwo.xValue, element.itemTwo.yValue),
           //Offset(10, 0),
           //Offset(500, 500),
-      paint);
+          paint);
     });
-
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
   }
-
 }
