@@ -53,11 +53,16 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   Size screenSize;
   /// Background component
   ParallaxComponent _back;
+  /// flag if the background is moving
+  bool _backMoving = false;
+  /// pixel left which the background has to move
   ClimberBranches climberBranches;
   double tileSize;
   List<SpriteComponent> branches = [];
+  double _backMoveTimeLeft = 0;
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
+
 
   ClimberGame(this._context, this._userRepo) {
     _back = ParallaxComponent([
@@ -65,7 +70,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       ParallaxImage('png/clouds_3.png'),
       ParallaxImage('png/clouds_2.png'),
       ParallaxImage('png/clouds.png'),
-    ], baseSpeed: Offset(7, 0), layerDelta: Offset(10, 0));
+    ], baseSpeed: Offset(3, 0), layerDelta: Offset(6, 0));
 
     Flame.images.loadAll([
       'png/tree7th.png',
@@ -160,6 +165,32 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         widget);
   }
 
+  /// This method flag the background movement which is handled in [update]
+  void _moveBackground() {
+    if (_backMoving) {
+      return;
+    }
+
+    _backMoving = true;
+    _backMoveTimeLeft = _animationTime;
+  }
+
+  @override
+  void update(double t) {
+    if (_backMoving) {
+      if (_backMoveTimeLeft > 0) {
+        _back.layerDelta = Offset(6, -6);
+        _backMoveTimeLeft -= t;
+      }
+      else {
+        _backMoving = false;
+        _back.layerDelta = Offset(6, 0);
+      }
+    }
+
+    super.update(t);
+  }
+
   void resize(Size size) {
     screenSize = Size(
         MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
@@ -168,10 +199,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     tileSize = screenSize.width / tilesX;
 
     super.resize(size);
-  }
-
-  void update(double t){
-    super.update(t);
   }
 
   void render(Canvas c){
@@ -186,6 +213,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       } else {
         element.move(ClimbSide.Right);
       }
+
+      _moveBackground();
 
       // move the tree
       _tree?.move(_monkeySize);
