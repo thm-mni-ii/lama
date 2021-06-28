@@ -49,4 +49,19 @@ class User {
     isAdmin = map[UserFields.columnIsAdmin] == 1;
     avatar = map[UserFields.columnAvatar];
   }
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    bool isAdmin = json['isAdmin'] == 'ja' ? true : false;
+    String avatar = isAdmin ? 'admin' : 'lama';
+    int coins = json['coins'] != null ? json['coins'] : 0;
+
+    return User(
+      name: json['name'],
+      password: json['password'],
+      grade: json['grade'],
+      coins: coins,
+      isAdmin: isAdmin,
+      avatar: avatar,
+    );
+  }
 }

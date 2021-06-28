@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lama_app/app/event/userlist_url_event.dart';
+import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/userlist_url_state.dart';
 
 class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
   UserlistUrlBloc({UserlistUrlState initialState}) : super(initialState);
 
   String _url;
+  List<User> _userList = [];
 
   @override
   Stream<UserlistUrlState> mapEventToState(UserlistUrlEvent event) async* {
@@ -49,6 +52,17 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
 
   Future<UserlistUrlState> _parsUrl() async {
     print('$_url :: pars...');
-    //Check if URL can be parsed
+    for (int i = 0; i < _url.length; i++) {
+      var response = await http
+          .get(Uri.parse(_url), headers: {'Content-type': 'application/json'});
+      if (response.statusCode == 200) {
+        await _loadtUsersFromUrl(utf8.decode(response.bodyBytes));
+      }
+    }
+  }
+
+  Future<void> _loadtUsersFromUrl(userContent) async {
+    User user = User.fromJson(jsonDecode(userContent));
+    _userList.add(user);
   }
 }
