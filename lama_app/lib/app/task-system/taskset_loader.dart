@@ -6,6 +6,7 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
+import 'package:lama_app/app/task-system/taskset_validator.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -87,6 +88,8 @@ class TasksetLoader {
   }
 
   Future<void> buildTasksetFromJson(tasksetContent) async {
+    print(
+        'Is Taskset valid: ${TasksetValidator.isValidTaskset(jsonDecode(tasksetContent))}');
     Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
 
     /*for (int i = 0; i < taskset.tasks.length; i++) {

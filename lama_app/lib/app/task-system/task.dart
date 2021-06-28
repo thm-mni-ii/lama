@@ -2,7 +2,6 @@ import 'package:lama_app/util/pair.dart';
 
 ///This file contains the Basic Task class with its factory Method and all Task subtypes
 ///To create a new Task subtype create a class that extends Task and add it to the factory method in Task
-
 class Task {
   factory Task.fromJson(Map<String, dynamic> json) {
     String taskType = json['task_type'];
@@ -51,7 +50,6 @@ class Task {
             json['left_to_solve'], json['moneyAmount']);
       case "VocableTest":
         var wordPairs = json['wordPairs'] as List;
-        print(wordPairs.runtimeType);
         List<Pair<String, String>> wordPairList =
             wordPairs.map((pair) => Pair.fromJson(pair)).toList();
         return TaskVocableTest(taskType, json['task_reward'], json['lama_text'],
