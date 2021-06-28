@@ -131,7 +131,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
     return Container(
         padding: EdgeInsets.all(10),
         width: screenSize.width,
-        height: (screenSize.height / 100) * 15,
+        height: (screenSize.height / 100) * 17.5,
         decoration: BoxDecoration(
           gradient: LinearGradient(
               colors: [LamaColors.orangeAccent, LamaColors.redAccent]),
@@ -169,7 +169,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                     ]),
                   ),
                 ),
-                SizedBox(height: (screenSize.height / 100) * 1.5),
+                SizedBox(height: (screenSize.height / 100) * 2),
                 FittedBox(
                   child: Text(
                     "Aufgaben insgesamt: " + taskset.tasks.length.toString(),
