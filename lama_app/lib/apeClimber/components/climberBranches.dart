@@ -34,6 +34,7 @@ class ClimberBranches extends Component {
     _createBranches();
   }
 
+  /// This method creates all branch SpriteComponents
   void _createBranches() {
     _branchCount = (_game.screenSize.height / _branchDistance) + 1;
     // clear branches
@@ -60,6 +61,7 @@ class ClimberBranches extends Component {
     }
   }
 
+  /// This method checks all branches if they are out of the screen and reset them to the start,
   void _updateBranches() {
     for (SpriteComponent branchElement in _branches) {
       if (branchElement.y > _game.screenSize.height) {
