@@ -56,7 +56,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// flag if the background is moving
   bool _backMoving = false;
   /// pixel left which the background has to move
-  ClimberBranches climberBranches;
+  ClimberBranches _climberBranches;
   double tileSize;
   List<SpriteComponent> branches = [];
   double _backMoveTimeLeft = 0;
@@ -117,11 +117,10 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // remove monkey and timer
     components.whereType<Monkey>().forEach((element) => element.destroy());
     components.whereType<MonkeyTimer>().forEach((element) => element.destroy());
-    climberBranches = ClimberBranches(this, _monkeySize, 30);
-    branches = climberBranches.getBranches();
-    for (SpriteComponent branchElement in branches){
-      add(branchElement);
-    }
+
+    // add branches
+    _climberBranches = ClimberBranches(this, _monkeySize, _monkeySize / 4);
+    add(_climberBranches);
 
     // initialize Timer Component
     _timer = MonkeyTimer(_onTimerFinished)
@@ -206,7 +205,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void onTapDown(TapDownDetails d) {
-    climberBranches.onTapDown();
+    _climberBranches.onTapDown();
     components.whereType<Monkey>().forEach((element) {
       if (d.localPosition.dx < screenSize.width / 2) {
         element.move(ClimbSide.Left);
