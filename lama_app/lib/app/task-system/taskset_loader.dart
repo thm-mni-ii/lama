@@ -88,11 +88,13 @@ class TasksetLoader {
   }
 
   Future<void> buildTasksetFromJson(tasksetContent) async {
-    print(
-        'Is Taskset valid: ${TasksetValidator.isValidTaskset(jsonDecode(tasksetContent))}');
-    Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
+    bool isTasksetValid =
+        TasksetValidator.isValidTaskset(jsonDecode(tasksetContent));
+    print('Is Taskset valid: $isTasksetValid}');
+    if (isTasksetValid) {
+      Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
 
-    /*for (int i = 0; i < taskset.tasks.length; i++) {
+      /*for (int i = 0; i < taskset.tasks.length; i++) {
       Task t = taskset.tasks[i];
       int leftToSolve = await DatabaseProvider.db
           .getLeftToSolve(t.toString(), userRepository.authenticatedUser);
@@ -106,7 +108,7 @@ class TasksetLoader {
       }
     }*/
 
-    /*LOGCODE
+      /*LOGCODE
     print("taskset_name: " + taskset.name);
     print("taskset_subject: " + taskset.subject);
     print("taskset_grade: " + taskset.grade.toString());
@@ -121,12 +123,13 @@ class TasksetLoader {
     }
     */
 
-    SubjectGradeRelation sgr =
-        SubjectGradeRelation(taskset.subject, taskset.grade);
-    if (loadedTasksets.containsKey(sgr))
-      loadedTasksets[sgr].add(taskset);
-    else
-      loadedTasksets[sgr] = <Taskset>[taskset];
+      SubjectGradeRelation sgr =
+          SubjectGradeRelation(taskset.subject, taskset.grade);
+      if (loadedTasksets.containsKey(sgr))
+        loadedTasksets[sgr].add(taskset);
+      else
+        loadedTasksets[sgr] = <Taskset>[taskset];
+    }
   }
 
   //Gets all Tasksets that match a specific subject-grade combination (for example Math and Second Grade)

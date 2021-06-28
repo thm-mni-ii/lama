@@ -18,9 +18,9 @@ class TasksetValidator {
           bool isValid = _isValidTask(tasksetTasks[i]);
           if (!isValid) return false;
         }
+        return true;
       }
     }
-    print("Taskset false");
     return false;
   }
 
@@ -35,13 +35,13 @@ class TasksetValidator {
           json["left_to_solve"] is int) {
         switch (json["task_type"]) {
           case "4Cards":
-            print(json["wrong_answers"].runtimeType);
             if (json.containsKey("question") &&
                 json["question"] is String &&
                 json.containsKey("right_answer") &&
                 json["right_answer"] is String &&
                 json.containsKey("wrong_answers") &&
-                json["wrong_answers"] is List<String>) return true;
+                json["wrong_answers"] is List &&
+                _checkListType<String>(json["wrong_answers"])) return true;
             print("4Cards false");
             return false;
           case "ClozeTest":
@@ -50,12 +50,14 @@ class TasksetValidator {
                 json.containsKey("right_answer") &&
                 json["right_answer"] is String &&
                 json.containsKey("wrong_answers") &&
-                json["wrong_answers"] is List<String>) return true;
+                json["wrong_answers"] is List &&
+                _checkListType<String>(json["wrong_answers"])) return true;
             print("Cloze false");
             return false;
           case "MarkWords":
             if (json.containsKey("right_words") &&
-                json["right_words"] is List<String> &&
+                json["right_words"] is List &&
+                _checkListType<String>(json["right_words"]) &&
                 json.containsKey("sentence") &&
                 json["sentence"] is String) return true;
             print("MarkWords false");
@@ -66,14 +68,17 @@ class TasksetValidator {
                 json.containsKey("nameCatTwo") &&
                 json["nameCatTwo"] is String &&
                 json.containsKey("categoryOne") &&
-                json["categoryOne"] is List<String> &&
+                json["categoryOne"] is List &&
+                _checkListType<String>(json["categoryOne"]) &&
                 json.containsKey("categoryTwo") &&
-                json["categoryTwo"] is List<String>) return true;
+                json["categoryTwo"] is List &&
+                _checkListType<String>(json["categoryTwo"])) return true;
             print("Match false");
             return false;
           case "GridSelect":
             if (json.containsKey("wordsToFind") &&
-                json["wordsToFind"] is List<String>) return true;
+                json["wordsToFind"] is List &&
+                _checkListType<String>(json["wordsToFind"])) return true;
             print("Grid false");
             return false;
           case "MoneyTask":
@@ -107,5 +112,12 @@ class TasksetValidator {
       }
     }
     return false;
+  }
+
+  static bool _checkListType<T>(List list) {
+    for (int i = 0; i < list.length; i++) {
+      if (!(list[i] is T)) return false;
+    }
+    return true;
   }
 }
