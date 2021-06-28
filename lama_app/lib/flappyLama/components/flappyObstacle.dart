@@ -218,9 +218,9 @@ class FlappyObstacle extends Component {
   }
 
   void render(Canvas c) {
-    // render each part of the snake
+    // render each part of the obstacle
     for (SpriteComponent obstaclePart in _sprites) {
-      // has so save the canvas because else it will lead to a render problem by adding up the x and y fields
+      // has to save the canvas because otherwise it will lead to a render problem by adding up the x and y fields
       c.save();
       // render the part of the obstacle
       obstaclePart.render(c);
