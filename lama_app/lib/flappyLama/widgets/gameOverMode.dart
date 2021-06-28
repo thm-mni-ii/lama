@@ -74,7 +74,7 @@ class GameOverMode extends StatelessWidget {
                       onQuitPressed.call();
                     },
                   ),
-                  ElevatedButton(
+                  /*ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: LamaColors.redAccent,
                       shape: RoundedRectangleBorder(
@@ -98,7 +98,7 @@ class GameOverMode extends StatelessWidget {
                         onRetryPressed?.call();
                       }
                     },
-                  ),
+                  ),*/
                 ],
               )
             ],
