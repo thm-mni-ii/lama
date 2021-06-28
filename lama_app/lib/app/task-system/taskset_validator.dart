@@ -1,6 +1,9 @@
 import 'package:lama_app/util/pair.dart';
 
 class TasksetValidator {
+  ///Checks if the passed json is a valid taskset.
+  ///
+  ///Use jsonDecode() with the corresponding json-string as argument when calling this method
   static bool isValidTaskset(Map<String, dynamic> json) {
     if (json.containsKey("taskset_name") &&
         json.containsKey("taskset_subject") &&
