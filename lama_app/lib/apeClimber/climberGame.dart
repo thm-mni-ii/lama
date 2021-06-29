@@ -12,7 +12,7 @@ import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/apeClimber/components/climberBranches.dart';
-
+import 'widgets/monkeyEndscreenWidget.dart';
 import 'components/tree.dart';
 
 class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
@@ -26,6 +26,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   final timerWidgetName = "timer";
   /// name of the start screen widget
   final startWidgetName = "start";
+  /// name of the end screen widget
+  final endScreenWidgetName = "gameOver";
   /// id of the game
   final _gameId = 3;
   /// Time for each click animation
@@ -147,7 +149,25 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
           userID: _userRepo.authenticatedUser.id));
     }
   }
-
+  /// This method finishes the game.
+  /// 
+  /// sideffects:
+  ///   adds [MonkeyEndscreenWidget] widget
+  void _gameOver(){
+    _saveHighScore();
+    pauseEngine();
+    addWidgetOverlay(
+        endScreenWidgetName,
+        MonkeyEndscreenWidget(
+          score: score,
+          onQuitPressed: quit,
+        ));
+  }
+  /// This method closes the game widget.
+  void quit() {
+    removeWidgetOverlay(endScreenWidgetName);
+    Navigator.pop(_context);
+  }
   /// This method is the handler when the timer finished.
   void _onTimerFinished(MonkeyTimerWidget widget) {
     removeWidgetOverlay(timerWidgetName);
@@ -205,6 +225,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void onTapDown(TapDownDetails d) {
+    _gameOver(); //ist nur zum testen drin
     components.whereType<Monkey>().forEach((element) {
       if (d.localPosition.dx < screenSize.width / 2) {
         element.move(ClimbSide.Left);
