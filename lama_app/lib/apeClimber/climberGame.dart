@@ -225,7 +225,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void onTapDown(TapDownDetails d) {
-    _gameOver(); //ist nur zum testen drin
+    //_gameOver(); //ist nur zum testen hier drin drin
     components.whereType<Monkey>().forEach((element) {
       if (d.localPosition.dx < screenSize.width / 2) {
         element.move(ClimbSide.Left);
