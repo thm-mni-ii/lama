@@ -7,6 +7,7 @@ import 'package:flame/components/component.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/monkeyTimer.dart';
 import 'package:lama_app/apeClimber/components/monkey.dart';
+import 'package:lama_app/apeClimber/widgets/monkeyScoreWidget.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyStartWidget.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -28,6 +29,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   final startWidgetName = "start";
   /// name of the end screen widget
   final endScreenWidgetName = "gameOver";
+  /// name of the end screen widget
+  final scoreWidgetName = "score";
   /// id of the game
   final _gameId = 3;
   /// Time for each click animation
@@ -108,10 +111,17 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     );
   }
 
+  void increaseScore() {
+    score += 1;
+    removeWidgetOverlay(scoreWidgetName);
+    addWidgetOverlay(scoreWidgetName, MonkeyScoreWidget(text: score.toString()));
+  }
+
   /// This method initialize the components and removes the start widget.
   void _startGame() {
     _addGameComponents();
     removeWidgetOverlay(startWidgetName);
+    addWidgetOverlay(scoreWidgetName, MonkeyScoreWidget(text: score.toString()));
   }
 
   /// This method adds all components which are necessary to the game.
@@ -243,5 +253,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // move the tree
     _tree?.move(_monkeySize);
     _climberBranches.move(_monkeySize);
+    increaseScore();
   }
 }
