@@ -31,6 +31,8 @@ class ClimberBranches extends Component {
   final double _moveTime;
   /// This method gets called when the branches finished moving
   Function onBranchesMoved;
+  /// Branch for collision detection
+  SpriteComponent collisionBranch;
 
   ClimberBranches(this._game, this._branchDistance, this._offsetX, this._moveTime) {
     _createBranches();
@@ -58,6 +60,11 @@ class ClimberBranches extends Component {
         branch.sprite = Sprite('png/stick_3.png');
         branch.x = _game.screenSize.width / 2 + this._offsetX;
       }
+
+      // select the first branch for collision detection
+      if (i == 0) {
+        collisionBranch = branch;
+      }
       
       _lastBranch = branch;
     }
@@ -82,6 +89,17 @@ class ClimberBranches extends Component {
     }
   }
 
+  void _selectNextCollisionDetectionBranch() {
+    var index = _branches.indexOf(collisionBranch);
+
+    if (index >= _branches.length - 1) {
+      collisionBranch = _branches[0];
+    }
+    else {
+      collisionBranch = _branches[index + 1];
+    }
+  }
+
   /// This methods flag the movement of the tree by [y] to the bottom in [_moveTime].
   ///
   /// This will handle in [update]
@@ -93,6 +111,7 @@ class ClimberBranches extends Component {
     _moveTimeLeft = _moveTime;
     _moving = true;
     _moveWidth = y;
+    _selectNextCollisionDetectionBranch();
   }
 
   @override
