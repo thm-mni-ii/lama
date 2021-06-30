@@ -154,26 +154,31 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// sideffects:
   ///   adds [MonkeyEndscreenWidget] widget
   void _gameOver(){
-    _saveHighScore();
     pauseEngine();
+    _saveHighScore();
+
     addWidgetOverlay(
         endScreenWidgetName,
         MonkeyEndscreenWidget(
           score: score,
-          onQuitPressed: quit,
+          onQuitPressed: _quit,
         ));
   }
+
   /// This method closes the game widget.
-  void quit() {
+  void _quit() {
     removeWidgetOverlay(endScreenWidgetName);
     Navigator.pop(_context);
   }
+
   /// This method is the handler when the timer finished.
   void _onTimerFinished(MonkeyTimerWidget widget) {
     removeWidgetOverlay(timerWidgetName);
     addWidgetOverlay(
         timerWidgetName,
         widget);
+
+    _gameOver();
   }
 
   /// This method is the handler when the timer finished.
@@ -225,7 +230,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void onTapDown(TapDownDetails d) {
-    //_gameOver(); //ist nur zum testen hier drin drin
     components.whereType<Monkey>().forEach((element) {
       if (d.localPosition.dx < screenSize.width / 2) {
         element.move(ClimbSide.Left);
