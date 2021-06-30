@@ -111,6 +111,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     );
   }
 
+  /// This method increase the score as well as the score widget.
   void increaseScore() {
     score += 1;
     removeWidgetOverlay(scoreWidgetName);
@@ -131,7 +132,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     components.whereType<MonkeyTimer>().forEach((element) => element.destroy());
 
     // add branches
-    _climberBranches = ClimberBranches(this, _monkeySize, _monkeySize / 4, _animationTime);
+    _climberBranches = ClimberBranches(this, _monkeySize, _monkeySize / 4, _animationTime)
+      ..onBranchesMoved = increaseScore;
     add(_climberBranches);
 
     // initialize Timer Component

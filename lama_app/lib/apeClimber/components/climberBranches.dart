@@ -29,6 +29,8 @@ class ClimberBranches extends Component {
   double _moveTimeLeft = 0;
   /// Time how long the movements takes
   final double _moveTime;
+  /// This method gets called when the branches finished moving
+  Function onBranchesMoved;
 
   ClimberBranches(this._game, this._branchDistance, this._offsetX, this._moveTime) {
     _createBranches();
@@ -110,7 +112,7 @@ class ClimberBranches extends Component {
       }
       // movement finished = disable movement
       else {
-        _game.increaseScore();
+        onBranchesMoved?.call();
         _moving = false;
       }
     }
