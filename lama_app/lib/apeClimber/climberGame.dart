@@ -7,6 +7,7 @@ import 'package:flame/components/component.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/monkeyTimer.dart';
 import 'package:lama_app/apeClimber/components/monkey.dart';
+import 'package:lama_app/apeClimber/widgets/monkeyScoreWidget.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyStartWidget.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -28,6 +29,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   final startWidgetName = "start";
   /// name of the end screen widget
   final endScreenWidgetName = "gameOver";
+  /// name of the end screen widget
+  final scoreWidgetName = "score";
   /// id of the game
   final _gameId = 3;
   /// Time for each click animation
@@ -108,10 +111,18 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     );
   }
 
+  /// This method increase the score as well as the score widget.
+  void increaseScore() {
+    score += 1;
+    removeWidgetOverlay(scoreWidgetName);
+    addWidgetOverlay(scoreWidgetName, MonkeyScoreWidget(text: score.toString()));
+  }
+
   /// This method initialize the components and removes the start widget.
   void _startGame() {
     _addGameComponents();
     removeWidgetOverlay(startWidgetName);
+    addWidgetOverlay(scoreWidgetName, MonkeyScoreWidget(text: score.toString()));
   }
 
   /// This method adds all components which are necessary to the game.
@@ -121,7 +132,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     components.whereType<MonkeyTimer>().forEach((element) => element.destroy());
 
     // add branches
-    _climberBranches = ClimberBranches(this, _monkeySize, _monkeySize / 4, _animationTime);
+    _climberBranches = ClimberBranches(this, _monkeySize, _monkeySize / 4, _animationTime)
+      ..onBranchesMoved = increaseScore;
     add(_climberBranches);
 
     // initialize Timer Component
@@ -157,6 +169,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     pauseEngine();
     _saveHighScore();
 
+    removeWidgetOverlay(scoreWidgetName);
     addWidgetOverlay(
         endScreenWidgetName,
         MonkeyEndscreenWidget(
