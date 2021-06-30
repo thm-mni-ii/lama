@@ -124,7 +124,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
       if (monkey.isLeft == _climberBranches.isLeft) {
         _timer.pause();
-        _gameOver();
+        _gameOver("Ast berührt");
       }
     }
     on StateError {
@@ -180,7 +180,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// 
   /// sideffects:
   ///   adds [MonkeyEndscreenWidget] widget
-  void _gameOver(){
+  void _gameOver(String endText){
     pauseEngine();
     _saveHighScore();
 
@@ -188,6 +188,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     addWidgetOverlay(
         endScreenWidgetName,
         MonkeyEndscreenWidget(
+          text: endText,
           score: score,
           onQuitPressed: _quit,
         ));
@@ -206,7 +207,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         timerWidgetName,
         widget);
 
-    _gameOver();
+    _gameOver("Zeit abgelaufen");
   }
 
   /// This method is the handler when the timer finished.
