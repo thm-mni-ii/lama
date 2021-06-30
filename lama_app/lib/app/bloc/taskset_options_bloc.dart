@@ -74,8 +74,8 @@ class TasksetOprionsBloc
               error: 'Der Inhalt der URL ist kein "json"!',
               failedUrl: _tasksetUrl);
         }
-        //Reload Tasksets
-        //RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
+        //Taskset validtion
+        //TasksetValidator.isValidTaskset(jsonDecode(response.body))
 
         //Insert URL to Database
         await DatabaseProvider.db.insertTaskUrl(url);
