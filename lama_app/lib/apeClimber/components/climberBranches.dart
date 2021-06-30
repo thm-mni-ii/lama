@@ -7,6 +7,13 @@ import 'package:flame/sprite.dart';
 import 'package:lama_app/apeClimber/climberGame.dart';
 
 class ClimberBranches extends Component {
+  // SETTINGS
+  // --------
+  /// flag to show the branch on the display
+  final bool _showCollisionBranch = false;
+  // --------
+  // SETTINGS
+
   /// reference to the BaseGame
   final ClimberGame _game;
   /// Random for generate random bools
@@ -31,6 +38,12 @@ class ClimberBranches extends Component {
   final double _moveTime;
   /// This method gets called when the branches finished moving
   Function onBranchesMoved;
+  /// Branch for collision detection
+  SpriteComponent collisionBranch;
+
+  get isLeft {
+    return collisionBranch != null && collisionBranch.x < _game.screenSize.width / 2;
+  }
 
   ClimberBranches(this._game, this._branchDistance, this._offsetX, this._moveTime) {
     _createBranches();
@@ -82,6 +95,17 @@ class ClimberBranches extends Component {
     }
   }
 
+  void _selectNextCollisionDetectionBranch() {
+    var index = collisionBranch == null ? 0 : _branches.indexOf(collisionBranch);
+
+    if (collisionBranch == null || index >= _branches.length - 1) {
+      collisionBranch = _branches[0];
+    }
+    else {
+      collisionBranch = _branches[index + 1];
+    }
+  }
+
   /// This methods flag the movement of the tree by [y] to the bottom in [_moveTime].
   ///
   /// This will handle in [update]
@@ -93,6 +117,7 @@ class ClimberBranches extends Component {
     _moveTimeLeft = _moveTime;
     _moving = true;
     _moveWidth = y;
+    _selectNextCollisionDetectionBranch();
   }
 
   @override
@@ -123,6 +148,17 @@ class ClimberBranches extends Component {
     _branches?.forEach((element) {
       c.save();
       element.render(c);
+
+      // show the collision branch
+      if (_showCollisionBranch) {
+        c.restore();
+        c.save();
+        if (element == collisionBranch) {
+          var rect = element.toRect();
+          c.drawRect(rect, Paint()
+            ..color = Color.fromRGBO(255, 0, 0, 0.3));
+        }
+      }
       c.restore();
     });
   }

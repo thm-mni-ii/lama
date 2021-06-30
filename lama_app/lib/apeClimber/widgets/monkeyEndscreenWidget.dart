@@ -4,6 +4,7 @@ import 'package:lama_app/util/LamaColors.dart';
 /// This class is a [StatelessWidget] for displaying the game over Mode Hud of Affen-Leiter
 class MonkeyEndscreenWidget extends StatelessWidget {
   /// Score to display on game over menu.
+  final String text;
   final int score;
   final int userHighScore;
   final int alltimeHighScore;
@@ -13,6 +14,7 @@ class MonkeyEndscreenWidget extends StatelessWidget {
 
   const MonkeyEndscreenWidget({
     Key key,
+    this.text,
     this.userHighScore,
     this.alltimeHighScore,
     @required this.score,
@@ -31,23 +33,33 @@ class MonkeyEndscreenWidget extends StatelessWidget {
         color: LamaColors.greenPrimary.withOpacity(0.8),
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.15,
-            vertical: MediaQuery.of(context).size.height * 0.10,
+            horizontal: 40,
+            vertical: 20,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 0,
+                    vertical: 10,
+                  ),
+                child: Text(
+                  text,
+                  style: TextStyle(fontSize: 20.0, color: LamaColors.white, fontStyle: FontStyle.italic),
+                ),
+              ),
               Text(
                 'Punkte',
                 style: TextStyle(fontSize: 40.0, color: LamaColors.white),
               ),
-              Text(
-                '$score',
-                style: TextStyle(fontSize: 70.0, color: LamaColors.white),
-              ),
-              SizedBox(
-                height: 40,
+              Padding(
+                padding: EdgeInsets.only(bottom: 20),
+                child: Text(
+                  '$score',
+                  style: TextStyle(fontSize: 70.0, color: LamaColors.white),
+                ),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,

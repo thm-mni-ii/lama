@@ -36,6 +36,12 @@ class Monkey extends AnimationComponent {
   double _moveTimeLeft = 0;
   /// is the monkey moving (switching or climbing)
   bool _moving = false;
+  /// Function which gets called when the movement finished
+  Function onMovementFinished;
+
+  get isLeft {
+    return _isLeft;
+  }
 
   /// Initialize the class with the given [_size] and [_game].
   Monkey(this._size, this.stepTime) : super.empty() {
@@ -149,6 +155,8 @@ class Monkey extends AnimationComponent {
         // reset moving flags
         _moving = false;
         animation = _isLeft ? _idleLeft : _idleRight;
+
+        onMovementFinished?.call();
       }
     }
 

@@ -63,11 +63,10 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// pixel left which the background has to move
   ClimberBranches _climberBranches;
   double tileSize;
-  List<SpriteComponent> branches = [];
-  double _backMoveTimeLeft = 0;
+  /// time left for the animation of the background
+  double _backgroundMoveTimeLeft = 0;
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
-
 
   ClimberGame(this._context, this._userRepo) {
     _back = ParallaxComponent([
@@ -118,6 +117,21 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     addWidgetOverlay(scoreWidgetName, MonkeyScoreWidget(text: score.toString()));
   }
 
+  /// This method checks if the monkey collides with the collision branch.
+  void _checkCollision() {
+    try {
+      var monkey = components.whereType<Monkey>().first;
+
+      if (monkey.isLeft == _climberBranches.isLeft) {
+        _timer.pause();
+        _gameOver("Ast berührt");
+      }
+    }
+    on StateError {
+      print("[Error] _checkCollision : monkey not found");
+    }
+  }
+
   /// This method initialize the components and removes the start widget.
   void _startGame() {
     _addGameComponents();
@@ -142,7 +156,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     add(_timer);
 
     // initialize monkey
-    add(Monkey(_monkeySize, _animationTime));
+    add(Monkey(_monkeySize, _animationTime)
+      ..onMovementFinished = _checkCollision);
 
     // start timer
     _timer.start();
@@ -165,7 +180,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// 
   /// sideffects:
   ///   adds [MonkeyEndscreenWidget] widget
-  void _gameOver(){
+  void _gameOver(String endText){
     pauseEngine();
     _saveHighScore();
 
@@ -173,6 +188,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     addWidgetOverlay(
         endScreenWidgetName,
         MonkeyEndscreenWidget(
+          text: endText,
           score: score,
           onQuitPressed: _quit,
         ));
@@ -191,7 +207,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         timerWidgetName,
         widget);
 
-    _gameOver();
+    _gameOver("Zeit abgelaufen");
   }
 
   /// This method is the handler when the timer finished.
@@ -209,15 +225,15 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     }
 
     _backMoving = true;
-    _backMoveTimeLeft = _animationTime;
+    _backgroundMoveTimeLeft = _animationTime;
   }
 
   @override
   void update(double t) {
     if (_backMoving) {
-      if (_backMoveTimeLeft > 0) {
+      if (_backgroundMoveTimeLeft > 0) {
         _back.layerDelta = Offset(6, -6);
-        _backMoveTimeLeft -= t;
+        _backgroundMoveTimeLeft -= t;
       }
       else {
         _backMoving = false;
@@ -249,7 +265,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       } else {
         element.move(ClimbSide.Right);
       }
-
     });
     _moveBackground();
     
