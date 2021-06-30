@@ -7,8 +7,13 @@ import 'package:flame/sprite.dart';
 import 'package:lama_app/apeClimber/climberGame.dart';
 
 class ClimberBranches extends Component {
+  // SETTINGS
+  // --------
   /// flag to show the branch on the display
-  final bool _showCollisionBranch = true;
+  final bool _showCollisionBranch = false;
+  // --------
+  // SETTINGS
+
   /// reference to the BaseGame
   final ClimberGame _game;
   /// Random for generate random bools
@@ -37,7 +42,7 @@ class ClimberBranches extends Component {
   SpriteComponent collisionBranch;
 
   get isLeft {
-    return collisionBranch.x < _game.screenSize.width / 2;
+    return collisionBranch != null && collisionBranch.x < _game.screenSize.width / 2;
   }
 
   ClimberBranches(this._game, this._branchDistance, this._offsetX, this._moveTime) {

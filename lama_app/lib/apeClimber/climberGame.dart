@@ -63,8 +63,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// pixel left which the background has to move
   ClimberBranches _climberBranches;
   double tileSize;
-  List<SpriteComponent> branches = [];
-  double _backMoveTimeLeft = 0;
+  /// time left for the animation of the background
+  double _backgroundMoveTimeLeft = 0;
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
 
@@ -225,15 +225,15 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     }
 
     _backMoving = true;
-    _backMoveTimeLeft = _animationTime;
+    _backgroundMoveTimeLeft = _animationTime;
   }
 
   @override
   void update(double t) {
     if (_backMoving) {
-      if (_backMoveTimeLeft > 0) {
+      if (_backgroundMoveTimeLeft > 0) {
         _back.layerDelta = Offset(6, -6);
-        _backMoveTimeLeft -= t;
+        _backgroundMoveTimeLeft -= t;
       }
       else {
         _backMoving = false;
