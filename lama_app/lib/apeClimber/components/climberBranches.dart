@@ -110,6 +110,7 @@ class ClimberBranches extends Component {
       }
       // movement finished = disable movement
       else {
+        _game.increaseScore();
         _moving = false;
       }
     }

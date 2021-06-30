@@ -167,6 +167,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     pauseEngine();
     _saveHighScore();
 
+    removeWidgetOverlay(scoreWidgetName);
     addWidgetOverlay(
         endScreenWidgetName,
         MonkeyEndscreenWidget(
@@ -253,6 +254,5 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     // move the tree
     _tree?.move(_monkeySize);
     _climberBranches.move(_monkeySize);
-    increaseScore();
   }
 }
