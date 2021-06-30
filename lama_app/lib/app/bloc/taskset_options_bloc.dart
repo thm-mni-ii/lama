@@ -16,10 +16,16 @@ class TasksetOprionsBloc
   Stream<TasksetOptionsState> mapEventToState(
       TasksetOptionsEvent event) async* {
     if (event is TasksetOptionsAbort) _return(event.context);
-    if (event is TasksetOptionsPush) yield await _tasksetOptionsPush();
+    if (event is TasksetOptionsPush) {
+      yield await _tasksetOptionsPush();
+      event.tasksetRepository.reloadTasksetLoader();
+    }
     if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
     if (event is TasksetOptionsReload) yield await _reload();
-    if (event is TasksetOptionsDelete) yield await _deleteUrl(event.url);
+    if (event is TasksetOptionsDelete) {
+      event.tasksetRepository.reloadTasksetLoader();
+      yield await _deleteUrl(event.url);
+    }
     if (event is TasksetOptionsPushUrl)
       yield await _tasksetOptionsReloadUrl(event.url);
   }
@@ -46,6 +52,7 @@ class TasksetOprionsBloc
 
   Future<TasksetOptionsPushSuccess> _insertUrl(TaskUrl url) async {
     await DatabaseProvider.db.insertTaskUrl(url);
+
     return TasksetOptionsPushSuccess();
   }
 
