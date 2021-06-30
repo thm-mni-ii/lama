@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
+import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/state/taskset_options_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -94,7 +95,8 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 : null,
             onFieldSubmitted: (value) => {
               if (_formKey.currentState.validate())
-                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush())
+                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush(
+                    RepositoryProvider.of<TasksetRepository>(context)))
             },
           ),
         ],
@@ -125,9 +127,9 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 size: 25,
               ),
               onPressed: () {
-                context
-                    .read<TasksetOprionsBloc>()
-                    .add(TasksetOptionsDelete(urls[index]));
+                context.read<TasksetOprionsBloc>().add(TasksetOptionsDelete(
+                    urls[index],
+                    RepositoryProvider.of<TasksetRepository>(context)));
               },
             )
           ],
