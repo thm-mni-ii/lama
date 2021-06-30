@@ -68,7 +68,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
 
-
   ClimberGame(this._context, this._userRepo) {
     _back = ParallaxComponent([
       ParallaxImage('png/himmel.png'),
@@ -118,6 +117,21 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     addWidgetOverlay(scoreWidgetName, MonkeyScoreWidget(text: score.toString()));
   }
 
+  /// This method checks if the monkey collides with the collision branch.
+  void _checkCollision() {
+    try {
+      var monkey = components.whereType<Monkey>().first;
+
+      if (monkey.isLeft == _climberBranches.isLeft) {
+        _timer.pause();
+        _gameOver();
+      }
+    }
+    on StateError {
+      print("[Error] _checkCollision : monkey not found");
+    }
+  }
+
   /// This method initialize the components and removes the start widget.
   void _startGame() {
     _addGameComponents();
@@ -142,7 +156,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     add(_timer);
 
     // initialize monkey
-    add(Monkey(_monkeySize, _animationTime));
+    add(Monkey(_monkeySize, _animationTime)
+      ..onMovementFinished = _checkCollision);
 
     // start timer
     _timer.start();
@@ -249,7 +264,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       } else {
         element.move(ClimbSide.Right);
       }
-
     });
     _moveBackground();
     

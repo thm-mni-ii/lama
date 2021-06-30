@@ -7,6 +7,8 @@ import 'package:flame/sprite.dart';
 import 'package:lama_app/apeClimber/climberGame.dart';
 
 class ClimberBranches extends Component {
+  /// flag to show the branch on the display
+  final bool _showCollisionBranch = true;
   /// reference to the BaseGame
   final ClimberGame _game;
   /// Random for generate random bools
@@ -34,6 +36,10 @@ class ClimberBranches extends Component {
   /// Branch for collision detection
   SpriteComponent collisionBranch;
 
+  get isLeft {
+    return collisionBranch.x < _game.screenSize.width / 2;
+  }
+
   ClimberBranches(this._game, this._branchDistance, this._offsetX, this._moveTime) {
     _createBranches();
   }
@@ -60,11 +66,6 @@ class ClimberBranches extends Component {
         branch.sprite = Sprite('png/stick_3.png');
         branch.x = _game.screenSize.width / 2 + this._offsetX;
       }
-
-      // select the first branch for collision detection
-      if (i == 0) {
-        collisionBranch = branch;
-      }
       
       _lastBranch = branch;
     }
@@ -90,9 +91,9 @@ class ClimberBranches extends Component {
   }
 
   void _selectNextCollisionDetectionBranch() {
-    var index = _branches.indexOf(collisionBranch);
+    var index = collisionBranch == null ? 0 : _branches.indexOf(collisionBranch);
 
-    if (index >= _branches.length - 1) {
+    if (collisionBranch == null || index >= _branches.length - 1) {
       collisionBranch = _branches[0];
     }
     else {
@@ -142,6 +143,17 @@ class ClimberBranches extends Component {
     _branches?.forEach((element) {
       c.save();
       element.render(c);
+
+      // show the collision branch
+      if (_showCollisionBranch) {
+        c.restore();
+        c.save();
+        if (element == collisionBranch) {
+          var rect = element.toRect();
+          c.drawRect(rect, Paint()
+            ..color = Color.fromRGBO(255, 0, 0, 0.3));
+        }
+      }
       c.restore();
     });
   }
