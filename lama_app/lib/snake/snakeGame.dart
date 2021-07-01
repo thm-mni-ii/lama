@@ -32,6 +32,14 @@ class SnakeGame extends Game with TapDetector {
 
   Background background;
   SnakeComponent snake;
+  /// id of the game
+  final _gameId = 1;
+  /// a bool flag which indicates if the score of the game has been saved
+  bool _savedHighScore = false;
+  /// the personal highScore
+  int _userHighScore;
+  /// the all time highScore in this game
+  int _allTimeHighScore;
 
   List<Apple> apples = [];
   Random rnd = Random();
@@ -79,6 +87,10 @@ class SnakeGame extends Game with TapDetector {
   /// It runs asynchron and it will flag the [_initialized] to true when its finished.
   void initialize() async {
     resize(await Flame.util.initialDimensions());
+    // load _serHighScore
+    _userHighScore = await _userRepo.getMyHighscore(_gameId);
+    // load allTimeHighScore
+    _allTimeHighScore = await _userRepo.getHighscore(_gameId);
 
     background = Background(this, _controlBarRelativeHeight);
     spawnApples();
@@ -121,6 +133,21 @@ class SnakeGame extends Game with TapDetector {
     arrowButtonRight?.resize();
     pauseButton?.resize();
     scoreDisplay?.resize();
+  }
+
+
+  /// This method saves the actual Score to the database for the user which is logged in.
+  ///
+  /// sideffects:
+  ///   [_savedHighScore] = true
+  void _saveHighScore() {
+    if (!_savedHighScore) {
+      _savedHighScore = true;
+      _userRepo.addHighscore(Highscore(
+          gameID: _gameId,
+          score: score,
+          userID: _userRepo.authenticatedUser.id));
+    }
   }
 
   /// This methos respawn the [apple] on a new free field. If there is none the [apple] will despawn.
