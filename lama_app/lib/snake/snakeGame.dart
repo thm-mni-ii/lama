@@ -37,9 +37,9 @@ class SnakeGame extends Game with TapDetector {
   /// a bool flag which indicates if the score of the game has been saved
   bool _savedHighScore = false;
   /// the personal highScore
-  int _userHighScore;
+  int userHighScore;
   /// the all time highScore in this game
-  int _allTimeHighScore;
+  int allTimeHighScore;
 
   List<Apple> apples = [];
   Random rnd = Random();
@@ -88,9 +88,9 @@ class SnakeGame extends Game with TapDetector {
   void initialize() async {
     resize(await Flame.util.initialDimensions());
     // load _serHighScore
-    _userHighScore = await _userRepo.getMyHighscore(_gameId);
+    userHighScore = await _userRepo.getMyHighscore(_gameId);
     // load allTimeHighScore
-    _allTimeHighScore = await _userRepo.getHighscore(_gameId);
+    allTimeHighScore = await _userRepo.getHighscore(_gameId);
 
     background = Background(this, _controlBarRelativeHeight);
     spawnApples();
