@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
@@ -37,17 +38,30 @@ class TasksetLoader {
 
     //load all standard-tasksets for each subject and grade
     for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-      try {
-        String tasksetMathe = await rootBundle.loadString(
-            'assets/standardTasksets/mathe/mathe' + i.toString() + '.json');
-        await buildTasksetFromJson(tasksetMathe);
-      } catch (e) {}
-      String tasksetDeutsch = await rootBundle.loadString(
-          'assets/standardTasksets/deutsch/deutsch' + i.toString() + '.json');
-      await buildTasksetFromJson(tasksetDeutsch);
-      String tasksetEnglisch = await rootBundle.loadString(
-          'assets/standardTasksets/englisch/englisch' + i.toString() + '.json');
-      await buildTasksetFromJson(tasksetEnglisch);
+      String tasksetMathe = await rootBundle
+          .loadString(
+              'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
+          .catchError((err) => Future.value(""));
+      if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
+
+      String tasksetDeutsch = await rootBundle
+          .loadString('assets/standardTasksets/deutsch/deutsch' +
+              i.toString() +
+              '.json')
+          .catchError((err) => Future.value(""));
+      if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+      String tasksetEnglisch = await rootBundle
+          .loadString('assets/standardTasksets/englisch/englisch' +
+              i.toString() +
+              '.json')
+          .catchError((err) => Future.value(""));
+      if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
+      String tasksetSachkunde = await rootBundle
+          .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+              i.toString() +
+              '.json')
+          .catchError((err) => Future.value(""));
+      if (tasksetSachkunde != "") await buildTasksetFromJson(tasksetSachkunde);
     }
 
     List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
@@ -90,7 +104,7 @@ class TasksetLoader {
   Future<void> buildTasksetFromJson(tasksetContent) async {
     bool isTasksetValid =
         TasksetValidator.isValidTaskset(jsonDecode(tasksetContent));
-    print('Is Taskset valid: $isTasksetValid}');
+    print('Is Taskset valid: $isTasksetValid');
     if (isTasksetValid) {
       Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
 
@@ -129,6 +143,12 @@ class TasksetLoader {
         loadedTasksets[sgr].add(taskset);
       else
         loadedTasksets[sgr] = <Taskset>[taskset];
+      print("Loaded Taskset: " +
+          taskset.name +
+          " for grade " +
+          taskset.grade.toString() +
+          " for subject " +
+          taskset.subject);
     }
   }
 

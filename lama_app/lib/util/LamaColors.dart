@@ -14,6 +14,9 @@ class LamaColors {
   //Colors used for english
   static Color orangePrimary = Color.fromARGB(255, 255, 92, 0);
   static Color orangeAccent = Color.fromARGB(255, 255, 122, 0);
+  //Colors used for science
+  static Color purplePrimary = Color.fromARGB(255, 102, 62, 194);
+  static Color purpleAccent = Color.fromARGB(255, 138, 87, 255);
 
   static Color greenPrimary = Color.fromARGB(255, 18, 194, 32);
   static Color greenAccent = Color.fromARGB(255, 50, 225, 83);
