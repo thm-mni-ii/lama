@@ -20,15 +20,23 @@ class DescriptionText {
     _painter.text = TextSpan(
       text: "Snake\n",
       style: TextStyle(
-        fontSize: this.game.screenSize.height * 0.05,
+        fontSize: this.game.screenSize.height * 0.03,
         color: Color(0xbb19721d),
       ),
       children: <TextSpan>[
         TextSpan(
-          text: 'Versuche soviele Äpfel wie\nmöglich zu essen ohne\ndich selber zu beißen oder\ndie Wand zu berühren!',
+          text: 'Versuche soviele Äpfel wiemöglich\nzu essen ohnedich selber zu beißen\noder die Wand zu berühren!',
           style: TextStyle(
               fontSize: this.game.screenSize.height * 0.03,
               fontFamily: 'Serif'
+          ),
+        ),
+        TextSpan(
+          text: '\nMein Highscore: ${game.userHighScore}\nHighscore: ${game.allTimeHighScore}',
+          style: TextStyle(
+              fontSize: this.game.screenSize.height * 0.03,
+              fontFamily: 'Serif',
+              fontWeight: FontWeight.bold
           ),
         ),
       ],
