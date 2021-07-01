@@ -37,11 +37,9 @@ class TasksetLoader {
 
     //load all standard-tasksets for each subject and grade
     for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-      try {
-        String tasksetMathe = await rootBundle.loadString(
-            'assets/standardTasksets/mathe/mathe' + i.toString() + '.json');
-        await buildTasksetFromJson(tasksetMathe);
-      } catch (e) {}
+      String tasksetMathe = await rootBundle.loadString(
+          'assets/standardTasksets/mathe/mathe' + i.toString() + '.json');
+      await buildTasksetFromJson(tasksetMathe);
       String tasksetDeutsch = await rootBundle.loadString(
           'assets/standardTasksets/deutsch/deutsch' + i.toString() + '.json');
       await buildTasksetFromJson(tasksetDeutsch);
@@ -49,6 +47,10 @@ class TasksetLoader {
           'assets/standardTasksets/englisch/englisch' + i.toString() + '.json');
       await buildTasksetFromJson(tasksetEnglisch);
     }
+
+    String tasksetSachkunde = await rootBundle
+        .loadString('assets/standardTasksets/sachkunde/sachkunde3.json');
+    await buildTasksetFromJson(tasksetSachkunde);
 
     List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
 
@@ -90,7 +92,7 @@ class TasksetLoader {
   Future<void> buildTasksetFromJson(tasksetContent) async {
     bool isTasksetValid =
         TasksetValidator.isValidTaskset(jsonDecode(tasksetContent));
-    print('Is Taskset valid: $isTasksetValid}');
+    print('Is Taskset valid: $isTasksetValid');
     if (isTasksetValid) {
       Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
 
@@ -129,6 +131,12 @@ class TasksetLoader {
         loadedTasksets[sgr].add(taskset);
       else
         loadedTasksets[sgr] = <Taskset>[taskset];
+      print("Loaded Taskset: " +
+          taskset.name +
+          " for grade " +
+          taskset.grade.toString() +
+          " for subject " +
+          taskset.subject);
     }
   }
 

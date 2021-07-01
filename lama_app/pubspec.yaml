@@ -74,6 +74,7 @@ flutter:
     - assets/standardTasksets/mathe/
     - assets/standardTasksets/deutsch/
     - assets/standardTasksets/englisch/
+    - assets/standardTasksets/sachkunde/
     - assets/md/
     - assets/lama_facts.txt
   #   - images/a_dot_ham.jpeg
