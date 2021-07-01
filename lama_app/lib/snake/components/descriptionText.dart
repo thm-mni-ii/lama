@@ -25,7 +25,7 @@ class DescriptionText {
       ),
       children: <TextSpan>[
         TextSpan(
-          text: 'Versuche soviele Äpfel wiemöglich\nzu essen ohnedich selber zu beißen\noder die Wand zu berühren!',
+          text: 'Versuche soviele Äpfel wie\nmöglich zu essen ohne dich\nselber zu beißen oder die Wand\nzu berühren!',
           style: TextStyle(
               fontSize: this.game.screenSize.height * 0.03,
               fontFamily: 'Serif'
