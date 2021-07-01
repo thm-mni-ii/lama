@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
@@ -37,20 +38,31 @@ class TasksetLoader {
 
     //load all standard-tasksets for each subject and grade
     for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-      String tasksetMathe = await rootBundle.loadString(
-          'assets/standardTasksets/mathe/mathe' + i.toString() + '.json');
-      await buildTasksetFromJson(tasksetMathe);
-      String tasksetDeutsch = await rootBundle.loadString(
-          'assets/standardTasksets/deutsch/deutsch' + i.toString() + '.json');
-      await buildTasksetFromJson(tasksetDeutsch);
-      String tasksetEnglisch = await rootBundle.loadString(
-          'assets/standardTasksets/englisch/englisch' + i.toString() + '.json');
-      await buildTasksetFromJson(tasksetEnglisch);
-    }
+      String tasksetMathe = await rootBundle
+          .loadString(
+              'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
+          .catchError((err) => Future.value(""));
+      if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
 
-    String tasksetSachkunde = await rootBundle
-        .loadString('assets/standardTasksets/sachkunde/sachkunde3.json');
-    await buildTasksetFromJson(tasksetSachkunde);
+      String tasksetDeutsch = await rootBundle
+          .loadString('assets/standardTasksets/deutsch/deutsch' +
+              i.toString() +
+              '.json')
+          .catchError((err) => Future.value(""));
+      if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+      String tasksetEnglisch = await rootBundle
+          .loadString('assets/standardTasksets/englisch/englisch' +
+              i.toString() +
+              '.json')
+          .catchError((err) => Future.value(""));
+      if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
+      String tasksetSachkunde = await rootBundle
+          .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+              i.toString() +
+              '.json')
+          .catchError((err) => Future.value(""));
+      if (tasksetSachkunde != "") await buildTasksetFromJson(tasksetSachkunde);
+    }
 
     List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
 
