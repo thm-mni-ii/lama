@@ -79,7 +79,7 @@ class TasksetOprionsBloc
         //Taskset validtion
         if (TasksetValidator.isValidTaskset(jsonDecode(response.body))) {
           return TasksetOptionsPushFailed(
-              error: 'Ein Fehler beim lesen der Aufgaben ist aufgetreten');
+              error: 'Beim lesen der Aufgaben ist ein Fehler aufgetreten!');
         }
 
         //Insert URL to Database
