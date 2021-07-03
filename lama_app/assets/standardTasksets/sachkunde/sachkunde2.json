@@ -1,7 +1,7 @@
 {
-    "taskset_name":"Standardaufgaben Klasse 3",
+    "taskset_name":"Standardaufgaben Klasse 2",
      "taskset_subject":"Sachkunde",
-      "taskset_grade":3,
+      "taskset_grade":2,
        "tasks": [
            {
            "task_type":"4Cards",
