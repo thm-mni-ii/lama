@@ -50,39 +50,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess());
           }
           if (state is TasksetOptionsUrlSelected) {
-            showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                title: Text(
-                  'Taskset URL',
-                  style: LamaTextTheme.getStyle(
-                    color: LamaColors.black,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                content: SingleChildScrollView(
-                  child: Text(
-                    state.url,
-                    style: LamaTextTheme.getStyle(
-                      color: LamaColors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      monospace: true,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    child: Text('Schließen'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            );
+            showDialog(context: context, builder: (_) => _urlPopUp(state.url));
           }
         },
         child: BlocBuilder<TasksetOprionsBloc, TasksetOptionsState>(
@@ -105,6 +73,18 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                     _tasksetUrlDeletedList(state.deletedUrls),
                   ],
                 ),
+              );
+            }
+            if (state is TasksetOptionsWaiting) {
+              print('watining');
+              return Column(
+                children: [
+                  Text(state.waitingText,
+                      style: LamaTextTheme.getStyle(
+                        color: LamaColors.bluePrimary,
+                      )),
+                  Center(child: CircularProgressIndicator())
+                ],
               );
             }
             context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
@@ -135,7 +115,8 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             validator: (value) => InputValidation.inputURLValidation(value),
             onFieldSubmitted: (value) => {
               if (_formKey.currentState.validate())
-                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush())
+                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush(
+                    RepositoryProvider.of<TasksetRepository>(context)))
             },
           ),
         ],
@@ -215,6 +196,39 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
           ],
         );
       },
+    );
+  }
+
+  Widget _urlPopUp(String url) {
+    return AlertDialog(
+      title: Text(
+        'Taskset URL',
+        style: LamaTextTheme.getStyle(
+          color: LamaColors.black,
+          fontSize: 16,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      content: SingleChildScrollView(
+        child: Text(
+          url,
+          style: LamaTextTheme.getStyle(
+            color: LamaColors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            monospace: true,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      actions: [
+        TextButton(
+          child: Text('Schließen'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
     );
   }
 

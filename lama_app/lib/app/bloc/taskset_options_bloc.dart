@@ -9,6 +9,7 @@ import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/state/taskset_options_state.dart';
+import 'package:lama_app/app/task-system/taskset_validator.dart';
 import 'package:lama_app/db/database_provider.dart';
 
 class TasksetOprionsBloc
@@ -17,20 +18,19 @@ class TasksetOprionsBloc
 
   String _tasksetUrl;
   List<TaskUrl> deletedUrls = [];
+  TasksetRepository tasksetRepository = TasksetRepository();
 
   @override
   Stream<TasksetOptionsState> mapEventToState(
       TasksetOptionsEvent event) async* {
     if (event is TasksetOptionsAbort) _return(event.context);
     if (event is TasksetOptionsPush) {
-      yield await _tasksetOptionsPush(event.context);
       yield await _tasksetOptionsPush();
-      event.tasksetRepository.reloadTasksetLoader();
+      yield await _tasksetOptionsPush();
     }
     if (event is TasksetOptionsDelete) {
-      event.tasksetRepository.reloadTasksetLoader();
-      yield TasksetOptionsWaiting();
-      yield await _tasksetOptionsPush();
+      yield TasksetOptionsWaiting("Aufgaben werden gelöscht...");
+      yield await _deleteUrl(event.url);
     }
     if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
     if (event is TasksetOptionsReload) {
@@ -39,7 +39,7 @@ class TasksetOprionsBloc
     if (event is TasksetOptionsSelectUrl)
       yield TasksetOptionsUrlSelected(event.url.url);
     if (event is TasksetOptionsReaddUrl) {
-      yield TasksetOptionsWaiting();
+      yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
       yield await _tasksetOptionsReaddUrl(event.url);
     }
   }
@@ -49,7 +49,9 @@ class TasksetOprionsBloc
   }
 
   Future<TasksetOptionsState> _tasksetOptionsPush() async {
-    return await _insertUrl(TaskUrl(url: _tasksetUrl));
+    return await _insertUrl(
+      TaskUrl(url: _tasksetUrl),
+    );
   }
 
   Future<TasksetOptionsPushSuccess> _tasksetOptionsReaddUrl(TaskUrl url) async {
@@ -75,10 +77,14 @@ class TasksetOprionsBloc
               failedUrl: _tasksetUrl);
         }
         //Taskset validtion
-        //TasksetValidator.isValidTaskset(jsonDecode(response.body))
+        if (TasksetValidator.isValidTaskset(jsonDecode(response.body))) {
+          return TasksetOptionsPushFailed(
+              error: 'Ein Fehler beim lesen der Aufgaben ist aufgetreten');
+        }
 
         //Insert URL to Database
         await DatabaseProvider.db.insertTaskUrl(url);
+        tasksetRepository.reloadTasksetLoader();
         return TasksetOptionsPushSuccess();
       } else {
         return TasksetOptionsPushFailed(

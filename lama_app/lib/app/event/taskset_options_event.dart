@@ -10,7 +10,10 @@ class TasksetOptionsAbort extends TasksetOptionsEvent {
   TasksetOptionsAbort(this.context);
 }
 
-class TasksetOptionsPush extends TasksetOptionsEvent {}
+class TasksetOptionsPush extends TasksetOptionsEvent {
+  TasksetRepository tasksetRepository;
+  TasksetOptionsPush(this.tasksetRepository);
+}
 
 class TasksetOptionsReaddUrl extends TasksetOptionsEvent {
   TaskUrl url;
