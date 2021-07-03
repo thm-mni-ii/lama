@@ -83,7 +83,7 @@ class Task4Cards extends Task {
 
   @override
   String toString() {
-    String s = super.toString() + rightAnswer;
+    String s = super.toString() + question + rightAnswer;
     wrongAnswers.sort();
     for (int i = 0; i < wrongAnswers.length; i++) {
       s += wrongAnswers[i];
@@ -103,7 +103,7 @@ class TaskClozeTest extends Task {
 
   @override
   String toString() {
-    String s = super.toString() + rightAnswer;
+    String s = super.toString() + question + rightAnswer;
     wrongAnswers.sort();
     for (int i = 0; i < wrongAnswers.length; i++) {
       s += wrongAnswers[i];
