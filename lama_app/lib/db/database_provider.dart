@@ -595,7 +595,7 @@ class DatabaseProvider {
     var leftToSolve = await db.query(tableLeftToSolve,
         columns: [LeftToSolveFields.columnLeftToSolve],
         where: "${LeftToSolveFields.columnTaskString} = ? and ${LeftToSolveFields
-            .columnUserLTSId} = ?", //TODO
+            .columnUserLTSId} = ?",
         whereArgs: [taskString, user.id]);
     if (leftToSolve.length > 0) return leftToSolve.first[LeftToSolveFields.columnLeftToSolve];
     return Future.value(-3);
