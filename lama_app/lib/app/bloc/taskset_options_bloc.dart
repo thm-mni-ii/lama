@@ -29,7 +29,7 @@ class TasksetOprionsBloc
     }
     if (event is TasksetOptionsDelete) {
       yield TasksetOptionsWaiting("Aufgaben werden gelöscht...");
-      yield await _deleteUrl(event.url);
+      yield await _deleteUrl(event.url, event.tasksetRepository);
     }
     if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
     if (event is TasksetOptionsReload) {
@@ -98,9 +98,11 @@ class TasksetOprionsBloc
     }
   }
 
-  Future<TasksetOptionsDeleteSuccess> _deleteUrl(TaskUrl url) async {
+  Future<TasksetOptionsDeleteSuccess> _deleteUrl(
+      TaskUrl url, TasksetRepository tasksetRepository) async {
     await DatabaseProvider.db.deleteTaskUrl(url.id);
     deletedUrls.add(url);
+    tasksetRepository.reloadTasksetLoader();
     return TasksetOptionsDeleteSuccess();
   }
 

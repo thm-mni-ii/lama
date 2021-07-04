@@ -76,9 +76,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               );
             }
             if (state is TasksetOptionsWaiting) {
-              return Column(
-                children: [Center(child: CircularProgressIndicator())],
-              );
+              return Center(child: CircularProgressIndicator());
             }
             context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
             return Center(child: CircularProgressIndicator());
