@@ -15,9 +15,9 @@ class TasksetOptionsPush extends TasksetOptionsEvent {
   TasksetOptionsPush(this.tasksetRepository);
 }
 
-class TasksetOptionsReaddUrl extends TasksetOptionsEvent {
+class TasksetOptionsReadUrl extends TasksetOptionsEvent {
   TaskUrl url;
-  TasksetOptionsReaddUrl(this.url);
+  TasksetOptionsReadUrl(this.url);
 }
 
 class TasksetOptionsDelete extends TasksetOptionsEvent {

@@ -25,9 +25,12 @@ class TasksetOprionsBloc
       TasksetOptionsEvent event) async* {
     if (event is TasksetOptionsAbort) _return(event.context);
     if (event is TasksetOptionsPush) {
+      tasksetRepository = event.tasksetRepository;
+      yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
       yield await _tasksetOptionsPush();
     }
     if (event is TasksetOptionsDelete) {
+      tasksetRepository = event.tasksetRepository;
       yield TasksetOptionsWaiting("Aufgaben werden gelöscht...");
       yield await _deleteUrl(event.url);
     }
@@ -37,7 +40,7 @@ class TasksetOprionsBloc
     }
     if (event is TasksetOptionsSelectUrl)
       yield TasksetOptionsUrlSelected(event.url.url);
-    if (event is TasksetOptionsReaddUrl) {
+    if (event is TasksetOptionsReadUrl) {
       yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
       yield await _tasksetOptionsReaddUrl(event.url);
     }
