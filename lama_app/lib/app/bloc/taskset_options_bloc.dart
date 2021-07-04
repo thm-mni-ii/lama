@@ -26,7 +26,6 @@ class TasksetOprionsBloc
     if (event is TasksetOptionsAbort) _return(event.context);
     if (event is TasksetOptionsPush) {
       yield await _tasksetOptionsPush();
-      yield await _tasksetOptionsPush();
     }
     if (event is TasksetOptionsDelete) {
       yield TasksetOptionsWaiting("Aufgaben werden gelöscht...");
@@ -73,13 +72,13 @@ class TasksetOprionsBloc
           jsonDecode(response.body);
         } on FormatException {
           return TasksetOptionsPushFailed(
-              error: 'Der Inhalt der URL ist kein "json"!',
+              error: 'Inhalt kein "json" oder Fehlerhaft!',
               failedUrl: _tasksetUrl);
         }
         //Taskset validtion
-        if (TasksetValidator.isValidTaskset(jsonDecode(response.body))) {
+        if (!TasksetValidator.isValidTaskset(jsonDecode(response.body))) {
           return TasksetOptionsPushFailed(
-              error: 'Beim lesen der Aufgaben ist ein Fehler aufgetreten!');
+              error: 'Fehler beim lesen der Aufgaben!');
         }
 
         //Insert URL to Database

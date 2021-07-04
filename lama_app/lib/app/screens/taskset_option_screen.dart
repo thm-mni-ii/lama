@@ -76,15 +76,8 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               );
             }
             if (state is TasksetOptionsWaiting) {
-              print('watining');
               return Column(
-                children: [
-                  Text(state.waitingText,
-                      style: LamaTextTheme.getStyle(
-                        color: LamaColors.bluePrimary,
-                      )),
-                  Center(child: CircularProgressIndicator())
-                ],
+                children: [Center(child: CircularProgressIndicator())],
               );
             }
             context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
