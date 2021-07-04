@@ -45,7 +45,7 @@ class UserManagementScreenState extends State<UserManagementScreen> {
   Widget _bar(double size) {
     return AppBar(
       title: Text(
-        'Verwalte deine Nutzer',
+        'Nutzerverwaltung',
         style: LamaTextTheme.getStyle(fontSize: 18),
       ),
       toolbarHeight: size,
