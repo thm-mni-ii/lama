@@ -181,9 +181,9 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 size: 25,
               ),
               onPressed: () {
-                context
-                    .read<TasksetOprionsBloc>()
-                    .add(TasksetOptionsReadUrl(urls[index]));
+                context.read<TasksetOprionsBloc>().add(TasksetOptionsReAddUrl(
+                    urls[index],
+                    RepositoryProvider.of<TasksetRepository>(context)));
               },
             )
           ],
