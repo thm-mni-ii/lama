@@ -581,8 +581,7 @@ class DatabaseProvider {
     await db.delete(tableLeftToSolve);
   }
 
-  Future<int> insertLeftToSolve(
-      String taskString, int leftToSolve, User user) async {
+  Future<int> insertLeftToSolve(String taskString, int leftToSolve, User user) async {
     final db = await database;
     LeftToSolve lts =
     LeftToSolve(taskString: taskString, leftToSolve: leftToSolve, userLTSId: user.id, doesStillExist: 0);
@@ -615,19 +614,15 @@ class DatabaseProvider {
     print("curVal: " + t.leftToSolve.toString());
     int newVal = max(t.leftToSolve - 1, -2);
     print("setting to: " + newVal.toString());
-    LeftToSolve lts =
-    LeftToSolve(leftToSolve: newVal);
-    return await db.update(tableLeftToSolve, lts.toMap(),
+    return await db.update(tableLeftToSolve, <String, dynamic>{LeftToSolveFields.columnLeftToSolve: newVal},
         where: "${LeftToSolveFields.columnTaskString} = ? and ${LeftToSolveFields.columnUserLTSId} = ?",
         whereArgs: [t.toString(), user.id]);
   }
 
   Future<int> setDoesStillExist(Task t) async {
     final db = await database;
-    LeftToSolve lts =
-    LeftToSolve(doesStillExist: 1);
     print("Set flag for " + t.toString());
-    return await db.update(tableLeftToSolve, lts.toMap(),
+    return await db.update(tableLeftToSolve, <String, dynamic>{LeftToSolveFields.columnDoesStillExist: 1},
         where: "${LeftToSolveFields.columnTaskString} = ?", whereArgs: [t.toString()]);
   }
 
@@ -640,8 +635,6 @@ class DatabaseProvider {
 
   Future<int> resetAllStillExistFlags() async {
     final db = await database;
-    LeftToSolve lts =
-    LeftToSolve(doesStillExist: 0);
-    return await db.update(tableLeftToSolve, lts.toMap());
+    return await db.update(tableLeftToSolve, <String, dynamic>{LeftToSolveFields.columnDoesStillExist: 0});
   }
 }
