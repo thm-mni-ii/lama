@@ -68,8 +68,8 @@ class Monkey extends AnimationComponent {
     );
 
     // idle
-    _idleLeft = spriteSheet.createAnimation(0, loop: true, from: 0, to: 2, stepTime: stepTime / 4);
-    _idleRight = spriteSheetMirror.createAnimation(0, loop: true, from: 0, to: 2, stepTime: stepTime / 4);
+    _idleLeft = spriteSheet.createAnimation(0, loop: true, from: 0, to: 3, stepTime: stepTime);
+    _idleRight = spriteSheetMirror.createAnimation(0, loop: true, from: 0, to: 3, stepTime: stepTime);
 
     // climb
     _climbLeft = spriteSheet.createAnimation(0, loop: false, from: 3, to: 7, stepTime: stepTime / 4);

@@ -57,15 +57,15 @@ class ClimberBranches extends Component {
 
     for(var i = 0; i < _branchCount; i++){
       var branch = SpriteComponent()
-        ..height = _game.tileSize
-        ..width = _game.tileSize * 3
+        ..height = _game.branchSize
+        ..width = _game.branchSize * 3
         ..y = _game.screenSize.height / 1.5 - (_branchDistance + i*_branchDistance)
         ..anchor = Anchor.topLeft;
       _branches.add(branch);
 
       if (_rnd.nextBool()) {
         branch.sprite = Sprite('png/stick_3m.png');
-        branch.x = _game.screenSize.width / 2 - this._offsetX - 3 * _game.tileSize;
+        branch.x = _game.screenSize.width / 2 - this._offsetX - 3 * _game.branchSize;
       }
       else {
         branch.sprite = Sprite('png/stick_3.png');
@@ -84,7 +84,7 @@ class ClimberBranches extends Component {
 
         if (_rnd.nextBool()) {
           branchElement.sprite = Sprite('png/stick_3m.png');
-          branchElement.x = _game.screenSize.width / 2 - this._offsetX - 3 * _game.tileSize;
+          branchElement.x = _game.screenSize.width / 2 - this._offsetX - 3 * _game.branchSize;
         }
         else {
           branchElement.sprite = Sprite('png/stick_3.png');

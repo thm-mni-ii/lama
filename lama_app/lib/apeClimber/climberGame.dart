@@ -2,7 +2,6 @@ import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/components/parallax_component.dart';
-import 'package:flame/components/component.dart';
 
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/monkeyTimer.dart';
@@ -62,7 +61,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   bool _backMoving = false;
   /// pixel left which the background has to move
   ClimberBranches _climberBranches;
-  double tileSize;
+  double branchSize;
   /// time left for the animation of the background
   double _backgroundMoveTimeLeft = 0;
   /// the [UserRepository] to interact with the database and get the user infos
@@ -124,7 +123,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
       if (monkey.isLeft == _climberBranches.isLeft) {
         _timer.pause();
-        _gameOver("Ast berührt");
+        _gameOver("Ast berührt!!");
       }
     }
     on StateError {
@@ -145,6 +144,10 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     components.whereType<Monkey>().forEach((element) => element.destroy());
     components.whereType<MonkeyTimer>().forEach((element) => element.destroy());
 
+    // initialize monkey
+    add(Monkey(_monkeySize, _animationTime)
+      ..onMovementFinished = _checkCollision);
+
     // add branches
     _climberBranches = ClimberBranches(this, _monkeySize, _monkeySize / 4, _animationTime)
       ..onBranchesMoved = increaseScore;
@@ -154,10 +157,6 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     _timer = MonkeyTimer(_onTimerFinished)
       ..onWidgetUpdated = _onTimerWidgetUpdated;
     add(_timer);
-
-    // initialize monkey
-    add(Monkey(_monkeySize, _animationTime)
-      ..onMovementFinished = _checkCollision);
 
     // start timer
     _timer.start();
@@ -207,7 +206,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         timerWidgetName,
         widget);
 
-    _gameOver("Zeit abgelaufen");
+    _gameOver("Zeit abgelaufen!!");
   }
 
   /// This method is the handler when the timer finished.
@@ -249,7 +248,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
         MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
 
-    tileSize = screenSize.width / tilesX;
+    branchSize = screenSize.width / tilesX;
 
     super.resize(size);
   }

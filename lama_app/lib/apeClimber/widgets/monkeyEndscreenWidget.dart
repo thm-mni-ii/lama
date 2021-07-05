@@ -47,7 +47,17 @@ class MonkeyEndscreenWidget extends StatelessWidget {
                   ),
                 child: Text(
                   text,
-                  style: TextStyle(fontSize: 20.0, color: LamaColors.white, fontStyle: FontStyle.italic),
+                  style: TextStyle(
+                      shadows: [
+                        Shadow(
+                            color: LamaColors.black.withOpacity(0.3),
+                            offset: Offset(2,2)
+                        ),
+                      ],
+                      fontSize: 20.0,
+                      color: LamaColors.white,
+                      fontStyle: FontStyle.italic,
+                      decoration: TextDecoration.underline),
                 ),
               ),
               Text(
