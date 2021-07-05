@@ -61,7 +61,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   bool _backMoving = false;
   /// pixel left which the background has to move
   ClimberBranches _climberBranches;
-  double tileSize;
+  double branchSize;
   /// time left for the animation of the background
   double _backgroundMoveTimeLeft = 0;
   /// the [UserRepository] to interact with the database and get the user infos
@@ -248,7 +248,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
         MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
 
-    tileSize = screenSize.width / tilesX;
+    branchSize = screenSize.width / tilesX;
 
     super.resize(size);
   }
