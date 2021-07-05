@@ -1,7 +1,6 @@
 import 'package:flame/components/timer_component.dart';
 import 'package:flame/time.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
-import 'dart:developer' as developer;
 
 class MonkeyTimer extends TimerComponent {
   // SETTINGS
@@ -13,7 +12,7 @@ class MonkeyTimer extends TimerComponent {
   /// string which gets displayed of the widget when timer stopped.
   static const _stopString = "Stop";
   /// seconds the timer will run
-  static const _seconds = 8.0;
+  static const _seconds = 120.0;
   // --------
   // SETTINGS
 
