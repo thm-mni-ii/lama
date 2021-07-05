@@ -1,6 +1,7 @@
 import 'package:flame/components/timer_component.dart';
 import 'package:flame/time.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
+import 'dart:developer' as developer;
 
 class MonkeyTimer extends TimerComponent {
   // SETTINGS
@@ -12,7 +13,7 @@ class MonkeyTimer extends TimerComponent {
   /// string which gets displayed of the widget when timer stopped.
   static const _stopString = "Stop";
   /// seconds the timer will run
-  static const _seconds = 12.0;
+  static const _seconds = 8.0;
   // --------
   // SETTINGS
 
@@ -51,13 +52,14 @@ class MonkeyTimer extends TimerComponent {
   @override
   void update(double dt) {
     if (timer.isRunning()) {
+      var secondsLeft = (_seconds - timer.current).ceil();
       // calculate the minutes left
-      var minLeft = (_seconds - timer.current) ~/ 60;
+      var minLeft = ((secondsLeft) ~/ 60).toInt();
       // calculate the seconds left
-      var secLeft = _seconds - timer.current - (minLeft * 60);
+      var secLeft = (secondsLeft - (minLeft * 60)).ceil();
       // calls the onWidgetUpdated function
       onWidgetUpdated?.call(MonkeyTimerWidget(
-        text: "${minLeft.toString().padLeft(2, '0')}:${secLeft.toStringAsFixed(0).padLeft(2, '0')}",
+        text: "${minLeft.toString().padLeft(2, '0')}:${secLeft.toString().padLeft(2, '0')}",
         percent: timer.current,
       ));
     } else if (timer.isFinished()) {
