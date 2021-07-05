@@ -239,7 +239,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
           score: score,
           onQuitPressed: _quit,
         ));
-    
+
     // removed the playMode widget
     removeWidgetOverlay(playPauseWidgetName);
   }
