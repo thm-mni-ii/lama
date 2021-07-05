@@ -1,5 +1,17 @@
 import '../../db/database_provider.dart';
 
+final String tableUser = "user";
+
+class UserFields{
+  static final String columnId = "id";
+  static final String columnName = "name";
+  static final String columnPassword = "password";
+  static final String columnGrade = "grade";
+  static final String columnCoins = "coins";
+  static final String columnIsAdmin = "isAdmin";
+  static final String columnAvatar = "avatar";
+}
+
 class User {
   int id;
   String name;
@@ -19,22 +31,22 @@ class User {
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      DatabaseProvider.columnName: name,
-      DatabaseProvider.columnPassword: password,
-      DatabaseProvider.columnGrade: grade,
-      DatabaseProvider.columnCoins: coins,
-      DatabaseProvider.columnIsAdmin: isAdmin ? 1 : 0,
-      DatabaseProvider.columnAvatar: avatar
+      UserFields.columnName: name,
+      UserFields.columnPassword: password,
+      UserFields.columnGrade: grade,
+      UserFields.columnCoins: coins,
+      UserFields.columnIsAdmin: isAdmin ? 1 : 0,
+      UserFields.columnAvatar: avatar
     };
     return map;
   }
 
   User.fromMap(Map<String, dynamic> map) {
-    id = map[DatabaseProvider.columnId];
-    name = map[DatabaseProvider.columnName];
-    grade = map[DatabaseProvider.columnGrade];
-    coins = map[DatabaseProvider.columnCoins];
-    isAdmin = map[DatabaseProvider.columnIsAdmin] == 1;
-    avatar = map[DatabaseProvider.columnAvatar];
+    id = map[UserFields.columnId];
+    name = map[UserFields.columnName];
+    grade = map[UserFields.columnGrade];
+    coins = map[UserFields.columnCoins];
+    isAdmin = map[UserFields.columnIsAdmin] == 1;
+    avatar = map[UserFields.columnAvatar];
   }
 }

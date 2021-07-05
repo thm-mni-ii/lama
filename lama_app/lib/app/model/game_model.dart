@@ -1,5 +1,12 @@
 import '../../db/database_provider.dart';
 
+final String tableGames = "game";
+
+class GamesFields{
+  static final String columnGamesId = "id";
+  static final String columnGamesName = "name";
+}
+
 class Game {
   int id;
   String name;
@@ -8,13 +15,13 @@ class Game {
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      DatabaseProvider.columnGamesName: name,
+      GamesFields.columnGamesName: name,
     };
     return map;
   }
 
   Game.fromMap(Map<String, dynamic> map) {
-    id = map[DatabaseProvider.columnGamesId];
-    name = map[DatabaseProvider.columnGamesName];
+    id = map[GamesFields.columnGamesId];
+    name = map[GamesFields.columnGamesName];
   }
 }
