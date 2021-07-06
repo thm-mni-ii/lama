@@ -170,7 +170,7 @@ class Monkey extends AnimationComponent {
   void resize(Size size) {
     // start location in the center with the offset
     x = size.width / 2 - _size - relOffsetCenter[0] * _size;
-    y = size.height / 1.5 - _size / 2 - relOffsetCenter[1] * _size;
+    y = size.height / 1.4 - _size / 2 - relOffsetCenter[1] * _size;
   }
 }
 

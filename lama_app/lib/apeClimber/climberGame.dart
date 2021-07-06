@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:developer' as developer;
 
 import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
@@ -122,6 +121,21 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// This method increase the score as well as the score widget.
   void increaseScore() {
     score += 1;
+    _updateScoreWidget();
+  }
+
+  /// This method decrease the score as well as the score widget.
+  void decreaseScore() {
+    score -= 1;
+    _updateScoreWidget();
+  }
+
+  /// This methods updates the score widget.
+  void _updateScoreWidget() {
+    if (!_running) {
+      return;
+    }
+
     removeWidgetOverlay(scoreWidgetName);
     addWidgetOverlay(scoreWidgetName, MonkeyScoreWidget(text: score.toString()));
   }
@@ -130,6 +144,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   void _checkCollision() {
     try {
       if (_monkey.isLeft == _climberBranches.isLeft) {
+        //decreaseScore();
         _climberBranches.highlightCollisionBranch();
         _timer.pause();
         _gameOver("Ast berührt!!");
@@ -232,7 +247,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// 
   /// sideffects:
   ///   adds [MonkeyEndscreenWidget] widget
-  void _gameOver(String endText){
+  void _gameOver(String endText) {
+    _running = false;
     pauseEngine();
     _saveHighScore();
 
