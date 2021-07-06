@@ -12,7 +12,7 @@ class ClimberBranch extends SpriteComponent {
       var tmp = Paint();
 
       if (hit) {
-        tmp.color = Colors.red.withOpacity(0.7);
+        tmp.color = Colors.white.withOpacity(0.7);
       } else {
         tmp.color = Colors.white.withOpacity(opacity);
       }

@@ -129,9 +129,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// This method checks if the monkey collides with the collision branch.
   void _checkCollision() {
     try {
-      var monkey = components.whereType<Monkey>().first;
-
-      if (monkey.isLeft == _climberBranches.isLeft) {
+      if (_monkey.isLeft == _climberBranches.isLeft) {
+        _climberBranches.highlightCollisionBranch();
         _timer.pause();
         _gameOver("Ast berührt!!");
       }

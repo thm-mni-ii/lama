@@ -50,6 +50,10 @@ class ClimberBranches extends Component {
     _createBranches();
   }
 
+  void highlightCollisionBranch() {
+    collisionBranch.hit = true;
+  }
+
   /// This method creates all branch SpriteComponents
   void _createBranches() {
     _branchCount = (_game.screenSize.height / _branchDistance) + 1;
