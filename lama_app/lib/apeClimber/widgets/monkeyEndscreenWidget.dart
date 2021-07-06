@@ -65,7 +65,7 @@ class MonkeyEndscreenWidget extends StatelessWidget {
                 style: TextStyle(fontSize: 40.0, color: LamaColors.white),
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 20),
+                padding: EdgeInsets.only(bottom: 10),
                 child: Text(
                   '$score',
                   style: TextStyle(fontSize: 70.0, color: LamaColors.white),
