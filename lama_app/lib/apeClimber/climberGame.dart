@@ -1,3 +1,6 @@
+import 'dart:collection';
+import 'dart:developer' as developer;
+
 import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
@@ -36,12 +39,14 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   /// id of the game
   final _gameId = 3;
   /// Time for each click animation
-  final _animationTime = 0.2;
+  final _animationTime = 0.125;
   /// Amount of Components the Tree consists of
   final _treeComponentAmount = 5;
   // --------
   // SETTINGS
 
+  Monkey _monkey;
+  Queue<ClimbSide> _inputQueue = Queue();
   /// Timer component for display and organize the gametimer.
   MonkeyTimer _timer;
   /// flag which indicates if the game is running
@@ -193,8 +198,9 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     components.whereType<MonkeyTimer>().forEach((element) => element.destroy());
 
     // initialize monkey
-    add(Monkey(_monkeySize, _animationTime)
-      ..onMovementFinished = _checkCollision);
+    _monkey = Monkey(_monkeySize, _animationTime)
+      ..onMovementFinished = _checkCollision;
+    add(_monkey);
 
     // add branches
     _climberBranches = ClimberBranches(this, _monkeySize, _monkeySize / 4, _animationTime)
@@ -280,6 +286,19 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   @override
   void update(double t) {
+    // check input queue to select the next movement
+    if (_monkey != null && !_monkey.isMoving && _inputQueue.isNotEmpty) {
+      components.whereType<Monkey>().forEach((element) => element.move(_inputQueue.removeLast()));
+
+      _moveBackground();
+
+      // move the tree
+      _tree?.move(_monkeySize);
+      // move the branches
+      _climberBranches.move(_monkeySize);
+    }
+
+    // background y animation on movement
     if (_backMoving) {
       if (_backgroundMoveTimeLeft > 0) {
         _back.layerDelta = Offset(6, -6);
@@ -310,18 +329,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   void onTapDown(TapDownDetails d) {
     if (_running) {
-      components.whereType<Monkey>().forEach((element) {
-        if (d.localPosition.dx < screenSize.width / 2) {
-          element.move(ClimbSide.Left);
-        } else {
-          element.move(ClimbSide.Right);
-        }
-      });
-      _moveBackground();
-
-      // move the tree
-      _tree?.move(_monkeySize);
-      _climberBranches.move(_monkeySize);
+      // add input to queue
+      _inputQueue.addFirst(d.localPosition.dx < screenSize.width / 2 ? ClimbSide.Left : ClimbSide.Right);
     }
   }
 }

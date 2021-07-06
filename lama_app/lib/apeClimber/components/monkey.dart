@@ -43,6 +43,10 @@ class Monkey extends AnimationComponent {
     return _isLeft;
   }
 
+  get isMoving {
+    return _moving;
+  }
+
   /// Initialize the class with the given [_size] and [_game].
   Monkey(this._size, this.stepTime) : super.empty() {
     // size
