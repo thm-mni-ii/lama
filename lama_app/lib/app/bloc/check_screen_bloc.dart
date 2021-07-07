@@ -10,6 +10,7 @@ import 'package:lama_app/app/screens/create_admin_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
 import 'package:lama_app/db/database_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
   CheckScreenBloc({CheckScreenState initialState}) : super(initialState);
@@ -30,6 +31,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
         return AdminExist();
       }
     }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('enableDefaultTaskset', true);
     return ShowDSGVO(await _loadDSGVO());
   }
 

@@ -9,6 +9,7 @@ import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminMenuScreen extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class AdminMenuScreen extends StatefulWidget {
 
 class _AdminMenuScreenState extends State<AdminMenuScreen> {
   bool _isChecked = false;
+  SharedPreferences prefs;
 
   @override
   Widget build(BuildContext context) {
@@ -170,4 +172,8 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
       ),
     );
   }
+}
+
+abstract class AdminUtils {
+  static final String enableDefaultTasksetsPref = 'enableDefaultTaskset';
 }
