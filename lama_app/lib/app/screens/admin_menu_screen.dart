@@ -16,6 +16,8 @@ class AdminMenuScreen extends StatefulWidget {
 }
 
 class _AdminMenuScreenState extends State<AdminMenuScreen> {
+  bool _isChecked = false;
+
   @override
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
@@ -63,8 +65,34 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               )
             },
           ),
+          _checkBox(),
         ],
       ),
+    );
+  }
+
+  Widget _checkBox() {
+    Color getColor(Set<MaterialState> states) {
+      const Set<MaterialState> interactiveStates = <MaterialState>{
+        MaterialState.pressed,
+        MaterialState.hovered,
+        MaterialState.focused,
+      };
+      if (states.any(interactiveStates.contains)) {
+        return LamaColors.blueAccent;
+      }
+      return LamaColors.bluePrimary;
+    }
+
+    return Checkbox(
+      checkColor: Colors.white,
+      fillColor: MaterialStateProperty.resolveWith(getColor),
+      value: _isChecked,
+      onChanged: (bool value) {
+        setState(() {
+          _isChecked = value;
+        });
+      },
     );
   }
 
