@@ -10,7 +10,12 @@ import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
-class AdminMenuScreen extends StatelessWidget {
+class AdminMenuScreen extends StatefulWidget {
+  @override
+  _AdminMenuScreenState createState() => _AdminMenuScreenState();
+}
+
+class _AdminMenuScreenState extends State<AdminMenuScreen> {
   @override
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
