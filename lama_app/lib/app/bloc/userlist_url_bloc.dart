@@ -51,18 +51,19 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
   }
 
   Future<UserlistUrlState> _parsUrl() async {
-    print('$_url :: pars...');
     for (int i = 0; i < _url.length; i++) {
       var response = await http
           .get(Uri.parse(_url), headers: {'Content-type': 'application/json'});
       if (response.statusCode == 200) {
-        await _loadtUsersFromUrl(utf8.decode(response.bodyBytes));
+        _userList = await _loadtUsersFromUrl(utf8.decode(response.bodyBytes));
       }
     }
+    return UserlistUrlParsingSuccessfull(_userList);
   }
 
-  Future<void> _loadtUsersFromUrl(userContent) async {
+  Future<List<User>> _loadtUsersFromUrl(userContent) async {
+    List<User> list = [];
     User user = User.fromJson(jsonDecode(userContent));
-    _userList.add(user);
+    list.add(user);
   }
 }

@@ -1,3 +1,5 @@
+import 'package:lama_app/app/model/user_model.dart';
+
 abstract class UserlistUrlState {}
 
 class UserlistUrlParsingFailed extends UserlistUrlState {
@@ -11,5 +13,6 @@ class UserlistUrlTesting extends UserlistUrlState {}
 class UserlistUrlTestingSuccessfull extends UserlistUrlState {}
 
 class UserlistUrlParsingSuccessfull extends UserlistUrlState {
-  //TODO save all parsed Users and show them in the View
+  List<User> userList;
+  UserlistUrlParsingSuccessfull(this.userList);
 }
