@@ -84,15 +84,27 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
       return LamaColors.bluePrimary;
     }
 
-    return Checkbox(
-      checkColor: Colors.white,
-      fillColor: MaterialStateProperty.resolveWith(getColor),
-      value: _isChecked,
-      onChanged: (bool value) {
-        setState(() {
-          _isChecked = value;
-        });
-      },
+    return Center(
+      child: Row(
+        children: [
+          Checkbox(
+            checkColor: Colors.white,
+            fillColor: MaterialStateProperty.resolveWith(getColor),
+            value: _isChecked,
+            onChanged: (bool value) {
+              setState(() {
+                _isChecked = value;
+              });
+            },
+          ),
+          Text(
+            'Standardaufgaben aktivieren?',
+            style:
+                LamaTextTheme.getStyle(fontSize: 14, color: LamaColors.black),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 
