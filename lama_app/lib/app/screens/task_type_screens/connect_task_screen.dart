@@ -85,18 +85,14 @@ class ConnectState extends State<ConnectTaskScreen> {
             ],
           ),
         ),
-
-        CustomPaint(
-          painter: CurvePainter(),
-          child: Container(
+          Container(
             //color: LamaColors.redPrimary,
             // positioning answers on the screen
             child: Row(
               children: [
                 //left words
-
                 Container(
-                    color: LamaColors.redPrimary,
+                    //color: LamaColors.redPrimary,
                     padding: EdgeInsets.only(top: 20, left: 10),
                     width: (constraints.maxWidth / 100) * 37.5,
                     height: (constraints.maxHeight / 100) * 60,
@@ -138,8 +134,6 @@ class ConnectState extends State<ConnectTaskScreen> {
               ],
             ),
           ),
-        ),
-
         //space to "fertig" button
         SizedBox(
           height: (constraints.maxHeight / 100) * 5,
@@ -177,11 +171,10 @@ class ConnectState extends State<ConnectTaskScreen> {
     );
   }
 
-  // Method to build posible answers
+  // Method to build possible answers
   Widget _buildPair(context, index, List<Item> itemList) {
     return InkWell(
       child: Container(
-          key: itemList[index].key,
           height: 7,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -196,11 +189,6 @@ class ConnectState extends State<ConnectTaskScreen> {
                     fontSize: 15, color: LamaColors.black)),
           )),
       onTap: () {
-        RenderBox box = itemList[index].key.currentContext.findRenderObject();
-        Offset position = box.localToGlobal(Offset.zero);
-        itemList[index].xValue = itemList[index].key.globalPaintBounds.right;
-        itemList[index].yValue = itemList[index].key.globalPaintBounds.bottom;
-
         if (!choosenWords.contains(itemList[index])) {
           choosenWords.add(itemList[index]);
         }
@@ -256,15 +244,11 @@ class Item {
   bool touched;
   String content;
   bool left;
-  double xValue;
-  double yValue;
-  GlobalKey key;
 
   Item(bool touched, String content, bool left, GlobalKey key) {
     this.touched = touched;
     this.content = content;
     this.left = left;
-    this.key = key;
   }
 }
 
@@ -273,31 +257,4 @@ class Pair {
   Item itemTwo;
 
   Pair(this.itemOne, this.itemTwo);
-}
-
-class CurvePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (pairList.isEmpty) {
-      return;
-    }
-    var paint = Paint();
-    paint.color = Colors.black;
-    paint.strokeWidth = 5;
-    print(pairList[0].itemOne.yValue);
-    print(pairList[0].itemOne.xValue);
-    pairList.forEach((element) {
-      canvas.drawLine(
-          Offset(element.itemOne.xValue, element.itemOne.yValue),
-          Offset(element.itemTwo.xValue, element.itemTwo.yValue),
-          //Offset(10, 0),
-          //Offset(500, 500),
-          paint);
-    });
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
 }
