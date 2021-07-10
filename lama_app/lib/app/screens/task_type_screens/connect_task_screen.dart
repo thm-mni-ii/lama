@@ -10,37 +10,55 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/GlobalKeyExtension.dart';
 
+///This file creates the Connect task Screen
+///The connect task is a task where two list of words gets showen on the screen
+///which needs to be connected. The Words on the left side can be selected and
+///connected with items on the right side. Connected Items will be showen in the
+///same color. If everthing is connect the ontrol of results can be started by puhing
+///the "fertig" button.
+///
+/// Author: T.Rentsch
+/// latest Changes: 10.07.2021
+
+/// ConnectTaskScreen class is made to create the Connecttasksreen
+/// StatefulWidget is extended to get the Method setState
 class ConnectTaskScreen extends StatefulWidget {
   final TaskConnect task;
   final BoxConstraints constraints;
-
   ConnectTaskScreen(this.task, this.constraints);
-
   @override
   State<StatefulWidget> createState() {
     return ConnectState(task, constraints);
   }
 }
 
+/// ConnectState class creates the Conect task Screen
 class ConnectState extends State<ConnectTaskScreen> {
+  // task infos and constraints handed over by tasktypeScreen
   final TaskConnect task;
   final BoxConstraints constraints;
+  // Both lists stores the word which needs to be written on the Screen
   List<Item> leftWords = [];
   List<Item> rightWords = [];
+  // List colors is needed to pass the colors to the single items
   List<Color> colors = [
     LamaColors.redPrimary,
     LamaColors.orangePrimary,
     LamaColors.greenPrimary,
     LamaColors.bluePrimary
   ];
+  // leftTouched indicates if a item on the left side is selected
   bool leftTouched = false;
+  // choosenWord stores the Item which is selected
   Item choosenWord;
 
   ConnectState(this.task, this.constraints) {
+    // shuffle every list to create a illusion of dynamic task designe
     task.pair1.shuffle();
     task.pair2.shuffle();
     colors.shuffle();
     int i = 0;
+    // fill the left and right word lists with Item types
     task.pair1.forEach((element) {
       leftWords.add(Item(false, element.toString(), true, colors[i], task));
       i++;
