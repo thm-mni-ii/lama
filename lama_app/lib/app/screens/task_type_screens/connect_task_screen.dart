@@ -155,8 +155,35 @@ class ConnectState extends State<ConnectTaskScreen> {
               ]),
           child: InkWell(
             onTap: (){
-            bool answer = checkAnswer();
-            print(answer);
+              bool noObjectConnected = true;
+              rightWords.forEach((element) {
+                if(element.shownColor != LamaColors.white){
+                  noObjectConnected = false;
+                }
+              });
+              if(noObjectConnected){
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: Duration(seconds: 2),
+                      content: Container(
+                          height: (constraints.maxHeight / 100) * 6,
+                          alignment: Alignment.bottomCenter,
+                          child: Center(
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text(
+                                  "Verbinde mindestens ein Wort!",
+                                  style: LamaTextTheme.getStyle(),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ))),
+                      backgroundColor: LamaColors.mainPink,
+                    ));
+              }
+              else {
+                bool answer = checkAnswer();
+                print(answer);
+              }
           },
             child: Center(
               child: Text(
