@@ -46,7 +46,8 @@ class ConnectState extends State<ConnectTaskScreen> {
       i++;
     });
     task.pair2.forEach((element) {
-      rightWords.add(Item(false, element.toString(), false, LamaColors.white, task));
+      rightWords
+          .add(Item(false, element.toString(), false, LamaColors.white, task));
     });
   }
 
@@ -66,10 +67,7 @@ class ConnectState extends State<ConnectTaskScreen> {
                 child: Container(
                   padding: EdgeInsets.only(left: 75),
                   height: 50,
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
+                  width: MediaQuery.of(context).size.width,
                   child: Bubble(
                     nip: BubbleNip.leftCenter,
                     child: Center(
@@ -110,7 +108,7 @@ class ConnectState extends State<ConnectTaskScreen> {
                     ),
                     itemCount: leftWords.length,
                     itemBuilder: (context, index) =>
-                        _buildPair(context, index, leftWords),
+                        _buildPair(index, leftWords),
                   )),
               //Space between both containers
               Container(
@@ -130,7 +128,7 @@ class ConnectState extends State<ConnectTaskScreen> {
                     ),
                     itemCount: rightWords.length,
                     itemBuilder: (context, index) =>
-                        _buildPair(context, index, rightWords),
+                        _buildPair(index, rightWords),
                   )),
             ],
           ),
@@ -154,38 +152,37 @@ class ConnectState extends State<ConnectTaskScreen> {
                     offset: Offset(0, 3))
               ]),
           child: InkWell(
-            onTap: (){
+            onTap: () {
               bool noObjectConnected = true;
               rightWords.forEach((element) {
-                if(element.shownColor != LamaColors.white){
+                if (element.shownColor != LamaColors.white) {
                   noObjectConnected = false;
                 }
               });
-              if(noObjectConnected){
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      duration: Duration(seconds: 2),
-                      content: Container(
-                          height: (constraints.maxHeight / 100) * 6,
-                          alignment: Alignment.bottomCenter,
-                          child: Center(
-                              child: FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Text(
-                                  "Verbinde mindestens ein Wort!",
-                                  style: LamaTextTheme.getStyle(),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ))),
-                      backgroundColor: LamaColors.mainPink,
-                    ));
-              }
-              else {
+              if (noObjectConnected) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  duration: Duration(seconds: 2),
+                  content: Container(
+                      height: (constraints.maxHeight / 100) * 6,
+                      alignment: Alignment.bottomCenter,
+                      child: Center(
+                          child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(
+                          "Verbinde mindestens ein Wort!",
+                          style: LamaTextTheme.getStyle(),
+                          textAlign: TextAlign.center,
+                        ),
+                      ))),
+                  backgroundColor: LamaColors.mainPink,
+                ));
+              } else {
                 bool answer = checkAnswer();
                 print(answer);
-                BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initConnect(answer));
+                BlocProvider.of<TaskBloc>(context)
+                    .add(AnswerTaskEvent.initConnect(answer));
               }
-          },
+            },
             child: Center(
               child: Text(
                 "Fertig!",
@@ -202,8 +199,11 @@ class ConnectState extends State<ConnectTaskScreen> {
     );
   }
 
-  // Method to build possible answers
-  Widget _buildPair(context, index, List<Item> itemList) {
+  /// _buildPair is used by the Gridview Builder to build the Widgets shown left and right on the screen.
+  /// The method gets called for the left and than for the right Items.
+  /// int [index]           = Used to locate which item is used from the List
+  /// List<Item> [itemList] = Is the list filled with either left or right Items
+  Widget _buildPair(index, List<Item> itemList) {
     return InkWell(
       child: Container(
           height: 7,
@@ -217,14 +217,24 @@ class ConnectState extends State<ConnectTaskScreen> {
                 style: LamaTextTheme.getStyle(
                     fontSize: 15, color: LamaColors.black)),
           )),
+      // Used to call the touch method. Needs to be set for every single widget
       onTap: () {
         touch(index, itemList);
       },
     );
   }
 
+  /// touch is called when one of the Items gets pressed on.
+  /// The method decides based on which item got pressed, if the Item
+  /// needs to be set to white + untouched or the provided color of one
+  /// of the left items. After this, setState is called and the screen gets rebuilded
+  /// int [index]           = Used to locate which item is used from the List
+  /// List<Item> [itemList] = Is the list filled with either left or right Items
   void touch(int index, List<Item> itemlist) {
+    // check if touched item is located left
     if (itemlist[index].left) {
+      // check if a left item got selected bevore. If one is selected the greyed out items
+      // will be colored so that it is visual that the selected left Item isnt selected anymore
       if (leftTouched) {
         leftTouched = false;
         leftWords.forEach((element) {
@@ -234,6 +244,8 @@ class ConnectState extends State<ConnectTaskScreen> {
           element.touched = false;
         });
       }
+      // if no left item got selected bevore, the touched left item will be set as the selected item and
+      // all other items on the right side will be greyed out
       else {
         leftTouched = true;
         choosenWord = itemlist[index];
@@ -245,79 +257,107 @@ class ConnectState extends State<ConnectTaskScreen> {
         });
       }
     }
+    // if a right item got selected it gets checked if a left item got selected at first.
+    // if yes the color of the item will be adjusted,
+    // else a snackbar will be showen
     else {
       if (leftTouched) {
+        // check if item got pressed bevore
         if (itemlist[index].touched) {
           itemlist[index].touched = false;
-          if(itemlist[index].shownColor != choosenWord.shownColor){
+          // is the pressed item colored in a different color as the selected left Item
+          // the color will be adjusted.
+          // if its the same color, the item gets white to indicate it isn´t selected anymore
+          if (itemlist[index].shownColor != choosenWord.shownColor) {
             itemlist[index].shownColor = choosenWord.color;
-          }
-          else {
+          } else {
             itemlist[index].shownColor = LamaColors.white;
           }
         }
+        // is the item pressed for the first time, the color changes to the color of the
+        // selected left Item
         else {
           itemlist[index].shownColor = choosenWord.color;
           itemlist[index].touched = true;
         }
       }
+      // Snackbar which is shown if no left item is selected
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              duration: Duration(seconds: 2),
-              content: Container(
-                  height: (constraints.maxHeight / 100) * 6,
-                  alignment: Alignment.bottomCenter,
-                  child: Center(
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text(
-                          "Wähle zuerst ein Wort von der linken Seite aus !",
-                          style: LamaTextTheme.getStyle(),
-                          textAlign: TextAlign.center,
-                        ),
-                      ))),
-              backgroundColor: LamaColors.mainPink,
-            ));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: Duration(seconds: 2),
+          content: Container(
+              height: (constraints.maxHeight / 100) * 6,
+              alignment: Alignment.bottomCenter,
+              child: Center(
+                  child: FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  "Wähle zuerst ein Wort von der linken Seite aus !",
+                  style: LamaTextTheme.getStyle(),
+                  textAlign: TextAlign.center,
+                ),
+              ))),
+          backgroundColor: LamaColors.mainPink,
+        ));
       }
     }
-    setState(() {});
+    setState(() {}); // rebuild whole screen
   }
 
-  bool checkAnswer(){
+  /// checkAnswer is used to compare the selected Answers with the provided Answers
+  /// The function returns a bool for either correct (true) or incorrect (false)
+  bool checkAnswer() {
+    bool result = false; // because of saftyreasons the result is initially assumed to be wrong
+    // because you can press the "fertig" button even when items on the left side are greyed out
+    // we need to set every item on the left side back to its initial color
     leftWords.forEach((element) {
       element.shownColor = element.color;
     });
-    bool result = false;
-      for(int i = 0; i < leftWords.length; i++){
-      List<String> answers = [];
+    // for every word on the left side the initial color is getting checked with the colors on
+    // the right side. When the colors match the content of the right item will be added to the
+    // answer list.
+    // After that for each left item the answer list will be checked if "answer" and item.correctAnswers
+    // are equal
+    for (int i = 0; i < leftWords.length; i++) {
+      List<String> answers = []; // stores the selected answers
+      // check which words on the right have the same color
       rightWords.forEach((right) {
-        if(leftWords[i].color == right.shownColor){
+        if (leftWords[i].color == right.shownColor) {
           answers.add(right.content);
         }
       });
-      if(answers.length > leftWords[i].correctAnswers.length || answers.length < leftWords[i].correctAnswers.length){
+      // Check if the answer list ist bigger/shorter than the answer list in the item
+      // because if this the case the result is automatically false
+      if (answers.length > leftWords[i].correctAnswers.length ||
+          answers.length < leftWords[i].correctAnswers.length) {
         result = false;
         return result;
       }
-
-        for(int y = 0; y < answers.length; y++){
-        if(leftWords[i].correctAnswers.contains(answers[y])){
+      // check if both list contain the same content
+      for (int y = 0; y < answers.length; y++) {
+        if (leftWords[i].correctAnswers.contains(answers[y])) {
           result = true;
-        }
-        else{
+        } else {
           result = false;
           return result;
         }
       }
-      if(result == false){
+      if (result == false) {
         return result;
       }
     }
-      return result;
+    return result;
   }
 }
 
+/// Class Item represent each word Written on the left and right side of the Screen
+/// bool [touched]    = indicator if item is currently selected
+/// String [content]  = is the word written inside the Widget
+/// bool [left]       = indicator if item is written on the left side of the screen
+/// Color [color]     = is the given color from the constructor. It´s important so that if a
+///                     Item from the left side changed its color to grey, it can remember its given color
+/// Color [shownColor] = is the color which is shown on the Display
+/// List<String> [correctAnswers] = to make the Answer validation easier each left Item stores its associated values(Answers)
 class Item {
   bool touched;
   String content;
@@ -327,20 +367,17 @@ class Item {
   List<String> correctAnswers = [];
 
   Item(this.touched, this.content, this.left, this.color, TaskConnect task) {
-    if(left){
+    if (left) {
+      // set the Color displayed on the screen to the given color from the constructor
       shownColor = color;
-
+      // add the associated values to each "left" item
       task.rightAnswers.forEach((element) {
         List<String> tmp = element.split(":");
-        if(tmp[0] == content){
+        if (tmp[0] == content) {
           tmp.remove(content);
           correctAnswers.addAll(tmp);
         }
       });
-      }
-
-
     }
   }
-
-
+}

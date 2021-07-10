@@ -53,8 +53,8 @@
            "left_to_solve": 3,
            "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
            "pair1": ["Affe", "Löwe", "Eisbär", "Baum"],
-           "pair2": ["braun", "Wurzel", "weiß", "grün"],
-           "rightAnswers": ["Affe:braun", "Eisbär:weiß", "Baum:grün:Wurzel"]
+           "pair2": ["klettern", "Wurzel", "Nordpol", "Savanne"],
+           "rightAnswers": ["Affe:klettern", "Eisbär:Nordpol", "Baum:Wurzel", "Löwe:Savanne"]
          }
         ]
 }
