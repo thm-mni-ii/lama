@@ -183,6 +183,7 @@ class ConnectState extends State<ConnectTaskScreen> {
               else {
                 bool answer = checkAnswer();
                 print(answer);
+                BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initConnect(answer));
               }
           },
             child: Center(
@@ -284,6 +285,9 @@ class ConnectState extends State<ConnectTaskScreen> {
   }
 
   bool checkAnswer(){
+    leftWords.forEach((element) {
+      element.shownColor = element.color;
+    });
     bool result = false;
       for(int i = 0; i < leftWords.length; i++){
       List<String> answers = [];

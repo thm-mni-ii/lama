@@ -84,6 +84,16 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
               subTaskResult: event.providedanswerStates);
         }
       }
+      else if (t is TaskConnect) {
+        if (event.providedAnswerBool) {
+          userRepository.addLamaCoins(t.reward);
+          answerResults.add(true);
+          yield TaskAnswerResultState(true);
+        } else {
+          answerResults.add(false);
+          yield TaskAnswerResultState(false);
+        }
+      }
       await Future.delayed(Duration(seconds: 1));
       if (curIndex >= tasks.length)
         yield AllTasksCompletedState(tasks, answerResults);
