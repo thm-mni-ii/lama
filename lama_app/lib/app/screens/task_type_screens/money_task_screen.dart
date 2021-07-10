@@ -29,6 +29,9 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
   double finalMoneyAmount;
   List<double> deletions = [];
 
+  //index maps to coins => 2€ = 0 1 € = 1, usw..
+  List<int> amounts = [0, 0, 0, 0, 0, 0, 0, 0];
+
   MoneyTaskState(this.task, this.constraints) {
     finalMoneyAmount = currentAmountDouble;
   }
@@ -73,7 +76,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
         ),
       ),
       // Money Balance display
-      Container(
+      /*Container(
         height: (constraints.maxHeight / 100) * 12,
         padding: EdgeInsets.only(top: 15),
         //color: LamaColors.greenAccent,
@@ -101,7 +104,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
             ),
           ),
         ),
-      ),
+      ),*/
       //2, 1, 50, 20
       Container(
         height: (constraints.maxHeight / 100) * 25,
@@ -112,53 +115,109 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               InkWell(
-                child: SvgPicture.asset(
-                  "assets/images/svg/EuroCoins/2_Euro.svg",
-                  semanticsLabel: "Zwei Euro",
-                  width: (constraints.maxWidth / 100) * 25,
+                child: Container(
+                  height: (constraints.maxHeight / 100) * 20,
+                  child: Stack(alignment: Alignment.centerRight, children: [
+                    SvgPicture.asset(
+                      "assets/images/svg/EuroCoins/2_Euro.svg",
+                      semanticsLabel: "Zwei Euro",
+                      width: (constraints.maxWidth / 100) * 25,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        amounts[0].toString(),
+                        style: LamaTextTheme.getStyle(color: LamaColors.black),
+                      ),
+                    ),
+                  ]),
                 ),
                 onTap: () {
                   setState(() {
                     deletions.add(2);
+                    amounts[0]++;
                     currentAmountDouble = currentAmountDouble + 2;
                   });
                 },
               ),
               InkWell(
-                child: SvgPicture.asset(
-                  "assets/images/svg/EuroCoins/1_Euro.svg",
-                  semanticsLabel: "Ein Euro",
-                  width: (constraints.maxWidth / 100) * 23,
+                child: Container(
+                  height: (constraints.maxHeight / 100) * 20,
+                  child: Stack(alignment: Alignment.centerRight, children: [
+                    SvgPicture.asset(
+                      "assets/images/svg/EuroCoins/1_Euro.svg",
+                      semanticsLabel: "Ein Euro",
+                      width: (constraints.maxWidth / 100) * 23,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        amounts[1].toString(),
+                        style: LamaTextTheme.getStyle(color: LamaColors.black),
+                      ),
+                    ),
+                  ]),
                 ),
                 onTap: () {
                   setState(() {
                     deletions.add(1);
+                    amounts[1]++;
                     currentAmountDouble = currentAmountDouble + 1;
                   });
                 },
               ),
               InkWell(
-                child: SvgPicture.asset(
-                  "assets/images/svg/EuroCoins/50_Cent.svg",
-                  semanticsLabel: "Fünfzig Cent",
-                  width: (constraints.maxWidth / 100) * 23,
+                child: Container(
+                  height: (constraints.maxHeight / 100) * 20,
+                  child: Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/images/svg/EuroCoins/50_Cent.svg",
+                        semanticsLabel: "Fünfzig Cent",
+                        width: (constraints.maxWidth / 100) * 23,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          amounts[2].toString(),
+                          style:
+                              LamaTextTheme.getStyle(color: LamaColors.black),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 onTap: () {
                   setState(() {
                     deletions.add(0.5);
+                    amounts[2]++;
                     currentAmountDouble = currentAmountDouble + 0.5;
                   });
                 },
               ),
               InkWell(
-                child: SvgPicture.asset(
-                  "assets/images/svg/EuroCoins/20_Cent.svg",
-                  semanticsLabel: "Zwanzig Cent",
-                  width: (constraints.maxWidth / 100) * 20,
+                child: Container(
+                  height: (constraints.maxHeight / 100) * 20,
+                  child: Stack(alignment: Alignment.centerRight, children: [
+                    SvgPicture.asset(
+                      "assets/images/svg/EuroCoins/20_Cent.svg",
+                      semanticsLabel: "Zwanzig Cent",
+                      width: (constraints.maxWidth / 100) * 20,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        amounts[3].toString(),
+                        style: LamaTextTheme.getStyle(color: LamaColors.black),
+                      ),
+                    ),
+                  ]),
                 ),
                 onTap: () {
                   setState(() {
                     deletions.add(0.2);
+                    amounts[3]++;
                     currentAmountDouble = currentAmountDouble + 0.2;
                   });
                 },
@@ -178,53 +237,121 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               InkWell(
-                child: SvgPicture.asset(
-                  "assets/images/svg/EuroCoins/10_Cent.svg",
-                  semanticsLabel: "Zehn Cent",
-                  width: (constraints.maxWidth / 100) * 20,
+                child: Container(
+                  height: (constraints.maxWidth / 100) * 20,
+                  width: (constraints.maxWidth / 100) * 25,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/images/svg/EuroCoins/10_Cent.svg",
+                        semanticsLabel: "Zehn Cent",
+                        width: (constraints.maxWidth / 100) * 20,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          amounts[4].toString(),
+                          style:
+                              LamaTextTheme.getStyle(color: LamaColors.black),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 onTap: () {
                   setState(() {
                     deletions.add(0.1);
+                    amounts[4]++;
                     currentAmountDouble = currentAmountDouble + 0.1;
                   });
                 },
               ),
               InkWell(
-                child: SvgPicture.asset(
-                  "assets/images/svg/EuroCoins/5_Cent.svg",
-                  semanticsLabel: "Fünf Cent",
-                  width: (constraints.maxWidth / 100) * 19,
+                child: Container(
+                  height: (constraints.maxWidth / 100) * 20,
+                  width: (constraints.maxWidth / 100) * 23,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/images/svg/EuroCoins/5_Cent.svg",
+                        semanticsLabel: "Fünf Cent",
+                        width: (constraints.maxWidth / 100) * 19,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          amounts[5].toString(),
+                          style:
+                              LamaTextTheme.getStyle(color: LamaColors.black),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 onTap: () {
                   setState(() {
                     deletions.add(0.05);
+                    amounts[5]++;
                     currentAmountDouble = currentAmountDouble + 0.05;
                   });
                 },
               ),
               InkWell(
-                child: SvgPicture.asset(
-                  "assets/images/svg/EuroCoins/2_Cent.svg",
-                  semanticsLabel: "Zwei Cent",
-                  width: (constraints.maxWidth / 100) * 16,
+                child: Container(
+                  height: (constraints.maxWidth / 100) * 20,
+                  width: (constraints.maxWidth / 100) * 23,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/images/svg/EuroCoins/2_Cent.svg",
+                        semanticsLabel: "Zwei Cent",
+                        width: (constraints.maxWidth / 100) * 16,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          amounts[6].toString(),
+                          style:
+                              LamaTextTheme.getStyle(color: LamaColors.black),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 onTap: () {
                   setState(() {
                     deletions.add(0.02);
+                    amounts[6]++;
                     currentAmountDouble = currentAmountDouble + 0.02;
                   });
                 },
               ),
               InkWell(
-                child: SvgPicture.asset(
-                  "assets/images/svg/EuroCoins/1_Cent.svg",
-                  semanticsLabel: "Ein Cent",
-                  width: (constraints.maxWidth / 100) * 13,
+                child: Container(
+                  height: (constraints.maxWidth / 100) * 20,
+                  width: (constraints.maxWidth / 100) * 20,
+                  child: Stack(alignment: Alignment.center, children: [
+                    SvgPicture.asset(
+                      "assets/images/svg/EuroCoins/1_Cent.svg",
+                      semanticsLabel: "Ein Cent",
+                      width: (constraints.maxWidth / 100) * 13,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        amounts[7].toString(),
+                        style: LamaTextTheme.getStyle(color: LamaColors.black),
+                      ),
+                    ),
+                  ]),
                 ),
                 onTap: () {
                   setState(() {
                     deletions.add(0.01);
+                    amounts[7]++;
                     currentAmountDouble = currentAmountDouble + 0.01;
                   });
                 },
@@ -269,26 +396,26 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                       if (deletions.isNotEmpty) {
                         currentAmountDouble =
                             currentAmountDouble - deletions.last;
-                        deletions.removeLast();
+                        double deletedElement = deletions.removeLast();
+                        updateAmount(deletedElement);
                       } else {
                         ScaffoldMessenger.of(context).removeCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Container(
-                                height: (constraints.maxHeight / 100) * 4,
-                                alignment: Alignment.bottomCenter,
-                                child: Center(
-                                    child: FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: Text(
-                                    "Füge zuerst einen Betrag hinzu",
-                                    style: LamaTextTheme.getStyle(),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ))),
-                            backgroundColor: LamaColors.mainPink,
-                              duration: Duration(seconds: 1)
-                          ),
+                              content: Container(
+                                  height: (constraints.maxHeight / 100) * 4,
+                                  alignment: Alignment.bottomCenter,
+                                  child: Center(
+                                      child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      "Füge zuerst einen Betrag hinzu",
+                                      style: LamaTextTheme.getStyle(),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ))),
+                              backgroundColor: LamaColors.mainPink,
+                              duration: Duration(seconds: 1)),
                         );
                       }
                     });
@@ -334,5 +461,25 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
         ),
       ),
     ]);
+  }
+
+  updateAmount(deletedElement) {
+    if (deletedElement == 2) {
+      amounts[0]--;
+    } else if (deletedElement == 1) {
+      amounts[1]--;
+    } else if (deletedElement == 0.5) {
+      amounts[2]--;
+    } else if (deletedElement == 0.2) {
+      amounts[3]--;
+    } else if (deletedElement == 0.1) {
+      amounts[4]--;
+    } else if (deletedElement == 0.05) {
+      amounts[5]--;
+    } else if (deletedElement == 0.02) {
+      amounts[6]--;
+    } else if (deletedElement == 0.01) {
+      amounts[7]--;
+    }
   }
 }
