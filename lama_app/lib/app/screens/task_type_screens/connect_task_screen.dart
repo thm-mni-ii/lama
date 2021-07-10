@@ -10,8 +10,6 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/GlobalKeyExtension.dart';
 
-List<Pair> pairList = [];
-
 class ConnectTaskScreen extends StatefulWidget {
   final TaskConnect task;
   final BoxConstraints constraints;
@@ -29,19 +27,26 @@ class ConnectState extends State<ConnectTaskScreen> {
   final BoxConstraints constraints;
   List<Item> leftWords = [];
   List<Item> rightWords = [];
-  List<Item> choosenWords = [];
-
-  List<String> givenAnswers = [];
+  List<Color> colors = [
+    LamaColors.redPrimary,
+    LamaColors.orangePrimary,
+    LamaColors.greenPrimary,
+    LamaColors.bluePrimary
+  ];
+  bool leftTouched = false;
+  Item choosenWord;
 
   ConnectState(this.task, this.constraints) {
-    pairList.clear();
     task.pair1.shuffle();
     task.pair2.shuffle();
+    colors.shuffle();
+    int i = 0;
     task.pair1.forEach((element) {
-      leftWords.add(Item(false, element.toString(), true, GlobalKey()));
+      leftWords.add(Item(false, element.toString(), true, colors[i], task));
+      i++;
     });
     task.pair2.forEach((element) {
-      rightWords.add(Item(false, element.toString(), false, GlobalKey()));
+      rightWords.add(Item(false, element.toString(), false, LamaColors.white, task));
     });
   }
 
@@ -61,7 +66,10 @@ class ConnectState extends State<ConnectTaskScreen> {
                 child: Container(
                   padding: EdgeInsets.only(left: 75),
                   height: 50,
-                  width: MediaQuery.of(context).size.width,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                   child: Bubble(
                     nip: BubbleNip.leftCenter,
                     child: Center(
@@ -85,55 +93,48 @@ class ConnectState extends State<ConnectTaskScreen> {
             ],
           ),
         ),
-          Container(
-            //color: LamaColors.redPrimary,
-            // positioning answers on the screen
-            child: Row(
-              children: [
-                //left words
-                Container(
-                    //color: LamaColors.redPrimary,
-                    padding: EdgeInsets.only(top: 20, left: 10),
-                    width: (constraints.maxWidth / 100) * 37.5,
-                    height: (constraints.maxHeight / 100) * 60,
-                    child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                        childAspectRatio: 3 / 1,
-                        mainAxisSpacing: 40,
-                      ),
-                      itemCount: leftWords.length,
-                      itemBuilder: (context, index) =>
-                          _buildPair(context, index, leftWords),
-                    )),
-                //Space between both containers
-                Container(
-                  //color: LamaColors.redPrimary,
-                  width: (constraints.maxWidth / 100) * 25,
+        Container(
+          // positioning answers on the screen
+          child: Row(
+            children: [
+              //left words
+              Container(
+                  padding: EdgeInsets.only(top: 20, left: 10),
+                  width: (constraints.maxWidth / 100) * 37.5,
                   height: (constraints.maxHeight / 100) * 60,
-                  /*
-              child: CustomPaint(
-                painter: CurvePainter(),
-              ),*/
-                ),
-                // Right words
-                Container(
-                    padding: EdgeInsets.only(top: 20, right: 10),
-                    width: (constraints.maxWidth / 100) * 37.5,
-                    height: (constraints.maxHeight / 100) * 60,
-                    child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                        childAspectRatio: 3 / 1,
-                        mainAxisSpacing: 40,
-                      ),
-                      itemCount: rightWords.length,
-                      itemBuilder: (context, index) =>
-                          _buildPair(context, index, rightWords),
-                    )),
-              ],
-            ),
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      childAspectRatio: 3 / 1,
+                      mainAxisSpacing: 40,
+                    ),
+                    itemCount: leftWords.length,
+                    itemBuilder: (context, index) =>
+                        _buildPair(context, index, leftWords),
+                  )),
+              //Space between both containers
+              Container(
+                width: (constraints.maxWidth / 100) * 25,
+                height: (constraints.maxHeight / 100) * 60,
+              ),
+              // Right words
+              Container(
+                  padding: EdgeInsets.only(top: 20, right: 10),
+                  width: (constraints.maxWidth / 100) * 37.5,
+                  height: (constraints.maxHeight / 100) * 60,
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      childAspectRatio: 3 / 1,
+                      mainAxisSpacing: 40,
+                    ),
+                    itemCount: rightWords.length,
+                    itemBuilder: (context, index) =>
+                        _buildPair(context, index, rightWords),
+                  )),
+            ],
           ),
+        ),
         //space to "fertig" button
         SizedBox(
           height: (constraints.maxHeight / 100) * 5,
@@ -153,8 +154,10 @@ class ConnectState extends State<ConnectTaskScreen> {
                     offset: Offset(0, 3))
               ]),
           child: InkWell(
-            onTap: () => BlocProvider.of<TaskBloc>(context)
-                .add(AnswerTaskEvent.initMarkWords(givenAnswers)),
+            onTap: (){
+            bool answer = checkAnswer();
+            print(answer);
+          },
             child: Center(
               child: Text(
                 "Fertig!",
@@ -178,9 +181,7 @@ class ConnectState extends State<ConnectTaskScreen> {
           height: 7,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
-              color: itemList[index].touched
-                  ? LamaColors.redPrimary
-                  : LamaColors.white,
+              color: itemList[index].shownColor,
               border: Border.all(color: LamaColors.black)),
           child: Center(
             child: Text(itemList[index].content,
@@ -189,54 +190,100 @@ class ConnectState extends State<ConnectTaskScreen> {
                     fontSize: 15, color: LamaColors.black)),
           )),
       onTap: () {
-        if (!choosenWords.contains(itemList[index])) {
-          choosenWords.add(itemList[index]);
-        }
         touch(index, itemList);
       },
     );
   }
 
   void touch(int index, List<Item> itemlist) {
-    if (itemlist[index].touched) {
-      itemlist[index].touched = false;
-      choosenWords.removeLast();
-    } else if (!itemlist[index].touched) {
-      itemlist[index].touched = true;
-    }
-
-    if (choosenWords.length >= 2) {
-      if (choosenWords[0].left == itemlist[1].left) {
-        choosenWords.forEach((element) {
+    if (itemlist[index].left) {
+      if (leftTouched) {
+        leftTouched = false;
+        leftWords.forEach((element) {
+          element.shownColor = element.color;
+        });
+        rightWords.forEach((element) {
           element.touched = false;
         });
-        choosenWords.clear();
+      }
+      else {
+        leftTouched = true;
+        choosenWord = itemlist[index];
+        leftWords.forEach((element) {
+          element.shownColor = Colors.grey;
+          if (element.content == itemlist[index].content) {
+            element.shownColor = element.color;
+          }
+        });
+      }
+    }
+    else {
+      if (leftTouched) {
+        if (itemlist[index].touched) {
+          itemlist[index].touched = false;
+          if(itemlist[index].shownColor != choosenWord.shownColor){
+            itemlist[index].shownColor = choosenWord.color;
+          }
+          else {
+            itemlist[index].shownColor = LamaColors.white;
+          }
+        }
+        else {
+          itemlist[index].shownColor = choosenWord.color;
+          itemlist[index].touched = true;
+        }
+      }
+      else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            duration: Duration(seconds: 2),
-            content: Container(
-                height: (constraints.maxHeight / 100) * 6,
-                alignment: Alignment.bottomCenter,
-                child: Center(
-                    child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text(
-                    "Zwei Wörter der gleichen Seite \n können nicht verbunden werden !",
-                    style: LamaTextTheme.getStyle(),
-                    textAlign: TextAlign.center,
-                  ),
-                ))),
-            backgroundColor: LamaColors.mainPink,
-          ),
-        );
-      } else {
-        givenAnswers
-            .add(choosenWords[0].content + ":" + choosenWords[1].content);
-        pairList.add(Pair(choosenWords[0], choosenWords[1]));
-        choosenWords.clear();
+            SnackBar(
+              duration: Duration(seconds: 2),
+              content: Container(
+                  height: (constraints.maxHeight / 100) * 6,
+                  alignment: Alignment.bottomCenter,
+                  child: Center(
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(
+                          "Wähle zuerst ein Wort von der linken Seite aus !",
+                          style: LamaTextTheme.getStyle(),
+                          textAlign: TextAlign.center,
+                        ),
+                      ))),
+              backgroundColor: LamaColors.mainPink,
+            ));
       }
     }
     setState(() {});
+  }
+
+  bool checkAnswer(){
+    bool result = false;
+      for(int i = 0; i < leftWords.length; i++){
+      List<String> answers = [];
+      rightWords.forEach((right) {
+        if(leftWords[i].color == right.shownColor){
+          answers.add(right.content);
+        }
+      });
+      if(answers.length > leftWords[i].correctAnswers.length || answers.length < leftWords[i].correctAnswers.length){
+        result = false;
+        return result;
+      }
+
+        for(int y = 0; y < answers.length; y++){
+        if(leftWords[i].correctAnswers.contains(answers[y])){
+          result = true;
+        }
+        else{
+          result = false;
+          return result;
+        }
+      }
+      if(result == false){
+        return result;
+      }
+    }
+      return result;
   }
 }
 
@@ -244,17 +291,25 @@ class Item {
   bool touched;
   String content;
   bool left;
+  Color color;
+  Color shownColor = LamaColors.white;
+  List<String> correctAnswers = [];
 
-  Item(bool touched, String content, bool left, GlobalKey key) {
-    this.touched = touched;
-    this.content = content;
-    this.left = left;
+  Item(this.touched, this.content, this.left, this.color, TaskConnect task) {
+    if(left){
+      shownColor = color;
+
+      task.rightAnswers.forEach((element) {
+        List<String> tmp = element.split(":");
+        if(tmp[0] == content){
+          tmp.remove(content);
+          correctAnswers.addAll(tmp);
+        }
+      });
+      }
+
+
+    }
   }
-}
 
-class Pair {
-  Item itemOne;
-  Item itemTwo;
 
-  Pair(this.itemOne, this.itemTwo);
-}
