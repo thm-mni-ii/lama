@@ -115,7 +115,9 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               setState(() {
                 _isChecked = value;
                 context.read<AdminMenuBloc>().add(AdminMenuChangePrefsEvent(
-                    AdminUtils.enableDefaultTasksetsPref, _isChecked));
+                    AdminUtils.enableDefaultTasksetsPref,
+                    _isChecked,
+                    RepositoryProvider.of<TasksetRepository>(context)));
                 AdminUtils.reloadTasksets(context);
               });
             },

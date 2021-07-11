@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:lama_app/app/screens/admin_menu_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -37,31 +39,37 @@ class TasksetLoader {
     */
 
     //load all standard-tasksets for each subject and grade
-    for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-      String tasksetMathe = await rootBundle
-          .loadString(
-              'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
-          .catchError((err) => Future.value(""));
-      if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool enableDefaultTasksetPref =
+        prefs.getBool(AdminUtils.enableDefaultTasksetsPref);
+    if (enableDefaultTasksetPref == null || enableDefaultTasksetPref) {
+      for (int i = 1; i <= GRADES_SUPPORTED; i++) {
+        String tasksetMathe = await rootBundle
+            .loadString(
+                'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
 
-      String tasksetDeutsch = await rootBundle
-          .loadString('assets/standardTasksets/deutsch/deutsch' +
-              i.toString() +
-              '.json')
-          .catchError((err) => Future.value(""));
-      if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
-      String tasksetEnglisch = await rootBundle
-          .loadString('assets/standardTasksets/englisch/englisch' +
-              i.toString() +
-              '.json')
-          .catchError((err) => Future.value(""));
-      if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
-      String tasksetSachkunde = await rootBundle
-          .loadString('assets/standardTasksets/sachkunde/sachkunde' +
-              i.toString() +
-              '.json')
-          .catchError((err) => Future.value(""));
-      if (tasksetSachkunde != "") await buildTasksetFromJson(tasksetSachkunde);
+        String tasksetDeutsch = await rootBundle
+            .loadString('assets/standardTasksets/deutsch/deutsch' +
+                i.toString() +
+                '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+        String tasksetEnglisch = await rootBundle
+            .loadString('assets/standardTasksets/englisch/englisch' +
+                i.toString() +
+                '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
+        String tasksetSachkunde = await rootBundle
+            .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+                i.toString() +
+                '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetSachkunde != "")
+          await buildTasksetFromJson(tasksetSachkunde);
+      }
     }
 
     List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
