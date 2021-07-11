@@ -29,6 +29,7 @@ class AdminMenuBloc extends Bloc<AdminMenuEvent, AdminMenuState> {
   Future<void> _changePref(AdminMenuChangePrefsEvent event) async {
     if (event.value is bool) {
       await prefs.setBool(event.key, event.value);
+      event.repository.reloadTasksetLoader();
     }
   }
 }
