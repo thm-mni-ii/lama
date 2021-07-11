@@ -1,22 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/bloc/admin_menu_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
+import 'package:lama_app/app/event/admin_menu_event.dart';
+import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
+import 'package:lama_app/app/state/admin_menu_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
-class AdminMenuScreen extends StatelessWidget {
+class AdminMenuScreen extends StatefulWidget {
+  @override
+  _AdminMenuScreenState createState() => _AdminMenuScreenState();
+}
+
+class _AdminMenuScreenState extends State<AdminMenuScreen> {
+  bool _isChecked = true;
+
   @override
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: _bar(screensize.width / 5, 'Adminmenü', LamaColors.bluePrimary),
-      body: _buttonColumne(context),
+    return BlocBuilder<AdminMenuBloc, AdminMenuState>(
+      builder: (context, state) {
+        if (state is AdminMenuPrefLoadedState) {
+          _isChecked = state.prefDefaultTasksEnable;
+          context.read<AdminMenuBloc>().add(AdminMenuLoadDefaultEvent());
+          return Center(child: CircularProgressIndicator());
+        }
+        if (state is AdminMenuDefaultState) {
+          return Scaffold(
+            appBar:
+                _bar(screensize.width / 5, 'Adminmenü', LamaColors.bluePrimary),
+            body: _buttonColumne(context),
+          );
+        }
+        context.read<AdminMenuBloc>().add(AdminMenuLoadPrefsEvent());
+        return Center(child: CircularProgressIndicator());
+      },
     );
   }
 
@@ -55,8 +80,51 @@ class AdminMenuScreen extends StatelessWidget {
                     child: OptionTaskScreen(),
                   ),
                 ),
-              )
+              ).then((_) {
+                AdminUtils.reloadTasksets(context);
+              })
             },
+          ),
+          _checkBox(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _checkBox(BuildContext context) {
+    Color getColor(Set<MaterialState> states) {
+      const Set<MaterialState> interactiveStates = <MaterialState>{
+        MaterialState.pressed,
+        MaterialState.hovered,
+        MaterialState.focused,
+      };
+      if (states.any(interactiveStates.contains)) {
+        return LamaColors.blueAccent;
+      }
+      return LamaColors.bluePrimary;
+    }
+
+    return Center(
+      child: Row(
+        children: [
+          Checkbox(
+            checkColor: Colors.white,
+            fillColor: MaterialStateProperty.resolveWith(getColor),
+            value: _isChecked,
+            onChanged: (bool value) {
+              setState(() {
+                _isChecked = value;
+                context.read<AdminMenuBloc>().add(AdminMenuChangePrefsEvent(
+                    AdminUtils.enableDefaultTasksetsPref, _isChecked));
+                AdminUtils.reloadTasksets(context);
+              });
+            },
+          ),
+          Text(
+            'Standardaufgaben aktivieren?',
+            style:
+                LamaTextTheme.getStyle(fontSize: 14, color: LamaColors.black),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -124,5 +192,13 @@ class AdminMenuScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+abstract class AdminUtils {
+  static final String enableDefaultTasksetsPref = 'enableDefaultTaskset';
+
+  static void reloadTasksets(BuildContext context) {
+    RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
   }
 }

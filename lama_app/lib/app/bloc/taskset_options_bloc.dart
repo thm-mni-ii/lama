@@ -25,11 +25,11 @@ class TasksetOprionsBloc
     if (event is TasksetOptionsAbort) _return(event.context);
     if (event is TasksetOptionsPush) {
       yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
-      yield await _tasksetOptionsPush(event.tasksetRepository);
+      yield await _tasksetOptionsPush();
     }
     if (event is TasksetOptionsDelete) {
       yield TasksetOptionsWaiting("Aufgaben werden gelöscht...");
-      yield await _deleteUrl(event.url, event.tasksetRepository);
+      yield await _deleteUrl(event.url);
     }
     if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
     if (event is TasksetOptionsReload) {
@@ -40,7 +40,7 @@ class TasksetOprionsBloc
 
     if (event is TasksetOptionsReAddUrl) {
       yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
-      yield await _tasksetOptionsReAddUrl(event.url, event.tasksetRepository);
+      yield await _tasksetOptionsReAddUrl(event.url);
     }
   }
 
@@ -48,20 +48,17 @@ class TasksetOprionsBloc
     Navigator.pop(context);
   }
 
-  Future<TasksetOptionsState> _tasksetOptionsPush(
-      TasksetRepository tasksetRepository) async {
-    return await _insertUrl(TaskUrl(url: _tasksetUrl), tasksetRepository);
+  Future<TasksetOptionsState> _tasksetOptionsPush() async {
+    return await _insertUrl(TaskUrl(url: _tasksetUrl));
   }
 
-  Future<TasksetOptionsPushSuccess> _tasksetOptionsReAddUrl(
-      TaskUrl url, TasksetRepository tasksetRepository) async {
-    TasksetOptionsState retValue = await _insertUrl(url, tasksetRepository);
+  Future<TasksetOptionsPushSuccess> _tasksetOptionsReAddUrl(TaskUrl url) async {
+    TasksetOptionsState retValue = await _insertUrl(url);
     if (retValue is TasksetOptionsPushSuccess) deletedUrls.remove(url);
     return retValue;
   }
 
-  Future<TasksetOptionsState> _insertUrl(
-      TaskUrl url, TasksetRepository tasksetRepository) async {
+  Future<TasksetOptionsState> _insertUrl(TaskUrl url) async {
     //Check if URL can be parsed
     if (!Uri.tryParse(url.url).hasAbsolutePath)
       return TasksetOptionsPushFailed(failedUrl: _tasksetUrl);
@@ -85,7 +82,6 @@ class TasksetOprionsBloc
 
         //Insert URL to Database
         await DatabaseProvider.db.insertTaskUrl(url);
-        tasksetRepository.reloadTasksetLoader();
         return TasksetOptionsPushSuccess();
       } else {
         return TasksetOptionsPushFailed(
@@ -98,11 +94,9 @@ class TasksetOprionsBloc
     }
   }
 
-  Future<TasksetOptionsDeleteSuccess> _deleteUrl(
-      TaskUrl url, TasksetRepository tasksetRepository) async {
+  Future<TasksetOptionsDeleteSuccess> _deleteUrl(TaskUrl url) async {
     await DatabaseProvider.db.deleteTaskUrl(url.id);
     deletedUrls.add(url);
-    tasksetRepository.reloadTasksetLoader();
     return TasksetOptionsDeleteSuccess();
   }
 
