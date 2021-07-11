@@ -14,7 +14,6 @@ class TasksetRepository {
   }
 
   void reloadTasksetLoader() async {
-    print('reloadTasksetLoader()');
     tasksetLoader = TasksetLoader();
     await tasksetLoader.loadAllTasksets();
   }
