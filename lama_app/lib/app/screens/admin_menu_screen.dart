@@ -6,13 +6,13 @@ import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/event/admin_menu_event.dart';
+import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/state/admin_menu_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminMenuScreen extends StatefulWidget {
   @override
@@ -80,16 +80,18 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
                     child: OptionTaskScreen(),
                   ),
                 ),
-              )
+              ).then((_) {
+                AdminUtils.reloadTasksets(context);
+              })
             },
           ),
-          _checkBox(),
+          _checkBox(context),
         ],
       ),
     );
   }
 
-  Widget _checkBox() {
+  Widget _checkBox(BuildContext context) {
     Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
         MaterialState.pressed,
@@ -114,6 +116,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
                 _isChecked = value;
                 context.read<AdminMenuBloc>().add(AdminMenuChangePrefsEvent(
                     AdminUtils.enableDefaultTasksetsPref, _isChecked));
+                AdminUtils.reloadTasksets(context);
               });
             },
           ),
@@ -194,4 +197,8 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
 
 abstract class AdminUtils {
   static final String enableDefaultTasksetsPref = 'enableDefaultTaskset';
+
+  static void reloadTasksets(BuildContext context) {
+    RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
+  }
 }

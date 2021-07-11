@@ -106,8 +106,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             validator: (value) => InputValidation.inputURLValidation(value),
             onFieldSubmitted: (value) => {
               if (_formKey.currentState.validate())
-                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush(
-                    RepositoryProvider.of<TasksetRepository>(context)))
+                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush())
             },
           ),
         ],
@@ -145,9 +144,9 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 size: 25,
               ),
               onPressed: () {
-                context.read<TasksetOprionsBloc>().add(TasksetOptionsDelete(
-                    urls[index],
-                    RepositoryProvider.of<TasksetRepository>(context)));
+                context
+                    .read<TasksetOprionsBloc>()
+                    .add(TasksetOptionsDelete(urls[index]));
               },
             )
           ],
@@ -179,9 +178,9 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 size: 25,
               ),
               onPressed: () {
-                context.read<TasksetOprionsBloc>().add(TasksetOptionsReAddUrl(
-                    urls[index],
-                    RepositoryProvider.of<TasksetRepository>(context)));
+                context
+                    .read<TasksetOprionsBloc>()
+                    .add(TasksetOptionsReAddUrl(urls[index]));
               },
             )
           ],

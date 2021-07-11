@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
-import 'package:lama_app/app/repository/taskset_repository.dart';
 
 abstract class TasksetOptionsEvent {}
 
@@ -9,21 +8,16 @@ class TasksetOptionsAbort extends TasksetOptionsEvent {
   TasksetOptionsAbort(this.context);
 }
 
-class TasksetOptionsPush extends TasksetOptionsEvent {
-  TasksetRepository tasksetRepository;
-  TasksetOptionsPush(this.tasksetRepository);
-}
+class TasksetOptionsPush extends TasksetOptionsEvent {}
 
 class TasksetOptionsReAddUrl extends TasksetOptionsEvent {
   TaskUrl url;
-  TasksetRepository tasksetRepository;
-  TasksetOptionsReAddUrl(this.url, this.tasksetRepository);
+  TasksetOptionsReAddUrl(this.url);
 }
 
 class TasksetOptionsDelete extends TasksetOptionsEvent {
   TaskUrl url;
-  TasksetRepository tasksetRepository;
-  TasksetOptionsDelete(this.url, this.tasksetRepository);
+  TasksetOptionsDelete(this.url);
 }
 
 class TasksetOptionsSelectUrl extends TasksetOptionsEvent {
