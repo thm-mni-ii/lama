@@ -45,6 +45,15 @@
            "lama_text":"Markiere vier Städte",
            "left_to_solve": 3,
            "wordsToFind":["Gießen", "Wetzlar", "Frankfurt", "Berlin"]
+         },
+         {
+           "task_type": "Connect",
+           "task_reward":2,
+           "left_to_solve": 3,
+           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+           "pair1": ["Affe", "Löwe", "Eisbär", "Baum"],
+           "pair2": ["klettern", "Wurzel", "Nordpol", "Savanne"],
+           "rightAnswers": ["Affe:klettern", "Eisbär:Nordpol", "Baum:Wurzel", "Löwe:Savanne"]
          }
         ]
 }

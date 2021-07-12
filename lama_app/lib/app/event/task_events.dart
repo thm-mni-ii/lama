@@ -7,6 +7,7 @@ class ShowNextTaskEvent extends TaskEvent {}
 class AnswerTaskEvent extends TaskEvent {
   String providedAnswer;
   double providedAnswerDouble;
+  bool providedAnswerBool;
   List<String> providedanswerWords;
   List<bool> providedanswerStates;
 
@@ -26,4 +27,8 @@ class AnswerTaskEvent extends TaskEvent {
   }
 
   AnswerTaskEvent.initVocableTest(this.providedanswerStates);
+
+  AnswerTaskEvent.initConnect(bool providedanswer){
+    this.providedAnswerBool = providedanswer;
+  }
 }

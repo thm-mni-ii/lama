@@ -83,6 +83,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           yield TaskAnswerResultState(true,
               subTaskResult: event.providedanswerStates);
         }
+      } else if (t is TaskConnect) {
+        if (event.providedAnswerBool) {
+          rightAnswerCallback(t);
+          yield TaskAnswerResultState(true);
+        } else {
+          wrongAnswerCallback(t);
+          yield TaskAnswerResultState(false);
+        }
       }
       await Future.delayed(Duration(seconds: 1));
       if (curIndex >= tasks.length)
