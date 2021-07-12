@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+
 abstract class InputValidation {
   static int allowedNameLength = 12;
   static int maxNumber = 99999;
@@ -41,6 +45,29 @@ abstract class InputValidation {
       return 'URL Fehlerhaft! Einige URLs müssen mit ".json" oder "/" enden.';
     if (isEmpty(url)) return 'Dieses Feld darf nicht leer sein!';
     return null;
+  }
+
+  static Future<String> inputUrlWithJsonValidation(String url) async {
+    if (!Uri.tryParse(url).hasAbsolutePath)
+      return 'Die Url ist fehlerhaft! \n einige URLs enden mit ".json" oder einem "/"';
+    try {
+      final response = await http.get(Uri.parse(url));
+      //Check if URL is reachable
+      if (response.statusCode == 200) {
+        //Check if URL contains valid json code
+        try {
+          jsonDecode(response.body);
+        } on FormatException {
+          return 'Der Inhalt der URL ist kein "json" oder fehlerhaft!';
+        }
+        //Testing successfull
+        return null;
+      } else {
+        return 'URL ist nicht erreichbar!';
+      }
+    } on SocketException {
+      return 'Da ist etwas gewaltig schiefgelaufen!';
+    }
   }
 
   static bool _regExpInvalide(String str) {
