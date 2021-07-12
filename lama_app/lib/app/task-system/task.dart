@@ -69,6 +69,7 @@ class Task {
             json['task_reward'],
             json['lama_text'],
             json['left_to_solve'],
+            List<String>.from(json['random']), // Stand jetzt: 1. yes/"" 2. Rechenzeichen 3. min-Wert 4. max-Wert
             json['operator(1-2)'],
             List<String>.from(json['equation']),
             List<String>.from(json['missing_elements']),
@@ -267,11 +268,12 @@ class TaskConnect extends Task {
 
   class TaskEquation extends Task {
   int operator;
+  List<String> random;
   List<String> equation;
   List<String> missingElements;
   List<String> wrongAnswers;
 
   TaskEquation(String taskType, int reward, String lamaText, int leftToSolve,
-  this.operator, this.equation, this.missingElements, this.wrongAnswers)
+      this.random, this.operator, this.equation, this.missingElements, this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
   }
