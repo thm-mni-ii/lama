@@ -251,29 +251,14 @@ class ConnectState extends State<ConnectTaskScreen> {
   void touch(int index, List<Item> itemlist) {
     // check if touched item is located left
     if (itemlist[index].left) {
-      // check if a left item got selected bevore. If one is selected the greyed out items
-      // will be colored so that it is visual that the selected left Item isnt selected anymore
-      if (leftTouched) {
-        leftTouched = false;
-        leftWords.forEach((element) {
+      leftTouched = true;
+      choosenWord = itemlist[index];
+      leftWords.forEach((element) {
+        element.shownColor = Colors.grey;
+        if (element.content == itemlist[index].content) {
           element.shownColor = element.color;
-        });
-        rightWords.forEach((element) {
-          element.touched = false;
-        });
-      }
-      // if no left item got selected bevore, the touched left item will be set as the selected item and
-      // all other items on the right side will be greyed out
-      else {
-        leftTouched = true;
-        choosenWord = itemlist[index];
-        leftWords.forEach((element) {
-          element.shownColor = Colors.grey;
-          if (element.content == itemlist[index].content) {
-            element.shownColor = element.color;
-          }
-        });
-      }
+        }
+      });
     }
     // if a right item got selected it gets checked if a left item got selected at first.
     // if yes the color of the item will be adjusted,
