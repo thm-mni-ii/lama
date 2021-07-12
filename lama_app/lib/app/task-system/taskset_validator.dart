@@ -109,6 +109,15 @@ class TasksetValidator {
             }
             print("Voc false");
             return false;
+          case "Connect":
+            if(json.containsKey("pair1") && json.containsKey("pair2") && json.containsKey("rightAnswers")){
+              if(json["pair1"] is List && _checkListType<String>(json["pair1"]) &&
+                  json["pair2"] is List && _checkListType<String>(json["pair2"]) &&
+                  json["rightAnswers"] is List && _checkListType<String>(json["rightAnswers"])){
+                return true;
+              }
+            }
+            return false;
           default:
             return false;
         }

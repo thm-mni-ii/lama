@@ -45,7 +45,6 @@
            "lama_text":"Markiere vier Städte",
            "left_to_solve": 3,
            "wordsToFind":["Gießen", "Wetzlar", "Frankfurt", "Berlin"]
-           "categoryTwo": ["Haus", "Straße", "Baum", "Auto"]
          },
          {
            "task_type": "Connect",
