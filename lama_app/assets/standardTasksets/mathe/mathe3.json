@@ -75,9 +75,9 @@
            "left_to_solve": 4,
            "operator(1-2)": 2,
            "random": ["yes", "+", "0", "50"],
-           "equation": ["?", "*", "7", "+", "?", "=", "50"],
-           "missing_elements": ["7", "1"],
-           "wrong_answers": ["8", "9", "10", "11", "12", "13"]
+           "equation": [""],
+           "missing_elements": [""],
+           "wrong_answers": [""]
          },
          {
            "task_type": "Equation",
