@@ -83,14 +83,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           yield TaskAnswerResultState(true,
               subTaskResult: event.providedanswerStates);
         }
-      }
-      else if (t is TaskConnect) {
+      } else if (t is TaskConnect) {
         if (event.providedAnswerBool) {
-          userRepository.addLamaCoins(t.reward);
-          answerResults.add(true);
+          rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         } else {
-          answerResults.add(false);
+          wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
       }
