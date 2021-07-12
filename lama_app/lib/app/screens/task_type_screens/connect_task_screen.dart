@@ -250,6 +250,8 @@ class ConnectState extends State<ConnectTaskScreen> {
   /// List<Item> [itemList] = Is the list filled with either left or right Items
   void touch(int index, List<Item> itemlist) {
     // check if touched item is located left
+    // If the touched Item is left, all items besides the choosen word
+    // will be greyed out.
     if (itemlist[index].left) {
       leftTouched = true;
       choosenWord = itemlist[index];
