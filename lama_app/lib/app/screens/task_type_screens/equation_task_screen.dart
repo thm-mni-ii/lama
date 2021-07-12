@@ -71,7 +71,7 @@ class EquationState extends State<EquationTaskScreen> {
         } else {
           _missing1 = _r.nextInt(6);
           _missing2 = _r.nextInt(6);
-          while((_missing1==5 || _missing2==5) && _missing1 == _missing2) {
+          while(_missing1==5 || _missing2==5 || _missing1==_missing2) {
             _missing1 = _r.nextInt(6);
             _missing2 = _r.nextInt(6);
           }
@@ -93,7 +93,11 @@ class EquationState extends State<EquationTaskScreen> {
         }
       }
       answers.addAll(task.wrongAnswers);
-      answers.addAll(task.missingElements);
+      for(int i = 0; i<task.missingElements.length; i++) {
+          String s = task.missingElements[i];
+          if(s!="+" || s!="-" || s!="*" || s!="/")
+            answers.add(s);
+      }
       answers.shuffle();
       fullAnswer.addAll(task.equation);
     }
