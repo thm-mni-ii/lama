@@ -70,11 +70,11 @@ class User {
 
   static String isValidUser(Map<String, dynamic> json) {
     if (!(json.containsKey('name') && json['name'] is String))
-      return 'Feld ("name":...) fehlt oder ist fehlerhaft \n Hinweis: ("name":"NUTZERNAME",)';
+      return 'Feld ("name":...) fehlt oder ist fehlerhaft! \n Hinweis: ("name":"NUTZERNAME",)';
     if (!(json.containsKey('password') && json['password'] is String))
-      return 'Feld ("password":...) fehlt oder ist fehlerhaft \n Hinweis: ("password":"PASSWORT",)';
-    if (!(json.containsKey('grade') && json['coins'] is int))
-      return 'Feld ("grade":...) fehlt oder ist fehlerhaft \n Hinweis: ("grade":ZAHL,)';
+      return 'Feld ("password":...) fehlt oder ist fehlerhaft! \n Hinweis: ("password":"PASSWORT",)';
+    if (!(json.containsKey('grade') && json['grade'] is int))
+      return 'Feld ("grade":...) fehlt oder ist fehlerhaft! \n Hinweis: ("grade":ZAHL,)';
 
     String error = InputValidation.inputPasswortValidation(json['password']);
     if (error != null) return error;

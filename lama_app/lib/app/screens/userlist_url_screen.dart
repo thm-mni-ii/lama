@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/event/userlist_url_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
@@ -65,7 +66,83 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
   }
 
   Widget _userList(List<User> userlist) {
-    return Container();
+    return ListView.builder(
+      itemCount: userlist.length,
+      itemBuilder: (context, index) {
+        return _userCard(userlist[index]);
+      },
+    );
+  }
+
+  Widget _userCard(User user) {
+    String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
+    return Row(
+      children: [
+        //User Avatar
+        CircleAvatar(
+          child: SvgPicture.asset(
+            'assets/images/svg/avatars/${user.avatar}.svg',
+            semanticsLabel: 'LAMA',
+          ),
+          radius: 25,
+        ),
+        Column(
+          children: [
+            //Name
+            Text(
+              _nameDisplay,
+              style: LamaTextTheme.getStyle(
+                fontSize: 20,
+                color: LamaColors.black,
+                monospace: true,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            //Password
+            Text(
+              user.password,
+              style: LamaTextTheme.getStyle(
+                fontSize: 14,
+                color: LamaColors.black,
+                monospace: true,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            //Grade
+            Text(
+              'Klasse ${user.grade}',
+              style: LamaTextTheme.getStyle(
+                fontSize: 14,
+                color: LamaColors.black,
+                monospace: true,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            //Coins
+            Row(
+              children: [
+                CircleAvatar(
+                  child: SvgPicture.asset(
+                    'assets/images/svg/lama_coin.svg',
+                    semanticsLabel: 'LAMA',
+                  ),
+                  radius: 15,
+                ),
+                Text(
+                  '${user.coins}',
+                  style: LamaTextTheme.getStyle(
+                    fontSize: 14,
+                    color: LamaColors.black,
+                    monospace: true,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            )
+          ],
+        )
+      ],
+    );
   }
 
   Widget _loadingWidget(String text) {

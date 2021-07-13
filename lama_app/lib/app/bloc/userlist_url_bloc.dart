@@ -37,9 +37,15 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
     if (!(json.containsKey('users') && json['users'] is List))
       return UserlistUrlParsingFailed(
         error:
-            'Feld ("users": [...]) feld oder ist fehlerhaft \n Hinweis: ("users": [NUTZER])',
+            'Feld ("users": [...]) fehlt oder ist fehlerhaft! \n Hinweis: ("users": [NUTZER])',
       );
     var userList = json['users'] as List;
+    if (userList == null || userList.length == 0)
+      return UserlistUrlParsingFailed(
+        error:
+            'Feld ("users": [...]) darf nicht leer sein! \n Hinweis: ("users": [NUTZER])',
+      );
+
     for (int i = 0; i < userList.length; i++) {
       //Check if user is valid
       String error = User.isValidUser(userList[i]);
