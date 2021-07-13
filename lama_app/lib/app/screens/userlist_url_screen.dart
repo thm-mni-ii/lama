@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/event/userlist_url_event.dart';
+import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/userlist_url_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -18,6 +19,7 @@ class UserlistUrlScreen extends StatefulWidget {
 
 class UserlistUrlScreenState extends State<UserlistUrlScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String _url;
 
   @override
   void initState() {
@@ -34,29 +36,36 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
       body: BlocBuilder<UserlistUrlBloc, UserlistUrlState>(
           builder: (context, state) {
         if (state is UserlistUrlTesting)
-          return _loadingWidget('Eingabe wird geprüft!');
-
-        if (state is UserlistUrlTestingSuccessfull)
-          return _loadingWidget('Inhalt wird geladen');
+          return _loadingWidget('Inhalt wird geprüft und geladen!');
         if (state is UserlistUrlParsingFailed) return _errorWidget(state.error);
-        return Padding(
-          padding: EdgeInsets.all(20),
-          child: Wrap(
-            children: [
-              Center(
-                child: Icon(
-                  Icons.assignment_ind_outlined,
-                  color: LamaColors.bluePrimary,
-                  size: 30,
-                ),
-              ),
-              _headline('Nutzerlisten URL eingeben'),
-              _inputFields(context),
-            ],
-          ),
-        );
+        if (state is UserlistUrlParsingSuccessfull)
+          return _userList(state.userList);
+        return _defaultWidget();
       }),
     );
+  }
+
+  Widget _defaultWidget() {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Wrap(
+        children: [
+          Center(
+            child: Icon(
+              Icons.assignment_ind_outlined,
+              color: LamaColors.bluePrimary,
+              size: 30,
+            ),
+          ),
+          _headline('Nutzerlisten URL eingeben'),
+          _inputFields(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _userList(List<User> userlist) {
+    return Container();
   }
 
   Widget _loadingWidget(String text) {
@@ -150,8 +159,10 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
         decoration: InputDecoration(
           hintText: 'https://beispiel.de/nutzerliste.json',
         ),
-        onChanged: (value) => {
-          context.read<UserlistUrlBloc>().add(UserlistUrlChangeUrl(value)),
+        initialValue: _url,
+        onChanged: (value) {
+          context.read<UserlistUrlBloc>().add(UserlistUrlChangeUrl(value));
+          _url = value;
         },
         validator: (value) => InputValidation.isEmpty(value)
             ? 'Feld darf nicht leer sein!'

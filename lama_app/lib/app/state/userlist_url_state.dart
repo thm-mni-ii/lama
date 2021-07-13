@@ -10,8 +10,6 @@ class UserlistUrlParsingFailed extends UserlistUrlState {
 
 class UserlistUrlTesting extends UserlistUrlState {}
 
-class UserlistUrlTestingSuccessfull extends UserlistUrlState {}
-
 class UserlistUrlParsingSuccessfull extends UserlistUrlState {
   List<User> userList;
   UserlistUrlParsingSuccessfull(this.userList);

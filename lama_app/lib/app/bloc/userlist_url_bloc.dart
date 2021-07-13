@@ -45,9 +45,10 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
       String error = User.isValidUser(userList[i]);
       if (error != null)
         return UserlistUrlParsingFailed(error: error + '\n Nutzer: ($i)');
-      //Add User to _userList
+      //Add valid User to _userList
       _userList.add(User.fromJson(userList[i]));
     }
+    //return valid _userList to UI
     return UserlistUrlParsingSuccessfull(_userList);
   }
 }
