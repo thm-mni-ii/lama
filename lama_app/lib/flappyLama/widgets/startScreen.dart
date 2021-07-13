@@ -28,7 +28,7 @@ class StartScreen extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(35.0)
           ),
-          color: LamaColors.bluePrimary.withOpacity(0.8),
+          color: Color(0xFFd3d3d3).withOpacity(0.4),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 10.0,
@@ -46,7 +46,7 @@ class StartScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(
-                            'assets/images/png/lama_head.png'//platzhalter
+                            'assets/images/png/plane-1598084_1280.png'//platzhalter
                           ),
                         )
                       ),
@@ -55,7 +55,7 @@ class StartScreen extends StatelessWidget {
                   Text(
                     "Flappy Lama",
                     style: TextStyle(
-                      color: LamaColors.redPrimary,
+                      color: LamaColors.mainPink,
                       fontWeight: FontWeight.bold,
                       fontSize: 35.0,
                     ),
@@ -73,7 +73,7 @@ class StartScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 25.0,
                         fontWeight: FontWeight.bold,
-                        color: LamaColors.redAccent,
+                        color: LamaColors.mainPink,
                       )
                     ),
                   ),
@@ -82,7 +82,7 @@ class StartScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 25.0,
                           fontWeight: FontWeight.bold,
-                          color: LamaColors.redAccent,
+                          color: LamaColors.mainPink,
                         )
                     ),
                   ),
