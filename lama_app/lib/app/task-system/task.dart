@@ -71,9 +71,12 @@ class Task {
   String type;
   int reward;
   String lamaText;
+  int originalLeftToSolve;
   int leftToSolve;
 
-  Task(this.type, this.reward, this.lamaText, this.leftToSolve);
+  Task(this.type, this.reward, this.lamaText, this.originalLeftToSolve) {
+    leftToSolve = originalLeftToSolve;
+  }
 
   @override
   String toString() {
