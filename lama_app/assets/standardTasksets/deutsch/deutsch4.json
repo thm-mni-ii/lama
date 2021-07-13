@@ -3,6 +3,15 @@
      "taskset_subject":"Deutsch",
       "taskset_grade":4,
        "tasks": [
+         {
+           "task_type": "Connect",
+           "task_reward":2,
+           "left_to_solve": 3,
+           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+           "pair1": ["Perfekt", "Präteritum", "Futur I"],
+           "pair2": ["gefahren", "fuhr", "werde"],
+           "rightAnswers": ["Perfekt:gefahren", "Präteritum:fuhr", "Futur I:werde"]
+         },
            {
            "task_type":"4Cards",
             "task_reward":2,
@@ -27,6 +36,14 @@
            "lama_text":"Markiere vier Flüsse",
            "left_to_solve": 3,
            "wordsToFind":["Rhein", "Lahn", "Werra", "Main"]
+         },
+         {
+           "task_type":"MarkWords",
+           "task_reward":2,
+           "lama_text":"Tippe alle Akkusativobjekt an!",
+           "left_to_solve": 3,
+           "sentence": "Das Kind schenkt dem Opa ein Bild!",
+           "right_words": ["Bild!"]
          },
          {
            "task_type": "MatchCategory",

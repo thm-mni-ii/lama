@@ -33,10 +33,10 @@
            "task_reward":2,
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
            "left_to_solve": 3,
-           "nameCatOne": "Verben",
-           "nameCatTwo": "Nomen",
-           "categoryOne": ["laufen", "gehen", "schweben", "fallen"],
-           "categoryTwo": ["Haus", "Straße", "Baum", "Auto"]
+           "nameCatOne": "Farben",
+           "nameCatTwo": "Gegenstände",
+           "categoryOne": ["Rot", "Blau", "Grün", "Gelb"],
+           "categoryTwo": ["Auto", "Baum", "Schule", "Mensch"]
          }
         ]
 }

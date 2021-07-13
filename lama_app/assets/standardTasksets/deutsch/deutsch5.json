@@ -15,11 +15,20 @@
          {
            "task_type":"ClozeTest",
            "task_reward":2,
-           "question":"Wusstest du, ___ Lamas spucken können?",
+           "question":"Ich hoffe, __ das Wetter bald besser wird",
            "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
            "right_answer":"dass",
-           "wrong_answers":["Das", "das"]
+           "wrong_answers":["dieses", "das"]
+         },
+         {
+           "task_type": "Connect",
+           "task_reward":2,
+           "left_to_solve": 3,
+           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+           "pair1": ["Genitiv", "Akkusativ", "Nominativ", "Dativ"],
+           "pair2": ["Wessen .. ?", "Wen oder Was", "Wer oder Was", "Wem .. ?"],
+           "rightAnswers": ["Genitiv:Wessen .. ?", "Akkusativ:Wen oder Was", "Nominativ:Wer oder Was", "Dativ:Wem .. ?"]
          },
          {
            "task_type":"GridSelect",
@@ -33,10 +42,10 @@
            "task_reward":2,
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
            "left_to_solve": 3,
-           "nameCatOne": "Gegenwart",
-           "nameCatTwo": "Vergangenheit",
-           "categoryOne": ["laufen", "gehen", "lernen", "fallen"],
-           "categoryTwo": ["lief", "ging", "lernte", "fiel"]
+           "nameCatOne": "Präsens",
+           "nameCatTwo": "Präteritum",
+           "categoryOne": ["laufe", "läufst", "laufen", "lauft"],
+           "categoryTwo": ["lief", "liefst", "liefen", "lieft"]
          }
         ]
 }
