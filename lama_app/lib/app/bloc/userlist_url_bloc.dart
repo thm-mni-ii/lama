@@ -18,22 +18,36 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
     if (event is UserlistUrlChangeUrl) _url = event.url;
     if (event is UserlistParseUrl) {
       yield UserlistUrlTesting();
-      String error = await InputValidation.inputUrlWithJsonValidation(_url);
-      if (error != null)
-        yield UserlistUrlParsingFailed(error: error);
-      else
-        yield await _parsUrl();
+      yield await _parsUrl();
     }
   }
 
   Future<UserlistUrlState> _parsUrl() async {
+    //Validat URL
+    String error = await InputValidation.inputUrlWithJsonValidation(_url);
+    if (error != null) return UserlistUrlParsingFailed(error: error);
+
+    _userList.clear();
     final respons = await http.get(Uri.parse(_url));
-    List<User> _userList = await _loadtUsersFromUrl(jsonDecode(respons.body));
-    return UserlistUrlParsingSuccessfull(_userList);
+    return _parsUserList(jsonDecode(respons.body));
   }
 
-  Future<List<User>> _loadtUsersFromUrl(Map<String, dynamic> json) async {
+  UserlistUrlState _parsUserList(Map<String, dynamic> json) {
+    //Check if UserList "users" exist in the json file
+    if (!(json.containsKey('users') && json['users'] is List))
+      return UserlistUrlParsingFailed(
+        error:
+            'Feld ("users": [...]) feld oder ist fehlerhaft \n Hinweis: ("users": [NUTZER])',
+      );
     var userList = json['users'] as List;
-    return userList.map((e) => User.fromJson(e)).toList();
+    for (int i = 0; i < userList.length; i++) {
+      //Check if user is valid
+      String error = User.isValidUser(userList[i]);
+      if (error != null)
+        return UserlistUrlParsingFailed(error: error + '\n Nutzer: ($i)');
+      //Add User to _userList
+      _userList.add(User.fromJson(userList[i]));
+    }
+    return UserlistUrlParsingSuccessfull(_userList);
   }
 }

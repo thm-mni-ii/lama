@@ -51,9 +51,10 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
-    bool isAdmin = json['isAdmin'] == 'ja' ? true : false;
+    bool isAdmin =
+        json.containsKey('isAdmin') && json['isAdmin'] == 'ja' ? true : false;
     String avatar = isAdmin ? 'admin' : 'lama';
-    int coins = json['coins'] != null ? json['coins'] : 0;
+    int coins = json.containsKey('coins') ? json['coins'] : 0;
 
     return User(
       name: json['name'],
@@ -63,5 +64,15 @@ class User {
       isAdmin: isAdmin,
       avatar: avatar,
     );
+  }
+
+  static String isValidUser(Map<String, dynamic> json) {
+    if (!(json.containsKey('name') && json['name'] is String))
+      return 'Feld ("name":...) fehlt oder ist fehlerhaft \n Hinweis: ("name":"NUTZERNAME",)';
+    if (!(json.containsKey('password') && json['password'] is String))
+      return 'Feld ("password":...) fehlt oder ist fehlerhaft \n Hinweis: ("password":"PASSWORT",)';
+    if (!(json.containsKey('grade') && json['coins'] is int))
+      return 'Feld ("grade":...) fehlt oder ist fehlerhaft \n Hinweis: ("grade":ZAHL,)';
+    return 'Ä';
   }
 }

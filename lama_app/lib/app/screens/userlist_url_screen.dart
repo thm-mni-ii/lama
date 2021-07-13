@@ -153,7 +153,6 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
         onChanged: (value) => {
           context.read<UserlistUrlBloc>().add(UserlistUrlChangeUrl(value)),
         },
-        //TODO Validator should be InputValidation.inputUrlValidator....
         validator: (value) => InputValidation.isEmpty(value)
             ? 'Feld darf nicht leer sein!'
             : null,
