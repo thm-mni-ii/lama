@@ -1,3 +1,5 @@
+import 'package:lama_app/util/input_validation.dart';
+
 import '../../db/database_provider.dart';
 
 final String tableUser = "user";
@@ -73,6 +75,12 @@ class User {
       return 'Feld ("password":...) fehlt oder ist fehlerhaft \n Hinweis: ("password":"PASSWORT",)';
     if (!(json.containsKey('grade') && json['coins'] is int))
       return 'Feld ("grade":...) fehlt oder ist fehlerhaft \n Hinweis: ("grade":ZAHL,)';
-    return 'Ä';
+
+    String error = InputValidation.inputPasswortValidation(json['password']);
+    if (error != null) return error;
+
+    error = InputValidation.inputUsernameValidation(json['name']);
+    if (error != null) return error;
+    return null;
   }
 }
