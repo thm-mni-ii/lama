@@ -16,3 +16,5 @@ class UserlistUrlParsingSuccessfull extends UserlistUrlState {
   List<User> userList;
   UserlistUrlParsingSuccessfull(this.userList);
 }
+
+class UserlistUrlInsertSuccess extends UserlistUrlState {}

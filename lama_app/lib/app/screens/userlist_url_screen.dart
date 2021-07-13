@@ -42,6 +42,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
             return _errorWidget(state.error);
           if (state is UserlistUrlParsingSuccessfull)
             return _userList(state.userList);
+          if (state is UserlistUrlInsertSuccess) return _insertSuccessWidget();
           return _defaultWidget();
         }),
         floatingActionButton: BlocBuilder<UserlistUrlBloc, UserlistUrlState>(
@@ -166,6 +167,48 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
           ],
         )
       ],
+    );
+  }
+
+  Widget _insertSuccessWidget() {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Wrap(
+        children: [
+          Center(
+            child: Icon(
+              Icons.assignment_ind_outlined,
+              color: LamaColors.bluePrimary,
+              size: 30,
+            ),
+          ),
+          _headline('Nutzerlisten URL eingeben'),
+          _inputFields(context),
+          Padding(
+            padding: EdgeInsets.only(top: 60, bottom: 10),
+            child: Center(
+              child: Icon(
+                Icons.check_circle_outline_rounded,
+                color: LamaColors.greenPrimary,
+                size: 80,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Center(
+              child: Text(
+                'Eingabe erfolgreich!',
+                style: LamaTextTheme.getStyle(
+                  fontSize: 14,
+                  color: LamaColors.greenPrimary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

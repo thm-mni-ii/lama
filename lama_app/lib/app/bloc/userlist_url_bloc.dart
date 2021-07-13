@@ -24,7 +24,7 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
     if (event is UserlistAbort) yield UserlistUrlDefault();
     if (event is UserlistInsertList) {
       _insertList();
-      yield UserlistUrlDefault();
+      yield UserlistUrlInsertSuccess();
     }
   }
 
@@ -56,7 +56,7 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
       //Check if user is valid
       String error = User.isValidUser(userList[i]);
       if (error != null)
-        return UserlistUrlParsingFailed(error: error + '\n Nutzer: ($i)');
+        return UserlistUrlParsingFailed(error: error + '\n Nutzer: (${i + 1})');
       //Add valid User to _userList
       _userList.add(User.fromJson(userList[i]));
     }

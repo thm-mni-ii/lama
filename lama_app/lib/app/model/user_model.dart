@@ -75,7 +75,8 @@ class User {
       return 'Feld ("password":...) fehlt oder ist fehlerhaft! \n Hinweis: ("password":"PASSWORT",)';
     if (!(json.containsKey('grade') && json['grade'] is int))
       return 'Feld ("grade":...) fehlt oder ist fehlerhaft! \n Hinweis: ("grade":ZAHL,)';
-
+    if (json.containsKey('coins') && !(json['coins'] is int))
+      return 'Feld ("coins":...) ist fehlerhaft! \n Hinweis: ("coins":ZAHL,)';
     String error = InputValidation.inputPasswortValidation(json['password']);
     if (error != null) return error;
 
