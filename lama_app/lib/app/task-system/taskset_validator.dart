@@ -7,10 +7,13 @@ class TasksetValidator {
   static bool isValidTaskset(Map<String, dynamic> json) {
     if (json.containsKey("taskset_name") &&
         json.containsKey("taskset_subject") &&
-        json.containsKey("taskset_grade")) {
+        json.containsKey("taskset_grade") &&
+        json.containsKey("tasks")) {
       if (json["taskset_name"] is String &&
           json["taskset_subject"] is String &&
-          json["taskset_grade"] is int) {
+          json["taskset_grade"] is int &&
+          json["tasks"] is List &&
+          (json["tasks"] as List).length > 0) {
         if (json.containsKey("taskset_choose_amount") &&
             !(json["taskset_choose_amount"] is int)) return false;
         if (json.containsKey("taskset_randomize_order") &&
@@ -110,10 +113,15 @@ class TasksetValidator {
             print("Voc false");
             return false;
           case "Connect":
-            if(json.containsKey("pair1") && json.containsKey("pair2") && json.containsKey("rightAnswers")){
-              if(json["pair1"] is List && _checkListType<String>(json["pair1"]) &&
-                  json["pair2"] is List && _checkListType<String>(json["pair2"]) &&
-                  json["rightAnswers"] is List && _checkListType<String>(json["rightAnswers"])){
+            if (json.containsKey("pair1") &&
+                json.containsKey("pair2") &&
+                json.containsKey("rightAnswers")) {
+              if (json["pair1"] is List &&
+                  _checkListType<String>(json["pair1"]) &&
+                  json["pair2"] is List &&
+                  _checkListType<String>(json["pair2"]) &&
+                  json["rightAnswers"] is List &&
+                  _checkListType<String>(json["rightAnswers"])) {
                 return true;
               }
             }
