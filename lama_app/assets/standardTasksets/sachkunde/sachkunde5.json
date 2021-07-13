@@ -26,26 +26,26 @@
            "task_reward":2,
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
            "left_to_solve": 3,
-           "nameCatOne": "Säugetier",
-           "nameCatTwo": "Reptil",
-           "categoryOne": ["Lama", "Alpaka", "Biber", "Delfin"],
-           "categoryTwo": ["Schildkröte", "Krokodil", "Schlange", "Echse"]
+           "nameCatOne": "Physiker",
+           "nameCatTwo": "Autor",
+           "categoryOne": ["Einstein", "Hawking", "Curie", "Newton"],
+           "categoryTwo": ["Rowling", "King", "Tolkien", "Goethe"]
          },
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "lama_text":"Markiere drei Nadelbäume",
+           "lama_text":"Markiere vier physikalische Größen",
            "left_to_solve": 3,
-           "wordsToFind":["Fichte", "Kiefer", "Tanne"]
+           "wordsToFind":["Ampere", "Kelvin", "Celsius", "Energie"]
          },
          {
            "task_type": "Connect",
            "task_reward":2,
            "left_to_solve": 3,
            "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
-           "pair1": ["Vogel", "Säugetier", "Reptil", "Fisch"],
-           "pair2": ["Spatz", "Delphin", "Krokodil", "Lachs"],
-           "rightAnswers": ["Vogel:Spatz", "Säugetier:Delphin", "Reptil:Krokodil", "Fisch:Lachs"]
+           "pair1": ["Ampere", "Kelvin", "Celsius", "Energie"],
+           "pair2": ["A", "K", "°C", "Ws"],
+           "rightAnswers": ["Ampere:A", "Kelvin:K", "Celsius:°C", "Energie:Ws"]
          }
         ]
 }
