@@ -93,11 +93,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         }
       } else if (t is TaskEquation) {
         if (fullequals(event.fullAnswer, event.providedanswerWords)) {
-          userRepository.addLamaCoins(t.reward);
-          answerResults.add(true);
+          rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         } else {
-          answerResults.add(false);
+          wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
       }
@@ -158,9 +157,46 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     return true;
   }
   bool fullequals(List<String> list1, List<String> list2) {
+    int remove1, remove2;
+    bool twoToRemove = false;
+
     if (!(list1 is List<String> && list2 is List<String>) ||
         list1.length != list2.length) {
       return false;
+    }
+    if(list2[0]=="0" || list2[2]=="0" || list2[4]=="0") {
+      if (list2[0] == "0") {
+        if (list2[1] == "*") {
+          remove1 = 2;
+          if (list2[3] == "*") {
+            remove2 = 3;
+            twoToRemove = true;
+          }
+        }
+      } else if (list2[2] == "0") {
+        if (list2[1] == "*") {
+          remove1 = 0;
+          if (list2[3] == "*") {
+            remove2 = 3;
+            twoToRemove = true;
+          }
+        } else if (list2[3] == "*")
+          remove1 = 4;
+      } else if (list2[4] == "0") {
+        if (list2[3] == "*") {
+          remove1 = 2; // 7 *  * 0 = 0
+          if (list2[1] == "*") {
+            remove2 = 0;
+            twoToRemove = true;
+          }
+        }
+      }
+      list1.removeAt(remove1);
+      list2.removeAt(remove1);
+      if (twoToRemove) {
+        list1.removeAt(remove2);
+        list2.removeAt(remove2);
+      }
     }
     for (int i = 0; i < list1.length; i++) {
       if (list1[i] != list2[i]) {

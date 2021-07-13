@@ -276,4 +276,18 @@ class TaskConnect extends Task {
   TaskEquation(String taskType, int reward, String lamaText, int leftToSolve,
       this.random, this.operator, this.equation, this.missingElements, this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
+
+  @override
+  String toString() {
+    String s = super.toString();
+    for(int i = 0; i < random.length; i++)
+      s+= random[i];
+    for(int i = 0; i < equation.length; i++)
+      s+= equation[i];
+    for(int i = 0; i < missingElements.length; i++)
+      s+= missingElements[i];
+    for(int i = 0; i < wrongAnswers.length; i++)
+      s+= wrongAnswers[i];
+    return s;
   }
+}

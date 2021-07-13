@@ -12,6 +12,7 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 
 List<String> fullAnswer = [];
 List<String> answers = [];
+List<String> resetList = [];
 
 class EquationTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
@@ -23,6 +24,7 @@ class EquationTaskScreen extends StatefulWidget {
   State<StatefulWidget> createState() {
     fullAnswer.clear();
     answers.clear();
+    resetList.clear();
     return EquationState(task, constraints);
   }
 }
@@ -32,55 +34,49 @@ class EquationState extends State<EquationTaskScreen> {
   final TaskEquation task;
   final List<String> fullEquation = [];
   final _r = new Random();
-  int _missing1, _missing2;
+  int _missing1;
 
   EquationState(this.task, this.constraints) {
-    if (task.random[0] == "yes") {
-      int number1 = (int.parse(task.random[2]) +
-          _r.nextInt(int.parse(task.random[3]) - int.parse(task.random[2])));
-      int number2 = (int.parse(task.random[2]) +
-          _r.nextInt(int.parse(task.random[3]) - int.parse(task.random[2])));
-      int number3 = (int.parse(task.random[2]) +
-          _r.nextInt(int.parse(task.random[3]) - int.parse(task.random[2])));
+    if (task.random.isNotEmpty) {
+      int number1 = (int.parse(task.random[1]) +
+          _r.nextInt(int.parse(task.random[2]) - int.parse(task.random[1])));
+      int number2 = (int.parse(task.random[1]) +
+          _r.nextInt(int.parse(task.random[2]) - int.parse(task.random[1])));
+      int number3 = (int.parse(task.random[1]) +
+          _r.nextInt(int.parse(task.random[2]) - int.parse(task.random[1])));
       fullEquation.add(number1.toString());
-      fullEquation.add(task.random[1]);
+      fullEquation.add(task.random[0]);
       fullEquation.add(number2.toString());
       answers.add(number1.toString());
       answers.add(number2.toString());
       for (int i = 0; i < 7; i++) {
-        answers.add((int.parse(task.random[2]) +
-            _r.nextInt(int.parse(task.random[3]) - int.parse(task.random[2])))
+        answers.add((int.parse(task.random[1]) +
+            _r.nextInt(int.parse(task.random[2]) - int.parse(task.random[1])))
             .toString());
       }
         if (task.operator == 2) {
-          fullEquation.add(task.random[1]);
+          fullEquation.add(task.random[0]);
           fullEquation.add(number3.toString());
           answers.add(number3.toString());
         }
         fullEquation.add("=");
         if(task.operator == 1)
           number3 = 0;
-        fullEquation.add(_randomRes(task.random[1], number1, number2, number3).toString());
+        fullEquation.add(_randomRes(task.random[0], number1, number2, number3).toString());
         if(task.operator == 1) {
           _missing1 = _r.nextInt(4);
           while(_missing1==3)
             _missing1 = _r.nextInt(4);
-          fullAnswer.addAll(fullEquation);
-          fullAnswer.removeAt(_missing1);
-          fullAnswer.insert(_missing1, "?");
         } else {
           _missing1 = _r.nextInt(6);
-          _missing2 = _r.nextInt(6);
-          while(_missing1==5 || _missing2==5 || _missing1==_missing2) {
+          while(_missing1==5) {
             _missing1 = _r.nextInt(6);
-            _missing2 = _r.nextInt(6);
           }
-          fullAnswer.addAll(fullEquation);
-          fullAnswer.removeAt(_missing1);
-          fullAnswer.insert(_missing1, "?");
-          fullAnswer.removeAt(_missing2);
-          fullAnswer.insert(_missing2, "?");
         }
+        fullAnswer.addAll(fullEquation);
+        fullAnswer.removeAt(_missing1);
+        fullAnswer.insert(_missing1, "?");
+        resetList.addAll(fullAnswer);
         // Normaler Ablauf mit gegebener Gleichung
     } else {
       int j = 0;
@@ -95,11 +91,12 @@ class EquationState extends State<EquationTaskScreen> {
       answers.addAll(task.wrongAnswers);
       for(int i = 0; i<task.missingElements.length; i++) {
           String s = task.missingElements[i];
-          if(s!="+" || s!="-" || s!="*" || s!="/")
+          if(s!="+" && s!="-" && s!="*" && s!="/")
             answers.add(s);
       }
       answers.shuffle();
       fullAnswer.addAll(task.equation);
+      resetList.addAll(fullAnswer);
     }
   }
 
@@ -185,28 +182,61 @@ class EquationState extends State<EquationTaskScreen> {
           height: (constraints.maxHeight / 100) * 1,
         ),
         Container(
-          width: (constraints.maxWidth / 100) * 50,
           height: (constraints.maxHeight / 100) * 10,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: LamaColors.greenAccent,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 3))
-              ]),
-          child: InkWell(
-            onTap: () =>
-                BlocProvider.of<TaskBloc>(context).add(
-                    AnswerTaskEvent.initEquation(fullEquation, fullAnswer)),
-            child: Center(
-              child: Text(
-                "Fertig!",
-                textAlign: TextAlign.center,
-                style: LamaTextTheme.getStyle(),
-              ),
+          child: Align(
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  height: (constraints.maxHeight / 100) * 10,
+                  width: (constraints.maxWidth / 100) * 35,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: LamaColors.redAccent,
+                  ),
+                  child: InkWell(
+                    child: Center(
+                      child: Text(
+                        "Reset",
+                        style: LamaTextTheme.getStyle(),
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                        fullAnswer.clear();
+                        fullAnswer.addAll(resetList);
+                      });
+                    }
+                  ),
+                ),
+                Container(
+                  width: (constraints.maxWidth / 100) * 35,
+                  height: (constraints.maxHeight / 100) * 10,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: LamaColors.greenAccent,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3))
+                      ]),
+                  child: InkWell(
+                    onTap: () =>
+                        BlocProvider.of<TaskBloc>(context).add(
+                            AnswerTaskEvent.initEquation(fullEquation, fullAnswer)),
+                    child: Center(
+                      child: Text(
+                        "Fertig!",
+                        textAlign: TextAlign.center,
+                        style: LamaTextTheme.getStyle(),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

@@ -46,13 +46,24 @@
          "left_to_solve": 3,
          "moneyAmount": 3.59
         },
+         {
+           "task_type": "Equation",
+           "task_reward": 2,
+           "lama_text": "Löse die Gleichung!",
+           "left_to_solve": 4,
+           "operator(1-2)": 2,
+           "random": [],
+           "equation": ["?", "*", "0", "+", "?", "=", "1"],
+           "missing_elements": ["7", "1"],
+           "wrong_answers": ["8", "9", "10", "11", "12", "13"]
+         },
               {
                   "task_type": "Equation",
                   "task_reward": 2,
                   "lama_text": "Löse die Gleichung!",
                   "left_to_solve": 4,
                   "operator(1-2)": 2,
-                  "random": [""],
+                  "random": [],
                   "equation": ["?", "*", "7", "+", "?", "=", "50"],
                   "missing_elements": ["7", "1"],
                 "wrong_answers": ["8", "9", "10", "11", "12", "13"]
@@ -62,7 +73,7 @@
                 "task_reward": 2,
                 "lama_text": "Löse die Gleichung!",
                 "left_to_solve": 4,
-                "random": [""],
+                "random": [],
                 "operator(1-2)": 1,
                 "equation": ["9", "?", "7", "=", "2"],
                 "missing_elements": ["-"],
@@ -74,7 +85,7 @@
            "lama_text": "Löse die Gleichung!",
            "left_to_solve": 4,
            "operator(1-2)": 2,
-           "random": ["yes", "+", "0", "50"],
+           "random": ["+", "0", "50"],
            "equation": [""],
            "missing_elements": [""],
            "wrong_answers": [""]
@@ -84,10 +95,10 @@
            "task_reward": 2,
            "lama_text": "Löse die Gleichung!",
            "left_to_solve": 4,
-           "random": ["yes", "+", "5", "20"],
-           "operator(1-2)": 1,
-           "equation": ["9", "?", "7", "=", "2"],
-           "missing_elements": ["-"],
+           "operator(1-2)": 2,
+           "random": [],
+           "equation": ["?", "*", "0", "*", "?", "=", "0"],
+           "missing_elements": ["7", "1"],
            "wrong_answers": ["8", "9", "10", "11", "12", "13"]
          },
          {
@@ -95,10 +106,10 @@
            "task_reward": 2,
            "lama_text": "Löse die Gleichung!",
            "left_to_solve": 4,
-           "random": ["yes", "-", "0", "30"],
+           "random": [],
            "operator(1-2)": 1,
-           "equation": ["9", "?", "7", "=", "2"],
-           "missing_elements": ["-"],
+           "equation": ["0", "?", "7", "=", "0"],
+           "missing_elements": ["*"],
            "wrong_answers": ["8", "9", "10", "11", "12", "13"]
          },
          {
@@ -106,7 +117,7 @@
            "task_reward": 2,
            "lama_text": "Löse die Gleichung!",
            "left_to_solve": 4,
-           "random": ["yes", "*", "0", "10"],
+           "random": ["*", "0", "10"],
            "operator(1-2)": 1,
            "equation": ["9", "?", "7", "=", "2"],
            "missing_elements": ["-"],
@@ -118,7 +129,7 @@
            "lama_text": "Löse die Gleichung!",
            "left_to_solve": 4,
            "operator(1-2)": 2,
-           "random": ["yes", "-", "40", "100"],
+           "random": ["-", "40", "100"],
            "equation": ["?", "*", "7", "+", "?", "=", "50"],
            "missing_elements": ["7", "1"],
            "wrong_answers": ["8", "9", "10", "11", "12", "13"]
@@ -129,7 +140,7 @@
            "lama_text": "Löse die Gleichung!",
            "left_to_solve": 4,
            "operator(1-2)": 2,
-           "random": ["yes", "*", "0", "10"],
+           "random": ["*", "0", "10"],
            "equation": ["?", "*", "7", "+", "?", "=", "50"],
            "missing_elements": ["7", "1"],
            "wrong_answers": ["8", "9", "10", "11", "12", "13"]
