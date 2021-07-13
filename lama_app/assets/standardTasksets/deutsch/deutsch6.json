@@ -15,11 +15,37 @@
          {
            "task_type":"ClozeTest",
            "task_reward":2,
-           "question":"Wusstest du, ___ Lamas spucken können?",
+           "question":"Ich hoffe, __ das Wetter bald besser wird",
            "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
            "right_answer":"dass",
-           "wrong_answers":["Das", "das"]
+           "wrong_answers":["dieses", "das"]
+         },
+         {
+           "task_type": "Connect",
+           "task_reward":2,
+           "left_to_solve": 3,
+           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+           "pair1": ["Author", "Dichter", "Buch", "Ballade"],
+           "pair2": ["Kafka", "Schiller", "Harry Potter", "Der Erlkönig"],
+           "rightAnswers": ["Author:Kafka", "Dichter:Schiller", "Buch:Harry Potter", "Ballade:Der Erlkönig"]
+         },
+         {
+           "task_type":"GridSelect",
+           "task_reward":3,
+           "lama_text":"Markiere vier Dichter",
+           "left_to_solve": 3,
+           "wordsToFind":["Schiller", "Goethe", "Brecht", "Grimm"]
+         },
+         {
+           "task_type": "MatchCategory",
+           "task_reward":2,
+           "lama_text": "Ordne jeder Person die Passende Werke zu",
+           "left_to_solve": 3,
+           "nameCatOne": "Goethe",
+           "nameCatTwo": "Schiller",
+           "categoryOne": ["Faust", "Erlkönig", "Novelle", "Mailied"],
+           "categoryTwo": ["Demetrius", "Räuber", "Taucher", "Nänie "]
          }
-        ]
+       ]
 }
