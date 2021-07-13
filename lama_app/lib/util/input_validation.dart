@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -48,24 +49,38 @@ abstract class InputValidation {
   }
 
   static Future<String> inputUrlWithJsonValidation(String url) async {
-    if (!Uri.tryParse(url).hasAbsolutePath)
-      return 'Die Url ist fehlerhaft! \n einige URLs enden mit ".json" oder einem "/"';
+    if (inputURLValidation(url) != null) return inputURLValidation(url);
+    //SocketException
+    //HandshakeException
+    //TimeoutException
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await Future.wait([
+        http
+            .get(Uri.parse(url))
+            .timeout(Duration(seconds: 4))
+            .whenComplete(() {})
+            .catchError((e) {
+          return null;
+        })
+      ]).catchError((e) {
+        return null;
+      });
+
       //Check if URL is reachable
-      if (response.statusCode == 200) {
+      if (response[0].statusCode == 200) {
         //Check if URL contains valid json code
         try {
-          jsonDecode(response.body);
+          await jsonDecode(response[0].body);
         } on FormatException {
-          return 'Der Inhalt der URL ist kein "json" oder fehlerhaft!';
+          return '"json" fehlerhaft!';
         }
         //Testing successfull
         return null;
       } else {
         return 'URL ist nicht erreichbar!';
       }
-    } on SocketException {
+    } catch (e) {
+      if (e is TimeoutException) return 'Zeitüberschreitung!';
       return 'Da ist etwas gewaltig schiefgelaufen!';
     }
   }
