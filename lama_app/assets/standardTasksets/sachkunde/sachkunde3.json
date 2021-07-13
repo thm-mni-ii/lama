@@ -34,9 +34,9 @@
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "lama_text":"Markiere vier Berge",
+           "lama_text":"Markiere drei Berge",
            "left_to_solve": 3,
-           "wordsToFind":["Brocken", "Watzmann", "Zugspitze", "Alpspitze"]
+           "wordsToFind":["Brocken", "Watzmann", "Höfats"]
          },
          {
            "task_type": "Connect",

@@ -3,48 +3,49 @@
      "taskset_subject":"Sachkunde",
       "taskset_grade":5,
        "tasks": [
-           {
+         {
            "task_type":"4Cards",
-            "task_reward":2,
-            "question":"Was ist kein Verb (Tunwort)?",
-            "lama_text":"Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "right_answer":"grün",
-             "wrong_answers":["begrünen", "reden", "lesen"]
-             },
+           "task_reward":2,
+           "question":"Wer kämpfte hauptsächlich in der Arena ?",
+           "lama_text":"Tippe die richtige Antwort an!",
+           "left_to_solve": 3,
+           "right_answer":"Gladiatoren",
+           "wrong_answers":["Christen", "Kinder", "Bauern"]
+         },
          {
            "task_type":"ClozeTest",
            "task_reward":2,
-           "question":"Wusstest du, ___ Lamas spucken können?",
+           "question":"Alle eroberten Gebiete außerhalb Italiens nannten die Römer __",
            "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
-           "right_answer":"dass",
-           "wrong_answers":["Das", "das"]
+           "right_answer":"Provinz",
+           "wrong_answers":["Limes", "Kastell"]
          },
-            {
-          "task_type":"MarkWords",
-          "task_reward":2,
-          "lama_text":"Tippe alle Verben an!",
-          "left_to_solve": 3,
-          "sentence": "Eine Pflanze wächst auf der Wiese!",
-          "right_words": ["wächst"]
-            },
          {
            "task_type": "MatchCategory",
            "task_reward":2,
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
            "left_to_solve": 3,
-           "nameCatOne": "Verben",
-           "nameCatTwo": "Nomen",
-           "categoryOne": ["laufen", "gehen", "schweben", "fallen"],
-           "categoryTwo": ["haus", "straße", "baum", "auto"]
+           "nameCatOne": "Säugetier",
+           "nameCatTwo": "Reptil",
+           "categoryOne": ["Lama", "Alpaka", "Biber", "Delfin"],
+           "categoryTwo": ["Schildkröte", "Krokodil", "Schlange", "Echse"]
          },
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "lama_text":"Markiere vier Städte",
+           "lama_text":"Markiere drei Nadelbäume",
            "left_to_solve": 3,
-           "wordsToFind":["Gießen", "Wetzlar", "Frankfurt", "Berlin"]
+           "wordsToFind":["Fichte", "Kiefer", "Tanne"]
+         },
+         {
+           "task_type": "Connect",
+           "task_reward":2,
+           "left_to_solve": 3,
+           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+           "pair1": ["Vogel", "Säugetier", "Reptil", "Fisch"],
+           "pair2": ["Spatz", "Delphin", "Krokodil", "Lachs"],
+           "rightAnswers": ["Vogel:Spatz", "Säugetier:Delphin", "Reptil:Krokodil", "Fisch:Lachs"]
          }
         ]
 }
