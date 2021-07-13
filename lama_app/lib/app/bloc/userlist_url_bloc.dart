@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
@@ -34,8 +35,14 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
     if (error != null) return UserlistUrlParsingFailed(error: error);
 
     _userList.clear();
-    final respons = await http.get(Uri.parse(_url));
-    return _parsUserList(jsonDecode(respons.body));
+    try {
+      final respons = await http.get(Uri.parse(_url));
+      return _parsUserList(jsonDecode(respons.body));
+    } on SocketException {
+      return UserlistUrlParsingFailed(
+        error: 'Kritischer Fehler beim erreichen der URL!',
+      );
+    }
   }
 
   UserlistUrlState _parsUserList(Map<String, dynamic> json) {
