@@ -2,6 +2,8 @@ import 'package:lama_app/app/model/user_model.dart';
 
 abstract class UserlistUrlState {}
 
+class UserlistUrlDefault extends UserlistUrlState {}
+
 class UserlistUrlParsingFailed extends UserlistUrlState {
   String error;
   UserlistUrlParsingFailed(

@@ -31,19 +31,29 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AdminUtils.appbar(
-          screenSize, LamaColors.bluePrimary, 'Nutzerliste einfügen'),
-      body: BlocBuilder<UserlistUrlBloc, UserlistUrlState>(
-          builder: (context, state) {
-        if (state is UserlistUrlTesting)
-          return _loadingWidget('Inhalt wird geprüft und geladen!');
-        if (state is UserlistUrlParsingFailed) return _errorWidget(state.error);
-        if (state is UserlistUrlParsingSuccessfull)
-          return _userList(state.userList);
-        return _defaultWidget();
-      }),
-    );
+        resizeToAvoidBottomInset: false,
+        appBar: AdminUtils.appbar(
+            screenSize, LamaColors.bluePrimary, 'Nutzerliste einfügen'),
+        body: BlocBuilder<UserlistUrlBloc, UserlistUrlState>(
+            builder: (context, state) {
+          if (state is UserlistUrlTesting)
+            return _loadingWidget('Inhalt wird geprüft und geladen!');
+          if (state is UserlistUrlParsingFailed)
+            return _errorWidget(state.error);
+          if (state is UserlistUrlParsingSuccessfull)
+            return _userList(state.userList);
+          return _defaultWidget();
+        }),
+        floatingActionButton: BlocBuilder<UserlistUrlBloc, UserlistUrlState>(
+          builder: (contextB, state) {
+            if (state is UserlistUrlParsingSuccessfull)
+              return AdminUtils.saveAboardButtons(
+                  () =>
+                      context.read<UserlistUrlBloc>().add(UserlistInsertList()),
+                  () => context.read<UserlistUrlBloc>().add(UserlistAbort()));
+            return Container();
+          },
+        ));
   }
 
   Widget _defaultWidget() {
@@ -66,41 +76,86 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
   }
 
   Widget _userList(List<User> userlist) {
-    return ListView.builder(
-      itemCount: userlist.length,
-      itemBuilder: (context, index) {
-        return _userCard(userlist[index]);
-      },
+    return Padding(
+      padding: EdgeInsets.all(15),
+      child: ListView.builder(
+        itemCount: userlist.length,
+        itemBuilder: (context, index) {
+          return _userCard(userlist[index]);
+        },
+      ),
     );
   }
 
   Widget _userCard(User user) {
     String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
-    return Row(
-      children: [
-        //User Avatar
-        CircleAvatar(
-          child: SvgPicture.asset(
-            'assets/images/svg/avatars/${user.avatar}.svg',
-            semanticsLabel: 'LAMA',
+    return Padding(
+      padding: EdgeInsets.all(5),
+      child: Row(
+        children: [
+          //User Avatar
+          CircleAvatar(
+            child: SvgPicture.asset(
+              'assets/images/svg/avatars/${user.avatar}.svg',
+              semanticsLabel: 'LAMA',
+            ),
+            radius: 25,
           ),
-          radius: 25,
+          SizedBox(width: 15),
+          Column(
+            children: [
+              //Name
+              Text(
+                _nameDisplay,
+                style: LamaTextTheme.getStyle(
+                  fontSize: 20,
+                  color: LamaColors.black,
+                  monospace: true,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _userDetails(User user) {
+    return Column(
+      children: [
+        //Password
+        Text(
+          'Passwort: ' + user.password,
+          style: LamaTextTheme.getStyle(
+            fontSize: 14,
+            color: LamaColors.black,
+            monospace: true,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-        Column(
+        //Grade
+        Text(
+          'Klasse ${user.grade}',
+          style: LamaTextTheme.getStyle(
+            fontSize: 14,
+            color: LamaColors.black,
+            monospace: true,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        //Coins
+        Row(
           children: [
-            //Name
-            Text(
-              _nameDisplay,
-              style: LamaTextTheme.getStyle(
-                fontSize: 20,
-                color: LamaColors.black,
-                monospace: true,
-                fontWeight: FontWeight.w500,
+            CircleAvatar(
+              child: SvgPicture.asset(
+                'assets/images/svg/lama_coin.svg',
+                semanticsLabel: 'LAMA',
               ),
+              radius: 15,
             ),
-            //Password
             Text(
-              user.password,
+              '${user.coins}',
               style: LamaTextTheme.getStyle(
                 fontSize: 14,
                 color: LamaColors.black,
@@ -108,37 +163,6 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            //Grade
-            Text(
-              'Klasse ${user.grade}',
-              style: LamaTextTheme.getStyle(
-                fontSize: 14,
-                color: LamaColors.black,
-                monospace: true,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            //Coins
-            Row(
-              children: [
-                CircleAvatar(
-                  child: SvgPicture.asset(
-                    'assets/images/svg/lama_coin.svg',
-                    semanticsLabel: 'LAMA',
-                  ),
-                  radius: 15,
-                ),
-                Text(
-                  '${user.coins}',
-                  style: LamaTextTheme.getStyle(
-                    fontSize: 14,
-                    color: LamaColors.black,
-                    monospace: true,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            )
           ],
         )
       ],

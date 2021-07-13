@@ -237,4 +237,40 @@ abstract class AdminUtils {
       ),
     );
   }
+
+  static Widget saveAboardButtons(
+      VoidCallback functionLeft, VoidCallback functionRight) {
+    return Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Ink(
+            decoration: ShapeDecoration(
+              color: LamaColors.greenPrimary,
+              shape: CircleBorder(),
+            ),
+            padding: EdgeInsets.all(7.0),
+            child: IconButton(
+                icon: Icon(Icons.save, size: 28),
+                color: Colors.white,
+                tooltip: 'Bestätigen',
+                onPressed: functionLeft),
+          ),
+        ),
+        Ink(
+          decoration: ShapeDecoration(
+            color: LamaColors.redPrimary,
+            shape: CircleBorder(),
+          ),
+          padding: EdgeInsets.all(2.0),
+          child: IconButton(
+              icon: Icon(Icons.close_rounded),
+              color: Colors.white,
+              tooltip: 'Abbrechen',
+              onPressed: functionRight),
+        ),
+      ],
+      mainAxisAlignment: MainAxisAlignment.end,
+    );
+  }
 }

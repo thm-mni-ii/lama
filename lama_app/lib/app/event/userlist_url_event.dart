@@ -6,3 +6,7 @@ class UserlistUrlChangeUrl extends UserlistUrlEvent {
 }
 
 class UserlistParseUrl extends UserlistUrlEvent {}
+
+class UserlistAbort extends UserlistUrlEvent {}
+
+class UserlistInsertList extends UserlistUrlEvent {}

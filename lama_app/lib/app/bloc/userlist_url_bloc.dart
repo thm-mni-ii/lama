@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:lama_app/app/event/userlist_url_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/userlist_url_state.dart';
+import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/input_validation.dart';
 
 class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
@@ -19,6 +20,11 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
     if (event is UserlistParseUrl) {
       yield UserlistUrlTesting();
       yield await _parsUrl();
+    }
+    if (event is UserlistAbort) yield UserlistUrlDefault();
+    if (event is UserlistInsertList) {
+      _insertList();
+      yield UserlistUrlDefault();
     }
   }
 
@@ -56,5 +62,11 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
     }
     //return valid _userList to UI
     return UserlistUrlParsingSuccessfull(_userList);
+  }
+
+  void _insertList() {
+    _userList.forEach((user) async {
+      await DatabaseProvider.db.insertUser(user);
+    });
   }
 }
