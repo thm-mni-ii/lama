@@ -2,6 +2,7 @@
     "taskset_name":"Standardaufgaben Klasse 3",
      "taskset_subject":"Deutsch",
       "taskset_grade":3,
+      "taskset_randomize_order":true,
        "tasks": [
            {
            "task_type":"4Cards",

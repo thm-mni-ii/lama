@@ -149,6 +149,8 @@ class GridSelectTaskScreen extends StatelessWidget {
       Pair cords;
       List<Pair> cordList;
       int timeout = 0;
+
+      int wordTimeout = 0;
       //Whether it will generate vertical or horizontal
       do {
         wordAdded = false;
@@ -206,7 +208,12 @@ class GridSelectTaskScreen extends StatelessWidget {
           }
           wordAdded = true;
         }
-      } while (!wordAdded);
+        wordTimeout++;
+        print("wordTimeout is now " +
+            wordTimeout.toString() +
+            " for word " +
+            word);
+      } while (!wordAdded && wordTimeout < 20);
     });
   }
 
