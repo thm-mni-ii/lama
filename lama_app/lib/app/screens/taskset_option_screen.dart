@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
-import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/state/taskset_options_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -32,7 +31,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
       resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5),
       body: BlocListener(
-        bloc: BlocProvider.of<TasksetOprionsBloc>(context),
+        bloc: BlocProvider.of<TasksetOptionsBloc>(context),
         listener: (context, state) {
           if (state is TasksetOptionsPushSuccess) {
             urlInitValue = null;
@@ -53,7 +52,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             showDialog(context: context, builder: (_) => _urlPopUp(state.url));
           }
         },
-        child: BlocBuilder<TasksetOprionsBloc, TasksetOptionsState>(
+        child: BlocBuilder<TasksetOptionsBloc, TasksetOptionsState>(
           builder: (context, state) {
             if (state is TasksetOptionsDefault) {
               return Padding(
@@ -78,7 +77,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             if (state is TasksetOptionsWaiting) {
               return Center(child: CircularProgressIndicator());
             }
-            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
+            context.read<TasksetOptionsBloc>().add(TasksetOptionsReload());
             return Center(child: CircularProgressIndicator());
           },
         ),
@@ -100,13 +99,13 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             ),
             onChanged: (value) => {
               context
-                  .read<TasksetOprionsBloc>()
+                  .read<TasksetOptionsBloc>()
                   .add(TasksetOptionsChangeURL(value))
             },
             validator: (value) => InputValidation.inputURLValidation(value),
             onFieldSubmitted: (value) => {
               if (_formKey.currentState.validate())
-                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush())
+                context.read<TasksetOptionsBloc>().add(TasksetOptionsPush())
             },
           ),
         ],
@@ -132,7 +131,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               ),
               onPressed: () {
                 context
-                    .read<TasksetOprionsBloc>()
+                    .read<TasksetOptionsBloc>()
                     .add(TasksetOptionsSelectUrl(urls[index]));
               },
             ),
@@ -145,7 +144,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               ),
               onPressed: () {
                 context
-                    .read<TasksetOprionsBloc>()
+                    .read<TasksetOptionsBloc>()
                     .add(TasksetOptionsDelete(urls[index]));
               },
             )
@@ -179,7 +178,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               ),
               onPressed: () {
                 context
-                    .read<TasksetOprionsBloc>()
+                    .read<TasksetOptionsBloc>()
                     .add(TasksetOptionsReAddUrl(urls[index]));
               },
             )

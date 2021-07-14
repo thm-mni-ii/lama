@@ -11,10 +11,11 @@ import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/state/taskset_options_state.dart';
 import 'package:lama_app/app/task-system/taskset_validator.dart';
 import 'package:lama_app/db/database_provider.dart';
+import 'package:lama_app/util/input_validation.dart';
 
-class TasksetOprionsBloc
+class TasksetOptionsBloc
     extends Bloc<TasksetOptionsEvent, TasksetOptionsState> {
-  TasksetOprionsBloc({TasksetOptionsState initialState}) : super(initialState);
+  TasksetOptionsBloc({TasksetOptionsState initialState}) : super(initialState);
 
   String _tasksetUrl;
   List<TaskUrl> deletedUrls = [];
@@ -52,46 +53,30 @@ class TasksetOprionsBloc
     return await _insertUrl(TaskUrl(url: _tasksetUrl));
   }
 
-  Future<TasksetOptionsPushSuccess> _tasksetOptionsReAddUrl(TaskUrl url) async {
+  Future<TasksetOptionsState> _tasksetOptionsReAddUrl(TaskUrl url) async {
     TasksetOptionsState retValue = await _insertUrl(url);
     if (retValue is TasksetOptionsPushSuccess) deletedUrls.remove(url);
     return retValue;
   }
 
   Future<TasksetOptionsState> _insertUrl(TaskUrl url) async {
-    //Check if URL can be parsed
-    if (!Uri.tryParse(url.url).hasAbsolutePath)
-      return TasksetOptionsPushFailed(failedUrl: _tasksetUrl);
-    try {
-      final response = await http.get(Uri.parse(url.url));
-      //Check if URL is reachable
-      if (response.statusCode == 200) {
-        //Check if URL contains valid json code
-        try {
-          jsonDecode(response.body);
-        } on FormatException {
-          return TasksetOptionsPushFailed(
-              error: 'Inhalt kein "json" oder Fehlerhaft!',
-              failedUrl: _tasksetUrl);
-        }
-        //Taskset validtion
-        if (!TasksetValidator.isValidTaskset(jsonDecode(response.body))) {
-          return TasksetOptionsPushFailed(
-              error: 'Fehler beim lesen der Aufgaben!');
-        }
-
-        //Insert URL to Database
-        await DatabaseProvider.db.insertTaskUrl(url);
-        return TasksetOptionsPushSuccess();
-      } else {
-        return TasksetOptionsPushFailed(
-            error: 'URL nicht erreichbar!', failedUrl: _tasksetUrl);
-      }
-    } on SocketException {
-      return TasksetOptionsPushFailed(
-          error: 'Da ist etwas gewaltig schiefgelaufen!',
-          failedUrl: _tasksetUrl);
+    //Check if URL is valid
+    String error = await InputValidation.inputUrlWithJsonValidation(url.url);
+    if (error != null) {
+      return TasksetOptionsPushFailed(error: error, failedUrl: _tasksetUrl);
     }
+    final response = await http.get(Uri.parse(url.url));
+    //Check if URL is reachable
+    if (response.statusCode == 200) {
+      //Taskset validtion
+      if (!TasksetValidator.isValidTaskset(jsonDecode(response.body))) {
+        return TasksetOptionsPushFailed(
+            error: 'Fehler beim lesen der Aufgaben!');
+      }
+    }
+    //Insert URL to Database
+    await DatabaseProvider.db.insertTaskUrl(url);
+    return TasksetOptionsPushSuccess();
   }
 
   Future<TasksetOptionsDeleteSuccess> _deleteUrl(TaskUrl url) async {

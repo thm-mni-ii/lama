@@ -1,3 +1,5 @@
+import 'package:lama_app/util/input_validation.dart';
+
 import '../../db/database_provider.dart';
 
 final String tableUser = "user";
@@ -48,5 +50,38 @@ class User {
     coins = map[UserFields.columnCoins];
     isAdmin = map[UserFields.columnIsAdmin] == 1;
     avatar = map[UserFields.columnAvatar];
+  }
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    bool isAdmin =
+        json.containsKey('isAdmin') && json['isAdmin'] == 'ja' ? true : false;
+    String avatar = isAdmin ? 'admin' : 'lama';
+    int coins = json.containsKey('coins') ? json['coins'] : 0;
+
+    return User(
+      name: json['name'],
+      password: json['password'],
+      grade: json['grade'],
+      coins: coins,
+      isAdmin: isAdmin,
+      avatar: avatar,
+    );
+  }
+
+  static String isValidUser(Map<String, dynamic> json) {
+    if (!(json.containsKey('name') && json['name'] is String))
+      return 'Feld ("name":...) fehlt oder ist fehlerhaft! \n Hinweis: ("name":"NUTZERNAME",)';
+    if (!(json.containsKey('password') && json['password'] is String))
+      return 'Feld ("password":...) fehlt oder ist fehlerhaft! \n Hinweis: ("password":"PASSWORT",)';
+    if (!(json.containsKey('grade') && json['grade'] is int))
+      return 'Feld ("grade":...) fehlt oder ist fehlerhaft! \n Hinweis: ("grade":ZAHL,)';
+    if (json.containsKey('coins') && !(json['coins'] is int))
+      return 'Feld ("coins":...) ist fehlerhaft! \n Hinweis: ("coins":ZAHL,)';
+    String error = InputValidation.inputPasswortValidation(json['password']);
+    if (error != null) return error;
+
+    error = InputValidation.inputUsernameValidation(json['name']);
+    if (error != null) return error;
+    return null;
   }
 }
