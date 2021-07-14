@@ -38,6 +38,50 @@
                   "left_to_solve": 3,
                   "right_answer":"-30",
                    "wrong_answers":["30", "-10", "0"]
-             }
+             },
+        {
+         "task_type": "Equation",
+         "task_reward": 2,
+         "lama_text": "Löse die Gleichung!",
+         "left_to_solve": 4,
+         "operator(1-2)": 1,
+         "random": [],
+         "equation": ["?", "/", "7", "=", "5"],
+         "missing_elements": ["35"],
+         "wrong_answers": ["36", "40", "0", "12", "45"]
+        },
+        {
+         "task_type": "Equation",
+         "task_reward": 2,
+         "lama_text": "Löse die Gleichung!",
+         "left_to_solve": 4,
+         "operator(1-2)": 2,
+         "random": [],
+         "equation": ["?", "+", "2", "?", "8", "=", "28"],
+         "missing_elements": ["12", "*"],
+         "wrong_answers": ["10", "4", "0", "20", "50"]
+        },
+        {
+         "task_type": "Equation",
+         "task_reward": 2,
+         "lama_text": "Löse die Gleichung!",
+         "left_to_solve": 4,
+         "random": ["*", "5", "20"],
+         "operator(1-2)": 1,
+         "equation": [""],
+         "missing_elements": [""],
+         "wrong_answers": [""]
+        },
+        {
+         "task_type": "Equation",
+         "task_reward": 2,
+         "lama_text": "Löse die Gleichung!",
+         "left_to_solve": 4,
+         "operator(1-2)": 2,
+         "random": ["-", "20", "50"],
+         "equation": [""],
+         "missing_elements": [""],
+         "wrong_answers": [""]
+        }
         ]
 }
