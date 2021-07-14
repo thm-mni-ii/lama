@@ -164,7 +164,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         list1.length != list2.length) {
       return false;
     }
-    if(list2[0]=="0" || list2[2]=="0" || list2[4]=="0") {
+    if((list2.length==5 && (list2[0]=="0" || list2[2]=="0")) || (list2.length==7 && (list2[0]=="0" || list2[2]=="0" || list2[4]=="0"))) {
       if (list2[0] == "0") {
         if (list2[1] == "*") {
           remove1 = 2;
