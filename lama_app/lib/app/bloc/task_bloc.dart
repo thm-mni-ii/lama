@@ -172,6 +172,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
             remove2 = 3;
             twoToRemove = true;
           }
+          list1.removeAt(remove1);
+          list2.removeAt(remove1);
+          if (twoToRemove) {
+            list1.removeAt(remove2);
+            list2.removeAt(remove2);
+          }
         }
       } else if (list2[2] == "0") {
         if (list2[1] == "*") {
@@ -180,8 +186,17 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
             remove2 = 3;
             twoToRemove = true;
           }
-        } else if (list2[3] == "*")
+          list1.removeAt(remove1);
+          list2.removeAt(remove1);
+          if (twoToRemove) {
+            list1.removeAt(remove2);
+            list2.removeAt(remove2);
+          }
+        } else if (list2[3] == "*") {
           remove1 = 4;
+          list1.removeAt(remove1);
+          list2.removeAt(remove1);
+        }
       } else if (list2[4] == "0") {
         if (list2[3] == "*") {
           remove1 = 2; // 7 *  * 0 = 0
@@ -189,13 +204,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
             remove2 = 0;
             twoToRemove = true;
           }
+          list1.removeAt(remove1);
+          list2.removeAt(remove1);
+          if (twoToRemove) {
+            list1.removeAt(remove2);
+            list2.removeAt(remove2);
+          }
         }
-      }
-      list1.removeAt(remove1);
-      list2.removeAt(remove1);
-      if (twoToRemove) {
-        list1.removeAt(remove2);
-        list2.removeAt(remove2);
       }
     }
     for (int i = 0; i < list1.length; i++) {
