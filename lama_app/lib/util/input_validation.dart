@@ -15,13 +15,15 @@ abstract class InputValidation {
     if (isEmpty(username)) return 'Der Nutzername darf nicht leer sein!';
     if (username.length > allowedNameLength)
       return 'Der Nutzername darf nur $allowedNameLength Zeichen lang sein!';
-    if (_regExpInvalide(username)) return 'Bitte keine Sonderzeichen!';
+    if (_regExpInvalide(username))
+      return 'Bitte keine Sonderzeichen im Nutzernamen!';
     return null;
   }
 
   static String inputPasswortValidation(String passwort, {String secondPass}) {
     if (isEmpty(passwort)) return 'Das Passwort darf nicht leer sein!';
-    if (_regExpInvalide(passwort)) return 'Bitte keine Sonderzeichen!';
+    if (_regExpInvalide(passwort))
+      return 'Bitte keine Sonderzeichen im Passwort!';
     if (passwort.length > passwortMaxLength)
       return 'Das Passwort darf maximal $passwortMaxLength Zeichen haben!';
     if (secondPass != null && (passwort != secondPass)) {
