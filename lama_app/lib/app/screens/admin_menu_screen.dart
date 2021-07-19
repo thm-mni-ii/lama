@@ -26,6 +26,11 @@ import 'package:lama_app/app/screens/userlist_url_screen.dart';
 ///or option which coulde be used by the Admin to
 ///change, configur, delete or add content and users.
 ///
+/// * see also
+///    [AdminMenuBloc]
+///    [AdminMenuEvent]
+///    [AdminMenuState]
+///
 /// Author: L.Kammerer
 /// latest Changes: 15.07.2021
 class AdminMenuScreen extends StatefulWidget {
@@ -146,7 +151,8 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   }
 
   ///(private)
-  ///provides custom [Checkbox] to deaktivate the App default Tasksets
+  ///provides custom [Checkbox] to deactivate or activate the App default Tasksets
+  ///chnages are made onChanged through [AdminMenuBloc] via [AdminMenuChangePrefsEvent]
   ///
   ///{@param} [BuildContext] as context
   ///
@@ -287,13 +293,48 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   }
 }
 
+///The AdminUtils class provides basic [Widget]s
+///and functions to make the building more easy or
+///prevent repetitive code in all Screens used for the Admin
+///
+/// Author: L.Kammerer
+/// latest Changes: 17.07.2021
 abstract class AdminUtils {
+  ///START of Area for UserPreferences
+  ///
+  ///enableDefaultTasksetsPref is used to set an bool in the
+  ///UserPreferences to deaktivate all default Tasksets made available by this App
   static final String enableDefaultTasksetsPref = 'enableDefaultTaskset';
 
+  ///
+  ///END of Area for UserPreferences
+
+  ///reloads all Tasksets (defaults and custom sets)
+  ///reading the [TasksetRepository] from context
+  ///and execute the [reloadTasksetLoader] function
+  ///
+  ///{@Important} the context of the app
+  ///provides the [TasksetRepository] by default.
+  ///However on use make sure the context provides the [TasksetRepository]
+  ///This Method doesn't check the context so no error handling is implemented
+  ///
+  ///{@param} [BuildContext] as context
+  ///
+  /// * see also
+  ///    [RepositoryProvider]
+  ///    [TasksetRepository]
   static void reloadTasksets(BuildContext context) {
     RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
   }
 
+  ///porvides [AppBar] with default design for Screens used by the Admin
+  ///
+  ///{@params}
+  ///[Size] as screenSize used to calculate the size of [AppBar]
+  ///[AppBar] [Color] as colors
+  ///[AppBar] titel as String title
+  ///
+  ///{@return} [AppBar] with generel AdminMenu specific design
   static Widget appbar(Size screenSize, Color color, String titel) {
     return AppBar(
       title: Text(
@@ -310,6 +351,15 @@ abstract class AdminUtils {
     );
   }
 
+  ///porvides [Row] with default designed abort and save [Ink] Button
+  ///for all Screens used by the Admin where this buttons are needed.
+  ///
+  ///{@params}
+  ///[VoidCallback] as functionLeft. onPressed for the 'Bestätigen' (save) Button.
+  ///[VoidCallback] as functionRight. onPressed for the 'Abbrechen' (abort) Button.
+  ///
+  ///{@return} [Row] with two [Ink] Buttons
+  //TODO Rename to abort not Aboard
   static Widget saveAboardButtons(
       VoidCallback functionLeft, VoidCallback functionRight) {
     return Row(
