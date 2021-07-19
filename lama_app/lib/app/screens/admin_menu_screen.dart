@@ -1,29 +1,49 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+//Lama default
+import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
+//Blocs
 import 'package:lama_app/app/bloc/admin_menu_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
-import 'package:lama_app/app/event/admin_menu_event.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
+//Events
+import 'package:lama_app/app/event/admin_menu_event.dart';
+//States
+import 'package:lama_app/app/state/admin_menu_state.dart';
+//Screens
 import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/screens/userlist_url_screen.dart';
-import 'package:lama_app/app/state/admin_menu_state.dart';
-import 'package:lama_app/util/LamaColors.dart';
-import 'package:lama_app/util/LamaTextTheme.dart';
 
+///This file creates the Admin Menu Screen
+///The Admin Menu Screen provides every navigation to screens
+///or option which coulde be used by the Admin to
+///change, configur, delete or add content and users.
+///
+/// Author: L.Kammerer
+/// latest Changes: 15.07.2021
 class AdminMenuScreen extends StatefulWidget {
   @override
   _AdminMenuScreenState createState() => _AdminMenuScreenState();
 }
 
+///AdminMenuScreenState provides the state for the [AdminMenuScreen]
+/// * see also [StatelessWidget]
 class _AdminMenuScreenState extends State<AdminMenuScreen> {
+  //save the Checkbox (Standardaufgaben aktivieren?) value as bool
   bool _isChecked = true;
 
+  ///override build methode [StatelessWidget]
+  ///
+  ///{@param} [BuildContext] as context
+  ///
+  ///{@return} a [Widget] decided by the incoming state of the [AdminMenuBloc]
   @override
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
@@ -47,12 +67,25 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
     );
   }
 
+  ///(private)
+  ///provides [Columne] of all Buttons or elements
+  ///
+  ///To add more Buttons which navigates to another
+  ///Screen use [_menuButton] for an Button with
+  ///[AdminMenuScreen] specific default design.
+  ///
+  ///{@param} [BuildContext] as context
+  ///
+  ///{@return} [Columne] with all Buttons or elements
+  ///which could be used to navigate to another Screen or
+  ///configur the App directly.
   Widget _buttonColumne(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(50),
       child: Wrap(
         runSpacing: 5,
         children: [
+          //Navigation Button to 'Nutzerverwaltung' [UserManagementScreen]
           _menuButton(
             context,
             Icon(Icons.group_add),
@@ -69,6 +102,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               )
             },
           ),
+          //Navigation Button to 'Nutzerliste einfügen' [UserlistUrlScreen]
           _menuButton(
             context,
             Icon(Icons.assignment_ind_sharp),
@@ -85,6 +119,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               )
             },
           ),
+          //Navigation Button to 'Aufgabenverwaltung' [OptionTaskScreen]
           _menuButton(
             context,
             Icon(Icons.add_link),
@@ -103,13 +138,26 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               })
             },
           ),
+          //Checkbox to deaktivate the default Tasksets
           _checkBox(context),
         ],
       ),
     );
   }
 
+  ///(private)
+  ///provides custom [Checkbox] to deaktivate the App default Tasksets
+  ///
+  ///{@param} [BuildContext] as context
+  ///
+  ///{@return} [Checkbox] to deaktivate the default Tasksets
   Widget _checkBox(BuildContext context) {
+    ///(local)
+    ///getColor porvides [Color]s for the [Checkbox] 'Standardaufgaben aktivieren?'
+    ///
+    ///{@param} [Set<MaterialState>] as states
+    ///
+    ///{@return} [Color] to resolve the [Checkbox] colors by using App default colors [LamaColors]
     Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
         MaterialState.pressed,
@@ -122,6 +170,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
       return LamaColors.bluePrimary;
     }
 
+    //return [Checkbox] 'Standardaufgaben aktivieren?'
     return Center(
       child: Row(
         children: [
@@ -151,6 +200,16 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
     );
   }
 
+  ///(private)
+  ///porvides [ElevatedButton] with [AdminMenuScreen] specific default design
+  ///
+  ///{@params}
+  ///[BuildContext] as context
+  ///[ElevatedButton] [Icon] as icon
+  ///[ElevatedButton] titel as String
+  ///Navigation [VoidCallback] as route
+  ///
+  ///{@return} [Color] to resolve the [Checkbox] colors by using App default colors [LamaColors]
   Widget _menuButton(
       BuildContext context, Icon icon, String text, VoidCallback route) {
     return ElevatedButton(
@@ -179,6 +238,19 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
     );
   }
 
+  ///(private)
+  ///porvides [AppBar] with [AdminMenuScreen] specific default design
+  ///
+  ///Customise the leading of the [AppBar] to provide
+  ///an logout function which leads to [UserSelectionScreen] via
+  ///[Navigator].pushReplacement
+  ///
+  ///{@params}
+  ///[AppBar] size as double size
+  ///[AppBar] titel as String title
+  ///[AppBar] [Color] as colors
+  ///
+  ///{@return} [AppBar] with generel AdminMenu specific design
   Widget _bar(double size, String titel, Color colors) {
     return AppBar(
       leading: Builder(
