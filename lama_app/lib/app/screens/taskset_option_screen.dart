@@ -168,15 +168,15 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
   }
 
   ///(private)
-  ///is used to show all urls stored in the Database
+  ///is used to show all [TaskUrl] stored in the Database
   ///
-  ///ListView for all urls stored in the Database.
+  ///[ListView] for all [TaskUrl] stored in the Database.
   ///If an Urls is longer than 30 symbols the first 7 symbols are cut
   ///and every after the 32 symbol is cut of and the url ends with '...'
-  ///Also behind the url an delete button is available
+  ///Also behind the [TaskUrl] an delete button is available
   ///
   ///{@params}
-  ///all urls as [List]<[TaskUrl]> urls
+  ///all [TaskUrl] as [List]<[TaskUrl]> urls
   ///
   ///{@return} [ListView] with urls
   Widget _tasksetUrlList(List<TaskUrl> urls) {
