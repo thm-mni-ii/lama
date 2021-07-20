@@ -6,7 +6,19 @@ import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/state/create_admin_state.dart';
 import 'package:lama_app/db/database_provider.dart';
 
+///[Bloc] for the [CreateAdminScreen]
+///
+/// * see also
+///    [CreateAdminScreen]
+///    [CreateAdminEvent]
+///    [CreateAdminState]
+///    [Bloc]
+///
+/// Author: L.Kammerer
+/// latest Changes: 14.07.2021
 class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
+  ///[User] that is inserted in to the Database later on
+  ///incoming events are used to change the values of this [User]
   User _user = User(grade: 1, coins: 0, isAdmin: true, avatar: 'admin');
 
   CreateAdminBloc({CreateAdminState initialState}) : super(initialState);
@@ -19,17 +31,29 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
     if (event is CreateAdminAbort) _adminAbort(event.context);
   }
 
-  //pop with return value _user
+  ///(private)
+  ///insterting the [User] via [_insterAdmin] and
+  ///pops with return value [_user] afterwards
+  ///{@params}
+  ///[User] as user that should be stored in the database
+  ///[BuildContext] context
   Future<void> _adminPush(User user, BuildContext context) async {
     await _insterAdmin(user);
     Navigator.pop(context, _user);
   }
 
+  ///(private)
+  ///inserting the given [User] into the Database
+  ///
+  ///{@param}[User] as user that should be stored in the database
   Future<void> _insterAdmin(User user) async {
     if (user.isAdmin != null || user.isAdmin)
       await DatabaseProvider.db.insertUser(user);
   }
 
+  ///(private)
+  ///abort the action to create an admin
+  ///pops the Screen and return null
   void _adminAbort(BuildContext context) {
     Navigator.pop(context, null);
   }
