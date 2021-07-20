@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
-import 'package:lama_app/app/event/userlist_url_event.dart';
-import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/state/userlist_url_state.dart';
+//Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
-
 import 'admin_menu_screen.dart';
+//Blocs
+import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
+//Events
+import 'package:lama_app/app/event/userlist_url_event.dart';
+//States
+import 'package:lama_app/app/state/userlist_url_state.dart';
+import 'package:lama_app/app/model/user_model.dart';
 
+///This file creates the Userlist Url Screen
+///This Screen provides an option to save a bunch of users via link input
+///
+///
+///{@important} the url given via input should be validated with the
+///[InputValidation] to prevent any Issue with Exceptions
+///
+/// * see also
+///    [UserlistUrlBloc]
+///    [UserlistUrlEvent]
+///    [UserlistUrlState]
+///
+/// Author: L.Kammerer
+/// latest Changes: 17.07.2021
 class UserlistUrlScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -18,8 +35,11 @@ class UserlistUrlScreen extends StatefulWidget {
   }
 }
 
+///UserlistUrlScreenState provides the state for the [UserlistUrlScreen]
 class UserlistUrlScreenState extends State<UserlistUrlScreen> {
+  //[_formKey] should by used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //temporary url to prevent losing the url on error states
   String _url;
 
   @override
@@ -27,10 +47,16 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
     super.initState();
   }
 
+  ///override build methode [StatelessWidget]
+  ///
+  ///{@param} [BuildContext] as context
+  ///
+  ///{@return} a [Widget] decided by the incoming state of the [UserlistUrlBloc]
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
+        //avoid overflow because of the keyboard
         resizeToAvoidBottomInset: false,
         appBar: AdminUtils.appbar(
             screenSize, LamaColors.bluePrimary, 'Nutzerliste einfügen'),
@@ -57,6 +83,10 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
         ));
   }
 
+  ///(private)
+  ///defines default view for the [UserlistUrlScreen]
+  ///
+  ///{@return} [Padding] with [Wrap] and url input via [_inputFields]
   Widget _defaultWidget() {
     return Padding(
       padding: EdgeInsets.all(20),
@@ -76,6 +106,10 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
     );
   }
 
+  ///(private)
+  ///provides [ListView] for alle [User]s
+  ///
+  ///{@return} [ListView] with all users via [_userCard]
   Widget _userList(List<User> userlist) {
     return Padding(
       padding: EdgeInsets.all(15),
@@ -88,7 +122,13 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
     );
   }
 
+  ///(private)
+  ///shows [User] with avatar and username
+  ///
+  ///{@return} [Widget] with [CircleAvatar] with [User] avatar and username
+  //TODO Show more details of the users
   Widget _userCard(User user) {
+    ///attache '(Admin)' to the username if the user is an Admin
     String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
     return Padding(
       padding: EdgeInsets.all(5),
@@ -122,54 +162,11 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
     );
   }
 
-  Widget _userDetails(User user) {
-    return Column(
-      children: [
-        //Password
-        Text(
-          'Passwort: ' + user.password,
-          style: LamaTextTheme.getStyle(
-            fontSize: 14,
-            color: LamaColors.black,
-            monospace: true,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        //Grade
-        Text(
-          'Klasse ${user.grade}',
-          style: LamaTextTheme.getStyle(
-            fontSize: 14,
-            color: LamaColors.black,
-            monospace: true,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        //Coins
-        Row(
-          children: [
-            CircleAvatar(
-              child: SvgPicture.asset(
-                'assets/images/svg/lama_coin.svg',
-                semanticsLabel: 'LAMA',
-              ),
-              radius: 15,
-            ),
-            Text(
-              '${user.coins}',
-              style: LamaTextTheme.getStyle(
-                fontSize: 14,
-                color: LamaColors.black,
-                monospace: true,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        )
-      ],
-    );
-  }
-
+  ///(private)
+  ///is used to show an successfull insert of all [User]s
+  ///
+  ///
+  ///{@return} [Widget] like [_defaultWidget] but with an success icon and message
   Widget _insertSuccessWidget() {
     return Padding(
       padding: EdgeInsets.all(20),
@@ -212,6 +209,14 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
     );
   }
 
+  ///(private)
+  ///is used to show an specific loading state to
+  ///provide loading information to the App user
+  ///view more like [_defaultWidget] but without [_inputFields]
+  ///
+  ///{@param} waiting message as [String] text
+  ///
+  ///{@return} [Widget] with waiting message and [Icons].watch_later_sharp (clock)
   Widget _loadingWidget(String text) {
     return Padding(
       padding: EdgeInsets.all(20),
@@ -252,6 +257,13 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
     );
   }
 
+  ///(private)
+  ///is used to show an specific error to the App user
+  ///
+  ///{@param} error message as [String] error
+  ///
+  ///{@return} [Widget] like [_defaultWidget] but with specific error message and
+  ///alert [Icons].warning_amber_sharp
   Widget _errorWidget(String error) {
     return Padding(
       padding: EdgeInsets.all(20),
@@ -294,6 +306,17 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
     );
   }
 
+  ///(private)
+  ///is used to input an url
+  ///
+  ///{@important} the input should only be saved in local
+  ///variable to avoid lost on error. The url that is used for the https request
+  ///is stored in [UserlistUrlBloc]. The onChanged is used to send the
+  ///[TextFormField] value through [UserlistUrlBloc] via [UserlistUrlChangeUrl]
+  ///
+  ///{@param} [BuildContext] context
+  ///
+  ///{@return} [Form] with [TextFormField] to provide input with validation
   Widget _inputFields(BuildContext context) {
     return Form(
       key: _formKey,
@@ -321,6 +344,12 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
     );
   }
 
+  ///(private)
+  ///is used for headlines
+  ///
+  ///{@param} headline as [String] headline
+  ///
+  ///{@return} [Align] with [Text]
   Widget _headline(String headline) {
     return Align(
       alignment: Alignment.center,

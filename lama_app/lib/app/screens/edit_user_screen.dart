@@ -14,8 +14,7 @@ import 'package:lama_app/app/event/edit_user_event.dart';
 import 'package:lama_app/app/state/edit_user_state.dart';
 
 ///This file creates the Edit User Screen
-///This Screen provides every option to edit a user
-///or delete the user.
+///This Screen provides every option to edit a user or delete the user.
 ///
 ///{@important} the [User] needed by the this class is the [User]
 ///selected by the Admin. However the [User] only needed to provides default values for
@@ -42,8 +41,6 @@ class EditUserScreen extends StatefulWidget {
 }
 
 ///EditUserScreenState provides the state for the [EditUserScreen]
-///
-/// * see also [StatelessWidget]
 class EditUserScreenState extends State<EditUserScreen> {
   //[_formKey] should by used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -101,6 +98,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///provides every input that could be change in the user in [Column]
   ///
   ///{@param} [BuildContext] as context
@@ -136,6 +134,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///provides [TextFormField] that changes the Username
   ///
   ///All changes are made onChange through the [EditUserBloc] via [EditUserChangeUsername]
@@ -162,6 +161,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///provides [TextFormField] that saves the value in [_pass]
   ///only used to save the password onChange temporarily for the double Password verification
   ///labelText: 'Password'
@@ -190,6 +190,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///provides [TextFormField] that changes the user password
   ///
   ///All changes are made onChange through the [EditUserBloc] via [EditUserChangePasswort]
@@ -221,6 +222,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///provides [TextFormField] that changes the user coins
   ///
   ///All changes are made onChange through the [EditUserBloc] via [EditUserChangeCoins]
@@ -251,6 +253,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///provides [DropdownButtonHideUnderline] to change the user grade
   ///
   ///All changes are made onChange through the [EditUserBloc] via [EditUserChangeGrade]
@@ -303,6 +306,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///provides [ElevatedButton] to leads the view to the delete user check
   ///
   ///leads the view to the delete user check onPressed through the [EditUserBloc] via [EditUserDeleteUserCheck]
@@ -335,6 +339,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///provides [Scaffold] that shows taken changes in comparison to the old values
   ///if the value isn't changed only the old value is seen
   ///With onPressed of an [ElevatedButton] the user can move on.
@@ -436,6 +441,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///provides view as row that shows taken changes in comparison to the old values
   ///the oldValue will be compared to the newValue
   ///if both values are equal only the old value is seen
@@ -507,6 +513,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     }
   }
 
+  ///(private)
   ///provides headline as [Text] with specific stlye
   ///
   ///{@param}
@@ -522,6 +529,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///provides headline with two [String]s
   ///one of the left side of an arrow and one on the right side
   ///
@@ -577,6 +585,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///porvides [Row] with default designed abort and save [Ink] Button
   ///
   ///{@params} [BuildContext] context
@@ -624,6 +633,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  ///(private)
   ///porvides [Scaffold] to give the Admin the opportunity to
   ///abort or approve the delete of the selected user.
   ///
@@ -703,6 +713,7 @@ class EditUserScreenState extends State<EditUserScreen> {
         ));
   }
 
+  ///(private)
   ///porvides [AppBar] with default design for Screens used by the Admin
   ///
   ///{@params}

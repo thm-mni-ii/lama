@@ -39,7 +39,6 @@ class AdminMenuScreen extends StatefulWidget {
 }
 
 ///AdminMenuScreenState provides the state for the [AdminMenuScreen]
-/// * see also [StatelessWidget]
 class _AdminMenuScreenState extends State<AdminMenuScreen> {
   //save the Checkbox (Standardaufgaben aktivieren?) value as bool
   bool _isChecked = true;
