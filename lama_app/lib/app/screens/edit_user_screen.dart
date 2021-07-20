@@ -59,6 +59,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     'Klasse 5',
     'Klasse 6',
   ];
+  //temporary save the value of the Dropdown menu
   String _dropDown;
 
   ///constructor with the needed attribute [User] as _user
