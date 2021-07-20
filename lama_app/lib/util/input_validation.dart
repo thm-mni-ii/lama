@@ -2,6 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+///This file provides basic input validation for
+///password, usernames, numbers and url input.
+///
+///function names -> input <%what should be validated%> Validation
+///
+///{@important} to understand how the validation works
+///an at least basic knowledge about [RegExp] is necessary.
+///
+///
+/// Author: L.Kammerer
+/// latest Changes: 15.07.2021
 abstract class InputValidation {
   //MAX_LENGTH for Usernamens
   static int allowedNameLength = 12;
@@ -126,6 +137,7 @@ abstract class InputValidation {
     }
   }
 
+  ///(private)
   ///used for inverting the [RegExp].hasMatch result of
   ///inverted whitelist [inputFilter]
   ///

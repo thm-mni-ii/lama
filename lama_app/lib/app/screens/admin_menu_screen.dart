@@ -53,6 +53,8 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
     Size screensize = MediaQuery.of(context).size;
     return BlocBuilder<AdminMenuBloc, AdminMenuState>(
       builder: (context, state) {
+        ///Set the [_isChecked] for the [Checkbox] to ensure it's the current value of [SharedPreferences]
+        ///then force the [AdminMenuLoadDefaultEvent] to move on
         if (state is AdminMenuPrefLoadedState) {
           _isChecked = state.prefDefaultTasksEnable;
           context.read<AdminMenuBloc>().add(AdminMenuLoadDefaultEvent());
@@ -65,6 +67,8 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
             body: _buttonColumne(context),
           );
         }
+
+        ///Force the [AdminMenuLoadPrefsEvent] to get the current value of the [SharedPreferences]
         context.read<AdminMenuBloc>().add(AdminMenuLoadPrefsEvent());
         return Center(child: CircularProgressIndicator());
       },

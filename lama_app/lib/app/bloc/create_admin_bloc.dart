@@ -19,6 +19,7 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
     if (event is CreateAdminAbort) _adminAbort(event.context);
   }
 
+  //pop with return value _user
   Future<void> _adminPush(User user, BuildContext context) async {
     await _insterAdmin(user);
     Navigator.pop(context, _user);
