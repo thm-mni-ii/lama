@@ -37,7 +37,7 @@ class UserlistUrlScreen extends StatefulWidget {
 
 ///UserlistUrlScreenState provides the state for the [UserlistUrlScreen]
 class UserlistUrlScreenState extends State<UserlistUrlScreen> {
-  //[_formKey] should by used to identify every Form in this Screen
+  //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //temporary url to prevent losing the url on error states
   String _url;

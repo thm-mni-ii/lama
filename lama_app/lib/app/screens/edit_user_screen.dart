@@ -42,7 +42,7 @@ class EditUserScreen extends StatefulWidget {
 
 ///EditUserScreenState provides the state for the [EditUserScreen]
 class EditUserScreenState extends State<EditUserScreen> {
-  //[_formKey] should by used to identify every Form in this Screen
+  //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Size screenSize;
 
@@ -87,6 +87,7 @@ class EditUserScreenState extends State<EditUserScreen> {
           return _showChanges(context, state);
         else {
           return Scaffold(
+            //avoid overflow because of the keyboard
             resizeToAvoidBottomInset: false,
             appBar: _bar(screenSize.width / 5, 'Editiere den Nutzer',
                 LamaColors.bluePrimary),
