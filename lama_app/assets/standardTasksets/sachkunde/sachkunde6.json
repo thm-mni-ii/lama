@@ -4,47 +4,48 @@
       "taskset_grade":6,
        "tasks": [
            {
-           "task_type":"4Cards",
-            "task_reward":2,
-            "question":"Was ist kein Verb (Tunwort)?",
-            "lama_text":"Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "right_answer":"grün",
-             "wrong_answers":["begrünen", "reden", "lesen"]
-             },
-         {
            "task_type":"ClozeTest",
            "task_reward":2,
-           "question":"Wusstest du, ___ Lamas spucken können?",
+           "question":"Das Knochengewebe ist __",
            "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
-           "right_answer":"dass",
-           "wrong_answers":["Das", "das"]
+           "right_answer":"hart",
+           "wrong_answers":["weich", "elastisch"]
          },
-            {
-          "task_type":"MarkWords",
-          "task_reward":2,
-          "lama_text":"Tippe alle Verben an!",
-          "left_to_solve": 3,
-          "sentence": "Eine Pflanze wächst auf der Wiese!",
-          "right_words": ["wächst"]
-            },
          {
-           "task_type": "MatchCategory",
+           "task_type":"4Cards",
            "task_reward":2,
-           "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+           "question":"Wie viele Knochen hat das menschliche Skelett?",
+           "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
-           "nameCatOne": "Verben",
-           "nameCatTwo": "Nomen",
-           "categoryOne": ["laufen", "gehen", "schweben", "fallen"],
-           "categoryTwo": ["haus", "straße", "baum", "auto"]
+           "right_answer":"über 200",
+           "wrong_answers":["über 1000", "genau 99", "genau 306"]
+         },
+         {
+           "task_type": "Connect",
+           "task_reward":2,
+           "left_to_solve": 3,
+           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+           "pair1": ["Thüringen", "Niedersachsen", "Saarland", "Sachsen"],
+           "pair2": ["Erfurt", "Hannover", "Saarbrücken", "Dresden"],
+           "rightAnswers": ["Thüringen:Erfurt", "Niedersachsen:Hannover", "Saarland:Saarbrücken", "Sachsen:Dresden"]
          },
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "lama_text":"Markiere vier Städte",
+           "lama_text":"Markiere vier Aggregatzustände",
            "left_to_solve": 3,
-           "wordsToFind":["Gießen", "Wetzlar", "Frankfurt", "Berlin"]
+           "wordsToFind":["Fest", "Flüssig", "Gas", "Plasma"]
+         },
+         {
+           "task_type": "MatchCategory",
+           "task_reward":2,
+           "lama_text": "Entscheide ob die Personen deutsche Bundeskanzler sind/waren",
+           "left_to_solve": 3,
+           "nameCatOne": " Ja ",
+           "nameCatTwo": "Nein",
+           "categoryOne": ["Merkel", "Kohl", "Schröder", "Schmidt"],
+           "categoryTwo": ["Müller", "Fischer", "Wagner", "Spahn"]
          }
         ]
 }

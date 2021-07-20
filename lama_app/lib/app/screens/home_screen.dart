@@ -221,7 +221,11 @@ class _HomeScreenState extends State<HomeScreen> {
             Align(
               alignment: Alignment.centerLeft,
               child: CircleAvatar(
-                backgroundColor: LamaColors.mainPink,
+                child: SvgPicture.asset(
+                  'assets/images/svg/MainMenu_Icons/mathe_icon.svg',
+                  semanticsLabel: 'MatheIcon',
+                ),
+                backgroundColor: LamaColors.bluePrimary,
               ),
             )
           ],
@@ -265,7 +269,11 @@ class _HomeScreenState extends State<HomeScreen> {
             Align(
               alignment: Alignment.centerLeft,
               child: CircleAvatar(
-                backgroundColor: LamaColors.mainPink,
+                child: SvgPicture.asset(
+                  'assets/images/svg/MainMenu_Icons/deutsch_icon.svg',
+                  semanticsLabel: 'DeutschIcon',
+                ),
+                backgroundColor: LamaColors.redPrimary,
               ),
             )
           ],
@@ -310,7 +318,11 @@ class _HomeScreenState extends State<HomeScreen> {
             Align(
               alignment: Alignment.centerLeft,
               child: CircleAvatar(
-                backgroundColor: LamaColors.mainPink,
+                child: SvgPicture.asset(
+                  'assets/images/svg/MainMenu_Icons/englisch_icon.svg',
+                  semanticsLabel: 'EnglischIcon',
+                ),
+                backgroundColor: LamaColors.orangePrimary,
               ),
             )
           ],
@@ -355,7 +367,11 @@ class _HomeScreenState extends State<HomeScreen> {
             Align(
               alignment: Alignment.centerLeft,
               child: CircleAvatar(
-                backgroundColor: LamaColors.mainPink,
+                child: SvgPicture.asset(
+                  'assets/images/svg/MainMenu_Icons/sachkunde_icon.svg',
+                  semanticsLabel: 'SachkundeIcon',
+                ),
+                backgroundColor: LamaColors.purplePrimary,
               ),
             )
           ],
@@ -403,7 +419,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: CircleAvatar(
-                      backgroundColor: LamaColors.mainPink,
+                      child: SvgPicture.asset(
+                        'assets/images/svg/MainMenu_Icons/spiel_icon.svg',
+                        semanticsLabel: 'SpielIcon',
+                      ),
+                      backgroundColor: LamaColors.greenPrimary,
                     ),
                   )
                 ],

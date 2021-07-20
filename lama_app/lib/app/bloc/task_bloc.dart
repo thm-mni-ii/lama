@@ -91,6 +91,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
+      } else if (t is TaskEquation) {
+        if (fullequals(event.fullAnswer, event.providedanswerWords)) {
+          rightAnswerCallback(t);
+          yield TaskAnswerResultState(true);
+        } else {
+          wrongAnswerCallback(t);
+          yield TaskAnswerResultState(false);
+        }
       }
       await Future.delayed(Duration(seconds: 1));
       if (curIndex >= tasks.length)
@@ -108,8 +116,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     //Its -1 if the user just solves the task during this "run", its -2 when the task has not given coins once (important for summary screen) and -3 if the task is not found in the db
     if (leftToSolve == -3) {
       print("Not found - inserting");
-      await DatabaseProvider.db.insertLeftToSolve(
-          task.toString(), task.leftToSolve, userRepository.authenticatedUser);
+      await DatabaseProvider.db.insertLeftToSolve(task.toString(),
+          task.originalLeftToSolve, userRepository.authenticatedUser);
     } else {
       print("found - setting to: " + leftToSolve.toString());
       task.leftToSolve = leftToSolve;
@@ -141,6 +149,70 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     }
     list1.sort();
     list2.sort();
+    for (int i = 0; i < list1.length; i++) {
+      if (list1[i] != list2[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+  bool fullequals(List<String> list1, List<String> list2) {
+    int remove1, remove2;
+    bool twoToRemove = false;
+
+    if (!(list1 is List<String> && list2 is List<String>) ||
+        list1.length != list2.length) {
+      return false;
+    }
+    if((list2.length==5 && (list2[0]=="0" || list2[2]=="0")) || (list2.length==7 && (list2[0]=="0" || list2[2]=="0" || list2[4]=="0"))) {
+      if (list2[0] == "0") {
+        if (list2[1] == "*" && (list2[2]!="+" && list2[2]!="-" && list2[2]!="*" && list2[2]!="/")) {
+          remove1 = 2;
+          if (list2[3] == "*" && (list2[4]!="+" && list2[4]!="-" && list2[4]!="*" && list2[4]!="/")) {
+            remove2 = 3;
+            twoToRemove = true;
+          }
+          list1.removeAt(remove1);
+          list2.removeAt(remove1);
+          if (twoToRemove) {
+            list1.removeAt(remove2);
+            list2.removeAt(remove2);
+          }
+        }
+      } else if (list2[2] == "0") {
+        if (list2[1] == "*" && (list2[0]!="+" && list2[0]!="-" && list2[0]!="*" && list2[0]!="/")) {
+          remove1 = 0;
+          if (list2[3] == "*" && (list2[4]!="+" && list2[4]!="-" && list2[4]!="*" && list2[4]!="/")) {
+            remove2 = 3;
+            twoToRemove = true;
+          }
+          list1.removeAt(remove1);
+          list2.removeAt(remove1);
+          if (twoToRemove) {
+            list1.removeAt(remove2);
+            list2.removeAt(remove2);
+          }
+        } else if (list2[3] == "*" && (list2[4]!="+" && list2[4]!="-" && list2[4]!="*" && list2[4]!="/")) {
+          remove1 = 4;
+          list1.removeAt(remove1);
+          list2.removeAt(remove1);
+        }
+      } else if (list2[4] == "0") {
+        if (list2[3] == "*" && (list2[2]!="+" && list2[2]!="-" && list2[2]!="*" && list2[2]!="/")) {
+          remove1 = 2; // 7 *  * 0 = 0
+          if (list2[1] == "*" && (list2[0]!="+" && list2[0]!="-" && list2[0]!="*" && list2[0]!="/")) {
+            remove2 = 0;
+            twoToRemove = true;
+          }
+          list1.removeAt(remove1);
+          list2.removeAt(remove1);
+          if (twoToRemove) {
+            list1.removeAt(remove2);
+            list2.removeAt(remove2);
+          }
+        }
+      }
+    }
     for (int i = 0; i < list1.length; i++) {
       if (list1[i] != list2[i]) {
         return false;

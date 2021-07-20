@@ -30,7 +30,7 @@ class DatabaseProvider {
     print("database getter called!");
 
     if (_database != null) {
-      if(await _database.getVersion() == currentVersion) {
+      if (await _database.getVersion() == currentVersion) {
         return _database;
       }
     }
@@ -42,47 +42,46 @@ class DatabaseProvider {
 
   Future<Database> createDatabase() async {
     String dbPath = await getDatabasesPath();
-    if(_database != null) {
+    if (_database != null) {
       oldVersion = await _database.getVersion();
     }
 
-    return await openDatabase(join(dbPath, "userDB.db"), version: currentVersion,
-        onCreate: (Database database, int version) async {
-
-      DBMigrator.migrations.keys.toList()
-        ..sort()
-        ..forEach((j) async {
-          Map migrationsVersion = DBMigrator.migrations[j];
-          migrationsVersion.keys.toList()
+    return await openDatabase(
+      join(dbPath, "userDB.db"),
+      version: currentVersion,
+      onCreate: (Database database, int version) async {
+        DBMigrator.migrations.keys.toList()
           ..sort()
-            ..forEach((k) async {
-              var script = migrationsVersion[k];
-              await database.execute(script);
-            });
-        });
-    },
+          ..forEach((j) async {
+            Map migrationsVersion = DBMigrator.migrations[j];
+            migrationsVersion.keys.toList()
+              ..sort()
+              ..forEach((k) async {
+                var script = migrationsVersion[k];
+                await database.execute(script);
+              });
+          });
+      },
+      onUpgrade: (Database database, int oldVersion, int newVersion) async {
+        var upgradeScripts = new Map.fromIterable(
+            DBMigrator.migrations.keys.where((j) => j > oldVersion),
+            key: (j) => j,
+            value: (j) => DBMigrator.migrations[j]);
 
-    onUpgrade: (Database database, int oldVersion, int newVersion) async {
+        if (upgradeScripts.length == 0) return;
 
-      var upgradeScripts = new Map.fromIterable(
-          DBMigrator.migrations.keys.where((j) => j > oldVersion),
-      key: (j) => j, value: (j) => DBMigrator.migrations[j]
-      );
-
-      if(upgradeScripts.length == 0) return;
-
-      upgradeScripts.keys.toList()
-      ..sort()
-      ..forEach((j) async {
-      Map migrationsVersion = upgradeScripts[j];
-      migrationsVersion.keys.toList()
-        ..sort()
-        ..forEach((k) async {
-          var script = migrationsVersion[k];
-          await database.execute(script);
-        });
-      });
-    },
+        upgradeScripts.keys.toList()
+          ..sort()
+          ..forEach((j) async {
+            Map migrationsVersion = upgradeScripts[j];
+            migrationsVersion.keys.toList()
+              ..sort()
+              ..forEach((k) async {
+                var script = migrationsVersion[k];
+                await database.execute(script);
+              });
+          });
+      },
     );
   }
 
@@ -112,8 +111,10 @@ class DatabaseProvider {
   Future<List<Achievement>> getAchievements() async {
     final db = await database;
 
-    var achievements = await db.query(tableAchievements,
-        columns: [AchievementsFields.columnAchievementsId, AchievementsFields.columnAchievementsName]);
+    var achievements = await db.query(tableAchievements, columns: [
+      AchievementsFields.columnAchievementsId,
+      AchievementsFields.columnAchievementsName
+    ]);
 
     List<Achievement> achievementList = <Achievement>[];
 
@@ -129,8 +130,11 @@ class DatabaseProvider {
   Future<List<UserHasAchievement>> getUserHasAchievements() async {
     final db = await database;
 
-    var userHasAchievements = await db.query(tableUserHasAchievements,
-        columns: [UserHasAchievementsFields.columnUserId, UserHasAchievementsFields.columnAchievementId]);
+    var userHasAchievements =
+        await db.query(tableUserHasAchievements, columns: [
+      UserHasAchievementsFields.columnUserId,
+      UserHasAchievementsFields.columnAchievementId
+    ]);
 
     List<UserHasAchievement> userHasAchievementList = <UserHasAchievement>[];
 
@@ -147,8 +151,8 @@ class DatabaseProvider {
   Future<List<Game>> getGames() async {
     final db = await database;
 
-    var games =
-        await db.query(tableGames, columns: [GamesFields.columnGamesId, GamesFields.columnGamesName]);
+    var games = await db.query(tableGames,
+        columns: [GamesFields.columnGamesId, GamesFields.columnGamesName]);
 
     List<Game> gameList = <Game>[];
 
@@ -164,12 +168,12 @@ class DatabaseProvider {
   Future<List<Highscore>> getHighscores() async {
     final db = await database;
 
-    var highscores = await db.query(tableHighscore,
-        columns: [
-          HighscoresFields.columnId,
-          HighscoresFields.columnGameId,
-          HighscoresFields.columnScore,
-          HighscoresFields.columnUserId]);
+    var highscores = await db.query(tableHighscore, columns: [
+      HighscoresFields.columnId,
+      HighscoresFields.columnGameId,
+      HighscoresFields.columnScore,
+      HighscoresFields.columnUserId
+    ]);
 
     List<Highscore> highscoreList = <Highscore>[];
 
@@ -186,15 +190,17 @@ class DatabaseProvider {
     final db = await database;
 
     var highscore = await db.query(tableHighscore,
-      columns: [
-        HighscoresFields.columnId,
-        HighscoresFields.columnGameId,
-        HighscoresFields.columnScore,
-        HighscoresFields.columnUserId],
-      where: "${HighscoresFields.columnUserId} = ? and ${HighscoresFields.columnGameId} = ?",
-      whereArgs: [user.id, gameID],
-      orderBy: "${HighscoresFields.columnScore} DESC",
-      limit: 1);
+        columns: [
+          HighscoresFields.columnId,
+          HighscoresFields.columnGameId,
+          HighscoresFields.columnScore,
+          HighscoresFields.columnUserId
+        ],
+        where:
+            "${HighscoresFields.columnUserId} = ? and ${HighscoresFields.columnGameId} = ?",
+        whereArgs: [user.id, gameID],
+        orderBy: "${HighscoresFields.columnScore} DESC",
+        limit: 1);
 
     if (highscore.isNotEmpty) {
       return Highscore.fromMap(highscore.first).score;
@@ -211,7 +217,8 @@ class DatabaseProvider {
           HighscoresFields.columnId,
           HighscoresFields.columnGameId,
           HighscoresFields.columnScore,
-          HighscoresFields.columnUserId],
+          HighscoresFields.columnUserId
+        ],
         where: "${HighscoresFields.columnGameId} = ?",
         whereArgs: [gameID],
         orderBy: "${HighscoresFields.columnScore} DESC",
@@ -227,8 +234,10 @@ class DatabaseProvider {
   Future<List<Subject>> getSubjects() async {
     final db = await database;
 
-    var subjects = await db
-        .query(tableSubjects, columns: [SubjectsFields.columnSubjectsId, SubjectsFields.columnSubjectsName]);
+    var subjects = await db.query(tableSubjects, columns: [
+      SubjectsFields.columnSubjectsId,
+      SubjectsFields.columnSubjectsName
+    ]);
 
     List<Subject> subjectList = <Subject>[];
 
@@ -244,11 +253,12 @@ class DatabaseProvider {
   Future<List<UserSolvedTaskAmount>> getUserSolvedTaskAmount() async {
     final db = await database;
 
-    var userSolvedTaskAmounts = await db.query(tableUserSolvedTaskAmount,
-        columns: [
-          UserSolvedTaskAmountFields.columnUserId,
-          UserSolvedTaskAmountFields.columnSubjectId,
-          UserSolvedTaskAmountFields.columnAmount]);
+    var userSolvedTaskAmounts =
+        await db.query(tableUserSolvedTaskAmount, columns: [
+      UserSolvedTaskAmountFields.columnUserId,
+      UserSolvedTaskAmountFields.columnSubjectId,
+      UserSolvedTaskAmountFields.columnAmount
+    ]);
 
     List<UserSolvedTaskAmount> userSolvedTaskAmountList =
         <UserSolvedTaskAmount>[];
@@ -266,8 +276,8 @@ class DatabaseProvider {
   Future<List<TaskUrl>> getTaskUrl() async {
     final db = await database;
 
-    var taskUrl =
-        await db.query(tableTaskUrl, columns: [TaskUrlFields.columnId, TaskUrlFields.columnTaskUrl]);
+    var taskUrl = await db.query(tableTaskUrl,
+        columns: [TaskUrlFields.columnId, TaskUrlFields.columnTaskUrl]);
 
     List<TaskUrl> taskUrlList = <TaskUrl>[];
 
@@ -333,58 +343,62 @@ class DatabaseProvider {
   Future<int> deleteUser(int id) async {
     final db = await database;
 
-    return await db.delete(tableUser, where: "${UserFields.columnId} = ?", whereArgs: [id]);
+    return await db.delete(tableUser,
+        where: "${UserFields.columnId} = ?", whereArgs: [id]);
   }
 
   Future<int> deleteAchievement(int id) async {
     final db = await database;
 
     return await db.delete(tableAchievements,
-        where: "${AchievementsFields.columnAchievementsId} = ?", whereArgs: [id]);
+        where: "${AchievementsFields.columnAchievementsId} = ?",
+        whereArgs: [id]);
   }
 
   Future<int> deleteUserHasAchievement(
       User user, Achievement achievement) async {
     final db = await database;
     return await db.delete(tableUserHasAchievements,
-        where: "${UserHasAchievementsFields.columnUserId} = ? and ${UserHasAchievementsFields.columnAchievementId} = ? ",
+        where:
+            "${UserHasAchievementsFields.columnUserId} = ? and ${UserHasAchievementsFields.columnAchievementId} = ? ",
         whereArgs: [user.id, achievement.id]);
   }
 
   Future<int> deleteGame(int id) async {
     final db = await database;
 
-    return await db
-        .delete(tableGames, where: "${GamesFields.columnGamesId} = ?", whereArgs: [id]);
+    return await db.delete(tableGames,
+        where: "${GamesFields.columnGamesId} = ?", whereArgs: [id]);
   }
 
   Future<int> deleteHighscore(int id) async {
     final db = await database;
 
-    return await db
-        .delete(tableHighscore, where: "${HighscoresFields.columnId} = ?", whereArgs: [id]);
+    return await db.delete(tableHighscore,
+        where: "${HighscoresFields.columnId} = ?", whereArgs: [id]);
   }
 
   Future<int> deleteSubject(int id) async {
     final db = await database;
 
-    return await db
-        .delete(tableSubjects, where: "${SubjectsFields.columnSubjectsId} = ?", whereArgs: [id]);
+    return await db.delete(tableSubjects,
+        where: "${SubjectsFields.columnSubjectsId} = ?", whereArgs: [id]);
   }
 
   Future<int> deleteUserSolvedTaskAmount(User user, Subject subject) async {
     final db = await database;
 
     return await db.delete(tableUserSolvedTaskAmount,
-        where: "${UserSolvedTaskAmountFields.columnSubjectId} = ? and ${UserSolvedTaskAmountFields.columnUserId} = ?",
+        where:
+            "${UserSolvedTaskAmountFields.columnSubjectId} = ? and ${UserSolvedTaskAmountFields.columnUserId} = ?",
         whereArgs: [subject.id, user.id]);
   }
 
   Future<int> deleteTaskUrl(int id) async {
     final db = await database;
 
-    return await db
-        .delete(tableTaskUrl, where: "${TaskUrlFields.columnId} = ?", whereArgs: [id]);
+    return await db.delete(tableTaskUrl,
+        where: "${TaskUrlFields.columnId} = ?", whereArgs: [id]);
   }
 
   Future<User> updateUser(User user) async {
@@ -450,8 +464,8 @@ class DatabaseProvider {
   Future<User> updateUserIsAdmin(User user, bool isAdmin) async {
     final db = await database;
 
-    int updated = await db.update(tableUser,
-        <String, dynamic>{UserFields.columnIsAdmin: isAdmin ? 1 : 0},
+    int updated = await db.update(
+        tableUser, <String, dynamic>{UserFields.columnIsAdmin: isAdmin ? 1 : 0},
         where: " ${UserFields.columnId} = ?", whereArgs: [user.id]);
 
     if (updated != null) {
@@ -477,7 +491,8 @@ class DatabaseProvider {
     final db = await database;
 
     return await db.update(tableAchievements, achievement.toMap(),
-        where: " ${AchievementsFields.columnAchievementsId} = ?", whereArgs: [achievement.id]);
+        where: " ${AchievementsFields.columnAchievementsId} = ?",
+        whereArgs: [achievement.id]);
   }
 
   Future<int> updateGame(Game game) async {
@@ -498,7 +513,8 @@ class DatabaseProvider {
     final db = await database;
 
     return await db.update(tableSubjects, subject.toMap(),
-        where: "${SubjectsFields.columnSubjectsId}  = ?", whereArgs: [subject.id]);
+        where: "${SubjectsFields.columnSubjectsId}  = ?",
+        whereArgs: [subject.id]);
   }
 
   Future<int> updateUserSolvedTaskAmount(
@@ -509,7 +525,8 @@ class DatabaseProvider {
 
     return await db.update(
         tableUserSolvedTaskAmount, userSolvedTaskAmount.toMap(),
-        where: "${UserSolvedTaskAmountFields.columnSubjectId}  = ? and ${UserSolvedTaskAmountFields.columnUserId} = ?",
+        where:
+            "${UserSolvedTaskAmountFields.columnSubjectId}  = ? and ${UserSolvedTaskAmountFields.columnUserId} = ?",
         whereArgs: [subject.id, user.id]);
   }
 
@@ -581,10 +598,14 @@ class DatabaseProvider {
     await db.delete(tableLeftToSolve);
   }
 
-  Future<int> insertLeftToSolve(String taskString, int leftToSolve, User user) async {
+  Future<int> insertLeftToSolve(
+      String taskString, int leftToSolve, User user) async {
     final db = await database;
-    LeftToSolve lts =
-    LeftToSolve(taskString: taskString, leftToSolve: leftToSolve, userLTSId: user.id, doesStillExist: 0);
+    LeftToSolve lts = LeftToSolve(
+        taskString: taskString,
+        leftToSolve: leftToSolve,
+        userLTSId: user.id,
+        doesStillExist: 0);
     return await db.insert(tableLeftToSolve, lts.toMap());
   }
 
@@ -593,17 +614,20 @@ class DatabaseProvider {
     print("looking up task with: " + taskString);
     var leftToSolve = await db.query(tableLeftToSolve,
         columns: [LeftToSolveFields.columnLeftToSolve],
-        where: "${LeftToSolveFields.columnTaskString} = ? and ${LeftToSolveFields
-            .columnUserLTSId} = ?",
+        where:
+            "${LeftToSolveFields.columnTaskString} = ? and ${LeftToSolveFields.columnUserLTSId} = ?",
         whereArgs: [taskString, user.id]);
-    if (leftToSolve.length > 0) return leftToSolve.first[LeftToSolveFields.columnLeftToSolve];
+    if (leftToSolve.length > 0)
+      return leftToSolve.first[LeftToSolveFields.columnLeftToSolve];
     return Future.value(-3);
   }
 
-  Future<void> removeUnusedLeftToSolveEntries(List<Task> loadedTasks, User user) async {
+  Future<void> removeUnusedLeftToSolveEntries(
+      List<Task> loadedTasks, User user) async {
     final db = await database;
     db.delete(tableLeftToSolve,
-        where: "${LeftToSolveFields.columnUserLTSId} = ?", whereArgs: [user.id]);
+        where: "${LeftToSolveFields.columnUserLTSId} = ?",
+        whereArgs: [user.id]);
     loadedTasks.forEach((task) {
       insertLeftToSolve(task.toString(), task.leftToSolve, user);
     });
@@ -614,27 +638,33 @@ class DatabaseProvider {
     print("curVal: " + t.leftToSolve.toString());
     int newVal = max(t.leftToSolve - 1, -2);
     print("setting to: " + newVal.toString());
-    return await db.update(tableLeftToSolve, <String, dynamic>{LeftToSolveFields.columnLeftToSolve: newVal},
-        where: "${LeftToSolveFields.columnTaskString} = ? and ${LeftToSolveFields.columnUserLTSId} = ?",
+    return await db.update(tableLeftToSolve,
+        <String, dynamic>{LeftToSolveFields.columnLeftToSolve: newVal},
+        where:
+            "${LeftToSolveFields.columnTaskString} = ? and ${LeftToSolveFields.columnUserLTSId} = ?",
         whereArgs: [t.toString(), user.id]);
   }
 
   Future<int> setDoesStillExist(Task t) async {
     final db = await database;
     print("Set flag for " + t.toString());
-    return await db.update(tableLeftToSolve, <String, dynamic>{LeftToSolveFields.columnDoesStillExist: 1},
-        where: "${LeftToSolveFields.columnTaskString} = ?", whereArgs: [t.toString()]);
+    return await db.update(tableLeftToSolve,
+        <String, dynamic>{LeftToSolveFields.columnDoesStillExist: 1},
+        where: "${LeftToSolveFields.columnTaskString} = ?",
+        whereArgs: [t.toString()]);
   }
 
   Future<int> removeAllNonExistent() async {
     final db = await database;
     int val = 0;
     return await db.delete(tableLeftToSolve,
-        where: "${LeftToSolveFields.columnDoesStillExist} = ?", whereArgs: [val]);
+        where: "${LeftToSolveFields.columnDoesStillExist} = ?",
+        whereArgs: [val]);
   }
 
   Future<int> resetAllStillExistFlags() async {
     final db = await database;
-    return await db.update(tableLeftToSolve, <String, dynamic>{LeftToSolveFields.columnDoesStillExist: 0});
+    return await db.update(tableLeftToSolve,
+        <String, dynamic>{LeftToSolveFields.columnDoesStillExist: 0});
   }
 }

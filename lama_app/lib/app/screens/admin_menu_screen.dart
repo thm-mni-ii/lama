@@ -5,11 +5,13 @@ import 'package:lama_app/app/bloc/admin_menu_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
+import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/event/admin_menu_event.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
+import 'package:lama_app/app/screens/userlist_url_screen.dart';
 import 'package:lama_app/app/state/admin_menu_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -69,6 +71,22 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           ),
           _menuButton(
             context,
+            Icon(Icons.assignment_ind_sharp),
+            'Nutzerliste einfügen',
+            () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) => UserlistUrlBloc(),
+                    child: UserlistUrlScreen(),
+                  ),
+                ),
+              )
+            },
+          ),
+          _menuButton(
+            context,
             Icon(Icons.add_link),
             'Aufgabenverwaltung',
             () => {
@@ -76,7 +94,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
-                    create: (BuildContext context) => TasksetOprionsBloc(),
+                    create: (BuildContext context) => TasksetOptionsBloc(),
                     child: OptionTaskScreen(),
                   ),
                 ),
@@ -202,5 +220,57 @@ abstract class AdminUtils {
 
   static void reloadTasksets(BuildContext context) {
     RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
+  }
+
+  static Widget appbar(Size screenSize, Color color, String titel) {
+    return AppBar(
+      title: Text(
+        titel,
+        style: LamaTextTheme.getStyle(fontSize: 18),
+      ),
+      toolbarHeight: screenSize.width / 5,
+      backgroundColor: color,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
+    );
+  }
+
+  static Widget saveAboardButtons(
+      VoidCallback functionLeft, VoidCallback functionRight) {
+    return Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Ink(
+            decoration: ShapeDecoration(
+              color: LamaColors.greenPrimary,
+              shape: CircleBorder(),
+            ),
+            padding: EdgeInsets.all(7.0),
+            child: IconButton(
+                icon: Icon(Icons.save, size: 28),
+                color: Colors.white,
+                tooltip: 'Bestätigen',
+                onPressed: functionLeft),
+          ),
+        ),
+        Ink(
+          decoration: ShapeDecoration(
+            color: LamaColors.redPrimary,
+            shape: CircleBorder(),
+          ),
+          padding: EdgeInsets.all(2.0),
+          child: IconButton(
+              icon: Icon(Icons.close_rounded),
+              color: Colors.white,
+              tooltip: 'Abbrechen',
+              onPressed: functionRight),
+        ),
+      ],
+      mainAxisAlignment: MainAxisAlignment.end,
+    );
   }
 }

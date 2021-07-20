@@ -25,10 +25,10 @@
             {
           "task_type":"MarkWords",
           "task_reward":2,
-          "lama_text":"Tippe alle Verben an!",
+          "lama_text":"Tippe alle Subjekte an!",
           "left_to_solve": 3,
-          "sentence": "Eine Pflanze wächst auf der Wiese!",
-          "right_words": ["wächst"]
+          "sentence": "Das Kind schenkt dem Opa ein Bild!",
+          "right_words": ["Kind"]
             },
          {
            "task_type": "MatchCategory",
@@ -52,9 +52,9 @@
            "task_reward":2,
            "left_to_solve": 3,
            "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
-           "pair1": ["Affe", "Löwe", "Eisbär", "Baum"],
-           "pair2": ["klettern", "Wurzel", "Nordpol", "Savanne"],
-           "rightAnswers": ["Affe:klettern", "Eisbär:Nordpol", "Baum:Wurzel", "Löwe:Savanne"]
+           "pair1": ["Verb", "Nomen", "Adjektive"],
+           "pair2": ["klettern", "blau", "flach", "Hund"],
+           "rightAnswers": ["Verb:klettern", "Nomen:Hund", "Adjektive:blau:flach"]
          }
         ]
 }

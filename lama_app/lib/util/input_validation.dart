@@ -1,3 +1,8 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+
 abstract class InputValidation {
   static int allowedNameLength = 12;
   static int maxNumber = 99999;
@@ -10,13 +15,15 @@ abstract class InputValidation {
     if (isEmpty(username)) return 'Der Nutzername darf nicht leer sein!';
     if (username.length > allowedNameLength)
       return 'Der Nutzername darf nur $allowedNameLength Zeichen lang sein!';
-    if (_regExpInvalide(username)) return 'Bitte keine Sonderzeichen!';
+    if (_regExpInvalide(username))
+      return 'Bitte keine Sonderzeichen im Nutzernamen!';
     return null;
   }
 
   static String inputPasswortValidation(String passwort, {String secondPass}) {
     if (isEmpty(passwort)) return 'Das Passwort darf nicht leer sein!';
-    if (_regExpInvalide(passwort)) return 'Bitte keine Sonderzeichen!';
+    if (_regExpInvalide(passwort))
+      return 'Bitte keine Sonderzeichen im Passwort!';
     if (passwort.length > passwortMaxLength)
       return 'Das Passwort darf maximal $passwortMaxLength Zeichen haben!';
     if (secondPass != null && (passwort != secondPass)) {
@@ -41,6 +48,43 @@ abstract class InputValidation {
       return 'URL Fehlerhaft! Einige URLs müssen mit ".json" oder "/" enden.';
     if (isEmpty(url)) return 'Dieses Feld darf nicht leer sein!';
     return null;
+  }
+
+  static Future<String> inputUrlWithJsonValidation(String url) async {
+    if (inputURLValidation(url) != null) return inputURLValidation(url);
+    //SocketException
+    //HandshakeException
+    //TimeoutException
+    try {
+      final response = await Future.wait([
+        http
+            .get(Uri.parse(url))
+            .timeout(Duration(seconds: 4))
+            .whenComplete(() {})
+            .catchError((e) {
+          return null;
+        })
+      ]).catchError((e) {
+        return null;
+      });
+
+      //Check if URL is reachable
+      if (response[0].statusCode == 200) {
+        //Check if URL contains valid json code
+        try {
+          await jsonDecode(response[0].body);
+        } on FormatException {
+          return '"json" fehlerhaft!';
+        }
+        //Testing successfull
+        return null;
+      } else {
+        return 'URL ist nicht erreichbar!';
+      }
+    } catch (e) {
+      if (e is TimeoutException) return 'Zeitüberschreitung!';
+      return 'Da ist etwas gewaltig schiefgelaufen!';
+    }
   }
 
   static bool _regExpInvalide(String str) {

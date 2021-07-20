@@ -42,7 +42,8 @@ dependencies:
   http: ^0.13.3
   flutter_speed_dial: ^3.0.5
   shared_preferences: ^2.0.6
-
+  dio: ^4.0.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -69,6 +70,7 @@ flutter:
     - assets/images/svg/
     - assets/images/svg/avatars/
     - assets/images/svg/EuroCoins/
+    - assets/images/svg/MainMenu_Icons/
     - assets/images/png/
     - assets/images/png/
     - assets/sounds/
