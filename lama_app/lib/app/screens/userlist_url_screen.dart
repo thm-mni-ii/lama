@@ -51,7 +51,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
   ///
   ///{@param} [BuildContext] as context
   ///
-  ///{@return} a [Widget] decided by the incoming state of the [UserlistUrlBloc]
+  ///{@return} [Widget] decided by the incoming state of the [UserlistUrlBloc]
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -309,7 +309,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
   ///(private)
   ///is used to input an url
   ///
-  ///{@important} the input should only be saved in local
+  ///{@important} the input should be saved in local
   ///variable to avoid lost on error. The url that is used for the https request
   ///is stored in [UserlistUrlBloc]. The onChanged is used to send the
   ///[TextFormField] value through [UserlistUrlBloc] via [UserlistUrlChangeUrl]
