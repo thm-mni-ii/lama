@@ -9,11 +9,24 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/app/model/user_model.dart';
 //Blocs
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
-//Evnts
+//Events
 import 'package:lama_app/app/event/user_management_event.dart';
 //States
 import 'package:lama_app/app/state/user_management_state.dart';
 
+///This file creates the User Management Screen
+///the User Management Screen provides navigation
+///to Screens which edits user/admin and creating users/admin
+///there for all [User] are shown as [ListView].
+///
+///
+/// * see also
+///    [UserManagementBloc]
+///    [UserManagementEvent]
+///    [UserManagementState]
+///
+/// Author: L.Kammerer
+/// latest Changes: 26.06.2021
 class UserManagementScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -99,7 +112,7 @@ class UserManagementScreenState extends State<UserManagementScreen> {
   ///used to display an user with username and avatar as
   ///[Card] with [ListTile]. onTap triggers the [EditUser] event.
   ///
-  ///{@param} [User] that should be displayed as user
+  ///{@param} [User] as user that should be displayed
   Widget _userCard(User user) {
     ///attache '(Admin)' to the username if the user is an Admin
     String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
