@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// Events used by [CheckScreen] and [CheckScreenBloc]
+///
+/// Author: L.Kammerer
+/// latest Changes: 14.06.2021
 class CheckScreenEvent {}
 
 class CheckForAdmin extends CheckScreenEvent {
