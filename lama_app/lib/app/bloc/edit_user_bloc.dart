@@ -18,7 +18,9 @@ import 'package:lama_app/db/database_provider.dart';
 class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   //[User] that should be updated in the database
   User _user;
-  //[User] to store the changed values
+
+  ///[User] to store the changed values
+  ///incoming events are used to change the values
   User _changedUser = User();
 
   ///{@param}[User] as user that should be updated or deleted in the database
