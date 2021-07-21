@@ -6,6 +6,17 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:collection/collection.dart';
 import 'package:lama_app/db/database_provider.dart';
 
+/// [Bloc] for the [TaskScreen]
+///
+/// This Bloc handles everything related to tasks from
+/// deciding which one to display to if the chosen answer is correct
+///
+/// * see also
+///     [TaskScreen]
+///     [TaskEvent]
+///     [TaskState]
+///
+/// Author: K.Binder
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   String tasksetSubject;
   List<Task> tasks;
@@ -108,12 +119,19 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     }
   }
 
+  /// Returns a [DisplayTaskState] containing the next task.
+  ///
+  /// This method also handles the lookup and the injection of the left_to_solve
+  /// parameter into the next task.
   Future<TaskState> displayNextTask(String subject, Task task) async {
-    //lookup task for user and inject current leftToSolve
-    //wenn nich vorhanden => insert standardValue;
+    //lookup task for current user and inject the current leftToSolve value
+    //if not found => insert standard value
     int leftToSolve = await DatabaseProvider.db
         .getLeftToSolve(task.toString(), userRepository.authenticatedUser);
-    //Its -1 if the user just solves the task during this "run", its -2 when the task has not given coins once (important for summary screen) and -3 if the task is not found in the db
+    //Its -1 if the user just solves the task during this "run",
+    //its -2 when the task has not given coins once
+    //(important for summary screen as it needs to show the right amount one last time)
+    // and -3 if the task is not found in the db
     if (leftToSolve == -3) {
       print("Not found - inserting");
       await DatabaseProvider.db.insertLeftToSolve(task.toString(),
@@ -125,6 +143,11 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     return DisplayTaskState(subject, task);
   }
 
+  /// Handles everything that should happen when a task is solved correctly.
+  ///
+  /// This entails adding the answer to the list for the summary screen,
+  /// awarding lama coins and updating the left_to_solve value in the database
+  /// for the passed Task [t].
   void rightAnswerCallback(Task t) async {
     if (t.leftToSolve > 0) {
       answerResults.add(true);
@@ -138,10 +161,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         .getLeftToSolve(t.toString(), userRepository.authenticatedUser);
   }
 
+  /// Handles everything that should happen when a task is solved wrongly.
+  ///
+  /// For now this only adds the result to the list for the summary screen.
   void wrongAnswerCallback(Task t) {
     answerResults.add(false);
   }
 
+  /// Checks if two String lists ([list1] and [list2]) contain exactly the same elements.
   bool equals(List<String> list1, List<String> list2) {
     if (!(list1 is List<String> && list2 is List<String>) ||
         list1.length != list2.length) {
@@ -156,6 +183,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     }
     return true;
   }
+
+  //TODO: Franz komentier die bitte die hast du geschrieben iirc und ich will nix falsches sagen
   bool fullequals(List<String> list1, List<String> list2) {
     int remove1, remove2;
     bool twoToRemove = false;
@@ -164,11 +193,21 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         list1.length != list2.length) {
       return false;
     }
-    if((list2.length==5 && (list2[0]=="0" || list2[2]=="0")) || (list2.length==7 && (list2[0]=="0" || list2[2]=="0" || list2[4]=="0"))) {
+    if ((list2.length == 5 && (list2[0] == "0" || list2[2] == "0")) ||
+        (list2.length == 7 &&
+            (list2[0] == "0" || list2[2] == "0" || list2[4] == "0"))) {
       if (list2[0] == "0") {
-        if (list2[1] == "*" && (list2[2]!="+" && list2[2]!="-" && list2[2]!="*" && list2[2]!="/")) {
+        if (list2[1] == "*" &&
+            (list2[2] != "+" &&
+                list2[2] != "-" &&
+                list2[2] != "*" &&
+                list2[2] != "/")) {
           remove1 = 2;
-          if (list2[3] == "*" && (list2[4]!="+" && list2[4]!="-" && list2[4]!="*" && list2[4]!="/")) {
+          if (list2[3] == "*" &&
+              (list2[4] != "+" &&
+                  list2[4] != "-" &&
+                  list2[4] != "*" &&
+                  list2[4] != "/")) {
             remove2 = 3;
             twoToRemove = true;
           }
@@ -180,9 +219,17 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           }
         }
       } else if (list2[2] == "0") {
-        if (list2[1] == "*" && (list2[0]!="+" && list2[0]!="-" && list2[0]!="*" && list2[0]!="/")) {
+        if (list2[1] == "*" &&
+            (list2[0] != "+" &&
+                list2[0] != "-" &&
+                list2[0] != "*" &&
+                list2[0] != "/")) {
           remove1 = 0;
-          if (list2[3] == "*" && (list2[4]!="+" && list2[4]!="-" && list2[4]!="*" && list2[4]!="/")) {
+          if (list2[3] == "*" &&
+              (list2[4] != "+" &&
+                  list2[4] != "-" &&
+                  list2[4] != "*" &&
+                  list2[4] != "/")) {
             remove2 = 3;
             twoToRemove = true;
           }
@@ -192,15 +239,27 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
             list1.removeAt(remove2);
             list2.removeAt(remove2);
           }
-        } else if (list2[3] == "*" && (list2[4]!="+" && list2[4]!="-" && list2[4]!="*" && list2[4]!="/")) {
+        } else if (list2[3] == "*" &&
+            (list2[4] != "+" &&
+                list2[4] != "-" &&
+                list2[4] != "*" &&
+                list2[4] != "/")) {
           remove1 = 4;
           list1.removeAt(remove1);
           list2.removeAt(remove1);
         }
       } else if (list2[4] == "0") {
-        if (list2[3] == "*" && (list2[2]!="+" && list2[2]!="-" && list2[2]!="*" && list2[2]!="/")) {
+        if (list2[3] == "*" &&
+            (list2[2] != "+" &&
+                list2[2] != "-" &&
+                list2[2] != "*" &&
+                list2[2] != "/")) {
           remove1 = 2; // 7 *  * 0 = 0
-          if (list2[1] == "*" && (list2[0]!="+" && list2[0]!="-" && list2[0]!="*" && list2[0]!="/")) {
+          if (list2[1] == "*" &&
+              (list2[0] != "+" &&
+                  list2[0] != "-" &&
+                  list2[0] != "*" &&
+                  list2[0] != "/")) {
             remove2 = 0;
             twoToRemove = true;
           }
