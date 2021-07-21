@@ -1,10 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
-import 'package:lama_app/util/pair.dart';
 
+///[Bloc] for the [VocableTestTaskScreen]
+///
+/// * see also
+///     [VocableTestTaskScreen]
+///     [VocableTestTaskEvent]
+///     [VocableTestTaskState]
+///
+/// Author: K.Binder
 class VocableTestTaskBloc
     extends Bloc<VocableTestTaskEvent, VocableTestTaskState> {
   final TaskVocableTest task;
@@ -84,19 +90,43 @@ class VocableTestTaskBloc
   }
 }
 
+///BaseEvent for [VocableTestTaskBloc]
+///
+/// Author: K.Binder
 class VocableTestTaskEvent {}
 
+///Subclass of [VocableTestTaskEvent] for [VocableTestTaskBloc]
+///
+/// Author: K.Binder
 class VocableTestTaskGetWordEvent extends VocableTestTaskEvent {}
 
+///Subclass of [VocableTestTaskEvent] for [VocableTestTaskBloc]
+///
+/// Author: K.Binder
 class VocableTestTaskAnswerEvent extends VocableTestTaskEvent {
   final String answer;
   VocableTestTaskAnswerEvent(this.answer);
 }
 
+///BaseState of [VocableTestTaskState]
+///
+/// Author: K.Binder
 class VocableTestTaskState {}
 
+///Subclass of [VocableTestTaskState] for [VocableTestTaskBloc]
+///
+/// This state is emitted by the [VocableTestTaskBloc] on initialization
+///
+/// Author: K.Binder
 class VocableTestTaskInitState extends VocableTestTaskState {}
 
+///Subclass of [VocableTestTaskState] for [VocableTestTaskBloc]
+///
+/// This state is emmited by the [VocableTestTaskBloc] when a word pair to
+/// translate gets displayed and cointains the word and the list of all results
+/// up till now
+///
+/// Author: K.Binder
 class VocableTestTaskTranslationState extends VocableTestTaskState {
   List<bool> resultList;
   String wordToTranslate;
@@ -104,6 +134,12 @@ class VocableTestTaskTranslationState extends VocableTestTaskState {
   VocableTestTaskTranslationState(this.wordToTranslate, this.resultList);
 }
 
+///Subclass of [VocableTestTaskState] for [VocableTestTaskBloc]
+///
+/// This state is emmitted by the [VocableTestTaskBloc] once all words
+/// have been translated.
+///
+/// Author: K.Binder
 class VocableTestFinishedTaskState extends VocableTestTaskState {
   List<bool> resultList;
   VocableTestFinishedTaskState(this.resultList);
