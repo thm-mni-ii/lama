@@ -34,9 +34,10 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
   ///(private)
   ///insterting the [User] via [_insterAdmin] and
   ///pops with return value [_user] afterwards
+  ///
   ///{@params}
   ///[User] as user that should be stored in the database
-  ///[BuildContext] context
+  ///[BuildContext] as context
   Future<void> _adminPush(User user, BuildContext context) async {
     await _insterAdmin(user);
     Navigator.pop(context, _user);
@@ -54,6 +55,8 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
   ///(private)
   ///abort the action to create an admin
   ///pops the Screen and return null
+  ///
+  ///{@param}[BuildContext] as context
   void _adminAbort(BuildContext context) {
     Navigator.pop(context, null);
   }
