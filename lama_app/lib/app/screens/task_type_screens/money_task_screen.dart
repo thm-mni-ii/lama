@@ -373,7 +373,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 width: (constraints.maxWidth / 100) * 35,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: LamaColors.blueAccent,
+                    color: LamaColors.redAccent,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
