@@ -382,46 +382,46 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                           offset: Offset(0, 3)),
                     ]),
                 child: InkWell(
-                  child: Center(
-                    child: Text(
-                      "Reset",
-                      style: LamaTextTheme.getStyle(
-                          fontSize: 25,
-                          color: LamaColors.white,
-                          fontWeight: FontWeight.bold),
+                  child: IconButton(
+                    padding: EdgeInsets.all(1.0),
+                    icon: Icon(
+                      Icons.replay_rounded,
+                      size: 40,
                     ),
+                    color: LamaColors.white,
+                    onPressed: (){
+                      setState(() {
+                        if (deletions.isNotEmpty) {
+                          currentAmountDouble =
+                              currentAmountDouble - deletions.last;
+                          double deletedElement = deletions.removeLast();
+                          updateAmount(deletedElement);
+                        } else {
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Container(
+                                    height: (constraints.maxHeight / 100) * 4,
+                                    alignment: Alignment.bottomCenter,
+                                    child: Center(
+                                        child: FittedBox(
+                                          fit: BoxFit.fitWidth,
+                                          child: Text(
+                                            "Füge zuerst einen Betrag hinzu",
+                                            style: LamaTextTheme.getStyle(),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ))),
+                                backgroundColor: LamaColors.mainPink,
+                                duration: Duration(seconds: 1)),
+                          );
+                        }
+                      });
+                    },
                   ),
-                  onTap: () {
-                    setState(() {
-                      if (deletions.isNotEmpty) {
-                        currentAmountDouble =
-                            currentAmountDouble - deletions.last;
-                        double deletedElement = deletions.removeLast();
-                        updateAmount(deletedElement);
-                      } else {
-                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Container(
-                                  height: (constraints.maxHeight / 100) * 4,
-                                  alignment: Alignment.bottomCenter,
-                                  child: Center(
-                                      child: FittedBox(
-                                    fit: BoxFit.fitWidth,
-                                    child: Text(
-                                      "Füge zuerst einen Betrag hinzu",
-                                      style: LamaTextTheme.getStyle(),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ))),
-                              backgroundColor: LamaColors.mainPink,
-                              duration: Duration(seconds: 1)),
-                        );
-                      }
-                    });
-                  },
                 ),
               ),
+              //fertig
               Container(
                 height: (constraints.maxHeight / 100) * 12,
                 width: (constraints.maxWidth / 100) * 35,
