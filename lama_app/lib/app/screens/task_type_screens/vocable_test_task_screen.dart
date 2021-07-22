@@ -25,7 +25,7 @@ class VocableTestTaskScreen extends StatefulWidget {
   }
 }
 
-/// [State] that contains the UI-Side logic for the VocableTest TaskType.
+/// [State] that contains the UI side logic for the VocableTest TaskType.
 ///
 /// Author: K.Binder
 class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
