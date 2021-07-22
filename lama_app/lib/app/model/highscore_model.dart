@@ -1,7 +1,8 @@
-import '../../db/database_provider.dart';
 
+//set table name
 final String tableHighscore = "highscore";
 
+//set column names
 class HighscoresFields{
   static final String columnId = "id";
   static final String columnGameId = "gameid";
@@ -16,7 +17,7 @@ class Highscore {
   int userID;
 
   Highscore({this.gameID, this.score, this.userID});
-
+  //Map the variables and return the map
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       HighscoresFields.columnGameId: gameID,
@@ -25,7 +26,7 @@ class Highscore {
     };
     return map;
   }
-
+  //get the data from an map
   Highscore.fromMap(Map<String, dynamic> map) {
     id = map[HighscoresFields.columnId];
     gameID = map[HighscoresFields.columnGameId];

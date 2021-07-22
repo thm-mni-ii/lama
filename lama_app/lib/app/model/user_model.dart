@@ -1,9 +1,7 @@
 import 'package:lama_app/util/input_validation.dart';
-
-import '../../db/database_provider.dart';
-
+//set table name
 final String tableUser = "user";
-
+//set column names
 class UserFields{
   static final String columnId = "id";
   static final String columnName = "name";
@@ -30,7 +28,7 @@ class User {
       this.coins,
       this.isAdmin,
       this.avatar});
-
+  //Map the variables and return the map
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       UserFields.columnName: name,
@@ -42,7 +40,7 @@ class User {
     };
     return map;
   }
-
+  //get the data from an map
   User.fromMap(Map<String, dynamic> map) {
     id = map[UserFields.columnId];
     name = map[UserFields.columnName];

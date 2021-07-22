@@ -1,7 +1,6 @@
-import '../../db/database_provider.dart';
-
+//set table name
 final String tableUserSolvedTaskAmount = "user_solved_task_amount";
-
+//set column names
 class UserSolvedTaskAmountFields{
   static final String columnUserId = "userID";
   static final String columnSubjectId = "id";
@@ -14,7 +13,7 @@ class UserSolvedTaskAmount {
   int amount;
 
   UserSolvedTaskAmount({this.userId, this.subjectId, this.amount});
-
+  //Map the variables and return the map
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       UserSolvedTaskAmountFields.columnUserId: userId,
@@ -23,7 +22,7 @@ class UserSolvedTaskAmount {
     };
     return map;
   }
-
+  //get the data from an map
   UserSolvedTaskAmount.fromMap(Map<String, dynamic> map) {
     userId = map[UserSolvedTaskAmountFields.columnUserId];
     subjectId = map[UserSolvedTaskAmountFields.columnSubjectId];
