@@ -1,8 +1,17 @@
 import 'package:lama_app/util/pair.dart';
 
-///This file contains the Basic Task class with its factory Method and all Task subtypes
-///To create a new Task subtype create a class that extends Task and add it to the factory method in Task
+///This file contains the Basic Task class with its factory Method and all Task subtypes.
+///To create a new TaskType create a class that extends Task and add it to the factory method in [Task].
+///
+///Note that the toString MUST be overriden by the subclass with all its task specific variables for the "left_to_solve" feature to work.
+///(Have a look at an existing subclass for an example)
+///
+///This should be changed in the future since this is not enforced by the compiler at the moment.
+///
+///Author: K.Binder
 class Task {
+  ///factory constructor that creates the corresponding
+  ///subclass of [Task] based on the [taskType].
   factory Task.fromJson(Map<String, dynamic> json) {
     String taskType = json['task_type'];
     switch (taskType) {
@@ -51,7 +60,7 @@ class Task {
       case "VocableTest":
         var wordPairs = json['wordPairs'] as List;
         List<Pair<String, String>> wordPairList =
-        wordPairs.map((pair) => Pair.fromJson(pair)).toList();
+            wordPairs.map((pair) => Pair.fromJson(pair)).toList();
         return TaskVocableTest(taskType, json['task_reward'], json['lama_text'],
             json['left_to_solve'], wordPairList, json['randomizeSide']);
       case "Connect":
@@ -69,7 +78,8 @@ class Task {
             json['task_reward'],
             json['lama_text'],
             json['left_to_solve'],
-            List<String>.from(json['random']), // Stand jetzt: 1. yes/"" 2. Rechenzeichen 3. min-Wert 4. max-Wert
+            List<String>.from(json[
+                'random']), // Stand jetzt: 1. yes/"" 2. Rechenzeichen 3. min-Wert 4. max-Wert
             json['operator(1-2)'],
             List<String>.from(json['equation']),
             List<String>.from(json['missing_elements']),
@@ -95,6 +105,9 @@ class Task {
   }
 }
 
+///Subclass of [Task] for the Tasktype "4Cards"
+///
+///Author: K.Binder
 class Task4Cards extends Task {
   String question;
   String rightAnswer;
@@ -115,6 +128,9 @@ class Task4Cards extends Task {
   }
 }
 
+///Subclass of [Task] for the Tasktype "ClozeTest"
+///
+///Author: T.Rentsch
 class TaskClozeTest extends Task {
   String question;
   String rightAnswer;
@@ -135,6 +151,9 @@ class TaskClozeTest extends Task {
   }
 }
 
+///Subclass of [Task] for the Tasktype "MarkWords"
+///
+///Author: F.Leonhardt
 class TaskMarkWords extends Task {
   List<String> rightWords;
   String sentence;
@@ -155,13 +174,17 @@ class TaskMarkWords extends Task {
   }
 }
 
+///Subclass of [Task] for the Tasktype "MatchCategory"
+///
+///Author: T.Rentsch
 class TaskMatchCategory extends Task {
   List<String> categoryOne;
   List<String> categoryTwo;
   String nameCatOne;
   String nameCatTwo;
 
-  TaskMatchCategory(String taskType,
+  TaskMatchCategory(
+      String taskType,
       int reward,
       String lamaText,
       int leftToSolve,
@@ -188,6 +211,9 @@ class TaskMatchCategory extends Task {
   }
 }
 
+///Subclass of [Task] for the Tasktype "GridSelect"
+///
+///Author: K.Binder
 class TaskGridSelect extends Task {
   List<String> wordsToFind;
 
@@ -206,6 +232,9 @@ class TaskGridSelect extends Task {
   }
 }
 
+///Subclass of [Task] for the Tasktype "MoneyTask"
+///
+///Author: T.Rentsch
 class TaskMoney extends Task {
   double moneyAmount;
 
@@ -219,6 +248,9 @@ class TaskMoney extends Task {
   }
 }
 
+///Subclass of [Task] for the Tasktype "VocableTest"
+///
+///Author: K.Binder
 class TaskVocableTest extends Task {
   List<Pair<String, String>> vocablePairs;
   bool randomizeSide;
@@ -238,6 +270,9 @@ class TaskVocableTest extends Task {
   }
 }
 
+///Subclass of [Task] for the Tasktype "Connect"
+///
+///Author: T.Rentsch
 class TaskConnect extends Task {
   List<String> pair1;
   List<String> pair2;
@@ -266,28 +301,35 @@ class TaskConnect extends Task {
   }
 }
 
-  class TaskEquation extends Task {
+///Subclass of [Task] for the Tasktype "Equation"
+///
+///Author: F.Leonhardt
+class TaskEquation extends Task {
   int operator;
   List<String> random;
   List<String> equation;
   List<String> missingElements;
   List<String> wrongAnswers;
 
-  TaskEquation(String taskType, int reward, String lamaText, int leftToSolve,
-      this.random, this.operator, this.equation, this.missingElements, this.wrongAnswers)
+  TaskEquation(
+      String taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.random,
+      this.operator,
+      this.equation,
+      this.missingElements,
+      this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
   String toString() {
     String s = super.toString();
-    for(int i = 0; i < random.length; i++)
-      s+= random[i];
-    for(int i = 0; i < equation.length; i++)
-      s+= equation[i];
-    for(int i = 0; i < missingElements.length; i++)
-      s+= missingElements[i];
-    for(int i = 0; i < wrongAnswers.length; i++)
-      s+= wrongAnswers[i];
+    for (int i = 0; i < random.length; i++) s += random[i];
+    for (int i = 0; i < equation.length; i++) s += equation[i];
+    for (int i = 0; i < missingElements.length; i++) s += missingElements[i];
+    for (int i = 0; i < wrongAnswers.length; i++) s += wrongAnswers[i];
     return s;
   }
 }

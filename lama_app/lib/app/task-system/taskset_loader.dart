@@ -1,28 +1,29 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:lama_app/app/screens/admin_menu_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
-import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
-import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/app/task-system/taskset_validator.dart';
 import 'package:lama_app/db/database_provider.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'dart:convert' show utf8;
 
+///Class responsible for loading the standard tasks and tasks from a provided url.
+///
+///Author: K.Binder
 class TasksetLoader {
   Map<SubjectGradeRelation, List<Taskset>> loadedTasksets = {};
 
   //Change this constant if you want to support more grades than 1-6.
-  // Keep in mind youll have to add standard taskset for each subject for the new grade otherwise the app will crash on startup
+  //Keep in mind youll have to add standard taskset for each subject for the new grade otherwise the app will crash on startup.
   static const int GRADES_SUPPORTED = 6;
 
+  ///Loads all Tasksets.
+  ///
+  ///This includes all standard tasksets if they are not disabled in the admin menu.
   Future<void> loadAllTasksets() async {
     /* ONLY NEEDED WHEN A LOCAL COPY SHOUL EXIST AND POSSIBLY PERSIST
     //get path for the taskset directory (only accessible by this app)
@@ -72,6 +73,7 @@ class TasksetLoader {
       }
     }
 
+    //load all tasksets from url
     List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
 
     for (int i = 0; i < taskUrls.length; i++) {
@@ -93,14 +95,6 @@ class TasksetLoader {
     }*/
 
     //Remove all leftToSolveEntries for deleted Tasksets
-    /*List<Task> tasks = [];
-    loadedTasksets.values.forEach((element) {
-      element.forEach((taskset) {
-        tasks.addAll(taskset.tasks);
-      });
-    });
-    await DatabaseProvider.db.removeUnusedLeftToSolveEntries(
-        tasks, userRepository.authenticatedUser);*/
     print("Removed: " +
         (await DatabaseProvider.db.removeAllNonExistent()).toString() +
         "Entries");
@@ -109,6 +103,9 @@ class TasksetLoader {
         "Entries");
   }
 
+  ///Builds a Taskset from a json string and puts it into [loadedTasksets()].
+  ///
+  ///Also checks if the Taskset is valid via the [TasksetValidator] and skips it if its not.
   Future<void> buildTasksetFromJson(tasksetContent) async {
     bool isTasksetValid =
         TasksetValidator.isValidTaskset(jsonDecode(tasksetContent));
@@ -116,21 +113,7 @@ class TasksetLoader {
     if (isTasksetValid) {
       Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
 
-      /*for (int i = 0; i < taskset.tasks.length; i++) {
-      Task t = taskset.tasks[i];
-      int leftToSolve = await DatabaseProvider.db
-          .getLeftToSolve(t.toString(), userRepository.authenticatedUser);
-      if (leftToSolve == -3) {
-        print("Not found - inserting");
-        await DatabaseProvider.db.insertLeftToSolve(
-            t.toString(), t.leftToSolve, userRepository.authenticatedUser);
-      } else {
-        print("found - setting to: " + leftToSolve.toString());
-        t.leftToSolve = leftToSolve;
-      }
-    }*/
-
-      /*LOGCODE
+      /* DEBUG LOGCODE
     print("taskset_name: " + taskset.name);
     print("taskset_subject: " + taskset.subject);
     print("taskset_grade: " + taskset.grade.toString());
@@ -160,7 +143,7 @@ class TasksetLoader {
     }
   }
 
-  //Gets all Tasksets that match a specific subject-grade combination (for example Math and Second Grade)
+  ///Gets all Tasksets that match a specific subject-grade combination (e.g. math and second grade)
   List<Taskset> getLoadedTasksetsForSubjectAndGrade(String subject, int grade) {
     SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
     if (loadedTasksets.containsKey(sgr))
