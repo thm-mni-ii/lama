@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -185,7 +183,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     }
     return true;
   }
-  
+
   //TODO: Franz komentier die bitte die hast du geschrieben iirc und ich will nix falsches sagen
   bool fullequals(List<String> list1, List<String> list2) {
     double list1res, list2res;

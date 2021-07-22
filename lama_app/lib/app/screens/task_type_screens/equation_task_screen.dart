@@ -196,18 +196,19 @@ class EquationState extends State<EquationTaskScreen> {
                     color: LamaColors.redAccent,
                   ),
                   child: InkWell(
-                    child: Center(
-                      child: Text(
-                        "Reset",
-                        style: LamaTextTheme.getStyle(),
+                    child: IconButton(
+                      padding: EdgeInsets.all(1.0),
+                      icon: Icon(
+                          Icons.replay_rounded,
+                        size: 40,
                       ),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        fullAnswer.clear();
-                        fullAnswer.addAll(resetList);
-                      });
-                    }
+                      color: LamaColors.white,
+                      onPressed: () {
+                        setState(() {
+                          fullAnswer.clear();
+                          fullAnswer.addAll(resetList);
+                        });
+                        }),
                   ),
                 ),
                 Container(
