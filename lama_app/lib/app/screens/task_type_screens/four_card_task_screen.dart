@@ -8,6 +8,9 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+/// [StatelessWidget] that contains the screen for the 4Cards TaskType.
+///
+/// Author: K.Binder
 class FourCardTaskScreen extends StatelessWidget {
   final Task4Cards task;
   final List<String> answers = [];
@@ -102,6 +105,7 @@ class FourCardTaskScreen extends StatelessWidget {
     ]);
   }
 
+  ///Returns one of the four cards that contain the different answers as [Widget].
   Widget _buildCards(context, index) {
     Color color =
         index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;

@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lama_app/app/bloc/taskBloc/gridselecttask_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
@@ -22,12 +19,20 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+///[StatefulWidget] for the screen framework containing the current Task Widget.
+///
+///Author: K.Binder
 class TaskScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => TaskScreenState();
 }
 
+///[State] for the [TaskScreen]
+///
+///Author: K.Binder
 class TaskScreenState extends State<TaskScreen> {
+  ///Loads the first Task of the list that was passed by
+  ///the [ChooseTasksetScreen] during initialization.
   void initState() {
     super.initState();
     BlocProvider.of<TaskBloc>(context).add(ShowNextTaskEvent());
@@ -38,6 +43,7 @@ class TaskScreenState extends State<TaskScreen> {
     LinearGradient lg;
     return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
+        //State that signals a Task should be displayed
         if (state is DisplayTaskState) {
           SvgPicture coinImg = SvgPicture.asset(
               'assets/images/svg/lama_coin.svg',
@@ -118,6 +124,8 @@ class TaskScreenState extends State<TaskScreen> {
                         ),
                         Container(
                             height: (constraints.maxHeight / 100) * 92.5,
+                            //"TaskBox" that will be filled depending on
+                            //the TaskType of the current Task
                             child: LayoutBuilder(builder: (BuildContext context,
                                 BoxConstraints constraints) {
                               return getScreenForTaskWithConstraints(
@@ -130,7 +138,9 @@ class TaskScreenState extends State<TaskScreen> {
               ),
             ),
           );
-        } else if (state is TaskAnswerResultState) {
+        }
+        //State that signals a Task was answered and evaluated and a result is provided
+        else if (state is TaskAnswerResultState) {
           if (state.correct) {
             if (state.subTaskResult == null) {
               return Container(
@@ -242,7 +252,9 @@ class TaskScreenState extends State<TaskScreen> {
               );
             }
           }
-        } else if (state is AllTasksCompletedState) {
+        }
+        //State that signals that all Tasks have been completed and to show the summary
+        else if (state is AllTasksCompletedState) {
           return Scaffold(
             body: Container(
               color: LamaColors.mainPink,
@@ -259,13 +271,17 @@ class TaskScreenState extends State<TaskScreen> {
             ),
           );
         }
-        return Text("No task passed");
+        return Container(
+          color: LamaColors.white,
+        );
       },
     );
   }
 
-  //Task is the loaded Task and the constraints constrain the space
-  // which the taskscreen can use to display its stuff
+  ///Returns the Widget that corresponds to the TaskType of [task].
+  ///
+  ///Also passes the constraints of the "TaskBox" (see [build()])
+  ///to allow the task screens to scale accordingly.
   Widget getScreenForTaskWithConstraints(
       Task task, BoxConstraints constraints) {
     switch (task.type) {
@@ -285,13 +301,14 @@ class TaskScreenState extends State<TaskScreen> {
         return VocableTestTaskScreen(task, constraints);
       case "Connect":
         return ConnectTaskScreen(task, constraints);
-      case "Equation" :
+      case "Equation":
         return EquationTaskScreen(task, constraints);
       default:
         return Container();
     }
   }
 
+  ///Returns the Widget that displays the summary after all tasks have been solved.
   Widget buildCompletionScreen(
       List<Task> tasks, List<bool> results, BoxConstraints constraints) {
     int rightAnswers = 0;
@@ -421,6 +438,10 @@ class TaskScreenState extends State<TaskScreen> {
     );
   }
 
+  ///Returns a single item of the list in the summary screen.
+  ///
+  ///Contains the information, whether a Task has been solved
+  ///correctly and how many lama coins were awarded.
   Widget buildListItem(
       int index, BoxConstraints constraints, bool result, Task task) {
     Icon icon = result

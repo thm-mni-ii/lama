@@ -10,6 +10,9 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+/// [StatefulWidget] that contains the screen for the VocableTest TaskType.
+///
+/// Author: K.Binder
 class VocableTestTaskScreen extends StatefulWidget {
   final TaskVocableTest task;
   final BoxConstraints constraints;
@@ -22,6 +25,9 @@ class VocableTestTaskScreen extends StatefulWidget {
   }
 }
 
+/// [State] that contains the UI side logic for the VocableTest TaskType.
+///
+/// Author: K.Binder
 class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
   final TaskVocableTest task;
   final BoxConstraints constraints;
@@ -32,6 +38,10 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
     bloc = VocableTestTaskBloc(task);
   }
 
+  ///Fetches the first word pair to translate during initialization.
+  ///
+  ///This is the reason why [VocableTestTaskScreen] is a [StatefulWidget],
+  ///because the fetch needs to happen before building the screen and without user interaction.
   void initState() {
     super.initState();
     bloc.add(VocableTestTaskGetWordEvent());

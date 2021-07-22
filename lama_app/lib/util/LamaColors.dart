@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+///Utility class that contains all colors used in the app.
 class LamaColors {
   //Mirroring colors from Colors.class to avoid confusion and mixed usage
   static Color white = Colors.white;

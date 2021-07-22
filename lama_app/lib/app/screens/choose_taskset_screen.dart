@@ -13,6 +13,9 @@ import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+/// [StatefulWidget] that contains the screen that shows all Tasksets.
+///
+/// Author: K.Binder
 class ChooseTasksetScreen extends StatefulWidget {
   final String chosenSubject;
   final int userGrade;
@@ -26,6 +29,9 @@ class ChooseTasksetScreen extends StatefulWidget {
   }
 }
 
+/// [State] that contains the UI side logic for the [ChooseTasksetScreen]
+///
+/// Author: K.Binder
 class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
   String chosenSubject;
   int userGrade;
@@ -33,6 +39,10 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
   ChooseTasksetScreenState(
       this.chosenSubject, this.userGrade, this.userRepository);
 
+  ///Loads all Tasksets for [chosenSubject] with [userGrade] during initialization.
+  ///
+  ///This is the reason why [ChooseTasksetScreen] is a [StatefulWidget],
+  ///because the fetch needs to happen before building the screen and without user interaction.
   @override
   void initState() {
     super.initState();
@@ -113,6 +123,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
     );
   }
 
+  ///Returns a centered, seperated ListView containing all loaded Tasksets.
   Widget _buildTasksetList(context, state) {
     return Center(
       child: ListView.separated(
@@ -126,6 +137,9 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
     );
   }
 
+  ///Returns a Container widget representing a single Taskset.
+  ///
+  ///Used by [_buildTasksetList()]
   Widget _buildTasksetListItem(context, Taskset taskset) {
     Size screenSize = MediaQuery.of(context).size;
     return Container(
@@ -199,6 +213,11 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
         ));
   }
 
+  ///Returns a list of [Task] that will be passed to the [TaskBloc].
+  ///
+  ///This list can contain all Tasks of a Taskset (ordered or unordered),
+  ///but can also contain only a fraction of the tasks,
+  ///based on the Taskset prameters
   List<Task> generateTaskList(Taskset taskset) {
     if (taskset.randomTaskAmount == taskset.tasks.length &&
         !taskset.randomizeOrder) {
