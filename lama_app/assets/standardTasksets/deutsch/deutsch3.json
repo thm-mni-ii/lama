@@ -37,8 +37,8 @@
            "left_to_solve": 3,
            "nameCatOne": "Verben",
            "nameCatTwo": "Nomen",
-           "categoryOne": ["laufen", "gehen", "schweben", "fallen"],
-           "categoryTwo": ["haus", "straße", "baum", "auto"]
+           "categoryOne": ["laufen", "gehen", "schweben", "fallen", "fegen", "fahren", "fliegen", "lernen", "lesen", "hören"],
+           "categoryTwo": ["haus", "straße", "baum", "auto", "lampe", "licht", "käfer", "zug", "apfel", "birne"]
          },
          {
            "task_type":"GridSelect",
