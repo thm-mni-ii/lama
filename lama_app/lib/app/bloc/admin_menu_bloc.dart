@@ -39,7 +39,6 @@ class AdminMenuBloc extends Bloc<AdminMenuEvent, AdminMenuState> {
   ///{@return} [AdminMenuPrefLoadedState]
   Future<AdminMenuState> _loadPrefs() async {
     prefs = await SharedPreferences.getInstance();
-    print(prefs.getBool(AdminUtils.enableDefaultTasksetsPref));
 
     ///if the enableDefaultTasksetsPref value isn't set yet the
     ///[AdminMenuPrefLoadedState] should return the default value of true

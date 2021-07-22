@@ -293,13 +293,14 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           ),
         ),
         Text(
-          "GitHub Link",
+          "https://github.com/thm-mni-ii/lama",
           style: LamaTextTheme.getStyle(
             color: LamaColors.black,
             fontSize: 16,
             fontWeight: FontWeight.w500,
             monospace: true,
           ),
+          textAlign: TextAlign.center,
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
