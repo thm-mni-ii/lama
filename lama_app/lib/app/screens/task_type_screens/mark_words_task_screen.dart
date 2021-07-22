@@ -9,6 +9,10 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+/// [StatelessWidget] that contains the screen for the MarkWords TaskType.
+/// seperace sentence at space to a list of words.
+///
+/// Author: F.Leonhardt
 class MarkWordsScreen extends StatelessWidget {
   final BoxConstraints constraints;
   final TaskMarkWords task;
@@ -21,6 +25,11 @@ class MarkWordsScreen extends StatelessWidget {
     print(sentence.length);
   }
 
+  /// Override build method [StatelessWidget]
+  ///
+  /// {@param} [BuildContext] as context
+  ///
+  /// {@return} a [Widget] that contains the sentence in separate containers
   @override
   Widget build(BuildContext context) {
     neededBloc = MarkWordsBloc();
@@ -100,6 +109,7 @@ class MarkWordsScreen extends StatelessWidget {
         ));
   }
 
+  /// Returns sentence as [ListView] where each word is stored as [InkWell].
   Widget _sentence(List<String> sentence) {
     return BlocBuilder<MarkWordsBloc, MarkWordState>(
         builder: (context, MarkWordState state) {
