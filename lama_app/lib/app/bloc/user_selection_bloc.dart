@@ -13,6 +13,16 @@ import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/app/state/user_selection_state.dart';
 import 'package:lama_app/db/database_provider.dart';
 
+///[Bloc] for the [UserSelectionScreen]
+///
+/// * see also
+///    [UserSelectionScreen]
+///    [UserSelectionEvent]
+///    [UserSelectionState]
+///    [Bloc]
+///
+/// Author: L.Kammerer
+/// latest Changes: 15.06.2021
 class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
   UserSelectionBloc({UserSelectionState initialState}) : super(initialState);
 
@@ -25,11 +35,28 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
     }
   }
 
+  ///load all stored [User] from the database and
+  ///pack them in [UsersLoaded] state
+  ///
+  ///{@return}[UsersLoaded] with all loaded [User]
   Future<UsersLoaded> loadUsers() async {
     List<User> userList = await DatabaseProvider.db.getUser();
     return UsersLoaded(userList);
   }
 
+  ///(private)
+  ///used to try an login for an specific [User]
+  ///
+  ///using navigation to the [UserLoginScreen] and awaits an
+  ///successfull login.
+  ///If the [UserLoginScreen] pops with [User] an navigation
+  ///via [Navigator.pushReplacement] will be done. If the [User] is an admin
+  ///the navigation leads to [AdminMenuScreen] else to the [HomeScreen]
+  ///If the [UserLoginScreen] pops with null no action is done.
+  ///
+  ///{@params}
+  ///[User] as user which try to login
+  ///[BuildContext] as context
   Future<void> _userSelected(User user, BuildContext context) async {
     User selectedUser = await Navigator.push(
       context,

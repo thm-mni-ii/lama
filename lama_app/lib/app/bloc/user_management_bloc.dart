@@ -12,6 +12,16 @@ import 'package:lama_app/app/screens/edit_user_screen.dart';
 import 'package:lama_app/app/state/user_management_state.dart';
 import 'package:lama_app/db/database_provider.dart';
 
+///[Bloc] for the [UserManagementScreen]
+///
+/// * see also
+///    [UserManagementScreen]
+///    [UserManagementEvent]
+///    [UserManagementState]
+///    [Bloc]
+///
+/// Author: L.Kammerer
+/// latest Changes: 26.06.2021
 class UserManagementBloc
     extends Bloc<UserManagementEvent, UserManagementState> {
   UserManagementBloc({UserManagementState initialState}) : super(initialState);
@@ -26,6 +36,10 @@ class UserManagementBloc
     if (event is EditUser) _editUserScreen(event.context, event.user);
   }
 
+  ///(private)
+  ///navigats via [Navigator.push] to the [CreateUserScreen] plus [CreateUserBloc]
+  ///
+  ///{@param}[BuildContext] as context
   void _createUserScreen(BuildContext context) {
     Navigator.push(
       context,
@@ -38,6 +52,10 @@ class UserManagementBloc
     ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
   }
 
+  ///(private)
+  ///navigats via [Navigator.push] to the [CreateAdminScreen] plus [CreateAdminBloc]
+  ///
+  ///{@param}[BuildContext] as context
   void _createAdminScreen(BuildContext context) {
     Navigator.push(
       context,
@@ -50,6 +68,12 @@ class UserManagementBloc
     ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
   }
 
+  ///(private)
+  ///navigats via [Navigator.push] to the [EditUserScreen] plus [EditUserBloc]
+  ///
+  ///{@params}
+  ///[BuildContext] as context
+  ///[User] as user that should be edited
   void _editUserScreen(BuildContext context, User user) {
     Navigator.push(
       context,
@@ -62,11 +86,19 @@ class UserManagementBloc
     ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
   }
 
+  ///(private)
+  ///pops the Screen
+  ///
+  ///{@param}[BuildContext] as context
   void _logout(BuildContext context) {
     Navigator.pop(context);
   }
 
-  //Operations
+  ///(private)
+  ///load all stored [User] from the database and
+  ///pack them in [Loaded] state
+  ///
+  ///{@return}[Loaded] with all loaded [User]
   Future<Loaded> _loadUsers() async {
     List<User> userList = await DatabaseProvider.db.getUser();
     return Loaded(userList);

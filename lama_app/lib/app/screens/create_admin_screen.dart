@@ -1,24 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/bloc/create_admin_bloc.dart';
-import 'package:lama_app/app/event/create_admin_event.dart';
+//Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
+//Blocs
+import 'package:lama_app/app/bloc/create_admin_bloc.dart';
+//Events
+import 'package:lama_app/app/event/create_admin_event.dart';
 
+///This file creates the create admin screen
+///the create admin screen provides the function to
+///create an admin entering the name and an password
+///
+/// * see also
+///    [CreateAdminBloc]
+///    [CreateAdminEvent]
+///    [CreateAdminState]
+///
+/// Author: L.Kammerer
+/// latest Changes: 09.07.2021
 class CreateAdminScreen extends StatefulWidget {
   @override
   _CreateAdminScreenState createState() => _CreateAdminScreenState();
 }
 
+///_CreateAdminScreenState provides the state for the [CreateAdminScreen]
 class _CreateAdminScreenState extends State<CreateAdminScreen> {
+  //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //temporary password for double password validation
   String _secondPass;
 
+  ///override build methode [StatelessWidget]
+  ///
+  ///{@param} [BuildContext] as context
+  ///
+  ///{@return} [Scaffold] with appBar [_bar] and body [_form]
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
       appBar: _bar(
         screenSize.width / 5,
@@ -30,6 +53,16 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
     );
   }
 
+  ///(private)
+  ///[Columne] with all inputs as [TextFormField] thats needed
+  ///for creating an admin.
+  ///
+  ///All changes are made onChange through the [CreateAdminBloc] via [CreateAdminChange***]
+  ///to validat the input the [InputValidation] is used.
+  ///
+  ///{@param} [BuildContext] as context
+  ///
+  ///{@return} [Widget] with every input as [TextFormField]
   Widget _form(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(20.0),
@@ -53,6 +86,10 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
                   validator: (String value) {
                     return InputValidation.inputPasswortValidation(value);
                   },
+
+                  ///this input value isn't used to change the value via [CreateAdminBloc]
+                  ///it is used to validate the first password input with the second one
+                  ///to provide this validation the value is temporary saved in [_secondPass]
                   onChanged: (value) => _secondPass = value,
                   obscureText: true,
                 ),
@@ -60,6 +97,9 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Passwort wiederholen'),
                   validator: (String value) {
+                    ///this value and the [_secondPass] is used to validat the password input
+                    ///in generell. If both values aren't equal an error message returns.
+                    ///Else the validation returns with null.
                     return InputValidation.inputPasswortValidation(value,
                         secondPass: _secondPass);
                   },
@@ -77,6 +117,12 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
     );
   }
 
+  ///(private)
+  ///porvides [Row] with default designed abort and save [Ink] Button
+  ///
+  ///{@params} [BuildContext] context
+  ///
+  ///{@return} [Row] with two [Ink] Buttons
   Widget _userOptionsButtons(BuildContext context) {
     return Row(
       children: [
@@ -119,6 +165,15 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
     );
   }
 
+  ///(private)
+  ///porvides [AppBar] with default design for Screens used by the Admin
+  ///
+  ///{@params}
+  ///[AppBar] size as double size
+  ///[AppBar] titel as String title
+  ///[AppBar] [Color] as colors
+  ///
+  ///{@return} [AppBar] with generel AdminMenu specific design
   Widget _bar(double size, String titel, Color colors) {
     return AppBar(
       title: Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//TODO delete this
 extension GlobalKeyExtension on GlobalKey {
   Rect get globalPaintBounds {
     final renderObject = currentContext?.findRenderObject();
