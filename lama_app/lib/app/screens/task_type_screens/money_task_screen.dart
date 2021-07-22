@@ -33,7 +33,7 @@ class MoneyTaskScreen extends StatefulWidget {
     return MoneyTaskState(task, constraints);
   }
 }
-/// MatchCategoryTaskScreen class creates the Match Category Task Screen
+/// MoneyTaskState class creates the Money Task Screen
 class MoneyTaskState extends State<MoneyTaskScreen> {
   // task infos and constraints handed over by tasktypeScreen
   final TaskMoney task;
