@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/check_screen_bloc.dart';
 import 'package:lama_app/app/screens/check_Screen.dart';
 
+///Main class for the app.
 class LamaApp extends MaterialApp {
   LamaApp()
       : super(
@@ -21,6 +22,9 @@ class LamaApp extends MaterialApp {
         );
 }
 
+///Utility class that hides the "blue waves" when overscrolling a list.
+///
+///Author: K.Binder
 class LamaScrollBehaivour extends ScrollBehavior {
   @override
   Widget buildViewportChrome(
