@@ -141,8 +141,7 @@ Widget _input(BuildContext context, String error, User user, double size,
             ),
             validator: (value) => InputValidation.isEmpty(value)
                 ? 'Eingabe darf nicht leer sein!'
-                : nul
-            l,
+                : null,
             onChanged: (value) =>
                 context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
             obscureText: true,
