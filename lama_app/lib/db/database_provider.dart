@@ -17,6 +17,12 @@ import 'package:lama_app/db/database_migrator.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+///This file manage the database
+///
+///In this file the database will be create or update
+///All methods to work with the database you will find here
+///
+/// Author: F.Brecher
 class DatabaseProvider {
   int currentVersion = 1;
   int oldVersion = 0;
@@ -26,20 +32,34 @@ class DatabaseProvider {
 
   Database _database;
 
+  ///Return the Database
+  ///
+  /// If the Database doesn't exist or is not on the current version
+  /// createDatabase() is called
+  ///
+  /// {@return} Database
   Future<Database> get database async {
-  //Check if there is currently a database and if the version of the database is the current version.
-  //if it is the case, return the databse
     if (_database != null) {
       if (await _database.getVersion() == currentVersion) {
         return _database;
       }
     }
-//if there is no database or the version is not the current version call createDatabase()
+
     _database = await createDatabase();
 
     return _database;
   }
 
+  ///Create or Update the Database
+  ///
+  /// open a new database or a database with an old Version.
+  ///
+  /// if there is no database all migrations will be called and the
+  /// code will be execute
+  /// if there is an old database, the migrations which have a
+  /// newer version will be called and the code will be execute
+  ///
+  /// {@return} Database
   Future<Database> createDatabase() async {
     //get the Database Path for the current device
     String dbPath = await getDatabasesPath();
@@ -67,7 +87,7 @@ class DatabaseProvider {
       },
       //if there is a database on the device, but the version is not the current version call onUpgrade
       onUpgrade: (Database database, int oldVersion, int newVersion) async {
-        //Map the entrys from migrations new, which are higher then the oldVersion.
+        //Map the entry's from migrations new, which are higher then the oldVersion.
         var upgradeScripts = new Map.fromIterable(
             DBMigrator.migrations.keys.where((j) => j > oldVersion),
             key: (j) => j,
@@ -89,7 +109,9 @@ class DatabaseProvider {
       },
     );
   }
-//get a list from typ User from the database.
+  ///get all entry's from table User
+  ///
+  /// {@return} <List<User>>
   Future<List<User>> getUser() async {
     final db = await database;
 
@@ -112,7 +134,10 @@ class DatabaseProvider {
 
     return userList;
   }
-//get a list from typ Achievement from the database.
+
+  ///get all entry's from table Achievement
+  ///
+  /// {@return} <List<Achievement>>
   Future<List<Achievement>> getAchievements() async {
     final db = await database;
 
@@ -131,7 +156,10 @@ class DatabaseProvider {
 
     return achievementList;
   }
-//get a list from typ UserHasAchievement from the database.
+
+  ///get all entry's from table UserHasAchievement
+  ///
+  /// {@return} <List<UserHasAchievement>>
   Future<List<UserHasAchievement>> getUserHasAchievements() async {
     final db = await database;
 
@@ -152,7 +180,10 @@ class DatabaseProvider {
 
     return userHasAchievementList;
   }
-//get a list from typ Games from the database.
+
+  ///get all entry's from table Game
+  ///
+  /// {@return} <List<Game>>
   Future<List<Game>> getGames() async {
     final db = await database;
 
@@ -169,7 +200,9 @@ class DatabaseProvider {
 
     return gameList;
   }
-//get a list from typ highscores from the database.
+  ///get all entry's from table Highscores
+  ///
+  /// {@return} <List<Highscores>>
   Future<List<Highscore>> getHighscores() async {
     final db = await database;
 
@@ -190,7 +223,12 @@ class DatabaseProvider {
 
     return highscoreList;
   }
-//get a the highscore from an user in a specific game from the database.
+
+  ///get the highscore from an user in a specific game from table highscore
+  ///
+  /// {@param} User user, int gameID
+  ///
+  /// {@return} <int>
   Future<int> getHighscoreOfUserInGame(User user, int gameID) async {
     final db = await database;
 
@@ -213,7 +251,12 @@ class DatabaseProvider {
 
     return 0;
   }
-//get the highest score of an game from the database.
+
+  /// get the highscore from a game from table highscore
+  ///
+  /// {@param} int gameID
+  ///
+  /// {@return} <int>
   Future<int> getHighscoreOfGame(int gameID) async {
     final db = await database;
 
@@ -236,6 +279,9 @@ class DatabaseProvider {
     return 0;
   }
 //get a list from typ Subject from the database.
+  ///get all entry's from table Subject
+  ///
+  /// {@return} <List<Subject>>
   Future<List<Subject>> getSubjects() async {
     final db = await database;
 
@@ -254,7 +300,10 @@ class DatabaseProvider {
 
     return subjectList;
   }
-//get a list from typ UserSolvedTaskAmount from the database.
+
+  ///get all entry's from table UserSolvedTaskAmount
+  ///
+  /// {@return} <List<UserSolvedTaskAmount>>
   Future<List<UserSolvedTaskAmount>> getUserSolvedTaskAmount() async {
     final db = await database;
 
@@ -277,7 +326,10 @@ class DatabaseProvider {
 
     return userSolvedTaskAmountList;
   }
-  //get a list from typ TaskUrl from the database.
+
+  ///get all entry's from table TaskUrl
+  ///
+  /// {@return} <List<TaskUrl>>
   Future<List<TaskUrl>> getTaskUrl() async {
     final db = await database;
 
@@ -294,70 +346,110 @@ class DatabaseProvider {
 
     return taskUrlList;
   }
-  //insert an user in the database.
-  //returns the user white the autoincremented id
+
+  /// insert an new User in the table User
+  ///
+  /// {@param} User user
+  ///
+  /// {@return} <User> with the autoincremented id
   Future<User> insertUser(User user) async {
     final db = await database;
     user.id = await db.insert(tableUser, user.toMap());
     return user;
   }
-  //insert an achievement in the database.
-  //returns the achievement white the autoincremented id
+
+  /// insert an new Achievement in the table Achievement
+  ///
+  /// {@param} Achievement achievement
+  ///
+  /// {@return} <Achievement> with the autoincremented id
   Future<Achievement> insertAchievement(Achievement achievement) async {
     final db = await database;
     achievement.id = await db.insert(tableAchievements, achievement.toMap());
     return achievement;
   }
-  //insert the userId and the achievementId in the database.
+
+  /// insert an new userId and an achievementId in the table UserHAsAchievement
+  ///
+  /// {@param} User user, Achievement achievement
   insertUserHasAchievement(User user, Achievement achievement) async {
     final db = await database;
     UserHasAchievement userHasAchievement =
         UserHasAchievement(userID: user.id, achievementID: achievement.id);
     await db.insert(tableUserHasAchievements, userHasAchievement.toMap());
   }
-  //insert a game in the database.
-  //returns the game white the autoincremented id
+
+  /// insert an new Game in the table Game
+  ///
+  /// {@param} Game game
+  ///
+  /// {@return} <Game> with the autoincremented id
   Future<Game> insertGame(Game game) async {
     final db = await database;
     game.id = await db.insert(tableGames, game.toMap());
     return game;
   }
-  //insert a highscore in the database.
-  //returns the highscore white the autoincremented id
+
+  /// insert an new Highscore in the table Highscore
+  ///
+  /// {@param} Highscore highscore
+  ///
+  /// {@return} <Highscore> with the autoincremented id
   Future<Highscore> insertHighscore(Highscore highscore) async {
     final db = await database;
     highscore.id = await db.insert(tableHighscore, highscore.toMap());
     return highscore;
   }
-  //insert a subject in the database.
-  //returns the subject white the autoincremented id
+
+  /// insert an new Subject in the table Subject
+  ///
+  /// {@param} Subject subject
+  ///
+  /// {@return} <Subject> with the autoincremented id
   Future<Subject> insertSubject(Subject subject) async {
     final db = await database;
     subject.id = await db.insert(tableSubjects, subject.toMap());
     return subject;
   }
-  //insert an user, a subject and the amount in the database.
+
+  /// insert an UserId, a subjectId and an amount in the table UserSolvedTaskAmount
+  ///
+  /// {@param} User user, Subject subject, int amount
   insertUserSolvedTaskAmount(User user, Subject subject, int amount) async {
     final db = await database;
     UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount(
         userId: user.id, subjectId: subject.id, amount: amount);
     await db.insert(tableUserSolvedTaskAmount, userSolvedTaskAmount.toMap());
   }
-  //insert an taskUrl in the database.
-  //returns the taskUrl white the autoincremented id
+
+  /// insert a new TaskUrl in the table TaskUrl
+  ///
+  /// {@param} TaskUrl taskUrl
+  ///
+  /// {@return} <TaskUrl> with the autoincremented id
   Future<TaskUrl> insertTaskUrl(TaskUrl taskUrl) async {
     final db = await database;
     taskUrl.id = await db.insert(tableTaskUrl, taskUrl.toMap());
     return taskUrl;
   }
-  //delete an entry from user
+
+  /// delete an user in table User
+  ///
+  /// {@param} int id
+  ///
+  /// {@return} <int> which shows the number of deleted rows
   Future<int> deleteUser(int id) async {
     final db = await database;
 
     return await db.delete(tableUser,
         where: "${UserFields.columnId} = ?", whereArgs: [id]);
   }
-  //delete an entry from achievement
+
+  /// delete an achievement in table Achievement
+  ///
+  /// {@param} int id
+  ///
+  /// {@return} <int> which shows the number of deleted rows
   Future<int> deleteAchievement(int id) async {
     final db = await database;
 
@@ -365,7 +457,12 @@ class DatabaseProvider {
         where: "${AchievementsFields.columnAchievementsId} = ?",
         whereArgs: [id]);
   }
-  //delete an entry from userHasAchievement
+
+  /// delete an entry in table UserHasAchievement
+  ///
+  /// {@param} User user, Achievement achievement
+  ///
+  /// {@return} <int> which shows the number of deleted rows
   Future<int> deleteUserHasAchievement(
       User user, Achievement achievement) async {
     final db = await database;
@@ -374,28 +471,48 @@ class DatabaseProvider {
             "${UserHasAchievementsFields.columnUserId} = ? and ${UserHasAchievementsFields.columnAchievementId} = ? ",
         whereArgs: [user.id, achievement.id]);
   }
-  //delete an entry from game
+
+  /// delete a game in table Game
+  ///
+  /// {@param} int id
+  ///
+  /// {@return} <int> which shows the number of deleted rows
   Future<int> deleteGame(int id) async {
     final db = await database;
 
     return await db.delete(tableGames,
         where: "${GamesFields.columnGamesId} = ?", whereArgs: [id]);
   }
-  //delete an entry from highscore
+
+  /// delete a highscore in table Highscore
+  ///
+  /// {@param} int id
+  ///
+  /// {@return} <int> which shows the number of deleted rows
   Future<int> deleteHighscore(int id) async {
     final db = await database;
 
     return await db.delete(tableHighscore,
         where: "${HighscoresFields.columnId} = ?", whereArgs: [id]);
   }
-  //delete an entry from subject
+
+  /// delete an subject in table Subject
+  ///
+  /// {@param} int id
+  ///
+  /// {@return} <int> which shows the number of deleted rows
   Future<int> deleteSubject(int id) async {
     final db = await database;
 
     return await db.delete(tableSubjects,
         where: "${SubjectsFields.columnSubjectsId} = ?", whereArgs: [id]);
   }
-  //delete an entry from userSolvedTaskAmount
+
+  /// delete an entry in table UserSolvedTaskAMount
+  ///
+  /// {@param} User user, Subject subject
+  ///
+  /// {@return} <int> which shows the number of deleted rows
   Future<int> deleteUserSolvedTaskAmount(User user, Subject subject) async {
     final db = await database;
 
@@ -404,14 +521,24 @@ class DatabaseProvider {
             "${UserSolvedTaskAmountFields.columnSubjectId} = ? and ${UserSolvedTaskAmountFields.columnUserId} = ?",
         whereArgs: [subject.id, user.id]);
   }
-  //delete an entry from taskUrl
+
+  /// delete a taskUrl in table TaskUrl
+  ///
+  /// {@param} int id
+  ///
+  /// {@return} <int> which shows the number of deleted rows
   Future<int> deleteTaskUrl(int id) async {
     final db = await database;
 
     return await db.delete(tableTaskUrl,
         where: "${TaskUrlFields.columnId} = ?", whereArgs: [id]);
   }
-  //update an entry from user
+
+  /// update an user in table User
+  ///
+  /// {@param} User user
+  ///
+  /// {@return} <User>
   Future<User> updateUser(User user) async {
     final db = await database;
 
@@ -432,7 +559,11 @@ class DatabaseProvider {
     }
     return null;
   }
- //update the name column from an user
+  /// update the name from an user in table User
+  ///
+  /// {@param} User user, String name
+  ///
+  /// {@return} <User>
   Future<User> updateUserName(User user, String name) async {
     final db = await database;
 
@@ -446,7 +577,11 @@ class DatabaseProvider {
     return null;
   }
 
-  //update the grade column from an user
+  /// update the grade from an user in table User
+  ///
+  /// {@param} User user, int grade
+  ///
+  /// {@return} <User>
   Future<User> updateUserGrade(User user, int grade) async {
     final db = await database;
 
@@ -460,7 +595,11 @@ class DatabaseProvider {
     return null;
   }
 
-  //update the coins column from an user
+  /// update the coins from an user in table User
+  ///
+  /// {@param} User user, int coins
+  ///
+  /// {@return} <User>
   Future<User> updateUserCoins(User user, int coins) async {
     final db = await database;
 
@@ -474,7 +613,11 @@ class DatabaseProvider {
     return null;
   }
 
-  //update the isAdmin column from an user
+  /// update the isAdmin field from an user in table User
+  ///
+  /// {@param} User user, bool isAdmin
+  ///
+  /// {@return} <User>
   Future<User> updateUserIsAdmin(User user, bool isAdmin) async {
     final db = await database;
 
@@ -488,7 +631,11 @@ class DatabaseProvider {
     return null;
   }
 
-  //update the avatar column from an user
+  /// update the avatar from an user in table User
+  ///
+  /// {@param} User user, String avatar
+  ///
+  /// {@return} <User>
   Future<User> updateUserAvatar(User user, String avatar) async {
     final db = await database;
 
@@ -502,7 +649,11 @@ class DatabaseProvider {
     return null;
   }
 
-  //update an entry from achievement
+  /// update an achievement in table Achievement
+  ///
+  /// {@param} Achievement achievement
+  ///
+  /// {@return} <int> which shows the number of updated rows
   Future<int> updateAchievement(Achievement achievement) async {
     final db = await database;
 
@@ -510,21 +661,36 @@ class DatabaseProvider {
         where: " ${AchievementsFields.columnAchievementsId} = ?",
         whereArgs: [achievement.id]);
   }
-  //update an entry from game
+
+  /// update a game in table Game
+  ///
+  /// {@param} Game game
+  ///
+  /// {@return} <int> which shows the number of updated rows
   Future<int> updateGame(Game game) async {
     final db = await database;
 
     return await db.update(tableGames, game.toMap(),
         where: "${GamesFields.columnGamesId} = ?", whereArgs: [game.id]);
   }
-  //update an entry from highscore
+
+  /// update a highscore in table Highscore
+  ///
+  /// {@param} Highscore highscore
+  ///
+  /// {@return} <int> which shows the number of updated rows
   Future<int> updateHighscore(Highscore highscore) async {
     final db = await database;
 
     return await db.update(tableHighscore, highscore.toMap(),
         where: "${HighscoresFields.columnId} = ?", whereArgs: [highscore.id]);
   }
-  //update an entry from subject
+
+  /// update a subject in table Subject
+  ///
+  /// {@param} Subject subject
+  ///
+  /// {@return} <int> which shows the number of updated rows
   Future<int> updateSubject(Subject subject) async {
     final db = await database;
 
@@ -532,7 +698,12 @@ class DatabaseProvider {
         where: "${SubjectsFields.columnSubjectsId}  = ?",
         whereArgs: [subject.id]);
   }
-  //update an entry from userSolvedTaskAmount
+
+  /// update an entry in table UserSolvedTaskAmount
+  ///
+  /// {@param} User user, Subject subject, int amount
+  ///
+  /// {@return} <int> which shows the number of updated rows
   Future<int> updateUserSolvedTaskAmount(
       User user, Subject subject, int amount) async {
     final db = await database;
@@ -545,26 +716,47 @@ class DatabaseProvider {
             "${UserSolvedTaskAmountFields.columnSubjectId}  = ? and ${UserSolvedTaskAmountFields.columnUserId} = ?",
         whereArgs: [subject.id, user.id]);
   }
-  //update an entry from TaskUrl
+
+  /// update a taskUrl in table TaskUrl
+  ///
+  /// {@param} TaskUrl taskUrl
+  ///
+  /// {@return} <int> which shows the number of updated rows
   Future<int> updateTaskUrl(TaskUrl taskUrl) async {
     final db = await database;
 
     return await db.update(tableTaskUrl, taskUrl.toMap(),
         where: " ${TaskUrlFields.columnId} = ?", whereArgs: [taskUrl.id]);
   }
+  /// checks if the transferred password is the password from the user
+  ///
+  /// {@param} String password, User user
+  ///
+  /// {@return} <int> true == 1, false == 0
   //check if the transferred password is the password from the user
   Future<int> checkPassword(String password, User user) async {
     Password pswd = await _getPassword(user);
     return (password.compareTo(pswd.password) == 0 ? 1 : 0);
   }
-  //update the password column from an user
+
+  /// update the password field in table User
+  ///
+  /// {@param} String newPassword, User user
+  ///
+  /// {@return} <int> which shows the number of updated rows
   Future<int> updatePassword(String newPassword, User user) async {
     final db = await database;
     Password password = Password(password: newPassword);
     return await db.update(tableUser, password.toMap(),
         where: "${UserFields.columnId} = ?", whereArgs: [user.id]);
   }
- //get an user
+
+  ///(private)
+  ///get an user from table User
+  ///
+  /// {@param} int id
+  ///
+  /// {@return} <User>
   Future<User> _getUser(int id) async {
     final db = await database;
 
@@ -584,9 +776,16 @@ class DatabaseProvider {
       User user = User.fromMap(users.first);
       return user;
     }
-    return null;
+    return
+      null;
   }
-  //get the password from an user
+
+  ///(private)
+  ///get the password from an user from table User
+  ///
+  /// {@param} User user
+  ///
+  /// {@return} <Password>
   Future<Password> _getPassword(User user) async {
     final db = await database;
     var passwords = await db.query(tableUser,
@@ -599,7 +798,8 @@ class DatabaseProvider {
     }
     return null;
   }
-  //delete all entry's from the database
+
+  ///delete all entrys in all databases
   Future deleteDatabase() async {
     final db = await database;
     await db.delete(tableUser);
@@ -613,7 +813,12 @@ class DatabaseProvider {
     await db.delete(tableTaskUrl);
     await db.delete(tableLeftToSolve);
   }
-  //insert a taskString, a leftToSolve value, an userId and a doesStill Exist Value in the table leftToSolve
+
+  /// insert a taskString, a leftToSolve value, an userId and a doesStill Exist Value in the table leftToSolve
+  ///
+  /// {@param} String taskString, int leftToSolve, User user
+  ///
+  /// {@return} <int> which represent the id
   Future<int> insertLeftToSolve(
       String taskString, int leftToSolve, User user) async {
     final db = await database;
@@ -624,7 +829,12 @@ class DatabaseProvider {
         doesStillExist: 0);
     return await db.insert(tableLeftToSolve, lts.toMap());
   }
- //get how the leftToSolve value from task and an specific User
+
+  /// get the leftToSolve value from a task with an specific user
+  ///
+  /// {@param} String taskString,  User user
+  ///
+  /// {@return} <int>
   Future<int> getLeftToSolve(String taskString, User user) async {
     final db = await database;
     print("looking up task with: " + taskString);
@@ -648,8 +858,13 @@ class DatabaseProvider {
       insertLeftToSolve(task.toString(), task.leftToSolve, user);
     });
   }
-  //decrement the leftToSolve value from a task and an specific user
+  /// decrement the leftToSolve value from a task with an specific user
+  ///
+  /// {@param} Task t,  User user
+  ///
+  /// {@return} <int> which shows the number of updated rows
   Future<int> decrementLeftToSolve(Task t, User user) async {
+
     final db = await database;
     print("curVal: " + t.leftToSolve.toString());
     int newVal = max(t.leftToSolve - 1, -2);
@@ -660,7 +875,12 @@ class DatabaseProvider {
             "${LeftToSolveFields.columnTaskString} = ? and ${LeftToSolveFields.columnUserLTSId} = ?",
         whereArgs: [t.toString(), user.id]);
   }
-  //update the columns doesStillExist to 1 from all entry's where columnTaskString is the transferred task
+
+  /// update the columns doesStillExist to 1 from all entry's where columnTaskString is the transferred task
+  ///
+  /// {@param} Task t
+  ///
+  /// {@return} <int> which shows the number of updated rows
   Future<int> setDoesStillExist(Task t) async {
     final db = await database;
     print("Set flag for " + t.toString());
@@ -669,7 +889,10 @@ class DatabaseProvider {
         where: "${LeftToSolveFields.columnTaskString} = ?",
         whereArgs: [t.toString()]);
   }
-  //delete all entry's where the column doesStillExist is 0
+
+  /// delete all entry's where the column doesStillExist is 0
+  ///
+  /// {@return} <int> which shows the number of deleted rows
   Future<int> removeAllNonExistent() async {
     final db = await database;
     int val = 0;
@@ -678,7 +901,9 @@ class DatabaseProvider {
         whereArgs: [val]);
   }
 
-  //update all columns doesStillExist to 0
+  /// update all columns doesStillExist to 0
+  ///
+  /// {@return} <int> which shows the number of updated rows
   Future<int> resetAllStillExistFlags() async {
     final db = await database;
     return await db.update(tableLeftToSolve,

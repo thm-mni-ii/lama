@@ -9,17 +9,26 @@ import 'package:lama_app/app/model/userSolvedTaskAmount_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 
 
-//helper to struct the creates and updates in the database.
-//
-//if you change something or create a new table, create an new map migrationVx.
-//write this map in the migration map.
+/// This class is a helper to handle the code which create or update tables in the database.
+///
+///If you want to create a new table or update a table, you have to write a new map migrationVx with the version.
+///Add the new map to the migrations map
+///
+
+///
+/// Author: F.Brecher
 class DBMigrator{
 
-  //map for each version a map
+  ///map the migrationVx maps
+  ///
+  /// {@return} Map<int, Map>
   static final Map<int, Map> migrations = {
     1: migrationsV1,
   };
-  //map all create tables for Version 1
+
+  ///map the code to create the tables for Version 1
+  ///
+  /// {@return} Map<int, Map>
   static final Map<int, String> migrationsV1 = {
 
     1:  "Create TABLE IF NOT EXISTS $tableUser("
