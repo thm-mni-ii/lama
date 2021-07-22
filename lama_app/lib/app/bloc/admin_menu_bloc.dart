@@ -26,6 +26,7 @@ class AdminMenuBloc extends Bloc<AdminMenuEvent, AdminMenuState> {
     if (event is AdminMenuLoadPrefsEvent) yield await _loadPrefs();
     if (event is AdminMenuChangePrefsEvent) await _changePref(event);
     if (event is AdminMenuLoadDefaultEvent) yield AdminMenuDefaultState();
+    if (event is AdminMenuGitHubPopUpEvent) yield AdminMenuGitHubPopUpState();
   }
 
   ///(private)

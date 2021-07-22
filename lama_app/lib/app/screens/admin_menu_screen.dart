@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -51,27 +52,44 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   @override
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
-    return BlocBuilder<AdminMenuBloc, AdminMenuState>(
-      builder: (context, state) {
-        ///Set the [_isChecked] for the [Checkbox] to ensure it's the current value of [SharedPreferences]
-        ///then force the [AdminMenuLoadDefaultEvent] to move on
-        if (state is AdminMenuPrefLoadedState) {
-          _isChecked = state.prefDefaultTasksEnable;
-          context.read<AdminMenuBloc>().add(AdminMenuLoadDefaultEvent());
-          return Center(child: CircularProgressIndicator());
-        }
-        if (state is AdminMenuDefaultState) {
-          return Scaffold(
-            appBar:
-                _bar(screensize.width / 5, 'Adminmenü', LamaColors.bluePrimary),
-            body: _buttonColumne(context),
-          );
-        }
+    return Scaffold(
+      appBar: _bar(screensize.width / 5, 'Adminmenü', LamaColors.bluePrimary),
+      body: BlocListener(
+        bloc: BlocProvider.of<AdminMenuBloc>(context),
+        listener: (context, state) {
+          //shows the GitHub repository link
+          if (state is AdminMenuGitHubPopUpState) {
+            showDialog(context: context, builder: (_) => _gitHubAlert());
+          }
+        },
+        child: BlocBuilder<AdminMenuBloc, AdminMenuState>(
+          builder: (context, state) {
+            ///Set the [_isChecked] for the [Checkbox] to ensure it's the current value of [SharedPreferences]
+            ///then force the [AdminMenuLoadDefaultEvent] to move on
+            if (state is AdminMenuPrefLoadedState) {
+              _isChecked = state.prefDefaultTasksEnable;
+              context.read<AdminMenuBloc>().add(AdminMenuLoadDefaultEvent());
+              return Center(child: CircularProgressIndicator());
+            }
+            if (state is AdminMenuDefaultState) {
+              return _buttonColumne(context);
+            }
 
-        ///Force the [AdminMenuLoadPrefsEvent] to get the current value of the [SharedPreferences]
-        context.read<AdminMenuBloc>().add(AdminMenuLoadPrefsEvent());
-        return Center(child: CircularProgressIndicator());
-      },
+            ///Force the [AdminMenuLoadPrefsEvent] to get the current value of the [SharedPreferences]
+            context.read<AdminMenuBloc>().add(AdminMenuLoadPrefsEvent());
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: LamaColors.white,
+        child: SvgPicture.asset(
+          'assets/images/svg/GitHub.svg',
+          semanticsLabel: 'LAMA',
+        ),
+        onPressed: () =>
+            context.read<AdminMenuBloc>().add(AdminMenuGitHubPopUpEvent()),
+      ),
     );
   }
 
@@ -244,6 +262,117 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
         primary: LamaColors.bluePrimary,
         shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(0)),
       ),
+    );
+  }
+
+  ///(private)
+  ///Alert to show the GitHub repository link with authors
+  Widget _gitHubAlert() {
+    return AlertDialog(
+      title: Text(
+        'GitHub',
+        style: LamaTextTheme.getStyle(
+          color: LamaColors.black,
+          fontSize: 16,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      content: Column(children: [
+        SvgPicture.asset(
+          'assets/images/svg/GitHub.svg',
+          semanticsLabel: 'LAMA',
+        ),
+        SizedBox(height: 50),
+        Text(
+          "Link",
+          style: LamaTextTheme.getStyle(
+            color: LamaColors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w800,
+            monospace: true,
+          ),
+        ),
+        Text(
+          "GitHub Link",
+          style: LamaTextTheme.getStyle(
+            color: LamaColors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            monospace: true,
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 25),
+            Text(
+              "Projektleitung:",
+              style: LamaTextTheme.getStyle(
+                color: LamaColors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                monospace: true,
+              ),
+              textAlign: TextAlign.left,
+            ),
+            Text(
+              "Dario Pläschke",
+              style: LamaTextTheme.getStyle(
+                color: LamaColors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                monospace: true,
+              ),
+            ),
+            SizedBox(height: 15),
+            Text(
+              "App:",
+              style: LamaTextTheme.getStyle(
+                color: LamaColors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                monospace: true,
+              ),
+            ),
+            Text(
+              "Kevin Binder (Leitung)\nLars Kammerer\nFranz Leonhardt\nTobias Rentsch\nFabian Brescher",
+              style: LamaTextTheme.getStyle(
+                color: LamaColors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                monospace: true,
+              ),
+            ),
+            SizedBox(height: 15),
+            Text(
+              "Spiele:",
+              style: LamaTextTheme.getStyle(
+                color: LamaColors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                monospace: true,
+              ),
+            ),
+            Text(
+              "Vinzenz Branzk (Leitung)\nFlorian Silber",
+              style: LamaTextTheme.getStyle(
+                color: LamaColors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                monospace: true,
+              ),
+            ),
+          ],
+        ),
+      ]),
+      actions: [
+        TextButton(
+          child: Text('Schließen'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
     );
   }
 

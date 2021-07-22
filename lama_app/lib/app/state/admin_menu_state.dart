@@ -14,3 +14,6 @@ class AdminMenuPrefLoadedState extends AdminMenuState {
   bool prefDefaultTasksEnable;
   AdminMenuPrefLoadedState(this.prefDefaultTasksEnable);
 }
+
+///used to show the GitHub repository link
+class AdminMenuGitHubPopUpState extends AdminMenuState {}
