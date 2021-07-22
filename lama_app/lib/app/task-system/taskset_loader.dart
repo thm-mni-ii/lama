@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:lama_app/app/screens/admin_menu_screen.dart';
+import 'package:lama_app/util/input_validation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
@@ -77,9 +78,12 @@ class TasksetLoader {
     List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
 
     for (int i = 0; i < taskUrls.length; i++) {
+      String result =
+          await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
+
       var response = await http.get(Uri.parse(taskUrls[i].url),
           headers: {'Content-type': 'application/json'});
-      if (response.statusCode == 200) {
+      if (result == null) {
         await buildTasksetFromJson(utf8.decode(response.bodyBytes));
       }
     }
