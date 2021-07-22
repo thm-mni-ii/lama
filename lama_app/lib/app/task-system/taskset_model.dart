@@ -1,9 +1,13 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/db/database_provider.dart';
 
+///Model that represents a single taskset.
+///
+///Provides a named constructor [Taskset.fromJson()] to build a [Taskset] from JSON.
+///
+///Author: K.Binder
 class Taskset {
   String name;
   String subject;
@@ -12,7 +16,6 @@ class Taskset {
   int randomTaskAmount;
   List<Task> tasks;
 
-  //This method creates a Taskset from the passed json
   Taskset.fromJson(Map<String, dynamic> json) {
     name = json['taskset_name'];
     subject = json['taskset_subject'];

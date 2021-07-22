@@ -7,25 +7,33 @@ import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
-import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
-import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
 import 'game_list_screen.dart';
 
-//Home Screen is a Stateful Widget so it can be reloaded using setState((){}) after Navigation
+/// [StatefulWidget] that contains the main menu screen
+///
+/// This is a Stateful Widget so it can be reloaded using setState((){})
+/// after Navigation, primarily to reflect changes to the lama coin amount.
+///
+/// Author: K.Binder
 class HomeScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomeScreenState();
 }
 
+/// [State] that contains the UI side logic for the [HomeScreen]
+///
+/// Author: K.Binder
 class _HomeScreenState extends State<HomeScreen> {
   UserRepository userRepository;
+
   DateTime backButtonPressedTime;
+
   final snackBar = SnackBar(
       backgroundColor: LamaColors.mainPink,
       content: Text(
@@ -199,6 +207,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  ///Return a Widget that contains the complete center column with
+  ///all subjects and the game button.
+  ///
+  ///Note that if no Tasksets are loaded for a specific combination
+  ///(e.g. (Mathe, Grade 4)) the corresponding button will be emmited
+  ///from the column.
   Widget _buildMenuButtonColumn(BoxConstraints constraints) {
     List<Widget> children = [];
     TasksetRepository tasksetRepository =
@@ -479,6 +493,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(children: children);
   }
 
+  ///Prevents leaving the app with a single press on the back button.
+  ///
+  ///This method is registered as a callback in the [build()] method.
+  ///Then it decides based on the time between to presses, whether the
+  ///app will exit or display a message.
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
     if (backButtonPressedTime == null ||
