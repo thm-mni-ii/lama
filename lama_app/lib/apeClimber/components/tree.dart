@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/components/component.dart';
 import 'package:lama_app/apeClimber/components/treeSprite.dart';
 
+/// This class is [PositionComponent] to display a complete tree.
 class Tree extends PositionComponent {
   // SETTINGS
   // --------
@@ -27,6 +28,8 @@ class Tree extends PositionComponent {
   /// all components of the tree
   Queue<TreeSprite> _treeComponents = Queue<TreeSprite>();
 
+  /// The constructor need the amount [componentCount] of components the tree should consists of
+  /// and the time [_moveTime] it needs to move the tree.
   Tree(this.componentCount, this._moveTime);
 
   /// This method adds all components depending on the [componentCount].
