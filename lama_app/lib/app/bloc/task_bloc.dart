@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -222,6 +224,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           return false;
       } else if (list2[1] == "/") {
         list2res = double.parse(list2[0]) / double.parse(list2[2]);
+        if(list2[2]=="0")
+          return true;
         if (list1res != list2res)
           return false;
       }
@@ -263,6 +267,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
               return false;
           } else if (list2[3] == "/") {
             list2res = (double.parse(list2[0]) + double.parse(list2[2])) / double.parse(list2[4]);
+            if(list2[4]=="0")
+              return true;
             if (list1res != list2res)
               return false;
           }
@@ -281,6 +287,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
               return false;
           } else if (list2[3] == "/") {
             list2res = ((double.parse(list2[0]) - double.parse(list2[2])) / double.parse(list2[4]));
+            if(list2[4]=="0")
+              return true;
             if (list1res != list2res)
               return false;
           }
@@ -299,10 +307,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
               return false;
           } else if (list2[3] == "/") {
             list2res = (double.parse(list2[0]) * double.parse(list2[2])) / double.parse(list2[4]);
+            if(list2[4]=="0")
+              return true;
             if (list1res != list2res)
               return false;
           }
         } else if (list2[1] == "/") {
+          if(list2[2]=="0")
+            return true;
           if (list2[3] == "+") {
             list2res = (double.parse(list2[0]) / double.parse(list2[2]) + double.parse(list2[4]));
             if (list1res != list2res)
@@ -317,6 +329,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
               return false;
           } else if (list2[3] == "/") {
             list2res = (double.parse(list2[0]) / double.parse(list2[2])) / double.parse(list2[4]);
+            if(list2[4]=="0")
+              return true;
             if (list1res != list2res)
               return false;
           }
