@@ -186,97 +186,143 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   //TODO: Franz komentier die bitte die hast du geschrieben iirc und ich will nix falsches sagen
   bool fullequals(List<String> list1, List<String> list2) {
-    int remove1, remove2;
-    bool twoToRemove = false;
-
+    double list1res, list2res;
     if (!(list1 is List<String> && list2 is List<String>) ||
         list1.length != list2.length) {
       return false;
     }
-    if ((list2.length == 5 && (list2[0] == "0" || list2[2] == "0")) ||
-        (list2.length == 7 &&
-            (list2[0] == "0" || list2[2] == "0" || list2[4] == "0"))) {
-      if (list2[0] == "0") {
-        if (list2[1] == "*" &&
-            (list2[2] != "+" &&
-                list2[2] != "-" &&
-                list2[2] != "*" &&
-                list2[2] != "/")) {
-          remove1 = 2;
-          if (list2[3] == "*" &&
-              (list2[4] != "+" &&
-                  list2[4] != "-" &&
-                  list2[4] != "*" &&
-                  list2[4] != "/")) {
-            remove2 = 3;
-            twoToRemove = true;
-          }
-          list1.removeAt(remove1);
-          list2.removeAt(remove1);
-          if (twoToRemove) {
-            list1.removeAt(remove2);
-            list2.removeAt(remove2);
-          }
-        }
-      } else if (list2[2] == "0") {
-        if (list2[1] == "*" &&
-            (list2[0] != "+" &&
-                list2[0] != "-" &&
-                list2[0] != "*" &&
-                list2[0] != "/")) {
-          remove1 = 0;
-          if (list2[3] == "*" &&
-              (list2[4] != "+" &&
-                  list2[4] != "-" &&
-                  list2[4] != "*" &&
-                  list2[4] != "/")) {
-            remove2 = 3;
-            twoToRemove = true;
-          }
-          list1.removeAt(remove1);
-          list2.removeAt(remove1);
-          if (twoToRemove) {
-            list1.removeAt(remove2);
-            list2.removeAt(remove2);
-          }
-        } else if (list2[3] == "*" &&
-            (list2[4] != "+" &&
-                list2[4] != "-" &&
-                list2[4] != "*" &&
-                list2[4] != "/")) {
-          remove1 = 4;
-          list1.removeAt(remove1);
-          list2.removeAt(remove1);
-        }
-      } else if (list2[4] == "0") {
-        if (list2[3] == "*" &&
-            (list2[2] != "+" &&
-                list2[2] != "-" &&
-                list2[2] != "*" &&
-                list2[2] != "/")) {
-          remove1 = 2; // 7 *  * 0 = 0
-          if (list2[1] == "*" &&
-              (list2[0] != "+" &&
-                  list2[0] != "-" &&
-                  list2[0] != "*" &&
-                  list2[0] != "/")) {
-            remove2 = 0;
-            twoToRemove = true;
-          }
-          list1.removeAt(remove1);
-          list2.removeAt(remove1);
-          if (twoToRemove) {
-            list1.removeAt(remove2);
-            list2.removeAt(remove2);
-          }
-        }
-      }
-    }
-    for (int i = 0; i < list1.length; i++) {
-      if (list1[i] != list2[i]) {
+
+    if (list2.length <= 5) {
+      list1res = double.parse(list1[4]);
+      if (list2[4] != list1[4])
         return false;
+      if (list2[0] == "+" || list2[0] == "-" || list2[0] == "*" ||
+          list2[0] == "/")
+        return false;
+      if (list2[2] == "+" || list2[2] == "-" || list2[2] == "*" ||
+          list2[2] == "/")
+        return false;
+      if (list2[4] == "+" || list2[4] == "-" || list2[4] == "*" ||
+          list2[4] == "/")
+        return false;
+      if (list2[1] != "+" && list2[1] != "-" && list2[1] != "*" &&
+          list2[1] != "/")
+        return false;
+      if (list2[1] == "+") {
+        list2res = double.parse(list1[0]) + double.parse(list1[2]);
+        if (list2res != list2res)
+          return false;
+      } else if (list2[1] == "-") {
+        list2res = double.parse(list1[0]) - double.parse(list1[2]);
+        if (list1res != list2res)
+          return false;
+      } else if (list2[1] == "*") {
+        list2res = double.parse(list2[0]) * double.parse(list2[2]);
+        if (list1res != list2res)
+          return false;
+      } else if (list2[1] == "/") {
+        list2res = double.parse(list2[0]) / double.parse(list2[2]);
+        if (list1res != list2res)
+          return false;
       }
     }
-    return true;
-  }
+      if (list2.length > 5) {
+        list1res = double.parse(list1[6]);
+        if (list1[6] != list2[6])
+          return false;
+        if (list2[0] == "+" || list2[0] == "-" || list2[0] == "*" ||
+            list2[0] == "/")
+          return false;
+        if (list2[2] == "+" || list2[2] == "-" || list2[2] == "*" ||
+            list2[2] == "/")
+          return false;
+        if (list2[4] == "+" || list2[4] == "-" || list2[4] == "*" ||
+            list2[4] == "/")
+          return false;
+        if (list2[6] == "+" || list2[6] == "-" || list2[6] == "*" ||
+            list2[6] == "/")
+          return false;
+        if (list2[1] != "+" && list2[1] != "-" && list2[1] != "*" &&
+            list2[1] != "/")
+          return false;
+        if (list2[3] != "+" && list2[3] != "-" && list2[3] != "*" &&
+            list2[3] != "/")
+          return false;
+        if (list2[1] == "+") {
+          if (list2[3] == "+") {
+            list2res = double.parse(list2[0]) + double.parse(list2[2]) + double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "-") {
+            list2res = double.parse(list2[0]) + double.parse(list2[2]) - double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "*") {
+            list2res = double.parse(list2[0]) + double.parse(list2[2]) * double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "/") {
+            list2res = (double.parse(list2[0]) + double.parse(list2[2])) / double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          }
+        } else if (list2[1] == "-") {
+          if (list2[3] == "+") {
+            list2res = double.parse(list2[0]) - double.parse(list2[2]) + double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "-") {
+            list2res = double.parse(list2[0]) - double.parse(list2[2]) - double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "*") {
+            list2res = double.parse(list2[0]) - double.parse(list2[2]) * double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "/") {
+            list2res = ((double.parse(list2[0]) - double.parse(list2[2])) / double.parse(list2[4]));
+            if (list1res != list2res)
+              return false;
+          }
+        } else if (list2[1] == "*") {
+          if (list2[3] == "+") {
+            list2res = double.parse(list2[0]) * double.parse(list2[2]) + double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "-") {
+            list2res = double.parse(list2[0]) * double.parse(list2[2]) - double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "*") {
+            list2res = double.parse(list2[0]) * double.parse(list2[2]) * double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "/") {
+            list2res = (double.parse(list2[0]) * double.parse(list2[2])) / double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          }
+        } else if (list2[1] == "/") {
+          if (list2[3] == "+") {
+            list2res = (double.parse(list2[0]) / double.parse(list2[2]) + double.parse(list2[4]));
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "-") {
+            list2res = (double.parse(list2[0]) / double.parse(list2[2]) - double.parse(list2[4]));
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "*") {
+            list2res = (double.parse(list2[0]) / double.parse(list2[2]) * double.parse(list2[4]));
+            if (list1res != list2res)
+              return false;
+          } else if (list2[3] == "/") {
+            list2res = (double.parse(list2[0]) / double.parse(list2[2])) / double.parse(list2[4]);
+            if (list1res != list2res)
+              return false;
+          }
+        }
+      }
+
+      return true;
+    }
 }
