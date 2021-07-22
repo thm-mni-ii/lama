@@ -24,3 +24,6 @@ class AdminMenuChangePrefsEvent extends AdminMenuEvent {
 
 ///used to force the default state
 class AdminMenuLoadDefaultEvent extends AdminMenuEvent {}
+
+///used to show the GitHub repository link
+class AdminMenuGitHubPopUpEvent extends AdminMenuEvent {}
