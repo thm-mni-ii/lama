@@ -14,7 +14,7 @@ import 'package:lama_app/util/GlobalKeyExtension.dart';
 ///The connect task is a task where two list of words gets showen on the screen
 ///which needs to be connected. The Words on the left side can be selected and
 ///connected with items on the right side. Connected Items will be showen in the
-///same color. If everthing is connect the ontrol of results can be started by puhing
+///same color. If everthing is connected the control of results can be started by pushing
 ///the "fertig" button.
 ///
 /// Author: T.Rentsch

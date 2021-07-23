@@ -9,15 +9,29 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+/// This file creates the Match Category task Screen
+/// The Match Category task is a task where you have to sort 8 given
+/// words into one of the given Topics with drag and drop.
+/// The items will be randomly selected and placed on the Screen. After dropping
+/// the last word from the screen into a Topic, the answers will be checked.
+///
+///
+/// Author: T.Rentsch
+/// latest Changes: 22.07.2021
+
+
+/// Global Variables
+// Flag to check if the screen is build for the first time
 bool firstStart = true;
+// Flag to check if the words have been shuffled or not
 bool firstShuffel = true;
+// List of all created Items
 List<Item> items =[];
 
-
+/// MatchCategoryTaskScreen class creates the Match Category Task Screen
 class MatchCategoryTaskScreen extends StatefulWidget {
   final TaskMatchCategory task;
   final BoxConstraints constraints;
-
   MatchCategoryTaskScreen(this.task, this.constraints);
 
   @override
@@ -26,21 +40,25 @@ class MatchCategoryTaskScreen extends StatefulWidget {
   }
 }
 class MatchCategoryState extends State<MatchCategoryTaskScreen>{
-
+  // task infos and constraints handed over by tasktypeScreen
   final BoxConstraints constraints;
   final TaskMatchCategory task;
+  // List of all handed words
   final List<String> categorySum = [];
+  // List to save the results of every drag and drop
   final List<bool> results = [];
-
+  // To recreate the latest Item we need to Save which item was deleted
   String latestDeletion = "";
+  // This List contains all Items which have already been draged
   List <Item> deletinons = [];
 
   MatchCategoryState(this.task, this.constraints) {
+    // Add all given words to categorySum
     categorySum.addAll(task.categoryOne);
     categorySum.addAll(task.categoryTwo);
+    // If its the first screen Build we need to Shuffle the list
     if(firstShuffel) {
       categorySum.shuffle();
-
       firstShuffel = false;
     }
   }
@@ -169,9 +187,15 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
     );
   }
 
+  /// generateItems is Used to create every draggable Item displayed on the Screen.
+  /// Every Item gets a unique position on the screen and is builded.
+  /// After this the Item gets added to the output list.
+  /// {@return} a List of [Widget]
   List<Widget> generateItems() {
+    // Array of every possible position on the Screen [[Bottom, Left], ..]
+    // There are only 8 possible position without overflowing, so the the Limit of
+    // items displayed is 8
     List positions = [
-      //Bottom , left
       [(constraints.maxHeight / 100) * 50, (constraints.maxWidth / 100) * 55],
       [(constraints.maxHeight / 100) * 45, (constraints.maxWidth / 100) * 7],
       [(constraints.maxHeight / 100) * 32, (constraints.maxWidth / 100) * 5],
@@ -181,20 +205,22 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
       [(constraints.maxHeight / 100) * 15, (constraints.maxWidth / 100) * 30,],
       [(constraints.maxHeight / 100) * 5, (constraints.maxWidth / 100) * 9]
     ];
-
-
+    // if the Screen is build for the first time
+    // all Items become a random position
     if(firstStart) {
       positions.shuffle();
       firstStart = false;
       double bottom;
       double left;
       int length;
+      // check if there are more than 8 Items in the list
       if(categorySum.length <= 8){
         length = categorySum.length;
       }
       else{
         length = 8;
       }
+      // save every Item with its unique position
       for(int x = 0; x < length; x++){
         for(int y = 0; y < 2; y++){
           if(y == 0){bottom = positions[x][y];}
@@ -202,17 +228,16 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
         }
         items.add(Item(bottom, left, categorySum[x]));
       }
-      print(items.length);
     }
-
+    // List to save the created Widgets
     List<Widget> output = [];
+    // Create for every Item a widget
     for(int i = 0; i < items.length; i++){
       output.add(
         Positioned(
             bottom: items[i].bottom,
             left: items[i].left,
             child: Draggable<Item>(
-              //data: task.categoryOne.contains(categorySum[i]) ? categoryType.catOne : categoryType.catTwo,
               data: items[i],
               child: Container(
                   height: (constraints.maxHeight / 100) * 8,
@@ -282,6 +307,15 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
     }
     return output;
   }
+
+  /// buildTargets is Used to create the dragtargets for the Items
+  /// The method gets called for both Dragtargets.
+  /// {@param} BuildContext [context] needed for constraints
+  /// {@param} List<String> [categoryList] List of all Items accepted by this Target
+  /// {@param} String [taskCategory] name of the Target
+  /// {@param} Color [color] color of the Target
+  ///
+  /// {@return} [Widget] Targetwidget to be displayed on the screen
   Widget buildTargets(BuildContext context, List<String> categoryList , String taskCategory, Color color){
     return DragTarget<Item>(
       builder: (context, candidate, rejectedData) =>
@@ -313,16 +347,17 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
           ))),
       onWillAccept: (data)=> true,
       onAccept: (data){
-
+        // Check if draged Item is contained in the Items for this Category
         categoryList.contains(data.item) ?  results.add(true) :  results.add(false);
+        // reload screen
         setState(() {
+          // After Draging the Item needs to be removed from the Screen
           deletinons.add(data);
-
           items.removeWhere((element) {
-            print(element.item);
-            print(data.item);
             return element.item == data.item;
           });
+          // If the draged Item was the Last one on the Screen
+          // reset all Variables and send the resluts to check
           if(items.isEmpty){
             firstStart = true;
             firstShuffel = true;
@@ -333,6 +368,11 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
     );
   }
 }
+
+/// class Item used to store information of every given word
+/// double [bottom] Used for positioning
+/// double [left] Used for positioning
+/// String [item] Stores item text given by TaskMatchCategory [task]
 class Item{
   double bottom;
   double left;

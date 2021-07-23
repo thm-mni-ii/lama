@@ -9,6 +9,17 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+/// This file creates the Money task Screen
+/// The Money Task is used to learn the calculating with money.
+/// Euro Coins (2€, 1€, 0.5€, 0.2€, 0.1€, 5cent, 2cent, 1cent) will be displayed
+/// on the Screen. By touching the coin the the Value of the coin will be stored.
+/// The goal is to gather the asked amount of money by tapping on the right coins.
+///
+/// Author: T.Rentsch
+/// latest Changes: 22.07.2021
+
+/// Globale Variables
+// currentAmountDouble is used to Store the gathered amount of money
 double currentAmountDouble = 0;
 
 class MoneyTaskScreen extends StatefulWidget {
@@ -22,11 +33,15 @@ class MoneyTaskScreen extends StatefulWidget {
     return MoneyTaskState(task, constraints);
   }
 }
-
+/// MoneyTaskState class creates the Money Task Screen
 class MoneyTaskState extends State<MoneyTaskScreen> {
+  // task infos and constraints handed over by tasktypeScreen
   final TaskMoney task;
   final BoxConstraints constraints;
+  // Value which is checked after pressing the "fertig" Button
   double finalMoneyAmount;
+  // Stores the pressed coins
+  // needed for the undo button
   List<double> deletions = [];
 
   //index maps to coins => 2€ = 0 1 € = 1, usw..
@@ -75,37 +90,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
           ],
         ),
       ),
-      // Money Balance display
-      /*Container(
-        height: (constraints.maxHeight / 100) * 12,
-        padding: EdgeInsets.only(top: 15),
-        //color: LamaColors.greenAccent,
-        child: Container(
-          alignment: Alignment.bottomCenter,
-          height: (constraints.maxHeight / 100) * 1,
-          width: (constraints.maxHeight / 100) * 40,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: LamaColors.orangeAccent,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 7,
-                    offset: Offset(0, 3)),
-              ]),
-          child: Center(
-            child: Text(
-              currentAmountDouble.toStringAsFixed(2) + "€",
-              style: LamaTextTheme.getStyle(
-                  fontSize: 50,
-                  color: LamaColors.white,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      ),*/
-      //2, 1, 50, 20
+      //Coin Display 2, 1, 50, 20
       Container(
         height: (constraints.maxHeight / 100) * 25,
         //color: LamaColors.orangeAccent,
@@ -226,7 +211,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
           ),
         ),
       ),
-      //10, 5, 2, 1
+      //Coin Display 10, 5, 2, 1
       Container(
         height: (constraints.maxHeight / 100) * 20,
         padding: EdgeInsets.only(bottom: 20),
@@ -368,6 +353,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              //undo button
               Container(
                 height: (constraints.maxHeight / 100) * 12,
                 width: (constraints.maxWidth / 100) * 35,
@@ -421,7 +407,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                   ),
                 ),
               ),
-              //fertig
+              //fertig button
               Container(
                 height: (constraints.maxHeight / 100) * 12,
                 width: (constraints.maxWidth / 100) * 35,
@@ -463,6 +449,9 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
     ]);
   }
 
+  /// updateAmount is used to refresh the coin press counter
+  /// after undoing a tapp the counter of the last tapped coin needs to be decrement
+  /// {@param} double [deletedElement] indicates which coin got pressed last
   updateAmount(deletedElement) {
     if (deletedElement == 2) {
       amounts[0]--;
