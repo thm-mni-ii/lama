@@ -5,8 +5,11 @@ import 'package:lama_app/util/LamaColors.dart';
 class MonkeyEndscreenWidget extends StatelessWidget {
   /// Score to display on game over menu.
   final String text;
+  /// score to display
   final int score;
+  /// highscore of the current user in the current game
   final int userHighScore;
+  /// highscore of the current game
   final int alltimeHighScore;
 
   // This function will be called when quit button is pressed.

@@ -7,6 +7,7 @@ import 'package:flame/sprite.dart';
 import 'package:lama_app/apeClimber/climberGame.dart';
 import 'package:lama_app/apeClimber/components/climberBranch.dart';
 
+/// This class is [Component] to display a [List] of [ClimberBranch]s.
 class ClimberBranches extends Component {
   // SETTINGS
   // --------
@@ -42,6 +43,7 @@ class ClimberBranches extends Component {
   /// Branch for collision detection
   ClimberBranch collisionBranch;
 
+  /// This getter returns if the next branch which the monkey will hit is on the left side
   get isLeft {
     return collisionBranch != null && collisionBranch.x < _game.screenSize.width / 2;
   }
@@ -50,6 +52,7 @@ class ClimberBranches extends Component {
     _createBranches();
   }
 
+  /// This method highlightes the branch which the monkey will hit.
   void highlightCollisionBranch() {
     collisionBranch.hit = true;
   }
@@ -101,6 +104,7 @@ class ClimberBranches extends Component {
     }
   }
 
+  /// This method selectes the next branch after the current [collisionBranch] as [collisionBranch].
   void _selectNextCollisionDetectionBranch() {
     var index = collisionBranch == null ? 0 : _branches.indexOf(collisionBranch);
 

@@ -2,6 +2,7 @@ import 'package:flame/components/timer_component.dart';
 import 'package:flame/time.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
 
+/// This class is [TimerComponent] to display and handle the game timer.
 class MonkeyTimer extends TimerComponent {
   // SETTINGS
   // --------

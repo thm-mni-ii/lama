@@ -5,26 +5,35 @@ import 'package:flutter/cupertino.dart';
 /// This class represents a Pause and Play button.
 class PauseButton{
   final SnakeGame game;
-
+  /// [Paint] of the button
   final Paint _paintButton = Paint()
     ..color = Color(0xffFBFEF5);
+  /// [Paint] of the icon path
   final Paint _paintPausePath = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0
     ..color = Color(0xff000000);
+  /// width of the shadow
   final double _shadowWidth = 5;
-
+  /// position of the button 1-4
   int _position;
+  /// offset relative to the screen height to the top
   double _relativeOffsetY;
+  /// size of the button relative to the width of the screen
   double _relativeSize = 0.15;
+  /// offset relative to the screen width to the left
   double _relativeOffsetX = 0.05;
+  /// [Function(bool)] which gets called when the button gets clickes
   Function(bool) _onTap;
-
+  /// [Path] of the icon
   Path _signPath;
+  /// [Rect] of the button
   Rect _rectButton;
+  /// [Paint] of the shadow
   Paint _paintShadow;
-
+  /// start position on the x axis
   double _startX;
+  /// flag if its tapped
   bool _tapped = false;
 
   /// The constructor needs following parameters:
@@ -143,9 +152,7 @@ class PauseButton{
       // tap switch
       _tapped = !_tapped;
 
-      if (_onTap != null) {
-        _onTap(_tapped);
-      }
+      _onTap?.call(_tapped);
 
       // alters the path between play and pause
       _signPath = _tapped ? getPlayPath() : getPausePath();

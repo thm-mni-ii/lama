@@ -4,6 +4,7 @@ import 'package:flame/animation.dart';
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
 
+/// This class is [AnimationComponent] to display a monkey with all its properties.
 class Monkey extends AnimationComponent {
   // SETTINGS
   // --------
