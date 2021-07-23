@@ -3,18 +3,24 @@ import '../snakeGame.dart';
 import '../views/view.dart';
 import 'package:flutter/painting.dart';
 
+/// This class represents a Pause and Play button.
 class StartButton {
   final SnakeGame game;
-
+  /// [RRect] of the button
   RRect rect;
+  /// [Paint] of the button
   Paint startPaint = Paint()
     ..color = Color(0xff6dff4a);
+  /// [Paint] of the text
   TextPainter _painter = TextPainter(
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
   );
+  /// [TextStyle] of the text
   TextStyle _textStyle;
+  /// position of the text
   Offset _position;
+  /// Offset of the button [top, left, right, bottom]
   List<double> _buttonOffset = [0.7, 0.1, 0.1, 0.1];
 
   StartButton(this.game, double relativeX, double relativeY) {

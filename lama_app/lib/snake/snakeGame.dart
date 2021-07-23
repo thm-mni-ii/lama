@@ -16,7 +16,7 @@ import 'package:lama_app/snake/components/background.dart';
 import 'package:lama_app/snake/components/scoreDisplay.dart';
 
 import 'components/apple.dart';
-import 'package:lama_app/snake/components/arrowButtons.dart';
+import 'package:lama_app/snake/components/arrowButton.dart';
 import 'package:lama_app/snake/components/pauseButton.dart';
 
 import 'components/snake.dart';
@@ -29,7 +29,6 @@ import 'package:lama_app/snake/views/gameOverView.dart';
 
 class SnakeGame extends Game with TapDetector {
   final bool log = true;
-
   Background background;
   SnakeComponent snake;
   /// id of the game
@@ -40,40 +39,53 @@ class SnakeGame extends Game with TapDetector {
   int userHighScore;
   /// the all time highScore in this game
   int allTimeHighScore;
-
+  /// all apples on the game field
   List<Apple> apples = [];
   Random rnd = Random();
   ScoreDisplay scoreDisplay;
-  ArrowButtons arrowButtonDown;
-  ArrowButtons arrowButtonUp;
-  ArrowButtons arrowButtonLeft;
-  ArrowButtons arrowButtonRight;
+  ArrowButton arrowButtonDown;
+  ArrowButton arrowButtonUp;
+  ArrowButton arrowButtonLeft;
+  ArrowButton arrowButtonRight;
   PauseButton pauseButton;
 
   int score = 0;
 
   Size screenSize;
   double tileSize;
-
+  /// max fields on the x axis
   int maxFieldX = 25;
+  /// max fields on the y axis
   int maxFieldY = 25;
+  /// flag to maximise the game field
   final maxField = true;
+  /// game field offset to the left and right
   final fieldOffsetY = 0;
+  /// apples to spawn
   final maxApples = 20;
+  /// start velocity of the snake
   final snakeStartVelocity = 2.0;
-
+  /// flag to indicate if the game has finished
   bool _finished = false;
+  /// flag to indicate if the game is initializes
   bool _initialized = false;
+  /// flag to indicate if the game runs
   bool _running = false;
+  /// height of the controlbar relative to the screen height
   double _controlBarRelativeHeight = 0.25;
+  /// height of the buttons relative to the screen height
   double _relativeButtonSize = 0.16;
+  /// audioplayer
   AudioCache _bitePlayer;
-
+  /// active view for displaying different states
   View activeView = View.home; // views added
   HomeView homeView;
   GameOverView gameOverView;
+  /// context of the game to allow access to the navigator
   BuildContext _context;
+  /// repository to access the database with the logged in user
   UserRepository _userRepo;
+  /// flag to indicate if the highscore already saved
   bool _saved = false;
 
   SnakeGame(this._context, this._userRepo) {
@@ -100,10 +112,10 @@ class SnakeGame extends Game with TapDetector {
     homeView = HomeView(this);
     gameOverView = GameOverView(this);
 
-    arrowButtonDown = ArrowButtons(this, _relativeButtonSize, 3, 1, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.South);
-    arrowButtonUp = ArrowButtons(this, _relativeButtonSize, 1, 3, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.North);
-    arrowButtonLeft = ArrowButtons(this, _relativeButtonSize, 2, 0, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.West);
-    arrowButtonRight = ArrowButtons(this, _relativeButtonSize, 4, 4, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.East);
+    arrowButtonDown = ArrowButton(this, _relativeButtonSize, 3, 1, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.South);
+    arrowButtonUp = ArrowButton(this, _relativeButtonSize, 1, 3, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.North);
+    arrowButtonLeft = ArrowButton(this, _relativeButtonSize, 2, 0, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.West);
+    arrowButtonRight = ArrowButton(this, _relativeButtonSize, 4, 4, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.East);
 
     pauseButton = PauseButton(this, _relativeButtonSize, 2, 1.0 - _controlBarRelativeHeight, (tapped) => _running = !tapped);
 

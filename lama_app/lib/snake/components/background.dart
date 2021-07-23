@@ -3,21 +3,33 @@ import 'dart:ui';
 import 'package:lama_app/snake/models/position.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
+/// This class will render the background of the full screen.
 class Background {
   final SnakeGame game;
-
-  Rect backgroundRect;
+  /// [Rect] of the background of the hole screen
+  Rect _backgroundRect;
+  /// [Rect] of the control bar
   Rect _controlBarRect;
-  Paint backgroundPaint;
-  Rect fieldRect;
-  Paint fieldBorderPaint;
-  List<Position> fieldTiles;
+  /// [Paint] of the background of the hole screen
+  Paint _backgroundPaint;
+  /// [Rect] of the background of the game field
+  Rect _fieldRect;
+  /// [Paint] of the background of the game field border
+  Paint _fieldBorderPaint;
+  /// [List] of [Position] of all field tiles
+  List<Position> _fieldTiles;
 
+  /// Offset to the left
   double _offsetX;
+  /// Offset to the top
   double _offsetY;
+  /// this flag decides if the chess optic will display
   bool _chessOptic = false;
+  /// The thickness of the field border
   double _borderThickness = 2;
+  /// the relative height to the screen height of the control bar
   double _controlBarRelativeHeight;
+  /// [Paint] of the control bar
   Paint _controlBarPaint = Paint()
     ..color = Color(0xFF34C935);
 
@@ -28,17 +40,17 @@ class Background {
     resize();
 
     // background paint
-    backgroundPaint = Paint();
-    backgroundPaint.color = Color(0xFFF9FBB6);
+    _backgroundPaint = Paint();
+    _backgroundPaint.color = Color(0xFFF9FBB6);
 
     // field border paint
-    fieldBorderPaint = Paint();
-    fieldBorderPaint.color = Color(0xFF4C4C4C);
+    _fieldBorderPaint = Paint();
+    _fieldBorderPaint.color = Color(0xFF4C4C4C);
   }
 
   void resize() {
     // background rectangle
-    backgroundRect = Rect.fromLTWH(
+    _backgroundRect = Rect.fromLTWH(
       0,
       0,
       game.screenSize.width,
@@ -54,7 +66,7 @@ class Background {
     );
 
     // generate the field tiles
-    fieldTiles = List.generate(
+    _fieldTiles = List.generate(
         this.game.maxFieldX * this.game.maxFieldY,
             (index) => Position(index % this.game.maxFieldX, index ~/ this.game.maxFieldX));
 
@@ -63,7 +75,7 @@ class Background {
     _offsetY = game.screenSize.height > game.screenSize.width ? game.tileSize * this.game.fieldOffsetY : 0;
 
     // field border rect
-    fieldRect = Rect.fromLTWH(
+    _fieldRect = Rect.fromLTWH(
         _offsetX,
         _offsetY,
         game.tileSize * this.game.maxFieldX,
@@ -71,21 +83,24 @@ class Background {
   }
 
   void render(Canvas c) {
-    c.drawRect(backgroundRect, backgroundPaint);
+    // draw the background of the hole screen
+    c.drawRect(_backgroundRect, _backgroundPaint);
 
     if (!this.game.maxField) {
-      c.drawRect(fieldRect.inflate(_borderThickness), fieldBorderPaint);
+      c.drawRect(_fieldRect.inflate(_borderThickness), _fieldBorderPaint);
     }
-    c.drawRect(fieldRect, backgroundPaint);
+
+    c.drawRect(_fieldRect, _backgroundPaint);
     c.drawRect(_controlBarRect, _controlBarPaint);
 
+    // draw the game field in chess optic
     if (_chessOptic) {
       // each tile of the game field
-      for (var i = 0 ; i < fieldTiles.length; i++) {
+      for (var i = 0 ; i < _fieldTiles.length; i++) {
         // tile rectangle
         var rect = Rect.fromLTWH(
-          fieldTiles[i].x * this.game.tileSize + _offsetX,
-          fieldTiles[i].y * this.game.tileSize + _offsetY,
+          _fieldTiles[i].x * this.game.tileSize + _offsetX,
+          _fieldTiles[i].y * this.game.tileSize + _offsetY,
           game.tileSize,
           game.tileSize,
         );
