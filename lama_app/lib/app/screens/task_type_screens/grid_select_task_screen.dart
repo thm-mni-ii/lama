@@ -164,6 +164,7 @@ class GridSelectTaskScreen extends StatelessWidget {
         if (rnd.nextBool()) {
           //vertical
           do {
+            print("trying vertical");
             succesfullyGenerated = true;
             int start = rnd.nextInt(maxStartIndex);
             cordList = [];
@@ -191,6 +192,7 @@ class GridSelectTaskScreen extends StatelessWidget {
           wordAdded = true;
         } else {
           do {
+            print("trying horizontal");
             succesfullyGenerated = true;
             int start = rnd.nextInt(maxStartIndex);
             cordList = [];
@@ -203,6 +205,7 @@ class GridSelectTaskScreen extends StatelessWidget {
               if (characterPositions.containsKey(element))
                 succesfullyGenerated = false;
             });
+            timeout++;
           } while (!succesfullyGenerated && timeout < 20);
           if (timeout >= 20) {
             timeout = 0;
