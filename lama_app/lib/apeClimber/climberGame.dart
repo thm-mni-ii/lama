@@ -1,18 +1,21 @@
+import 'dart:collection';
+
 import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/components/parallax_component.dart';
-import 'package:flame/components/component.dart';
 
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/monkeyTimer.dart';
 import 'package:lama_app/apeClimber/components/monkey.dart';
+import 'package:lama_app/apeClimber/widgets/PlayPauseModeWidget.dart';
+import 'package:lama_app/apeClimber/widgets/monkeyScoreWidget.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyStartWidget.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/apeClimber/components/climberBranches.dart';
-
+import 'widgets/monkeyEndscreenWidget.dart';
 import 'components/tree.dart';
 
 class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
@@ -26,17 +29,27 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   final timerWidgetName = "timer";
   /// name of the start screen widget
   final startWidgetName = "start";
+  /// name of the end screen widget
+  final endScreenWidgetName = "gameOver";
+  /// name of the end screen widget
+  final scoreWidgetName = "score";
+  /// name of the end screen widget
+  final playPauseWidgetName = "playmode";
   /// id of the game
   final _gameId = 3;
   /// Time for each click animation
-  final _animationTime = 0.2;
+  final _animationTime = 0.125;
   /// Amount of Components the Tree consists of
   final _treeComponentAmount = 5;
   // --------
   // SETTINGS
 
+  Monkey _monkey;
+  Queue<ClimbSide> _inputQueue = Queue();
   /// Timer component for display and organize the gametimer.
   MonkeyTimer _timer;
+  /// flag which indicates if the game is running
+  bool _running = false;
   /// a bool flag which indicates if the score of the game has been saved
   bool _savedHighScore = false;
   /// the personal highScore
@@ -57,12 +70,11 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   bool _backMoving = false;
   /// pixel left which the background has to move
   ClimberBranches _climberBranches;
-  double tileSize;
-  List<SpriteComponent> branches = [];
-  double _backMoveTimeLeft = 0;
+  double branchSize;
+  /// time left for the animation of the background
+  double _backgroundMoveTimeLeft = 0;
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
-
 
   ClimberGame(this._context, this._userRepo) {
     _back = ParallaxComponent([
@@ -106,10 +118,91 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     );
   }
 
+  /// This method increase the score as well as the score widget.
+  void increaseScore() {
+    score += 1;
+    _updateScoreWidget();
+  }
+
+  /// This method decrease the score as well as the score widget.
+  void decreaseScore() {
+    score -= 1;
+    _updateScoreWidget();
+  }
+
+  /// This methods updates the score widget.
+  void _updateScoreWidget() {
+    if (!_running) {
+      return;
+    }
+
+    removeWidgetOverlay(scoreWidgetName);
+    addWidgetOverlay(scoreWidgetName, MonkeyScoreWidget(text: score.toString()));
+  }
+
+  /// This method checks if the monkey collides with the collision branch.
+  void _checkCollision() {
+    try {
+      if (_monkey.isLeft == _climberBranches.isLeft) {
+        //decreaseScore();
+        _climberBranches.highlightCollisionBranch();
+        _timer.pause();
+        _gameOver("Ast berührt!!");
+      }
+    }
+    on StateError {
+      print("[Error] _checkCollision : monkey not found");
+    }
+  }
+
   /// This method initialize the components and removes the start widget.
   void _startGame() {
     _addGameComponents();
     removeWidgetOverlay(startWidgetName);
+    addWidgetOverlay(scoreWidgetName, MonkeyScoreWidget(text: score.toString()));
+
+    addWidgetOverlay(
+        playPauseWidgetName,
+        PlayPauseModeWidget(
+            playMode: true,
+            onButtonPressed: _pauseGame)
+    );
+
+    _running = true;
+  }
+
+  /// This method pauses the game.
+  void _pauseGame() {
+    pauseEngine();
+
+    // removed the playMode widget
+    removeWidgetOverlay(playPauseWidgetName);
+    addWidgetOverlay(
+        playPauseWidgetName,
+        PlayPauseModeWidget(
+            playMode: false,
+            onButtonPressed: _resumeGame)
+    );
+
+    _running = false;
+  }
+
+  /// This method resumes the game.
+  void _resumeGame() {
+    resumeEngine();
+
+    // remove the pauseMode widget
+    removeWidgetOverlay(playPauseWidgetName);
+
+    // add the playMode widget
+    addWidgetOverlay(
+        playPauseWidgetName,
+        PlayPauseModeWidget(
+            playMode: true,
+            onButtonPressed: _pauseGame)
+    );
+
+    _running = true;
   }
 
   /// This method adds all components which are necessary to the game.
@@ -118,17 +211,20 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     components.whereType<Monkey>().forEach((element) => element.destroy());
     components.whereType<MonkeyTimer>().forEach((element) => element.destroy());
 
+    // initialize monkey
+    _monkey = Monkey(_monkeySize, _animationTime)
+      ..onMovementFinished = _checkCollision;
+    add(_monkey);
+
     // add branches
-    _climberBranches = ClimberBranches(this, _monkeySize, _monkeySize / 4, _animationTime);
+    _climberBranches = ClimberBranches(this, _monkeySize, _monkeySize / 4, _animationTime)
+      ..onBranchesMoved = increaseScore;
     add(_climberBranches);
 
     // initialize Timer Component
     _timer = MonkeyTimer(_onTimerFinished)
       ..onWidgetUpdated = _onTimerWidgetUpdated;
     add(_timer);
-
-    // initialize monkey
-    add(Monkey(_monkeySize, _animationTime));
 
     // start timer
     _timer.start();
@@ -147,6 +243,33 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
           userID: _userRepo.authenticatedUser.id));
     }
   }
+  /// This method finishes the game.
+  /// 
+  /// sideffects:
+  ///   adds [MonkeyEndscreenWidget] widget
+  void _gameOver(String endText) {
+    _running = false;
+    pauseEngine();
+    _saveHighScore();
+
+    removeWidgetOverlay(scoreWidgetName);
+    addWidgetOverlay(
+        endScreenWidgetName,
+        MonkeyEndscreenWidget(
+          text: endText,
+          score: score,
+          onQuitPressed: _quit,
+        ));
+
+    // removed the playMode widget
+    removeWidgetOverlay(playPauseWidgetName);
+  }
+
+  /// This method closes the game widget.
+  void _quit() {
+    removeWidgetOverlay(endScreenWidgetName);
+    Navigator.pop(_context);
+  }
 
   /// This method is the handler when the timer finished.
   void _onTimerFinished(MonkeyTimerWidget widget) {
@@ -154,6 +277,8 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     addWidgetOverlay(
         timerWidgetName,
         widget);
+
+    _gameOver("Zeit abgelaufen!!");
   }
 
   /// This method is the handler when the timer finished.
@@ -171,15 +296,28 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     }
 
     _backMoving = true;
-    _backMoveTimeLeft = _animationTime;
+    _backgroundMoveTimeLeft = _animationTime;
   }
 
   @override
   void update(double t) {
+    // check input queue to select the next movement
+    if (_monkey != null && !_monkey.isMoving && _inputQueue.isNotEmpty) {
+      components.whereType<Monkey>().forEach((element) => element.move(_inputQueue.removeLast()));
+
+      _moveBackground();
+
+      // move the tree
+      _tree?.move(_monkeySize);
+      // move the branches
+      _climberBranches.move(_monkeySize);
+    }
+
+    // background y animation on movement
     if (_backMoving) {
-      if (_backMoveTimeLeft > 0) {
+      if (_backgroundMoveTimeLeft > 0) {
         _back.layerDelta = Offset(6, -6);
-        _backMoveTimeLeft -= t;
+        _backgroundMoveTimeLeft -= t;
       }
       else {
         _backMoving = false;
@@ -195,7 +333,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
         MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
 
-    tileSize = screenSize.width / tilesX;
+    branchSize = screenSize.width / tilesX;
 
     super.resize(size);
   }
@@ -205,18 +343,9 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void onTapDown(TapDownDetails d) {
-    components.whereType<Monkey>().forEach((element) {
-      if (d.localPosition.dx < screenSize.width / 2) {
-        element.move(ClimbSide.Left);
-      } else {
-        element.move(ClimbSide.Right);
-      }
-
-    });
-    _moveBackground();
-    
-    // move the tree
-    _tree?.move(_monkeySize);
-    _climberBranches.move(_monkeySize);
+    if (_running) {
+      // add input to queue
+      _inputQueue.addFirst(d.localPosition.dx < screenSize.width / 2 ? ClimbSide.Left : ClimbSide.Right);
+    }
   }
 }

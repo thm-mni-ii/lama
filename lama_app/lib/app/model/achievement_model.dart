@@ -1,5 +1,12 @@
 import '../../db/database_provider.dart';
 
+final String tableAchievements = "achievement";
+
+class AchievementsFields{
+  static final String columnAchievementsId = "id";
+  static final String columnAchievementsName = "name";
+}
+
 class Achievement {
   int id;
   String name;
@@ -8,13 +15,13 @@ class Achievement {
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      DatabaseProvider.columnAchievementsName: name,
+      AchievementsFields.columnAchievementsName: name,
     };
     return map;
   }
 
   Achievement.fromMap(Map<String, dynamic> map) {
-    id = map[DatabaseProvider.columnAchievementsId];
-    name = map[DatabaseProvider.columnAchievementsName];
+    id = map[AchievementsFields.columnAchievementsId];
+    name = map[AchievementsFields.columnAchievementsName];
   }
 }

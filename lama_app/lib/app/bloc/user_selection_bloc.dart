@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/bloc/admin_menu_bloc.dart';
 import 'package:lama_app/app/bloc/user_login_bloc.dart';
 import 'package:lama_app/app/event/user_selection_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
@@ -43,7 +44,14 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
     UserRepository repository = UserRepository(selectedUser);
     if (selectedUser.isAdmin) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => AdminMenuScreen()));
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (BuildContext context) => AdminMenuBloc(),
+            child: AdminMenuScreen(),
+          ),
+        ),
+      );
     } else {
       LamaFactsRepository lamaFactsRepository = LamaFactsRepository();
       await lamaFactsRepository.loadFacts();

@@ -18,6 +18,7 @@ class OptionTaskScreen extends StatefulWidget {
 
 class OptionTaskScreennState extends State<OptionTaskScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String urlInitValue;
   @override
   void initState() {
     super.initState();
@@ -30,20 +31,28 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
       resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5),
       body: BlocListener(
-        bloc: BlocProvider.of<TasksetOprionsBloc>(context),
+        bloc: BlocProvider.of<TasksetOptionsBloc>(context),
         listener: (context, state) {
           if (state is TasksetOptionsPushSuccess) {
+            urlInitValue = null;
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(_saveSuccess(context));
-            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
+            ScaffoldMessenger.of(context).showSnackBar(_saveSuccess());
+          }
+          if (state is TasksetOptionsPushFailed) {
+            urlInitValue = state.failedUrl;
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            ScaffoldMessenger.of(context)
+                .showSnackBar(_saveFailed(state.error));
           }
           if (state is TasksetOptionsDeleteSuccess) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess(context));
-            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
+            ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess());
+          }
+          if (state is TasksetOptionsUrlSelected) {
+            showDialog(context: context, builder: (_) => _urlPopUp(state.url));
           }
         },
-        child: BlocBuilder<TasksetOprionsBloc, TasksetOptionsState>(
+        child: BlocBuilder<TasksetOptionsBloc, TasksetOptionsState>(
           builder: (context, state) {
             if (state is TasksetOptionsDefault) {
               return Padding(
@@ -56,7 +65,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                       color: LamaColors.bluePrimary,
                       size: 30,
                     ),
-                    _inputFields(context),
+                    _inputFields(context, urlInitValue),
                     _headline('Taskset URLs'),
                     _tasksetUrlList(state.urls),
                     _headline('Kürzlich gelöscht'),
@@ -65,7 +74,10 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 ),
               );
             }
-            context.read<TasksetOprionsBloc>().add(TasksetOptionsReload());
+            if (state is TasksetOptionsWaiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            context.read<TasksetOptionsBloc>().add(TasksetOptionsReload());
             return Center(child: CircularProgressIndicator());
           },
         ),
@@ -73,12 +85,13 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
     );
   }
 
-  Widget _inputFields(BuildContext context) {
+  Widget _inputFields(BuildContext context, String initValue) {
     return Form(
       key: _formKey,
       child: Column(
         children: [
           TextFormField(
+            initialValue: initValue,
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
               labelText: 'Taskset URL',
@@ -86,15 +99,13 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             ),
             onChanged: (value) => {
               context
-                  .read<TasksetOprionsBloc>()
+                  .read<TasksetOptionsBloc>()
                   .add(TasksetOptionsChangeURL(value))
             },
-            validator: (value) => InputValidation.isEmpty(value)
-                ? 'Feld darf nicht leer sein!'
-                : null,
+            validator: (value) => InputValidation.inputURLValidation(value),
             onFieldSubmitted: (value) => {
               if (_formKey.currentState.validate())
-                context.read<TasksetOprionsBloc>().add(TasksetOptionsPush())
+                context.read<TasksetOptionsBloc>().add(TasksetOptionsPush())
             },
           ),
         ],
@@ -110,12 +121,19 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
       itemBuilder: (context, index) {
         return Row(
           children: [
-            Text(
-              urls[index].url.length > 30
-                  ? urls[index].url.substring(7, 32) + '...'
-                  : urls[index].url,
-              style: LamaTextTheme.getStyle(
-                  color: LamaColors.black, fontSize: 18, monospace: true),
+            TextButton(
+              child: Text(
+                urls[index].url.length > 30
+                    ? urls[index].url.substring(7, 32) + '...'
+                    : urls[index].url,
+                style: LamaTextTheme.getStyle(
+                    color: LamaColors.black, fontSize: 18, monospace: true),
+              ),
+              onPressed: () {
+                context
+                    .read<TasksetOptionsBloc>()
+                    .add(TasksetOptionsSelectUrl(urls[index]));
+              },
             ),
             Spacer(),
             IconButton(
@@ -126,7 +144,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               ),
               onPressed: () {
                 context
-                    .read<TasksetOprionsBloc>()
+                    .read<TasksetOptionsBloc>()
                     .add(TasksetOptionsDelete(urls[index]));
               },
             )
@@ -160,8 +178,8 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
               ),
               onPressed: () {
                 context
-                    .read<TasksetOprionsBloc>()
-                    .add(TasksetOptionsPushUrl(urls[index]));
+                    .read<TasksetOptionsBloc>()
+                    .add(TasksetOptionsReAddUrl(urls[index]));
               },
             )
           ],
@@ -170,50 +188,51 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
     );
   }
 
-  Widget _deleteSuccess(BuildContext context) {
-    return SnackBar(
-      duration: Duration(seconds: 1, milliseconds: 0),
-      content: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(5),
-            child: Icon(
-              Icons.delete_forever_rounded,
-              size: 25,
-              color: LamaColors.white,
-            ),
-          ),
-          Text(
-            'URL erfolgreich gelöscht!',
-            style: LamaTextTheme.getStyle(fontSize: 14),
-          ),
-        ],
+  Widget _urlPopUp(String url) {
+    return AlertDialog(
+      title: Text(
+        'Taskset URL',
+        style: LamaTextTheme.getStyle(
+          color: LamaColors.black,
+          fontSize: 16,
+        ),
+        textAlign: TextAlign.center,
       ),
-      backgroundColor: LamaColors.redAccent,
+      content: SingleChildScrollView(
+        child: Text(
+          url,
+          style: LamaTextTheme.getStyle(
+            color: LamaColors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            monospace: true,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      actions: [
+        TextButton(
+          child: Text('Schließen'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
     );
   }
 
-  Widget _saveSuccess(BuildContext context) {
-    return SnackBar(
-      duration: Duration(seconds: 1, milliseconds: 0),
-      content: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(5),
-            child: Icon(
-              Icons.check_rounded,
-              size: 25,
-              color: LamaColors.white,
-            ),
-          ),
-          Text(
-            'Änderung erfogreich!',
-            style: LamaTextTheme.getStyle(fontSize: 14),
-          ),
-        ],
-      ),
-      backgroundColor: LamaColors.greenPrimary,
-    );
+  Widget _deleteSuccess() {
+    return _snackbar(Icons.delete_forever_rounded, 'URL erfolgreich gelöscht!',
+        LamaColors.redAccent);
+  }
+
+  Widget _saveSuccess() {
+    return _snackbar(
+        Icons.check_rounded, 'Änderung erfogreich!', LamaColors.greenPrimary);
+  }
+
+  Widget _saveFailed(String error) {
+    return _snackbar(Icons.close_rounded, error, LamaColors.redAccent);
   }
 
   Widget _headline(String headline) {
@@ -229,6 +248,29 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _snackbar(IconData icon, String msg, Color color) {
+    return SnackBar(
+      duration: Duration(seconds: 2, milliseconds: 50),
+      content: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(5),
+            child: Icon(
+              icon,
+              size: 25,
+              color: LamaColors.white,
+            ),
+          ),
+          Text(
+            msg,
+            style: LamaTextTheme.getStyle(fontSize: 14),
+          ),
+        ],
+      ),
+      backgroundColor: color,
     );
   }
 

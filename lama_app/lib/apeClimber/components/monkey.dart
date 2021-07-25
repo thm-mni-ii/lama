@@ -36,6 +36,16 @@ class Monkey extends AnimationComponent {
   double _moveTimeLeft = 0;
   /// is the monkey moving (switching or climbing)
   bool _moving = false;
+  /// Function which gets called when the movement finished
+  Function onMovementFinished;
+
+  get isLeft {
+    return _isLeft;
+  }
+
+  get isMoving {
+    return _moving;
+  }
 
   /// Initialize the class with the given [_size] and [_game].
   Monkey(this._size, this.stepTime) : super.empty() {
@@ -62,8 +72,8 @@ class Monkey extends AnimationComponent {
     );
 
     // idle
-    _idleLeft = spriteSheet.createAnimation(0, loop: true, from: 0, to: 2, stepTime: stepTime / 4);
-    _idleRight = spriteSheetMirror.createAnimation(0, loop: true, from: 0, to: 2, stepTime: stepTime / 4);
+    _idleLeft = spriteSheet.createAnimation(0, loop: true, from: 0, to: 3, stepTime: stepTime);
+    _idleRight = spriteSheetMirror.createAnimation(0, loop: true, from: 0, to: 3, stepTime: stepTime);
 
     // climb
     _climbLeft = spriteSheet.createAnimation(0, loop: false, from: 3, to: 7, stepTime: stepTime / 4);
@@ -149,6 +159,8 @@ class Monkey extends AnimationComponent {
         // reset moving flags
         _moving = false;
         animation = _isLeft ? _idleLeft : _idleRight;
+
+        onMovementFinished?.call();
       }
     }
 
@@ -158,7 +170,7 @@ class Monkey extends AnimationComponent {
   void resize(Size size) {
     // start location in the center with the offset
     x = size.width / 2 - _size - relOffsetCenter[0] * _size;
-    y = size.height / 1.5 - _size / 2 - relOffsetCenter[1] * _size;
+    y = size.height / 1.4 - _size / 2 - relOffsetCenter[1] * _size;
   }
 }
 

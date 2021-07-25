@@ -10,4 +10,21 @@ class TasksetOptionsDefault extends TasksetOptionsState {
 
 class TasksetOptionsPushSuccess extends TasksetOptionsState {}
 
+class TasksetOptionsPushFailed extends TasksetOptionsState {
+  String error;
+  String failedUrl;
+  TasksetOptionsPushFailed(
+      {this.error = 'Da ist wohl was gehörig schiefgelaufen', this.failedUrl});
+}
+
+class TasksetOptionsWaiting extends TasksetOptionsState {
+  String waitingText;
+  TasksetOptionsWaiting(this.waitingText);
+}
+
+class TasksetOptionsUrlSelected extends TasksetOptionsState {
+  String url;
+  TasksetOptionsUrlSelected(this.url);
+}
+
 class TasksetOptionsDeleteSuccess extends TasksetOptionsState {}

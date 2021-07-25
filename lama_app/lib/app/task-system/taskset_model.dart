@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/db/database_provider.dart';
 
@@ -28,7 +31,7 @@ class Taskset {
       } else
         randomizeOrder = false;
     } else {
-      randomTaskAmount = json['taskset_choose_amount'];
+      randomTaskAmount = min(tasks.length, json['taskset_choose_amount']);
     }
   }
 }

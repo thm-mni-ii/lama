@@ -45,7 +45,50 @@
          "lama_text":"Sammle 13,87€ mit den Münzen zusammen",
          "left_to_solve": 3,
          "moneyAmount": 13.87
+        },
+        {
+         "task_type": "Equation",
+         "task_reward": 2,
+         "lama_text": "Löse die Gleichung!",
+         "left_to_solve": 4,
+         "operator(1-2)": 1,
+         "random": [],
+         "equation": ["?", "/", "2", "=", "2"],
+         "missing_elements": ["4"],
+         "wrong_answers": ["3", "1", "0", "2", "5"]
+        },
+        {
+         "task_type": "Equation",
+         "task_reward": 2,
+         "lama_text": "Löse die Gleichung!",
+         "left_to_solve": 4,
+         "operator(1-2)": 2,
+         "random": [],
+         "equation": ["?", "/", "2", "+", "?", "=", "30"],
+         "missing_elements": ["50", "5"],
+         "wrong_answers": ["48", "50", "0", "20", "6", "9"]
+        },
+        {
+         "task_type": "Equation",
+         "task_reward": 2,
+         "lama_text": "Löse die Gleichung!",
+         "left_to_solve": 4,
+         "random": ["*", "0", "15"],
+         "operator(1-2)": 1,
+         "equation": [""],
+         "missing_elements": [""],
+         "wrong_answers": [""]
+        },
+        {
+         "task_type": "Equation",
+         "task_reward": 2,
+         "lama_text": "Löse die Gleichung!",
+         "left_to_solve": 4,
+         "operator(1-2)": 2,
+         "random": ["-", "0", "100"],
+         "equation": [""],
+         "missing_elements": [""],
+         "wrong_answers": [""]
         }
-
         ]
 }

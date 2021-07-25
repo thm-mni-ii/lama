@@ -1,3 +1,5 @@
+import 'package:lama_app/app/model/user_model.dart';
+
 import '../../db/database_provider.dart';
 
 class Password {
@@ -8,13 +10,13 @@ class Password {
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      DatabaseProvider.columnPassword: password,
+      UserFields.columnPassword: password,
     };
     return map;
   }
 
   Password.fromMap(Map<String, dynamic> map) {
-    id = map[DatabaseProvider.columnId];
-    password = map[DatabaseProvider.columnPassword];
+    id = map[UserFields.columnId];
+    password = map[UserFields.columnPassword];
   }
 }

@@ -2,7 +2,6 @@ import 'package:lama_app/util/pair.dart';
 
 ///This file contains the Basic Task class with its factory Method and all Task subtypes
 ///To create a new Task subtype create a class that extends Task and add it to the factory method in Task
-
 class Task {
   factory Task.fromJson(Map<String, dynamic> json) {
     String taskType = json['task_type'];
@@ -51,11 +50,30 @@ class Task {
             json['left_to_solve'], json['moneyAmount']);
       case "VocableTest":
         var wordPairs = json['wordPairs'] as List;
-        print(wordPairs.runtimeType);
         List<Pair<String, String>> wordPairList =
-            wordPairs.map((pair) => Pair.fromJson(pair)).toList();
+        wordPairs.map((pair) => Pair.fromJson(pair)).toList();
         return TaskVocableTest(taskType, json['task_reward'], json['lama_text'],
             json['left_to_solve'], wordPairList, json['randomizeSide']);
+      case "Connect":
+        return TaskConnect(
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            List<String>.from(json['pair1']),
+            List<String>.from(json['pair2']),
+            List<String>.from(json['rightAnswers']));
+      case "Equation":
+        return TaskEquation(
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            List<String>.from(json['random']), // Stand jetzt: 1. yes/"" 2. Rechenzeichen 3. min-Wert 4. max-Wert
+            json['operator(1-2)'],
+            List<String>.from(json['equation']),
+            List<String>.from(json['missing_elements']),
+            List<String>.from(json['wrong_answers']));
       default:
         return null;
     }
@@ -64,9 +82,12 @@ class Task {
   String type;
   int reward;
   String lamaText;
+  int originalLeftToSolve;
   int leftToSolve;
 
-  Task(this.type, this.reward, this.lamaText, this.leftToSolve);
+  Task(this.type, this.reward, this.lamaText, this.originalLeftToSolve) {
+    leftToSolve = originalLeftToSolve;
+  }
 
   @override
   String toString() {
@@ -85,7 +106,7 @@ class Task4Cards extends Task {
 
   @override
   String toString() {
-    String s = super.toString() + rightAnswer;
+    String s = super.toString() + question + rightAnswer;
     wrongAnswers.sort();
     for (int i = 0; i < wrongAnswers.length; i++) {
       s += wrongAnswers[i];
@@ -105,7 +126,7 @@ class TaskClozeTest extends Task {
 
   @override
   String toString() {
-    String s = super.toString() + rightAnswer;
+    String s = super.toString() + question + rightAnswer;
     wrongAnswers.sort();
     for (int i = 0; i < wrongAnswers.length; i++) {
       s += wrongAnswers[i];
@@ -140,8 +161,7 @@ class TaskMatchCategory extends Task {
   String nameCatOne;
   String nameCatTwo;
 
-  TaskMatchCategory(
-      String taskType,
+  TaskMatchCategory(String taskType,
       int reward,
       String lamaText,
       int leftToSolve,
@@ -215,5 +235,59 @@ class TaskVocableTest extends Task {
       s += vocablePairs[i].a + vocablePairs[i].b;
     }
     return s + randomizeSide.toString();
+  }
+}
+
+class TaskConnect extends Task {
+  List<String> pair1;
+  List<String> pair2;
+  List<String> rightAnswers;
+
+  TaskConnect(String taskType, int reward, String lamaText, int leftToSolve,
+      this.pair1, this.pair2, this.rightAnswers)
+      : super(taskType, reward, lamaText, leftToSolve);
+
+  @override
+  String toString() {
+    String s = super.toString();
+    pair1.sort();
+    for (int i = 0; i < pair1.length; i++) {
+      s += pair1[i];
+    }
+    pair2.sort();
+    for (int i = 0; i < pair2.length; i++) {
+      s += pair2[i];
+    }
+    rightAnswers.sort();
+    for (int i = 0; i < rightAnswers.length; i++) {
+      s += rightAnswers[i];
+    }
+    return s;
+  }
+}
+
+  class TaskEquation extends Task {
+  int operator;
+  List<String> random;
+  List<String> equation;
+  List<String> missingElements;
+  List<String> wrongAnswers;
+
+  TaskEquation(String taskType, int reward, String lamaText, int leftToSolve,
+      this.random, this.operator, this.equation, this.missingElements, this.wrongAnswers)
+      : super(taskType, reward, lamaText, leftToSolve);
+
+  @override
+  String toString() {
+    String s = super.toString();
+    for(int i = 0; i < random.length; i++)
+      s+= random[i];
+    for(int i = 0; i < equation.length; i++)
+      s+= equation[i];
+    for(int i = 0; i < missingElements.length; i++)
+      s+= missingElements[i];
+    for(int i = 0; i < wrongAnswers.length; i++)
+      s+= wrongAnswers[i];
+    return s;
   }
 }

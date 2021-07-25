@@ -24,10 +24,10 @@
             {
           "task_type":"MarkWords",
           "task_reward":2,
-          "lama_text":"Tippe alle Verben an!",
+          "lama_text":"Tippe alle Subjekte an!",
           "left_to_solve": 3,
-          "sentence": "Eine Pflanze wächst auf der Wiese!",
-          "right_words": ["wächst"]
+          "sentence": "Das Kind schenkt dem Opa ein Bild!",
+          "right_words": ["Kind"]
             },
          {
            "task_type": "MatchCategory",
@@ -45,6 +45,15 @@
            "lama_text":"Markiere vier Städte",
            "left_to_solve": 3,
            "wordsToFind":["Gießen", "Wetzlar", "Frankfurt", "Berlin"]
+         },
+         {
+           "task_type": "Connect",
+           "task_reward":2,
+           "left_to_solve": 3,
+           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+           "pair1": ["Verb", "Nomen", "Adjektive"],
+           "pair2": ["klettern", "blau", "flach", "Hund"],
+           "rightAnswers": ["Verb:klettern", "Nomen:Hund", "Adjektive:blau:flach"]
          }
         ]
 }
