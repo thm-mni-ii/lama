@@ -16,6 +16,7 @@ import 'package:lama_app/flappyLama/widgets/startScreen.dart';
 
 import 'widgets/gameOverMode.dart';
 
+/// This class represents the Flappy Lama game and its components.
 class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   // SETTINGS
   // --------
