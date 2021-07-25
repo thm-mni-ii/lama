@@ -1,6 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/util/pair.dart';
 
+///[Bloc] for the [GridSelectTaskScreen]
+///
+/// * see also
+///     [GridSelectTaskScreen]
+///     [SelectGridLetterEvent]
+///     [GridSelectTaskState]
+///
+/// Author: K.Binder
 class GridSelectTaskBloc
     extends Bloc<SelectGridLetterEvent, GridSelectTaskState> {
   List<Pair> selectedTableItems = [];
@@ -18,11 +26,17 @@ class GridSelectTaskBloc
   }
 }
 
+/// Event for the [GridSelectTaskBloc]
+///
+/// Author: K.Binder
 class SelectGridLetterEvent {
   Pair position;
   SelectGridLetterEvent(this.position);
 }
 
+/// State for the [GridSelectTaskBloc]
+///
+/// Author: K.Binder
 class GridSelectTaskState {
   List<Pair> selectedWords;
   GridSelectTaskState(this.selectedWords);

@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lama_app/app/bloc/user_login_bloc.dart';
-import 'package:lama_app/app/event/user_login_event.dart';
-import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/state/user_login_state.dart';
+//Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
+import 'package:lama_app/app/model/user_model.dart';
+//Blocs
+import 'package:lama_app/app/bloc/user_login_bloc.dart';
+//Events
+import 'package:lama_app/app/event/user_login_event.dart';
+//States
+import 'package:lama_app/app/state/user_login_state.dart';
 
+///This file creates the User Login Screen
+///This Screen provides the login for an specific user
+///
+///
+/// * see also
+///    [UserLoginBloc]
+///    [UserLoginEvent]
+///    [UserLoginState]
+///
+/// Author: L.Kammerer
+/// latest Changes: 15.06.2021
 class UserLoginScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -16,18 +31,30 @@ class UserLoginScreen extends StatefulWidget {
   }
 }
 
+///UserLoginScreenState provides the state for the [UserLoginScreen]
 class UserLoginScreenState extends State<UserLoginScreen> {
+  //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
+
+    ///forcing the [UserLoginPullUser] event to load the user that
+    ///selected to login
     context.read<UserLoginBloc>().add(UserLoginPullUser());
   }
 
+  ///override build methode [StatelessWidget]
+  ///
+  ///{@param} [BuildContext] as context
+  ///
+  ///{@return} [Widget] decided by the incoming state of the [UserLoginBloc]
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<UserLoginBloc, UserLoginState>(
@@ -57,8 +84,21 @@ class UserLoginScreenState extends State<UserLoginScreen> {
   }
 }
 
+///(private)
+///shows the user with username and avatar
+///provides input as [TextFormField] for the password
+///and two [ElevatedButton] to login or abort the action
+///
+///{@params}
+///[BuildContext] as context
+///error message if the login fails as [String] error
+///[User] as user for default values
+///not used double size
+///
+///{@return} [Widget] decided by the incoming state of the [UserLoginBloc]
 Widget _input(BuildContext context, String error, User user, double size,
     GlobalKey<FormState> key) {
+  ///attache '(Admin)' to the username if the user is an Admin
   String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
   return Form(
     key: key,
@@ -155,6 +195,13 @@ Widget _input(BuildContext context, String error, User user, double size,
   );
 }
 
+///(private)
+///porvides [AppBar] with default design for the Login Screen
+///
+///{@params}
+///[AppBar] size as double size
+///
+///{@return} [AppBar] with specific design
 Widget _bar(double size) {
   return AppBar(
     title: Text('Anmeldung', style: LamaTextTheme.getStyle(fontSize: 18)),

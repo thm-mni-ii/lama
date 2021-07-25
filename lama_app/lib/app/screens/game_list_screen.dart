@@ -9,7 +9,13 @@ import 'package:lama_app/app/state/game_list_screen_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+///[StatelessWidget] that contains the Screen that displays all games.
+///
+///Author: K.Binder
 class GameListScreen extends StatelessWidget {
+  ///This list contains a [GameListItem] for each Game.
+  ///
+  ///If a new game is added, it will need to be "registered" here.
   final List<GameListItem> games = [
     GameListItem("Snake", 16,
         "Steuer die Schlange mit den Pfeiltasten und sammle Äpfel, um länger zu werden!"),
@@ -17,7 +23,6 @@ class GameListScreen extends StatelessWidget {
         "Tippe auf den Bildschirm, um das Lama fliegen zu lassen und weiche dabei den Hindernissen aus!")
     GameListItem("Affen-Leiter", 18,
         "Tippe die entsprechende Richtung an, um auf die andere Seite des Baumes zu springen und so den Ästen auszuweichen!"),
-
   ];
 
   @override
@@ -86,36 +91,6 @@ class GameListScreen extends StatelessWidget {
                               fontSize: 30,
                               fontWeight: FontWeight.w500),
                         ),
-                        /*Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              margin: EdgeInsets.only(right: 15),
-                              padding: EdgeInsets.only(left: 10),
-                              decoration: BoxDecoration(
-                                  color: LamaColors.greenPrimary,
-                                  borderRadius: BorderRadius.circular(25),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color:
-                                            LamaColors.black.withOpacity(0.5),
-                                        offset: Offset(0, 1))
-                                  ]),
-                              width: (constraints.maxWidth / 100) * 30,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "5000",
-                                    style: LamaTextTheme.getStyle(),
-                                  ),
-                                  SizedBox(width: 5),
-                                  SvgPicture.asset(
-                                    "assets/images/svg/lama_coin.svg",
-                                    semanticsLabel: "Lama Coin",
-                                    width: 25,
-                                  ),
-                                ],
-                              ),
-                            )),*/
                       ],
                     ),
                   ),
@@ -128,7 +103,8 @@ class GameListScreen extends StatelessWidget {
                         return ListView.separated(
                           itemCount: games.length,
                           itemBuilder: (context, index) {
-                            return buildGameList(context, index, constraints);
+                            return buildGameListItem(
+                                context, index, constraints);
                           },
                           separatorBuilder: (context, index) => SizedBox(
                             height: (constraints.maxHeight / 100) * 5,
@@ -146,7 +122,10 @@ class GameListScreen extends StatelessWidget {
     );
   }
 
-  Widget buildGameList(context, index, constraints) {
+  ///Returns a Container with all information of a single [GameListItem]
+  ///
+  ///Used in the [build()] method for building the ListView
+  Widget buildGameListItem(context, index, constraints) {
     Color color = LamaColors.orangeAccent;
     if (index % 2 == 0) color = LamaColors.blueAccent;
     return Container(

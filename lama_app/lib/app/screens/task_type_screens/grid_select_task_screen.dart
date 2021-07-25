@@ -13,11 +13,17 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/pair.dart';
 
+/// [StatelessWidget] that contains the screen for the GridSelect TaskType.
+///
+/// This Screen still contains a lot of logic. This will need to be moved to its own BloC once developement continues.
+///
+/// Author: K.Binder
 class GridSelectTaskScreen extends StatelessWidget {
   final TaskGridSelect task;
   final BoxConstraints constraints;
 
   final Map<Pair, String> characterPositions = Map();
+
   //some letter appear more often (loosely based on letter frequency) so they have a higher chance of being chosen
   final String letters = "AAABCDDEEEEFFGGHHIIIJKKLLMMNNNOOPPQRRSSSTTTUUVWXYZ";
 
@@ -119,12 +125,12 @@ class GridSelectTaskScreen extends StatelessWidget {
     );
   }
 
-//Entweder same index oder same rowNumber
-
+  ///Generates all [TableRow]
   List<TableRow> _getTableRows() {
     return List.generate(9, (index) => TableRow(children: _getRow(index)));
   }
 
+  ///Generates a List of [TableItem] to fill a [TableRow].
   List<Widget> _getRow(int rowNumber) {
     return List.generate(9, (columnNumber) {
       Pair cord = Pair(columnNumber, rowNumber);
@@ -137,7 +143,8 @@ class GridSelectTaskScreen extends StatelessWidget {
     });
   }
 
-  _generateWordPlacement() {
+  ///Places the words that need to be found on the grid.
+  void _generateWordPlacement() {
     var rnd = Random();
     task.wordsToFind.forEach((word) {
       int wordLength = word.length;
@@ -149,6 +156,8 @@ class GridSelectTaskScreen extends StatelessWidget {
       Pair cords;
       List<Pair> cordList;
       int timeout = 0;
+
+      int wordTimeout = 0;
       //Whether it will generate vertical or horizontal
       do {
         wordAdded = false;
@@ -206,10 +215,16 @@ class GridSelectTaskScreen extends StatelessWidget {
           }
           wordAdded = true;
         }
-      } while (!wordAdded);
+        wordTimeout++;
+        print("wordTimeout is now " +
+            wordTimeout.toString() +
+            " for word " +
+            word);
+      } while (!wordAdded && wordTimeout < 20);
     });
   }
 
+  ///Returns the character that will be placed at the [position] in the table.
   String getTableItemLetter(Pair position) {
     Pair left = Pair(position.a - 1, position.b);
     Pair right = Pair(position.a + 1, position.b);
@@ -220,6 +235,14 @@ class GridSelectTaskScreen extends StatelessWidget {
     return char;
   }
 
+  ///Returns a random letter.
+  ///
+  ///This method prevents placing a character thats in one of the words that
+  ///need to be found next to another character thats
+  ///also in one of the words to find.
+  ///
+  ///This obviously doesnt happen when one of the characters is part of one of the placed words.
+  ///It only prevents two random generated characters that are next to each other from both being in a word thats needs to be found.
   String getRandomLetter(Pair left, Pair up, Pair right, Pair down) {
     var rnd = Random();
     String char = "";
@@ -253,6 +276,12 @@ class GridSelectTaskScreen extends StatelessWidget {
   }
 }
 
+///[StatelessWidget] that contains a single Item in a TableRow
+///
+///This class exists to (albeit only slightly) improve the performance of
+///the [GridSelectTaskScreen] by splitting the main build method into smaller ones.
+///
+///Author: K.Binder
 class TableItem extends StatelessWidget {
   final BoxConstraints constraints;
   final Pair cord;

@@ -7,18 +7,27 @@ import 'package:lama_app/app/screens/flappy_game_screen.dart';
 import 'package:lama_app/app/screens/snake_screen.dart';
 import 'package:lama_app/app/state/game_list_screen_state.dart';
 
+/// [Bloc] for the [GameListScreen]
+///
+/// * see also
+///     [GameListScreen]
+///     [GameListScreenEvent]
+///     [GameListScreenState]
+///
+/// Author: K.Binder
 class GameListScreenBloc
     extends Bloc<GameListScreenEvent, GameListScreenState> {
   UserRepository userRepository;
 
   GameListScreenBloc(this.userRepository) : super(GameListScreenState());
+
   @override
   Stream<GameListScreenState> mapEventToState(
       GameListScreenEvent event) async* {
     if (event is TryStartGameEvent) {
       if (userRepository.getLamaCoins() >= event.gameCost) {
         userRepository.removeLamaCoins(event.gameCost);
-        navigateToGame(event.gameToStart, event.context, userRepository);
+        _navigateToGame(event.gameToStart, event.context, userRepository);
       } else {
         yield NotEnoughCoinsState();
       }
@@ -26,7 +35,12 @@ class GameListScreenBloc
   }
 }
 
-void navigateToGame(String gameName, BuildContext context, UserRepository userRepository) {
+/// (private)
+/// Navigates to the game with name [gameName].
+///
+/// Throws an [Exception] if there is no game with the name [gameName].
+void _navigateToGame(
+    String gameName, BuildContext context, UserRepository userRepository) {
   Widget gameToLaunch;
   switch (gameName) {
     case "Snake":

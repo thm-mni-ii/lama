@@ -1,9 +1,18 @@
 import 'package:lama_app/util/pair.dart';
 
+///This class provides methods to validate a [Taskset] and a [Task].
+///
+///It checks if all mandatory json keys are present and if the have the right type.
+///This is used before loading a taskset and also during the addition
+///of a url in the admin menu to prevent crashes of the app
+///
+///Author: K.Binder
 class TasksetValidator {
   ///Checks if the passed json is a valid taskset.
   ///
-  ///Use jsonDecode() with the corresponding json-string as argument when calling this method
+  ///Use jsonDecode() with the corresponding json-string as argument when calling this method.
+  ///
+  ///Confirms whether all mandatory json keys are present and if the have the right type.
   static bool isValidTaskset(Map<String, dynamic> json) {
     if (json.containsKey("taskset_name") &&
         json.containsKey("taskset_subject") &&
@@ -30,6 +39,12 @@ class TasksetValidator {
     return false;
   }
 
+  ///Checks if the passed json is a valid Task.
+  ///
+  ///Confirms whether all mandatory json keys are present and if
+  ///the have the right type for the corresponding TaskType.
+  ///
+  ///Used internally by [isValidTaskset()]
   static bool _isValidTask(Map<String, dynamic> json) {
     if (json.containsKey("task_type") &&
         json.containsKey("task_reward") &&
@@ -151,6 +166,12 @@ class TasksetValidator {
     return false;
   }
 
+  ///Returns whether all items in a list are of type [T]
+  ///
+  ///Needed because [jsonDecode()] provides a Map with dynamic values,
+  ///which means it COULD contain a list with different types.
+  ///
+  ///Used internally by [_isValidTask()]
   static bool _checkListType<T>(List list) {
     for (int i = 0; i < list.length; i++) {
       if (!(list[i] is T)) return false;

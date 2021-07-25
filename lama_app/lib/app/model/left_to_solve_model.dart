@@ -1,5 +1,9 @@
+//set table name
 final String tableLeftToSolve = "left_to_solve";
 
+///Set the column names
+///
+/// Author: F.Brecher
 class LeftToSolveFields{
   static const String columnLeftToSolveID = "id";
   static const String columnTaskString = "task_string";
@@ -8,6 +12,9 @@ class LeftToSolveFields{
   static const String columnDoesStillExist = "does_still_exist";
 }
 
+///This class help to work with the data's from the leftToSolve table
+///
+/// Author: F.Brecher
 class LeftToSolve {
   int id;
   String taskString;
@@ -17,6 +24,9 @@ class LeftToSolve {
 
   LeftToSolve({this.taskString, this.userLTSId, this.leftToSolve, this.doesStillExist});
 
+  ///Map the variables
+  ///
+  ///{@return} Map<String, dynamic>
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       LeftToSolveFields.columnTaskString: taskString,
@@ -27,6 +37,9 @@ class LeftToSolve {
     return map;
   }
 
+  ///get the data from the map
+  ///
+  ///{@param} Map<String, dynamic> map
   LeftToSolve.fromMap(Map<String, dynamic> map) {
     id = map[LeftToSolveFields.columnLeftToSolveID];
     taskString = map[LeftToSolveFields.columnTaskString];

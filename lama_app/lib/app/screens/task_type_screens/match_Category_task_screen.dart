@@ -188,7 +188,14 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
       firstStart = false;
       double bottom;
       double left;
-      for(int x = 0; x < categorySum.length; x++){
+      int length;
+      if(categorySum.length <= 8){
+        length = categorySum.length;
+      }
+      else{
+        length = 8;
+      }
+      for(int x = 0; x < length; x++){
         for(int y = 0; y < 2; y++){
           if(y == 0){bottom = positions[x][y];}
           if(y == 1){left = positions[x][y];}
