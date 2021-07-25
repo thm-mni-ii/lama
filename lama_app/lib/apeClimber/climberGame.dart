@@ -18,6 +18,7 @@ import 'package:lama_app/apeClimber/components/climberBranches.dart';
 import 'widgets/monkeyEndscreenWidget.dart';
 import 'components/tree.dart';
 
+/// This class represents the monkey climber game and its components.
 class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   // SETTINGS
   // --------

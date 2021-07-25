@@ -27,6 +27,7 @@ import 'package:lama_app/snake/views/view.dart';
 import 'package:lama_app/snake/views/homeView.dart';
 import 'package:lama_app/snake/views/gameOverView.dart';
 
+/// This class represents the Snake game and its components.
 class SnakeGame extends Game with TapDetector {
   final bool log = true;
   Background background;
@@ -135,6 +136,7 @@ class SnakeGame extends Game with TapDetector {
     _initialized = true;
   }
 
+  /// This method will resize all components of this class.
   void resizeComponents() {
     background?.resize();
     homeView?.resize();
@@ -290,7 +292,6 @@ class SnakeGame extends Game with TapDetector {
     }
   }
 
-  /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void onTapDown(TapDownDetails d) {
     if (!_initialized) {
       return;
