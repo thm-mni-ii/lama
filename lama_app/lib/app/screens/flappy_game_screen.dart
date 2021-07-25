@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
 class FlappyGameScreen extends StatelessWidget {
+  final UserRepository userRepository;
+
+  const FlappyGameScreen(this.userRepository);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +21,7 @@ class FlappyGameScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 color: Colors.green,
-                child: FlappyLamaGame(context).widget,
+                child: FlappyLamaGame(context, userRepository).widget,
               )
             )
           ]

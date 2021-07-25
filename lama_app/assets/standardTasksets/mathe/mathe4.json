@@ -4,6 +4,22 @@
       "taskset_grade":4,
        "tasks": [
         {
+         "task_type":"4Cards",
+         "task_reward":2,
+         "question":"Was ist das Ergebnis der Multiplikation ?",
+         "lama_text":"Tippe die richtige Antwort an!",
+         "right_answer":"Produkt",
+         "wrong_answers":["Summe", "Differenz", "Quotient"]
+        },
+        {
+         "task_type":"4Cards",
+         "task_reward":2,
+         "question":"Was ist das Ergebnis der Division ?",
+         "lama_text":"Tippe die richtige Antwort an!",
+         "right_answer":"Quotient",
+         "wrong_answers":["Summe", "Differenz", "Produkt"]
+        },
+        {
             "task_type":"4Cards",
              "task_reward":2,
              "question":"15/5",
@@ -18,6 +34,14 @@
                   "lama_text":"Tippe die richtige Antwort an!",
                   "right_answer":"60",
                    "wrong_answers":["17", "23", "40"]
-             }
+             },
+        {
+         "task_type":"MoneyTask",
+         "task_reward":2,
+         "question":"irgendwas",
+         "lama_text":"Sammle 13,87€ mit den Münzen zusammen",
+         "moneyAmount": 13.87
+        }
+
         ]
 }

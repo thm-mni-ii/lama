@@ -4,13 +4,14 @@ import 'dart:math';
 
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flame/flame_audio.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/model/highscore_model.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/snake/components/background.dart';
 import 'package:lama_app/snake/components/scoreDisplay.dart';
 
@@ -64,8 +65,10 @@ class SnakeGame extends Game with TapDetector {
   HomeView homeView;
   GameOverView gameOverView;
   BuildContext _context;
+  UserRepository _userRepo;
+  bool _saved = false;
 
-  SnakeGame(this._context) {
+  SnakeGame(this._context, this._userRepo) {
     initialize();
     developer.log("${MediaQuery.of(_context).size.width}");
     developer.log("${MediaQuery.of(_context).size.height}");
@@ -227,8 +230,16 @@ class SnakeGame extends Game with TapDetector {
       scoreDisplay.update(t);
      
     }
-    if(_finished && _initialized){
+    if (_finished && _initialized){
       gameOverView.update(t);
+
+      if (!this._saved) {
+        this._saved = true;
+        _userRepo.addHighscore(Highscore(
+            gameID: 1,
+            score: this.score,
+            userID: this._userRepo.authenticatedUser.id));
+      }
     } 
   }
 

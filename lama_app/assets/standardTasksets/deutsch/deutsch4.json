@@ -18,6 +18,23 @@
            "lama_text":"Tippe die richtige Antwort an!",
            "right_answer":"dass",
            "wrong_answers":["Das", "das"]
+         },
+         {
+           "task_type":"GridSelect",
+           "task_reward":3,
+           "question":"",
+           "lama_text":"Markiere vier Flüsse",
+           "wordsToFind":["Rhein", "Lahn", "Werra", "Main"]
+         },
+         {
+           "task_type": "MatchCategory",
+           "task_reward":2,
+           "question": "",
+           "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+           "nameCatOne": "Gegenwart",
+           "nameCatTwo": "Vergangenheit",
+           "categoryOne": ["laufen", "gehen", "lernen", "fallen"],
+           "categoryTwo": ["lief", "ging", "lernte", "fiel"]
          }
-        ]
+       ]
 }

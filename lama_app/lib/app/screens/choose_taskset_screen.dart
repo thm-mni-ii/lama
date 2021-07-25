@@ -88,9 +88,9 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
               alignment: Alignment.topCenter,
               child: Container(
                 width: screenSize.width,
-                height: 50,
+                height: (screenSize.height / 100) * 7.5,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 253, 74, 111),
+                  color: LamaColors.mainPink,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(25),
                     bottomRight: Radius.circular(25),
@@ -103,11 +103,27 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                         color: Colors.grey)
                   ],
                 ),
-                child: Center(
-                  child: Text(
-                    "Aufgaben-Set auswählen",
-                    style: LamaTextTheme.getStyle(fontSize: 22.5),
-                  ),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        "Aufgaben-Sets",
+                        style: LamaTextTheme.getStyle(fontSize: 22.5),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -119,24 +135,14 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
 
   Widget _buildTasksetList(context, state) {
     return Center(
-      child: ListView.builder(
-          padding: EdgeInsets.only(top: 15, left: 15, right: 15),
-          itemCount: state.tasksets.length,
-          itemBuilder: (context, index) {
-            if (index > 0)
-              return Container(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    _buildTasksetListItem(context, state.tasksets[index])
-                  ],
-                ),
-              );
-            else
-              return _buildTasksetListItem(context, state.tasksets[index]);
-          }),
+      child: ListView.separated(
+        padding: EdgeInsets.only(top: 15, left: 15, right: 15),
+        itemCount: state.tasksets.length,
+        itemBuilder: (context, index) {
+          return _buildTasksetListItem(context, state.tasksets[index]);
+        },
+        separatorBuilder: (context, index) => SizedBox(height: 10),
+      ),
     );
   }
 
