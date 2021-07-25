@@ -9,15 +9,27 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+/// This file creates the Match Category task Screen
+/// The Match Category task is a task where you have to sort 8 given
+/// words into one of the given Topics with drag and drop.
+/// The items will be randomly selected and placed on the Screen. After dropping
+/// the last word from the screen into a Topic, the answers will be checked.
+///
+///
+/// Author: T.Rentsch
+/// latest Changes: 22.07.2021
+
+/// Global Variables
+// Flag to check if the screen is build for the first time
 bool firstStart = true;
+// Flag to check if the words have been shuffled or not
 bool firstShuffel = true;
-List<Item> items =[];
+// List of all created Items
 
-
+/// MatchCategoryTaskScreen class creates the Match Category Task Screen
 class MatchCategoryTaskScreen extends StatefulWidget {
   final TaskMatchCategory task;
   final BoxConstraints constraints;
-
   MatchCategoryTaskScreen(this.task, this.constraints);
 
   @override
@@ -25,25 +37,46 @@ class MatchCategoryTaskScreen extends StatefulWidget {
     return MatchCategoryState(task, constraints);
   }
 }
-class MatchCategoryState extends State<MatchCategoryTaskScreen>{
 
+class MatchCategoryState extends State<MatchCategoryTaskScreen> {
+  // task infos and constraints handed over by tasktypeScreen
   final BoxConstraints constraints;
   final TaskMatchCategory task;
+  // List of all handed words
   final List<String> categorySum = [];
+  // List to save the results of every drag and drop
   final List<bool> results = [];
-
+  // To recreate the latest Item we need to Save which item was deleted
   String latestDeletion = "";
-  List <Item> deletinons = [];
+  // This List contains all Items which have already been draged
+  List<Item> deletinons = [];
+
+  List<Item> items = [];
 
   MatchCategoryState(this.task, this.constraints) {
+    // Add all given words to categorySum
+    /*categorySum.clear();
     categorySum.addAll(task.categoryOne);
     categorySum.addAll(task.categoryTwo);
-    if(firstShuffel) {
+    // If its the first screen Build we need to Shuffle the list
+    if (firstShuffel) {
       categorySum.shuffle();
-
       firstShuffel = false;
-    }
+    }*/
   }
+
+  @override
+  void initState() {
+    super.initState();
+    categorySum.clear();
+    categorySum.addAll(task.categoryOne);
+    categorySum.addAll(task.categoryTwo);
+    // If its the first screen Build we need to Shuffle the list
+    categorySum.shuffle();
+    items.clear();
+    firstStart = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -88,12 +121,9 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
         Padding(
             padding: EdgeInsets.all(5),
             child: Container(
-
                 height: (constraints.maxHeight / 100) * 60,
                 //color: LamaColors.greenAccent,
-                child: Stack(children: generateItems()
-
-                ))),
+                child: Stack(children: generateItems()))),
         //Category´s
         Container(
           height: (constraints.maxHeight / 100) * 12,
@@ -102,8 +132,10 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildTargets(context, task.categoryOne, task.nameCatOne, LamaColors.blueAccent),
-              buildTargets(context, task.categoryTwo, task.nameCatTwo, LamaColors.orangeAccent)
+              buildTargets(context, task.categoryOne, task.nameCatOne,
+                  LamaColors.blueAccent),
+              buildTargets(context, task.categoryTwo, task.nameCatTwo,
+                  LamaColors.orangeAccent)
             ],
           ),
         ),
@@ -118,13 +150,13 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                 decoration: ShapeDecoration(
                     color: LamaColors.blueAccent,
                     shape: CircleBorder(),
-                    shadows: [BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 7,
-                        offset: Offset(0, 3)),
-                    ]
-                ),
+                    shadows: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 7,
+                          offset: Offset(0, 3)),
+                    ]),
                 padding: EdgeInsets.all(5.0),
                 child: IconButton(
                   padding: EdgeInsets.all(1.0),
@@ -133,24 +165,23 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                     size: 40,
                   ),
                   color: LamaColors.black,
-                  onPressed: (){
+                  onPressed: () {
                     setState(() {
-                      if(deletinons.isNotEmpty){
+                      if (deletinons.isNotEmpty) {
                         results.removeLast();
                         items.add(deletinons.last);
                         deletinons.removeLast();
-                      }
-                      else if(deletinons.isEmpty){
+                      } else if (deletinons.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content:
-                            Container(
+                            content: Container(
                                 height: (constraints.maxHeight / 100) * 4,
                                 alignment: Alignment.bottomCenter,
                                 child: Center(
-                                  child: FittedBox(
-                                    fit: BoxFit.fitWidth,
-                                  child: Text("Kein Item zum zurücksetzen gefunden",
+                                    child: FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: Text(
+                                    "Kein Item zum zurücksetzen gefunden",
                                     style: LamaTextTheme.getStyle(),
                                     textAlign: TextAlign.center,
                                   ),
@@ -163,56 +194,68 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                   },
                 ),
               ),
-            )
-        )
+            ))
       ],
     );
   }
 
+  /// generateItems is Used to create every draggable Item displayed on the Screen.
+  /// Every Item gets a unique position on the screen and is builded.
+  /// After this the Item gets added to the output list.
+  /// {@return} a List of [Widget]
   List<Widget> generateItems() {
+    // Array of every possible position on the Screen [[Bottom, Left], ..]
+    // There are only 8 possible position without overflowing, so the the Limit of
+    // items displayed is 8
     List positions = [
-      //Bottom , left
       [(constraints.maxHeight / 100) * 50, (constraints.maxWidth / 100) * 55],
       [(constraints.maxHeight / 100) * 45, (constraints.maxWidth / 100) * 7],
       [(constraints.maxHeight / 100) * 32, (constraints.maxWidth / 100) * 5],
       [(constraints.maxHeight / 100) * 38, (constraints.maxWidth / 100) * 50],
       [(constraints.maxHeight / 100) * 25, (constraints.maxWidth / 100) * 53],
       [(constraints.maxHeight / 100) * 3, (constraints.maxWidth / 100) * 56],
-      [(constraints.maxHeight / 100) * 15, (constraints.maxWidth / 100) * 30,],
+      [
+        (constraints.maxHeight / 100) * 15,
+        (constraints.maxWidth / 100) * 30,
+      ],
       [(constraints.maxHeight / 100) * 5, (constraints.maxWidth / 100) * 9]
     ];
-
-
-    if(firstStart) {
+    // if the Screen is build for the first time
+    // all Items become a random position
+    if (firstStart) {
       positions.shuffle();
       firstStart = false;
       double bottom;
       double left;
       int length;
-      if(categorySum.length <= 8){
+      // check if there are more than 8 Items in the list
+      if (categorySum.length <= 8) {
         length = categorySum.length;
-      }
-      else{
+      } else {
         length = 8;
       }
-      for(int x = 0; x < length; x++){
-        for(int y = 0; y < 2; y++){
-          if(y == 0){bottom = positions[x][y];}
-          if(y == 1){left = positions[x][y];}
+      // save every Item with its unique position
+      for (int x = 0; x < length; x++) {
+        for (int y = 0; y < 2; y++) {
+          if (y == 0) {
+            bottom = positions[x][y];
+          }
+          if (y == 1) {
+            left = positions[x][y];
+          }
         }
         items.add(Item(bottom, left, categorySum[x]));
       }
-      print(items.length);
     }
-
+    // List to save the created Widgets
     List<Widget> output = [];
-    for(int i = 0; i < items.length; i++){
+    // Create for every Item a widget
+    for (int i = 0; i < items.length; i++) {
       output.add(
         Positioned(
             bottom: items[i].bottom,
             left: items[i].left,
             child: Draggable<Item>(
-              //data: task.categoryOne.contains(categorySum[i]) ? categoryType.catOne : categoryType.catTwo,
               data: items[i],
               child: Container(
                   height: (constraints.maxHeight / 100) * 8,
@@ -226,36 +269,28 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                             spreadRadius: 1,
                             blurRadius: 7,
                             offset: Offset(0, 3)),
-                      ]
-                  ),
+                      ]),
                   child: Center(
-                    child: Text(
-                        items[i].item,
-                        style: LamaTextTheme.getStyle()
-                    ),
-                  )
-              ),
-              feedback: Material(child: Container(
-                  height: 50,
-                  width: 150,
-                  decoration: BoxDecoration(
-                      color: LamaColors.mainPink,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: Offset(0, 3)),
-                      ]
-                  ),
-                  child: Center(
-                    child: Text(
-                        items[i].item,
-                        style: LamaTextTheme.getStyle()
-                    ),
-                  )
-              )),
+                    child: Text(items[i].item, style: LamaTextTheme.getStyle()),
+                  )),
+              feedback: Material(
+                  child: Container(
+                      height: 50,
+                      width: 150,
+                      decoration: BoxDecoration(
+                          color: LamaColors.mainPink,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 7,
+                                offset: Offset(0, 3)),
+                          ]),
+                      child: Center(
+                        child: Text(items[i].item,
+                            style: LamaTextTheme.getStyle()),
+                      ))),
               childWhenDragging: Container(
                   height: 50,
                   width: 150,
@@ -268,77 +303,91 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen>{
                             spreadRadius: 1,
                             blurRadius: 7,
                             offset: Offset(0, 3)),
-                      ]
-                  ),
+                      ]),
                   child: Center(
-                    child: Text(
-                        items[i].item,
-                        style: LamaTextTheme.getStyle()
-                    ),
-                  )
-              ),
+                    child: Text(items[i].item, style: LamaTextTheme.getStyle()),
+                  )),
             )),
       );
     }
     return output;
   }
-  Widget buildTargets(BuildContext context, List<String> categoryList , String taskCategory, Color color){
+
+  /// buildTargets is Used to create the dragtargets for the Items
+  /// The method gets called for both Dragtargets.
+  /// {@param} BuildContext [context] needed for constraints
+  /// {@param} List<String> [categoryList] List of all Items accepted by this Target
+  /// {@param} String [taskCategory] name of the Target
+  /// {@param} Color [color] color of the Target
+  ///
+  /// {@return} [Widget] Targetwidget to be displayed on the screen
+  Widget buildTargets(BuildContext context, List<String> categoryList,
+      String taskCategory, Color color) {
     return DragTarget<Item>(
-      builder: (context, candidate, rejectedData) =>
-          Container(
-            height: (constraints.maxHeight / 100) * 45,
-            width: (constraints.maxWidth / 100) * 45,
-            decoration:
-            BoxDecoration(color: color, boxShadow: [
+      builder: (context, candidate, rejectedData) => Container(
+          height: (constraints.maxHeight / 100) * 45,
+          width: (constraints.maxWidth / 100) * 45,
+          decoration: BoxDecoration(
+            color: color,
+            boxShadow: [
               BoxShadow(
                   color: Colors.grey.withOpacity(0.5),
                   spreadRadius: 1,
                   blurRadius: 7,
                   offset: Offset(0, 3)),
             ],
-              borderRadius: BorderRadius.all(Radius.circular(5)),),
-            child: Padding(
-                padding: EdgeInsets.all(10),
-            child: FittedBox(
-              fit: BoxFit.fitWidth,
-            child: Center(
-              child: Text(
-                taskCategory,
-                style: LamaTextTheme.getStyle(
-                  color: LamaColors.white,
-                  fontSize: 30,
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+          ),
+          child: Padding(
+              padding: EdgeInsets.all(10),
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Center(
+                  child: Text(
+                    taskCategory,
+                    style: LamaTextTheme.getStyle(
+                      color: LamaColors.white,
+                      fontSize: 30,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ))),
-      onWillAccept: (data)=> true,
-      onAccept: (data){
-
-        categoryList.contains(data.item) ?  results.add(true) :  results.add(false);
+              ))),
+      onWillAccept: (data) => true,
+      onAccept: (data) {
+        // Check if draged Item is contained in the Items for this Category
+        categoryList.contains(data.item)
+            ? results.add(true)
+            : results.add(false);
+        // reload screen
         setState(() {
+          // After Draging the Item needs to be removed from the Screen
           deletinons.add(data);
-
           items.removeWhere((element) {
-            print(element.item);
-            print(data.item);
             return element.item == data.item;
           });
-          if(items.isEmpty){
+          // If the draged Item was the Last one on the Screen
+          // reset all Variables and send the resluts to check
+          if (items.isEmpty) {
             firstStart = true;
-            firstShuffel = true;
-            BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initMatchCategory(results));
+            BlocProvider.of<TaskBloc>(context)
+                .add(AnswerTaskEvent.initMatchCategory(results));
           }
         });
       },
     );
   }
 }
-class Item{
+
+/// class Item used to store information of every given word
+/// double [bottom] Used for positioning
+/// double [left] Used for positioning
+/// String [item] Stores item text given by TaskMatchCategory [task]
+class Item {
   double bottom;
   double left;
   String item;
-  Item(double bottom, left, String item){
-    this.bottom =bottom;
+  Item(double bottom, left, String item) {
+    this.bottom = bottom;
     this.left = left;
     this.item = item;
   }

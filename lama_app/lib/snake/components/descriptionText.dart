@@ -2,14 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
+/// This class contains a centered description text on an Offset to the top.
 class DescriptionText {
   final SnakeGame game;
+  /// [TextPainter] of the text
   TextPainter _painter = TextPainter(
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
     maxLines: 10,
   );
+  /// position of the centered text
   Offset _position;
+  /// offset to the top
   double _offsetY;
 
   DescriptionText(this.game, this._offsetY) {

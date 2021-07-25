@@ -8,11 +8,20 @@ import 'package:lama_app/snake/snakeGame.dart';
 
 import 'apple.dart';
 
+/// This class represents the snake and wraps its [SnakeSpriteComponent]s.
 class SnakeComponent {
+  // SETTINGS
+  /// for development
   final bool log = true;
+  // --------
+  final double _maxVelocity = 15;
+  // --------
+  // SETTINGS
 
   final SnakeGame game;
+  /// [Queue]of all [SnakeSpriteComponent]s to wrap them all
   Queue<SnakeSpriteComponent> snakeParts = Queue();
+  /// actual velocity of the snake
   double velocity = 3;
   /// callback when the snake bites itself
   Function callbackBiteItSelf;
@@ -20,11 +29,12 @@ class SnakeComponent {
   Function callbackCollideWithBorder;
   /// callback when the snake hits the border
   Function(Apple) callbackEatsApple;
-
+  /// counter to check when the next movement will take place
   double _deltaCounter = 0;
+  /// actual direction
   SnakeDirection _actualDirection = SnakeDirection.North;
+  /// last direction after the last movement
   SnakeDirection _lastDirection = SnakeDirection.North;
-  final double _maxVelocity = 15;
 
   /// This class needs following parameters for initialisation:
   /// [game] = [SnakeGame] where are fields which need this class to proceed
@@ -128,6 +138,9 @@ class SnakeComponent {
     }
   }
 
+  /// This method checks if the snake head hits an [apple] and will handle the possible growth.
+  ///
+  /// [apples] = [List] of [Apple]s to check the collision
   void growOnHittingApple(List<Apple> apples) {
     if (apples != null) {
       for (Apple apple in apples) {
@@ -289,6 +302,7 @@ class SnakeComponent {
   }
 }
 
+/// This enum represents the compass directions
 enum SnakeDirection {
   North,
   West,

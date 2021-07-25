@@ -5,25 +5,33 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/goBackButton.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
+/// This class will render game overview with all its components
 class GameOverView {
   final SnakeGame game;
-
+  /// offset to the left and right relative to the screen width
   final relativeX = 0.15;
+  /// offset to the top and bottom relative to the screen height
   final relativeY = 0.15;
-
+  /// back button of the view
   GoBackButton goBackButton;
-
+  /// [Paint] of the background
   Paint _bgPaint = Paint()
     ..color = Color(0xFFFFFFFF);
+  /// [Paint] of the border
   Paint _borderPaint = Paint()
     ..color = Color(0xFF000000);
+  /// [TextPainter] of the text
   TextPainter _painter = TextPainter(
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
   );
+  /// thickness of the border
   double _borderThickness = 3;
+  /// rectangle of the background
   Rect _bgRect;
+  /// position of the text
   Offset _position;
+  /// textstyle of the text
   TextStyle _textStyle;
 
   GameOverView(this.game) {
@@ -34,8 +42,10 @@ class GameOverView {
   void resize() {
     this.goBackButton?.resize();
 
+    // calculate the relative size
     var relativeSize = sqrt(this.game.screenSize.width * this.game.screenSize.height);
 
+    // calculate the background rectangle
     _bgRect = Rect.fromLTWH(
       this.game.screenSize.width * relativeX,
       this.game.screenSize.height * relativeY,
@@ -43,6 +53,7 @@ class GameOverView {
       this.game.screenSize.height * (1.0 - relativeY * 4),
     );
 
+    // set the textstyle
     _textStyle = TextStyle(
       color: Color(0xff000000),
       fontSize: relativeSize * 0.10,

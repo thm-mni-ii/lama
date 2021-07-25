@@ -3,22 +3,33 @@ import 'dart:ui';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
+/// This class represents the score display and will render it
 class ScoreDisplay {
   final SnakeGame game;
-
+  /// Offset to the top relative to the the a relative size (sqrt(width * height));
   double _offsetYPercent;
+  /// radius of the button
   double _radiusPercent;
+  /// thickness of the border
   double _borderThickness;
+  /// [Path] of the border
   Path _borderPath;
+  /// [Rect] of the button
   Rect _fillRect;
+  /// [Paint] of the border as default stroke
   final Paint _borderPaint = Paint()
     ..style = PaintingStyle.stroke
     ..color = Color(0x80000000);
+  /// [Paint] of the background
   final Paint _fillPaint = Paint()
     ..color = Color(0x4DFD4A6F);
+  /// [Color] of the text
   final Color _textColor = Color(0xbbffffff);
+  /// [TextPainter] of the text
   TextPainter _painter;
+  /// [TextStyle] of the text
   TextStyle _textStyle;
+  /// position of the score display
   Offset _position;
 
   /// This class displays the [score] of the [SnakeGame] class.

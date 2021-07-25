@@ -6,24 +6,30 @@ import 'package:lama_app/snake/components/descriptionText.dart';
 import 'package:lama_app/snake/components/startButton.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
+/// This class will render home view with all its components
 class HomeView {
   final SnakeGame game;
-
+  /// offset to the left and right relative to the screen width
   final relativeX = 0.05;
+  /// offset to the top and bottom relative to the screen height
   final relativeY = 0.05;
-
+  /// rectangle of the background
   Rect _bgRect;
+  /// [Paint] of the background
   Paint bgPaint = Paint()
     ..color = Color(0xFFFFFFFF);
+  /// [Paint] of the border
   Paint borderPaint = Paint()
     ..color = Color(0xFF000000);
-
-
+  /// rectangle of the image
   Rect _imageRect;
+  /// image to display
   Sprite _imageSprite;
-
+  /// startbutton to launch the game
   StartButton startButton;
+  /// component to display the description
   DescriptionText description;
+  /// thickness of the border
   double _borderThickness = 3;
 
   HomeView(this.game) {

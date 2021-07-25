@@ -10,10 +10,21 @@ import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
 
+/// This file creates the Cloze Test task Screen
+/// The Cloze Test Task provides a short sentence where some part of the
+/// Sentence is keyed out. You can choose from 3 different soloutions to fill in.
+/// After pressing on one of the possibilities the answer will be checked
+///
+/// Author: T.Rentsch
+/// latest Changes: 10.07.2021
+
+/// ClozeTestTaskScreen class creates the Cloze Test Task Screen
 class ClozeTestTaskScreen extends StatelessWidget {
+  // task infos and constraints handed over by tasktypeScreen
   final TaskClozeTest task;
-  final List<String> answers = [];
   final BoxConstraints constraints;
+  // List of all possible Answers
+  final List<String> answers = [];
 
   ClozeTestTaskScreen(this.task, this.constraints) {
     answers.add(task.rightAnswer); //get the right answer

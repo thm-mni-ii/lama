@@ -4,28 +4,43 @@ import 'package:flutter/cupertino.dart';
 
 import '../snakeGame.dart';
 
-class ArrowButtons {
+/// This class will render an arrow button and handle if its tapped.
+class ArrowButton {
   final SnakeGame game;
-
+  /// [Rect] of the button location
   Rect _rectButton;
+  /// [Paint] of the button fill
   Paint _paintButton;
+  /// [Paint] of the button shadow
   Paint _paintShadow;
+  /// [Paint] of the button arrow
   Paint _paintArrow = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0;
+  /// [Path] of the arrow depending on [_arrowDirection]
   Path _arrowPath;
+  /// Position of the button between 0 and 4 (left to right)
   int _position;
+  /// Relative Offset of the Button to the top of the screen
   double _relativeOffsetY;
+  /// Relative Size of the button to the width of the screen
   double _relativeSize = 0.15;
+  /// Relative Offset of the Button to the left of the screen
   double _relativeOffsetX = 0.00;
+  /// Function which gets called when the button tapped
   Function _onTap;
+  /// flag which which checks the button tap
   bool _clickHandled = true;
+  /// [Color] of the button
   Color _buttonColor = Color(0xff3CDFFF);
+  /// [Color] of the button on tapping
   Color _buttonClickColor = Color(0xffbdcbd9);
+  /// direction of the Arrow (1-4)
   int _arrowDirection = 0;
+  /// width of the buttons shadow
   final double _shadowWidth = 5;
 
-  ArrowButtons(this.game, this._relativeSize, this._arrowDirection, this._position, this._relativeOffsetY, this._onTap) {
+  ArrowButton(this.game, this._relativeSize, this._arrowDirection, this._position, this._relativeOffsetY, this._onTap) {
     // button paint
     _paintButton = Paint();
     _paintButton.color = Color(0xff0088ff);
