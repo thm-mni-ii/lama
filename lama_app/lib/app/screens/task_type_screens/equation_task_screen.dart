@@ -14,6 +14,9 @@ List<String> fullAnswer = [];
 List<String> answers = [];
 List<String> resetList = [];
 
+/// [StatefulWidget] that contains the equationstate and clear old lists.
+///
+/// Author: F.Leonhardt
 class EquationTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
   final TaskEquation task;
@@ -29,6 +32,9 @@ class EquationTaskScreen extends StatefulWidget {
   }
 }
 
+/// [State] that contains the screen for the Equation TaskType.
+/// Check if task is random or not
+/// If task is random, fill lists with a random equation, else add the equation to the lists
 class EquationState extends State<EquationTaskScreen> {
   final BoxConstraints constraints;
   final TaskEquation task;
@@ -100,6 +106,7 @@ class EquationState extends State<EquationTaskScreen> {
     }
   }
 
+  /// return the result of the random operands with given operation
   int _randomRes(String s, int number1, int number2, int number3) {
     if(s == "+") {
       return number1 + number2 + number3;
@@ -114,6 +121,11 @@ class EquationState extends State<EquationTaskScreen> {
     }
   }
 
+  /// Override build method [State]
+  ///
+  /// {@param} [BuildContext] as context
+  ///
+  /// {@return} a [Widget] that contains the equation, the answers and the two Buttons.
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -248,6 +260,7 @@ class EquationState extends State<EquationTaskScreen> {
     );
   }
 
+  /// Return possible answers for equation in [GridView] as [Widget]
   Widget _buildAnswers(List<String> wrongAnswers) {
     return Center(
       child: GridView.builder(
@@ -315,6 +328,7 @@ class EquationState extends State<EquationTaskScreen> {
     );
   }
 
+  /// Return equation and chose if the build container is a dragtarget or not as [Widget]
   Widget _buildEquation(List<String> equation) {
     return Center(
         child: ListView.separated(
@@ -333,6 +347,7 @@ class EquationState extends State<EquationTaskScreen> {
             }));
   }
 
+  /// Return a container for equation which is a dragtarget as [Widget]
   Widget _equationTarget(BuildContext context, int index) {
     return DragTarget(
         builder: (context, candidate, rejectedData) =>
@@ -362,6 +377,7 @@ class EquationState extends State<EquationTaskScreen> {
     );
   }
 
+  /// Return a container for equation which contains the part of equation as [Widget]
   Widget _equationField(BuildContext context, int index) {
     return Container(
       width: (constraints.maxWidth / 100) * 12,
@@ -380,6 +396,7 @@ class EquationState extends State<EquationTaskScreen> {
     );
   }
 
+  /// Return the math operations as draggable container as [Widget]
   Widget _mathOperations(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
       Draggable<String>(

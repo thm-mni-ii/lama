@@ -184,7 +184,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     return true;
   }
 
-  //TODO: Franz komentier die bitte die hast du geschrieben iirc und ich will nix falsches sagen
+  /// Checks if the result of two equation as String lists ([list1] and [list2]) is equal.
   bool fullequals(List<String> list1, List<String> list2) {
     double list1res, list2res;
     if (!(list1 is List<String> && list2 is List<String>) ||
