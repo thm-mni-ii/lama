@@ -14,9 +14,11 @@ import 'package:lama_app/app/task-system/task.dart';
 class VocableTestTaskBloc
     extends Bloc<VocableTestTaskEvent, VocableTestTaskState> {
   final TaskVocableTest task;
+  //List with all subTask results
   List<bool> resultList;
+  //Index of the current subTask
   int curWordPair = 0;
-
+  //Which "side" is shown word->translation, translation->word
   int sideUsed = 0;
 
   VocableTestTaskBloc(this.task) : super(VocableTestTaskInitState()) {
