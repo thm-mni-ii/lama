@@ -1,3 +1,5 @@
+import 'package:lama_app/util/pair.dart';
+
 ///This file contains the Basic Task class with its factory Method and all Task subtypes
 ///To create a new Task subtype create a class that extends Task and add it to the factory method in Task
 
@@ -43,11 +45,15 @@ class Task {
         return TaskGridSelect(taskType, json['task_reward'], json['lama_text'],
             json['question'], List<String>.from(json['wordsToFind']));
       case "MoneyTask":
-        return TaskMoney(taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['question'],
-            json['moneyAmount']);
+        return TaskMoney(taskType, json['task_reward'], json['lama_text'],
+            json['question'], json['moneyAmount']);
+      case "VocableTest":
+        var wordPairs = json['wordPairs'] as List;
+        print(wordPairs.runtimeType);
+        List<Pair<String, String>> wordPairList =
+            wordPairs.map((pair) => Pair.fromJson(pair)).toList();
+        return TaskVocableTest(taskType, json['task_reward'], json['lama_text'],
+            json['question'], wordPairList, json['randomizeSide']);
       default:
         return null;
     }
@@ -117,6 +123,16 @@ class TaskGridSelect extends Task {
 class TaskMoney extends Task {
   double moneyAmount;
 
-  TaskMoney(String taskType, int reward, String lamaText, String question, this.moneyAmount)
-  : super(taskType, reward, question, lamaText);
+  TaskMoney(String taskType, int reward, String lamaText, String question,
+      this.moneyAmount)
+      : super(taskType, reward, question, lamaText);
+}
+
+class TaskVocableTest extends Task {
+  List<Pair<String, String>> vocablePairs;
+  bool randomizeSide;
+
+  TaskVocableTest(String taskType, int reward, String lamaText, String question,
+      this.vocablePairs, this.randomizeSide)
+      : super(taskType, reward, question, lamaText);
 }

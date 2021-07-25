@@ -1,161 +1,308 @@
-import 'dart:math';
 import 'dart:ui';
+import 'dart:developer' as developer;
+
 import 'package:flame/components/parallax_component.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
-import 'package:lama_app/flappyLama/components/flappyGround.dart';
 import 'package:lama_app/flappyLama/components/flappyLama.dart';
 import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
-import 'package:lama_app/flappyLama/widgets/pauseMode.dart';
-import 'package:lama_app/flappyLama/widgets/playMode.dart';
+import 'package:lama_app/flappyLama/widgets/playModeWidget.dart';
+import 'package:lama_app/flappyLama/widgets/startScreen.dart';
+
+import 'widgets/gameOverMode.dart';
 
 class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
-  Size screenSize;
-  double tileSize;
-  int tilesX = 9;
-  int tilesY;
-
-  int score = 0;
-  FlappyGround flappyGround;
-
-  BuildContext _context;
+  // SETTINGS
+  // --------
+  /// the id of flappyLama game which is used in the database
+  final int _gameId = 2;
+  /// amount of tiles on the x coordinate
+  final int tilesX = 9;
+  /// size of the lama
+  final double _lamaSize = 48;
   // name of the pauseMode widget
-  String _pauseMode = "PauseMode";
+  final String _pauseMode = "PauseMode";
   // name of the playMode widget
-  String _playMode = "PlayMode";
+  final String _playMode = "PlayMode";
+  // name of the startScreen widget
+  final String _startScreen = "StartScreen";
+  // name of the gameOver widget
+  final String _gameOverMode = "GameOverMode";
+  /// how many times the user can play this game
+  int _lifes = 3;
+  // --------
+  // SETTINGS
 
-  int _gameId = 2;
-  bool _paused = false;
+  /// screensize of the game
+  Size _screenSize;
+  /// pixel of the quadratic tiles
+  double _tileSize;
+  /// amount of tiles on the y coordinate
+  int _tilesY;
+  /// the achieved score in this round
+  int score = 0;
+  /// necessary context for determine the actual screensize
+  BuildContext _context;
+  /// a bool flag which indicates if the game has started
+  bool _started = false;
+  /// a bool flag which indicates if the score of the game has been saved
   bool _savedHighscore = false;
-  int _highScore = 0;
+  /// the personal highscore
+  int _userHighScore = 0;
+  /// the all time highscore in this game
+  int _alltimeHighScore = 0;
+  /// the lama [AnimationComponent]
   FlappyLama _lama;
-  Random _randomNumber = Random();
+  /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
 
-  FlappyLamaGame(this._context, this._userRepo) {
-    var back = ParallaxComponent(
-        [
-          ParallaxImage('png/himmel.png'),
-          ParallaxImage('png/clouds_3.png'),
-          ParallaxImage('png/clouds_2.png'),
-          ParallaxImage('png/clouds.png'),
-        ],
-        baseSpeed: Offset(7, 0),
-        layerDelta: Offset(10, 0)
-    );
-    // add background
-    add(back);
-
-    // add lama
-    _lama = FlappyLama(this, 48)
-      ..onHitGround = () => developer.log("GROUND");
-    add(_lama);
-
-    // add PlayMode widget
-    addWidgetOverlay(
-        _playMode,
-        PlayMode(
-            onPausePressed: pauseGame
-        )
-    );
-
-    initialize();
+  /// Getter of [_started]
+  bool get started {
+    return _started;
   }
 
-  void initialize() async {
-    resize(await Flame.util.initialDimensions());
+  /// Getter of [_screenSize]
+  Size get screenSize {
+    return _screenSize;
+  }
 
+  /// Getter of [_tilesY]
+  int get tilesY {
+    return _tilesY;
+  }
+
+  /// Getter of [_tileSize]
+  double get tileSize {
+    return _tileSize;
+  }
+
+  FlappyLamaGame(this._context, this._userRepo) {
+    // background with moving clouds
+    var back = ParallaxComponent([
+      ParallaxImage('png/himmel.png'),
+      ParallaxImage('png/clouds_3.png'),
+      ParallaxImage('png/clouds_2.png'),
+      ParallaxImage('png/clouds.png'),
+    ], baseSpeed: Offset(7, 0), layerDelta: Offset(10, 0));
+
+    // load all obstacle pngs
     Flame.images.loadAll([
       'png/kaktus_body.png',
       'png/kaktus_end_bottom.png',
       'png/kaktus_end_top.png',
     ]);
 
-    // add ground
-    //add(FlappyGround(this));
-    // TODO: move to where the game will start (tap the first time)
-    // add obstacles
-    add(
-        FlappyObstacle(
-            this,
-            false,
-            48,
-              () => this.score++,
-              () => developer.log("HIT"),
-        )
-    );
-    add(FlappyObstacle(this, true, 48, () => this.score++));
-    // add score
-    add(FlappyScoreDisplay(this));
+    // add background
+    add(back);
+
+    initializeAsync();
   }
 
+  /// This method load the [Size] of the screen and loads the StartScreen
+  void initializeAsync() async {
+    // resize
+    resize(await Flame.util.initialDimensions());
+
+    loadStartScreenAsync();
+  }
+
+  /// This method saves the actual Score to the database for the user which is logged in.
+  ///
+  /// sideffects:
+  ///   [_savedHighscore] = true
   void saveHighscore() {
-    if (!this._savedHighscore) {
-      this._savedHighscore = true;
+    if (!_savedHighscore) {
+      _savedHighscore = true;
       _userRepo.addHighscore(Highscore(
           gameID: _gameId,
-          score: this.score,
-          userID: this._userRepo.authenticatedUser.id));
+          score: score,
+          userID: _userRepo.authenticatedUser.id));
     }
   }
 
-  void loadPersonalHighscoreAsync() async {
-    this._highScore = await _userRepo.getMyHighscore(_gameId);
+  /// This method resets the game so another round can start.
+  ///
+  /// sideeffects:
+  ///   [score] = 0
+  ///   [_savedHighscore] = false
+  ///   [components]
+  ///   displayed widget
+  void resetGame() {
+    _savedHighscore = false;
+    score = 0;
+
+    // remove gameOver widget
+    removeWidgetOverlay(_gameOverMode);
+
+    // removes score
+    components.removeWhere((element) => element is FlappyScoreDisplay);
+
+    // removes obstacles
+    components.removeWhere((element) => element is FlappyObstacle);
+
+    // removes lama
+    components.removeWhere((element) => element is FlappyLama);
+
+    loadStartScreenAsync();
+  }
+
+  /// This method load the necessary components to start begin a new game.
+  ///
+  /// It loads/adds...
+  ///   ... the [_userHighscore]
+  ///   ... the [_alltimeHighscore]
+  ///   ... the [_lama]
+  ///   ... the start Screen widget
+  void loadStartScreenAsync() async {
+    // load highscore
+    this._userHighScore = await _userRepo.getMyHighscore(_gameId);
+    // load alltimeHighscore
+    this._alltimeHighScore = await _userRepo.getHighscore(_gameId);
+
+    // add lama
+    _lama = FlappyLama(this, _lamaSize)
+      ..onHitGround = gameOver;
+    add(_lama);
+
+    // add start widget
+    addWidgetOverlay(
+        _startScreen,
+        StartScreen(
+            userHighScore: _userHighScore,
+            alltimeHighScore: _alltimeHighScore,
+            onStartPressed: startGame
+        )
+    );
   }
 
   void resize(Size size) {
-    screenSize = Size(
+    // get the screensize fom [MediaQuery] because [size] is incorrect on some devices
+    _screenSize = Size(
         MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
         MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
-    tileSize = screenSize.width / tilesX;
-    tilesY = screenSize.height ~/ tileSize;
+    // calculates by the width of the screen
+    _tileSize = screenSize.width / tilesX;
+    _tilesY = screenSize.height ~/ tileSize;
 
     super.resize(size);
+  }
+
+  void startGame() {
+    // resum game
+    resumeEngine();
+
+    // remove start widget
+    removeWidgetOverlay(_startScreen);
+
+    // add playmodebutton widget
+    addWidgetOverlay(
+        _playMode,
+        PlayModeButton(
+          playMode: true,
+          onButtonPressed: pauseGame)
+    );
+
+    _started = true;
+
+    // add obstacles
+    add(FlappyObstacle(this, false, _lamaSize, () => this.score++));
+    add(FlappyObstacle(this, true, _lamaSize, () => this.score++));
+
+    // add score
+    add(FlappyScoreDisplay(this));
   }
 
   /// This method pauses the game.
   void pauseGame() {
     pauseEngine();
-    _paused = true;
 
     // removed the playMode widget
     removeWidgetOverlay(_playMode);
     addWidgetOverlay(
         _pauseMode,
-        PauseMode(
-            onPlayPressed: resumeGame)
+        PlayModeButton(
+            playMode: false,
+            onButtonPressed: resumeGame)
     );
   }
 
   /// This method resumes the game.
   void resumeGame() {
     resumeEngine();
-    _paused = false;
 
-    // removed the pauseMode widget
+    // remove the pauseMode widget
     removeWidgetOverlay(_pauseMode);
+
+    // add the playMode widget
     addWidgetOverlay(
         _playMode,
-        PlayMode(
-            onPausePressed: pauseGame)
+        PlayModeButton(
+            playMode: true,
+            onButtonPressed: pauseGame)
     );
   }
 
+  /// This method finishes the game.
+  ///
+  /// sideeffects:
+  ///   [_lifes] -= 1
+  ///   [_started] = false
+  ///   removes the play/pause widget
+  ///   adds [GameOverMode] widget
+  void gameOver() {
+    developer.log("Game Over");
+
+    // removes playMode and pausemode widget
+    removeWidgetOverlay(_playMode);
+    removeWidgetOverlay(_pauseMode);
+
+    // reduces life
+    _lifes--;
+
+    pauseEngine();
+    _started = false;
+
+    // save highscore
+    saveHighscore();
+
+    // add game over widget
+    addWidgetOverlay(
+        _gameOverMode,
+        GameOverMode(
+          score: score,
+          lifes: _lifes,
+          onQuitPressed: quit,
+          onRetryPressed: resetGame,
+        ));
+  }
+
+  /// This method closes the game widget.
+  void quit() {
+    removeWidgetOverlay(_gameOverMode);
+    Navigator.pop(_context);
+  }
+
   void onTapDown(TapDownDetails d) {
-    _lama.onTapDown();
+    if (_started) {
+      _lama.onTapDown();
+    }
   }
 
   void update(double t) {
-    // check if the lama hits an obstacle
-    components.whereType<FlappyObstacle>().forEach((element) { element.collides(_lama?.toRect() ?? null); });
-    
     super.update(t);
+
+    if (_started) {
+      // check if the lama hits an obstacle
+      components.whereType<FlappyObstacle>().forEach((element) {
+        if (element.collides(_lama?.toRect() ?? null) == true) {
+          gameOver();
+        }
+      });
+    }
   }
 }

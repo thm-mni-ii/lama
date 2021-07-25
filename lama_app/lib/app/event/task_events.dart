@@ -21,8 +21,9 @@ class AnswerTaskEvent extends TaskEvent {
   }
   AnswerTaskEvent.initGridSelect(this.rightPositions, this.markedPositions);
 
-  AnswerTaskEvent.initMoneyTask(double providedAnswerDouble){
+  AnswerTaskEvent.initMoneyTask(double providedAnswerDouble) {
     this.providedAnswerDouble = providedAnswerDouble;
   }
-}
 
+  AnswerTaskEvent.initVocableTest(this.providedanswerStates);
+}

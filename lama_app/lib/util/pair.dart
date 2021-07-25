@@ -7,4 +7,8 @@ class Pair<T1, T2> extends Equatable {
 
   @override
   List<Object> get props => [a, b];
+
+  static Pair<String, String> fromJson(Map<String, dynamic> json) {
+    return Pair(json['word'], json['translation']);
+  }
 }

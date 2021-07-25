@@ -12,6 +12,7 @@ import 'package:lama_app/app/screens/task_type_screens/grid_select_task_screen.d
 import 'package:lama_app/app/screens/task_type_screens/mark_words_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/match_Category_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/money_task_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/vocable_test_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -49,6 +50,7 @@ class TaskScreenState extends State<TaskScreen> {
               break;
           }
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             body: Container(
               decoration: BoxDecoration(gradient: lg),
               child: SafeArea(
@@ -105,28 +107,117 @@ class TaskScreenState extends State<TaskScreen> {
             ),
           );
         } else if (state is TaskAnswerResultState) {
-          if (state.correct)
-            return Container(
-              color: LamaColors.white,
-              child: Center(
-                child: Icon(
-                  Icons.check,
-                  size: 100,
-                  color: LamaColors.greenAccent,
+          if (state.correct) {
+            if (state.subTaskResult == null) {
+              return Container(
+                color: LamaColors.white,
+                child: Center(
+                  child: Icon(
+                    Icons.check,
+                    size: 100,
+                    color: LamaColors.greenAccent,
+                  ),
                 ),
-              ),
-            );
-          else
-            return Container(
-              color: LamaColors.white,
-              child: Center(
-                child: Icon(
-                  Icons.close,
-                  size: 100,
-                  color: LamaColors.redAccent,
+              );
+            } else {
+              return Container(
+                color: LamaColors.white,
+                child: Column(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height / 100 * 90,
+                      child: Icon(
+                        Icons.check,
+                        size: 100,
+                        color: LamaColors.greenAccent,
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 100 * 10,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: state.subTaskResult.length,
+                        itemBuilder: (context, index) {
+                          if (state.subTaskResult[index] == null) {
+                            return CircleAvatar(
+                              backgroundColor: Colors.grey,
+                            );
+                          } else if (!state.subTaskResult[index]) {
+                            return CircleAvatar(
+                              backgroundColor: LamaColors.redAccent,
+                            );
+                          } else if (state.subTaskResult[index]) {
+                            return CircleAvatar(
+                              backgroundColor: LamaColors.greenAccent,
+                            );
+                          }
+                          return CircleAvatar(
+                            backgroundColor: Colors.grey,
+                          );
+                        },
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    )
+                  ],
                 ),
-              ),
-            );
+              );
+            }
+          } else {
+            if (state.subTaskResult == null) {
+              return Container(
+                color: LamaColors.white,
+                child: Center(
+                  child: Icon(
+                    Icons.close,
+                    size: 100,
+                    color: LamaColors.redAccent,
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                color: LamaColors.white,
+                child: Column(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height / 100 * 90,
+                      child: Icon(
+                        Icons.close,
+                        size: 100,
+                        color: LamaColors.redAccent,
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 100 * 10,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: state.subTaskResult.length,
+                        itemBuilder: (context, index) {
+                          if (state.subTaskResult[index] == null) {
+                            return CircleAvatar(
+                              backgroundColor: Colors.grey,
+                            );
+                          } else if (!state.subTaskResult[index]) {
+                            return CircleAvatar(
+                              backgroundColor: LamaColors.redAccent,
+                            );
+                          } else if (state.subTaskResult[index]) {
+                            return CircleAvatar(
+                              backgroundColor: LamaColors.greenAccent,
+                            );
+                          }
+                          return CircleAvatar(
+                            backgroundColor: Colors.grey,
+                          );
+                        },
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+          }
         } else if (state is AllTasksCompletedState) {
           return Scaffold(
             body: Container(
@@ -164,8 +255,10 @@ class TaskScreenState extends State<TaskScreen> {
         return MatchCategoryTaskScreen(task, constraints);
       case "GridSelect":
         return GridSelectTaskScreen(task, constraints, GridSelectTaskBloc());
-      case"MoneyTask":
+      case "MoneyTask":
         return MoneyTaskScreen(task, constraints);
+      case "VocableTest":
+        return VocableTestTaskScreen(task, constraints);
       default:
         return Container();
     }

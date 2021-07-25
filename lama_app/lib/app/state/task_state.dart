@@ -11,8 +11,9 @@ class DisplayTaskState extends TaskState {
 }
 
 class TaskAnswerResultState extends TaskState {
+  List<bool> subTaskResult;
   bool correct;
-  TaskAnswerResultState(this.correct);
+  TaskAnswerResultState(this.correct, {this.subTaskResult});
 }
 
 class AllTasksCompletedState extends TaskState {

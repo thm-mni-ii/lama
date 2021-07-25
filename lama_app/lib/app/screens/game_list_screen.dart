@@ -12,7 +12,11 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 class GameListScreen extends StatelessWidget {
   final List<GameListItem> games = [
     GameListItem("Snake", 2,
-        "Steuer die Schlange mit den Pfeiltasten und sammle Äpfel, um länger zu werden!"),];
+        "Steuer die Schlange mit den Pfeiltasten und sammle Äpfel, um länger zu werden!"),
+    GameListItem("Flappy-Lama", 3,
+        "Tippe auf den Bildschirm, um das Lama fliegen zu lassen und weiche dabei den Hindernissen aus!")
+
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +147,7 @@ class GameListScreen extends StatelessWidget {
   Widget buildGameList(context, index, constraints) {
     Color color = LamaColors.orangeAccent;
     if (index % 2 == 0) color = LamaColors.blueAccent;
+    if (index % 3 == 0) color = LamaColors.redAccent;
     return Container(
       height: (constraints.maxHeight / 100) * 25,
       decoration: BoxDecoration(
