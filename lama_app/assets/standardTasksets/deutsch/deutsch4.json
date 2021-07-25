@@ -8,6 +8,7 @@
             "task_reward":2,
             "question":"Welches Wort ist ein Synonym zu Couch? (gleiche Bedeutung)",
             "lama_text":"Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
             "right_answer":"Sofa",
              "wrong_answers":["Sessel", "Stuhl", "Sitzsack"]
              },
@@ -16,21 +17,22 @@
            "task_reward":2,
            "question":"Wusstest du, ___ Lamas spucken können?",
            "lama_text":"Tippe die richtige Antwort an!",
+           "left_to_solve": 3,
            "right_answer":"dass",
            "wrong_answers":["Das", "das"]
          },
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "question":"",
            "lama_text":"Markiere vier Flüsse",
+           "left_to_solve": 3,
            "wordsToFind":["Rhein", "Lahn", "Werra", "Main"]
          },
          {
            "task_type": "MatchCategory",
            "task_reward":2,
-           "question": "",
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+           "left_to_solve": 3,
            "nameCatOne": "Gegenwart",
            "nameCatTwo": "Vergangenheit",
            "categoryOne": ["laufen", "gehen", "lernen", "fallen"],

@@ -2,12 +2,14 @@
     "taskset_name":"Standardaufgaben Klasse 6",
      "taskset_subject":"Mathe",
       "taskset_grade":6,
+      "taskset_randomize_order": true,
        "tasks": [
         {
          "task_type":"4Cards",
          "task_reward":2,
          "question":"Was ist das Ergebnis der Multiplikation ?",
          "lama_text":"Tippe die richtige Antwort an!",
+         "left_to_solve": 3,
          "right_answer":"Produkt",
          "wrong_answers":["Summe", "Differenz", "Quotient"]
         },
@@ -16,6 +18,7 @@
          "task_reward":2,
          "question":"Was ist das Ergebnis der Division ?",
          "lama_text":"Tippe die richtige Antwort an!",
+         "left_to_solve": 3,
          "right_answer":"Quotient",
          "wrong_answers":["Summe", "Differenz", "Produkt"]
         },
@@ -24,6 +27,7 @@
              "task_reward":2,
              "question":"-4*(-4)",
              "lama_text":"Tippe die richtige Antwort an!",
+             "left_to_solve": 3,
              "right_answer":"16",
               "wrong_answers":["-16", "0", "4"]
               },
@@ -32,6 +36,7 @@
                   "task_reward":2,
                   "question":"-10/2",
                   "lama_text":"Tippe die richtige Antwort an!",
+                  "left_to_solve": 3,
                   "right_answer":"-5",
                    "wrong_answers":["5", "7", "-7"]
              }

@@ -8,6 +8,7 @@
       "task_reward": 2,
       "question": "What does 'shoe' mean in german?",
       "lama_text": "Tap the right Answer!",
+      "left_to_solve": 3,
       "right_answer": "Schuh",
       "wrong_answers": [
         "Schatten",
@@ -20,6 +21,7 @@
       "task_reward": 2,
       "question": "Who discovered America",
       "lama_text": "Tap the right Answer!",
+      "left_to_solve": 3,
       "right_answer": "Christoph Kolumbus",
       "wrong_answers": [
         "Lukas Podolski",
@@ -32,6 +34,7 @@
       "task_reward": 2,
       "question": "I am __ to school",
       "lama_text": "Tap the right Answer!",
+      "left_to_solve": 3,
       "right_answer": "going",
       "wrong_answers": [
         "go",
@@ -43,14 +46,15 @@
       "task_reward":2,
       "question":"I __ learning english",
       "lama_text":"Tap the right Answer!",
+      "left_to_solve": 3,
       "right_answer":"am",
       "wrong_answers":["be", "horse"]
     },
     {
       "task_type": "MatchCategory",
       "task_reward":2,
-      "question": "",
       "lama_text": "Move each word in the correct category!",
+      "left_to_solve": 3,
       "nameCatOne": "Simple Present",
       "nameCatTwo": "Simple Past",
       "categoryOne": ["work", "go", "see", "sell"],
@@ -59,8 +63,8 @@
     {
       "task_type": "MatchCategory",
       "task_reward":2,
-      "question": "",
       "lama_text": "Move each word in the correct category!",
+      "left_to_solve": 3,
       "nameCatOne": "Simple Past",
       "nameCatTwo": "Past Participle",
       "categoryOne": ["was", "came", "did", "knew"],
@@ -69,8 +73,8 @@
     {
       "task_type":"VocableTest",
       "task_reward":5,
-      "question": "",
       "lama_text": "Translate the shown word!",
+      "left_to_solve": 3,
       "wordPairs": [{"word":"to jump","translation":"springen"}, {"word":"to sleep", "translation":"schlafen"}],
       "randomizeSide": true
     }

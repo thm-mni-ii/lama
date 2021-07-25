@@ -15,8 +15,8 @@ class ChooseTasksetBloc extends Bloc<ChooseTasksetEvent, ChooseTasksetState> {
       yield LoadingAllTasksetsState();
       List<Taskset> tasksets =
           repository.getTasksetsForSubjectAndGrade(event.subject, event.grade);
-      //TODO: Remove this TESTSTUFF
-      await Future.delayed(Duration(seconds: 1));
+      //TODO: Maybe remove this? it serves no real purpose but it makes it look more professional
+      await Future.delayed(Duration(milliseconds: 500));
       //
       yield LoadedAllTasksetsState(tasksets);
     }

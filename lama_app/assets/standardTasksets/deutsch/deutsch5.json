@@ -8,6 +8,7 @@
             "task_reward":2,
             "question":"Wie hieß Goethe mit Vornamen?",
             "lama_text":"Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
             "right_answer":"Johann Wolfgang",
              "wrong_answers":["Jonas Wolfgang", "Johann Wolffang", "Jona Hoftal"]
              },
@@ -16,21 +17,22 @@
            "task_reward":2,
            "question":"Wusstest du, ___ Lamas spucken können?",
            "lama_text":"Tippe die richtige Antwort an!",
+           "left_to_solve": 3,
            "right_answer":"dass",
            "wrong_answers":["Das", "das"]
          },
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "question":"",
            "lama_text":"Markiere vier Länder",
+           "left_to_solve": 3,
            "wordsToFind":["Finnland", "Irland", "Belgien", "Ungarn"]
          },
          {
            "task_type": "MatchCategory",
            "task_reward":2,
-           "question": "",
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+           "left_to_solve": 3,
            "nameCatOne": "Gegenwart",
            "nameCatTwo": "Vergangenheit",
            "categoryOne": ["laufen", "gehen", "lernen", "fallen"],

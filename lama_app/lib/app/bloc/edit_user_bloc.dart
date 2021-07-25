@@ -15,7 +15,6 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
 
   @override
   Stream<EditUserState> mapEventToState(event) async* {
-    print(_user.coins);
     if (event is EditUserAbort) _editUserReturn(event.context);
     if (event is EditUserDeleteUserCheck) yield await _deleteUserCheck();
     if (event is EditUserDeleteUserAbrove) _deleteUser(event.context);
@@ -29,6 +28,7 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
     if (event is EditUserChangeCoins) {
       _changedUser.coins = (int.parse(event.coins));
     }
+    if (event is EditUserChangeGrade) _changedUser.grade = event.grade;
   }
 
   Future<EditUserState> _pushUserChanges() async {
@@ -42,6 +42,8 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
     //Coins
     if (_changedUser.coins != _user.coins && _changedUser.coins != null)
       await DatabaseProvider.db.updateUserCoins(_user, _changedUser.coins);
+    if (_changedUser.grade != _user.grade && _changedUser.grade != null)
+      await DatabaseProvider.db.updateUserGrade(_user, _changedUser.grade);
     return EditUserChangeSuccess(_user, _changedUser);
   }
 
@@ -66,10 +68,10 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   Future<bool> _checkForLastAdmin() async {
     List<User> list = await DatabaseProvider.db.getUser();
     int count = 0;
-    list.forEach((element) {
-      if (element.isAdmin) count++;
-      if (count >= 2) return false;
-    });
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].isAdmin) count++;
+      if (count > 1) return false;
+    }
     return true;
   }
 }

@@ -25,11 +25,21 @@ class EditUserScreenState extends State<EditUserScreen> {
   //String _dropDown = 'Klasse 1';
   User _user;
   String _pass;
+  List<String> _grades = [
+    'Klasse 1',
+    'Klasse 2',
+    'Klasse 3',
+    'Klasse 4',
+    'Klasse 5',
+    'Klasse 6',
+  ];
+  String _dropDown;
 
   EditUserScreenState(this._user);
 
   @override
   void initState() {
+    _dropDown = _grades[_user.grade - 1];
     super.initState();
   }
 
@@ -69,7 +79,7 @@ class EditUserScreenState extends State<EditUserScreen> {
               _passwortTextField(context),
               _passwortTextField2(context),
               _coinsTextField(context),
-              SizedBox(height: 10),
+              _gradesList(context, _grades),
               _deletUserButoon(context),
             ],
           ),
@@ -159,6 +169,47 @@ class EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
+  Widget _gradesList(BuildContext context, List<String> grades) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 20),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 100),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: LamaColors.bluePrimary, width: 1),
+          ),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            items: grades.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: LamaTextTheme.getStyle(
+                    fontSize: 20,
+                    color: LamaColors.black,
+                    monospace: true,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            }).toList(),
+            onChanged: (value) {
+              context
+                  .read<EditUserBloc>()
+                  .add(EditUserChangeGrade(grades.indexOf(value) + 1));
+              setState(() {
+                _dropDown = value;
+              });
+            },
+            value: _dropDown,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _deletUserButoon(BuildContext context) {
     return ElevatedButton(
       child: Row(
@@ -212,6 +263,12 @@ class EditUserScreenState extends State<EditUserScreen> {
             _changeRow('******', passString),
             _changesHeadline('Lamamünzen'),
             _changeRow(state.user.coins, state.changedUser.coins),
+            _changesHeadline('Klasse'),
+            _changeRow(
+                _grades[state.user.grade - 1],
+                state.changedUser.grade != null
+                    ? _grades[state.changedUser.grade - 1]
+                    : _grades[state.user.grade - 1]),
             SizedBox(
               height: 15,
             ),
@@ -367,12 +424,12 @@ class EditUserScreenState extends State<EditUserScreen> {
           padding: EdgeInsets.only(right: 10),
           child: Ink(
             decoration: ShapeDecoration(
-              color: LamaColors.greenAccent,
+              color: LamaColors.greenPrimary,
               shape: CircleBorder(),
             ),
             padding: EdgeInsets.all(7.0),
             child: IconButton(
-              icon: Icon(Icons.check_rounded),
+              icon: Icon(Icons.save, size: 28),
               color: Colors.white,
               tooltip: 'Bestätigen',
               onPressed: () {

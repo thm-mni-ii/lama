@@ -2,21 +2,23 @@
     "taskset_name":"Standardaufgaben Klasse 2",
      "taskset_subject":"Englisch",
       "taskset_grade":2,
+      "taskset_randomize_order":true,
        "tasks": [
            {
-           "task_type":"4Cards",
-            "task_reward":2,
-            "question":"What does 'book' mean in german?",
-            "lama_text":"Tap the right Answer!",
-            "right_answer":"Buch",
-             "wrong_answers":["Baum", "Boden", "Apfel"]
+                "task_type":"4Cards",
+                "task_reward":2,
+                "question":"What does 'book' mean in german?",
+                "lama_text":"Tap the right Answer!",
+                "left_to_solve": 3,
+                "right_answer":"Buch",
+                "wrong_answers":["Baum", "Boden", "Apfel"]
              },
              {
                 "task_type":"VocableTest",
                 "task_reward":5,
-                "question": "",
                 "lama_text": "Translate the shown word!",
-                "wordPairs": [{"word":"Window","translation":"fenster"}, {"word":"Eimer", "translation":"bucket"}],
+                "left_to_solve": 3,
+                "wordPairs": [{"word":"window","translation":"Fenster"}, {"word":"Eimer", "translation":"bucket"}],
                 "randomizeSide": true
              }
         ]

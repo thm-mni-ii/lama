@@ -8,6 +8,7 @@
             "task_reward":2,
             "question":"What does 'to trust' mean in german?",
             "lama_text":"Tap the right Answer!",
+            "left_to_solve": 3,
             "right_answer":"vertrauen",
              "wrong_answers":["drücken", "brauchen", "rosten"]
              },
@@ -16,6 +17,7 @@
            "task_reward": 2,
            "question": "Simple Past: I __ in the water",
            "lama_text": "Tap the right Answer!",
+           "left_to_solve": 3,
            "right_answer": "swam",
            "wrong_answers": [
              "swimming",
@@ -25,8 +27,8 @@
          {
            "task_type": "MatchCategory",
            "task_reward":2,
-           "question": "",
            "lama_text": "Move each word in the correct category!",
+           "left_to_solve": 3,
            "nameCatOne": "Simple Present",
            "nameCatTwo": "Simple Past",
            "categoryOne": ["work", "go", "see", "sell"],
@@ -35,16 +37,16 @@
          {
           "task_type":"VocableTest",
           "task_reward":5,
-          "question": "",
           "lama_text": "Translate the shown word!",
+          "left_to_solve": 3,
           "wordPairs": [{"word":"newspaper","translation":"Zeitung"}, {"word":"skyscraper", "translation":"Wolkenkratzer"}],
           "randomizeSide": true
         },
          {
            "task_type": "MatchCategory",
            "task_reward":2,
-           "question": "",
            "lama_text": "Move each word in the correct category!",
+           "left_to_solve": 3,
            "nameCatOne": "Simple Past",
            "nameCatTwo": "Past Participle",
            "categoryOne": ["was", "came", "did", "knew"],

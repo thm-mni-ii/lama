@@ -11,7 +11,7 @@ class FlappyLama extends AnimationComponent {
   // SETTINGS
   // --------
   /// hitbox padding = [left, right, top, bottom] = negative move inwards / positive move outwards
-  final _hitBoxPadding = [-2.0, -2.0, -2.0, -2.0];
+  final _hitBoxPadding = [-9.0, -7.0, -7.0, -3.0];
   /// flag to show the hitbox as an rectangle
   final bool _showHitbox = false;
   /// speed increase/decrease when [flap] gets called = flap height

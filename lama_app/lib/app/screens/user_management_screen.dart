@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/event/user_management_event.dart';
@@ -37,13 +38,7 @@ class UserManagementScreenState extends State<UserManagementScreen> {
           return Center(child: CircularProgressIndicator());
         },
       ),
-      floatingActionButton: FloatingActionButton(
-          heroTag: "addUser",
-          backgroundColor: LamaColors.bluePrimary,
-          onPressed: () =>
-              {context.read<UserManagementBloc>().add(CreateUser(context))},
-          tooltip: 'Nutzer hinzufügen',
-          child: Icon(Icons.group_add)),
+      floatingActionButton: _floatingButton(context),
     );
   }
 
@@ -101,6 +96,36 @@ class UserManagementScreenState extends State<UserManagementScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _floatingButton(BuildContext context) {
+    return SpeedDial(
+      icon: Icons.add,
+      backgroundColor: LamaColors.mainPink,
+      foregroundColor: LamaColors.white,
+      children: [
+        SpeedDialChild(
+          label: 'Nutzer hinzufügen',
+          backgroundColor: LamaColors.mainPink,
+          onTap: () =>
+              {context.read<UserManagementBloc>().add(CreateUser(context))},
+          child: Icon(
+            Icons.group_add,
+            color: LamaColors.white,
+          ),
+        ),
+        SpeedDialChild(
+          label: 'Administrator hinzufügen',
+          backgroundColor: LamaColors.bluePrimary,
+          onTap: () =>
+              {context.read<UserManagementBloc>().add(CreateAdmin(context))},
+          child: Icon(
+            Icons.group_add,
+            color: LamaColors.white,
+          ),
+        ),
+      ],
     );
   }
 }

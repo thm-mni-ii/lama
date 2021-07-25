@@ -51,6 +51,11 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
+                    Icon(
+                      Icons.add_link,
+                      color: LamaColors.bluePrimary,
+                      size: 30,
+                    ),
                     _inputFields(context),
                     _headline('Taskset URLs'),
                     _tasksetUrlList(state.urls),
@@ -78,7 +83,6 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             decoration: InputDecoration(
               labelText: 'Taskset URL',
               hintText: 'https://beispiel.de/taskset.json',
-              suffixIcon: Icon(Icons.add_link),
             ),
             onChanged: (value) => {
               context
@@ -107,8 +111,8 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         return Row(
           children: [
             Text(
-              urls[index].url.length > 32
-                  ? urls[index].url.substring(1, 30) + '...'
+              urls[index].url.length > 30
+                  ? urls[index].url.substring(7, 32) + '...'
                   : urls[index].url,
               style: LamaTextTheme.getStyle(
                   color: LamaColors.black, fontSize: 18, monospace: true),
@@ -141,8 +145,8 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         return Row(
           children: [
             Text(
-              urls[index].url.length > 32
-                  ? urls[index].url.substring(1, 30) + '...'
+              urls[index].url.length > 30
+                  ? urls[index].url.substring(7, 32) + '...'
                   : urls[index].url,
               style: LamaTextTheme.getStyle(
                   color: Colors.grey, fontSize: 18, monospace: true),

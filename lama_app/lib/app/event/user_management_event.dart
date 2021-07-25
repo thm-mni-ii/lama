@@ -15,13 +15,13 @@ class CreateUser extends UserManagementEvent {
   CreateUser(this.context);
 }
 
+class CreateAdmin extends UserManagementEvent {
+  BuildContext context;
+  CreateAdmin(this.context);
+}
+
 class EditUser extends UserManagementEvent {
   BuildContext context;
   User user;
   EditUser(this.user, this.context);
-}
-
-class TasksetOption extends UserManagementEvent {
-  BuildContext context;
-  TasksetOption(this.context);
 }

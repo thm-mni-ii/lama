@@ -85,56 +85,68 @@ class CreateUserScreenState extends State<CreateUserScreen> {
 
   Widget _gradesList(BuildContext context, List<String> grades) {
     return Padding(
-        padding: EdgeInsets.all(20),
-        child: DropdownButton<String>(
-          items: grades.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(
-                value,
-                style: LamaTextTheme.getStyle(
-                  fontSize: 20,
-                  color: LamaColors.black,
-                  monospace: true,
-                  fontWeight: FontWeight.w500,
+      padding: EdgeInsets.all(20),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 100),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: LamaColors.bluePrimary, width: 1),
+          ),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            items: grades.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: LamaTextTheme.getStyle(
+                    fontSize: 20,
+                    color: LamaColors.black,
+                    monospace: true,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-            );
-          }).toList(),
-          onChanged: (value) {
-            context
-                .read<CreateUserBloc>()
-                .add(UserGradeChange(grades.indexOf(value) + 1));
-            setState(() {
-              _dropDown = value;
-            });
-          },
-          value: _dropDown,
-        ));
+              );
+            }).toList(),
+            onChanged: (value) {
+              context
+                  .read<CreateUserBloc>()
+                  .add(UserGradeChange(grades.indexOf(value) + 1));
+              setState(() {
+                _dropDown = value;
+              });
+            },
+            value: _dropDown,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _userOptionsButtons(BuildContext context) {
     return Row(
       children: [
         Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Ink(
-              decoration: ShapeDecoration(
-                color: LamaColors.greenAccent,
-                shape: CircleBorder(),
-              ),
-              padding: EdgeInsets.all(7.0),
-              child: IconButton(
-                icon: Icon(Icons.check_rounded),
-                color: Colors.white,
-                tooltip: 'Bestätigen',
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    context.read<CreateUserBloc>().add(CreateUserPush());
-                  }
-                },
-              ),
-            )),
+          padding: EdgeInsets.only(right: 10),
+          child: Ink(
+            decoration: ShapeDecoration(
+              color: LamaColors.greenPrimary,
+              shape: CircleBorder(),
+            ),
+            padding: EdgeInsets.all(7.0),
+            child: IconButton(
+              icon: Icon(Icons.save, size: 28),
+              color: Colors.white,
+              tooltip: 'Speichern',
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  context.read<CreateUserBloc>().add(CreateUserPush());
+                }
+              },
+            ),
+          ),
+        ),
         Ink(
           decoration: ShapeDecoration(
             color: LamaColors.redPrimary,

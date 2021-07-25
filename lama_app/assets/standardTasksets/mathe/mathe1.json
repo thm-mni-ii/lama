@@ -8,6 +8,7 @@
          "task_reward":2,
          "question":"Welches Zeichen steht für die Addition ?",
          "lama_text":"Tippe die richtige Antwort an!",
+         "left_to_solve": 3,
          "right_answer":"+",
          "wrong_answers":["-", "x", "%"]
         },
@@ -16,6 +17,7 @@
          "task_reward":2,
          "question":"Welches Zeichen steht für die Subtraktion ?",
          "lama_text":"Tippe die richtige Antwort an!",
+         "left_to_solve": 3,
          "right_answer":"-",
          "wrong_answers":["+", "x", "%"]
         },
@@ -24,6 +26,7 @@
             "task_reward":2,
             "question":"3+4",
             "lama_text":"Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
             "right_answer":"7",
              "wrong_answers":["6", "1", "8"]
              },
@@ -32,14 +35,15 @@
                  "task_reward":2,
                  "question":"3+1",
                  "lama_text":"Tippe die richtige Antwort an!",
+                 "left_to_solve": 3,
                  "right_answer":"4",
                   "wrong_answers":["2", "5", "3"]
             },
         {
          "task_type":"MoneyTask",
          "task_reward":2,
-         "question":"irgendwas",
          "lama_text":"Sammle 7,50€ mit den Münzen zusammen",
+         "left_to_solve": 3,
          "moneyAmount": 7.5
         }
         ]

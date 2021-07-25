@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/achievement_model.dart';
 import 'package:lama_app/app/model/game_model.dart';
@@ -8,6 +11,7 @@ import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/subject_model.dart';
 import 'package:lama_app/app/model/userSolvedTaskAmount_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -47,6 +51,13 @@ class DatabaseProvider {
 
   static const String tableTaskUrl = "task_url";
   static const String columnTaskUrl = "url";
+
+  static const String tableLeftToSolve = "left_to_solve";
+  static const String columnLeftToSolveID = "id";
+  static const String columnTaskString = "task_string";
+  static const String columnUserLTSId = "user_id";
+  static const String columnLeftToSolve = "left_to_solve";
+  static const String columnDoesStillExist = "does_still_exist";
 
   DatabaseProvider._();
   static final DatabaseProvider db = DatabaseProvider._();
@@ -111,6 +122,13 @@ class DatabaseProvider {
       await database.execute("Create TABLE $tableTaskUrl("
           "$columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
           "$columnTaskUrl TEXT"
+          ");");
+      await database.execute("CREATE TABLE $tableLeftToSolve("
+          "$columnLeftToSolveID INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$columnTaskString TEXT,"
+          "$columnLeftToSolve INTEGER,"
+          "$columnUserLTSId INTEGER,"
+          "$columnDoesStillExist INTEGER"
           ");");
     });
   }
@@ -211,11 +229,11 @@ class DatabaseProvider {
     final db = await database;
 
     var highscore = await db.query(tableHighscore,
-      columns: [columnId, columnGameId, columnScore, columnUserId],
-      where: "$columnUserId = ? and $columnGameId = ?",
-      whereArgs: [user.id, gameID],
-      orderBy: "$columnScore DESC",
-      limit: 1);
+        columns: [columnId, columnGameId, columnScore, columnUserId],
+        where: "$columnUserId = ? and $columnGameId = ?",
+        whereArgs: [user.id, gameID],
+        orderBy: "$columnScore DESC",
+        limit: 1);
 
     if (highscore.isNotEmpty) {
       return Highscore.fromMap(highscore.first).score;
@@ -376,7 +394,7 @@ class DatabaseProvider {
     final db = await database;
 
     return await db
-        .delete(tableHighscore, where: "$columnGameId = ?", whereArgs: [id]);
+        .delete(tableHighscore, where: "$columnId = ?", whereArgs: [id]);
   }
 
   Future<int> deleteSubject(int id) async {
@@ -505,7 +523,7 @@ class DatabaseProvider {
     final db = await database;
 
     return await db.update(tableHighscore, highscore.toMap(),
-        where: "$columnGameId = ?", whereArgs: [highscore.id]);
+        where: "$columnId = ?", whereArgs: [highscore.id]);
   }
 
   Future<int> updateSubject(Subject subject) async {
@@ -579,5 +597,86 @@ class DatabaseProvider {
       return pswd;
     }
     return null;
+  }
+
+  Future deleteDatabase() async {
+    final db = await database;
+    await db.delete(tableUser);
+    await db.delete(tableAchievements);
+    await db.delete(tableUserHasAchievements);
+    await db.delete(tableGames);
+    await db.delete(tableHighscore);
+    await db.delete(tableHighscore);
+    await db.delete(tableSubjects);
+    await db.delete(tableUserSolvedTaskAmount);
+    await db.delete(tableTaskUrl);
+    await db.delete(tableLeftToSolve);
+  }
+
+  Future<int> insertLeftToSolve(
+      String taskString, int leftToSolve, User user) async {
+    final db = await database;
+    Map data = Map<String, dynamic>();
+    data[columnTaskString] = taskString;
+    data[columnLeftToSolve] = leftToSolve;
+    data[columnUserLTSId] = user.id;
+    data[columnDoesStillExist] = 0;
+    return await db.insert(tableLeftToSolve, data);
+  }
+
+  Future<int> getLeftToSolve(String taskString, User user) async {
+    final db = await database;
+    print("looking up task with: " + taskString);
+    var leftToSolve = await db.query(tableLeftToSolve,
+        columns: [columnLeftToSolve],
+        where: "$columnTaskString = ? and $columnUserLTSId = ?",
+        whereArgs: [taskString, user.id]);
+    if (leftToSolve.length > 0) return leftToSolve.first[columnLeftToSolve];
+    return Future.value(-3);
+  }
+
+  Future<void> removeUnusedLeftToSolveEntries(
+      List<Task> loadedTasks, User user) async {
+    final db = await database;
+    db.delete(tableLeftToSolve,
+        where: "$columnUserLTSId = ?", whereArgs: [user.id]);
+    loadedTasks.forEach((task) {
+      insertLeftToSolve(task.toString(), task.leftToSolve, user);
+    });
+  }
+
+  Future<int> decrementLeftToSolve(Task t, User user) async {
+    final db = await database;
+    Map values = Map<String, dynamic>();
+    print("curVal: " + t.leftToSolve.toString());
+    int newVal = max(t.leftToSolve - 1, -2);
+    print("setting to: " + newVal.toString());
+    values[columnLeftToSolve] = newVal;
+    return await db.update(tableLeftToSolve, values,
+        where: "$columnTaskString = ? and $columnUserLTSId = ?",
+        whereArgs: [t.toString(), user.id]);
+  }
+
+  Future<int> setDoesStillExist(Task t) async {
+    final db = await database;
+    Map values = Map<String, dynamic>();
+    values[columnDoesStillExist] = 1;
+    print("Set flag for " + t.toString());
+    return await db.update(tableLeftToSolve, values,
+        where: "$columnTaskString = ?", whereArgs: [t.toString()]);
+  }
+
+  Future<int> removeAllNonExistent() async {
+    final db = await database;
+    int val = 0;
+    return await db.delete(tableLeftToSolve,
+        where: "$columnDoesStillExist = ?", whereArgs: [val]);
+  }
+
+  Future<int> resetAllStillExistFlags() async {
+    final db = await database;
+    Map values = Map<String, dynamic>();
+    values[columnDoesStillExist] = 0;
+    return await db.update(tableLeftToSolve, values);
   }
 }

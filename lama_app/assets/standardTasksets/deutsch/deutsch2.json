@@ -6,8 +6,8 @@
         {
           "task_type":"GridSelect",
            "task_reward":3,
-           "question":"",
            "lama_text":"Markiere vier Fahrzeuge",
+           "left_to_solve": 3,
            "wordsToFind":["auto", "Bus", "Flugzeug", "Minivan"]
             },
            {
@@ -15,14 +15,15 @@
             "task_reward":2,
             "question":"Was ist kein Nomen (Namenwort)",
             "lama_text":"Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
             "right_answer":"aufgeben",
              "wrong_answers":["Aufgabe", "Anfahrt", "Abgang"]
              },
          {
            "task_type": "MatchCategory",
            "task_reward":2,
-           "question": "",
            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+           "left_to_solve": 3,
            "nameCatOne": "Verben",
            "nameCatTwo": "Nomen",
            "categoryOne": ["laufen", "gehen", "schweben", "fallen"],
@@ -33,14 +34,15 @@
            "task_reward":2,
            "question":"Wusstest du, ___ Lamas spucken können?",
            "lama_text":"Tippe die richtige Antwort an!",
+           "left_to_solve": 3,
            "right_answer":"dass",
            "wrong_answers":["Das", "das"]
          },
          {
            "task_type":"MarkWords",
            "task_reward":2,
-           "question":"",
            "lama_text":"Tippe alle Verben an!",
+           "left_to_solve": 3,
            "sentence": "Eine Pflanze wächst auf der Wiese!",
            "right_words": ["wächst"]
          }
