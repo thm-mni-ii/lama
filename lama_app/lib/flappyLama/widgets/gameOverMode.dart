@@ -30,7 +30,7 @@ class GameOverMode extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(35.0),
         ),
-        color: LamaColors.bluePrimary.withOpacity(0.8),
+        color: Color(0xFFd3d3d3).withOpacity(0.5),
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: 40.0,
@@ -42,11 +42,11 @@ class GameOverMode extends StatelessWidget {
             children: [
               Text(
                 'Punkte',
-                style: TextStyle(fontSize: 25.0, color: LamaColors.white),
+                style: TextStyle(fontSize: 25.0, color: LamaColors.black),
               ),
               Text(
                 '$score',
-                style: TextStyle(fontSize: 50.0, color: LamaColors.white),
+                style: TextStyle(fontSize: 50.0, color: LamaColors.black),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
