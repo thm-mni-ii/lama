@@ -184,6 +184,7 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       Navigator.pop(_context, "NotEnoughCoins");
       return;
     }
+    _userRepo.removeLamaCoins(GameListScreen.games[_gameId - 1].cost);
     _addGameComponents();
     removeWidgetOverlay(startWidgetName);
     addWidgetOverlay(

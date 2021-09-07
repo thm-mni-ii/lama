@@ -82,9 +82,10 @@ class StartButton {
 
   void onTapDown() {
     if (game.userRepo.getLamaCoins() >=
-        GameListScreen.games[game.gameId - 1].cost)
+        GameListScreen.games[game.gameId - 1].cost) {
+      game.userRepo.removeLamaCoins(GameListScreen.games[game.gameId - 1].cost);
       game.activeView = View.playing;
-    else {
+    } else {
       //Return a value that is interpreted by the GamListScreenBloc to show a snackbar
       Navigator.pop(game.context, "NotEnoughCoins");
     }

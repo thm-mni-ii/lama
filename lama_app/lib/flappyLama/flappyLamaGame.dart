@@ -219,6 +219,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
       Navigator.pop(_context, "NotEnoughCoins");
       return;
     }
+    _userRepo.removeLamaCoins(GameListScreen.games[_gameId - 1].cost);
     // resum game
     resumeEngine();
 
