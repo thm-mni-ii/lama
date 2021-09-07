@@ -81,7 +81,8 @@ class StartButton {
   void update(double t) {}
 
   void onTapDown() {
-    if (game.userRepo.getLamaCoins() >= GameListScreen.games[game.gameId].cost)
+    if (game.userRepo.getLamaCoins() >=
+        GameListScreen.games[game.gameId - 1].cost)
       game.activeView = View.playing;
     else {
       //Return a value that is interpreted by the GamListScreenBloc to show a snackbar
