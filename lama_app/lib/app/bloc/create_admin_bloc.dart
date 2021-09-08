@@ -20,14 +20,19 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
   ///[User] that is inserted in to the Database later on
   ///incoming events are used to change the values of this [User]
   User _user = User(grade: 1, coins: 0, isAdmin: true, avatar: 'admin');
+  String _saftyQuestion;
+  String _saftyAnswer;
 
   CreateAdminBloc({CreateAdminState initialState}) : super(initialState);
 
   @override
   Stream<CreateAdminState> mapEventToState(CreateAdminEvent event) async* {
-    if (event is CreateAdminPush) _adminPush(_user, event.context);
+    if (event is CreateAdminPush) _adminPush(event.context);
     if (event is CreateAdminChangeName) _user.name = event.name;
     if (event is CreateAdminChangePassword) _user.password = event.password;
+    if (event is CreateAdminChangeSaftyQuestion)
+      _saftyQuestion = event.saftyQuestion;
+    if (event is CreateAdminChangeSaftyAnswer) _saftyAnswer = event.saftyAnswer;
     if (event is CreateAdminAbort) _adminAbort(event.context);
   }
 
@@ -38,8 +43,8 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
   ///{@params}
   ///[User] as user that should be stored in the database
   ///[BuildContext] as context
-  Future<void> _adminPush(User user, BuildContext context) async {
-    await _insterAdmin(user);
+  Future<void> _adminPush(BuildContext context) async {
+    await _insterAdmin(_user);
     Navigator.pop(context, _user);
   }
 
