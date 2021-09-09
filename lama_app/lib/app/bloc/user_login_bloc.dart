@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/bloc/safty_question_bloc.dart';
 import 'package:lama_app/app/event/user_login_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/screens/safty_quastion_screen.dart';
 import 'package:lama_app/app/state/user_login_state.dart';
 import 'package:lama_app/db/database_provider.dart';
 
@@ -30,6 +32,8 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
     if (event is UserLogin) yield await validateUserLogin(event);
     if (event is UserLoginAbort) _abortLogin(event.context);
     if (event is UserLoginChangePass) _pass = event.pass;
+    if (event is UserLoginForgotPassword)
+      yield await validateSaftyQuestion(event);
   }
 
   ///validating the user login using [DatabaseProvider.db.checkPassword]
@@ -46,6 +50,24 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
     }
     return UserLoginFailed(event.user,
         error: 'Das Passwort passt nicht zu diesem Nutzer!');
+  }
+
+  Future<UserLoginState> validateSaftyQuestion(
+      UserLoginForgotPassword event) async {
+    bool saftyQuestionBool = await Navigator.push(
+      event.context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (BuildContext context) => SaftyQuestionBloc(user: user),
+          child: SaftyQuestionScreen(),
+        ),
+      ),
+    );
+    if (saftyQuestionBool == true) {
+      Navigator.pop(event.context, user);
+      return UserLoginSuccessful();
+    }
+    return UserLoginPulled(user);
   }
 
   ///(private)
