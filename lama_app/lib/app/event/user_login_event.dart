@@ -36,3 +36,8 @@ class UserLoginChangePass extends UserLoginEvent {
   String pass;
   UserLoginChangePass(this.pass);
 }
+
+class UserLoginForgotPassword extends UserLoginEvent {
+  BuildContext context;
+  UserLoginForgotPassword(this.context);
+}

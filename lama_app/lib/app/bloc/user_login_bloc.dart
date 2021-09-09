@@ -59,7 +59,7 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
       MaterialPageRoute(
         builder: (context) => BlocProvider(
           create: (BuildContext context) => SaftyQuestionBloc(user: user),
-          child: SaftyQuestionScreen(),
+          child: SaftyQuestionScreen(user),
         ),
       ),
     );
