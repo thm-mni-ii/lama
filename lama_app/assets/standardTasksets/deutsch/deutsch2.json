@@ -6,7 +6,7 @@
         {
           "task_type":"GridSelect",
            "task_reward":3,
-           "lama_text":"Markiere vier Fahrzeuge",
+           "lama_text":"Markiere X Fahrzeuge",
            "left_to_solve": 3,
            "wordsToFind":["auto", "Bus", "Flugzeug", "Minivan"]
             },

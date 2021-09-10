@@ -27,11 +27,14 @@ class GridSelectTaskScreen extends StatelessWidget {
   //some letter appear more often (loosely based on letter frequency) so they have a higher chance of being chosen
   final String letters = "AAABCDDEEEEFFGGHHIIIJKKLLMMNNNOOPPQRRSSSTTTUUVWXYZ";
 
+  String actualLamaText;
+
   final Map<Pair, String> gridLayout = Map();
 
   final GridSelectTaskBloc gridSelectTaskBloc;
 
   GridSelectTaskScreen(this.task, this.constraints, this.gridSelectTaskBloc) {
+    actualLamaText = task.lamaText;
     _generateWordPlacement();
   }
 
@@ -72,7 +75,7 @@ class GridSelectTaskScreen extends StatelessWidget {
                     nip: BubbleNip.leftCenter,
                     child: Center(
                       child: Text(
-                        task.lamaText,
+                        actualLamaText,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
                       ),
@@ -153,9 +156,10 @@ class GridSelectTaskScreen extends StatelessWidget {
   ///Places the words that need to be found on the grid.
   void _generateWordPlacement() {
     var rnd = Random();
+    int wordsPlaced = 0;
     task.wordsToFind.forEach((word) {
       int wordLength = word.length;
-
+      if (wordLength > 9) return;
       int maxStartIndex = 10 - wordLength;
 
       bool succesfullyGenerated;
@@ -230,8 +234,11 @@ class GridSelectTaskScreen extends StatelessWidget {
             wordTimeout.toString() +
             " for word " +
             word);
+        if (wordAdded) wordsPlaced++;
       } while (!wordAdded && wordTimeout < 20);
     });
+    actualLamaText =
+        actualLamaText.replaceAll(" X ", " " + wordsPlaced.toString() + " ");
   }
 
   ///Returns the character that will be placed at the [position] in the table.
