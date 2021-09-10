@@ -33,7 +33,7 @@
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "lama_text":"Markiere vier Gemüse",
+           "lama_text":"Markiere X Gemüse",
            "left_to_solve": 3,
            "wordsToFind":["Karotte", "Sellerie", "Zwiebel", "Spargel"]
          },
