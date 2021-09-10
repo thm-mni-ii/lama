@@ -12,6 +12,7 @@ import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
+import 'package:lama_app/app/bloc/admin_seetings_bloc.dart';
 //Events
 import 'package:lama_app/app/event/admin_menu_event.dart';
 //States
@@ -21,6 +22,7 @@ import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/screens/userlist_url_screen.dart';
+import 'admin_settings_screen.dart';
 
 ///This file creates the Admin Menu Screen
 ///The Admin Menu Screen provides every navigation to screens
@@ -164,6 +166,22 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               })
             },
           ),
+          _menuButton(
+            context,
+            Icon(Icons.settings),
+            'Weitere Einstellungen',
+            () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) => AdminSettingsBloc(),
+                    child: AdminSettingsScreen(),
+                  ),
+                ),
+              )
+            },
+          ),
           //Checkbox to deaktivate the default Tasksets
           _checkBox(context),
         ],
@@ -173,7 +191,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
 
   ///(private)
   ///provides custom [Checkbox] to deactivate or activate the App default Tasksets
-  ///chnages are made onChanged through [AdminMenuBloc] via [AdminMenuChangePrefsEvent]
+  ///changes are made onChanged through [AdminMenuBloc] via [AdminMenuChangePrefsEvent]
   ///
   ///{@param} [BuildContext] as context
   ///

@@ -61,7 +61,7 @@ class AdminSettingsScreenState extends State<AdminSettingsScreen> {
           screenSize, LamaColors.bluePrimary, 'Nutzerliste einfügen'),
       body: BlocBuilder<AdminSettingsBloc, AdminSettingsState>(
           builder: (context, state) {
-        return null;
+        return Text("Settings blabla");
       }),
     );
   }
