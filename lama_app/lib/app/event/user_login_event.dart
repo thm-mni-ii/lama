@@ -4,7 +4,7 @@ import 'package:lama_app/app/model/user_model.dart';
 /// Events used by [UserLoginScreen] and [UserLoginBloc]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 14.07.2021
+/// latest Changes: 10.09.2021
 abstract class UserLoginEvent {}
 
 ///used to try the loggin for an specific [User]

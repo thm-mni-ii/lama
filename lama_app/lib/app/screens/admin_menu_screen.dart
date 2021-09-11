@@ -33,7 +33,7 @@ import 'package:lama_app/app/screens/userlist_url_screen.dart';
 ///    [AdminMenuState]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 15.07.2021
+/// latest Changes: 10.09.2021
 class AdminMenuScreen extends StatefulWidget {
   @override
   _AdminMenuScreenState createState() => _AdminMenuScreenState();

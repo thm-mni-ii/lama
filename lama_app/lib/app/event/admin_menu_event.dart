@@ -3,7 +3,7 @@ import 'package:lama_app/app/repository/taskset_repository.dart';
 /// Events used by [AdminMenuScreen] and [AdminMenuBloc]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 14.07.2021
+/// latest Changes: 10.09.2021
 abstract class AdminMenuEvent {}
 
 ///used to load all needed [SharedPreferences]

@@ -14,7 +14,7 @@ import 'package:lama_app/app/state/safty_question_state.dart';
 ///    [Bloc]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 09.09.2021
+/// latest Changes: 10.09.2021
 class SaftyQuestionBloc extends Bloc<SaftyQuestionEvent, SaftyQuestionState> {
   User user;
   SaftyQuestionBloc({SaftyQuestionState initialState, this.user})

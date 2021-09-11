@@ -1,5 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
+/// Events used by [SaftyQuestionScreen] and [SaftyQuestionBloc]
+///
+/// Author: L.Kammerer
+/// latest Changes: 10.09.2021
+
 abstract class SaftyQuestionEvent {}
 
 //used to pull the safty question and answer

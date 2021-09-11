@@ -13,17 +13,17 @@ import 'package:lama_app/app/bloc/safty_question_bloc.dart';
 //States
 import 'package:lama_app/app/state/safty_question_state.dart';
 
-///This file creates the User Login Screen
-///This Screen provides the login for an specific user
+///This file creates the safty question screen
+///This Screen provides the forgot password function
 ///
 ///
 /// * see also
-///    [UserLoginBloc]
-///    [UserLoginEvent]
-///    [UserLoginState]
+///    [SaftyQuestionBloc]
+///    [SaftyQuestionEvent]
+///    [SaftyQuestionState]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 15.06.2021
+/// latest Changes: 10.09.2021
 class SaftyQuestionScreen extends StatefulWidget {
   User _user;
   SaftyQuestionScreen(this._user);

@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///    [Bloc]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 14.07.2021
+/// latest Changes: 10.09.2021
 class AdminMenuBloc extends Bloc<AdminMenuEvent, AdminMenuState> {
   //temporar storage for [SharedPreferences]
   SharedPreferences prefs;
