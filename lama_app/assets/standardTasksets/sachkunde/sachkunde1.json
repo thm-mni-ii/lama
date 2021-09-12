@@ -34,7 +34,7 @@
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "lama_text":"Markiere drei Nadelbäume",
+           "lama_text":"Markiere X Nadelbäume",
            "left_to_solve": 3,
            "wordsToFind":["Fichte", "Kiefer", "Tanne"]
          },

@@ -33,7 +33,7 @@
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "lama_text":"Markiere vier Flüsse",
+           "lama_text":"Markiere X Flüsse",
            "left_to_solve": 3,
            "wordsToFind":["Rhein", "Lahn", "Werra", "Main"]
          },
