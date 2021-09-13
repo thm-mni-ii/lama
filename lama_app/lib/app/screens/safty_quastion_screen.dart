@@ -131,7 +131,7 @@ Widget _userNoAdmin() {
     child: Padding(
       padding: EdgeInsets.only(left: 20, right: 20),
       child: Text(
-        "Wenn du dein Passwort vergessen hast wende dich an eine Aufsichtsperson!",
+        "Wenn du dein Passwort vergessen hast, wende dich an eine Aufsichtsperson!",
         textAlign: TextAlign.center,
         style: LamaTextTheme.getStyle(fontSize: 14, color: LamaColors.black),
       ),

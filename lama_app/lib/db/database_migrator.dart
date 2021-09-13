@@ -76,12 +76,6 @@ class DBMigrator {
         "${LeftToSolveFields.columnLeftToSolve} INTEGER,"
         "${LeftToSolveFields.columnUserLTSId} INTEGER,"
         "${LeftToSolveFields.columnDoesStillExist} INTEGER"
-        ");",
-    10: "CREATE TABLE IF NOT EXISTS $tableSaftyQuestion("
-        "${SaftyQuestionFields.columnSaftyQuestionId} INTEGER PRIMARY KEY AUTOINCREMENT,"
-        "${SaftyQuestionFields.columnSaftyQuestionAdminId} INTEGER,"
-        "${SaftyQuestionFields.columnSaftyQuestion} TEXT,"
-        "${SaftyQuestionFields.columnSaftyAnswer} TEXT,"
         ");"
   };
 
@@ -93,7 +87,7 @@ class DBMigrator {
         "${SaftyQuestionFields.columnSaftyQuestionId} INTEGER PRIMARY KEY AUTOINCREMENT,"
         "${SaftyQuestionFields.columnSaftyQuestionAdminId} INTEGER,"
         "${SaftyQuestionFields.columnSaftyQuestion} TEXT,"
-        "${SaftyQuestionFields.columnSaftyAnswer} TEXT,"
+        "${SaftyQuestionFields.columnSaftyAnswer} TEXT"
         ");"
   };
 }
