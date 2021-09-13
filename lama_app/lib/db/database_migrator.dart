@@ -23,6 +23,7 @@ class DBMigrator {
   /// {@return} Map<int, Map>
   static final Map<int, Map> migrations = {
     1: migrationsV1,
+    2: migrationsV2,
   };
 
   ///map the code to create the tables for Version 1
@@ -69,14 +70,26 @@ class DBMigrator {
         "${TaskUrlFields.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
         "${TaskUrlFields.columnTaskUrl} TEXT"
         ");",
-    9: "CREATE TABLE $tableLeftToSolve("
+    9: "CREATE TABLE IF NOT EXISTS $tableLeftToSolve("
         "${LeftToSolveFields.columnLeftToSolveID} INTEGER PRIMARY KEY AUTOINCREMENT,"
         "${LeftToSolveFields.columnTaskString} TEXT,"
         "${LeftToSolveFields.columnLeftToSolve} INTEGER,"
         "${LeftToSolveFields.columnUserLTSId} INTEGER,"
         "${LeftToSolveFields.columnDoesStillExist} INTEGER"
         ");",
-    10: "CREATE TABLE $tableSaftyQuestion("
+    10: "CREATE TABLE IF NOT EXISTS $tableSaftyQuestion("
+        "${SaftyQuestionFields.columnSaftyQuestionId} INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "${SaftyQuestionFields.columnSaftyQuestionAdminId} INTEGER,"
+        "${SaftyQuestionFields.columnSaftyQuestion} TEXT,"
+        "${SaftyQuestionFields.columnSaftyAnswer} TEXT,"
+        ");"
+  };
+
+  ///map the code to create the tables for Version 2
+  ///
+  /// {@return} Map<int, Map>
+  static final Map<int, String> migrationsV2 = {
+    1: "CREATE TABLE IF NOT EXISTS $tableSaftyQuestion("
         "${SaftyQuestionFields.columnSaftyQuestionId} INTEGER PRIMARY KEY AUTOINCREMENT,"
         "${SaftyQuestionFields.columnSaftyQuestionAdminId} INTEGER,"
         "${SaftyQuestionFields.columnSaftyQuestion} TEXT,"

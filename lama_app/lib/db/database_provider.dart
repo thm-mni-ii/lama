@@ -25,7 +25,7 @@ import 'package:sqflite/sqflite.dart';
 ///
 /// Author: F.Brecher
 class DatabaseProvider {
-  int currentVersion = 1;
+  int currentVersion = 2;
   int oldVersion = 0;
 
   DatabaseProvider._();

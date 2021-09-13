@@ -3,7 +3,7 @@ final String tableSaftyQuestion = "saftyquestion";
 
 ///Set the column names
 ///
-/// Author: F.Brecher
+/// Author: Lars Kammerer
 class SaftyQuestionFields {
   static final String columnSaftyQuestionId = "id";
   static final String columnSaftyQuestionAdminId = "adminID";
