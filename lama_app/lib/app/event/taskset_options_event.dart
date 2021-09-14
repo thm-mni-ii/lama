@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 
 /// Events used by [TasksetOptionScreen] and [TasksetOptionsBloc]
@@ -6,14 +5,6 @@ import 'package:lama_app/app/model/taskUrl_model.dart';
 /// Author: L.Kammerer
 /// latest Changes: 14.07.2021
 abstract class TasksetOptionsEvent {}
-
-///used to abort the add [TaskUrl] process
-///
-///{@param}[BuildContext] as context
-class TasksetOptionsAbort extends TasksetOptionsEvent {
-  BuildContext context;
-  TasksetOptionsAbort(this.context);
-}
 
 ///used to insert an [TaskUrl] into the database and finish the add url process
 class TasksetOptionsPush extends TasksetOptionsEvent {}

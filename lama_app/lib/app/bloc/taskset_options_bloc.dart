@@ -33,7 +33,6 @@ class TasksetOptionsBloc
   @override
   Stream<TasksetOptionsState> mapEventToState(
       TasksetOptionsEvent event) async* {
-    if (event is TasksetOptionsAbort) _return(event.context);
     if (event is TasksetOptionsPush) {
       yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
       yield await _tasksetOptionsPush();
@@ -53,14 +52,6 @@ class TasksetOptionsBloc
       yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
       yield await _tasksetOptionsReAddUrl(event.url);
     }
-  }
-
-  ///(private)
-  ///pops the Screen
-  ///
-  ///{@param}[BuildContext] as context
-  void _return(BuildContext context) {
-    Navigator.pop(context);
   }
 
   ///(private)
