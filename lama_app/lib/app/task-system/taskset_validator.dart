@@ -6,7 +6,8 @@ import 'package:lama_app/util/pair.dart';
 ///This is used before loading a taskset and also during the addition
 ///of a url in the admin menu to prevent crashes of the app
 ///
-///Author: K.Binder
+/// Author: K.Binder, Lars Kammerer
+/// Latest Changes: 14.09.2021
 class TasksetValidator {
   ///Checks if the passed json is a valid taskset.
   ///
@@ -32,8 +33,8 @@ class TasksetValidator {
         //VALIDATE TASKS
         var tasksetTasks = json['tasks'] as List;
         for (int i = 0; i < tasksetTasks.length; i++) {
-          bool isValid = _isValidTask(tasksetTasks[i]);
-          if (!isValid) return "Fehler in Aufgabe ${i + 1}";
+          String isValid = _isValidTask(tasksetTasks[i]);
+          if (isValid != null) return "Fehler in Aufgabe ${i + 1} \n $isValid";
         }
         return null;
       }
@@ -48,7 +49,7 @@ class TasksetValidator {
   ///the have the right type for the corresponding TaskType.
   ///
   ///Used internally by [isValidTaskset()]
-  static bool _isValidTask(Map<String, dynamic> json) {
+  static String _isValidTask(Map<String, dynamic> json) {
     if (json.containsKey("task_type") &&
         json.containsKey("task_reward") &&
         json.containsKey("lama_text") &&
@@ -58,6 +59,8 @@ class TasksetValidator {
           json["lama_text"] is String &&
           json["left_to_solve"] is int) {
         switch (json["task_type"]) {
+
+          ///4Cards
           case "4Cards":
             if (json.containsKey("question") &&
                 json["question"] is String &&
@@ -65,9 +68,10 @@ class TasksetValidator {
                 json["right_answer"] is String &&
                 json.containsKey("wrong_answers") &&
                 json["wrong_answers"] is List &&
-                _checkListType<String>(json["wrong_answers"])) return true;
-            print("4Cards false");
-            return false;
+                _checkListType<String>(json["wrong_answers"])) return null;
+            return "Aufgabentyp: 4Cards";
+
+          ///ClozeTest
           case "ClozeTest":
             if (json.containsKey("question") &&
                 json["question"] is String &&
@@ -75,17 +79,19 @@ class TasksetValidator {
                 json["right_answer"] is String &&
                 json.containsKey("wrong_answers") &&
                 json["wrong_answers"] is List &&
-                _checkListType<String>(json["wrong_answers"])) return true;
-            print("Cloze false");
-            return false;
+                _checkListType<String>(json["wrong_answers"])) return null;
+            return "Aufgabentyp: ClozeTest";
+
+          ///MarkWords
           case "MarkWords":
             if (json.containsKey("right_words") &&
                 json["right_words"] is List &&
                 _checkListType<String>(json["right_words"]) &&
                 json.containsKey("sentence") &&
-                json["sentence"] is String) return true;
-            print("MarkWords false");
-            return false;
+                json["sentence"] is String) return null;
+            return "Aufgabentyp: MarkWords";
+
+          ///MatchCategory
           case "MatchCategory":
             if (json.containsKey("nameCatOne") &&
                 json["nameCatOne"] is String &&
@@ -96,20 +102,23 @@ class TasksetValidator {
                 _checkListType<String>(json["categoryOne"]) &&
                 json.containsKey("categoryTwo") &&
                 json["categoryTwo"] is List &&
-                _checkListType<String>(json["categoryTwo"])) return true;
-            print("Match false");
-            return false;
+                _checkListType<String>(json["categoryTwo"])) return null;
+            return "Aufgabentyp: MatchCategory";
+
+          ///GridSelect
           case "GridSelect":
             if (json.containsKey("wordsToFind") &&
                 json["wordsToFind"] is List &&
-                _checkListType<String>(json["wordsToFind"])) return true;
-            print("Grid false");
-            return false;
+                _checkListType<String>(json["wordsToFind"])) return null;
+            return "Aufgabentyp: GridSelect";
+
+          ///MoneyTask
           case "MoneyTask":
             if (json.containsKey("moneyAmount") &&
-                json["moneyAmount"] is double) return true;
-            print("Money false");
-            return false;
+                json["moneyAmount"] is double) return null;
+            return "Aufgabentyp: MoneyTask";
+
+          ///VocableTest
           case "VocableTest":
             if (json.containsKey("randomizeSide") &&
                 json["randomizeSide"] is bool &&
@@ -123,13 +132,14 @@ class TasksetValidator {
                     wordPairList[i].b == null ||
                     !(wordPairList[i].b is String)) {
                   print("Voc Pairs false");
-                  return false;
+                  return "Aufgabentyp: VocableTest \n Fehler in Feld 'wordPairs' an Stelle ${i + 1}";
                 }
               }
-              return true;
+              return null;
             }
-            print("Voc false");
-            return false;
+            return "Aufgabentyp: VocableTest";
+
+          ///Connect
           case "Connect":
             if (json.containsKey("pair1") &&
                 json.containsKey("pair2") &&
@@ -140,42 +150,35 @@ class TasksetValidator {
                   _checkListType<String>(json["pair2"]) &&
                   json["rightAnswers"] is List &&
                   _checkListType<String>(json["rightAnswers"])) {
-                return true;
+                return null;
               }
             }
-            return false;
+            return "Aufgabentyp: Connect";
+
+          ///Equation
           case "Equation":
-            if (json.containsKey("equation") && json.containsKey("options")) {
-              if (json["equation"] is List &&
-                  _checkListType<String>(json["equation"]) &&
-                  json["options"] is List &&
-                  _checkListType<String>(json["options"])) {
-                return true;
-              }
-            } else if (json.containsKey("operand_range")) {
-              if (json["operand_range"] is List &&
-                  json["operand_range"].length == 2 &&
-                  _checkListType<int>(json["operand_range"])) {
-                if (json.containsKey("random_allowed_operators") &&
-                    !(json["random_allowed_operators"] is List) &&
-                    !_checkListType<String>(json["random_allowed_operators"]))
-                  return false;
-                if (json.containsKey("allow_replacing_operators") &&
-                    !(json["allow_replacing_operators"] is bool)) return false;
-                if (json.containsKey("fields_to_replace") &&
-                    !(json["fields_to_replace"] is int)) return false;
-                if (json.containsKey("operator_amount") &&
-                    !(json["operator_amount"] is int)) return false;
-                return true;
+            if (json.containsKey("operator(1-2)")) {
+              if (json.containsKey("random")) {
+                if (json["random"] is List &&
+                    _checkListType<String>(json["random"])) return null;
+              } else if (json.containsKey("equation") &&
+                  json.containsKey("missing_elements") &&
+                  json.containsKey("wrong_answers")) {
+                if (json["equation"] is List &&
+                    _checkListType<String>(json["equation"]) &&
+                    json["missing_elements"] is List &&
+                    _checkListType<String>(json["missing_elements"]) &&
+                    json["wrong_answers"] is List &&
+                    _checkListType<String>(json["wrong_answers"])) return null;
               }
             }
-            return false;
+            return "Aufgabentyp: Equation";
           default:
-            return false;
+            return "";
         }
       }
     }
-    return false;
+    return "";
   }
 
   ///Returns whether all items in a list are of type [T]

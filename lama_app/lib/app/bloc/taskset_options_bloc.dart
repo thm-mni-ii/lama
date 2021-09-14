@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
@@ -19,7 +18,7 @@ import 'package:lama_app/util/input_validation.dart';
 ///    [Bloc]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 26.06.2021
+/// Latest Changes: 26.06.2021
 class TasksetOptionsBloc
     extends Bloc<TasksetOptionsEvent, TasksetOptionsState> {
   TasksetOptionsBloc({TasksetOptionsState initialState}) : super(initialState);
