@@ -95,9 +95,10 @@ class TasksetOptionsBloc
     //Check if URL is reachable
     if (response.statusCode == 200) {
       //Taskset validtion
-      if (!TasksetValidator.isValidTaskset(jsonDecode(response.body))) {
-        return TasksetOptionsPushFailed(
-            error: 'Fehler beim lesen der Aufgaben!');
+      String tasksetError =
+          TasksetValidator.isValidTaskset(jsonDecode(response.body));
+      if (tasksetError != null) {
+        return TasksetOptionsPushFailed(error: tasksetError);
       }
     }
     //Insert URL to Database

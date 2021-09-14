@@ -111,10 +111,10 @@ class TasksetLoader {
   ///
   ///Also checks if the Taskset is valid via the [TasksetValidator] and skips it if its not.
   Future<void> buildTasksetFromJson(tasksetContent) async {
-    bool isTasksetValid =
+    String isTasksetValid =
         TasksetValidator.isValidTaskset(jsonDecode(tasksetContent));
     print('Is Taskset valid: $isTasksetValid');
-    if (isTasksetValid) {
+    if (isTasksetValid != null) {
       Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
 
       /* DEBUG LOGCODE

@@ -13,7 +13,7 @@ class TasksetValidator {
   ///Use jsonDecode() with the corresponding json-string as argument when calling this method.
   ///
   ///Confirms whether all mandatory json keys are present and if the have the right type.
-  static bool isValidTaskset(Map<String, dynamic> json) {
+  static String isValidTaskset(Map<String, dynamic> json) {
     if (json.containsKey("taskset_name") &&
         json.containsKey("taskset_subject") &&
         json.containsKey("taskset_grade") &&
@@ -24,19 +24,22 @@ class TasksetValidator {
           json["tasks"] is List &&
           (json["tasks"] as List).length > 0) {
         if (json.containsKey("taskset_choose_amount") &&
-            !(json["taskset_choose_amount"] is int)) return false;
+            !(json["taskset_choose_amount"] is int))
+          return "Feld 'taskset_choose_amount' nicht gefunden oder besitzt keinen Zahlenwert!";
         if (json.containsKey("taskset_randomize_order") &&
-            !(json["taskset_randomize_order"] is bool)) return false;
+            !(json["taskset_randomize_order"] is bool))
+          return "Feld 'taskset_randomize_order' nicht gefunden oder nicht richtig beschrieben!";
         //VALIDATE TASKS
         var tasksetTasks = json['tasks'] as List;
         for (int i = 0; i < tasksetTasks.length; i++) {
           bool isValid = _isValidTask(tasksetTasks[i]);
-          if (!isValid) return false;
+          if (!isValid) return "Fehler in Aufgabe ${i + 1}";
         }
-        return true;
+        return null;
       }
+      return "Prüfen Sie ob folgendes: \n 'taskset_name', 'taskset_subject' sind Zeichenketten \n 'taskset_grade' ist ein Zahlenwert \n tasks besitzt '[' und ']' und ist nicht leer.";
     }
-    return false;
+    return "Eines der folgenden Felder konnte nicht gefunden werden: \n 'taskset_name', 'taskset_subject', 'taskset_grade' oder 'tasks'.";
   }
 
   ///Checks if the passed json is a valid Task.
