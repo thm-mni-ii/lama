@@ -1,9 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/task-system/task.dart';
 
+///[Bloc] for the [EquationTaskScreen]
+///
+/// Author: K.Binder
 class EquationBloc extends Bloc<EquationEvent, EquationState> {
   final List<String> operatorList = ["+", "-", "*", "/"];
 
+  List<String> initialEquation = [];
   List<String> currentEquation = [];
 
   final TaskEquation task;
@@ -16,27 +22,275 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
   Stream<EquationState> mapEventToState(EquationEvent event) async* {
     //NonRandom and Random only called at the beginning
     if (event is NonRandomEquationEvent) {
+      initialEquation.addAll(task.equation);
       currentEquation.addAll(task.equation);
       answerList.addAll(task.options);
       answerList.shuffle();
       yield BuiltEquationState(currentEquation, answerList);
     }
-    if (event is RandomEquationEvent) {}
+    if (event is RandomEquationEvent) {
+      var rnd = Random();
+      List<String> randomEquation = _buildRandomEquation();
+      List<int> numbersInEquation = [];
+      List<String> answers = [];
+      for (int i = 0; i < randomEquation.length; i++) {
+        if (i % 2 == 0) numbersInEquation.add(int.parse(randomEquation[i]));
+        if (randomEquation[i] == "=") continue;
+        //Whether to remove the current space
+        if (rnd.nextBool()) {
+          if (int.tryParse(randomEquation[i]) != null)
+            answers.add(randomEquation[i]);
+          randomEquation[i] = "?";
+        } else {
+          //Fallback => if nothing was removed, at least remove the result
+          if (i == randomEquation.length - 1 && answers.length == 0) {
+            answers.add(randomEquation[i]);
+            randomEquation[i] = "?";
+          }
+        }
+      }
+      initialEquation.addAll(randomEquation);
+      currentEquation.addAll(randomEquation);
+      for (int i = answers.length; i < 10; i++) {
+        int baseAnswer =
+            numbersInEquation[rnd.nextInt(numbersInEquation.length)];
+        answers.add((baseAnswer - 5 + rnd.nextInt(10)).toString());
+      }
+      answerList.addAll(answers);
+      answerList.shuffle();
+      yield BuiltEquationState(currentEquation, answerList);
+    }
     if (event is UpdateEquationEvent) {
       currentEquation[event.index] = event.item;
-      print(currentEquation[event.index]);
-      print(task.equation[event.index]);
+      yield BuiltEquationState(currentEquation, answerList);
+    }
+    if (event is EquationResetEvent) {
+      currentEquation.clear();
+      currentEquation.addAll(initialEquation);
       yield BuiltEquationState(currentEquation, answerList);
     }
   }
+
+  ///This method builds a random Equation with the specific parameters passed
+  ///
+  ///Most of this code is very specific and could not be reused if the app ever starts to support more than two operator.
+  ///However this really convoluted and "confusing" method can generate a equation with differen operators and asserts, that they are solveable with integers
+  List<String> _buildRandomEquation() {
+    List<String> equation = [];
+
+    var rnd = Random();
+    //Decide whether to use 1 operant or 2
+    if (rnd.nextBool()) {
+      int op1 = task.operandRange[0] +
+          rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+      int op2 = 0;
+      int result = 0;
+      //1 operands
+      String equationOperator = task.randomAllowedOperators[
+          rnd.nextInt(task.randomAllowedOperators.length)];
+      switch (equationOperator) {
+        case "+":
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op1 + op2;
+          break;
+        case "-":
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op1 - op2;
+          break;
+        case "/":
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op1;
+          op1 = op1 * op2;
+          if (op2 == 0) op2 += 1;
+          if (op1 == 0) result = 0;
+          break;
+        case "*":
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op1 * op2;
+          break;
+      }
+      equation.add(op1.toString());
+      equation.add(equationOperator);
+      equation.add(op2.toString());
+      equation.add("=");
+      equation.add(result.toString());
+    } else {
+      //2 Operantor
+      String operator1 = task.randomAllowedOperators[
+          rnd.nextInt(task.randomAllowedOperators.length)];
+      String operator2 = task.randomAllowedOperators[
+          rnd.nextInt(task.randomAllowedOperators.length)];
+      int op1 = 0;
+      int op2 = 0;
+      int op3 = 0;
+      int result = 0;
+      if ((operator1 == "/" || operator1 == "*") &&
+          (operator2 == "/" || operator2 == "*")) {
+        if (operator1 == "*" && operator2 == "*") {
+          op1 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          op3 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op1 * op2 * op3;
+        } else if (operator1 == "*" && operator2 == "/") {
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          op3 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op2;
+          op2 = op2 * op3;
+          if (op3 == 0) op3 += 1;
+          if (op2 == 0) result = 0;
+          List<int> divisors = getDivisors(op2);
+          int divisor = 1;
+          if (divisors.length > 0)
+            divisor = divisors[rnd.nextInt(divisors.length)];
+          op1 = divisor;
+          op2 = op2 ~/ divisor;
+        } else if (operator1 == "/" && operator2 == "/") {
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          op3 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op2;
+          op2 = op2 * op3;
+          if (op3 == 0) op3 += 1;
+          if (op2 == 0) result = 0;
+          int op2tmp = op2;
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          op1 = op2tmp * op2;
+        } else if (operator1 == "/" && operator2 == "*") {
+          op1 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op1;
+          op1 = op1 * op2;
+          if (op2 == 0) op2 += 1;
+          if (op1 == 0) result = 0;
+          result = result * op3;
+        }
+      } else {
+        //At least one "+" or "-"
+        if (operator1 == "/") {
+          op1 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op1;
+          op1 = op1 * op2;
+          if (op2 == 0) op2 += 1;
+          if (op1 == 0) result = 0;
+
+          if (operator2 == "+") {
+            op3 = task.operandRange[0] +
+                rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+            result += op3;
+          } else if (operator2 == "-") {
+            op3 = task.operandRange[0] +
+                rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+            result -= op3;
+          }
+        } else if (operator1 == "*") {
+          op1 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op1 * op2;
+
+          if (operator2 == "+") {
+            op3 = task.operandRange[0] +
+                rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+            result += op3;
+          } else if (operator2 == "-") {
+            op3 = task.operandRange[0] +
+                rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+            result -= op3;
+          }
+        } else if (operator2 == "/") {
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          op3 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op2;
+          op2 = op2 * op3;
+          if (op3 == 0) op3 += 1;
+          if (op2 == 0) result = 0;
+          if (operator1 == "+") {
+            op1 = task.operandRange[0] +
+                rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+            result += op1;
+          } else if (operator1 == "-") {
+            op1 = task.operandRange[0] +
+                rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+            result -= op1;
+          }
+        } else if (operator2 == "*") {
+          op2 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          op3 = task.operandRange[0] +
+              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+          result = op2 * op3;
+          if (operator1 == "+") {
+            op1 = task.operandRange[0] +
+                rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+            result += op1;
+          } else if (operator1 == "-") {
+            op1 = task.operandRange[0] +
+                rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+            result -= op1;
+          }
+        }
+      }
+      equation.add(op1.toString());
+      equation.add(operator1);
+      equation.add(op2.toString());
+      equation.add(operator2);
+      equation.add(op3.toString());
+      equation.add("=");
+      equation.add(result.toString());
+    }
+    return equation;
+  }
+
+  ///Small helper method to get all divisors of a number.
+  List<int> getDivisors(int number) {
+    List<int> divisors = [];
+    for (int i = 1; i <= number / 2; i++) {
+      if (number % i == 0) divisors.add(i);
+    }
+    return divisors;
+  }
 }
 
+///BaseEvent of [EquationTestTaskState]
+///
+/// Author: K.Binder
 class EquationEvent {}
 
+///Subclass of [EquationEvent]
+///
+///Emitted during initialization when a random Equation should be constructed
+/// Author: K.Binder
 class RandomEquationEvent extends EquationEvent {}
 
+///Subclass of [EquationEvent]
+///
+///Emitted during initialization when a non random Equation should be constructed
+/// Author: K.Binder
 class NonRandomEquationEvent extends EquationEvent {}
 
+///Subclass of [EquationEvent]
+///
+///Emitted when a operator or a operand gets dragged onto a '?' field
+/// Author: K.Binder
 class UpdateEquationEvent extends EquationEvent {
   String item;
   int index;
@@ -44,10 +298,28 @@ class UpdateEquationEvent extends EquationEvent {
   UpdateEquationEvent(this.item, this.index);
 }
 
+///Subclass of [EquationEvent]
+///
+///Emitted when the reset button gets pressed.
+/// Author: K.Binder
+class EquationResetEvent extends EquationEvent {}
+
+///BaseState of [EquationTestTaskState]
+///
+///Emitted when the reset button gets pressed.
+/// Author: K.Binder
 class EquationState {}
 
+///Subclass of [EquationState]
+///
+///Initial empty State
+/// Author: K.Binder
 class EmptyEquationState extends EquationState {}
 
+///Subclass of [EquationState]
+///
+///state that contains the current equation, and all answer options
+/// Author: K.Binder
 class BuiltEquationState extends EquationState {
   List<String> equationItems = [];
   List<String> answers = [];

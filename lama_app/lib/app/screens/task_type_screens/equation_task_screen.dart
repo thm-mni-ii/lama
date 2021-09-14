@@ -12,16 +12,16 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/OperatorWidget.dart';
 
-/// [StatefulWidget] that contains the equationstate and clear old lists.
-
-/// Author: F.Leonhardt
-
-//TODO change author
-class EquationTaskScreenNew extends StatefulWidget {
+/// [StatefulWidget] that contains the screen for the Equation TaskType
+///
+///
+/// Author: K. Binder
+/// Basic Layout Author: F. Leonhardt
+class EquationTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
   final TaskEquation task;
 
-  EquationTaskScreenNew(this.task, this.constraints);
+  EquationTaskScreen(this.task, this.constraints);
 
   @override
   State<StatefulWidget> createState() {
@@ -29,10 +29,11 @@ class EquationTaskScreenNew extends StatefulWidget {
   }
 }
 
-/// [State] that contains the screen for the Equation TaskType.
-/// Check if task is random or not
-/// If task is random, fill lists with a random equation, else add the equation to the lists
-class EquationTaskState extends State<EquationTaskScreenNew> {
+/// [State] that contains the UI side logic for the Equation TaskType
+///
+/// Author: K. Binder
+/// Basic Layout Author: F. Leonhardt
+class EquationTaskState extends State<EquationTaskScreen> {
   final BoxConstraints constraints;
   final TaskEquation task;
   EquationBloc bloc;
@@ -43,14 +44,12 @@ class EquationTaskState extends State<EquationTaskScreenNew> {
   @override
   void initState() {
     super.initState();
-    bloc.add(NonRandomEquationEvent());
+    if (task.isRandom)
+      bloc.add(RandomEquationEvent());
+    else
+      bloc.add(NonRandomEquationEvent());
   }
 
-  /// Override build method [State]
-  ///
-  /// {@param} [BuildContext] as context
-  ///
-  /// {@return} a [Widget] that contains the equation, the answers and the two Buttons.
   @override
   Widget build(BuildContext context) {
     return BlocProvider<EquationBloc>(
@@ -113,6 +112,7 @@ class EquationTaskState extends State<EquationTaskScreenNew> {
     );
   }
 
+  ///Returns the anna saying the lama_text in a speechbubble
   Widget _buildLamaText() {
     return Container(
       padding: EdgeInsets.only(left: 15, right: 15),
@@ -174,10 +174,7 @@ class EquationTaskState extends State<EquationTaskScreenNew> {
             ),
             color: LamaColors.white,
             onPressed: () {
-              setState(() {
-                //fullAnswer.clear();
-                //fullAnswer.addAll(resetList);
-              });
+              bloc.add(EquationResetEvent());
             }),
       ),
     );

@@ -149,12 +149,13 @@ class TasksetValidator {
                   _checkListType(json["options"])) {
                 return true;
               }
-            } else if (json.containsKey("random_allowed_operants") &&
-                json.containsKey("random_range")) {
-              if (json["random_allowed_operants"] is List &&
-                  _checkListType<String>(json["random_allowed_operants"]) &&
-                  json["random_range"] is List &&
-                  _checkListType<int>(json["random_range"])) {
+            } else if (json.containsKey("random_allowed_operators") &&
+                json.containsKey("operand_range")) {
+              if (json["random_allowed_operators"] is List &&
+                  _checkListType<String>(json["random_allowed_operators"]) &&
+                  json["operand_range"] is List &&
+                  json["operand_range"].length == 2 &&
+                  _checkListType<int>(json["operand_range"])) {
                 return true;
               }
             }

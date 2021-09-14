@@ -75,17 +75,17 @@ class Task {
       case "Equation":
         List<String> equation = [];
         List<String> options = [];
-        List<String> randomAllowedOperants = [];
-        List<int> randomRange = [];
+        List<String> randomAllowedOperators = [];
+        List<int> resultRange = [];
         if (json['equation'] != null)
           equation = List<String>.from(json['equation']);
         if (json['options'] != null)
           options = List<String>.from(json['options']);
-        if (json['random_allowed_operants'] != null)
-          randomAllowedOperants =
-              List<String>.from(json['random_allowed_operants']);
-        if (json['random_range'] != null)
-          randomRange = List<int>.from(json['random_range']);
+        if (json['random_allowed_operators'] != null)
+          randomAllowedOperators =
+              List<String>.from(json['random_allowed_operators']);
+        if (json['operand_range'] != null)
+          resultRange = List<int>.from(json['operand_range']);
         return TaskEquation(
             taskType,
             json['task_reward'],
@@ -93,8 +93,8 @@ class Task {
             json['left_to_solve'],
             equation,
             options,
-            randomAllowedOperants,
-            randomRange);
+            randomAllowedOperators,
+            resultRange);
       default:
         return null;
     }
@@ -319,12 +319,24 @@ class TaskEquation extends Task {
   List<String> equation;
   List<String> options;
 
-  List<String> randomAllowedOperants;
-  List<int> randomRange;
+  List<String> randomAllowedOperators;
+  List<int> operandRange;
 
-  TaskEquation(String taskType, int reward, String lamaText, int leftToSolve,
-      this.equation, this.options, this.randomAllowedOperants, this.randomRange)
-      : super(taskType, reward, lamaText, leftToSolve);
+  bool isRandom = false;
+
+  TaskEquation(
+      String taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.equation,
+      this.options,
+      this.randomAllowedOperators,
+      this.operandRange)
+      : super(taskType, reward, lamaText, leftToSolve) {
+    if (this.randomAllowedOperators != null && this.operandRange != null)
+      isRandom = true;
+  }
 
   @override
   String toString() {
@@ -333,12 +345,12 @@ class TaskEquation extends Task {
       for (int i = 0; i < equation.length; i++) s += equation[i];
     if (options != null)
       for (int i = 0; i < options.length; i++) s += options[i];
-    if (randomAllowedOperants != null)
-      for (int i = 0; i < randomAllowedOperants.length; i++)
-        s += randomAllowedOperants[i];
-    if (randomRange != null)
-      for (int i = 0; i < randomRange.length; i++)
-        s += randomRange[i].toString();
+    if (randomAllowedOperators != null)
+      for (int i = 0; i < randomAllowedOperators.length; i++)
+        s += randomAllowedOperators[i];
+    if (operandRange != null)
+      for (int i = 0; i < operandRange.length; i++)
+        s += operandRange[i].toString();
     return s;
   }
 }
