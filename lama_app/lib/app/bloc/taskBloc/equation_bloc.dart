@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/task-system/task.dart';
-import 'package:lama_app/util/pair.dart';
 
 class EquationBloc extends Bloc<EquationEvent, EquationState> {
   final List<String> operatorList = ["+", "-", "*", "/"];
@@ -18,7 +17,8 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
     //NonRandom and Random only called at the beginning
     if (event is NonRandomEquationEvent) {
       currentEquation.addAll(task.equation);
-      answerList = _buildAnswerList(task.wrongAnswers, task.missingElements);
+      answerList.addAll(task.options);
+      answerList.shuffle();
       yield BuiltEquationState(currentEquation, answerList);
     }
     if (event is RandomEquationEvent) {}
@@ -28,17 +28,6 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
       print(task.equation[event.index]);
       yield BuiltEquationState(currentEquation, answerList);
     }
-  }
-
-  List<String> _buildAnswerList(
-      List<String> wrongAnswers, List<String> rightAnswers) {
-    List<String> answers = [];
-    answers.addAll(wrongAnswers);
-    rightAnswers.forEach((element) {
-      if (!operatorList.contains(element)) answers.add(element);
-    });
-    answers.shuffle();
-    return answers;
   }
 }
 
