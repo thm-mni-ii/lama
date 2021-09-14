@@ -76,9 +76,9 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
           ///old [SnackBar] disappears
           if (state is TasksetOptionsPushFailed) {
             urlInitValue = state.failedUrl;
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context)
-                .showSnackBar(_saveFailed(state.error));
+            showDialog(
+                context: context,
+                builder: (_) => _insertErrorPopUp(state.error));
           }
 
           ///url delete succeeded
@@ -325,11 +325,40 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
   }
 
   ///(private)
-  ///provides [SnackBar] with [_snackbar] to show an error
+  ///provides [AlertDialog] to show error message
   ///
-  ///{@param} error message as [String] error
-  Widget _saveFailed(String error) {
-    return _snackbar(Icons.close_rounded, error, LamaColors.redAccent);
+  ///{@param} error message as String
+  Widget _insertErrorPopUp(String error) {
+    return AlertDialog(
+      title: Text(
+        'Fehler beim laden der Aufgaben',
+        style: LamaTextTheme.getStyle(
+          color: LamaColors.black,
+          fontSize: 16,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      content: SingleChildScrollView(
+        child: Text(
+          error,
+          style: LamaTextTheme.getStyle(
+            color: LamaColors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            monospace: true,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      actions: [
+        TextButton(
+          child: Text('Schließen'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
   }
 
   ///(private)
