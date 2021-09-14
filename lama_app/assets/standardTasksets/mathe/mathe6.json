@@ -47,6 +47,14 @@
                 "left_to_solve": 4,
                 "random_allowed_operators":["+", "/", "*", "-"],
                 "operand_range":[5,9]
+               },
+               {
+                "task_type": "Equation",
+                "task_reward": 2,
+                "lama_text": "Löse die Gleichung!",
+                "left_to_solve": 4,
+                "equation":["?", "-", "1", "=", "2"],
+                "options":["3", "4", "9", "5"]
                }
         ]
 }

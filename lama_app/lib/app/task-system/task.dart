@@ -334,7 +334,11 @@ class TaskEquation extends Task {
       this.randomAllowedOperators,
       this.operandRange)
       : super(taskType, reward, lamaText, leftToSolve) {
-    if (this.randomAllowedOperators != null && this.operandRange != null)
+    print("meep");
+    print(this.randomAllowedOperators);
+    print("meep2");
+    print(this.operandRange);
+    if (this.randomAllowedOperators.length > 0 && this.operandRange.length > 0)
       isRandom = true;
   }
 

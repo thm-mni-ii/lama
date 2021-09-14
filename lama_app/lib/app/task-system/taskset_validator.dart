@@ -146,7 +146,7 @@ class TasksetValidator {
               if (json["equation"] is List &&
                   _checkListType<String>(json["equation"]) &&
                   json["options"] is List &&
-                  _checkListType(json["options"])) {
+                  _checkListType<String>(json["options"])) {
                 return true;
               }
             } else if (json.containsKey("random_allowed_operators") &&
