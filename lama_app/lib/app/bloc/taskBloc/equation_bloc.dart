@@ -11,8 +11,6 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
 
   List<String> answerList = [];
 
-  List<Pair<int, String>> providedAnswers = [];
-
   EquationBloc(this.task) : super(EmptyEquationState());
 
   @override
@@ -28,16 +26,8 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
       currentEquation[event.index] = event.item;
       print(currentEquation[event.index]);
       print(task.equation[event.index]);
-      providedAnswers.add(Pair<int, String>(event.index, event.item));
-      print(providedAnswers);
       yield BuiltEquationState(currentEquation, answerList);
     }
-  }
-
-  void reset() {
-    currentEquation = [];
-    answerList = [];
-    providedAnswers = [];
   }
 
   List<String> _buildAnswerList(

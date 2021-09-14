@@ -198,7 +198,10 @@ class EquationTaskState extends State<EquationTaskScreenNew> {
                 offset: Offset(0, 3))
           ]),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          BlocProvider.of<TaskBloc>(context)
+              .add(AnswerTaskEvent.initEquationNew(bloc.currentEquation));
+        },
         child: Center(
           child: Text(
             "Fertig!",
