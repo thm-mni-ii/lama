@@ -6,7 +6,7 @@ import 'package:lama_app/util/pair.dart';
 ///This is used before loading a taskset and also during the addition
 ///of a url in the admin menu to prevent crashes of the app
 ///
-/// Author: K.Binder, Lars Kammerer
+/// Author: K.Binder, L.Kammerer
 /// Latest Changes: 14.09.2021
 class TasksetValidator {
   ///Checks if the passed json is a valid taskset.
