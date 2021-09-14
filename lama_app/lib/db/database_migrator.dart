@@ -16,7 +16,7 @@ import 'package:lama_app/app/model/user_model.dart';
 ///
 
 ///
-/// Author: F.Brecher, Lars Kammerer
+/// Author: F.Brecher, L.Kammerer
 /// latest Changes: 13.09.2021
 class DBMigrator {
   ///map the migrationVx maps

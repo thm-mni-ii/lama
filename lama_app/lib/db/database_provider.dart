@@ -23,7 +23,7 @@ import 'package:sqflite/sqflite.dart';
 ///In this file the database will be create or update
 ///All methods to work with the database you will find here
 ///
-/// Author: F.Brecher, Lars Kammerer
+/// Author: F.Brecher, L.Kammerer
 /// latest Changes: 13.09.2021
 class DatabaseProvider {
   int currentVersion = 2;
