@@ -124,7 +124,7 @@ abstract class InputValidation {
         try {
           await jsonDecode(response[0].body);
         } on FormatException {
-          return '"json" fehlerhaft!';
+          return '"json" fehlerhaft oder nicht gefunden!';
         }
         //Testing successfull
         return null;

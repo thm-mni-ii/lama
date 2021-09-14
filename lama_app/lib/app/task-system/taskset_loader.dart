@@ -114,7 +114,7 @@ class TasksetLoader {
     String isTasksetValid =
         TasksetValidator.isValidTaskset(jsonDecode(tasksetContent));
     print('Is Taskset valid: $isTasksetValid');
-    if (isTasksetValid != null) {
+    if (isTasksetValid == null) {
       Taskset taskset = Taskset.fromJson(jsonDecode(tasksetContent));
 
       /* DEBUG LOGCODE

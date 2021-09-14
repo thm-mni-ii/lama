@@ -34,13 +34,14 @@ class TasksetValidator {
         var tasksetTasks = json['tasks'] as List;
         for (int i = 0; i < tasksetTasks.length; i++) {
           String isValid = _isValidTask(tasksetTasks[i]);
-          if (isValid != null) return "Fehler in Aufgabe ${i + 1} \n $isValid";
+          if (isValid != null)
+            return "Fehler in Aufgabe ${i + 1} \n\n $isValid";
         }
         return null;
       }
-      return "Prüfen Sie ob folgendes: \n 'taskset_name', 'taskset_subject' sind Zeichenketten \n 'taskset_grade' ist ein Zahlenwert \n tasks besitzt '[' und ']' und ist nicht leer.";
+      return "Prüfen Sie folgendes: \n\n 'taskset_name' und 'taskset_subject' sind Zeichenketten \n\n 'taskset_grade' ist ein Zahlenwert \n\n tasks besitzt '[' und ']' und ist nicht leer.";
     }
-    return "Eines der folgenden Felder konnte nicht gefunden werden: \n 'taskset_name', 'taskset_subject', 'taskset_grade' oder 'tasks'.";
+    return "Eines der folgenden Felder konnte nicht gefunden werden: \n\n 'taskset_name',\n 'taskset_subject',\n 'taskset_grade'\n oder\n 'tasks'.";
   }
 
   ///Checks if the passed json is a valid Task.
