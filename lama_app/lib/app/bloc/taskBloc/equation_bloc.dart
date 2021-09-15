@@ -100,12 +100,15 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
           result = op1 - op2;
           break;
         case "/":
-          op2 = task.operandRange[0] +
-              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          result = op1;
-          op1 = op1 * op2;
-          if (op2 == 0) op2 += 1;
-          if (op1 == 0) result = 0;
+          List<int> divisors = getDivisors(op1);
+          if (divisors.length > 0)
+            op2 = divisors[rnd.nextInt(divisors.length)];
+          else
+            op2 = 1 + rnd.nextInt(task.operandRange[1]);
+          if (op1 == 0)
+            result = 0;
+          else
+            result = op1 ~/ op2;
           break;
         case "*":
           op2 = task.operandRange[0] +
@@ -154,7 +157,7 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
           op1 = divisor;
           op2 = op2 ~/ divisor;
         } else if (operator1 == "/" && operator2 == "/") {
-          op2 = task.operandRange[0] +
+          /*op2 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
           op3 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
@@ -165,16 +168,49 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
           int op2tmp = op2;
           op2 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          op1 = op2tmp * op2;
+          op1 = op2tmp * op2;*/
+          List<int> divisorsForOp1 = getDivisors(op1);
+          if (divisorsForOp1.length > 0) {
+            op2 = divisorsForOp1[rnd.nextInt(divisorsForOp1.length)];
+          } else {
+            op2 = 1 + rnd.nextInt(task.operandRange[1]);
+          }
+          if (op1 == 0)
+            result = 0;
+          else
+            result = op1 ~/ op2;
+
+          List<int> divisorsForOp2Op1 = getDivisors(result);
+          if (divisorsForOp2Op1.length > 0) {
+            op3 = divisorsForOp2Op1[rnd.nextInt(divisorsForOp2Op1.length)];
+          } else {
+            op3 = 1 + rnd.nextInt(task.operandRange[1]);
+          }
+          if (result == 0)
+            result = 0;
+          else
+            result = result ~/ op3;
         } else if (operator1 == "/" && operator2 == "*") {
           op1 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          op2 = task.operandRange[0] +
+          op3 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          result = op1;
+          /*result = op1;
           op1 = op1 * op2;
           if (op2 == 0) op2 += 1;
           if (op1 == 0) result = 0;
+          result = result * op3;*/
+          List<int> divisorsForOp1 = getDivisors(op1);
+          if (divisorsForOp1.length > 0) {
+            op2 = divisorsForOp1[rnd.nextInt(divisorsForOp1.length)];
+          } else {
+            op2 = 1 + rnd.nextInt(task.operandRange[1]);
+          }
+          if (op1 == 0)
+            result = 0;
+          else
+            result = op1 ~/ op2;
+
           result = result * op3;
         }
       } else {
@@ -182,12 +218,16 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
         if (operator1 == "/") {
           op1 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          op2 = task.operandRange[0] +
-              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          result = op1;
-          op1 = op1 * op2;
-          if (op2 == 0) op2 += 1;
-          if (op1 == 0) result = 0;
+          List<int> divisorsForOp1 = getDivisors(op1);
+          if (divisorsForOp1.length > 0) {
+            op2 = divisorsForOp1[rnd.nextInt(divisorsForOp1.length)];
+          } else {
+            op2 = 1 + rnd.nextInt(task.operandRange[1]);
+          }
+          if (op1 == 0)
+            result = 0;
+          else
+            result = op1 ~/ op2;
 
           if (operator2 == "+") {
             op3 = task.operandRange[0] +
@@ -217,12 +257,16 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
         } else if (operator2 == "/") {
           op2 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          op3 = task.operandRange[0] +
-              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          result = op2;
-          op2 = op2 * op3;
-          if (op3 == 0) op3 += 1;
-          if (op2 == 0) result = 0;
+          List<int> divisorsForOp2 = getDivisors(op2);
+          if (divisorsForOp2.length > 0) {
+            op3 = divisorsForOp2[rnd.nextInt(divisorsForOp2.length)];
+          } else {
+            op3 = 1 + rnd.nextInt(task.operandRange[1]);
+          }
+          if (op2 == 0)
+            result = 0;
+          else
+            result = op2 ~/ op3;
           if (operator1 == "+") {
             op1 = task.operandRange[0] +
                 rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
@@ -266,6 +310,7 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
     for (int i = 1; i <= number / 2; i++) {
       if (number % i == 0) divisors.add(i);
     }
+    if (number != 0) divisors.add(number);
     return divisors;
   }
 }
