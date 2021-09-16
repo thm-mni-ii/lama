@@ -637,6 +637,29 @@ class DatabaseProvider {
     return null;
   }
 
+  /// update the highscorePermission field from an user in table User
+  ///
+  /// {@param} User user, bool highscorePermission
+  ///
+  /// {@return} <User>
+  Future<User> updateUserHighscorePermission(
+      User user, bool highscorePermission) async {
+    final db = await database;
+
+    int updated = await db.update(
+        tableUser,
+        <String, dynamic>{
+          UserFields.columnHighscorePermission: highscorePermission ? 1 : 0
+        },
+        where: " ${UserFields.columnId} = ?",
+        whereArgs: [user.id]);
+
+    if (updated != null) {
+      return await _getUser(user.id);
+    }
+    return null;
+  }
+
   /// update the avatar from an user in table User
   ///
   /// {@param} User user, String avatar
