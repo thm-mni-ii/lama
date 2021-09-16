@@ -1,11 +1,12 @@
 import 'package:lama_app/util/input_validation.dart';
+
 //set table name
 final String tableUser = "user";
 
 ///Set the column names
 ///
 /// Author: F.Brecher
-class UserFields{
+class UserFields {
   static final String columnId = "id";
   static final String columnName = "name";
   static final String columnPassword = "password";
@@ -13,6 +14,7 @@ class UserFields{
   static final String columnCoins = "coins";
   static final String columnIsAdmin = "isAdmin";
   static final String columnAvatar = "avatar";
+  static final String columnHighscorePermission = "highscorePermission";
 }
 
 ///This class help to work with the data's from the user table
@@ -26,6 +28,7 @@ class User {
   int coins;
   bool isAdmin;
   String avatar;
+  bool highscorePermission;
 
   User(
       {this.name,
@@ -33,7 +36,8 @@ class User {
       this.grade,
       this.coins,
       this.isAdmin,
-      this.avatar});
+      this.avatar,
+      this.highscorePermission});
 
   ///Map the variables
   ///
@@ -45,7 +49,8 @@ class User {
       UserFields.columnGrade: grade,
       UserFields.columnCoins: coins,
       UserFields.columnIsAdmin: isAdmin ? 1 : 0,
-      UserFields.columnAvatar: avatar
+      UserFields.columnAvatar: avatar,
+      UserFields.columnHighscorePermission: highscorePermission ? 1 : 0
     };
     return map;
   }
@@ -60,6 +65,7 @@ class User {
     coins = map[UserFields.columnCoins];
     isAdmin = map[UserFields.columnIsAdmin] == 1;
     avatar = map[UserFields.columnAvatar];
+    highscorePermission = map[UserFields.columnHighscorePermission] == 1;
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -67,6 +73,10 @@ class User {
         json.containsKey('isAdmin') && json['isAdmin'] == 'ja' ? true : false;
     String avatar = isAdmin ? 'admin' : 'lama';
     int coins = json.containsKey('coins') ? json['coins'] : 0;
+    bool highscorePermission =
+        json.containsKey('isAdmin') && json['highscorePermission'] == 'ja'
+            ? true
+            : false;
 
     return User(
       name: json['name'],
@@ -75,6 +85,7 @@ class User {
       coins: coins,
       isAdmin: isAdmin,
       avatar: avatar,
+      highscorePermission: highscorePermission,
     );
   }
 
@@ -87,6 +98,21 @@ class User {
       return 'Feld ("grade":...) fehlt oder ist fehlerhaft! \n Hinweis: ("grade":ZAHL,)';
     if (json.containsKey('coins') && !(json['coins'] is int))
       return 'Feld ("coins":...) ist fehlerhaft! \n Hinweis: ("coins":ZAHL,)';
+
+    if (json.containsKey('isAdmin') && !(json['isAdmin'] is String))
+      return 'Feld ("isAdmin":...) ist fehlerhaft! \n Hinweis: ("isAdmin":"ja/nein",)';
+    if (json.containsKey('isAdmin') &&
+        (json['isAdmin'] != 'ja' && (json['isAdmin'] != 'nein')))
+      return 'Optionales Feld ("isAdmin":...) muss die Werte "ja" oder "nein" enthalten';
+
+    if (json.containsKey('highscorePermission') &&
+        !(json['highscorePermission'] is String))
+      return 'Feld ("highscorePermission":...) ist fehlerhaft! \n Hinweis: ("highscorePermission":"ja/nein",)';
+    if (json.containsKey('highscorePermission') &&
+        (json['highscorePermission'] != 'ja' &&
+            (json['highscorePermission'] != 'nein')))
+      return 'Optionales Feld ("highscorePermission":...) muss die Werte "ja" oder "nein" enthalten';
+
     String error = InputValidation.inputPasswortValidation(json['password']);
     if (error != null) return error;
 

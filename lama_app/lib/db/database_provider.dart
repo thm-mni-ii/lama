@@ -124,7 +124,8 @@ class DatabaseProvider {
       UserFields.columnGrade,
       UserFields.columnCoins,
       UserFields.columnIsAdmin,
-      UserFields.columnAvatar
+      UserFields.columnAvatar,
+      UserFields.columnHighscorePermission
     ]);
 
     List<User> userList = <User>[];
@@ -819,7 +820,8 @@ class DatabaseProvider {
           UserFields.columnGrade,
           UserFields.columnCoins,
           UserFields.columnIsAdmin,
-          UserFields.columnAvatar
+          UserFields.columnAvatar,
+          UserFields.columnHighscorePermission
         ],
         where: "${UserFields.columnId} = ?",
         whereArgs: [id]);
