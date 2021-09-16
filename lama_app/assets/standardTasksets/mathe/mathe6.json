@@ -64,7 +64,7 @@
                 "operand_range":[17, 25],
                 "fields_to_replace": 2,
                 "allow_replacing_operators": false,
-                "operator_amount":2
+                "operator_amount": 2
                }
         ]
 }

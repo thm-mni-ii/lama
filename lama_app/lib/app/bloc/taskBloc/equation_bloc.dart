@@ -31,6 +31,7 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
     if (event is RandomEquationEvent) {
       var rnd = Random();
       List<String> randomEquation = _buildRandomEquation();
+      print(randomEquation);
       List<int> numbersInEquation = [];
       List<String> answers = [];
       int fieldsToRemove = task.fieldsToReplace;
@@ -41,7 +42,6 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
         if (i % 2 == 0) numbersInEquation.add(int.parse(randomEquation[i]));
         if (randomEquation[i] == "=") continue;
         //Only remove operators when its enabled for the task
-        print("Gummiboot:" + task.allowReplacingOperators.toString());
         if (operatorList.contains(randomEquation[i]) &&
             !task.allowReplacingOperators) continue;
 
@@ -70,7 +70,10 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
         possibleFieldsToReplace.shuffle();
         for (int i = 0; i < fieldsToRemove; i++) {
           if (i >= possibleFieldsToReplace.length) break;
-          answers.add(randomEquation[possibleFieldsToReplace[i]]);
+          if (int.tryParse(randomEquation[possibleFieldsToReplace[i]]) !=
+              null) {
+            answers.add(randomEquation[possibleFieldsToReplace[i]]);
+          }
           randomEquation[possibleFieldsToReplace[i]] = "?";
         }
       }
@@ -162,8 +165,6 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
       if ((operator1 == "/" || operator1 == "*") &&
           (operator2 == "/" || operator2 == "*")) {
         if (operator1 == "*" && operator2 == "*") {
-          op1 = task.operandRange[0] +
-              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
           op2 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
           op3 = task.operandRange[0] +
@@ -172,18 +173,13 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
         } else if (operator1 == "*" && operator2 == "/") {
           op2 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          op3 = task.operandRange[0] +
-              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          result = op2;
-          op2 = op2 * op3;
-          if (op3 == 0) op3 += 1;
-          if (op2 == 0) result = 0;
-          List<int> divisors = getDivisors(op2);
+          result = op1 * op2;
+          List<int> divisors = getDivisors(result);
           int divisor = 1;
           if (divisors.length > 0)
             divisor = divisors[rnd.nextInt(divisors.length)];
-          op1 = divisor;
-          op2 = op2 ~/ divisor;
+          op3 = divisor;
+          result = result ~/ op3;
         } else if (operator1 == "/" && operator2 == "/") {
           /*op2 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
@@ -219,8 +215,6 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
           else
             result = result ~/ op3;
         } else if (operator1 == "/" && operator2 == "*") {
-          op1 = task.operandRange[0] +
-              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
           op3 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
           /*result = op1;
@@ -240,6 +234,25 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
             result = op1 ~/ op2;
 
           result = result * op3;
+        }
+      } else if ((operator1 == "+" || operator1 == "-") &&
+          (operator2 == "+" || operator2 == "-")) {
+        op2 = task.operandRange[0] +
+            rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+        op3 = task.operandRange[0] +
+            rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
+        if (operator1 == "+") {
+          if (operator2 == "+") {
+            result = op1 + op2 + op3;
+          } else if (operator2 == "-") {
+            result = op1 + op2 - op3;
+          }
+        } else if (operator1 == "-") {
+          if (operator2 == "+") {
+            result = op1 - op2 + op3;
+          } else if (operator2 == "-") {
+            result = op1 - op2 - op3;
+          }
         }
       } else {
         //At least one "+" or "-"
@@ -298,11 +311,11 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
           if (operator1 == "+") {
             op1 = task.operandRange[0] +
                 rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-            result += op1;
+            result = op1 + result;
           } else if (operator1 == "-") {
             op1 = task.operandRange[0] +
                 rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-            result -= op1;
+            result = op1 - result;
           }
         } else if (operator2 == "*") {
           op2 = task.operandRange[0] +
@@ -313,11 +326,11 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
           if (operator1 == "+") {
             op1 = task.operandRange[0] +
                 rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-            result += op1;
+            result = op1 + result;
           } else if (operator1 == "-") {
             op1 = task.operandRange[0] +
                 rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-            result -= op1;
+            result = op1 - result;
           }
         }
       }
