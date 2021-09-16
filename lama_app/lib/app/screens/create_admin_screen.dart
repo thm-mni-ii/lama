@@ -31,6 +31,8 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //temporary password for double password validation
   String _secondPass;
+  //temporary _saftyQuestion to avoid an empty safty answer if an safty question is used
+  String _saftyQuestion;
 
   ///override build methode [StatelessWidget]
   ///
@@ -108,7 +110,46 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
                       .add(CreateAdminChangePassword(value)),
                   obscureText: true,
                 ),
+                SizedBox(height: 50),
+
+                ///
+                ///Safty question
+                ///
+                Text(
+                  "Sicherheitsfrage (Optional)",
+                  style: LamaTextTheme.getStyle(
+                      fontSize: 18, color: LamaColors.black),
+                ),
+                Text(
+                  "\n *Zur Wiederherstellung des Passworts, falls dieses verloren geht.",
+                  style: LamaTextTheme.getStyle(
+                      fontSize: 12, color: LamaColors.black),
+                ),
                 SizedBox(height: 10),
+                TextFormField(
+                  decoration: InputDecoration(hintText: 'Frage'),
+                  validator: (String value) {
+                    return null;
+                  },
+                  onChanged: (value) {
+                    _saftyQuestion = value;
+                    context
+                        .read<CreateAdminBloc>()
+                        .add(CreateAdminChangeSaftyQuestion(value));
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(hintText: 'Antwort'),
+                  validator: (String value) {
+                    if (InputValidation.isEmpty(value) &&
+                        !InputValidation.isEmpty(_saftyQuestion))
+                      return "Feld darf nicht leer sein, wenn eine Sicherheitsfrage genutzt wird.";
+                    return null;
+                  },
+                  onChanged: (value) => context
+                      .read<CreateAdminBloc>()
+                      .add(CreateAdminChangeSaftyAnswer(value)),
+                ),
               ],
             ),
           ),

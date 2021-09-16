@@ -189,6 +189,12 @@ Widget _input(BuildContext context, String error, User user, double size,
               ),
             ),
           ],
+        ),
+        TextButton(
+          onPressed: () {
+            context.read<UserLoginBloc>().add(UserLoginForgotPassword(context));
+          },
+          child: Text("Passwort vergessen?"),
         )
       ],
     ),
