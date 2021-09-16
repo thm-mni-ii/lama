@@ -48,9 +48,10 @@ class User {
       UserFields.columnPassword: password,
       UserFields.columnGrade: grade,
       UserFields.columnCoins: coins,
-      UserFields.columnIsAdmin: isAdmin ? 1 : 0,
+      UserFields.columnIsAdmin: (isAdmin == null || !isAdmin) ? 0 : 1,
       UserFields.columnAvatar: avatar,
-      UserFields.columnHighscorePermission: highscorePermission ? 1 : 0
+      UserFields.columnHighscorePermission:
+          (highscorePermission == null || !highscorePermission) ? 0 : 1
     };
     return map;
   }
