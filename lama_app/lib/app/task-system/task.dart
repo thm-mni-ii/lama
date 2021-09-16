@@ -77,6 +77,9 @@ class Task {
         List<String> options = [];
         List<String> randomAllowedOperators = [];
         List<int> resultRange = [];
+        bool allowReplacingOperators;
+        int fieldsToReplace;
+        int operatorAmount;
         if (json['equation'] != null)
           equation = List<String>.from(json['equation']);
         if (json['options'] != null)
@@ -84,8 +87,19 @@ class Task {
         if (json['random_allowed_operators'] != null)
           randomAllowedOperators =
               List<String>.from(json['random_allowed_operators']);
+        else
+          randomAllowedOperators = ["+", "-", "*", "/"];
         if (json['operand_range'] != null)
           resultRange = List<int>.from(json['operand_range']);
+        json['allow_replacing_operators'] != null
+            ? allowReplacingOperators = json['allow_replacing_operators']
+            : allowReplacingOperators = false;
+        json['fields_to_replace'] != null
+            ? fieldsToReplace = json['fields_to_replace']
+            : fieldsToReplace = -1;
+        json['operator_amount'] != null
+            ? operatorAmount = json['operator_amount']
+            : operatorAmount = null;
         return TaskEquation(
             taskType,
             json['task_reward'],
@@ -94,7 +108,10 @@ class Task {
             equation,
             options,
             randomAllowedOperators,
-            resultRange);
+            allowReplacingOperators,
+            resultRange,
+            operatorAmount,
+            fieldsToReplace);
       default:
         return null;
     }
@@ -322,6 +339,10 @@ class TaskEquation extends Task {
   List<String> randomAllowedOperators;
   List<int> operandRange;
 
+  int fieldsToReplace;
+  int operatorAmount;
+
+  bool allowReplacingOperators;
   bool isRandom = false;
 
   TaskEquation(
@@ -332,14 +353,16 @@ class TaskEquation extends Task {
       this.equation,
       this.options,
       this.randomAllowedOperators,
-      this.operandRange)
+      this.allowReplacingOperators,
+      this.operandRange,
+      this.operatorAmount,
+      this.fieldsToReplace)
       : super(taskType, reward, lamaText, leftToSolve) {
     print("meep");
     print(this.randomAllowedOperators);
     print("meep2");
     print(this.operandRange);
-    if (this.randomAllowedOperators.length > 0 && this.operandRange.length > 0)
-      isRandom = true;
+    if (this.operandRange.length > 0) isRandom = true;
   }
 
   @override

@@ -149,13 +149,20 @@ class TasksetValidator {
                   _checkListType<String>(json["options"])) {
                 return true;
               }
-            } else if (json.containsKey("random_allowed_operators") &&
-                json.containsKey("operand_range")) {
-              if (json["random_allowed_operators"] is List &&
-                  _checkListType<String>(json["random_allowed_operators"]) &&
-                  json["operand_range"] is List &&
+            } else if (json.containsKey("operand_range")) {
+              if (json["operand_range"] is List &&
                   json["operand_range"].length == 2 &&
                   _checkListType<int>(json["operand_range"])) {
+                if (json.containsKey("random_allowed_operators") &&
+                    !(json["random_allowed_operators"] is List) &&
+                    !_checkListType<String>(json["random_allowed_operators"]))
+                  return false;
+                if (json.containsKey("allow_replacing_operators") &&
+                    !(json["allow_replacing_operators"] is bool)) return false;
+                if (json.containsKey("fields_to_replace") &&
+                    !(json["fields_to_replace"] is int)) return false;
+                if (json.containsKey("operator_amount") &&
+                    !(json["operator_amount"] is bool)) return false;
                 return true;
               }
             }

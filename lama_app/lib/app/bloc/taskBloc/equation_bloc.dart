@@ -33,20 +33,45 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
       List<String> randomEquation = _buildRandomEquation();
       List<int> numbersInEquation = [];
       List<String> answers = [];
+      int fieldsToRemove = task.fieldsToReplace;
+
+      List<int> possibleFieldsToReplace = [];
+
       for (int i = 0; i < randomEquation.length; i++) {
         if (i % 2 == 0) numbersInEquation.add(int.parse(randomEquation[i]));
         if (randomEquation[i] == "=") continue;
-        //Whether to remove the current space
-        if (rnd.nextBool()) {
-          if (int.tryParse(randomEquation[i]) != null)
-            answers.add(randomEquation[i]);
-          randomEquation[i] = "?";
-        } else {
-          //Fallback => if nothing was removed, at least remove the result
-          if (i == randomEquation.length - 1 && answers.length == 0) {
-            answers.add(randomEquation[i]);
+        //Only remove operators when its enabled for the task
+        print("Gummiboot:" + task.allowReplacingOperators.toString());
+        if (operatorList.contains(randomEquation[i]) &&
+            !task.allowReplacingOperators) continue;
+
+        possibleFieldsToReplace.add(i);
+      }
+
+      //fieldsToRemove is -1 if the parameter fieldsToReplace was ommited in the json file
+      //This will cause the replacement of fields to use a different approach by replacing allowed fields randomly
+      if (fieldsToRemove == -1) {
+        for (int i = 0; i < possibleFieldsToReplace.length; i++) {
+          //Whether to remove the current space
+          if (rnd.nextBool()) {
+            if (int.tryParse(randomEquation[i]) != null)
+              answers.add(randomEquation[i]);
             randomEquation[i] = "?";
+          } else {
+            //Fallback => if nothing was removed, at least remove the result
+
           }
+        }
+        if (answers.length == 0) {
+          answers.add(randomEquation[randomEquation.length - 1]);
+          randomEquation[randomEquation.length - 1] = "?";
+        }
+      } else {
+        possibleFieldsToReplace.shuffle();
+        for (int i = 0; i < fieldsToRemove; i++) {
+          if (i >= possibleFieldsToReplace.length) break;
+          answers.add(randomEquation[possibleFieldsToReplace[i]]);
+          randomEquation[possibleFieldsToReplace[i]] = "?";
         }
       }
       initialEquation.addAll(randomEquation);
@@ -80,7 +105,9 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
 
     var rnd = Random();
     //Decide whether to use 1 operant or 2
-    if (rnd.nextBool()) {
+    bool removeIfNotSet = rnd.nextBool();
+    if ((task.operatorAmount == null && removeIfNotSet) ||
+        (task.operatorAmount != null && task.operatorAmount == 1)) {
       int op1 = task.operandRange[0] +
           rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
       int op2 = 0;
@@ -121,7 +148,8 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
       equation.add(op2.toString());
       equation.add("=");
       equation.add(result.toString());
-    } else {
+    } else if ((task.operatorAmount == null && !removeIfNotSet) ||
+        (task.operatorAmount != null && task.operatorAmount == 2)) {
       //2 Operantor
       String operator1 = task.randomAllowedOperators[
           rnd.nextInt(task.randomAllowedOperators.length)];
