@@ -162,7 +162,7 @@ class TasksetValidator {
                 if (json.containsKey("fields_to_replace") &&
                     !(json["fields_to_replace"] is int)) return false;
                 if (json.containsKey("operator_amount") &&
-                    !(json["operator_amount"] is bool)) return false;
+                    !(json["operator_amount"] is int)) return false;
                 return true;
               }
             }

@@ -63,7 +63,8 @@
                 "left_to_solve": 4,
                 "operand_range":[17, 25],
                 "fields_to_replace": 2,
-                "allow_replacing_operators": false
+                "allow_replacing_operators": false,
+                "operator_amount":2
                }
         ]
 }
