@@ -24,7 +24,7 @@ import 'package:sqflite/sqflite.dart';
 ///All methods to work with the database you will find here
 ///
 /// Author: F.Brecher, L.Kammerer
-/// latest Changes: 13.09.2021
+/// latest Changes: 16.09.2021
 class DatabaseProvider {
   int currentVersion = 2;
   int oldVersion = 0;
@@ -124,7 +124,8 @@ class DatabaseProvider {
       UserFields.columnGrade,
       UserFields.columnCoins,
       UserFields.columnIsAdmin,
-      UserFields.columnAvatar
+      UserFields.columnAvatar,
+      UserFields.columnHighscorePermission
     ]);
 
     List<User> userList = <User>[];
@@ -636,6 +637,29 @@ class DatabaseProvider {
     return null;
   }
 
+  /// update the highscorePermission field from an user in table User
+  ///
+  /// {@param} User user, bool highscorePermission
+  ///
+  /// {@return} <User>
+  Future<User> updateUserHighscorePermission(
+      User user, bool highscorePermission) async {
+    final db = await database;
+
+    int updated = await db.update(
+        tableUser,
+        <String, dynamic>{
+          UserFields.columnHighscorePermission: highscorePermission ? 1 : 0
+        },
+        where: " ${UserFields.columnId} = ?",
+        whereArgs: [user.id]);
+
+    if (updated != null) {
+      return await _getUser(user.id);
+    }
+    return null;
+  }
+
   /// update the avatar from an user in table User
   ///
   /// {@param} User user, String avatar
@@ -819,7 +843,8 @@ class DatabaseProvider {
           UserFields.columnGrade,
           UserFields.columnCoins,
           UserFields.columnIsAdmin,
-          UserFields.columnAvatar
+          UserFields.columnAvatar,
+          UserFields.columnHighscorePermission
         ],
         where: "${UserFields.columnId} = ?",
         whereArgs: [id]);

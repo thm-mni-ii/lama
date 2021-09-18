@@ -89,6 +89,8 @@ class DBMigrator {
         "${SaftyQuestionFields.columnSaftyQuestionAdminId} INTEGER,"
         "${SaftyQuestionFields.columnSaftyQuestion} TEXT,"
         "${SaftyQuestionFields.columnSaftyAnswer} TEXT"
-        ");"
+        ");",
+    2: "ALTER TABLE $tableUser "
+        "ADD COLUMN ${UserFields.columnHighscorePermission} INTEGER DEFAULT 0;"
   };
 }
