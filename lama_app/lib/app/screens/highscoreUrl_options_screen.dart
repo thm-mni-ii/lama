@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/event/highscoreUrl_screen_event.dart';
+import 'package:lama_app/app/model/user_model.dart';
 
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
@@ -21,21 +24,21 @@ import 'package:lama_app/app/state/highscoreUrl_screen_state.dart';
 ///[InputValidation] to prevent any Issue with Exceptions
 ///
 /// * see also
-///    [AdminSettingsBloc]
-///    [AdminSettingsEvent]
-///    [AdminSettingsState]
+///    [HighscoreUrlScreenBloc]
+///    [HighscoreUrlScreenEvent]
+///    [HighscoreUrlScreenState]
 ///
 /// Author: L.Kammerer
 /// latest Changes: 17.07.2021
-class AdminSettingsScreen extends StatefulWidget {
+class HighscoreUrlOptionScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return AdminSettingsScreenState();
+    return HighscoreUrlOptionScreenState();
   }
 }
 
 ///UserlistUrlScreenState provides the state for the [UserlistUrlScreen]
-class AdminSettingsScreenState extends State<AdminSettingsScreen> {
+class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //temporary url to prevent losing the url on error states
@@ -50,7 +53,7 @@ class AdminSettingsScreenState extends State<AdminSettingsScreen> {
   ///
   ///{@param} [BuildContext] as context
   ///
-  ///{@return} [Widget] decided by the incoming state of the [UserlistUrlBloc]
+  ///{@return} [Widget] decided by the incoming state of the [HighscoreUrlScreenBloc]
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -61,14 +64,21 @@ class AdminSettingsScreenState extends State<AdminSettingsScreen> {
           screenSize, LamaColors.bluePrimary, 'Highscore-URL Einstellungen'),
       body: BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState>(
           builder: (context, state) {
-        return Padding(
-          padding: EdgeInsets.only(top: 15, right: 25, left: 25),
-          child: Column(
+        if (state is HighscoreUrlPullState) {
+          return Column(
             children: [
-              _inputFields(context),
+              _headline("Highscore-URL einfügen"),
+              Padding(
+                padding: EdgeInsets.only(right: 25, left: 25),
+                child: _inputFields(context),
+              ),
+              _headline("Erlaubnis der Nutzer"),
+              _userList(state.userList),
             ],
-          ),
-        );
+          );
+        }
+        context.read<HighscoreUrlScreenBloc>().add(HighscoreUrlPullEvent());
+        return Center(child: CircularProgressIndicator());
       }),
     );
   }
@@ -96,10 +106,87 @@ class AdminSettingsScreenState extends State<AdminSettingsScreen> {
         initialValue: _url,
         onChanged: (value) {
           _url = value;
+          context
+              .read<HighscoreUrlScreenBloc>()
+              .add(HighscoreUrlChangeEvent(value));
         },
         validator: (value) => InputValidation.inputURLValidation(value),
         onFieldSubmitted: (value) => {if (_formKey.currentState.validate()) {}},
       ),
+    );
+  }
+
+  ///(private)
+  ///is used for headlines
+  ///
+  ///{@param} headline as [String] headline
+  ///
+  ///{@return} [Align] with [Text]
+  Widget _headline(String headline) {
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: EdgeInsets.only(top: 20),
+        child: Text(
+          headline,
+          style: LamaTextTheme.getStyle(
+            fontSize: 12,
+            color: LamaColors.bluePrimary,
+          ),
+        ),
+      ),
+    );
+  }
+
+  ///(private)
+  ///provides [ListView] for alle [User]s, except admins
+  ///
+  ///{@return} [ListView] with all users via [_userCard]
+  Widget _userList(List<User> userlist) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(2, 10, 2, 0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: userlist.length,
+        itemBuilder: (context, index) {
+          return _userCard(userlist[index]);
+        },
+      ),
+    );
+  }
+
+  ///(private)
+  ///used to display an user with username and avatar as
+  ///[Card] with [ListTile]. onTap triggers the [SelectUser] event.
+  ///
+  ///{@param} [User] as user that should be displayed
+  Widget _userCard(User user) {
+    ///attache '(Admin)' to the username if the user is an Admin
+    return BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState>(
+      builder: (context, state) {
+        return Card(
+          child: ListTile(
+            onTap: () {},
+            title: Text(
+              user.name,
+              style: LamaTextTheme.getStyle(
+                fontSize: 20,
+                color: LamaColors.black,
+                monospace: true,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            leading: CircleAvatar(
+              child: SvgPicture.asset(
+                'assets/images/svg/avatars/${user.avatar}.svg',
+                semanticsLabel: 'LAMA',
+              ),
+              radius: 25,
+              backgroundColor: LamaColors.mainPink,
+            ),
+          ),
+        );
+      },
     );
   }
 }

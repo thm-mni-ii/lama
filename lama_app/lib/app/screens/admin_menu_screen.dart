@@ -169,14 +169,14 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           _menuButton(
             context,
             Icon(Icons.settings),
-            'Weitere Einstellungen',
+            'Highscore-URL Einstellungen',
             () => {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
                     create: (BuildContext context) => HighscoreUrlScreenBloc(),
-                    child: AdminSettingsScreen(),
+                    child: HighscoreUrlOptionScreen(),
                   ),
                 ),
               )
@@ -449,13 +449,17 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
 ///prevent repetitive code in all Screens used for the Admin
 ///
 /// Author: L.Kammerer
-/// latest Changes: 17.07.2021
+/// latest Changes: 18.09.2021
 abstract class AdminUtils {
   ///START of Area for UserPreferences
   ///
   ///enableDefaultTasksetsPref is used to set an bool in the
   ///UserPreferences to deaktivate all default Tasksets made available by this App
   static final String enableDefaultTasksetsPref = 'enableDefaultTaskset';
+
+  ///highscoreUploadUrl is used to set a string in the
+  ///UserPreferences to upload game highscores via this url
+  static final String highscoreUploadUrlPref = 'highscoreUploadUrl';
 
   ///
   ///END of Area for UserPreferences
