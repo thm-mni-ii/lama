@@ -37,6 +37,7 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
 
       List<int> possibleFieldsToReplace = [];
       print(randomEquation);
+      print(task.allowReplacingOperators);
       for (int i = 0; i < randomEquation.length; i++) {
         if (i % 2 == 0) numbersInEquation.add(int.parse(randomEquation[i]));
         if (randomEquation[i] == "=") continue;
@@ -46,21 +47,20 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
 
         possibleFieldsToReplace.add(i);
       }
-
+      print(possibleFieldsToReplace);
+      print(fieldsToRemove);
       //fieldsToRemove is -1 if the parameter fieldsToReplace was ommited in the json file
       //This will cause the replacement of fields to use a different approach by replacing allowed fields randomly
       if (fieldsToRemove == -1) {
         for (int i = 0; i < possibleFieldsToReplace.length; i++) {
           //Whether to remove the current space
           if (rnd.nextBool()) {
-            if (int.tryParse(randomEquation[i]) != null)
-              answers.add(randomEquation[i]);
-            randomEquation[i] = "?";
-          } else {
-            //Fallback => if nothing was removed, at least remove the result
-
+            if (int.tryParse(randomEquation[possibleFieldsToReplace[i]]) !=
+                null) answers.add(randomEquation[possibleFieldsToReplace[i]]);
+            randomEquation[possibleFieldsToReplace[i]] = "?";
           }
         }
+        //Fallback => if nothing was replaced - at least remove result
         if (answers.length == 0) {
           answers.add(randomEquation[randomEquation.length - 1]);
           randomEquation[randomEquation.length - 1] = "?";
