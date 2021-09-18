@@ -82,12 +82,12 @@ abstract class InputValidation {
   ///
   ///{@param} [String] as url
   static String inputURLValidation(String url) {
+    if (isEmpty(url)) return 'Dieses Feld darf nicht leer sein!';
     if (RegExp('http://').hasMatch(url))
       return 'URL darf aus Sicherheitsgründen keine "http" Adresse sein!';
     if (!urlFilter.hasMatch(url)) return 'Die URL muss mit "https://" beginen!';
     if (!Uri.tryParse(url).hasAbsolutePath)
-      return 'URL Fehlerhaft! Einige URLs müssen mit ".json" oder "/" enden.';
-    if (isEmpty(url)) return 'Dieses Feld darf nicht leer sein!';
+      return 'URL Fehlerhaft! Einige URLs müssen mit "/" enden.';
     return null;
   }
 

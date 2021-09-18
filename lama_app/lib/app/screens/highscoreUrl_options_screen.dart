@@ -58,11 +58,48 @@ class AdminSettingsScreenState extends State<AdminSettingsScreen> {
       //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
       appBar: AdminUtils.appbar(
-          screenSize, LamaColors.bluePrimary, 'Nutzerliste einfügen'),
+          screenSize, LamaColors.bluePrimary, 'Highscore-URL Einstellungen'),
       body: BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState>(
           builder: (context, state) {
-        return Text("Settings blabla");
+        return Padding(
+          padding: EdgeInsets.only(top: 15, right: 25, left: 25),
+          child: Column(
+            children: [
+              _inputFields(context),
+            ],
+          ),
+        );
       }),
+    );
+  }
+
+  ///(private)
+  ///is used to input an url
+  ///
+  ///{@important} the input should be saved in local
+  ///variable to avoid lost on error. The url that is used for the https request
+  ///is stored in [UserlistUrlBloc]. The onChanged is used to send the
+  ///[TextFormField] value through [UserlistUrlBloc] via [UserlistUrlChangeUrl]
+  ///
+  ///{@param} [BuildContext] context
+  ///
+  ///{@return} [Form] with [TextFormField] to provide input with validation
+  Widget _inputFields(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: TextFormField(
+        textInputAction: TextInputAction.done,
+        textAlign: TextAlign.center,
+        decoration: InputDecoration(
+          hintText: 'https://beispiel.de/',
+        ),
+        initialValue: _url,
+        onChanged: (value) {
+          _url = value;
+        },
+        validator: (value) => InputValidation.inputURLValidation(value),
+        onFieldSubmitted: (value) => {if (_formKey.currentState.validate()) {}},
+      ),
     );
   }
 }
