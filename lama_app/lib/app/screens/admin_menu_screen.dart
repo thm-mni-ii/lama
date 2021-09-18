@@ -12,7 +12,7 @@ import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
-import 'package:lama_app/app/bloc/admin_seetings_bloc.dart';
+import 'package:lama_app/app/bloc/highscoreUrl_screen_bloc.dart';
 //Events
 import 'package:lama_app/app/event/admin_menu_event.dart';
 //States
@@ -22,7 +22,7 @@ import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/screens/userlist_url_screen.dart';
-import 'admin_settings_screen.dart';
+import 'highscoreUrl_options_screen.dart';
 
 ///This file creates the Admin Menu Screen
 ///The Admin Menu Screen provides every navigation to screens
@@ -175,7 +175,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
-                    create: (BuildContext context) => AdminSettingsBloc(),
+                    create: (BuildContext context) => HighscoreUrlScreenBloc(),
                     child: AdminSettingsScreen(),
                   ),
                 ),

@@ -1,1 +1,1 @@
-abstract class AdminSettingsState {}
+abstract class HighscoreUrlScreenState {}

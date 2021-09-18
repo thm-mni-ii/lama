@@ -1,1 +1,1 @@
-abstract class AdminSettingsEvent {}
+abstract class HighscoreUrlScreenEvent {}
