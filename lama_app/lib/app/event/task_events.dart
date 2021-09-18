@@ -60,4 +60,7 @@ class AnswerTaskEvent extends TaskEvent {
     this.fullAnswer = fullAnswer;
     this.providedanswerWords = providedanswerWords;
   }
+  AnswerTaskEvent.initEquationNew(List<String> fullAnswer) {
+    this.fullAnswer = fullAnswer;
+  }
 }

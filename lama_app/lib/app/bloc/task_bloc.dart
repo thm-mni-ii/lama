@@ -5,6 +5,7 @@ import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:collection/collection.dart';
 import 'package:lama_app/db/database_provider.dart';
+import 'package:lama_app/util/OperantsEnum.dart';
 
 /// [Bloc] for the [TaskScreen]
 ///
@@ -103,7 +104,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           yield TaskAnswerResultState(false);
         }
       } else if (t is TaskEquation) {
-        if (fullequals(event.fullAnswer, event.providedanswerWords)) {
+        if (evaluateExpression(event.fullAnswer)) {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         } else {
@@ -168,6 +169,151 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     answerResults.add(false);
   }
 
+  /// parses and evaluates a mathematical expression.
+  ///
+  /// Note that the pinpointing only works while using 1-2 operants.
+  /// Since it is not planed to support more operants,
+  /// which is of course limitied by the screen size of a smartphone,
+  /// this will do for now.
+  ///
+  /// If the equation contains a * or / AND a + or -, the equation is reconstructed to begin with
+  /// the * or / operator to preserve precedence of division and multiplication
+  /// NOTE: if the leading operator is a - and the equation gets reconstructed, the result needs to be inverted
+  /// by passing invertResult to evalLeftToRight() to get the correct result
+  ///
+  /// Example: 24 - 6/2 = 21 would look like this after reconstruction 6/2 - 24 = -21
+  /// Therefore the result needs to be inverted to be correct. This inly happens during calculation
+  /// and has no influence on the UI
+  bool evaluateExpression(List<String> equation) {
+    if (equation.contains("?")) return false;
+    if (equation.contains("*") || equation.contains("/")) {
+      //pinpoint * and / (if no other sign is present goto evalLeftToRight)
+      if (!(equation.contains("+") || equation.contains("-"))) {
+        return evalLeftToRight(equation);
+      } else {
+        int position;
+        Operants lastOperant;
+        for (int i = 0; i < equation.length; i++) {
+          Operants op = evalOperant(equation[i]);
+          if (op == Operants.NUMBER && lastOperant == Operants.NUMBER)
+            return false;
+          if (op != Operants.NUMBER && lastOperant != Operants.NUMBER)
+            return false;
+          lastOperant = op;
+          if (op == Operants.DIV || op == Operants.MUL) {
+            position = i;
+          }
+        }
+        List<String> newEquation = [];
+        bool invertResult = false;
+        newEquation.add(equation[position - 1]);
+        newEquation.add(equation[position]);
+        newEquation.add(equation[position + 1]);
+        for (int i = 0; i < equation.length; i++) {
+          if (i < position - 1) {
+            if (evalOperant(equation[i]) != Operants.NUMBER) {
+              if (evalOperant(equation[i]) == Operants.SUB) invertResult = true;
+              newEquation.add(equation[i]);
+              newEquation.add(equation[i - 1]);
+            }
+          } else if (i > position + 1) newEquation.add(equation[i]);
+        }
+        return evalLeftToRight(newEquation, invertResult: true);
+      }
+    } else {
+      return evalLeftToRight(equation);
+    }
+  }
+
+  ///evaluates a expression from left to right
+  ///
+  ///invertResult must be passed if the equation contains a * or / as a second operant and a - as a first
+  ///because of how the evaluation is handled
+  ///
+  ///see *evaluateExpression()
+  bool evalLeftToRight(List<String> equation, {bool invertResult = false}) {
+    int value = 0;
+    Operants lastOperant;
+    for (int i = 0; i < equation.length; i++) {
+      String char = equation[i];
+      switch (evalOperant(char)) {
+        case Operants.ADD:
+          if (lastOperant != Operants.NUMBER) return false;
+          lastOperant = Operants.ADD;
+          break;
+        case Operants.SUB:
+          if (lastOperant != Operants.NUMBER) return false;
+          lastOperant = Operants.SUB;
+          break;
+        case Operants.MUL:
+          if (lastOperant != Operants.NUMBER) return false;
+          lastOperant = Operants.MUL;
+          break;
+        case Operants.DIV:
+          if (lastOperant != Operants.NUMBER) return false;
+          lastOperant = Operants.DIV;
+          break;
+        case Operants.EQUALS:
+          if (lastOperant != Operants.NUMBER) return false;
+          lastOperant = Operants.EQUALS;
+          break;
+        case Operants.NUMBER:
+          if (lastOperant == Operants.NUMBER)
+            return false;
+          else if (lastOperant == null)
+            value = int.parse(char);
+          else if (lastOperant == Operants.DIV && int.parse(char) == 0)
+            return false;
+          else if (lastOperant == Operants.EQUALS) {
+            if (invertResult)
+              return (value * -1) == int.parse(char);
+            else
+              return value == int.parse(char);
+          } else
+            value = doOperation(value, int.parse(char), lastOperant);
+          lastOperant = Operants.NUMBER;
+          break;
+      }
+    }
+    return false;
+  }
+
+  /// executes a simple calculation based on the passed operator
+  int doOperation(int value, int number, Operants operant) {
+    switch (operant) {
+      case Operants.ADD:
+        return value + number;
+      case Operants.SUB:
+        return value - number;
+      case Operants.MUL:
+        return value * number;
+      case Operants.DIV:
+        return (value ~/ number);
+      //The following two CAN NEVER happen
+      case Operants.EQUALS:
+      case Operants.NUMBER:
+        return 0;
+    }
+    return 0;
+  }
+
+  /// returns the corresponding operant of the passed string
+  Operants evalOperant(String char) {
+    switch (char) {
+      case "+":
+        return Operants.ADD;
+      case "-":
+        return Operants.SUB;
+      case "*":
+        return Operants.MUL;
+      case "/":
+        return Operants.DIV;
+      case "=":
+        return Operants.EQUALS;
+    }
+    return Operants.NUMBER;
+  }
+
   /// Checks if two String lists ([list1] and [list2]) contain exactly the same elements.
   bool equals(List<String> list1, List<String> list2) {
     if (!(list1 is List<String> && list2 is List<String>) ||
@@ -183,158 +329,4 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     }
     return true;
   }
-
-  /// Checks if the result of two equation as String lists ([list1] and [list2]) is equal.
-  bool fullequals(List<String> list1, List<String> list2) {
-    double list1res, list2res;
-    if (!(list1 is List<String> && list2 is List<String>) ||
-        list1.length != list2.length) {
-      return false;
-    }
-
-    if (list2.length <= 5) {
-      list1res = double.parse(list1[4]);
-      if (list2[4] != list1[4])
-        return false;
-      if (list2[0] == "+" || list2[0] == "-" || list2[0] == "*" ||
-          list2[0] == "/")
-        return false;
-      if (list2[2] == "+" || list2[2] == "-" || list2[2] == "*" ||
-          list2[2] == "/")
-        return false;
-      if (list2[4] == "+" || list2[4] == "-" || list2[4] == "*" ||
-          list2[4] == "/")
-        return false;
-      if (list2[1] != "+" && list2[1] != "-" && list2[1] != "*" &&
-          list2[1] != "/")
-        return false;
-      if (list2[1] == "+") {
-        list2res = double.parse(list1[0]) + double.parse(list1[2]);
-        if (list2res != list2res)
-          return false;
-      } else if (list2[1] == "-") {
-        list2res = double.parse(list1[0]) - double.parse(list1[2]);
-        if (list1res != list2res)
-          return false;
-      } else if (list2[1] == "*") {
-        list2res = double.parse(list2[0]) * double.parse(list2[2]);
-        if (list1res != list2res)
-          return false;
-      } else if (list2[1] == "/") {
-        list2res = double.parse(list2[0]) / double.parse(list2[2]);
-        if(list2[2]=="0")
-          return true;
-        if (list1res != list2res)
-          return false;
-      }
-    }
-      if (list2.length > 5) {
-        list1res = double.parse(list1[6]);
-        if (list1[6] != list2[6])
-          return false;
-        if (list2[0] == "+" || list2[0] == "-" || list2[0] == "*" ||
-            list2[0] == "/")
-          return false;
-        if (list2[2] == "+" || list2[2] == "-" || list2[2] == "*" ||
-            list2[2] == "/")
-          return false;
-        if (list2[4] == "+" || list2[4] == "-" || list2[4] == "*" ||
-            list2[4] == "/")
-          return false;
-        if (list2[6] == "+" || list2[6] == "-" || list2[6] == "*" ||
-            list2[6] == "/")
-          return false;
-        if (list2[1] != "+" && list2[1] != "-" && list2[1] != "*" &&
-            list2[1] != "/")
-          return false;
-        if (list2[3] != "+" && list2[3] != "-" && list2[3] != "*" &&
-            list2[3] != "/")
-          return false;
-        if (list2[1] == "+") {
-          if (list2[3] == "+") {
-            list2res = double.parse(list2[0]) + double.parse(list2[2]) + double.parse(list2[4]);
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "-") {
-            list2res = double.parse(list2[0]) + double.parse(list2[2]) - double.parse(list2[4]);
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "*") {
-            list2res = double.parse(list2[0]) + double.parse(list2[2]) * double.parse(list2[4]);
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "/") {
-            list2res = (double.parse(list2[0]) + double.parse(list2[2])) / double.parse(list2[4]);
-            if(list2[4]=="0")
-              return true;
-            if (list1res != list2res)
-              return false;
-          }
-        } else if (list2[1] == "-") {
-          if (list2[3] == "+") {
-            list2res = double.parse(list2[0]) - double.parse(list2[2]) + double.parse(list2[4]);
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "-") {
-            list2res = double.parse(list2[0]) - double.parse(list2[2]) - double.parse(list2[4]);
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "*") {
-            list2res = double.parse(list2[0]) - double.parse(list2[2]) * double.parse(list2[4]);
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "/") {
-            list2res = ((double.parse(list2[0]) - double.parse(list2[2])) / double.parse(list2[4]));
-            if(list2[4]=="0")
-              return true;
-            if (list1res != list2res)
-              return false;
-          }
-        } else if (list2[1] == "*") {
-          if (list2[3] == "+") {
-            list2res = double.parse(list2[0]) * double.parse(list2[2]) + double.parse(list2[4]);
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "-") {
-            list2res = double.parse(list2[0]) * double.parse(list2[2]) - double.parse(list2[4]);
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "*") {
-            list2res = double.parse(list2[0]) * double.parse(list2[2]) * double.parse(list2[4]);
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "/") {
-            list2res = (double.parse(list2[0]) * double.parse(list2[2])) / double.parse(list2[4]);
-            if(list2[4]=="0")
-              return true;
-            if (list1res != list2res)
-              return false;
-          }
-        } else if (list2[1] == "/") {
-          if(list2[2]=="0")
-            return true;
-          if (list2[3] == "+") {
-            list2res = (double.parse(list2[0]) / double.parse(list2[2]) + double.parse(list2[4]));
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "-") {
-            list2res = (double.parse(list2[0]) / double.parse(list2[2]) - double.parse(list2[4]));
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "*") {
-            list2res = (double.parse(list2[0]) / double.parse(list2[2]) * double.parse(list2[4]));
-            if (list1res != list2res)
-              return false;
-          } else if (list2[3] == "/") {
-            list2res = (double.parse(list2[0]) / double.parse(list2[2])) / double.parse(list2[4]);
-            if(list2[4]=="0")
-              return true;
-            if (list1res != list2res)
-              return false;
-          }
-        }
-      }
-
-      return true;
-    }
 }

@@ -142,22 +142,31 @@ class TasksetValidator {
             }
             return false;
           case "Equation":
-            if (json.containsKey("operator(1-2)")) {
-              if (json.containsKey("random")) {
-                if (json["random"] is List &&
-                    _checkListType<String>(json["random"])) return true;
-              } else if (json.containsKey("equation") &&
-                  json.containsKey("missing_elements") &&
-                  json.containsKey("wrong_answers")) {
-                if (json["equation"] is List &&
-                    _checkListType<String>(json["equation"]) &&
-                    json["missing_elements"] is List &&
-                    _checkListType<String>(json["missing_elements"]) &&
-                    json["wrong_answers"] is List &&
-                    _checkListType<String>(json["wrong_answers"])) return true;
+            if (json.containsKey("equation") && json.containsKey("options")) {
+              if (json["equation"] is List &&
+                  _checkListType<String>(json["equation"]) &&
+                  json["options"] is List &&
+                  _checkListType<String>(json["options"])) {
+                return true;
+              }
+            } else if (json.containsKey("operand_range")) {
+              if (json["operand_range"] is List &&
+                  json["operand_range"].length == 2 &&
+                  _checkListType<int>(json["operand_range"])) {
+                if (json.containsKey("random_allowed_operators") &&
+                    !(json["random_allowed_operators"] is List) &&
+                    !_checkListType<String>(json["random_allowed_operators"]))
+                  return false;
+                if (json.containsKey("allow_replacing_operators") &&
+                    !(json["allow_replacing_operators"] is bool)) return false;
+                if (json.containsKey("fields_to_replace") &&
+                    !(json["fields_to_replace"] is int)) return false;
+                if (json.containsKey("operator_amount") &&
+                    !(json["operator_amount"] is int)) return false;
+                return true;
               }
             }
-            break;
+            return false;
           default:
             return false;
         }
