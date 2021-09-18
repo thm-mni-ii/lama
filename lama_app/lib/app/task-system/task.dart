@@ -98,7 +98,10 @@ class Task {
             ? fieldsToReplace = json['fields_to_replace']
             : fieldsToReplace = -1;
         json['operator_amount'] != null
-            ? operatorAmount = json['operator_amount']
+            ? operatorAmount =
+                (json['operator_amount'] > 2 || json['operator_amount'] < 1)
+                    ? null
+                    : json['operator_amount']
             : operatorAmount = null;
         return TaskEquation(
             taskType,

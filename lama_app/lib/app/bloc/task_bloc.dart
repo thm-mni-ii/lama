@@ -175,6 +175,15 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   /// Since it is not planed to support more operants,
   /// which is of course limitied by the screen size of a smartphone,
   /// this will do for now.
+  ///
+  /// If the equation contains a * or / AND a + or -, the equation is reconstructed to begin with
+  /// the * or / operator to preserve precedence of division and multiplication
+  /// NOTE: if the leading operator is a - and the equation gets reconstructed, the result needs to be inverted
+  /// by passing invertResult to evalLeftToRight() to get the correct result
+  ///
+  /// Example: 24 - 6/2 = 21 would look like this after reconstruction 6/2 - 24 = -21
+  /// Therefore the result needs to be inverted to be correct. This inly happens during calculation
+  /// and has no influence on the UI
   bool evaluateExpression(List<String> equation) {
     if (equation.contains("?")) return false;
     if (equation.contains("*") || equation.contains("/")) {
@@ -196,26 +205,33 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           }
         }
         List<String> newEquation = [];
-
+        bool invertResult = false;
         newEquation.add(equation[position - 1]);
         newEquation.add(equation[position]);
         newEquation.add(equation[position + 1]);
         for (int i = 0; i < equation.length; i++) {
           if (i < position - 1) {
             if (evalOperant(equation[i]) != Operants.NUMBER) {
+              if (evalOperant(equation[i]) == Operants.SUB) invertResult = true;
               newEquation.add(equation[i]);
               newEquation.add(equation[i - 1]);
             }
           } else if (i > position + 1) newEquation.add(equation[i]);
         }
-        return evalLeftToRight(newEquation);
+        return evalLeftToRight(newEquation, invertResult: true);
       }
     } else {
       return evalLeftToRight(equation);
     }
   }
 
-  bool evalLeftToRight(List<String> equation) {
+  ///evaluates a expression from left to right
+  ///
+  ///invertResult must be passed if the equation contains a * or / as a second operant and a - as a first
+  ///because of how the evaluation is handled
+  ///
+  ///see *evaluateExpression()
+  bool evalLeftToRight(List<String> equation, {bool invertResult = false}) {
     int value = 0;
     Operants lastOperant;
     for (int i = 0; i < equation.length; i++) {
@@ -249,15 +265,20 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           else if (lastOperant == Operants.DIV && int.parse(char) == 0)
             return false;
           else if (lastOperant == Operants.EQUALS) {
-            return value == int.parse(char);
+            if (invertResult)
+              return (value * -1) == int.parse(char);
+            else
+              return value == int.parse(char);
           } else
             value = doOperation(value, int.parse(char), lastOperant);
           lastOperant = Operants.NUMBER;
           break;
       }
     }
+    return false;
   }
 
+  /// executes a simple calculation based on the passed operator
   int doOperation(int value, int number, Operants operant) {
     switch (operant) {
       case Operants.ADD:
@@ -276,6 +297,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     return 0;
   }
 
+  /// returns the corresponding operant of the passed string
   Operants evalOperant(String char) {
     switch (char) {
       case "+":

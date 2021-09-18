@@ -31,13 +31,12 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
     if (event is RandomEquationEvent) {
       var rnd = Random();
       List<String> randomEquation = _buildRandomEquation();
-      print(randomEquation);
       List<int> numbersInEquation = [];
       List<String> answers = [];
       int fieldsToRemove = task.fieldsToReplace;
 
       List<int> possibleFieldsToReplace = [];
-
+      print(randomEquation);
       for (int i = 0; i < randomEquation.length; i++) {
         if (i % 2 == 0) numbersInEquation.add(int.parse(randomEquation[i]));
         if (randomEquation[i] == "=") continue;
@@ -181,18 +180,6 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
           op3 = divisor;
           result = result ~/ op3;
         } else if (operator1 == "/" && operator2 == "/") {
-          /*op2 = task.operandRange[0] +
-              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          op3 = task.operandRange[0] +
-              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          result = op2;
-          op2 = op2 * op3;
-          if (op3 == 0) op3 += 1;
-          if (op2 == 0) result = 0;
-          int op2tmp = op2;
-          op2 = task.operandRange[0] +
-              rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          op1 = op2tmp * op2;*/
           List<int> divisorsForOp1 = getDivisors(op1);
           if (divisorsForOp1.length > 0) {
             op2 = divisorsForOp1[rnd.nextInt(divisorsForOp1.length)];
@@ -217,11 +204,6 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
         } else if (operator1 == "/" && operator2 == "*") {
           op3 = task.operandRange[0] +
               rnd.nextInt(task.operandRange[1] - task.operandRange[0]);
-          /*result = op1;
-          op1 = op1 * op2;
-          if (op2 == 0) op2 += 1;
-          if (op1 == 0) result = 0;
-          result = result * op3;*/
           List<int> divisorsForOp1 = getDivisors(op1);
           if (divisorsForOp1.length > 0) {
             op2 = divisorsForOp1[rnd.nextInt(divisorsForOp1.length)];
