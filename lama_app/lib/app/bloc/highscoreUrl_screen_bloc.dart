@@ -23,7 +23,7 @@ class HighscoreUrlScreenBloc
   String _urlChanged;
   String _urlCurrent;
   SharedPreferences _prefs;
-  List<User> _userList;
+  List<User> _userList = [];
   HighscoreUrlScreenBloc({HighscoreUrlScreenState initialState})
       : super(initialState);
 
@@ -37,7 +37,9 @@ class HighscoreUrlScreenBloc
   Future<HighscoreUrlPullState> _pull() async {
     _prefs = await SharedPreferences.getInstance();
     _urlCurrent = _prefs.getString(AdminUtils.highscoreUploadUrlPref);
+    _urlChanged = _urlCurrent;
     _userList = await DatabaseProvider.db.getUser();
-    return HighscoreUrlPullState(_userList, _urlCurrent);
+    _userList.removeWhere((user) => user.isAdmin);
+    return HighscoreUrlPullState(_userList, _urlChanged);
   }
 }

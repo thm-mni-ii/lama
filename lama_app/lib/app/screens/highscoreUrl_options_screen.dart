@@ -43,6 +43,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //temporary url to prevent losing the url on error states
   String _url;
+  List<User> _changedUserList;
 
   @override
   void initState() {
@@ -62,24 +63,31 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AdminUtils.appbar(
           screenSize, LamaColors.bluePrimary, 'Highscore-URL Einstellungen'),
-      body: BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState>(
-          builder: (context, state) {
-        if (state is HighscoreUrlPullState) {
-          return Column(
-            children: [
-              _headline("Highscore-URL einfügen"),
-              Padding(
-                padding: EdgeInsets.only(right: 25, left: 25),
-                child: _inputFields(context),
-              ),
-              _headline("Erlaubnis der Nutzer"),
-              _userList(state.userList),
-            ],
-          );
-        }
-        context.read<HighscoreUrlScreenBloc>().add(HighscoreUrlPullEvent());
-        return Center(child: CircularProgressIndicator());
-      }),
+      body: WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context, _changedUserList);
+          return null;
+        },
+        child: BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState>(
+            builder: (context, state) {
+          if (state is HighscoreUrlPullState) {
+            _changedUserList = state.userList;
+            return Column(
+              children: [
+                _headline("Highscore-URL einfügen"),
+                Padding(
+                  padding: EdgeInsets.only(right: 25, left: 25),
+                  child: _inputFields(context),
+                ),
+                _headline("Erlaubnis der Nutzer"),
+                _userList(_changedUserList),
+              ],
+            );
+          }
+          context.read<HighscoreUrlScreenBloc>().add(HighscoreUrlPullEvent());
+          return Center(child: CircularProgressIndicator());
+        }),
+      ),
     );
   }
 
@@ -166,12 +174,26 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
       builder: (context, state) {
         return Card(
           child: ListTile(
-            onTap: () {},
+            tileColor: user.highscorePermission
+                ? LamaColors.greenPrimary
+                : LamaColors.redPrimary,
+            onTap: () {
+              setState(() {
+                int indexOf = _changedUserList.indexOf(user);
+                if (_changedUserList[indexOf].highscorePermission) {
+                  _changedUserList[indexOf].highscorePermission = false;
+                  user.highscorePermission = false;
+                } else {
+                  _changedUserList[indexOf].highscorePermission = true;
+                  user.highscorePermission = true;
+                }
+              });
+            },
             title: Text(
               user.name,
               style: LamaTextTheme.getStyle(
                 fontSize: 20,
-                color: LamaColors.black,
+                //color: LamaColors.black,
                 monospace: true,
                 fontWeight: FontWeight.w500,
               ),

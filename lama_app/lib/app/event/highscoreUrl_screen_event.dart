@@ -1,3 +1,5 @@
+import 'package:lama_app/app/model/user_model.dart';
+
 abstract class HighscoreUrlScreenEvent {}
 
 class HighscoreUrlPullEvent extends HighscoreUrlScreenEvent {}

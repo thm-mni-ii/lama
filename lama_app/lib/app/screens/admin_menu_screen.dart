@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/db/database_provider.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -108,6 +110,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   ///which could be used to navigate to another Screen or
   ///configur the App directly.
   Widget _buttonColumne(BuildContext context) {
+    List<User> userList = [];
     return Padding(
       padding: EdgeInsets.all(50),
       child: Wrap(
@@ -170,8 +173,8 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
             context,
             Icon(Icons.settings),
             'Highscore-URL Einstellungen',
-            () => {
-              Navigator.push(
+            () async => {
+              userList = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
@@ -179,7 +182,9 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
                     child: HighscoreUrlOptionScreen(),
                   ),
                 ),
-              )
+              ),
+              await DatabaseProvider.db
+                  .updateAllUserHighscorePermission(userList)
             },
           ),
           //Checkbox to deaktivate the default Tasksets
