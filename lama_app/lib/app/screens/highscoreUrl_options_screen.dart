@@ -84,7 +84,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
                 ),
                 _headline("Erlaubnis der Nutzer"),
                 Padding(
-                  padding: EdgeInsets.only(left: 7),
+                  padding: EdgeInsets.only(top: 10, left: 7),
                   child: _listButtons(),
                 ),
                 _userList(_changedUserList),
@@ -231,14 +231,16 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   ///
   ///{@return} [ListView] with all users via [_userCard]
   Widget _userList(List<User> userlist) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(2, 10, 2, 0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: userlist.length,
-        itemBuilder: (context, index) {
-          return _userCard(userlist[index]);
-        },
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(2, 10, 2, 0),
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: userlist.length,
+          itemBuilder: (context, index) {
+            return _userCard(userlist[index]);
+          },
+        ),
       ),
     );
   }
@@ -254,9 +256,6 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
       builder: (context, state) {
         return Card(
           child: ListTile(
-            tileColor: user.highscorePermission
-                ? LamaColors.greenPrimary
-                : LamaColors.redPrimary,
             onTap: () {
               setState(() {
                 int indexOf = _changedUserList.indexOf(user);
@@ -273,7 +272,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
               user.name,
               style: LamaTextTheme.getStyle(
                 fontSize: 20,
-                //color: LamaColors.black,
+                color: LamaColors.black,
                 monospace: true,
                 fontWeight: FontWeight.w500,
               ),
@@ -286,6 +285,9 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
               radius: 25,
               backgroundColor: LamaColors.mainPink,
             ),
+            trailing: user.highscorePermission
+                ? Icon(Icons.check_box_rounded, color: LamaColors.greenPrimary)
+                : Icon(Icons.close_outlined, color: LamaColors.redPrimary),
           ),
         );
       },
