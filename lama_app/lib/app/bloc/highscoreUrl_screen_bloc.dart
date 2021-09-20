@@ -32,6 +32,7 @@ class HighscoreUrlScreenBloc
       HighscoreUrlScreenEvent event) async* {
     if (event is HighscoreUrlPullEvent) yield await _pull();
     if (event is HighscoreUrlChangeEvent) _urlChanged = event.url;
+    if (event is HighscoreUrlReloadEvent) yield HighscoreUrlReloadState();
   }
 
   Future<HighscoreUrlPullState> _pull() async {

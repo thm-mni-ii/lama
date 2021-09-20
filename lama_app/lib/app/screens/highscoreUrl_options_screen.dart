@@ -16,8 +16,9 @@ import 'package:lama_app/app/bloc/highscoreUrl_screen_bloc.dart';
 //States
 import 'package:lama_app/app/state/highscoreUrl_screen_state.dart';
 
-///This file creates the Userlist Url Screen
-///This Screen provides an option to save a bunch of users via link input
+///This file creates the Highscroe Url Screen
+///This Screen provides an option to save an url for Highscore upload and
+///change the user permission
 ///
 ///
 ///{@important} the url given via input should be validated with the
@@ -29,7 +30,7 @@ import 'package:lama_app/app/state/highscoreUrl_screen_state.dart';
 ///    [HighscoreUrlScreenState]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 17.07.2021
+/// latest Changes: 20.09.2021
 class HighscoreUrlOptionScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -43,7 +44,8 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //temporary url to prevent losing the url on error states
   String _url;
-  List<User> _changedUserList;
+  bool _allPermissionValue = false;
+  List<User> _changedUserList = [];
 
   @override
   void initState() {
@@ -72,6 +74,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
             builder: (context, state) {
           if (state is HighscoreUrlPullState) {
             _changedUserList = state.userList;
+            _setAllPermissionValue();
             return Column(
               children: [
                 _headline("Highscore-URL einfügen"),
@@ -80,6 +83,10 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
                   child: _inputFields(context),
                 ),
                 _headline("Erlaubnis der Nutzer"),
+                Padding(
+                  padding: EdgeInsets.only(left: 7),
+                  child: _listButtons(),
+                ),
                 _userList(_changedUserList),
               ],
             );
@@ -147,6 +154,79 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   }
 
   ///(private)
+  ///is used to provide Buttons to reset alle changes or select all
+  ///
+  ///
+  ///{@return} [Row] with [Buttons]
+  Widget _listButtons() {
+    return Row(
+      children: [
+        ElevatedButton(
+          child: Row(
+            children: [
+              Icon(Icons.replay_rounded),
+              Padding(
+                child: Text(
+                  "Zurücksetzten",
+                  style: LamaTextTheme.getStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                padding: EdgeInsets.only(top: 3, bottom: 3, left: 5),
+              ),
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size(50, 45),
+            primary: LamaColors.bluePrimary,
+            shape:
+                BeveledRectangleBorder(borderRadius: BorderRadius.circular(0)),
+          ),
+          onPressed: () {
+            context
+                .read<HighscoreUrlScreenBloc>()
+                .add(HighscoreUrlReloadEvent());
+          },
+        ),
+        SizedBox(
+          width: 90,
+        ),
+        ElevatedButton(
+          child: Row(
+            children: [
+              Padding(
+                child: Text(
+                  "Alle",
+                  style: LamaTextTheme.getStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                padding: EdgeInsets.only(top: 3, right: 10, bottom: 3),
+              ),
+              _allPermissionValue
+                  ? Icon(Icons.close_outlined)
+                  : Icon(Icons.check_box_rounded),
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size(50, 45),
+            primary: _allPermissionValue
+                ? LamaColors.redPrimary
+                : LamaColors.greenPrimary,
+            shape:
+                BeveledRectangleBorder(borderRadius: BorderRadius.circular(0)),
+          ),
+          onPressed: () {
+            setState(() {
+              _changedUserList.forEach((user) {
+                user.highscorePermission = _allPermissionValue ? false : true;
+              });
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  ///(private)
   ///provides [ListView] for alle [User]s, except admins
   ///
   ///{@return} [ListView] with all users via [_userCard]
@@ -210,5 +290,15 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
         );
       },
     );
+  }
+
+  void _setAllPermissionValue() {
+    for (int i = 0; i < _changedUserList.length; i++) {
+      if (!_changedUserList[i].highscorePermission) {
+        _allPermissionValue = false;
+        return;
+      }
+    }
+    _allPermissionValue = true;
   }
 }

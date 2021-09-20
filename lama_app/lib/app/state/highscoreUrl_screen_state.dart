@@ -7,3 +7,5 @@ class HighscoreUrlPullState extends HighscoreUrlScreenState {
   List<User> userList;
   HighscoreUrlPullState(this.userList, this.currentUrl);
 }
+
+class HighscoreUrlReloadState extends HighscoreUrlScreenState {}
