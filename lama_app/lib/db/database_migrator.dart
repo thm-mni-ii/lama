@@ -39,7 +39,7 @@ class DBMigrator {
         "${UserFields.columnGrade} INTEGER,"
         "${UserFields.columnCoins} INTEGER,"
         "${UserFields.columnIsAdmin} INTEGER,"
-        "${UserFields.columnAvatar} TEXT,"
+        "${UserFields.columnAvatar} TEXT"
         ");",
     2: "Create TABLE IF NOT EXISTS $tableAchievements("
         "${AchievementsFields.columnAchievementsId} INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -98,6 +98,6 @@ class DBMigrator {
   /// {@return} Map<int, Map>
   static final Map<int, String> migrationsV3 = {
     1: "ALTER TABLE $tableUser "
-        "IF NOT EXISTS ADD COLUMN ${UserFields.columnHighscorePermission} INTEGER DEFAULT 0;"
+        "ADD COLUMN ${UserFields.columnHighscorePermission} INTEGER DEFAULT 0;"
   };
 }
