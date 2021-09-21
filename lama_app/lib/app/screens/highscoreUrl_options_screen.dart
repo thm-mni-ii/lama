@@ -30,7 +30,7 @@ import 'package:lama_app/app/state/highscoreUrl_screen_state.dart';
 ///    [HighscoreUrlScreenState]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 20.09.2021
+/// latest Changes: 21.09.2021
 class HighscoreUrlOptionScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -44,7 +44,9 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //temporary url to prevent losing the url on error states
   String _url;
+  //used to store the stats of all true or at least one false
   bool _allPermissionValue = false;
+  //store all changes to all users. Is used to apply this changes via [WillPopScope]
   List<User> _changedUserList = [];
 
   @override
@@ -84,7 +86,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
                 ),
                 _headline("Erlaubnis der Nutzer"),
                 Padding(
-                  padding: EdgeInsets.only(top: 10, left: 7),
+                  padding: EdgeInsets.all(10),
                   child: _listButtons(),
                 ),
                 _userList(_changedUserList),
@@ -103,8 +105,8 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   ///
   ///{@important} the input should be saved in local
   ///variable to avoid lost on error. The url that is used for the https request
-  ///is stored in [UserlistUrlBloc]. The onChanged is used to send the
-  ///[TextFormField] value through [UserlistUrlBloc] via [UserlistUrlChangeUrl]
+  ///is stored in [HighscoreUrlScreenBloc]. The onChanged is used to send the
+  ///[TextFormField] value through [HighscoreUrlScreenBloc] via [HighscoreUrlChangeEvent]
   ///
   ///{@param} [BuildContext] context
   ///
@@ -159,68 +161,60 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   ///
   ///{@return} [Row] with [Buttons]
   Widget _listButtons() {
-    return Row(
+    return Stack(
       children: [
-        ElevatedButton(
-          child: Row(
-            children: [
-              Icon(Icons.replay_rounded),
-              Padding(
-                child: Text(
-                  "Zurücksetzten",
-                  style: LamaTextTheme.getStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                padding: EdgeInsets.only(top: 3, bottom: 3, left: 5),
-              ),
-            ],
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            label: Text(
+              "Zurücksetzten",
+              style: LamaTextTheme.getStyle(fontSize: 14),
+              textAlign: TextAlign.center,
+            ),
+            icon: Icon(Icons.replay_rounded, color: LamaColors.white),
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(50, 45),
+              primary: LamaColors.bluePrimary,
+              shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
+            ),
+            onPressed: () {
+              context
+                  .read<HighscoreUrlScreenBloc>()
+                  .add(HighscoreUrlReloadEvent());
+            },
           ),
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size(50, 45),
-            primary: LamaColors.bluePrimary,
-            shape:
-                BeveledRectangleBorder(borderRadius: BorderRadius.circular(0)),
-          ),
-          onPressed: () {
-            context
-                .read<HighscoreUrlScreenBloc>()
-                .add(HighscoreUrlReloadEvent());
-          },
         ),
         SizedBox(
           width: 90,
         ),
-        ElevatedButton(
-          child: Row(
-            children: [
-              Padding(
-                child: Text(
-                  "Alle",
-                  style: LamaTextTheme.getStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                padding: EdgeInsets.only(top: 3, right: 10, bottom: 3),
-              ),
-              _allPermissionValue
-                  ? Icon(Icons.close_outlined)
-                  : Icon(Icons.check_box_rounded),
-            ],
-          ),
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size(50, 45),
-            primary: _allPermissionValue
-                ? LamaColors.redPrimary
-                : LamaColors.greenPrimary,
-            shape:
-                BeveledRectangleBorder(borderRadius: BorderRadius.circular(0)),
-          ),
-          onPressed: () {
-            setState(() {
-              _changedUserList.forEach((user) {
-                user.highscorePermission = _allPermissionValue ? false : true;
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            label: Text(
+              "Alle",
+              style: LamaTextTheme.getStyle(fontSize: 14),
+              textAlign: TextAlign.center,
+            ),
+            icon: _allPermissionValue
+                ? Icon(Icons.close_outlined, color: LamaColors.white)
+                : Icon(Icons.check_box_rounded, color: LamaColors.white),
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(50, 45),
+              primary: _allPermissionValue
+                  ? LamaColors.redPrimary
+                  : LamaColors.greenPrimary,
+              shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
+            ),
+            onPressed: () {
+              setState(() {
+                _changedUserList.forEach((user) {
+                  user.highscorePermission = _allPermissionValue ? false : true;
+                });
               });
-            });
-          },
+            },
+          ),
         ),
       ],
     );
@@ -233,7 +227,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   Widget _userList(List<User> userlist) {
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(2, 10, 2, 0),
+        padding: EdgeInsets.only(left: 3, right: 3),
         child: ListView.builder(
           shrinkWrap: true,
           itemCount: userlist.length,
