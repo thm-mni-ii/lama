@@ -25,6 +25,7 @@ class DBMigrator {
   static final Map<int, Map> migrations = {
     1: migrationsV1,
     2: migrationsV2,
+    3: migrationsV3,
   };
 
   ///map the code to create the tables for Version 1
@@ -90,7 +91,13 @@ class DBMigrator {
         "${SaftyQuestionFields.columnSaftyQuestion} TEXT,"
         "${SaftyQuestionFields.columnSaftyAnswer} TEXT"
         ");",
-    2: "ALTER TABLE $tableUser "
+  };
+
+  ///map the code to create the tables for Version 3
+  ///
+  /// {@return} Map<int, Map>
+  static final Map<int, String> migrationsV3 = {
+    1: "ALTER TABLE $tableUser "
         "ADD COLUMN ${UserFields.columnHighscorePermission} INTEGER DEFAULT 0;"
   };
 }

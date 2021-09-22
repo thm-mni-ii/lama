@@ -660,6 +660,17 @@ class DatabaseProvider {
     return null;
   }
 
+  /// update the highscorePermission field for alle users in table User
+  ///
+  /// {@param} User user, bool highscorePermission
+  ///
+  /// {@return} <User>
+  Future<void> updateAllUserHighscorePermission(List<User> userList) async {
+    userList.forEach((user) async {
+      await updateUserHighscorePermission(user, user.highscorePermission);
+    });
+  }
+
   /// update the avatar from an user in table User
   ///
   /// {@param} User user, String avatar
