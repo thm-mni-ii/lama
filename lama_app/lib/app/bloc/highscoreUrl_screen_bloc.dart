@@ -31,6 +31,7 @@ class HighscoreUrlScreenBloc
   Stream<HighscoreUrlScreenState> mapEventToState(
       HighscoreUrlScreenEvent event) async* {
     if (event is HighscoreUrlPullEvent) yield await _pull();
+    if (event is HighscoreUrlPushEvent) await _push();
     if (event is HighscoreUrlChangeEvent) _urlChanged = event.url;
     if (event is HighscoreUrlReloadEvent) yield HighscoreUrlReloadState();
   }
@@ -42,5 +43,9 @@ class HighscoreUrlScreenBloc
     _userList = await DatabaseProvider.db.getUser();
     _userList.removeWhere((user) => user.isAdmin);
     return HighscoreUrlPullState(_userList, _urlChanged);
+  }
+
+  Future<void> _push() async {
+    await _prefs.setString(AdminUtils.highscoreUploadUrlPref, _urlChanged);
   }
 }
