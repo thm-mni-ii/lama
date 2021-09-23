@@ -76,6 +76,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
             builder: (context, state) {
           if (state is HighscoreUrlPullState) {
             _changedUserList = state.userList;
+            _url = state.currentUrl;
             _setAllPermissionValue();
             return Column(
               children: [
@@ -128,7 +129,14 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
               .add(HighscoreUrlChangeEvent(value));
         },
         validator: (value) => InputValidation.inputURLValidation(value),
-        onFieldSubmitted: (value) => {if (_formKey.currentState.validate()) {}},
+        onFieldSubmitted: (value) => {
+          if (_formKey.currentState.validate())
+            {
+              context
+                  .read<HighscoreUrlScreenBloc>()
+                  .add(HighscoreUrlPushEvent())
+            }
+        },
       ),
     );
   }

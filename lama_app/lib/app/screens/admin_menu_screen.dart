@@ -172,7 +172,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           _menuButton(
             context,
             Icon(Icons.settings),
-            'Highscore-URL Einstellungen',
+            'Highscore Einstellungen',
             () async => {
               userList = await Navigator.push(
                 context,
