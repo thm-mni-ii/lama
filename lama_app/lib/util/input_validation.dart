@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 ///
 ///
 /// Author: L.Kammerer
-/// latest Changes: 15.07.2021
+/// Latest Changes: 14.09.2021
 abstract class InputValidation {
   //MAX_LENGTH for Usernamens
   static int allowedNameLength = 12;
@@ -124,7 +124,7 @@ abstract class InputValidation {
         try {
           await jsonDecode(response[0].body);
         } on FormatException {
-          return '"json" fehlerhaft!';
+          return '"json" fehlerhaft oder nicht gefunden!';
         }
         //Testing successfull
         return null;

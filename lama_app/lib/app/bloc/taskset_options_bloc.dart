@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
@@ -19,7 +18,7 @@ import 'package:lama_app/util/input_validation.dart';
 ///    [Bloc]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 26.06.2021
+/// Latest Changes: 26.06.2021
 class TasksetOptionsBloc
     extends Bloc<TasksetOptionsEvent, TasksetOptionsState> {
   TasksetOptionsBloc({TasksetOptionsState initialState}) : super(initialState);
@@ -33,7 +32,6 @@ class TasksetOptionsBloc
   @override
   Stream<TasksetOptionsState> mapEventToState(
       TasksetOptionsEvent event) async* {
-    if (event is TasksetOptionsAbort) _return(event.context);
     if (event is TasksetOptionsPush) {
       yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
       yield await _tasksetOptionsPush();
@@ -53,14 +51,6 @@ class TasksetOptionsBloc
       yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
       yield await _tasksetOptionsReAddUrl(event.url);
     }
-  }
-
-  ///(private)
-  ///pops the Screen
-  ///
-  ///{@param}[BuildContext] as context
-  void _return(BuildContext context) {
-    Navigator.pop(context);
   }
 
   ///(private)
@@ -104,9 +94,10 @@ class TasksetOptionsBloc
     //Check if URL is reachable
     if (response.statusCode == 200) {
       //Taskset validtion
-      if (!TasksetValidator.isValidTaskset(jsonDecode(response.body))) {
-        return TasksetOptionsPushFailed(
-            error: 'Fehler beim lesen der Aufgaben!');
+      String tasksetError =
+          TasksetValidator.isValidTaskset(jsonDecode(response.body));
+      if (tasksetError != null) {
+        return TasksetOptionsPushFailed(error: tasksetError);
       }
     }
     //Insert URL to Database
