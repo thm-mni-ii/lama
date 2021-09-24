@@ -164,6 +164,8 @@ class TasksetValidator {
                   json["options"] is List &&
                   _checkListType<String>(json["options"])) {
                 return null;
+              } else {
+                return "Fehler im Feld 'equation' oder im Feld 'options'";
               }
             } else if (json.containsKey("operand_range")) {
               if (json["operand_range"] is List &&
