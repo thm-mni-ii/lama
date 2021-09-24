@@ -218,7 +218,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
             }
           } else if (i > position + 1) newEquation.add(equation[i]);
         }
-        return evalLeftToRight(newEquation, invertResult: true);
+        return evalLeftToRight(newEquation, invertResult: invertResult);
       }
     } else {
       return evalLeftToRight(equation);
