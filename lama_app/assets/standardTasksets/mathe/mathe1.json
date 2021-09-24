@@ -1,94 +1,142 @@
 {
-    "taskset_name":"Standardaufgaben Klasse 1",
-     "taskset_subject":"Mathe",
-      "taskset_grade":1,
-       "tasks": [
+    "taskset_name": "Standardaufgaben Klasse 1",
+    "taskset_subject": "Mathe",
+    "taskset_grade": 1,
+    "tasks": [
         {
-         "task_type":"4Cards",
-         "task_reward":2,
-         "question":"Welches Zeichen steht für die Addition ?",
-         "lama_text":"Tippe die richtige Antwort an!",
-         "left_to_solve": 3,
-         "right_answer":"+",
-         "wrong_answers":["-", "x", "%"]
-        },
-        {
-         "task_type":"4Cards",
-         "task_reward":2,
-         "question":"Welches Zeichen steht für die Subtraktion ?",
-         "lama_text":"Tippe die richtige Antwort an!",
-         "left_to_solve": 3,
-         "right_answer":"-",
-         "wrong_answers":["+", "x", "%"]
-        },
-           {
-           "task_type":"4Cards",
-            "task_reward":2,
-            "question":"3+4",
-            "lama_text":"Tippe die richtige Antwort an!",
+            "task_type": "4Cards",
+            "task_reward": 2,
+            "question": "Welches Zeichen steht für die Addition ?",
+            "lama_text": "Tippe die richtige Antwort an!",
             "left_to_solve": 3,
-            "right_answer":"7",
-             "wrong_answers":["6", "1", "8"]
-             },
-             {
-                "task_type":"4Cards",
-                 "task_reward":2,
-                 "question":"3+1",
-                 "lama_text":"Tippe die richtige Antwort an!",
-                 "left_to_solve": 3,
-                 "right_answer":"4",
-                  "wrong_answers":["2", "5", "3"]
-            },
-        {
-         "task_type":"MoneyTask",
-         "task_reward":2,
-         "lama_text":"Sammle 7,50€ mit den Münzen zusammen",
-         "left_to_solve": 3,
-         "moneyAmount": 7.5
+            "right_answer": "+",
+            "wrong_answers": [
+                "-",
+                "x",
+                "%"
+            ]
         },
         {
-         "task_type": "Equation",
-         "task_reward": 2,
-         "lama_text": "Löse die Gleichung!",
-         "left_to_solve": 4,
-         "operator(1-2)": 1,
-         "random": [],
-         "equation": ["?", "+", "1", "=", "2"],
-         "missing_elements": ["1"],
-         "wrong_answers": ["3", "4", "0", "2", "5"]
+            "task_type": "4Cards",
+            "task_reward": 2,
+            "question": "Welches Zeichen steht für die Subtraktion ?",
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "right_answer": "-",
+            "wrong_answers": [
+                "+",
+                "x",
+                "%"
+            ]
         },
         {
-         "task_type": "Equation",
-         "task_reward": 2,
-         "lama_text": "Löse die Gleichung!",
-         "left_to_solve": 4,
-         "operator(1-2)": 2,
-         "random": [],
-         "equation": ["?", "+", "2", "+", "?", "=", "4"],
-         "missing_elements": ["1", "1"],
-         "wrong_answers": ["3", "4", "0", "2", "5"]
+            "task_type": "4Cards",
+            "task_reward": 2,
+            "question": "3+4",
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "right_answer": "7",
+            "wrong_answers": [
+                "6",
+                "1",
+                "8"
+            ]
         },
         {
-         "task_type": "Equation",
-         "task_reward": 2,
-         "lama_text": "Löse die Gleichung!",
-         "left_to_solve": 4,
-         "random": ["+", "0", "10"],
-         "operator(1-2)": 1,
-         "equation": [""],
-         "missing_elements": [""],
-         "wrong_answers": [""]
+            "task_type": "4Cards",
+            "task_reward": 2,
+            "question": "3+1",
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "right_answer": "4",
+            "wrong_answers": [
+                "2",
+                "5",
+                "3"
+            ]
         },
         {
-         "task_type": "Equation",
-         "task_reward": 2,
-         "lama_text": "Löse die Gleichung!",
-         "left_to_solve": 4,
-         "operator(1-2)": 2,
-         "random": ["+", "0", "10"],
-         "equation": [""],
-         "missing_elements": [""],
-         "wrong_answers": [""]
+            "task_type": "MoneyTask",
+            "task_reward": 2,
+            "lama_text": "Sammle 7,50€ mit den Münzen zusammen",
+            "left_to_solve": 3,
+            "moneyAmount": 7.5
+        },
+        {
+            "task_type": "Equation",
+            "task_reward": 2,
+            "lama_text": "Löse die Gleichung!",
+            "left_to_solve": 4,
+            "equation": [
+                "?",
+                "+",
+                "1",
+                "=",
+                "2"
+            ],
+            "options": [
+                "3",
+                "4",
+                "0",
+                "2",
+                "5",
+                "1"
+            ]
+        },
+        {
+            "task_type": "Equation",
+            "task_reward": 2,
+            "lama_text": "Löse die Gleichung!",
+            "left_to_solve": 4,
+            "equation": [
+                "?",
+                "+",
+                "2",
+                "+",
+                "?",
+                "=",
+                "4"
+            ],
+            "options": [
+                "3",
+                "4",
+                "0",
+                "2",
+                "5",
+                "1"
+            ]
+        },
+        {
+            "task_type": "Equation",
+            "task_reward": 2,
+            "lama_text": "Löse die Gleichung!",
+            "left_to_solve": 4,
+            "random_allowed_operators": [
+                "+"
+            ],
+            "operand_range": [
+                0,
+                10
+            ],
+            "fields_to_replace": 1,
+            "allow_replacing_operators": false,
+            "operator_amount": 1
+        },
+        {
+            "task_type": "Equation",
+            "task_reward": 2,
+            "lama_text": "Löse die Gleichung!",
+            "left_to_solve": 4,
+            "random_allowed_operators": [
+                "+"
+            ],
+            "operand_range": [
+                0,
+                10
+            ],
+            "fields_to_replace": 1,
+            "allow_replacing_operators": false,
+            "operator_amount": 2
         }
-        ]
+    ]
 }
