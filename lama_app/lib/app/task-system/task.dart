@@ -73,17 +73,48 @@ class Task {
             List<String>.from(json['pair2']),
             List<String>.from(json['rightAnswers']));
       case "Equation":
+        List<String> equation = [];
+        List<String> options = [];
+        List<String> randomAllowedOperators = [];
+        List<int> resultRange = [];
+        bool allowReplacingOperators;
+        int fieldsToReplace;
+        int operatorAmount;
+        if (json['equation'] != null)
+          equation = List<String>.from(json['equation']);
+        if (json['options'] != null)
+          options = List<String>.from(json['options']);
+        if (json['random_allowed_operators'] != null)
+          randomAllowedOperators =
+              List<String>.from(json['random_allowed_operators']);
+        else
+          randomAllowedOperators = ["+", "-", "*", "/"];
+        if (json['operand_range'] != null)
+          resultRange = List<int>.from(json['operand_range']);
+        json['allow_replacing_operators'] != null
+            ? allowReplacingOperators = json['allow_replacing_operators']
+            : allowReplacingOperators = false;
+        json['fields_to_replace'] != null
+            ? fieldsToReplace = json['fields_to_replace']
+            : fieldsToReplace = -1;
+        json['operator_amount'] != null
+            ? operatorAmount =
+                (json['operator_amount'] > 2 || json['operator_amount'] < 1)
+                    ? null
+                    : json['operator_amount']
+            : operatorAmount = null;
         return TaskEquation(
             taskType,
             json['task_reward'],
             json['lama_text'],
             json['left_to_solve'],
-            List<String>.from(json[
-                'random']), // Stand jetzt: 1. yes/"" 2. Rechenzeichen 3. min-Wert 4. max-Wert
-            json['operator(1-2)'],
-            List<String>.from(json['equation']),
-            List<String>.from(json['missing_elements']),
-            List<String>.from(json['wrong_answers']));
+            equation,
+            options,
+            randomAllowedOperators,
+            allowReplacingOperators,
+            resultRange,
+            operatorAmount,
+            fieldsToReplace);
       default:
         return null;
     }
@@ -305,31 +336,51 @@ class TaskConnect extends Task {
 ///
 ///Author: F.Leonhardt
 class TaskEquation extends Task {
-  int operator;
-  List<String> random;
   List<String> equation;
-  List<String> missingElements;
-  List<String> wrongAnswers;
+  List<String> options;
+
+  List<String> randomAllowedOperators;
+  List<int> operandRange;
+
+  int fieldsToReplace;
+  int operatorAmount;
+
+  bool allowReplacingOperators;
+  bool isRandom = false;
 
   TaskEquation(
       String taskType,
       int reward,
       String lamaText,
       int leftToSolve,
-      this.random,
-      this.operator,
       this.equation,
-      this.missingElements,
-      this.wrongAnswers)
-      : super(taskType, reward, lamaText, leftToSolve);
+      this.options,
+      this.randomAllowedOperators,
+      this.allowReplacingOperators,
+      this.operandRange,
+      this.operatorAmount,
+      this.fieldsToReplace)
+      : super(taskType, reward, lamaText, leftToSolve) {
+    print("meep");
+    print(this.randomAllowedOperators);
+    print("meep2");
+    print(this.operandRange);
+    if (this.operandRange.length > 0) isRandom = true;
+  }
 
   @override
   String toString() {
     String s = super.toString();
-    for (int i = 0; i < random.length; i++) s += random[i];
-    for (int i = 0; i < equation.length; i++) s += equation[i];
-    for (int i = 0; i < missingElements.length; i++) s += missingElements[i];
-    for (int i = 0; i < wrongAnswers.length; i++) s += wrongAnswers[i];
+    if (equation != null)
+      for (int i = 0; i < equation.length; i++) s += equation[i];
+    if (options != null)
+      for (int i = 0; i < options.length; i++) s += options[i];
+    if (randomAllowedOperators != null)
+      for (int i = 0; i < randomAllowedOperators.length; i++)
+        s += randomAllowedOperators[i];
+    if (operandRange != null)
+      for (int i = 0; i < operandRange.length; i++)
+        s += operandRange[i].toString();
     return s;
   }
 }

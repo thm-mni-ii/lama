@@ -16,7 +16,7 @@ class GameListScreen extends StatelessWidget {
   ///This list contains a [GameListItem] for each Game.
   ///
   ///If a new game is added, it will need to be "registered" here.
-  final List<GameListItem> games = [
+  static final List<GameListItem> games = [
     GameListItem("Snake", 16,
         "Steuer die Schlange mit den Pfeiltasten und sammle Äpfel, um länger zu werden!"),
     GameListItem("Flappy-Lama", 15,
@@ -28,94 +28,74 @@ class GameListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<GameListScreenBloc, GameListScreenState>(
-        listener: (context, state) {
-          if (state is NotEnoughCoinsState) {
-            final snackBar = SnackBar(
-                backgroundColor: LamaColors.redAccent,
-                content: Text(
-                  'Du hast nicht genug Lama Münzen!',
-                  textAlign: TextAlign.center,
-                  style: LamaTextTheme.getStyle(fontSize: 15),
-                ),
-                duration: Duration(seconds: 1));
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [LamaColors.greenAccent, LamaColors.greenPrimary],
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [LamaColors.greenAccent, LamaColors.greenPrimary],
           ),
-          child: SafeArea(
-            child: Container(
-              color: Colors.white,
-              child: LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                return Column(children: [
-                  Container(
-                    height: (constraints.maxHeight / 100) * 7.5,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          LamaColors.greenAccent,
-                          LamaColors.greenPrimary
-                        ],
-                      ),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25),
-                      ),
+        ),
+        child: SafeArea(
+          child: Container(
+            color: Colors.white,
+            child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+              return Column(children: [
+                Container(
+                  height: (constraints.maxHeight / 100) * 7.5,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [LamaColors.greenAccent, LamaColors.greenPrimary],
                     ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: IconButton(
-                            padding: EdgeInsets.all(0),
-                            icon: Icon(
-                              Icons.arrow_back,
-                              size: 40,
-                              color: Colors.white,
-                            ),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                        ),
-                        Text(
-                          "Spiele",
-                          style: LamaTextTheme.getStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 20, right: 20, top: 20),
-                      child: LayoutBuilder(builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        return ListView.separated(
-                          itemCount: games.length,
-                          itemBuilder: (context, index) {
-                            return buildGameListItem(
-                                context, index, constraints);
-                          },
-                          separatorBuilder: (context, index) => SizedBox(
-                            height: (constraints.maxHeight / 100) * 5,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(
+                            Icons.arrow_back,
+                            size: 40,
+                            color: Colors.white,
                           ),
-                        );
-                      }),
-                    ),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ),
+                      Text(
+                        "Spiele",
+                        style: LamaTextTheme.getStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
                   ),
-                ]);
-              }),
-            ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    child: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return ListView.separated(
+                        itemCount: games.length,
+                        itemBuilder: (context, index) {
+                          return buildGameListItem(context, index, constraints);
+                        },
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: (constraints.maxHeight / 100) * 5,
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ]);
+            }),
           ),
         ),
       ),

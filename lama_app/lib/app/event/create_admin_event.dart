@@ -31,6 +31,22 @@ class CreateAdminChangePassword extends CreateAdminEvent {
   CreateAdminChangePassword(this.password);
 }
 
+///used to transmit the safty question
+///
+///{@param}[String] safty question that should be set
+class CreateAdminChangeSaftyQuestion extends CreateAdminEvent {
+  String saftyQuestion;
+  CreateAdminChangeSaftyQuestion(this.saftyQuestion);
+}
+
+///used to transmit the safty answer
+///
+///{@param}[String] safty answer that should be set
+class CreateAdminChangeSaftyAnswer extends CreateAdminEvent {
+  String saftyAnswer;
+  CreateAdminChangeSaftyAnswer(this.saftyAnswer);
+}
+
 ///used to abort the create admin process
 ///
 ///{@param}[BuildContext] as context

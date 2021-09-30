@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/db/database_provider.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -12,6 +14,7 @@ import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
+import 'package:lama_app/app/bloc/highscoreUrl_screen_bloc.dart';
 //Events
 import 'package:lama_app/app/event/admin_menu_event.dart';
 //States
@@ -21,6 +24,7 @@ import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/screens/userlist_url_screen.dart';
+import 'highscoreUrl_options_screen.dart';
 
 ///This file creates the Admin Menu Screen
 ///The Admin Menu Screen provides every navigation to screens
@@ -33,7 +37,7 @@ import 'package:lama_app/app/screens/userlist_url_screen.dart';
 ///    [AdminMenuState]
 ///
 /// Author: L.Kammerer
-/// latest Changes: 15.07.2021
+/// latest Changes: 10.09.2021
 class AdminMenuScreen extends StatefulWidget {
   @override
   _AdminMenuScreenState createState() => _AdminMenuScreenState();
@@ -106,6 +110,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   ///which could be used to navigate to another Screen or
   ///configur the App directly.
   Widget _buttonColumne(BuildContext context) {
+    List<User> userList = [];
     return Padding(
       padding: EdgeInsets.all(50),
       child: Wrap(
@@ -164,6 +169,24 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               })
             },
           ),
+          _menuButton(
+            context,
+            Icon(Icons.settings),
+            'Highscore Einstellungen',
+            () async => {
+              userList = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) => HighscoreUrlScreenBloc(),
+                    child: HighscoreUrlOptionScreen(),
+                  ),
+                ),
+              ),
+              await DatabaseProvider.db
+                  .updateAllUserHighscorePermission(userList)
+            },
+          ),
           //Checkbox to deaktivate the default Tasksets
           _checkBox(context),
         ],
@@ -173,7 +196,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
 
   ///(private)
   ///provides custom [Checkbox] to deactivate or activate the App default Tasksets
-  ///chnages are made onChanged through [AdminMenuBloc] via [AdminMenuChangePrefsEvent]
+  ///changes are made onChanged through [AdminMenuBloc] via [AdminMenuChangePrefsEvent]
   ///
   ///{@param} [BuildContext] as context
   ///
@@ -431,13 +454,17 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
 ///prevent repetitive code in all Screens used for the Admin
 ///
 /// Author: L.Kammerer
-/// latest Changes: 17.07.2021
+/// latest Changes: 18.09.2021
 abstract class AdminUtils {
   ///START of Area for UserPreferences
   ///
   ///enableDefaultTasksetsPref is used to set an bool in the
   ///UserPreferences to deaktivate all default Tasksets made available by this App
   static final String enableDefaultTasksetsPref = 'enableDefaultTaskset';
+
+  ///highscoreUploadUrl is used to set a string in the
+  ///UserPreferences to upload game highscores via this url
+  static final String highscoreUploadUrlPref = 'highscoreUploadUrl';
 
   ///
   ///END of Area for UserPreferences

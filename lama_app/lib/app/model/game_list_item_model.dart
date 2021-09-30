@@ -1,3 +1,8 @@
+///This class represents a singular game.
+///
+///Used in [GameListScreen].
+///
+///Author: K.Binder
 class GameListItem {
   String name;
   int cost;

@@ -43,7 +43,7 @@
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "lama_text":"Markiere vier Städte",
+           "lama_text":"Markiere X Städte",
            "left_to_solve": 3,
            "wordsToFind":["Gießen", "Wetzlar", "Frankfurt", "Berlin"]
          },

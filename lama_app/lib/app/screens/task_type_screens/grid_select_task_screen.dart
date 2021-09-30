@@ -27,11 +27,14 @@ class GridSelectTaskScreen extends StatelessWidget {
   //some letter appear more often (loosely based on letter frequency) so they have a higher chance of being chosen
   final String letters = "AAABCDDEEEEFFGGHHIIIJKKLLMMNNNOOPPQRRSSSTTTUUVWXYZ";
 
+  String actualLamaText;
+
   final Map<Pair, String> gridLayout = Map();
 
   final GridSelectTaskBloc gridSelectTaskBloc;
 
   GridSelectTaskScreen(this.task, this.constraints, this.gridSelectTaskBloc) {
+    actualLamaText = task.lamaText;
     _generateWordPlacement();
   }
 
@@ -42,13 +45,19 @@ class GridSelectTaskScreen extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: (constraints.maxHeight / 100) * 70,
+            height: (constraints.maxHeight / 100) * 65,
             child: Padding(
-              padding: EdgeInsets.all((constraints.maxWidth / 100) * 5),
-              child: Table(
-                border: TableBorder.all(color: LamaColors.white, width: 2),
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: _getTableRows(),
+              padding: EdgeInsets.fromLTRB(
+                  (constraints.maxWidth / 100) * 5,
+                  (constraints.maxHeight / 100) * 5,
+                  (constraints.maxWidth / 100) * 5,
+                  0),
+              child: LayoutBuilder(
+                builder: (context, BoxConstraints constraints) => Table(
+                  border: TableBorder.all(color: LamaColors.white, width: 2),
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  children: _getTableRows(constraints),
+                ),
               ),
             ),
           ),
@@ -66,7 +75,7 @@ class GridSelectTaskScreen extends StatelessWidget {
                     nip: BubbleNip.leftCenter,
                     child: Center(
                       child: Text(
-                        task.lamaText,
+                        actualLamaText,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
                       ),
@@ -85,7 +94,7 @@ class GridSelectTaskScreen extends StatelessWidget {
             ]),
           ),
           Container(
-            height: (constraints.maxHeight / 100) * 15,
+            height: (constraints.maxHeight / 100) * 20,
             child: Center(
               child: InkWell(
                 child: Container(
@@ -126,12 +135,13 @@ class GridSelectTaskScreen extends StatelessWidget {
   }
 
   ///Generates all [TableRow]
-  List<TableRow> _getTableRows() {
-    return List.generate(9, (index) => TableRow(children: _getRow(index)));
+  List<TableRow> _getTableRows(BoxConstraints constraints) {
+    return List.generate(
+        9, (index) => TableRow(children: _getRow(index, constraints)));
   }
 
   ///Generates a List of [TableItem] to fill a [TableRow].
-  List<Widget> _getRow(int rowNumber) {
+  List<Widget> _getRow(int rowNumber, BoxConstraints constraints) {
     return List.generate(9, (columnNumber) {
       Pair cord = Pair(columnNumber, rowNumber);
       String char = "";
@@ -146,9 +156,10 @@ class GridSelectTaskScreen extends StatelessWidget {
   ///Places the words that need to be found on the grid.
   void _generateWordPlacement() {
     var rnd = Random();
+    int wordsPlaced = 0;
     task.wordsToFind.forEach((word) {
       int wordLength = word.length;
-
+      if (wordLength > 9) return;
       int maxStartIndex = 10 - wordLength;
 
       bool succesfullyGenerated;
@@ -223,8 +234,11 @@ class GridSelectTaskScreen extends StatelessWidget {
             wordTimeout.toString() +
             " for word " +
             word);
+        if (wordAdded) wordsPlaced++;
       } while (!wordAdded && wordTimeout < 20);
     });
+    actualLamaText =
+        actualLamaText.replaceAll(" X ", " " + wordsPlaced.toString() + " ");
   }
 
   ///Returns the character that will be placed at the [position] in the table.
@@ -299,7 +313,7 @@ class TableItem extends StatelessWidget {
             ? LamaColors.greenAccent
             : LamaColors.blueAccent,
         width: (constraints.maxWidth / 100) * 10,
-        height: (constraints.maxWidth / 100) * 10,
+        height: (constraints.maxHeight / 100) * 10,
         child: InkWell(
           onTap: () => BlocProvider.of<GridSelectTaskBloc>(context)
               .add(SelectGridLetterEvent(cord)),

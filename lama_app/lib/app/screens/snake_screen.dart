@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
+/// This class creates the Snake game screen
 class SnakeScreen extends StatelessWidget {
   final UserRepository userRepository;
 

@@ -14,15 +14,19 @@ import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
 import 'package:lama_app/flappyLama/widgets/playModeWidget.dart';
 import 'package:lama_app/flappyLama/widgets/startScreen.dart';
 
+import '../app/screens/game_list_screen.dart';
 import 'widgets/gameOverMode.dart';
 
+/// This class represents the Flappy Lama game and its components.
 class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   // SETTINGS
   // --------
   /// the id of flappyLama game which is used in the database
   final int _gameId = 2;
+
   /// amount of tiles on the x coordinate
   final int tilesX = 9;
+
   /// size of the lama
   final double _lamaSize = 48;
   // name of the pauseMode widget
@@ -33,8 +37,10 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   final String _startScreen = "StartScreen";
   // name of the gameOver widget
   final String _gameOverMode = "GameOverMode";
+
   /// score where the difficulty will increase
   final int _difficultyScore = 5;
+
   /// how many times the user can play this game
   int _lifes = 3;
   // --------
@@ -42,26 +48,37 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
   /// obstacle list
   List<FlappyObstacle> obstacles = [];
+
   /// screensize of the game
   Size _screenSize;
+
   /// pixel of the quadratic tiles
   double _tileSize;
+
   /// amount of tiles on the y coordinate
   int _tilesY;
+
   /// the achieved score in this round
   int score = 0;
+
   /// necessary context for determine the actual screensize
   BuildContext _context;
+
   /// a bool flag which indicates if the game has started
   bool _started = false;
+
   /// a bool flag which indicates if the score of the game has been saved
   bool _savedHighscore = false;
+
   /// the personal highscore
   int _userHighScore = 0;
+
   /// the all time highscore in this game
   int _alltimeHighScore = 0;
+
   /// the lama [AnimationComponent]
   FlappyLama _lama;
+
   /// the [UserRepository] to interact with the database and get the user infos
   UserRepository _userRepo;
 
@@ -169,8 +186,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     this._alltimeHighScore = await _userRepo.getHighscore(_gameId);
 
     // add lama
-    _lama = FlappyLama(this, _lamaSize)
-      ..onHitGround = gameOver;
+    _lama = FlappyLama(this, _lamaSize)..onHitGround = gameOver;
     add(_lama);
 
     // add start widget
@@ -179,16 +195,18 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
         StartScreen(
             userHighScore: _userHighScore,
             alltimeHighScore: _alltimeHighScore,
-            onStartPressed: startGame
-        )
-    );
+            onStartPressed: startGame));
   }
 
   void resize(Size size) {
     // get the screensize fom [MediaQuery] because [size] is incorrect on some devices
     _screenSize = Size(
-        MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
-        MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom);
+        MediaQuery.of(_context).size.width -
+            MediaQuery.of(_context).padding.left -
+            MediaQuery.of(_context).padding.right,
+        MediaQuery.of(_context).size.height -
+            MediaQuery.of(_context).padding.top -
+            MediaQuery.of(_context).padding.bottom);
     // calculates by the width of the screen
     _tileSize = screenSize.width / tilesX;
     _tilesY = screenSize.height ~/ tileSize;
@@ -197,6 +215,11 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   }
 
   void startGame() {
+    if (_userRepo.getLamaCoins() < GameListScreen.games[_gameId - 1].cost) {
+      Navigator.pop(_context, "NotEnoughCoins");
+      return;
+    }
+    _userRepo.removeLamaCoins(GameListScreen.games[_gameId - 1].cost);
     // resum game
     resumeEngine();
 
@@ -205,11 +228,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // add playmodebutton widget
     addWidgetOverlay(
-        _playMode,
-        PlayModeButton(
-          playMode: true,
-          onButtonPressed: pauseGame)
-    );
+        _playMode, PlayModeButton(playMode: true, onButtonPressed: pauseGame));
 
     _started = true;
 
@@ -250,12 +269,8 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // removed the playMode widget
     removeWidgetOverlay(_playMode);
-    addWidgetOverlay(
-        _pauseMode,
-        PlayModeButton(
-            playMode: false,
-            onButtonPressed: resumeGame)
-    );
+    addWidgetOverlay(_pauseMode,
+        PlayModeButton(playMode: false, onButtonPressed: resumeGame));
   }
 
   /// This method resumes the game.
@@ -267,11 +282,7 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
     // add the playMode widget
     addWidgetOverlay(
-        _playMode,
-        PlayModeButton(
-            playMode: true,
-            onButtonPressed: pauseGame)
-    );
+        _playMode, PlayModeButton(playMode: true, onButtonPressed: pauseGame));
   }
 
   /// This method finishes the game.

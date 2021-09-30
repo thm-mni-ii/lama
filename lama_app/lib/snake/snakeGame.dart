@@ -27,18 +27,24 @@ import 'package:lama_app/snake/views/view.dart';
 import 'package:lama_app/snake/views/homeView.dart';
 import 'package:lama_app/snake/views/gameOverView.dart';
 
+/// This class represents the Snake game and its components.
 class SnakeGame extends Game with TapDetector {
   final bool log = true;
   Background background;
   SnakeComponent snake;
+
   /// id of the game
-  final _gameId = 1;
+  final gameId = 1;
+
   /// a bool flag which indicates if the score of the game has been saved
   bool _savedHighScore = false;
+
   /// the personal highScore
   int userHighScore;
+
   /// the all time highScore in this game
   int allTimeHighScore;
+
   /// all apples on the game field
   List<Apple> apples = [];
   Random rnd = Random();
@@ -53,46 +59,62 @@ class SnakeGame extends Game with TapDetector {
 
   Size screenSize;
   double tileSize;
+
   /// max fields on the x axis
   int maxFieldX = 25;
+
   /// max fields on the y axis
   int maxFieldY = 25;
+
   /// flag to maximise the game field
   final maxField = true;
+
   /// game field offset to the left and right
   final fieldOffsetY = 0;
+
   /// apples to spawn
   final maxApples = 20;
+
   /// start velocity of the snake
   final snakeStartVelocity = 2.0;
+
   /// flag to indicate if the game has finished
   bool _finished = false;
+
   /// flag to indicate if the game is initializes
   bool _initialized = false;
+
   /// flag to indicate if the game runs
   bool _running = false;
+
   /// height of the controlbar relative to the screen height
   double _controlBarRelativeHeight = 0.25;
+
   /// height of the buttons relative to the screen height
   double _relativeButtonSize = 0.16;
+
   /// audioplayer
   AudioCache _bitePlayer;
+
   /// active view for displaying different states
   View activeView = View.home; // views added
   HomeView homeView;
   GameOverView gameOverView;
+
   /// context of the game to allow access to the navigator
-  BuildContext _context;
+  BuildContext context;
+
   /// repository to access the database with the logged in user
-  UserRepository _userRepo;
+  UserRepository userRepo;
+
   /// flag to indicate if the highscore already saved
   bool _saved = false;
 
-  SnakeGame(this._context, this._userRepo) {
+  SnakeGame(this.context, this.userRepo) {
     initialize();
-    developer.log("${MediaQuery.of(_context).size.width}");
-    developer.log("${MediaQuery.of(_context).size.height}");
-    developer.log("${MediaQuery.of(_context).padding}");
+    developer.log("${MediaQuery.of(context).size.width}");
+    developer.log("${MediaQuery.of(context).size.height}");
+    developer.log("${MediaQuery.of(context).padding}");
   }
 
   /// This method is vor the initialization process of the game class.
@@ -100,24 +122,50 @@ class SnakeGame extends Game with TapDetector {
   void initialize() async {
     resize(await Flame.util.initialDimensions());
     // load _serHighScore
-    userHighScore = await _userRepo.getMyHighscore(_gameId);
+    userHighScore = await userRepo.getMyHighscore(gameId);
     // load allTimeHighScore
-    allTimeHighScore = await _userRepo.getHighscore(_gameId);
+    allTimeHighScore = await userRepo.getHighscore(gameId);
 
     background = Background(this, _controlBarRelativeHeight);
     spawnApples();
 
-    _bitePlayer = AudioCache(prefix: 'assets/sounds/', fixedPlayer: AudioPlayer());
+    _bitePlayer =
+        AudioCache(prefix: 'assets/sounds/', fixedPlayer: AudioPlayer());
 
     homeView = HomeView(this);
     gameOverView = GameOverView(this);
 
-    arrowButtonDown = ArrowButton(this, _relativeButtonSize, 3, 1, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.South);
-    arrowButtonUp = ArrowButton(this, _relativeButtonSize, 1, 3, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.North);
-    arrowButtonLeft = ArrowButton(this, _relativeButtonSize, 2, 0, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.West);
-    arrowButtonRight = ArrowButton(this, _relativeButtonSize, 4, 4, 1.0 - _controlBarRelativeHeight, () => snake.direction = SnakeDirection.East);
+    arrowButtonDown = ArrowButton(
+        this,
+        _relativeButtonSize,
+        3,
+        1,
+        1.0 - _controlBarRelativeHeight,
+        () => snake.direction = SnakeDirection.South);
+    arrowButtonUp = ArrowButton(
+        this,
+        _relativeButtonSize,
+        1,
+        3,
+        1.0 - _controlBarRelativeHeight,
+        () => snake.direction = SnakeDirection.North);
+    arrowButtonLeft = ArrowButton(
+        this,
+        _relativeButtonSize,
+        2,
+        0,
+        1.0 - _controlBarRelativeHeight,
+        () => snake.direction = SnakeDirection.West);
+    arrowButtonRight = ArrowButton(
+        this,
+        _relativeButtonSize,
+        4,
+        4,
+        1.0 - _controlBarRelativeHeight,
+        () => snake.direction = SnakeDirection.East);
 
-    pauseButton = PauseButton(this, _relativeButtonSize, 2, 1.0 - _controlBarRelativeHeight, (tapped) => _running = !tapped);
+    pauseButton = PauseButton(this, _relativeButtonSize, 2,
+        1.0 - _controlBarRelativeHeight, (tapped) => _running = !tapped);
 
     // TODO - this has to move to the begin action of the main menu
     spawnSnake();
@@ -135,6 +183,7 @@ class SnakeGame extends Game with TapDetector {
     _initialized = true;
   }
 
+  /// This method will resize all components of this class.
   void resizeComponents() {
     background?.resize();
     homeView?.resize();
@@ -147,7 +196,6 @@ class SnakeGame extends Game with TapDetector {
     scoreDisplay?.resize();
   }
 
-
   /// This method saves the actual Score to the database for the user which is logged in.
   ///
   /// sideffects:
@@ -155,10 +203,8 @@ class SnakeGame extends Game with TapDetector {
   void _saveHighScore() {
     if (!_savedHighScore) {
       _savedHighScore = true;
-      _userRepo.addHighscore(Highscore(
-          gameID: _gameId,
-          score: score,
-          userID: _userRepo.authenticatedUser.id));
+      userRepo.addHighscore(Highscore(
+          gameID: gameId, score: score, userID: userRepo.authenticatedUser.id));
     }
   }
 
@@ -173,17 +219,20 @@ class SnakeGame extends Game with TapDetector {
       despawnApple(apple);
     } else {
       if (log) {
-        developer.log("[SnakeGame][respawnApple] before [x=${apple.position.x}, y=${apple.position.y}]");
+        developer.log(
+            "[SnakeGame][respawnApple] before [x=${apple.position.x}, y=${apple.position.y}]");
       }
 
       // get all Positions which are filled with the snake or apples
       var excludePositions = apples.map((e) => e.position).toList();
-      excludePositions.addAll(snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
+      excludePositions.addAll(
+          snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
       // set new Position of the eaten apple on a free field
       apple.setRandomPosition(excludePositions);
 
       if (log) {
-        developer.log("[SnakeGame][respawnApple] after  [x=${apple.position.x}, y=${apple.position.y}]");
+        developer.log(
+            "[SnakeGame][respawnApple] after  [x=${apple.position.x}, y=${apple.position.y}]");
       }
     }
   }
@@ -192,7 +241,8 @@ class SnakeGame extends Game with TapDetector {
   void spawnApples() {
     while (apples.length < maxApples) {
       var excludePositions = apples.map((e) => e.position).toList();
-      excludePositions.addAll(snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
+      excludePositions.addAll(
+          snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
       apples.add(Apple(this, excludePositions));
     }
   }
@@ -209,7 +259,8 @@ class SnakeGame extends Game with TapDetector {
   /// This method initialize the snake with its callback
   void spawnSnake() {
     // initialize a new snake
-    snake = SnakeComponent(this, Position(maxFieldX ~/ 2, maxFieldY ~/ 2), snakeStartVelocity);
+    snake = SnakeComponent(
+        this, Position(maxFieldX ~/ 2, maxFieldY ~/ 2), snakeStartVelocity);
     // callback when snake bites itself
     snake.callbackBiteItSelf = () => finishGame();
     // callback when the snake hits the border
@@ -267,19 +318,18 @@ class SnakeGame extends Game with TapDetector {
       snake.update(t, apples);
       apples.forEach((element) => element.update(t));
       scoreDisplay.update(t);
-     
     }
-    if (_finished && _initialized){
+    if (_finished && _initialized) {
       gameOverView.update(t);
 
       if (!this._saved) {
         this._saved = true;
-        _userRepo.addHighscore(Highscore(
+        userRepo.addHighscore(Highscore(
             gameID: 1,
             score: this.score,
-            userID: this._userRepo.authenticatedUser.id));
+            userID: this.userRepo.authenticatedUser.id));
       }
-    } 
+    }
   }
 
   /// This method finish the actual game
@@ -290,7 +340,6 @@ class SnakeGame extends Game with TapDetector {
     }
   }
 
-  /// [dir] 1 = north, 2 = west, 3 = south everything else = east
   void onTapDown(TapDownDetails d) {
     if (!_initialized) {
       return;
@@ -312,25 +361,31 @@ class SnakeGame extends Game with TapDetector {
       }
     }
 
-    if (activeView == View.gameOver && gameOverView.goBackButton.rect.contains(d.localPosition)){
+    if (activeView == View.gameOver &&
+        gameOverView.goBackButton.rect.contains(d.localPosition)) {
       gameOverView.goBackButton.onTapDown();
 
       // close the game widget
-      Navigator.pop(_context);
+      Navigator.pop(context);
     }
   }
 
   void resize(Size size) {
     screenSize = Size(
-        MediaQuery.of(_context).size.width - MediaQuery.of(_context).padding.left - MediaQuery.of(_context).padding.right,
-        MediaQuery.of(_context).size.height - MediaQuery.of(_context).padding.top - MediaQuery.of(_context).padding.bottom
-    );
+        MediaQuery.of(context).size.width -
+            MediaQuery.of(context).padding.left -
+            MediaQuery.of(context).padding.right,
+        MediaQuery.of(context).size.height -
+            MediaQuery.of(context).padding.top -
+            MediaQuery.of(context).padding.bottom);
 
     if (maxField && screenSize.width > 0 && screenSize.height > 0) {
       if (screenSize.width < screenSize.height) {
         tileSize = screenSize.width / maxFieldX;
-        
-        maxFieldY = ((screenSize.height * (1 - _controlBarRelativeHeight) - (tileSize * fieldOffsetY))) ~/ tileSize;
+
+        maxFieldY = ((screenSize.height * (1 - _controlBarRelativeHeight) -
+                (tileSize * fieldOffsetY))) ~/
+            tileSize;
       } else {
         tileSize = screenSize.width / maxFieldX;
 

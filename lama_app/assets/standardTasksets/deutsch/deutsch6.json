@@ -33,7 +33,7 @@
          {
            "task_type":"GridSelect",
            "task_reward":3,
-           "lama_text":"Markiere vier Dichter",
+           "lama_text":"Markiere X Dichter",
            "left_to_solve": 3,
            "wordsToFind":["Schiller", "Goethe", "Brecht", "Grimm"]
          },

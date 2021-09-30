@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 ///
 ///
 /// Author: L.Kammerer
-/// latest Changes: 15.07.2021
+/// Latest Changes: 14.09.2021
 abstract class InputValidation {
   //MAX_LENGTH for Usernamens
   static int allowedNameLength = 12;
@@ -82,12 +82,12 @@ abstract class InputValidation {
   ///
   ///{@param} [String] as url
   static String inputURLValidation(String url) {
+    if (isEmpty(url)) return 'Dieses Feld darf nicht leer sein!';
     if (RegExp('http://').hasMatch(url))
       return 'URL darf aus Sicherheitsgründen keine "http" Adresse sein!';
     if (!urlFilter.hasMatch(url)) return 'Die URL muss mit "https://" beginen!';
     if (!Uri.tryParse(url).hasAbsolutePath)
-      return 'URL Fehlerhaft! Einige URLs müssen mit ".json" oder "/" enden.';
-    if (isEmpty(url)) return 'Dieses Feld darf nicht leer sein!';
+      return 'URL Fehlerhaft! Einige URLs müssen mit "/" enden.';
     return null;
   }
 
@@ -124,7 +124,7 @@ abstract class InputValidation {
         try {
           await jsonDecode(response[0].body);
         } on FormatException {
-          return '"json" fehlerhaft!';
+          return '"json" fehlerhaft oder nicht gefunden!';
         }
         //Testing successfull
         return null;

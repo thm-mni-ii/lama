@@ -7,6 +7,7 @@ import 'package:lama_app/app/model/game_model.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/model/left_to_solve_model.dart';
 import 'package:lama_app/app/model/password_model.dart';
+import 'package:lama_app/app/model/safty_question_model.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/subject_model.dart';
@@ -22,9 +23,10 @@ import 'package:sqflite/sqflite.dart';
 ///In this file the database will be create or update
 ///All methods to work with the database you will find here
 ///
-/// Author: F.Brecher
+/// Author: F.Brecher, L.Kammerer
+/// latest Changes: 16.09.2021
 class DatabaseProvider {
-  int currentVersion = 1;
+  int currentVersion = 2;
   int oldVersion = 0;
 
   DatabaseProvider._();
@@ -109,6 +111,7 @@ class DatabaseProvider {
       },
     );
   }
+
   ///get all entry's from table User
   ///
   /// {@return} <List<User>>
@@ -121,7 +124,8 @@ class DatabaseProvider {
       UserFields.columnGrade,
       UserFields.columnCoins,
       UserFields.columnIsAdmin,
-      UserFields.columnAvatar
+      UserFields.columnAvatar,
+      UserFields.columnHighscorePermission
     ]);
 
     List<User> userList = <User>[];
@@ -200,6 +204,7 @@ class DatabaseProvider {
 
     return gameList;
   }
+
   ///get all entry's from table Highscores
   ///
   /// {@return} <List<Highscores>>
@@ -278,6 +283,7 @@ class DatabaseProvider {
 
     return 0;
   }
+
 //get a list from typ Subject from the database.
   ///get all entry's from table Subject
   ///
@@ -440,7 +446,6 @@ class DatabaseProvider {
   /// {@return} <int> which shows the number of deleted rows
   Future<int> deleteUser(int id) async {
     final db = await database;
-
     return await db.delete(tableUser,
         where: "${UserFields.columnId} = ?", whereArgs: [id]);
   }
@@ -559,6 +564,7 @@ class DatabaseProvider {
     }
     return null;
   }
+
   /// update the name from an user in table User
   ///
   /// {@param} User user, String name
@@ -629,6 +635,40 @@ class DatabaseProvider {
       return await _getUser(user.id);
     }
     return null;
+  }
+
+  /// update the highscorePermission field from an user in table User
+  ///
+  /// {@param} User user, bool highscorePermission
+  ///
+  /// {@return} <User>
+  Future<User> updateUserHighscorePermission(
+      User user, bool highscorePermission) async {
+    final db = await database;
+
+    int updated = await db.update(
+        tableUser,
+        <String, dynamic>{
+          UserFields.columnHighscorePermission: highscorePermission ? 1 : 0
+        },
+        where: " ${UserFields.columnId} = ?",
+        whereArgs: [user.id]);
+
+    if (updated != null) {
+      return await _getUser(user.id);
+    }
+    return null;
+  }
+
+  /// update the highscorePermission field for alle users in table User
+  ///
+  /// {@param} User user, bool highscorePermission
+  ///
+  /// {@return} <User>
+  Future<void> updateAllUserHighscorePermission(List<User> userList) async {
+    userList.forEach((user) async {
+      await updateUserHighscorePermission(user, user.highscorePermission);
+    });
   }
 
   /// update the avatar from an user in table User
@@ -728,6 +768,7 @@ class DatabaseProvider {
     return await db.update(tableTaskUrl, taskUrl.toMap(),
         where: " ${TaskUrlFields.columnId} = ?", whereArgs: [taskUrl.id]);
   }
+
   /// checks if the transferred password is the password from the user
   ///
   /// {@param} String password, User user
@@ -751,6 +792,52 @@ class DatabaseProvider {
         where: "${UserFields.columnId} = ?", whereArgs: [user.id]);
   }
 
+  Future<SaftyQuestion> _insertSaftyQuestion(
+      SaftyQuestion saftyQuestion) async {
+    final db = await database;
+    saftyQuestion.id =
+        await db.insert(tableSaftyQuestion, saftyQuestion.toMap());
+    return saftyQuestion;
+  }
+
+  Future<SaftyQuestion> updateSaftyQuestion(SaftyQuestion saftyQuestion) async {
+    final db = await database;
+    SaftyQuestion allreadyExist = await getSaftyQuestion(saftyQuestion.adminID);
+    if (allreadyExist != null) {
+      await db.update(tableSaftyQuestion, saftyQuestion.toMap(),
+          where: "${SaftyQuestionFields.columnSaftyQuestionAdminId} = ?",
+          whereArgs: [saftyQuestion.adminID]);
+    } else {
+      return _insertSaftyQuestion(saftyQuestion);
+    }
+    return saftyQuestion;
+  }
+
+  Future<SaftyQuestion> getSaftyQuestion(int adminId) async {
+    final db = await database;
+    var saftyQuestionMap = await db.query(tableSaftyQuestion,
+        columns: [
+          SaftyQuestionFields.columnSaftyQuestionId,
+          SaftyQuestionFields.columnSaftyQuestionAdminId,
+          SaftyQuestionFields.columnSaftyQuestion,
+          SaftyQuestionFields.columnSaftyAnswer
+        ],
+        where: "${SaftyQuestionFields.columnSaftyQuestionAdminId} = ?",
+        whereArgs: [adminId]);
+
+    if (saftyQuestionMap.length > 0) {
+      return SaftyQuestion.fromMap(saftyQuestionMap.first);
+    }
+    return null;
+  }
+
+  Future<int> deleteSaftyQuestion(int adminId) async {
+    final db = await database;
+    return await db.delete(tableSaftyQuestion,
+        where: "${SaftyQuestionFields.columnSaftyQuestionAdminId} = ?",
+        whereArgs: [adminId]);
+  }
+
   ///(private)
   ///get an user from table User
   ///
@@ -767,7 +854,8 @@ class DatabaseProvider {
           UserFields.columnGrade,
           UserFields.columnCoins,
           UserFields.columnIsAdmin,
-          UserFields.columnAvatar
+          UserFields.columnAvatar,
+          UserFields.columnHighscorePermission
         ],
         where: "${UserFields.columnId} = ?",
         whereArgs: [id]);
@@ -776,8 +864,7 @@ class DatabaseProvider {
       User user = User.fromMap(users.first);
       return user;
     }
-    return
-      null;
+    return null;
   }
 
   ///(private)
@@ -803,6 +890,7 @@ class DatabaseProvider {
   Future deleteDatabase() async {
     final db = await database;
     await db.delete(tableUser);
+    await db.delete(tableSaftyQuestion);
     await db.delete(tableAchievements);
     await db.delete(tableUserHasAchievements);
     await db.delete(tableGames);
@@ -858,13 +946,13 @@ class DatabaseProvider {
       insertLeftToSolve(task.toString(), task.leftToSolve, user);
     });
   }
+
   /// decrement the leftToSolve value from a task with an specific user
   ///
   /// {@param} Task t,  User user
   ///
   /// {@return} <int> which shows the number of updated rows
   Future<int> decrementLeftToSolve(Task t, User user) async {
-
     final db = await database;
     print("curVal: " + t.leftToSolve.toString());
     int newVal = max(t.leftToSolve - 1, -2);

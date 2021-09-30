@@ -1,4 +1,7 @@
 import 'dart:ui';
+import 'package:flutter/material.dart';
+
+import '../../app/screens/game_list_screen.dart';
 import '../snakeGame.dart';
 import '../views/view.dart';
 import 'package:flutter/painting.dart';
@@ -6,20 +9,25 @@ import 'package:flutter/painting.dart';
 /// This class represents a Pause and Play button.
 class StartButton {
   final SnakeGame game;
+
   /// [RRect] of the button
   RRect rect;
+
   /// [Paint] of the button
-  Paint startPaint = Paint()
-    ..color = Color(0xff6dff4a);
+  Paint startPaint = Paint()..color = Color(0xff6dff4a);
+
   /// [Paint] of the text
   TextPainter _painter = TextPainter(
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
   );
+
   /// [TextStyle] of the text
   TextStyle _textStyle;
+
   /// position of the text
   Offset _position;
+
   /// Offset of the button [top, left, right, bottom]
   List<double> _buttonOffset = [0.7, 0.1, 0.1, 0.1];
 
@@ -65,7 +73,7 @@ class StartButton {
 
   void render(Canvas c) {
     c.drawRRect(rect, startPaint);
-    
+
     // draw text
     _painter.paint(c, _position);
   }
@@ -73,6 +81,13 @@ class StartButton {
   void update(double t) {}
 
   void onTapDown() {
-    game.activeView = View.playing;
+    if (game.userRepo.getLamaCoins() >=
+        GameListScreen.games[game.gameId - 1].cost) {
+      game.userRepo.removeLamaCoins(GameListScreen.games[game.gameId - 1].cost);
+      game.activeView = View.playing;
+    } else {
+      //Return a value that is interpreted by the GamListScreenBloc to show a snackbar
+      Navigator.pop(game.context, "NotEnoughCoins");
+    }
   }
 }
