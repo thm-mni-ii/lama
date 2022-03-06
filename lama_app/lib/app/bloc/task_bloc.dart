@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -22,7 +24,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   String tasksetSubject;
   List<Task> tasks;
   int curIndex = 0;
-
+  int timer = 15;
   List<bool> answerResults = [];
 
   UserRepository userRepository;
@@ -59,7 +61,28 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
-      } else if (t is TaskMatchCategory) {
+      } else if (t is ClockTest) {
+        if (event.providedAnswer == t.rightAnswer) {
+          rightAnswerCallback(t);
+          yield TaskAnswerResultState(true);
+        } else if (event.providedAnswerBool == true){
+          rightAnswerCallback(t);
+          yield TaskAnswerResultState(true);
+        }
+        else { 
+          wrongAnswerCallback(t);
+          yield TaskAnswerResultState(false);
+        }
+      }
+      else if (t is TaskClozeTest) {
+        if (event.providedAnswer == t.rightAnswer) {
+          rightAnswerCallback(t);
+          yield TaskAnswerResultState(true);
+        } else {
+          wrongAnswerCallback(t);
+          yield TaskAnswerResultState(false);
+        }
+      }else if (t is TaskMatchCategory) {
         if (event.providedanswerStates.contains(false)) {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
@@ -67,7 +90,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         }
-      } else if (t is TaskGridSelect) {
+      }else if (t is TaskGridSelect) {
         if (!DeepCollectionEquality.unordered()
             .equals(event.rightPositions, event.markedPositions)) {
           wrongAnswerCallback(t);
@@ -76,16 +99,15 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         }
-      } else if (t is TaskMoney) {
-        if (event.providedAnswerDouble.toStringAsFixed(2) ==
-            t.moneyAmount.toStringAsFixed(2)) {
+      }else if (t is TaskMoney) {
+        if (event.providedAnswerBool) {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         } else {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
-      } else if (t is TaskVocableTest) {
+      }else if (t is TaskVocableTest) {
         if (event.providedanswerStates.contains(false)) {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false,

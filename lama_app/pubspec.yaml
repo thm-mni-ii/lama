@@ -44,6 +44,7 @@ dependencies:
   shared_preferences: ^2.0.6
   dio: ^4.0.0
   dbcrypt: ^1.0.0
+  decimal: ^2.1.0
   
 dev_dependencies:
   flutter_test:

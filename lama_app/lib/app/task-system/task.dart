@@ -33,6 +33,19 @@ class Task {
             json['question'],
             json['right_answer'],
             List<String>.from(json['wrong_answers']));
+      case "Clock":
+        return ClockTest(
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['uhr'],
+            json['timer'],
+            json['right_answer'],
+            json['wrong_answers']);
+      case "MoneyTask":
+        return TaskMoney(taskType, json['task_reward'], json['lama_text'],
+            json['left_to_solve'], json['difficulty'], json['optimum']);
       case "MarkWords":
         return TaskMarkWords(
             taskType,
@@ -56,7 +69,7 @@ class Task {
             json['left_to_solve'], List<String>.from(json['wordsToFind']));
       case "MoneyTask":
         return TaskMoney(taskType, json['task_reward'], json['lama_text'],
-            json['left_to_solve'], json['moneyAmount']);
+            json['left_to_solve'], json['difficulty'], json['optimum']);
       case "VocableTest":
         var wordPairs = json['wordPairs'] as List;
         List<Pair<String, String>> wordPairList =
@@ -262,20 +275,38 @@ class TaskGridSelect extends Task {
     return s;
   }
 }
+//Author Handito Bismo
+class ClockTest extends Task {
+  String uhr;
+  bool timer;
+  String rightAnswer;
+  String wrongAnswers;
+
+  ClockTest(String taskType, int reward, String lamaText, int leftToSolve,
+      this.uhr, this.timer, this.rightAnswer, this.wrongAnswers)
+      : super(taskType, reward, lamaText, leftToSolve);
+
+  @override
+  String toString() {
+    String s = super.toString() + uhr;
+    return s + timer.toString();
+  }
+}
 
 ///Subclass of [Task] for the Tasktype "MoneyTask"
 ///
 ///Author: T.Rentsch
 class TaskMoney extends Task {
-  double moneyAmount;
+  int difficulty;
+  bool optimum;
 
   TaskMoney(String taskType, int reward, String lamaText, int leftToSolve,
-      this.moneyAmount)
+      this.difficulty, this.optimum)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
   String toString() {
-    return super.toString() + moneyAmount.toString();
+    return super.toString() + difficulty.toString();
   }
 }
 

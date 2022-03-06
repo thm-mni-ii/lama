@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/gridselecttask_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/screens/task_type_screens/clock_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/connect_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/equation_task_screen.dart';
@@ -62,11 +63,12 @@ class TaskScreenState extends State<TaskScreen> {
               break;
             case "Deutsch":
               lg = LinearGradient(
-                  colors: [LamaColors.redAccent, LamaColors.redPrimary]);
+                  colors: [LamaColors.orangeAccent, LamaColors.redPrimary]);
               break;
             case "Sachkunde":
               lg = LinearGradient(
                   colors: [LamaColors.purpleAccent, LamaColors.purplePrimary]);
+              break;
           }
           return Scaffold(
             resizeToAvoidBottomInset: false,
@@ -289,6 +291,8 @@ class TaskScreenState extends State<TaskScreen> {
         return FourCardTaskScreen(task, constraints);
       case "ClozeTest":
         return ClozeTestTaskScreen(task, constraints);
+      case "Clock":
+        return ClockTaskScreen(task, constraints);
       case "MarkWords":
         return MarkWordsScreen(task, constraints);
       case "MatchCategory":

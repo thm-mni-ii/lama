@@ -1,3 +1,5 @@
+// import 'dart:ffi';
+
 import 'package:lama_app/util/pair.dart';
 
 ///This class provides methods to validate a [Taskset] and a [Task].
@@ -72,6 +74,13 @@ class TasksetValidator {
                 _checkListType<String>(json["wrong_answers"])) return null;
             return "Aufgabentyp: 4Cards";
 
+          case "Zerlegung":
+            if (json.containsKey("right_answer") &&
+                json["right_answer"] is int &&
+                json.containsKey("reverse") &&
+                json["reverse"] is bool) return null;
+            return "Aufgabentyp: Zerlegung";
+
           ///ClozeTest
           case "ClozeTest":
             if (json.containsKey("question") &&
@@ -82,6 +91,48 @@ class TasksetValidator {
                 json["wrong_answers"] is List &&
                 _checkListType<String>(json["wrong_answers"])) return null;
             return "Aufgabentyp: ClozeTest";
+
+          ///Bild4Cards
+          case "Bild4Cards":
+            if (json.containsKey("question") &&
+                json["question"] is String &&
+                json.containsKey("right_answer") &&
+                json["right_answer"] is String &&
+                json.containsKey("wrong_answers") &&
+                json["wrong_answers"] is List &&
+                _checkListType<String>(json["wrong_answers"])) return null;
+            return "Aufgabentyp: Bild4Cards";
+          case "Buchstabieren":
+            if (json.containsKey("words") && json["words"] is List) return null;
+            return "Aufgabentyp: Buchstabieren";
+
+          case "2Cards":
+            if (json.containsKey("question") &&
+                json["question"] is String &&
+                json.containsKey("right_answer") &&
+                json["right_answer"] is String &&
+                json.containsKey("wrong_answers") &&
+                json["wrong_answers"] is List &&
+                _checkListType<String>(json["wrong_answers"])) return null;
+            return "Aufgabentyp: 2Cards";
+
+          ///BildCard
+          case "BildCard":
+            if (json.containsKey("question") &&
+                json["question"] is String &&
+                json.containsKey("right_answer") &&
+                json["right_answer"] is String &&
+                json.containsKey("wrong_answers") &&
+                json["wrong_answers"] is List &&
+                _checkListType<String>(json["wrong_answers"])) return null;
+            return "Aufgabentyp: BildCard";
+
+          case "Clock":
+            if (json.containsKey("uhr") &&
+                json["uhr"] is String &&
+                json.containsKey("timer") &&
+                json["timer"] is bool) return null;
+            return "Aufgabentyp: Clock";
 
           ///MarkWords
           case "MarkWords":
@@ -106,6 +157,25 @@ class TasksetValidator {
                 _checkListType<String>(json["categoryTwo"])) return null;
             return "Aufgabentyp: MatchCategory";
 
+          ///MatchRandom
+          case "MatchRandom":
+            if (json.containsKey("boxLeft") &&
+                json["boxLeft"] is String &&
+                json.containsKey("boxMiddle") &&
+                json["boxMiddle"] is String &&
+                json.containsKey("boxRight") &&
+                json["boxRight"] is String &&
+                json.containsKey("ansLeft") &&
+                json["ansLeft"] is List &&
+                _checkListType<String>(json["ansLeft"]) &&
+                json.containsKey("ansMiddle") &&
+                json["ansMiddle"] is List &&
+                _checkListType<String>(json["ansRight"]) &&
+                json.containsKey("ansRight") &&
+                json["ansMiddle"] is List &&
+                _checkListType<String>(json["ansRight"])) return null;
+            return "Aufgabentyp: MatchRandom";
+
           ///GridSelect
           case "GridSelect":
             if (json.containsKey("wordsToFind") &&
@@ -115,9 +185,21 @@ class TasksetValidator {
 
           ///MoneyTask
           case "MoneyTask":
-            if (json.containsKey("moneyAmount") &&
-                json["moneyAmount"] is double) return null;
+            if (json.containsKey("difficulty") &&
+                json["difficulty"] is int &&
+                json['optimum'] is bool) return null;
             return "Aufgabentyp: MoneyTask";
+
+          case "NumberLine":
+            if (json.containsKey("steps") &&
+                json["steps"] is int &&
+                json.containsKey("randomRange") &&
+                json["randomRange"] is bool &&
+                json.containsKey("ontap") &&
+                json["ontap"] is bool &&
+                json["range"] is List &&
+                _checkListType<int>(json["range"])) return null;
+            return "Aufgabentyp: NumberLine";
 
           ///VocableTest
           case "VocableTest":

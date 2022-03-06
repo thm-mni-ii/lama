@@ -56,13 +56,6 @@
             ]
         },
         {
-            "task_type": "MoneyTask",
-            "task_reward": 2,
-            "lama_text": "Sammle 13,87€ mit den Münzen zusammen",
-            "left_to_solve": 3,
-            "moneyAmount": 13.87
-        },
-        {
             "task_type": "Equation",
             "task_reward": 2,
             "lama_text": "Löse die Gleichung!",

@@ -8,6 +8,8 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:collection/collection.dart';
+import 'dart:math';
 
 /// This file creates the Money task Screen
 /// The Money Task is used to learn the calculating with money.
@@ -19,8 +21,7 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 /// latest Changes: 22.07.2021
 
 /// Globale Variables
-// currentAmountDouble is used to Store the gathered amount of money
-double currentAmountDouble = 0;
+// currentAmountInt is used to Store the gathered amount of money
 
 class MoneyTaskScreen extends StatefulWidget {
   final TaskMoney task;
@@ -33,34 +34,125 @@ class MoneyTaskScreen extends StatefulWidget {
     return MoneyTaskState(task, constraints);
   }
 }
+
 /// MoneyTaskState class creates the Money Task Screen
 class MoneyTaskState extends State<MoneyTaskScreen> {
   // task infos and constraints handed over by tasktypeScreen
   final TaskMoney task;
   final BoxConstraints constraints;
   // Value which is checked after pressing the "fertig" Button
-  double finalMoneyAmount;
+  int finalMoneyAmount;
   // Stores the pressed coins
   // needed for the undo button
-  List<double> deletions = [];
-
+  List<int> deletions = [];
+  int currentAmountInt = 0;
   //index maps to coins => 2€ = 0 1 € = 1, usw..
   List<int> amounts = [0, 0, 0, 0, 0, 0, 0, 0];
+  int i = 0;
+  bool answer;
+  var random = Random();
+  var rnd;
+  int moneyAmount;
+  int maxAmount;
+  String moneyAmountText;
+  int minCount = 0;
+  int tempAmount = 0;
 
   MoneyTaskState(this.task, this.constraints) {
-    finalMoneyAmount = currentAmountDouble;
+    finalMoneyAmount = currentAmountInt;
+    maxAmount = 10 * 100;
+    rnd = random.nextInt(maxAmount);
+    this.maxAmount = 10;
+    this.moneyAmount = rnd;
+
+    while (this.moneyAmount != this.tempAmount) {
+      if ((this.moneyAmount - this.tempAmount) >= 200) {
+        this.tempAmount += 200;
+        ++minCount;
+      } else if ((this.moneyAmount - this.tempAmount) >= 100) {
+        this.tempAmount += 100;
+        ++minCount;
+      } else if ((this.moneyAmount - this.tempAmount) >= 50) {
+        this.tempAmount += 50;
+        ++minCount;
+      } else if ((this.moneyAmount - this.tempAmount) >= 20) {
+        this.tempAmount += 20;
+        ++minCount;
+      } else if ((this.moneyAmount - this.tempAmount) >= 10) {
+        this.tempAmount += 10;
+        ++minCount;
+      } else if ((this.moneyAmount - this.tempAmount) >= 5) {
+        this.tempAmount += 5;
+        ++minCount;
+      } else if ((this.moneyAmount - this.tempAmount) >= 2) {
+        this.tempAmount += 2;
+        ++minCount;
+      } else if ((this.moneyAmount - this.tempAmount) >= 1) {
+        this.tempAmount += 1;
+        ++minCount;
+      } else {
+        break;
+      }
+    }
+
+    int length = moneyAmount.toString().length;
+    if (length == 2) {
+      moneyAmountText = "0";
+      moneyAmountText = moneyAmountText +
+          this
+              .moneyAmount
+              .toString()
+              .substring(0, this.moneyAmount.toString().length - length) +
+          "," +
+          this.moneyAmount.toString().substring(
+              this.moneyAmount.toString().length - length,
+              this.moneyAmount.toString().length);
+    } else if (length == 1) {
+      moneyAmountText = "0";
+      moneyAmountText = moneyAmountText +
+          this
+              .moneyAmount
+              .toString()
+              .substring(0, this.moneyAmount.toString().length - length) +
+          ",0" +
+          this.moneyAmount.toString().substring(
+              this.moneyAmount.toString().length - length,
+              this.moneyAmount.toString().length);
+    } else {
+      moneyAmountText = "";
+      moneyAmountText = moneyAmountText +
+          this
+              .moneyAmount
+              .toString()
+              .substring(0, this.moneyAmount.toString().length - 2) +
+          "," +
+          this.moneyAmount.toString().substring(
+              this.moneyAmount.toString().length - 2,
+              this.moneyAmount.toString().length);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final sum = amounts.sum;
+    tempAmount = 0;
     return Column(children: [
+      // Row(
+      //   children: [
+      //Text("currentAmountInt: " + currentAmountInt.toString()),
+      //Text("tempAmount: " + tempAmount.toString() + " "),
+      //Text("Optimum: " + minCount.toString() + " "),
+      //Text("i:" + i.toString()),
+      //   ],int.parse(finalMoneyAmount.toStringAsFixed(2)
+      // ),
       // Lama Speechbubble
       Container(
         height: (constraints.maxHeight / 100) * 20,
         padding: EdgeInsets.only(left: 15, right: 15),
-        // create space between each childs
+        // create space between each child
         child: Stack(
           children: [
+            Text(sum.toString()),
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
@@ -71,7 +163,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                   nip: BubbleNip.leftCenter,
                   child: Center(
                     child: Text(
-                      task.lamaText,
+                      "Sammle $moneyAmountText€ mit den Münzen zusammen!",
                       style: LamaTextTheme.getStyle(
                           color: LamaColors.black, fontSize: 15),
                     ),
@@ -104,7 +196,11 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                   height: (constraints.maxHeight / 100) * 20,
                   child: Stack(alignment: Alignment.centerRight, children: [
                     SvgPicture.asset(
-                      "assets/images/svg/EuroCoins/2_Euro.svg",
+                      (false)
+                          ? "assets/images/svg/EuroCoins/2_Euro.svg"
+                          : (false)
+                              ? "assets/images/svg/EuroCoins/2_Euro.svg"
+                              : "assets/images/svg/EuroCoins/2_Euro.svg",
                       semanticsLabel: "Zwei Euro",
                       width: (constraints.maxWidth / 100) * 25,
                     ),
@@ -119,9 +215,10 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
-                    deletions.add(2);
+                    deletions.add(200);
                     amounts[0]++;
-                    currentAmountDouble = currentAmountDouble + 2;
+                    currentAmountInt = currentAmountInt + 200;
+                    currentAmountInt = int.parse(currentAmountInt.toString());
                   });
                 },
               ),
@@ -129,11 +226,22 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 child: Container(
                   height: (constraints.maxHeight / 100) * 20,
                   child: Stack(alignment: Alignment.centerRight, children: [
-                    SvgPicture.asset(
-                      "assets/images/svg/EuroCoins/1_Euro.svg",
-                      semanticsLabel: "Ein Euro",
-                      width: (constraints.maxWidth / 100) * 23,
-                    ),
+                    // SvgPicture.asset(
+                    //   "assets/images/jpg/5euro.jpg",
+                    //   semanticsLabel: "Ein Euro",
+                    //   width: (constraints.maxWidth / 100) * 23,
+                    //),
+                    (task.difficulty == 3)
+                        ? Image.asset(
+                            "assets/images/jpg/5_Euro.jpg",
+                            width: (constraints.maxWidth / 100) * 23,
+                          )
+                        : SvgPicture.asset(
+                            "assets/images/svg/EuroCoins/1_Euro.svg",
+                            semanticsLabel: "Ein Euro",
+                            width: (constraints.maxWidth / 100) * 23,
+                          ),
+
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Text(
@@ -145,9 +253,12 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
-                    deletions.add(1);
+                    deletions.add(100);
                     amounts[1]++;
-                    currentAmountDouble = currentAmountDouble + 1;
+                    (task.difficulty == 3)
+                        ? currentAmountInt = currentAmountInt + 5
+                        : currentAmountInt = currentAmountInt + 100;
+                    currentAmountInt = int.parse(currentAmountInt.toString());
                   });
                 },
               ),
@@ -175,9 +286,10 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
-                    deletions.add(0.5);
+                    deletions.add(50);
                     amounts[2]++;
-                    currentAmountDouble = currentAmountDouble + 0.5;
+                    currentAmountInt = currentAmountInt + 50;
+                    currentAmountInt = int.parse(currentAmountInt.toString());
                   });
                 },
               ),
@@ -201,9 +313,10 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
-                    deletions.add(0.2);
+                    deletions.add(20);
                     amounts[3]++;
-                    currentAmountDouble = currentAmountDouble + 0.2;
+                    currentAmountInt = currentAmountInt + 20;
+                    currentAmountInt = int.parse(currentAmountInt.toString());
                   });
                 },
               ),
@@ -246,9 +359,10 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
-                    deletions.add(0.1);
+                    deletions.add(10);
                     amounts[4]++;
-                    currentAmountDouble = currentAmountDouble + 0.1;
+                    currentAmountInt = currentAmountInt + 10;
+                    currentAmountInt = int.parse(currentAmountInt.toString());
                   });
                 },
               ),
@@ -277,9 +391,10 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
-                    deletions.add(0.05);
+                    deletions.add(5);
                     amounts[5]++;
-                    currentAmountDouble = currentAmountDouble + 0.05;
+                    currentAmountInt = currentAmountInt + 5;
+                    currentAmountInt = int.parse(currentAmountInt.toString());
                   });
                 },
               ),
@@ -308,9 +423,10 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
-                    deletions.add(0.02);
+                    deletions.add(2);
                     amounts[6]++;
-                    currentAmountDouble = currentAmountDouble + 0.02;
+                    currentAmountInt = currentAmountInt + 2;
+                    currentAmountInt = int.parse(currentAmountInt.toString());
                   });
                 },
               ),
@@ -335,9 +451,10 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 ),
                 onTap: () {
                   setState(() {
-                    deletions.add(0.01);
+                    deletions.add(1);
                     amounts[7]++;
-                    currentAmountDouble = currentAmountDouble + 0.01;
+                    currentAmountInt = currentAmountInt + 1;
+                    currentAmountInt = int.parse(currentAmountInt.toString());
                   });
                 },
               ),
@@ -375,12 +492,11 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                       size: 40,
                     ),
                     color: LamaColors.white,
-                    onPressed: (){
+                    onPressed: () {
                       setState(() {
                         if (deletions.isNotEmpty) {
-                          currentAmountDouble =
-                              currentAmountDouble - deletions.last;
-                          double deletedElement = deletions.removeLast();
+                          currentAmountInt = currentAmountInt - deletions.last;
+                          int deletedElement = deletions.removeLast();
                           updateAmount(deletedElement);
                         } else {
                           ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -391,13 +507,13 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                                     alignment: Alignment.bottomCenter,
                                     child: Center(
                                         child: FittedBox(
-                                          fit: BoxFit.fitWidth,
-                                          child: Text(
-                                            "Füge zuerst einen Betrag hinzu",
-                                            style: LamaTextTheme.getStyle(),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ))),
+                                      fit: BoxFit.fitWidth,
+                                      child: Text(
+                                        "Füge zuerst einen Betrag hinzu",
+                                        style: LamaTextTheme.getStyle(),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ))),
                                 backgroundColor: LamaColors.mainPink,
                                 duration: Duration(seconds: 1)),
                           );
@@ -432,13 +548,38 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                     ),
                   ),
                   onTap: () {
-                    finalMoneyAmount = currentAmountDouble;
-                    currentAmountDouble = 0;
+                    finalMoneyAmount = currentAmountInt;
+                    currentAmountInt = 0;
+                    tempAmount = 0;
                     deletions.clear();
-                    print(finalMoneyAmount);
-                    print(finalMoneyAmount.toStringAsFixed(2));
+                    print("finalmoneyamount: $finalMoneyAmount");
+                    print(
+                        "finalMoneyAmount.toStringAsFixed(2): $finalMoneyAmount.toStringAsFixed(2)");
+                    print("moneyAmount: $moneyAmount");
+                    if (task.optimum == true) {
+                      if ((this.finalMoneyAmount.toString()) ==
+                              (this.moneyAmount.toString()) &&
+                          sum == minCount) {
+                        answer = true;
+                        print("correct");
+                      } else {
+                        answer = false;
+                        print("false");
+                      }
+                    } else {
+                      if ((this.finalMoneyAmount.toString()) ==
+                          (this.moneyAmount.toString())) {
+                        answer = true;
+                        print("correct");
+                      } else {
+                        answer = false;
+                        print("false");
+                      }
+                    }
+
+                    // (finalMoneyAmount.toStringAsFixed(2) == moneyAmount) ? answer = true : answer = false;
                     BlocProvider.of<TaskBloc>(context)
-                        .add(AnswerTaskEvent.initMoneyTask(finalMoneyAmount));
+                        .add(AnswerTaskEvent.initMoneyTask(answer));
                   },
                 ),
               )
@@ -453,21 +594,21 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
   /// after undoing a tapp the counter of the last tapped coin needs to be decrement
   /// {@param} double [deletedElement] indicates which coin got pressed last
   updateAmount(deletedElement) {
-    if (deletedElement == 2) {
+    if (deletedElement == 200) {
       amounts[0]--;
-    } else if (deletedElement == 1) {
+    } else if (deletedElement == 100) {
       amounts[1]--;
-    } else if (deletedElement == 0.5) {
+    } else if (deletedElement == 50) {
       amounts[2]--;
-    } else if (deletedElement == 0.2) {
+    } else if (deletedElement == 20) {
       amounts[3]--;
-    } else if (deletedElement == 0.1) {
+    } else if (deletedElement == 10) {
       amounts[4]--;
-    } else if (deletedElement == 0.05) {
+    } else if (deletedElement == 5) {
       amounts[5]--;
-    } else if (deletedElement == 0.02) {
+    } else if (deletedElement == 2) {
       amounts[6]--;
-    } else if (deletedElement == 0.01) {
+    } else if (deletedElement == 1) {
       amounts[7]--;
     }
   }

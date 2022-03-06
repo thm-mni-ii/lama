@@ -28,7 +28,7 @@ class AnswerTaskEvent extends TaskEvent {
   bool providedAnswerBool;
   List<String> providedanswerWords;
   List<bool> providedanswerStates;
-
+  List<int> answerParts;
   List<Pair> rightPositions;
   List<Pair> markedPositions;
 
@@ -45,8 +45,12 @@ class AnswerTaskEvent extends TaskEvent {
   //Constructor used for [TaskGridSelect]
   AnswerTaskEvent.initGridSelect(this.rightPositions, this.markedPositions);
   //Constructor used for [TaskMoney]
-  AnswerTaskEvent.initMoneyTask(double providedAnswerDouble) {
-    this.providedAnswerDouble = providedAnswerDouble;
+  AnswerTaskEvent.initMoneyTask(bool providedAnswerBool) {
+    this.providedAnswerBool = providedAnswerBool;
+  }
+  //Constructor used for [NumberLine]
+  AnswerTaskEvent.initNumberLine(bool providedAnswerBool) {
+    this.providedAnswerBool = providedAnswerBool;
   }
   //Constructor used for [TaskVocableTest]
   AnswerTaskEvent.initVocableTest(this.providedanswerStates);
@@ -62,5 +66,15 @@ class AnswerTaskEvent extends TaskEvent {
   }
   AnswerTaskEvent.initEquationNew(List<String> fullAnswer) {
     this.fullAnswer = fullAnswer;
+  }
+  AnswerTaskEvent.initBuchstabieren(bool fullAnswer) {
+    this.providedAnswerBool = fullAnswer;
+  }
+  AnswerTaskEvent.initZerlegung(List<int> answerParts) {
+    this.answerParts = answerParts;
+  }
+  AnswerTaskEvent.initClockTask(bool providedAnswerBool) {
+    this.providedAnswerBool = providedAnswerBool;
+    this.providedAnswer = providedAnswer;
   }
 }
