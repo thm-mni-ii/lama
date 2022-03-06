@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 135.46666 135.46666"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="geographie_icon.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     inkscape:snap-global="false"
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497476"
+     inkscape:cx="-8.969348"
+     inkscape:cy="219.66369"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer2"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     units="px"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:snap-text-baseline="true"
+     inkscape:snap-others="false" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Background 1">
+    <g
+       id="g885"
+       transform="rotate(45,35.829005,83.946901)">
+      <path
+         style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;shape-margin:0;inline-size:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate;stop-color:#000000;stop-opacity:1;opacity:1"
+         d="M 44.519531 -10.091797 C 26.893161 -10.091796 12.527344 4.272067 12.527344 21.898438 C 12.527344 39.524808 26.893161 53.888671 44.519531 53.888672 C 61.907858 53.888672 76.058717 39.893155 76.439453 22.59375 A 3.5 3.5 0 0 0 76.509766 21.898438 A 3.5 3.5 0 0 0 76.439453 21.207031 C 76.060795 3.905804 61.909182 -10.091797 44.519531 -10.091797 z M 44.519531 -3.0917969 C 58.362821 -3.0917969 69.509766 8.0551474 69.509766 21.898438 C 69.509766 35.741728 58.362821 46.888672 44.519531 46.888672 C 30.676241 46.888671 19.527344 35.741727 19.527344 21.898438 C 19.527344 8.0551477 30.676241 -3.0917964 44.519531 -3.0917969 z "
+         id="path899" />
+      <path
+         id="rect870"
+         style="fill:none;stroke:#e6e6e6;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+         d="m 42.641899,52.286938 h 3.753446 c 1.898591,0 3.427059,1.970844 3.427059,4.418932 v 51.34072 c 0,2.44809 -1.528468,4.41893 -3.427059,4.41893 h -3.753446 c -1.898591,0 -3.427059,-1.97084 -3.427059,-4.41893 V 56.70587 c 0,-2.448088 1.528468,-4.418932 3.427059,-4.418932 z" />
+      <path
+         id="rect872"
+         style="fill:#e6e6e6;stroke:none;stroke-width:5.17058;stroke-linecap:round;stroke-linejoin:round"
+         d="M 34.577525,48.365009 H 54.45972 c 1.963373,0 3.543996,2.03809 3.543996,4.569708 v 0.04608 c 0,2.531618 -1.580623,4.569708 -3.543996,4.569708 H 34.577525 c -1.963374,0 -3.543996,-2.03809 -3.543996,-4.569708 v -0.04608 c 0,-2.531618 1.580622,-4.569708 3.543996,-4.569708 z" />
+    </g>
+    <g
+       aria-label="!"
+       id="text889"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:43.9214px;line-height:1.25;font-family:'Berlin Sans FB Demi';-inkscape-font-specification:'Berlin Sans FB Demi';fill:#ececec;fill-opacity:1;stroke:none;stroke-width:1.09804">
+      <path
+         d="m 89.891847,36.871318 q 0,3.903171 -0.707718,7.334531 -0.857839,3.517143 -1.694233,7.01284 -0.193014,0.793502 -1.71568,0.793502 -1.737125,0 -1.930139,-0.686272 -2.015924,-6.884164 -2.015924,-7.827788 0,-0.879286 0.08578,-2.616412 0.08578,-1.737125 0.08578,-2.616411 0,-0.96507 -0.06434,-2.895209 -0.06434,-1.93014 -0.06434,-2.89521 0,-0.793502 0.386028,-0.793502 0.600488,0 1.801464,0.08578 1.200975,0.08578 1.801463,0.08578 0.600488,0 1.801464,-0.08578 1.200975,-0.08578 1.801463,-0.08578 0.42892,0 0.42892,5.189931 z m 0,21.252982 q 0,1.801463 -1.115192,3.002439 -1.115191,1.17953 -2.916655,1.17953 -1.822909,0 -2.938101,-1.17953 -1.093746,-1.17953 -1.093746,-3.002439 0,-1.801464 1.115192,-2.959548 1.115192,-1.158084 2.916655,-1.158084 1.780018,0 2.895209,1.158084 1.136638,1.158084 1.136638,2.959548 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Berlin Sans FB Demi';-inkscape-font-specification:'Berlin Sans FB Demi';fill:#ececec;stroke-width:1.09804"
+         id="path891" />
+    </g>
+  </g>
+</svg>
