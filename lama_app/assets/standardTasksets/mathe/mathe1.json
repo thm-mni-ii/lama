@@ -2,6 +2,7 @@
     "taskset_name": "Standardaufgaben Klasse 1",
     "taskset_subject": "Mathe",
     "taskset_grade": 1,
+    "taskset_randomize_order": true,
     "tasks": [
         {
             "task_type": "Zerlegung",
@@ -34,12 +35,106 @@
             "optimum": false
         },
         {
-            "task_type": "Clock",
+            "task_type": "4Cards",
             "task_reward": 2,
-            "lama_text": "Wie viel Uhr ist es?",
+            "question": "3+4",
+            "lama_text": "Tippe die richtige Antwort an!",
             "left_to_solve": 3,
-            "uhr": "vollStunde",
-            "timer": false
+            "right_answer": "7",
+            "wrong_answers": [
+                "6",
+                "1",
+                "8"
+            ]
+        },
+        {
+            "task_type": "4Cards",
+            "task_reward": 2,
+            "question": "3+1",
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "right_answer": "4",
+            "wrong_answers": [
+                "2",
+                "5",
+                "3"
+            ]
+        },
+        {
+            "task_type": "Equation",
+            "task_reward": 2,
+            "lama_text": "Löse die Gleichung!",
+            "left_to_solve": 4,
+            "equation": [
+                "?",
+                "+",
+                "1",
+                "=",
+                "2"
+            ],
+            "options": [
+                "3",
+                "4",
+                "0",
+                "2",
+                "5",
+                "1"
+            ]
+        },
+        {
+            "task_type": "Equation",
+            "task_reward": 2,
+            "lama_text": "Löse die Gleichung!",
+            "left_to_solve": 4,
+            "equation": [
+                "?",
+                "+",
+                "2",
+                "+",
+                "?",
+                "=",
+                "4"
+            ],
+            "options": [
+                "3",
+                "4",
+                "0",
+                "2",
+                "5",
+                "1"
+            ]
+        },
+        {
+            "task_type": "Equation",
+            "task_reward": 2,
+            "lama_text": "Löse die Gleichung!",
+            "left_to_solve": 4,
+            "random_allowed_operators": [
+                "+"
+            ],
+            "operand_range": [
+                0,
+                10
+            ],
+            "fields_to_replace": 1,
+            "allow_replacing_operators": false,
+            "operator_amount": 1
+        },
+        {
+            "task_type": "Equation",
+            "task_reward": 2,
+            "lama_text": "Löse die Gleichung!",
+            "left_to_solve": 4,
+            "random_allowed_operators": [
+                "+"
+            ],
+            "operand_range": [
+                0,
+                10
+            ],
+            "fields_to_replace": 1,
+            "allow_replacing_operators": false,
+            "operator_amount": 2
         }
     ]
 }

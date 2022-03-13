@@ -4,6 +4,44 @@
     "taskset_grade": 5,
     "tasks": [
         {
+            "task_type": "Zerlegung",
+            "task_reward": 2,
+            "lama_text": " zerlegt die Zahlen!",
+            "left_to_solve": 3,
+            "reverse": true,
+            "zeros": true,
+            "boolThousands": true 
+        },
+        {
+            "task_type": "NumberLine",
+            "task_reward": 2,
+            "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
+            "left_to_solve": 3,
+            "range": [ 
+                 0,
+                 100
+              ],
+            "randomRange": true,
+            "steps": 5,
+            "ontap": false
+          },
+        {
+            "task_type": "MoneyTask",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "difficulty": 1,
+            "optimum": true
+        },
+        {
+            "task_type": "Clock",
+            "task_reward": 2,
+            "lama_text": "Wie viel Uhr ist es?",
+            "left_to_solve": 3,
+            "uhr": "viertelStunde",
+            "timer": false
+        },
+        {
             "task_type": "4Cards",
             "task_reward": 2,
             "question": "Was ist das Ergebnis der Multiplikation?",

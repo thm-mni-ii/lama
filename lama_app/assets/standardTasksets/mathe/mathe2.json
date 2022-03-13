@@ -2,33 +2,23 @@
     "taskset_name": "Standardaufgaben Klasse 2",
     "taskset_subject": "Mathe",
     "taskset_grade": 2,
-    "taskset_choose_amount": 2,
+    "taskset_randomize_order": true,
     "tasks": [
         {
-            "task_type": "4Cards",
+            "task_type": "Clock",
             "task_reward": 2,
-            "question": "Welches Zeichen steht für die Addition ?",
-            "lama_text": "Tippe die richtige Antwort an!",
+            "lama_text": "Wie viel Uhr ist es?",
             "left_to_solve": 3,
-            "right_answer": "+",
-            "wrong_answers": [
-                "-",
-                "x",
-                "%"
-            ]
+            "uhr": "vollStunde",
+            "timer": false
         },
         {
-            "task_type": "4Cards",
+            "task_type": "MoneyTask",
             "task_reward": 2,
-            "question": "Welches Zeichen steht für die Subtraktion ?",
-            "lama_text": "Tippe die richtige Antwort an!",
+            "lama_text": "",
             "left_to_solve": 3,
-            "right_answer": "-",
-            "wrong_answers": [
-                "+",
-                "x",
-                "%"
-            ]
+            "difficulty": 1,
+            "optimum": false
         },
         {
             "task_type": "4Cards",
@@ -44,18 +34,18 @@
             ]
         },
         {
-            "task_type": "4Cards",
+            "task_type": "NumberLine",
             "task_reward": 2,
-            "question": "7-3",
-            "lama_text": "Tippe die richtige Antwort an!",
+            "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
-            "right_answer": "4",
-            "wrong_answers": [
-                "10",
-                "5",
-                "3"
-            ]
-        },
+            "range": [ 
+                 0,
+                 20
+              ],
+            "randomRange": false,
+            "steps": 1,
+            "ontap": true
+          },
         {
             "task_type": "Equation",
             "task_reward": 2,
@@ -115,6 +105,15 @@
             "fields_to_replace": 1,
             "allow_replacing_operators": false,
             "operator_amount": 1
+        },
+        {
+            "task_type": "Zerlegung",
+            "task_reward": 2,
+            "lama_text": " zerlegt die Zahlen!",
+            "left_to_solve": 3,
+            "reverse": false,
+            "zeros": true,
+            "boolThousands": false 
         }
     ]
 }
