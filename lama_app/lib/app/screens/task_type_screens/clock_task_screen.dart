@@ -256,7 +256,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
           return this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
         }
       }
-    } return ((this.wrgStunde2 - this.randStunde) + 12).toString() + ":" + this.wrgMinute.toString();
+    } return 
+       ((this.wrgStunde2 - this.randStunde) + 12).toString() + ":" + this.wrgStunde.toString();
   }
 
   @override
