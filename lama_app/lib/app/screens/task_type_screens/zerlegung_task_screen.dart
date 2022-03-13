@@ -418,7 +418,7 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
                     answer = false;
                   }
                 }
-              } else{if (task.boolThousands) {
+              } else if (task.boolThousands) {
                 if(_answerParts[0] == thousands){
                   if (_answerParts[1] == hundreds){
                     if(_answerParts[2] == tens){
@@ -443,10 +443,9 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
                     answer = false;
                   }
               }
-            }
               
-              BlocProvider.of<TaskBloc>(context)
-                  .add(AnswerTaskEvent.initZerlegung(answer));
+            
+              BlocProvider.of<TaskBloc>(context).add(AnswerTaskEvent.initZerlegung(answer));
             },
           ),
         ),

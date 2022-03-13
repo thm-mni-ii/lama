@@ -110,6 +110,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
     });
   }
 
+  
   String wrgAnswer() {
     if (this.wrgStunde != this.randStunde ||
         this.wrgMinute != this.randMinute) {
@@ -179,8 +180,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
           return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
         }
       }
-    }
-    return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
+    } return "0" + ((this.wrgStunde - this.randStunde) + 1).toString() + ":" + this.wrgMinute2.toString();
   }
 
   String wrgAnswer2() {
@@ -256,8 +256,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
           return this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
         }
       }
-    }
-    return this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
+    } return ((this.wrgStunde2 - this.randStunde) + 12).toString() + ":" + this.wrgMinute.toString();
   }
 
   @override
