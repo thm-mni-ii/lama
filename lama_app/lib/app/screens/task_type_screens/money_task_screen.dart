@@ -152,7 +152,6 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
         // create space between each child
         child: Stack(
           children: [
-            Text(sum.toString()),
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
