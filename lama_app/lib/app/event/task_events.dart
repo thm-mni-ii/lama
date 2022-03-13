@@ -70,8 +70,8 @@ class AnswerTaskEvent extends TaskEvent {
   AnswerTaskEvent.initBuchstabieren(bool fullAnswer) {
     this.providedAnswerBool = fullAnswer;
   }
-  AnswerTaskEvent.initZerlegung(List<int> answerParts) {
-    this.answerParts = answerParts;
+  AnswerTaskEvent.initZerlegung(bool providedAnswerBool) {
+    this.providedAnswerBool = providedAnswerBool;
   }
   AnswerTaskEvent.initClockTask(bool providedAnswerBool) {
     this.providedAnswerBool = providedAnswerBool;

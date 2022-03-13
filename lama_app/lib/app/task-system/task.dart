@@ -33,6 +33,16 @@ class Task {
             json['question'],
             json['right_answer'],
             List<String>.from(json['wrong_answers']));
+      case "Zerlegung":
+        return TaskZerlegung(
+          taskType,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          json['reverse'],
+          json['zeros'],
+          json['boolThousands']
+        );
       case "Clock":
         return ClockTest(
             taskType,
@@ -54,6 +64,17 @@ class Task {
             json['left_to_solve'],
             json['sentence'],
             List<String>.from(json['right_words']));
+      case "NumberLine":
+        return TaskNumberLine(
+          taskType,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          List<int>.from(json['range']),
+          json["randomRange"],
+          json['steps'],
+          json['ontap'],
+        );
       case "MatchCategory":
         return TaskMatchCategory(
             taskType,
@@ -412,6 +433,36 @@ class TaskEquation extends Task {
     if (operandRange != null)
       for (int i = 0; i < operandRange.length; i++)
         s += operandRange[i].toString();
+    return s;
+  }
+}
+class TaskZerlegung extends Task {
+  bool zeros;
+  bool boolThousands;
+  bool reverse;
+
+  TaskZerlegung(String taskType, int reward, String lamaText, int leftToSolve,
+      this.reverse, this.zeros, this.boolThousands)
+      : super(taskType, reward, lamaText, leftToSolve);
+
+  // do toString Method
+
+}
+///Subclass of [Task] for the Tasktype "NumberLine"
+///
+///Author: J.Decher
+class TaskNumberLine extends Task {
+  List<int> range;
+  bool randomrange;
+  int steps;
+  bool ontap;
+  TaskNumberLine(String taskType, int reward, String lamaText, int leftToSolve,
+      this.range, this.randomrange, this.steps, this.ontap)
+      : super(taskType, reward, lamaText, leftToSolve);
+
+  @override
+  String toString() {
+    String s = super.toString();
     return s;
   }
 }

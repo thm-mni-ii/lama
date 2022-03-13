@@ -75,10 +75,13 @@ class TasksetValidator {
             return "Aufgabentyp: 4Cards";
 
           case "Zerlegung":
-            if (json.containsKey("right_answer") &&
-                json["right_answer"] is int &&
-                json.containsKey("reverse") &&
-                json["reverse"] is bool) return null;
+            if (json.containsKey("reverse") &&
+                json["reverse"] is bool &&
+                json.containsKey('zeros') &&
+                json['zeros'] is bool &&
+                json.containsKey('boolThousands')&&
+                json['boolThousands'] is bool)
+                return null;
             return "Aufgabentyp: Zerlegung";
 
           ///ClozeTest
@@ -106,26 +109,6 @@ class TasksetValidator {
             if (json.containsKey("words") && json["words"] is List) return null;
             return "Aufgabentyp: Buchstabieren";
 
-          case "2Cards":
-            if (json.containsKey("question") &&
-                json["question"] is String &&
-                json.containsKey("right_answer") &&
-                json["right_answer"] is String &&
-                json.containsKey("wrong_answers") &&
-                json["wrong_answers"] is List &&
-                _checkListType<String>(json["wrong_answers"])) return null;
-            return "Aufgabentyp: 2Cards";
-
-          ///BildCard
-          case "BildCard":
-            if (json.containsKey("question") &&
-                json["question"] is String &&
-                json.containsKey("right_answer") &&
-                json["right_answer"] is String &&
-                json.containsKey("wrong_answers") &&
-                json["wrong_answers"] is List &&
-                _checkListType<String>(json["wrong_answers"])) return null;
-            return "Aufgabentyp: BildCard";
 
           case "Clock":
             if (json.containsKey("uhr") &&

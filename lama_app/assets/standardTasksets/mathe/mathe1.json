@@ -4,6 +4,24 @@
     "taskset_grade": 1,
     "tasks": [
         {
+            "task_type": "Zerlegung",
+            "task_reward": 2,
+            "lama_text": " zerlegt die Zahlen!",
+            "left_to_solve": 3,
+            "reverse": false,
+            "zeros": false,
+            "boolThousands": false 
+        },
+        {
+            "task_type": "Zerlegung",
+            "task_reward": 2,
+            "lama_text": " zerlegt die Zahlen!",
+            "left_to_solve": 3,
+            "reverse": false,
+            "zeros": false,
+            "boolThousands": false 
+        },
+        {
             "task_type": "MoneyTask",
             "task_reward": 2,
             "lama_text": "",
