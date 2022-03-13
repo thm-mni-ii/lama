@@ -13,38 +13,18 @@
             "boolThousands": false 
         },
         {
-            "task_type": "Zerlegung",
+            "task_type": "NumberLine",
             "task_reward": 2,
-            "lama_text": " zerlegt die Zahlen!",
+            "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
-            "reverse": false,
-            "zeros": false,
-            "boolThousands": false 
-        },
-        {
-            "task_type": "MoneyTask",
-            "task_reward": 2,
-            "lama_text": "",
-            "left_to_solve": 3,
-            "difficulty": 1,
-            "optimum": true
-        },
-        {
-            "task_type": "MoneyTask",
-            "task_reward": 2,
-            "lama_text": "",
-            "left_to_solve": 3,
-            "difficulty": 1,
-            "optimum": true
-        },
-        {
-            "task_type": "MoneyTask",
-            "task_reward": 2,
-            "lama_text": "",
-            "left_to_solve": 3,
-            "difficulty": 1,
-            "optimum": false
-        },
+            "range": [ 
+                 0,
+                 10
+              ],
+            "randomRange": false,
+            "steps": 1,
+            "ontap": true
+          },
         {
             "task_type": "MoneyTask",
             "task_reward": 2,
@@ -58,7 +38,7 @@
             "task_reward": 2,
             "lama_text": "Wie viel Uhr ist es?",
             "left_to_solve": 3,
-            "uhr": "allStunden",
+            "uhr": "vollStunde",
             "timer": false
         }
     ]
