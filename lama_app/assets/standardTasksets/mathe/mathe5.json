@@ -2,6 +2,7 @@
     "taskset_name": "Standardaufgaben Klasse 5",
     "taskset_subject": "Mathe",
     "taskset_grade": 5,
+    "taskset_randomize_order": true,
     "tasks": [
         {
             "task_type": "Zerlegung",
