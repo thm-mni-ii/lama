@@ -37,6 +37,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
   String sonneMond;
   var randStunde;
   var randMinute;
+  var halbeMinute;
   var rnd = Random();
   var wrgStunde;
   var wrgMinute;
@@ -46,6 +47,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
   var wrgMinute3;
   var wrgStunde4;
   var wrgMinute4;
+  var wrgMinute5;
+  var wrgMinute6;
   var vierMinute;
   var allMinuten;
   List<String> wrongAnswer;
@@ -69,28 +72,27 @@ class ClockTaskState extends State<ClockTaskScreen> {
   ClockTaskState(this.task, this.constraints) {
     this.allMinuten = rnd.nextInt(60);
     this.wrgStunde2 = rnd.nextInt(24);
-    this.wrgMinute2 = rnd.nextInt(60);
+    this.wrgMinute2 = rnd.nextInt(2) * 30;
     this.wrgStunde = rnd.nextInt(24);
-    this.wrgMinute = rnd.nextInt(60);
+    this.wrgMinute = 0;
     this.wrgStunde3 = rnd.nextInt(24);
-    this.wrgMinute3 = rnd.nextInt(60);
+    this.wrgMinute3 = rnd.nextInt(4) * 15;
     this.wrgStunde4 = rnd.nextInt(24);
-    this.wrgMinute4 = rnd.nextInt(60);
+    this.wrgMinute4 = 0;
+    this.wrgMinute5 = rnd.nextInt(2) * 30;
+    this.wrgMinute6 = rnd.nextInt(4) * 15;
     this.randStunde = rnd.nextInt(24);
-    this.randMinute = rnd.nextInt(2) * 30;
+    this.randMinute = 0;
+    this.halbeMinute = rnd.nextInt(2) * 30;
     this.vierMinute = rnd.nextInt(4) * 15;
 
     bloc = ClockPainter(task, constraints, this.randStunde, this.randMinute,
-        this.vierMinute, this.allMinuten, this.wrgStunde, this.wrgMinute);
+        this.vierMinute, this.allMinuten, this.halbeMinute);
     task.rightAnswer = bloc.strAnswer();
     answers.add(task.rightAnswer); //get the right answer
     answers.add(wrgAnswer());
     answers.add(wrgAnswer2()); // add the wrong answers
     answers.shuffle();
-    print(this.wrgMinute);
-    print(this.wrgMinute2);
-    print(this.wrgMinute3);
-    print(this.wrgMinute4);
     print(answers);
   }
 
@@ -122,28 +124,32 @@ class ClockTaskState extends State<ClockTaskScreen> {
     });
   }
 
+
   String wrgAnswer() {
-    if (this.wrgStunde != this.randStunde ||
-        this.wrgMinute != this.randMinute) {
+    while (this.wrgStunde == this.randStunde && (this.wrgMinute == this.randMinute || this.wrgMinute2 == this.halbeMinute || this.wrgMinute3 == this.vierMinute)){
+      this.wrgStunde = rnd.nextInt(24);
+      this.wrgMinute2 = rnd.nextInt(2) * 30;
+      this.wrgMinute3 = rnd.nextInt(4) * 15;
+    }
       if (task.uhr == "halbeStunde") {
-           if (this.wrgMinute == 0){
+           if (this.wrgMinute2 == 0){
              if(this.wrgStunde < 10){
                return "0" + this.wrgStunde.toString() + ":" + "00";
              } else {
                return this.wrgStunde.toString() + ":" + "00";
              }
             } else{
-              if (this.wrgMinute < 10){
+              if (this.wrgMinute2 < 10){
                 if(this.wrgStunde < 10){
-                  return "0" + this.wrgStunde.toString() + ":" + "0" + this.wrgMinute.toString();
+                  return "0" + this.wrgStunde.toString() + ":" + "0" + this.wrgMinute2.toString();
                 } else{
-                  return this.wrgStunde.toString() + ":" + "0" + this.wrgMinute.toString();
+                  return this.wrgStunde.toString() + ":" + "0" + this.wrgMinute2.toString();
                 }
               } else {
                 if(this.wrgStunde < 10){
-                  return "0" + this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
+                  return "0" + this.wrgStunde.toString() + ":" + this.wrgMinute2.toString();
                 } else {
-                  return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
+                  return this.wrgStunde.toString() + ":" + this.wrgMinute2.toString();
                 }
               }
             }
@@ -151,315 +157,90 @@ class ClockTaskState extends State<ClockTaskScreen> {
         if (this.wrgStunde < 10) {
           return "0" + this.wrgStunde.toString() + ":" + "00";
         } else {
-          return this.wrgStunde.toString() + ":" + "00";
+          return this.wrgStunde.toString() + ":" + "0" + this.wrgMinute.toString();
         }
       } else if (task.uhr == "viertelStunde") {
-          if (this.wrgMinute == 0){
+          if (this.wrgMinute3 == 0){
              if(this.wrgStunde < 10){
                return "0" + this.wrgStunde.toString() + ":" + "00";
              } else {
                return this.wrgStunde.toString() + ":" + "00";
              }
             } else{
-              if (this.wrgMinute < 10){
+              if (this.wrgMinute3 < 10){
                 if(this.wrgStunde < 10){
-                  return "0" + this.wrgStunde.toString() + ":" + "0" + this.wrgMinute.toString();
+                  return "0" + this.wrgStunde.toString() + ":" + "0" + this.wrgMinute3.toString();
                 } else{
-                  return this.wrgStunde.toString() + ":" + "0" + this.wrgMinute.toString();
+                  return this.wrgStunde.toString() + ":" + "0" + this.wrgMinute3.toString();
                 }
               } else {
                 if(this.wrgStunde < 10){
-                  return "0" + this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
+                  return "0" + this.wrgStunde.toString() + ":" + this.wrgMinute3.toString();
                 } else {
-                  return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
+                  return this.wrgStunde.toString() + ":" + this.wrgMinute3.toString();
                 }
               }
             }
-        } else if (task.uhr == "allStunden") {
-        if (this.wrgMinute < 10) {
-          if (this.wrgStunde < 10) {
-            return "0" +
-                this.wrgStunde.toString() +
-                ":" +
-                "0" +
-                this.wrgMinute.toString();
-          } else {
-            return this.wrgStunde.toString() +
-                ":" +
-                "0" +
-                this.wrgMinute.toString();
-          }
-        } else if (this.allMinuten >= 10) {
-          if (this.wrgStunde < 10) {
-            return "0" +
-                this.wrgStunde.toString() +
-                ":" +
-                this.wrgMinute.toString();
-          } else {
-            return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
-          }
-        } else {
-          return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
-        }
-      }
-    } else {
-      if (this.wrgStunde2 != this.randStunde ||
-          this.wrgMinute2 != this.randMinute) {
-        if (task.uhr == "halbeStunde") {
-           if (this.wrgMinute2 == 0){
-             if(this.wrgStunde2 < 10){
-               return "0" + this.wrgStunde2.toString() + ":" + "00";
-             } else {
-               return this.wrgStunde2.toString() + ":" + "00";
-             }
-            } else{
-              if (this.wrgMinute2 < 10){
-                if(this.wrgStunde2 < 10){
-                  return "0" + this.wrgStunde2.toString() + ":" + "0" + this.wrgMinute2.toString();
-                } else{
-                  return this.wrgStunde2.toString() + ":" + "0" + this.wrgMinute2.toString();
-                }
-              } else {
-                if(this.wrgStunde2 < 10){
-                  return "0" + this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
-                } else {
-                  return this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
-                }
-              }
-            }
-        }else if (task.uhr == "vollStunde") {
-          if (this.wrgStunde2 < 10) {
-            return "0" + this.wrgStunde2.toString() + ":" + "00";
-          } else {
-            return this.wrgStunde2.toString() + ":" + "00";
-          }
-        } else if (task.uhr == "viertelStunde") {
-          if (this.wrgMinute2 == 0){
-             if(this.wrgStunde2 < 10){
-               return "0" + this.wrgStunde2.toString() + ":" + "00";
-             } else {
-               return this.wrgStunde2.toString() + ":" + "00";
-             }
-            } else{
-              if (this.wrgMinute2 < 10){
-                if(this.wrgStunde2 < 10){
-                  return "0" + this.wrgStunde2.toString() + ":" + "0" + this.wrgMinute2.toString();
-                } else{
-                  return this.wrgStunde2.toString() + ":" + "0" + this.wrgMinute2.toString();
-                }
-              } else {
-                if(this.wrgStunde2 < 10){
-                  return "0" + this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
-                } else {
-                  return this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
-                }
-              }
-            }
-        } else if (task.uhr == "allStunden") {
-          if (this.wrgMinute2 < 10) {
-            if (this.wrgStunde2 < 10) {
-              return "0" +
-                  this.wrgStunde2.toString() +
-                  ":" +
-                  "0" +
-                  this.wrgMinute2.toString();
-            } else {
-              return this.wrgStunde.toString() +
-                  ":" +
-                  "0" +
-                  this.wrgMinute.toString();
-            }
-          } else if (this.wrgMinute2 >= 10) {
-            if (this.wrgStunde2 < 10) {
-              return "0" +
-                  this.wrgStunde2.toString() +
-                  ":" +
-                  this.wrgMinute2.toString();
-            } else {
-              return this.wrgStunde2.toString() +
-                  ":" +
-                  this.wrgMinute2.toString();
-            }
-          } else {
-            return this.wrgStunde2.toString() +
-                ":" +
-                this.wrgMinute2.toString();
-          }
-        }
-      }
-    }
-    return wrgAnswer();
+        } return wrgAnswer();
   }
 
   String wrgAnswer2() {
-    if (this.wrgStunde3 != this.randStunde ||
-        this.wrgMinute3 != this.randMinute) {
+    while (this.wrgStunde3 == this.randStunde && (this.wrgMinute4 == this.randMinute || this.wrgMinute5 == this.halbeMinute || this.wrgMinute6 == this.vierMinute)){
+      this.wrgStunde3 = rnd.nextInt(24);
+      this.wrgMinute5 = rnd.nextInt(2) * 30;
+      this.wrgMinute6 = rnd.nextInt(4) * 15;
+    }
       if (task.uhr == "halbeStunde") {
-           if (this.wrgMinute3 == 0){
+           if (this.wrgMinute5 == 0){
              if(this.wrgStunde3 < 10){
                return "0" + this.wrgStunde3.toString() + ":" + "00";
              } else {
                return this.wrgStunde3.toString() + ":" + "00";
              }
             } else{
-              if (this.wrgMinute3 < 10){
+              if (this.wrgMinute5 < 10){
                 if(this.wrgStunde3 < 10){
-                  return "0" + this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute3.toString();
+                  return "0" + this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute5.toString();
                 } else{
-                  return this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute3.toString();
+                  return this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute5.toString();
                 }
               } else {
                 if(this.wrgStunde3 < 10){
-                  return "0" + this.wrgStunde3.toString() + ":" + "30";
+                  return "0" + this.wrgStunde3.toString() + ":" + this.wrgMinute5.toString();
                 } else {
-                  return this.wrgStunde3.toString() + ":" + "30";
+                  return this.wrgStunde3.toString() + ":" + this.wrgMinute5.toString();
                 }
               }
             }
         } else if (task.uhr == "vollStunde") {
         if (this.wrgStunde3 < 10) {
-          return "0" + this.wrgStunde3.toString() + ":" + "00";
+          return "0" + this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute4.toString();
         } else {
-          return this.wrgStunde3.toString() + ":" + "00";
+          return this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute4.toString();
         }
       } else if (task.uhr == "viertelStunde") {
-          if (this.wrgMinute3 == 0){
+          if (this.wrgMinute6 == 0){
              if(this.wrgStunde3 < 10){
                return "0" + this.wrgStunde3.toString() + ":" + "00";
              } else {
                return this.wrgStunde3.toString() + ":" + "00";
              }
             } else{
-              if (this.wrgMinute3 < 10){
+              if (this.wrgMinute6 < 10){
                 if(this.wrgStunde3 < 10){
-                  return "0" + this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute3.toString();
+                  return "0" + this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute6.toString();
                 } else{
-                  return this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute3.toString();
+                  return this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute6.toString();
                 }
               } else {
                 if(this.wrgStunde3 < 10){
-                  return "0" + this.wrgStunde3.toString() + ":" + "45";
+                  return "0" + this.wrgStunde3.toString() + ":" + this.wrgMinute6.toString();
                 } else {
-                  return this.wrgStunde3.toString() + ":" + "45";
+                  return this.wrgStunde3.toString() + ":" + this.wrgMinute6.toString();
                 }
               }
             }
-        } else if (task.uhr == "allStunden") {
-        if (this.wrgMinute3 < 10) {
-          if (this.wrgStunde3 < 10) {
-            return "0" +
-                this.wrgStunde3.toString() +
-                ":" +
-                "0" +
-                this.wrgMinute3.toString();
-          } else {
-            return this.wrgStunde3.toString() +
-                ":" +
-                "0" +
-                this.wrgMinute3.toString();
-          }
-        } else if (this.wrgMinute3 >= 10) {
-          if (this.wrgStunde3 < 10) {
-            return "0" +
-                this.wrgStunde3.toString() +
-                ":" +
-                this.wrgMinute3.toString();
-          } else {
-            return this.wrgStunde3.toString() +
-                ":" +
-                this.wrgMinute3.toString();
-          }
-        } else {
-          return this.wrgStunde3.toString() + ":" + this.wrgMinute3.toString();
-        }
-      }
-    } else {
-      if (this.wrgStunde4 != this.randStunde ||
-          this.wrgMinute4 != this.randMinute) {
-        if (task.uhr == "halbeStunde") {
-           if (this.wrgMinute4 == 0){
-             if(this.wrgStunde4 < 10){
-               return "0" + this.wrgStunde4.toString() + ":" + "00";
-             } else {
-               return this.wrgStunde4.toString() + ":" + "00";
-             }
-            } else{
-              if (this.wrgMinute4 < 10){
-                if(this.wrgStunde4 < 10){
-                  return "0" + this.wrgStunde4.toString() + ":" + "0" + this.wrgMinute4.toString();
-                } else{
-                  return this.wrgStunde4.toString() + ":" + "0" + this.wrgMinute4.toString();
-                }
-              } else {
-                if(this.wrgStunde4 < 10){
-                  return "0" + this.wrgStunde4.toString() + ":" + "30";
-                } else {
-                  return this.wrgStunde4.toString() + ":" + "30";
-                }
-              }
-            }
-        } else if (task.uhr == "vollStunde") {
-          if (this.wrgStunde4 < 10) {
-            return "0" + this.wrgStunde4.toString() + ":" + "00";
-          } else {
-            return this.wrgStunde4.toString() + ":" + "00";
-          }
-        } else if (task.uhr == "viertelStunde") {
-          if (this.wrgMinute4 == 0){
-             if(this.wrgStunde4 < 10){
-               return "0" + this.wrgStunde4.toString() + ":" + "00";
-             } else {
-               return this.wrgStunde4.toString() + ":" + "00";
-             }
-            } else{
-              if (this.wrgMinute4 < 10){
-                if(this.wrgStunde4 < 10){
-                  return "0" + this.wrgStunde4.toString() + ":" + "0" + this.wrgMinute4.toString();
-                } else{
-                  return this.wrgStunde4.toString() + ":" + "0" + this.wrgMinute4.toString();
-                }
-              } else {
-                if(this.wrgStunde4 < 10){
-                  return "0" + this.wrgStunde4.toString() + ":" + "15";
-                } else {
-                  return this.wrgStunde4.toString() + ":" + "15";
-                }
-              }
-            }
-        } else if (task.uhr == "allStunden") {
-          if (this.wrgMinute4 < 10) {
-            if (this.wrgStunde4 < 10) {
-              return "0" +
-                  this.wrgStunde4.toString() +
-                  ":" +
-                  "0" +
-                  this.wrgMinute4.toString();
-            } else {
-              return this.wrgStunde4.toString() +
-                  ":" +
-                  "0" +
-                  this.wrgMinute4.toString();
-            }
-          } else if (this.wrgMinute4 >= 10) {
-            if (this.wrgStunde4 < 10) {
-              return "0" +
-                  this.wrgStunde4.toString() +
-                  ":" +
-                  this.wrgMinute4.toString();
-            } else {
-              return this.wrgStunde4.toString() +
-                  ":" +
-                  this.wrgMinute4.toString();
-            }
-          } else {
-            return this.wrgStunde4.toString() +
-                ":" +
-                this.wrgMinute4.toString();
-          }
-        }
-      }
-    }
-    return wrgAnswer2();
+        } return wrgAnswer2();
   }
 
   @override
@@ -528,8 +309,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           randMinute,
                           vierMinute,
                           allMinuten,
-                          wrgStunde,
-                          wrgMinute)),
+                          halbeMinute)),
                 )),
           ),
           Container(
@@ -714,8 +494,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                         randMinute,
                         vierMinute,
                         allMinuten,
-                        wrgStunde,
-                        wrgMinute)),
+                        halbeMinute)),
               )),
         ),
         Container(
@@ -830,22 +609,20 @@ class ClockTaskState extends State<ClockTaskScreen> {
 class ClockPainter extends CustomPainter {
   final ClockTest task;
   var allMinuten;
-  var wrgStunde;
-  var wrgMinute;
   var rnd = Random();
   var randStunde;
   var randMinute;
   var vierMinute;
+  var halbeMinute;
   final BoxConstraints constraints;
 
   ClockPainter(this.task, this.constraints, randStunde, randMinute, vierMinute,
-      allMinuten, wrgStunde, wrgMinute) {
+      allMinuten, halbeMinute) {
     this.randStunde = randStunde;
     this.randMinute = randMinute;
     this.vierMinute = vierMinute;
     this.allMinuten = allMinuten;
-    this.wrgStunde = wrgStunde;
-    this.wrgMinute = wrgMinute;
+    this.halbeMinute = halbeMinute;
   }
 
   @override
@@ -856,33 +633,33 @@ class ClockPainter extends CustomPainter {
 
   String strAnswer() {
     if (task.uhr == "halbeStunde") {
-      if (this.randMinute == 0) {
+      if (this.halbeMinute == 0) {
         if (this.randStunde < 10) {
-          return "0" + this.randStunde.toString() + ":" + "00";
+          return "0" + this.randStunde.toString() + ":" + "0" + this.halbeMinute.toString();
         } else {
-          return this.randStunde.toString() + ":" + "00";
+          return this.randStunde.toString() + ":" + "0" + this.halbeMinute.toString();
         }
       } else {
         if (this.randStunde < 10) {
           return "0" +
-              this.randStunde.toString() +
-              ":" +
-              this.randMinute.toString();
+              this.randStunde.toString() + ":" + this.halbeMinute.toString();
+        } else{
+            return this.randStunde.toString() + ":" + this.halbeMinute.toString();
         }
-        return this.randStunde.toString() + ":" + this.randMinute.toString();
+        
       }
     } else if (task.uhr == "vollStunde") {
       if (this.randStunde < 10) {
-        return "0" + this.randStunde.toString() + ":" + "00";
+        return "0" + this.randStunde.toString() + ":" + "0" + this.randMinute.toString();
       } else {
-        return this.randStunde.toString() + ":" + "00";
+        return this.randStunde.toString() + ":" + "0" + this.randMinute.toString();
       }
     } else if (task.uhr == "viertelStunde") {
       if (this.vierMinute == 0) {
         if (this.randStunde < 10) {
-          return "0" + this.randStunde.toString() + ":" + "00";
+          return "0" + this.randStunde.toString() + ":" + "0" + this.vierMinute.toString();
         } else {
-          return this.randStunde.toString() + ":" + "00";
+          return this.randStunde.toString() + ":" + "0" + this.vierMinute.toString();
         }
       } else {
         if (this.randStunde < 10) {
@@ -920,8 +697,7 @@ class ClockPainter extends CustomPainter {
       } else {
         return this.randStunde.toString() + ":" + this.allMinuten.toString();
       }
-    }
-    return this.randStunde.toString() + ":" + this.randMinute.toString();
+    } return strAnswer();
   }
 
   @override
@@ -996,7 +772,7 @@ class ClockPainter extends CustomPainter {
       }
     } else if (task.uhr == "halbeStunde") {
       for (int i = 0; i < 24; i++) {
-        if (randMinute == 30) {
+        if (halbeMinute == 30) {
           if (i == randStunde) {
             var minClockX = X + 80 * cos(90 * pi / 180);
             var minClockY = Y + 80 * sin(90 * pi / 180);
@@ -1004,9 +780,9 @@ class ClockPainter extends CustomPainter {
             var hourClockY = Y + 60 * sin((i * 30 + 285) * pi / 180);
             canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
             canvas.drawLine(center, Offset(hourClockX, hourClockY), hourClock);
-            print(randStunde.toString() + ":" + randMinute.toString());
+            print(randStunde.toString() + ":" + halbeMinute.toString());
           }
-        } else if (randMinute == 0) {
+        } else if (halbeMinute == 0) {
           for (int i = 0; i < 24; i++) {
             if (i == randStunde) {
               var minClockX = X + 80 * cos(270 * pi / 180);
@@ -1016,7 +792,7 @@ class ClockPainter extends CustomPainter {
               canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
               canvas.drawLine(
                   center, Offset(hourClockX, hourClockY), hourClock);
-              print(randStunde.toString() + ":" + randMinute.toString());
+              print(randStunde.toString() + ":" + halbeMinute.toString());
             }
           }
         }
