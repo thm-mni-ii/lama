@@ -15,16 +15,16 @@
         },
         {
             "task_type": "NumberLine",
-            "task_reward": 2,
+            "task_reward": 1,
             "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
             "range": [ 
                  0,
-                 100
+                 10000
               ],
-            "randomRange": true,
-            "steps": 1,
-            "ontap": false
+            "randomRange": false,
+            "steps": 500,
+            "ontap": true
           },
         {
             "task_type": "MoneyTask",
