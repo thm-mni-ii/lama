@@ -181,7 +181,10 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 }
               }
             }
-        } return wrgAnswer();
+        } else if (task.uhr == "allStunden"){
+          return this.wrgStunde.toString() + this.wrgMinute3.toString();
+        } 
+        return wrgAnswer();
   }
 
   String wrgAnswer2() {
@@ -240,7 +243,10 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 }
               }
             }
-        } return wrgAnswer2();
+        } else if (task.uhr == "allStunden"){
+          return this.wrgStunde.toString() + this.wrgMinute3.toString();
+        }
+        return wrgAnswer2();
   }
 
   @override
@@ -302,14 +308,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
                   width: 270,
                   height: 270,
                   child: CustomPaint(
-                      painter: ClockPainter(
-                          task,
-                          constraints,
-                          randStunde,
-                          randMinute,
-                          vierMinute,
-                          allMinuten,
-                          halbeMinute)),
+                      painter: ClockPainter(task, constraints, randStunde,
+                          randMinute, vierMinute, allMinuten,halbeMinute)),
                 )),
           ),
           Container(
@@ -431,7 +431,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
           ),
         ],
       );
-    } else {
+    } else{
       return Column(children: [
         // Lama Speechbubble
         Container(
@@ -604,7 +604,9 @@ class ClockTaskState extends State<ClockTaskScreen> {
       ]);
     }
   }
-}
+    }
+      
+
 
 class ClockPainter extends CustomPainter {
   final ClockTest task;
