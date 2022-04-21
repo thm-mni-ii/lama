@@ -4,11 +4,11 @@
       "taskset_grade":1,
        "tasks": [
         {
-          "task_type":"GridSelect",
+          "task_type":"Buchstabieren",
            "task_reward":2,
            "left_to_solve": 3,
-           "lama_text":"Markiere X Farben!",
-           "wordsToFind":["rot", "blau", "gelb"]
+           "lama_text":"Test Text",
+           "woerter":["rot", "blau", "gelb"]
             },
            {
            "task_type":"4Cards",

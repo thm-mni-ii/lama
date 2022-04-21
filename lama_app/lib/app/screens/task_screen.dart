@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/gridselecttask_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/clock_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/connect_task_screen.dart';
@@ -313,6 +314,8 @@ class TaskScreenState extends State<TaskScreen> {
         return ConnectTaskScreen(task, constraints);
       case "Equation":
         return EquationTaskScreen(task, constraints);
+      case "Buchstabieren":
+        return BuchstabierenTaskScreen(task, constraints);
       default:
         return Container();
     }
