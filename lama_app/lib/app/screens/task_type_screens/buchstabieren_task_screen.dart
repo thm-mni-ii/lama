@@ -67,7 +67,8 @@ class BuchstabierenTaskScreen extends StatelessWidget {
           ],
         ),
       ),
-    ]);
+      Text('test'),
+    ]); 
     // create space between each childs
   }
 }
