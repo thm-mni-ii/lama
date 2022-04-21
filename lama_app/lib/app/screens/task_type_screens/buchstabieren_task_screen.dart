@@ -67,8 +67,14 @@ class BuchstabierenTaskScreen extends StatelessWidget {
           ],
         ),
       ),
-      Text('test'),
+
+      Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+        height: MediaQuery.of(context).size.height /5,
+         width: MediaQuery.of(context).size.width /2,
+        child: SvgPicture.asset('assets/images/svg/Objects/Auto.svg'),)
     ]); 
-    // create space between each childs
   }
 }
