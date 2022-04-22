@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +12,13 @@ import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
 
-/// This file creates the Cloze Test task Screen
-/// The Cloze Test Task provides a short sentence where some part of the
-/// Sentence is keyed out. You can choose from 3 different soloutions to fill in.
-/// After pressing on one of the possibilities the answer will be checked
-///
-/// Author: T.Rentsch
-/// latest Changes: 10.07.2021
-
-/// ClozeTestTaskScreen class creates the Cloze Test Task Screen
+final growableList = <int>[
+  -1,
+  -1,
+  -1,
+  -1,
+  -1
+]; //vorab hard gecodet, diese Liste soll dem Index der Buchstaben eines Wortes entsprechen
 
 class BuchstabierenTaskScreen extends StatefulWidget {
   final TaskBuchstabieren task;
@@ -39,8 +39,50 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
   bool answer;
-  // var random = Random();
-  //var rnd;
+
+//hier beginnt der erste State der Aufgabe "Buchstabieren"
+//zufalls Nummer wird generiert und das erste Wort wird aus eine json gezogen
+  void initState() {
+    super.initState();
+    erstelleEinmaligeRandomNummer();
+  }
+
+  Widget zeichneAntwortButton(buchstabe) {
+    return ElevatedButton(
+      onPressed: () {},
+      child: Text(buchstabe, style: TextStyle(fontSize: 15)),
+    );
+  }
+
+  String holeBuchstabe(i) {
+    var losungsWort =
+        "Auto"; //task.woerter[randomIntNum]; als beispiel verwenden wir erstmal nur das Wort "Auto", zum randomisieren wird "task.woerter[randomIntNum];" an dieser Stelle implementiert
+    String test1 = losungsWort[i];
+    return test1;
+  }
+
+  void erstelleEinmaligeRandomNummer() {
+    setState(() {
+      //hier kann eine for schleife für die länge des Wortes ein array mit aufsteigenden Zahlen erstellen, beginnend mit der 0
+      growableList[0] = -1;
+      growableList[1] = -1;
+      growableList[2] = -1;
+      growableList[3] = -1;
+      growableList[4] = -1;
+      var rng = Random();
+
+      for (int y = 0; y < 4;) {
+        var randomIntNum = rng.nextInt(4);
+        if (!growableList.contains(randomIntNum)) {
+          growableList[y] = randomIntNum;
+          y++;
+        }
+      }
+      for (int y = 0; y < 4; y++) {
+        debugPrint(growableList[y].toString() + 'hier steht die random number');
+      }
+    });
+  }
 
   BuchstabierenTaskState(this.task, this.constraints);
 
@@ -64,7 +106,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                   nip: BubbleNip.leftCenter,
                   child: Center(
                     child: Text(
-                      task.woerter[0],
+                      "$i " + task.woerter[0],
                       style: LamaTextTheme.getStyle(
                           color: LamaColors.greenAccent, fontSize: 15),
                     ),
@@ -95,35 +137,56 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
       Container(
         margin: EdgeInsets.all(10),
         height: 50.0,
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text("A", style: TextStyle(fontSize: 15)),
-        ),
+        child: (false ==
+                false) //TODO: hier wid geschaut, ob es noch buchstaben zu vergeben gibt
+            ? zeichneAntwortButton(holeBuchstabe(growableList[
+                0])) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+            : ElevatedButton(
+                onPressed:
+                    () {}, //wenn in richtiger Reihenfolge gedrückt, dann soll der Buchstabe
+                child: Text("Buchstabe konnte nicht geholt werden",
+                    style: TextStyle(fontSize: 15)),
+              ),
       ),
       Container(
         margin: EdgeInsets.all(10),
         height: 50.0,
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text("UUU", style: TextStyle(fontSize: 15)),
-        ),
+        child: (false ==
+                false) //TODO: hier wid geschaut, ob es noch buchstaben zu vergeben gibt
+            ? zeichneAntwortButton(holeBuchstabe(growableList[
+                1])) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+            : ElevatedButton(
+                onPressed: () {},
+                child: Text("Buchstabe konnte nicht geholt werden",
+                    style: TextStyle(fontSize: 15)),
+              ),
       ),
       Container(
         margin: EdgeInsets.all(10),
         height: 50.0,
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text("T", style: TextStyle(fontSize: 15)),
-        ),
+        child: (false ==
+                false) //TODO: hier wid geschaut, ob es noch buchstaben zu vergeben gibt
+            ? zeichneAntwortButton(holeBuchstabe(growableList[
+                2])) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+            : ElevatedButton(
+                onPressed: () {},
+                child: Text("Buchstabe konnte nicht geholt werden",
+                    style: TextStyle(fontSize: 15)),
+              ),
       ),
       Container(
         margin: EdgeInsets.all(10),
         height: 50.0,
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text("O", style: TextStyle(fontSize: 15)),
-        ),
-      )
+        child: (false ==
+                false) //TODO: hier wid geschaut, ob es noch buchstaben zu vergeben gibt
+            ? zeichneAntwortButton(holeBuchstabe(growableList[
+                3])) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+            : ElevatedButton(
+                onPressed: () {},
+                child: Text("Buchstabe konnte nicht geholt werden",
+                    style: TextStyle(fontSize: 15)),
+              ),
+      ),
     ]);
   }
 }
