@@ -8,7 +8,7 @@
            "task_reward":2,
            "left_to_solve": 3,
            "lama_text":"Test Text",
-           "woerter":["rot", "blau", "gelb"]
+           "woerter":["rot", "blau", "Gurke", "Wand", "Auto", "Saxophon"]
             },
            {
            "task_type":"4Cards",
