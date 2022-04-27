@@ -12,7 +12,7 @@ import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
 
-final growableList2 = <int>[];
+final growableList2 = <String>['', '', '', '', '', '', '', ''];
 final growableList = <int>[
   -1,
   -1,
@@ -64,6 +64,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
 //hier beginnt der erste State der Aufgabe "Buchstabieren"
 //zufalls Nummer wird generiert und das erste Wort wird aus eine json gezogen
+//außerdem werden einige Variablen wieder auf ihren ursprünglichen Zustand gestellt-> wichtig für neue Aufgaben
   void initState() {
     super.initState();
     stringIndex = 0;
@@ -93,6 +94,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           ergebnisBuchstabe = buchstabe;
           hideWidget(ix);
           stringIndex++;
+          growableList2[ergebnisIndex] = buchstabe;
           ergebnisIndex++;
         }
       },
@@ -245,10 +247,10 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             mainAxisSpacing: 20,
             crossAxisSpacing: 20,
             children: [
-              for (i = 0; i < wortLaenge; i++)
+              for (int i = 0; i < wortLaenge; i++)
                 (_canShowButton[i])
                     ? leeresFeld()
-                    : gefuelltesFeld(ergebnisBuchstabe)
+                    : gefuelltesFeld(growableList2[i])
             ],
           ),
         ),
