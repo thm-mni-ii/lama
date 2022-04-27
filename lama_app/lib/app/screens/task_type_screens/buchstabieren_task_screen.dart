@@ -36,7 +36,7 @@ List<bool> _canShowButton = <bool>[
 ];
 
 String wort;
-int wortLaenge;
+int wortLaenge = 0;
 int zufallsZahl;
 int stringIndex = 0;
 int ergebnisIndex = 0;
@@ -99,6 +99,21 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
         }
       },
       child: Text(buchstabe, style: TextStyle(fontSize: 15)),
+    );
+  }
+
+  Widget zeichneContainerMitAntwortButton(x) {
+    return Container(
+      margin: EdgeInsets.all(10),
+      height: 20.0,
+      child: (wortLaenge >= x + 1 &&
+              _canShowButton[growableList[
+                  x]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
+          ? zeichneAntwortButton(
+              holeBuchstabe(growableList[x]),
+              growableList[
+                  x]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+          : null,
     );
   }
 
@@ -264,111 +279,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             crossAxisCount: 5,
             mainAxisSpacing: 20,
             children: [
+              for (int i = 0; i < wortLaenge; i++)
+                zeichneContainerMitAntwortButton(i)
               ////ein Buchstabe
-              Container(
-                margin: EdgeInsets.all(10),
-                height: 20.0,
-                child: (wortLaenge >= 1 &&
-                        _canShowButton[growableList[
-                            0]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-                    ? zeichneAntwortButton(
-                        holeBuchstabe(growableList[0]),
-                        growableList[
-                            0]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-                    : null,
-              ),
-              ////zweiter Buchstabe
-              Container(
-                //  alignment: Alignment(-0.75, -0.75),
-                margin: EdgeInsets.all(10),
-                height: 20.0,
-                child: (wortLaenge >= 2 &&
-                        _canShowButton[growableList[
-                            1]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-                    ? zeichneAntwortButton(
-                        holeBuchstabe(growableList[1]),
-                        growableList[
-                            1]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-                    : null,
-              ),
-              ////dritter Buchstabe
-              Container(
-                margin: EdgeInsets.all(10),
-                height: 20.0,
-                child: (wortLaenge >= 3 &&
-                        _canShowButton[growableList[
-                            2]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-                    ? zeichneAntwortButton(
-                        holeBuchstabe(growableList[2]),
-                        growableList[
-                            2]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-                    : null,
-              ),
-              ////vierter Buchstabe
-              Container(
-                margin: EdgeInsets.all(10),
-                height: 20.0,
-                child: (wortLaenge >= 4 &&
-                        _canShowButton[growableList[
-                            3]]) //hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-                    ? zeichneAntwortButton(
-                        holeBuchstabe(growableList[3]),
-                        growableList[
-                            3]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-                    : null,
-              ),
-              ////fuenfter Buchstabe
-              Container(
-                margin: EdgeInsets.all(10),
-                height: 20.0,
-                child: (wortLaenge >= 5 &&
-                        _canShowButton[growableList[
-                            4]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-                    ? zeichneAntwortButton(
-                        holeBuchstabe(growableList[4]),
-                        growableList[
-                            4]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-                    : null,
-              ),
-              ////sechster Buchstabe
-              Container(
-                margin: EdgeInsets.all(10),
-                height: 20.0,
-                child: (wortLaenge >= 6 &&
-                        _canShowButton[growableList[
-                            5]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-                    ? zeichneAntwortButton(
-                        holeBuchstabe(growableList[5]),
-                        growableList[
-                            5]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-                    : null,
-              ),
-              ////siebter Buchstabe
-              Container(
-                margin: EdgeInsets.all(10),
-                height: 20.0,
-                child: (wortLaenge >= 7 &&
-                        _canShowButton[growableList[
-                            6]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-                    ? zeichneAntwortButton(
-                        holeBuchstabe(growableList[6]),
-                        growableList[
-                            6]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-                    : null,
-              ),
-              ////achter Buchstabe
-              Container(
-                margin: EdgeInsets.all(10),
-                height: 20.0,
-                child: (wortLaenge >= 8 &&
-                        _canShowButton[growableList[
-                            7]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-                    ? zeichneAntwortButton(
-                        holeBuchstabe(growableList[7]),
-                        growableList[
-                            7]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-                    : null,
-              ),
             ],
           ),
         ),
