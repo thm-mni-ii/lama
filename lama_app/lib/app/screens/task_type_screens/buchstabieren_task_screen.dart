@@ -39,6 +39,8 @@ String wort;
 int wortLaenge;
 int zufallsZahl;
 int stringIndex = 0;
+int ergebnisIndex = 0;
+var ergebnisBuchstabe;
 
 class BuchstabierenTaskScreen extends StatefulWidget {
   final TaskBuchstabieren task;
@@ -66,6 +68,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     super.initState();
     stringIndex = 0;
     i = 0;
+    ergebnisIndex = 0;
     for (int x = 0; x < _canShowButton.length; x++) {
       _canShowButton[x] = true;
     }
@@ -79,17 +82,55 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     });
   }
 
+  void showLetter(i) {
+    setState(() {});
+  }
+
   Widget zeichneAntwortButton(buchstabe, ix) {
     return ElevatedButton(
       onPressed: () {
         if (wort.substring(stringIndex, stringIndex + 1) == buchstabe) {
+          ergebnisBuchstabe = buchstabe;
           hideWidget(ix);
           stringIndex++;
+          ergebnisIndex++;
         }
       },
       child: Text(buchstabe, style: TextStyle(fontSize: 15)),
     );
   }
+
+  Widget leeresFeld() {
+    return Container(
+      margin: EdgeInsets.all(10),
+      height: 20.0,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey,
+        ),
+      ),
+    );
+  }
+
+  Widget gefuelltesFeld(buchstabe) {
+    return Container(
+      margin: EdgeInsets.all(10),
+      height: 20.0,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey,
+        ),
+      ),
+      child: Text(buchstabe),
+    );
+  }
+
+  // width: (constraints.maxWidth / 100) * 12,
+  //     height: (constraints.maxHeight / 100) * 5,
+  //     alignment: Alignment.center,
+  //     decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.all(Radius.circular(10)),
+  //         color: LamaColors.purplePrimary),
 
   String holeEinWortAusJSON(i) {
     wort = task.woerter[i];
@@ -144,157 +185,192 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      // Lama Speechbubble
-      Container(
-        height: (constraints.maxHeight / 100) * 15,
-        padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-        // create space between each childs
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                padding: EdgeInsets.only(left: 75),
-                height: 60,
-                width: MediaQuery.of(context).size.width,
-                child: Bubble(
-                  nip: BubbleNip.leftCenter,
-                  child: Center(
-                    child: Text(
-                      "Buchstabiere das Wort, indem du auf die Buchstaben in der richtigen Reihenfolge drückst",
-                      style: LamaTextTheme.getStyle(
-                          color: LamaColors.greenAccent, fontSize: 15),
+    return Column(
+      children: [
+        // Lama Speechbubble
+        Container(
+          height: (constraints.maxHeight / 100) * 15,
+          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+          // create space between each childs
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: EdgeInsets.only(left: 75),
+                  height: 60,
+                  width: MediaQuery.of(context).size.width,
+                  child: Bubble(
+                    nip: BubbleNip.leftCenter,
+                    child: Center(
+                      child: Text(
+                        "Buchstabiere das Wort, indem du auf die Buchstaben in der richtigen Reihenfolge drückst",
+                        style: LamaTextTheme.getStyle(
+                            color: LamaColors.greenAccent, fontSize: 15),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: SvgPicture.asset(
-                "assets/images/svg/lama_head.svg",
-                semanticsLabel: "Lama Anna",
-                width: 75,
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SvgPicture.asset(
+                  "assets/images/svg/lama_head.svg",
+                  semanticsLabel: "Lama Anna",
+                  width: 75,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
 
-      Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-        height: MediaQuery.of(context).size.height / 5,
-        width: MediaQuery.of(context).size.width / 2,
-        child: SvgPicture.asset('assets/images/svg/Objects/Auto.svg'),
-      ),
-      ////ein Buchstabe
-      Container(
-        margin: EdgeInsets.all(10),
-        height: 20.0,
-        child: (wortLaenge >= 1 &&
-                _canShowButton[growableList[
-                    0]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-            ? zeichneAntwortButton(
-                holeBuchstabe(growableList[0]),
-                growableList[
-                    0]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-            : null,
-      ),
-      ////zweiter Buchstabe
-      Container(
-        //  alignment: Alignment(-0.75, -0.75),
-        margin: EdgeInsets.all(10),
-        height: 20.0,
-        child: (wortLaenge >= 2 &&
-                _canShowButton[growableList[
-                    1]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-            ? zeichneAntwortButton(
-                holeBuchstabe(growableList[1]),
-                growableList[
-                    1]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-            : null,
-      ),
-      ////dritter Buchstabe
-      Container(
-        margin: EdgeInsets.all(10),
-        height: 20.0,
-        child: (wortLaenge >= 3 &&
-                _canShowButton[growableList[
-                    2]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-            ? zeichneAntwortButton(
-                holeBuchstabe(growableList[2]),
-                growableList[
-                    2]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-            : null,
-      ),
-      ////vierter Buchstabe
-      Container(
-        margin: EdgeInsets.all(10),
-        height: 20.0,
-        child: (wortLaenge >= 4 &&
-                _canShowButton[growableList[
-                    3]]) //hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-            ? zeichneAntwortButton(
-                holeBuchstabe(growableList[3]),
-                growableList[
-                    3]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-            : null,
-      ),
-      ////fuenfter Buchstabe
-      Container(
-        margin: EdgeInsets.all(10),
-        height: 20.0,
-        child: (wortLaenge >= 5 &&
-                _canShowButton[growableList[
-                    4]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-            ? zeichneAntwortButton(
-                holeBuchstabe(growableList[4]),
-                growableList[
-                    4]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-            : null,
-      ),
-      ////sechster Buchstabe
-      Container(
-        margin: EdgeInsets.all(10),
-        height: 20.0,
-        child: (wortLaenge >= 6 &&
-                _canShowButton[growableList[
-                    5]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-            ? zeichneAntwortButton(
-                holeBuchstabe(growableList[5]),
-                growableList[
-                    5]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-            : null,
-      ),
-      ////siebter Buchstabe
-      Container(
-        margin: EdgeInsets.all(10),
-        height: 20.0,
-        child: (wortLaenge >= 7 &&
-                _canShowButton[growableList[
-                    6]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-            ? zeichneAntwortButton(
-                holeBuchstabe(growableList[6]),
-                growableList[
-                    6]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-            : null,
-      ),
-      ////achter Buchstabe
-      Container(
-        margin: EdgeInsets.all(10),
-        height: 20.0,
-        child: (wortLaenge >= 8 &&
-                _canShowButton[growableList[
-                    7]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-            ? zeichneAntwortButton(
-                holeBuchstabe(growableList[7]),
-                growableList[
-                    7]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-            : null,
-      ),
-    ]);
+        Container(
+          decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+          padding: EdgeInsets.all(10),
+          margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+          height: MediaQuery.of(context).size.height / 5,
+          width: MediaQuery.of(context).size.width / 2,
+          child: SvgPicture.asset('assets/images/svg/Objects/Auto.svg'),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+
+        Container(
+          height: MediaQuery.of(context).size.height * 0.1,
+          width: MediaQuery.of(context).size.width * 0.9,
+          color: Colors.red,
+          child: GridView.count(
+            crossAxisCount: 5,
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 20,
+            children: [
+              for (i = 0; i < wortLaenge; i++)
+                (_canShowButton[i])
+                    ? leeresFeld()
+                    : gefuelltesFeld(ergebnisBuchstabe)
+            ],
+          ),
+        ),
+        Container(
+          // legt Größe des Grids fest
+          height: MediaQuery.of(context).size.height * 0.35,
+          width: MediaQuery.of(context).size.width * 0.9,
+          color: Colors.green,
+          child: GridView.count(
+            // zeigt Buchstaben in nächster Zeile an, wenn crossAxisCount überschritten wird
+            crossAxisCount: 5,
+            mainAxisSpacing: 20,
+            children: [
+              ////ein Buchstabe
+              Container(
+                margin: EdgeInsets.all(10),
+                height: 20.0,
+                child: (wortLaenge >= 1 &&
+                        _canShowButton[growableList[
+                            0]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
+                    ? zeichneAntwortButton(
+                        holeBuchstabe(growableList[0]),
+                        growableList[
+                            0]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+                    : null,
+              ),
+              ////zweiter Buchstabe
+              Container(
+                //  alignment: Alignment(-0.75, -0.75),
+                margin: EdgeInsets.all(10),
+                height: 20.0,
+                child: (wortLaenge >= 2 &&
+                        _canShowButton[growableList[
+                            1]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
+                    ? zeichneAntwortButton(
+                        holeBuchstabe(growableList[1]),
+                        growableList[
+                            1]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+                    : null,
+              ),
+              ////dritter Buchstabe
+              Container(
+                margin: EdgeInsets.all(10),
+                height: 20.0,
+                child: (wortLaenge >= 3 &&
+                        _canShowButton[growableList[
+                            2]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
+                    ? zeichneAntwortButton(
+                        holeBuchstabe(growableList[2]),
+                        growableList[
+                            2]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+                    : null,
+              ),
+              ////vierter Buchstabe
+              Container(
+                margin: EdgeInsets.all(10),
+                height: 20.0,
+                child: (wortLaenge >= 4 &&
+                        _canShowButton[growableList[
+                            3]]) //hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
+                    ? zeichneAntwortButton(
+                        holeBuchstabe(growableList[3]),
+                        growableList[
+                            3]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+                    : null,
+              ),
+              ////fuenfter Buchstabe
+              Container(
+                margin: EdgeInsets.all(10),
+                height: 20.0,
+                child: (wortLaenge >= 5 &&
+                        _canShowButton[growableList[
+                            4]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
+                    ? zeichneAntwortButton(
+                        holeBuchstabe(growableList[4]),
+                        growableList[
+                            4]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+                    : null,
+              ),
+              ////sechster Buchstabe
+              Container(
+                margin: EdgeInsets.all(10),
+                height: 20.0,
+                child: (wortLaenge >= 6 &&
+                        _canShowButton[growableList[
+                            5]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
+                    ? zeichneAntwortButton(
+                        holeBuchstabe(growableList[5]),
+                        growableList[
+                            5]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+                    : null,
+              ),
+              ////siebter Buchstabe
+              Container(
+                margin: EdgeInsets.all(10),
+                height: 20.0,
+                child: (wortLaenge >= 7 &&
+                        _canShowButton[growableList[
+                            6]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
+                    ? zeichneAntwortButton(
+                        holeBuchstabe(growableList[6]),
+                        growableList[
+                            6]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+                    : null,
+              ),
+              ////achter Buchstabe
+              Container(
+                margin: EdgeInsets.all(10),
+                height: 20.0,
+                child: (wortLaenge >= 8 &&
+                        _canShowButton[growableList[
+                            7]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
+                    ? zeichneAntwortButton(
+                        holeBuchstabe(growableList[7]),
+                        growableList[
+                            7]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+                    : null,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
