@@ -83,10 +83,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     });
   }
 
-  void showLetter(i) {
-    setState(() {});
-  }
-
   Widget zeichneAntwortButton(buchstabe, ix) {
     return ElevatedButton(
       onPressed: () {
@@ -281,7 +277,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             children: [
               for (int i = 0; i < wortLaenge; i++)
                 zeichneContainerMitAntwortButton(i)
-              ////ein Buchstabe
             ],
           ),
         ),
