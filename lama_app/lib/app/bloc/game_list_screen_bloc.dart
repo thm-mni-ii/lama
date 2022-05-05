@@ -55,9 +55,6 @@ void _navigateToGame(String gameName, BuildContext context,
     case "Affen-Leiter":
       gameToLaunch = ClimberGameScreen(userRepository);
       break;
-    case "Tetris":
-      gameToLaunch = TetrisScreen(userRepository);
-      break;
     default:
       throw Exception("Trying to launch game that does not exist");
   }
