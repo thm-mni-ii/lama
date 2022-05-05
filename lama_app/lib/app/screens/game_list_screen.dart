@@ -23,8 +23,6 @@ class GameListScreen extends StatelessWidget {
         "Tippe auf den Bildschirm, um das Lama fliegen zu lassen und weiche dabei den Hindernissen aus!"),
     GameListItem("Affen-Leiter", 18,
         "Tippe die entsprechende Richtung an, um auf die andere Seite des Baumes zu springen und so den Ästen auszuweichen!"),
-    GameListItem("Tetris", 10,
-        "Setze die Blöcke zusammen und schaffe möglichst keine Lücke!"),
   ];
 
   @override
