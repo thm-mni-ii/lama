@@ -1,42 +1,62 @@
 {
-    "taskset_name":"Standardaufgaben Klasse 1",
-     "taskset_subject":"Deutsch",
-      "taskset_grade":1,
-       "tasks": [
-        {
-          "task_type":"Buchstabieren",
-           "task_reward":2,
-           "left_to_solve": 3,
-           "lama_text":"Test Text",
-           "woerter":["rot", "blau", "Gurke", "Wand", "Auto", "Saxophon"]
-            },
-           {
-           "task_type":"4Cards",
-            "task_reward":2,
-            "question":"lesen",
-            "left_to_solve": 3,
-            "lama_text":"Tippe die richtige Silbentrennung an!",
-            "right_answer":"le-sen",
-             "wrong_answers":["lese-n", "les-en", "lesen"]
-             },
-         {
-           "task_type":"ClozeTest",
-           "task_reward":2,
-           "question":"__ Dino ist groß",
-           "lama_text":"Tippe die richtige Antwort an!",
-           "left_to_solve": 3,
-           "right_answer":"Der",
-           "wrong_answers":["Die", "Das"]
-         },
-         {
-           "task_type": "MatchCategory",
-           "task_reward":2,
-           "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
-           "left_to_solve": 3,
-           "nameCatOne": "Farben",
-           "nameCatTwo": "Gegenstände",
-           "categoryOne": ["Rot", "Blau", "Grün", "Gelb"],
-           "categoryTwo": ["Auto", "Baum", "Schule", "Mensch"]
-         }
-        ]
+  "taskset_name": "Standardaufgaben Klasse 1",
+  "taskset_subject": "Deutsch",
+  "taskset_grade": 1,
+  "tasks": [
+    {
+      "task_type": "Buchstabieren",
+      "task_reward": 2,
+      "left_to_solve": 3,
+      "lama_text": "Test Text",
+      "woerter": {
+        "Baum": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Baum.png?raw=true",
+        "Baum2": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Baum.png?raw=true"
+      }
+    },
+    {
+      "task_type": "4Cards",
+      "task_reward": 2,
+      "question": "lesen",
+      "left_to_solve": 3,
+      "lama_text": "Tippe die richtige Silbentrennung an!",
+      "right_answer": "le-sen",
+      "wrong_answers": [
+        "lese-n",
+        "les-en",
+        "lesen"
+      ]
+    },
+    {
+      "task_type": "ClozeTest",
+      "task_reward": 2,
+      "question": "__ Dino ist groß",
+      "lama_text": "Tippe die richtige Antwort an!",
+      "left_to_solve": 3,
+      "right_answer": "Der",
+      "wrong_answers": [
+        "Die",
+        "Das"
+      ]
+    },
+    {
+      "task_type": "MatchCategory",
+      "task_reward": 2,
+      "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+      "left_to_solve": 3,
+      "nameCatOne": "Farben",
+      "nameCatTwo": "Gegenstände",
+      "categoryOne": [
+        "Rot",
+        "Blau",
+        "Grün",
+        "Gelb"
+      ],
+      "categoryTwo": [
+        "Auto",
+        "Baum",
+        "Schule",
+        "Mensch"
+      ]
+    }
+  ]
 }

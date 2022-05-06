@@ -251,7 +251,7 @@ class TasksetValidator {
 
           ///Buchstabieren
           case "Buchstabieren":
-            if (json.containsKey("woerter") && json["woerter"] is List)
+            
               return null;
             return "Aufgabentyp: Buchstabieren";
 

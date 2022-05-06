@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'dart:convert';
 
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
@@ -35,6 +36,9 @@ List<bool> _canShowButton = <bool>[
   true
 ];
 
+List<String> woerterKeys;
+List<String> woerterURLs;
+
 String wort;
 int wortLaenge = 0;
 int zufallsZahl;
@@ -58,6 +62,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   // task infos and constraints handed over by tasktypeScreen
   final TaskBuchstabieren task;
   final BoxConstraints constraints;
+
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
   bool answer;
@@ -67,6 +72,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 //außerdem werden einige Variablen wieder auf ihren ursprünglichen Zustand gestellt-> wichtig für neue Aufgaben
   void initState() {
     super.initState();
+    
     stringIndex = 0;
     i = 0;
     ergebnisIndex = 0;
@@ -146,7 +152,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   //         color: LamaColors.purplePrimary),
 
   String holeEinWortAusJSON(i) {
-    wort = task.woerter[i];
+    wort = "test";
     return wort;
   }
 
@@ -164,8 +170,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
   int erstelleEineRandomNummer() {
     var rng = Random();
-    var zufallsZahl = rng.nextInt(task.woerter
-        .length); //hier entsteht eine random Nummer 0..(Anzahl der Wörter in (task.woerter-1))
+    var zufallsZahl = rng.nextInt(
+        5); //hier entsteht eine random Nummer 0..(Anzahl der Wörter in (task.woerter-1))
     return zufallsZahl;
   }
 
@@ -198,89 +204,98 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Lama Speechbubble
-        Container(
-          height: (constraints.maxHeight / 100) * 15,
-          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-          // create space between each childs
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.only(left: 75),
-                  height: 60,
-                  width: MediaQuery.of(context).size.width,
-                  child: Bubble(
-                    nip: BubbleNip.leftCenter,
-                    child: Center(
-                      child: Text(
-                        "Buchstabiere das Wort, indem du auf die Buchstaben in der richtigen Reihenfolge drückst",
-                        style: LamaTextTheme.getStyle(
-                            color: LamaColors.greenAccent, fontSize: 15),
+    List<String> woerterKeys = task.woerter.keys.toList();
+    List<String> woerterURLs = task.woerter.values.toList();
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Text(task.woerter.length.toString()),
+          Text(woerterKeys[1]),
+          Text(woerterURLs[1]),
+       
+          // Lama Speechbubble
+          Container(
+            height: (constraints.maxHeight / 100) * 15,
+            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+            // create space between each childs
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 75),
+                    height: 60,
+                    width: MediaQuery.of(context).size.width,
+                    child: Bubble(
+                      nip: BubbleNip.leftCenter,
+                      child: Center(
+                        child: Text(
+                          "Buchstabiere das Wort, indem du auf die Buchstaben in der richtigen Reihenfolge drückst",
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.greenAccent, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SvgPicture.asset(
-                  "assets/images/svg/lama_head.svg",
-                  semanticsLabel: "Lama Anna",
-                  width: 75,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SvgPicture.asset(
+                    "assets/images/svg/lama_head.svg",
+                    semanticsLabel: "Lama Anna",
+                    width: 75,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
 
-        Container(
-          decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-          padding: EdgeInsets.all(10),
-          margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-          height: MediaQuery.of(context).size.height / 5,
-          width: MediaQuery.of(context).size.width / 2,
-          child: SvgPicture.asset('assets/images/svg/Objects/Auto.svg'),
-        ),
-        SizedBox(
-          height: 20,
-        ),
+          Container(
+            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+            height: MediaQuery.of(context).size.height / 5,
+            width: MediaQuery.of(context).size.width / 2,
+            child: Image.network(
+                'https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Baum.png?raw=true'),
+          ),
+          SizedBox(
+            height: 20,
+          ),
 
-        Container(
-          height: MediaQuery.of(context).size.height * 0.1,
-          width: MediaQuery.of(context).size.width * 0.9,
-          color: Colors.red,
-          child: GridView.count(
-            crossAxisCount: 5,
-            mainAxisSpacing: 20,
-            crossAxisSpacing: 20,
-            children: [
-              for (int i = 0; i < wortLaenge; i++)
-                (_canShowButton[i])
-                    ? leeresFeld()
-                    : gefuelltesFeld(growableList2[i])
-            ],
+          Container(
+            height: MediaQuery.of(context).size.height * 0.2,
+            width: MediaQuery.of(context).size.width * 0.9,
+            color: Colors.red,
+            child: GridView.count(
+              crossAxisCount: 5,
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 20,
+              children: [
+                for (int i = 0; i < wortLaenge; i++)
+                  (_canShowButton[i])
+                      ? leeresFeld()
+                      : gefuelltesFeld(growableList2[i])
+              ],
+            ),
           ),
-        ),
-        Container(
-          // legt Größe des Grids fest
-          height: MediaQuery.of(context).size.height * 0.35,
-          width: MediaQuery.of(context).size.width * 0.9,
-          color: Colors.green,
-          child: GridView.count(
-            // zeigt Buchstaben in nächster Zeile an, wenn crossAxisCount überschritten wird
-            crossAxisCount: 5,
-            mainAxisSpacing: 20,
-            children: [
-              for (int i = 0; i < wortLaenge; i++)
-                zeichneContainerMitAntwortButton(i)
-            ],
+          Container(
+            // legt Größe des Grids fest
+            height: MediaQuery.of(context).size.height * 0.3,
+            width: MediaQuery.of(context).size.width * 0.9,
+            color: Colors.green,
+            child: GridView.count(
+              // zeigt Buchstaben in nächster Zeile an, wenn crossAxisCount überschritten wird
+              crossAxisCount: 5,
+              mainAxisSpacing: 20,
+              children: [
+                for (int i = 0; i < wortLaenge; i++)
+                  zeichneContainerMitAntwortButton(i)
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

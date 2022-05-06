@@ -149,12 +149,9 @@ class Task {
             operatorAmount,
             fieldsToReplace);
       case "Buchstabieren":
-        return TaskBuchstabieren(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['left_to_solve'],
-            List<String>.from(json['woerter']));
+        Map<String, String> woerter = Map<String, String>.from(json['woerter']);
+        return TaskBuchstabieren(taskType, json['task_reward'],
+            json['lama_text'], json['left_to_solve'], woerter);
       default:
         return null;
     }
@@ -478,7 +475,7 @@ class TaskNumberLine extends Task {
 
 ///Author: J.Decher, A.Pusch
 class TaskBuchstabieren extends Task {
-  List<String> woerter;
+  Map<String, String> woerter;
 
   TaskBuchstabieren(String taskType, int reward, String lamaText,
       int leftToSolve, this.woerter)
