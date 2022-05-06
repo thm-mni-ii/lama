@@ -20,4 +20,41 @@ class AlivePoint extends Point {
 
     return retVal;
   }
+/*
+  bool checkIfPointsCollideleft(List<Point> pointList) {
+    bool retVal = false;
+
+    for (var pointToCheck in pointList) {
+      if (pointToCheck.x == x - 1 && pointToCheck.y == y) {
+        retVal = true;
+      }
+    }
+
+    return retVal;
+  }
+
+  bool checkIfPointsCollideright(List<Point> pointList) {
+    bool retVal = false;
+
+    for (var pointToCheck in pointList) {
+      if (pointToCheck.x == x + 1 && pointToCheck.y == y) {
+        retVal = true;
+      }
+    }
+
+    return retVal;
+  }*/
+
+//für rotation, falls true, dann rotation zurücksetzen
+  bool checkIfPointsCollideCollide(List<Point> pointList) {
+    bool retVal = false;
+
+    for (var pointToCheck in pointList) {
+      if (pointToCheck.x == x && pointToCheck.y == y) {
+        retVal = true;
+      }
+    }
+
+    return retVal;
+  }
 }

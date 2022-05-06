@@ -49,16 +49,16 @@ class _MenuState extends State<Menu> {
   void initState() {
     // ladeHighScores();
     super.initState();
+  }
+
+  _MenuState(this.userRepo, this.userHighScore, this.allTimeHighScore);
+  void onPlayClicked() {
     if (userRepo.getLamaCoins() < GameListScreen.games[4 - 1].cost) {
       //4-1 is game id
       Navigator.pop(context, "NotEnoughCoins");
       return;
     }
     userRepo.removeLamaCoins(GameListScreen.games[4 - 1].cost); //4-1 is game id
-  }
-
-  _MenuState(this.userRepo, this.userHighScore, this.allTimeHighScore);
-  void onPlayClicked() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => GameScreen(userRepo)),

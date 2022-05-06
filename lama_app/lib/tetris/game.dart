@@ -114,15 +114,19 @@ class _Game extends State<Game> {
         switch (performAction) {
           case LastButtonPressed.LEFT:
             currentBlock.move(MoveDir.LEFT);
+            if (isInOldBlock()) currentBlock.move(MoveDir.RIGHT);
             break;
           case LastButtonPressed.RIGHT:
             currentBlock.move(MoveDir.RIGHT);
+            if (isInOldBlock()) currentBlock.move(MoveDir.LEFT);
             break;
           case LastButtonPressed.ROTATE_LEFT:
             currentBlock.rotateLeft();
+            if (isInOldBlock()) currentBlock.rotateRight();
             break;
           case LastButtonPressed.ROTATE_RIGHT:
             currentBlock.rotateRight();
+            if (isInOldBlock()) currentBlock.rotateLeft();
             break;
           default:
             break;
@@ -142,12 +146,26 @@ class _Game extends State<Game> {
     }
   }
 
+//oder auch ist ein Block
   bool isAboveOldBlock() {
     bool retVal = false;
 
     for (var oldPoint in alivePoints) {
       if (oldPoint
           .checkIfPointsCollide(currentBlock.fixed_length_list_of_points)) {
+        retVal = true;
+      }
+    }
+
+    return retVal;
+  }
+
+  bool isInOldBlock() {
+    bool retVal = false;
+
+    for (var oldPoint in alivePoints) {
+      if (oldPoint.checkIfPointsCollideCollide(
+          currentBlock.fixed_length_list_of_points)) {
         retVal = true;
       }
     }
