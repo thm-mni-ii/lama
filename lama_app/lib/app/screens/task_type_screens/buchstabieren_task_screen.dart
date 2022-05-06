@@ -36,10 +36,8 @@ List<bool> _canShowButton = <bool>[
   true
 ];
 
-List<String> woerterKeys;
-List<String> woerterURLs;
-
 String wort;
+String wortURL;
 int wortLaenge = 0;
 int zufallsZahl;
 int stringIndex = 0;
@@ -63,6 +61,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   final TaskBuchstabieren task;
   final BoxConstraints constraints;
 
+  List<String> woerterKeys;
+  List<String> woerterURLs;
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
   bool answer;
@@ -72,14 +72,16 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 //außerdem werden einige Variablen wieder auf ihren ursprünglichen Zustand gestellt-> wichtig für neue Aufgaben
   void initState() {
     super.initState();
-    
+    List<String> woerterKeys = task.woerter.keys.toList();
+    List<String> woerterURLs = task.woerter.values.toList();
     stringIndex = 0;
     i = 0;
     ergebnisIndex = 0;
     for (int x = 0; x < _canShowButton.length; x++) {
       _canShowButton[x] = true;
     }
-    messeLaengeVomWort(holeEinWortAusJSON(erstelleEineRandomNummer()));
+    messeLaengeVomWort(holeEinWortAusJSON(
+        erstelleEineRandomNummer(), woerterKeys, woerterURLs));
     erstelleEinmaligeRandomNummer(wortLaenge);
   }
 
@@ -151,8 +153,10 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   //         borderRadius: BorderRadius.all(Radius.circular(10)),
   //         color: LamaColors.purplePrimary),
 
-  String holeEinWortAusJSON(i) {
+  String holeEinWortAusJSON(i, wortkey, worturl) {
     wort = "test";
+    wort = wortkey[i];
+    wortURL = worturl[i];
     return wort;
   }
 
@@ -170,8 +174,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
   int erstelleEineRandomNummer() {
     var rng = Random();
-    var zufallsZahl = rng.nextInt(
-        5); //hier entsteht eine random Nummer 0..(Anzahl der Wörter in (task.woerter-1))
+    var zufallsZahl = rng.nextInt(task.woerter
+        .length); //hier entsteht eine random Nummer 0..(Anzahl der Wörter in (task.woerter-1))
     return zufallsZahl;
   }
 
@@ -204,15 +208,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> woerterKeys = task.woerter.keys.toList();
-    List<String> woerterURLs = task.woerter.values.toList();
     return SingleChildScrollView(
       child: Column(
         children: [
-          Text(task.woerter.length.toString()),
-          Text(woerterKeys[1]),
-          Text(woerterURLs[1]),
-       
           // Lama Speechbubble
           Container(
             height: (constraints.maxHeight / 100) * 15,
@@ -256,8 +254,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
             height: MediaQuery.of(context).size.height / 5,
             width: MediaQuery.of(context).size.width / 2,
-            child: Image.network(
-                'https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Baum.png?raw=true'),
+            child: Image.network(wortURL),
           ),
           SizedBox(
             height: 20,
