@@ -29,13 +29,20 @@ class GameScreen extends StatelessWidget {
   const GameScreen(this.userRepository);
 
   // const GameScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Let\'s Tetris'),
         centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            timer.cancel();
+            Navigator.pop(context);
+          },
+        ),
       ),
       backgroundColor: Color.fromARGB(255, 27, 28, 27),
       body: Game(context, userRepository),

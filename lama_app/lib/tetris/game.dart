@@ -225,7 +225,10 @@ class _Game extends State<Game> {
   }
 
   void onTimeTick(Timer time) {
-    if (/*currentBlock == null ||*/ playerLost()) return;
+    if (currentBlock == null || playerLost()) {
+      timer.cancel();
+      return;
+    }
 
 //entferne volle Reihe
     removeFullRows();
@@ -239,6 +242,7 @@ class _Game extends State<Game> {
       });
     } else {
       setState(() {
+        //if game is running noch hinzufügen, sollte probleme beheben
         currentBlock.move(MoveDir.DOWN);
       });
       checkForUserInput();
