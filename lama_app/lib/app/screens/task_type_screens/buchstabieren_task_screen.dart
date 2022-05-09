@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'dart:io';
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,34 +9,13 @@ import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'dart:convert';
 
-import 'buchstabieren_task_BuchstabenListeClass.dart';
-
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
 
-final growableList2 = <String>['', '', '', '', '', '', '', ''];
-final growableList = <int>[
-  -1,
-  -1,
-  -1,
-  -1,
-  -1,
-  -1,
-  -1,
-  -1
-]; //vorab hard gecodet, diese Liste soll dem Index der Buchstaben eines Wortes entsprechen
-
-List<bool> _canShowButton = <bool>[
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true
-];
+List<String> buchstabenListe;
+List<int> buchstabenIndexListe;
+List<bool> _canShowButton;
 
 String wort;
 String wortURL;
@@ -63,14 +42,10 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   final TaskBuchstabieren task;
   final BoxConstraints constraints;
 
-  List<String> woerterKeys;
-  List<String> woerterURLs;
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
   bool answer;
-  List<BuchstabenListeClass> buchstabenObjekte = [];
-  List<int> zufallsZahlen = <int>[];
-
+  bool finished = false;
 //hier beginnt der erste State der Aufgabe "Buchstabieren"
 //zufalls Nummer wird generiert und das erste Wort wird aus eine json gezogen
 //außerdem werden einige Variablen wieder auf ihren ursprünglichen Zustand gestellt-> wichtig für neue Aufgaben
@@ -81,12 +56,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     stringIndex = 0;
     i = 0;
     ergebnisIndex = 0;
-    for (int x = 0; x < _canShowButton.length; x++) {
-      _canShowButton[x] = true;
-    }
     messeLaengeVomWort(holeEinWortAusJSON(
         erstelleEineRandomNummer(), woerterKeys, woerterURLs));
-    erstelleEinmaligeRandomNummer(wortLaenge);
   }
 
   void hideWidget(i) {
@@ -95,21 +66,46 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     });
   }
 
+
+Future<void> sleep() async {
+  await Future.delayed(Duration(seconds: 10));
+}
+
   Widget zeichneAntwortButton(buchstabe, ix) {
     return ElevatedButton(
       onPressed: () {
-        //wenn der Ausgewählte Buchstabe == der nächste richtige Buchstabe
-        if (wort.substring(stringIndex, stringIndex + 1) == buchstabe) {
+        if (buchstabenListe[stringIndex] == buchstabe) {
           ergebnisBuchstabe = buchstabe;
-          hideWidget(
-              ix); //hier muss das Widget gehidet werden, welches als erstes kommt und den ausgewählten Buchstaben beinhaltet-- da liegt der Hund begraben...
-          //gehe in der Überprüfung einen Buchstaben weiter
+          hideWidget(ix);
           stringIndex++;
-          growableList2[ergebnisIndex] = buchstabe;
+          buchstabenListe[ergebnisIndex] = buchstabe;
           ergebnisIndex++;
         }
+        (() {
+          if (!_canShowButton[wortLaenge - 1]) {
+            if (buchstabenListe.join('') == wort) {
+              sleep();
+              finished = true;
+              bool answer = true;
+              print(answer);
+              // setState(() {
+              //   sleep(Duration(seconds: 10));
+              //   BlocProvider.of<TaskBloc>(context)
+              //       .add(AnswerTaskEvent.initBuchstabieren(answer));
+              // });
+            }
+          }
+        }());
+        // if (!_canShowButton[wortLaenge - 1]) {
+        //   if (buchstabenListe.join('') == wort) {
+        //     bool answer = true;
+        //     print(answer);
+        //     BlocProvider.of<TaskBloc>(context)
+        //         .add(AnswerTaskEvent.initBuchstabieren(answer));
+        //   }
+        // }
       },
-      child: Text(buchstabe, style: TextStyle(fontSize: 25)),
+      child: Text(buchstabe, style: TextStyle(fontSize: 15)),
     );
   }
 
@@ -118,12 +114,12 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
       margin: EdgeInsets.all(10),
       height: 20.0,
       child: (wortLaenge >= x + 1 &&
-              _canShowButton[growableList[
+              _canShowButton[buchstabenIndexListe[
                   x]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
           ? zeichneAntwortButton(
-              holeBuchstabe(growableList[x]),
-              growableList[
-                  x]) //hier soll nun der zufällig ausgewählte Buchstabe eingesetzt werden
+              holeBuchstabe(buchstabenIndexListe[x]),
+              buchstabenIndexListe[
+                  x]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
           : null,
     );
   }
@@ -149,8 +145,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           color: Colors.grey,
         ),
       ),
-      child: Text(buchstabe,
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+      child: Text(buchstabe),
     );
   }
 
@@ -164,9 +159,20 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   String holeEinWortAusJSON(i, wortkey, worturl) {
     wort = "test";
     wort = wortkey[i];
-    befuelleBuchstabelListeObjekte(wort);
-    wortURL = worturl[
-        i]; //wozu?----------------------------------------------------------------------
+    wortURL = worturl[i];
+    buchstabenListe = wort.split('');
+    buchstabenIndexListe;
+    buchstabenIndexListe = List<int>.filled(wort.length, 0, growable: false);
+    for (int x = 0; x < wort.length; x++) {
+      buchstabenIndexListe[x] = x;
+    }
+    buchstabenIndexListe.shuffle();
+
+    _canShowButton = List<bool>.filled(wort.length, true, growable: false);
+    for (int x = 0; x < wort.length; x++) {
+      _canShowButton[x] = true;
+    }
+
     return wort;
   }
 
@@ -189,55 +195,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     return zufallsZahl;
   }
 
-////Hier werden Objekte mit Buchstaben, dem Index der Buchstaben
-  ///und einer Zufallszahl befüllt
-  void befuelleBuchstabelListeObjekte(String s) {
-    var rng = Random();
-
-//hier werden die Zufallszahlen generiert
-    for (int y = 0; y < i;) {
-      var randomIntNum = rng.nextInt(i);
-      if (!zufallsZahlen.contains(randomIntNum)) {
-        zufallsZahlen[y] = randomIntNum;
-        y++;
-      }
-    }
-//hier werden die Objekte befüllt
-    for (int y = 0; y < s.length;) {
-      BuchstabenListeClass neuerBuchstabe =
-          BuchstabenListeClass(y, s.substring(y - 1, y), zufallsZahlen[y]);
-      buchstabenObjekte.add(neuerBuchstabe);
-      debugPrint(
-          buchstabenObjekte[y].buchstabe + buchstabenObjekte[y].stelleImWort);
-    }
-  }
-
-//soll ersetzt werden duch befülle BuchstabelListeObjekte
-  void erstelleEinmaligeRandomNummer(i) {
-    setState(() {
-      //hier kann eine for schleife für die länge des Wortes ein array mit aufsteigenden Zahlen erstellen, beginnend mit der 0
-      growableList[0] = -1;
-      growableList[1] = -1;
-      growableList[2] = -1;
-      growableList[3] = -1;
-      growableList[4] = -1;
-      growableList[5] = -1;
-      growableList[6] = -1;
-      growableList[7] = -1;
-      // growableList[8] = -1;
-
-      var rng = Random();
-
-      for (int y = 0; y < i;) {
-        var randomIntNum = rng.nextInt(i);
-        if (!growableList.contains(randomIntNum)) {
-          growableList[y] = randomIntNum;
-          y++;
-        }
-      }
-    });
-  }
-
   BuchstabierenTaskState(this.task, this.constraints);
 
   @override
@@ -245,6 +202,21 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          Container(
+            child: (() {
+              if (finished) {
+                bool answer = true;
+                print(answer);
+                
+                // setState(() {
+                //   sleep(Duration(seconds: 10));
+                //   BlocProvider.of<TaskBloc>(context)
+                //       .add(AnswerTaskEvent.initBuchstabieren(answer));
+                // });
+
+              }
+            }()),
+          ),
           // Lama Speechbubble
           Container(
             height: (constraints.maxHeight / 100) * 15,
@@ -306,7 +278,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                 for (int i = 0; i < wortLaenge; i++)
                   (_canShowButton[i])
                       ? leeresFeld()
-                      : gefuelltesFeld(growableList2[i])
+                      : gefuelltesFeld(buchstabenListe[i])
               ],
             ),
           ),
@@ -325,6 +297,22 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               ],
             ),
           ),
+          Container(
+              child: (() {
+            if (finished) {
+              bool answer = true;
+              print(answer);
+              setState(() {
+                // sleep(Duration(seconds: 10));
+                // BlocProvider.of<TaskBloc>(context)
+                //     .add(AnswerTaskEvent.initBuchstabieren(answer));
+              });
+               
+               sleep();
+               BlocProvider.of<TaskBloc>(context)
+                   .add(AnswerTaskEvent.initBuchstabieren(answer));
+            }
+          }())),
         ],
       ),
     );
