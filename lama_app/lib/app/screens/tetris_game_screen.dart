@@ -41,6 +41,7 @@ class GameScreen extends StatelessWidget {
           onPressed: () {
             timer.cancel();
             Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
       ),
