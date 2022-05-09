@@ -45,7 +45,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
   bool answer;
-  bool finished = false;
 //hier beginnt der erste State der Aufgabe "Buchstabieren"
 //zufalls Nummer wird generiert und das erste Wort wird aus eine json gezogen
 //außerdem werden einige Variablen wieder auf ihren ursprünglichen Zustand gestellt-> wichtig für neue Aufgaben
@@ -65,11 +64,11 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
       _canShowButton[i] = false;
     });
   }
-
-
-Future<void> sleep() async {
-  await Future.delayed(Duration(seconds: 10));
-}
+ 
+ // sleep asynch test, funktioniert noch gar nicht
+  Future<void> sleepAsync() async {
+    await Future.delayed(Duration(seconds: 10));
+  }
 
   Widget zeichneAntwortButton(buchstabe, ix) {
     return ElevatedButton(
@@ -84,26 +83,18 @@ Future<void> sleep() async {
         (() {
           if (!_canShowButton[wortLaenge - 1]) {
             if (buchstabenListe.join('') == wort) {
-              sleep();
-              finished = true;
+              sleepAsync();
               bool answer = true;
               print(answer);
-              // setState(() {
-              //   sleep(Duration(seconds: 10));
-              //   BlocProvider.of<TaskBloc>(context)
-              //       .add(AnswerTaskEvent.initBuchstabieren(answer));
-              // });
+              setState(() {
+                // macht sleep ohne dass letzter Buchstabe auftaucht
+                sleep(Duration(seconds: 10));
+                BlocProvider.of<TaskBloc>(context)
+                    .add(AnswerTaskEvent.initBuchstabieren(answer));
+              });
             }
           }
         }());
-        // if (!_canShowButton[wortLaenge - 1]) {
-        //   if (buchstabenListe.join('') == wort) {
-        //     bool answer = true;
-        //     print(answer);
-        //     BlocProvider.of<TaskBloc>(context)
-        //         .add(AnswerTaskEvent.initBuchstabieren(answer));
-        //   }
-        // }
       },
       child: Text(buchstabe, style: TextStyle(fontSize: 15)),
     );
@@ -148,13 +139,6 @@ Future<void> sleep() async {
       child: Text(buchstabe),
     );
   }
-
-  // width: (constraints.maxWidth / 100) * 12,
-  //     height: (constraints.maxHeight / 100) * 5,
-  //     alignment: Alignment.center,
-  //     decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.all(Radius.circular(10)),
-  //         color: LamaColors.purplePrimary),
 
   String holeEinWortAusJSON(i, wortkey, worturl) {
     wort = "test";
@@ -202,21 +186,6 @@ Future<void> sleep() async {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            child: (() {
-              if (finished) {
-                bool answer = true;
-                print(answer);
-                
-                // setState(() {
-                //   sleep(Duration(seconds: 10));
-                //   BlocProvider.of<TaskBloc>(context)
-                //       .add(AnswerTaskEvent.initBuchstabieren(answer));
-                // });
-
-              }
-            }()),
-          ),
           // Lama Speechbubble
           Container(
             height: (constraints.maxHeight / 100) * 15,
@@ -297,22 +266,6 @@ Future<void> sleep() async {
               ],
             ),
           ),
-          Container(
-              child: (() {
-            if (finished) {
-              bool answer = true;
-              print(answer);
-              setState(() {
-                // sleep(Duration(seconds: 10));
-                // BlocProvider.of<TaskBloc>(context)
-                //     .add(AnswerTaskEvent.initBuchstabieren(answer));
-              });
-               
-               sleep();
-               BlocProvider.of<TaskBloc>(context)
-                   .add(AnswerTaskEvent.initBuchstabieren(answer));
-            }
-          }())),
         ],
       ),
     );
