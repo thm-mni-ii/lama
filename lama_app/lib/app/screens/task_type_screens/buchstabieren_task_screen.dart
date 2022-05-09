@@ -9,6 +9,8 @@ import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'dart:convert';
 
+import 'buchstabieren_task_BuchstabenListeClass.dart';
+
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
@@ -66,6 +68,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
   bool answer;
+  List<BuchstabenListeClass> buchstabenObjekte = [];
+  List<int> zufallsZahlen = <int>[];
 
 //hier beginnt der erste State der Aufgabe "Buchstabieren"
 //zufalls Nummer wird generiert und das erste Wort wird aus eine json gezogen
@@ -94,15 +98,18 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   Widget zeichneAntwortButton(buchstabe, ix) {
     return ElevatedButton(
       onPressed: () {
+        //wenn der Ausgewählte Buchstabe == der nächste richtige Buchstabe
         if (wort.substring(stringIndex, stringIndex + 1) == buchstabe) {
           ergebnisBuchstabe = buchstabe;
-          hideWidget(ix);
+          hideWidget(
+              ix); //hier muss das Widget gehidet werden, welches als erstes kommt und den ausgewählten Buchstaben beinhaltet-- da liegt der Hund begraben...
+          //gehe in der Überprüfung einen Buchstaben weiter
           stringIndex++;
           growableList2[ergebnisIndex] = buchstabe;
           ergebnisIndex++;
         }
       },
-      child: Text(buchstabe, style: TextStyle(fontSize: 15)),
+      child: Text(buchstabe, style: TextStyle(fontSize: 25)),
     );
   }
 
@@ -116,7 +123,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           ? zeichneAntwortButton(
               holeBuchstabe(growableList[x]),
               growableList[
-                  x]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+                  x]) //hier soll nun der zufällig ausgewählte Buchstabe eingesetzt werden
           : null,
     );
   }
@@ -142,7 +149,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           color: Colors.grey,
         ),
       ),
-      child: Text(buchstabe),
+      child: Text(buchstabe,
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
     );
   }
 
@@ -156,7 +164,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   String holeEinWortAusJSON(i, wortkey, worturl) {
     wort = "test";
     wort = wortkey[i];
-    wortURL = worturl[i];
+    befuelleBuchstabelListeObjekte(wort);
+    wortURL = worturl[
+        i]; //wozu?----------------------------------------------------------------------
     return wort;
   }
 
@@ -179,6 +189,30 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     return zufallsZahl;
   }
 
+////Hier werden Objekte mit Buchstaben, dem Index der Buchstaben
+  ///und einer Zufallszahl befüllt
+  void befuelleBuchstabelListeObjekte(String s) {
+    var rng = Random();
+
+//hier werden die Zufallszahlen generiert
+    for (int y = 0; y < i;) {
+      var randomIntNum = rng.nextInt(i);
+      if (!zufallsZahlen.contains(randomIntNum)) {
+        zufallsZahlen[y] = randomIntNum;
+        y++;
+      }
+    }
+//hier werden die Objekte befüllt
+    for (int y = 0; y < s.length;) {
+      BuchstabenListeClass neuerBuchstabe =
+          BuchstabenListeClass(y, s.substring(y - 1, y), zufallsZahlen[y]);
+      buchstabenObjekte.add(neuerBuchstabe);
+      debugPrint(
+          buchstabenObjekte[y].buchstabe + buchstabenObjekte[y].stelleImWort);
+    }
+  }
+
+//soll ersetzt werden duch befülle BuchstabelListeObjekte
   void erstelleEinmaligeRandomNummer(i) {
     setState(() {
       //hier kann eine for schleife für die länge des Wortes ein array mit aufsteigenden Zahlen erstellen, beginnend mit der 0
