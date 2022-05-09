@@ -10,6 +10,8 @@ import 'blocks/Zblock.dart';
 import 'dart:math';
 import 'game.dart';
 
+BuildContext context;
+
 Block getRamdomBlock() {
   int randomNumber = Random().nextInt(7);
   switch (randomNumber) {
@@ -48,6 +50,26 @@ Widget getTetrisPoint(Color color) {
         BoxShadow(color: Colors.grey, blurRadius: 2.0, offset: Offset(2.0, 2.0))
       ],
       shape: BoxShape.rectangle,
+    ),
+  );
+}
+
+Widget getGameOverButton(context) {
+  return ButtonTheme(
+    child: Padding(
+      padding: const EdgeInsets.all(25),
+      child: ElevatedButton(
+        onPressed: () {
+          timer.cancel();
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
+        style: ElevatedButton.styleFrom(
+          // primary: Colors.lightGreen,
+          textStyle: const TextStyle(fontSize: 20),
+        ),
+        child: const Text('Spiel verlassen'),
+      ),
     ),
   );
 }

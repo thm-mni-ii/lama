@@ -57,16 +57,14 @@ class _Game extends State<Game> {
   int score = 0;
   UserRepository _userRepo;
   BuildContext context;
+
   _Game(this._userRepo, this.context) {
     //das macht es fast!!! responsible
     final mediaQueryData = MediaQuery.of(context);
     WIDTH = (mediaQueryData.size.height - 250) / 2;
-    //    (mediaQueryData.size.width) -    110; //an dieser Stelle hängt es noch, wenn der Bildschirm etwas breiter ist
 
     POINT_SIZE = WIDTH / 10;
     HEIGHT = WIDTH * 2;
-    // BOARD_HEIGHT = HEIGHT / 20;
-    // BOARD_WIDTH = WIDTH / 20;
   }
   bool _savedHighscore = false;
 
@@ -311,7 +309,9 @@ class _Game extends State<Game> {
               ),
             ),
             Expanded(
-              child: UserInput(onActionButtonPressed),
+              child: (playerLost() == false)
+                  ? UserInput(onActionButtonPressed)
+                  : getGameOverButton(context),
             ),
           ],
         )
