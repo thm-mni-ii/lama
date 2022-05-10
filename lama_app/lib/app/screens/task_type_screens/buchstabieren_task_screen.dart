@@ -8,7 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'dart:convert';
-
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
@@ -64,11 +63,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
       _canShowButton[i] = false;
     });
   }
- 
- // sleep asynch test, funktioniert noch gar nicht
-  Future<void> sleepAsync() async {
-    await Future.delayed(Duration(seconds: 10));
-  }
 
   Widget zeichneAntwortButton(buchstabe, ix) {
     return ElevatedButton(
@@ -80,21 +74,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           buchstabenListe[ergebnisIndex] = buchstabe;
           ergebnisIndex++;
         }
-        (() {
-          if (!_canShowButton[wortLaenge - 1]) {
-            if (buchstabenListe.join('') == wort) {
-              sleepAsync();
-              bool answer = true;
-              print(answer);
-              setState(() {
-                // macht sleep ohne dass letzter Buchstabe auftaucht
-                sleep(Duration(seconds: 10));
-                BlocProvider.of<TaskBloc>(context)
-                    .add(AnswerTaskEvent.initBuchstabieren(answer));
-              });
-            }
-          }
-        }());
       },
       child: Text(buchstabe, style: TextStyle(fontSize: 15)),
     );
@@ -247,7 +226,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                 for (int i = 0; i < wortLaenge; i++)
                   (_canShowButton[i])
                       ? leeresFeld()
-                      : gefuelltesFeld(buchstabenListe[i])
+                      : gefuelltesFeld(buchstabenListe[i]),
               ],
             ),
           ),
@@ -265,6 +244,19 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                   zeichneContainerMitAntwortButton(i)
               ],
             ),
+          ),
+          Container(
+            child: (() {
+              if (!_canShowButton[wortLaenge - 1] &&
+                  buchstabenListe.join('') == wort) {
+                Future.delayed(const Duration(milliseconds: 1500), () {
+                  setState(() {
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(AnswerTaskEvent.initBuchstabieren(true));
+                  });
+                });
+              }
+            }()),
           ),
         ],
       ),
