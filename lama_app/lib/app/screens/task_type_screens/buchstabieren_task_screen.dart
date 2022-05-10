@@ -115,7 +115,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           color: Colors.grey,
         ),
       ),
-      child: child: Text(buchstabe, style: TextStyle(fontSize: 30)),
+      child: Text(buchstabe, style: TextStyle(fontSize: 30)),
     );
   }
 
