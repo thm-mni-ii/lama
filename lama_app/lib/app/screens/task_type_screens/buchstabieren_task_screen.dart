@@ -64,12 +64,17 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     });
   }
 
+//
   Widget zeichneAntwortButton(buchstabe, ix) {
     return ElevatedButton(
       onPressed: () {
+        //hier wird überprüft, ob der Buchstabe des Buttons
+        //gleich dem nächsten korrekt,anzuklickendem Buchstaben ist
         if (buchstabenListe[stringIndex] == buchstabe) {
+          // && ergebnisIndex == ix) {  //vorablösung
           ergebnisBuchstabe = buchstabe;
-          hideWidget(ix);
+          hideWidget(
+              stringIndex); //ix stand davor da , dies ersetzt die Vorablösung, sodass nun immer der richtige Buchstabe der Reihe nach eingetragen wird.
           stringIndex++;
           buchstabenListe[ergebnisIndex] = buchstabe;
           ergebnisIndex++;
@@ -79,6 +84,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     );
   }
 
+//ein Container, welcher einen klickbaren Button mit einem Buchstaben beinhaltet
+//wurde er in richtiger Reihenfolge angeklickt, wird er auf "null" gesetzt
+//Falls seine größe im Zustand "null" nicht angepasst wird, so wird eine andere Lösung benötigt
   Widget zeichneContainerMitAntwortButton(x) {
     return Container(
       margin: EdgeInsets.all(10),
@@ -131,11 +139,11 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     }
     buchstabenIndexListe.shuffle();
 
+    //hier wird die Menge an benötigter Buttons festgelegt, welche die Antwortbuchstaben beihalten
     _canShowButton = List<bool>.filled(wort.length, true, growable: false);
     for (int x = 0; x < wort.length; x++) {
       _canShowButton[x] = true;
     }
-
     return wort;
   }
 
@@ -245,8 +253,11 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               ],
             ),
           ),
+
           Container(
             child: (() {
+              //wenn der letzte Buchstabe richtig angeklickt und angezeigt wurde, soll ein grüner Haken auf dem Bildschirm angezeigt werden
+              //ich anschluss folgt ein neuer Task für den User
               if (!_canShowButton[wortLaenge - 1] &&
                   buchstabenListe.join('') == wort) {
                 Future.delayed(const Duration(milliseconds: 1500), () {
