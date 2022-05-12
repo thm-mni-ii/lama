@@ -243,11 +243,27 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
             height: MediaQuery.of(context).size.height / 5,
             width: MediaQuery.of(context).size.width / 2,
-            child: Image.network(wortURL),
+            child:
+                //Image.network(wortURL), //Image.memory(byte), // //Image.asset()
+                Image.network(
+              wortURL,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes
+                        : null,
+                  ),
+                );
+              },
+            ),
           ),
           SizedBox(
-            height: 20,
-          ),
+              //  height: 20,
+              ),
 
           Container(
             height: MediaQuery.of(context).size.height * 0.2,
