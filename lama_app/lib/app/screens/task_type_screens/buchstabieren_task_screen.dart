@@ -15,6 +15,7 @@ import '../../task-system/task.dart';
 List<String> buchstabenListe;
 List<int> buchstabenIndexListe;
 List<bool> _canShowButton;
+List<bool> _canShowAntwortButton;
 
 String wort;
 String wortURL;
@@ -23,6 +24,8 @@ int zufallsZahl;
 int stringIndex = 0;
 int ergebnisIndex = 0;
 var ergebnisBuchstabe;
+int fehlerZaehler = 0;
+int maxFehlerAnzahl = 2;
 
 class BuchstabierenTaskScreen extends StatefulWidget {
   final TaskBuchstabieren task;
@@ -54,6 +57,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     stringIndex = 0;
     i = 0;
     ergebnisIndex = 0;
+    fehlerZaehler = 0;
+
     messeLaengeVomWort(holeEinWortAusJSON(
         erstelleEineRandomNummer(), woerterKeys, woerterURLs));
   }
@@ -64,21 +69,46 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     });
   }
 
+  void showWidget(i) {
+    setState(() {
+      _canShowAntwortButton[i] = true;
+    });
+  }
+
+//
   Widget zeichneAntwortButton(buchstabe, ix) {
     return ElevatedButton(
       onPressed: () {
+        //hier wird überprüft, ob der Buchstabe des Buttons
+        //gleich dem nächsten korrekt,anzuklickendem Buchstaben ist
         if (buchstabenListe[stringIndex] == buchstabe) {
+          // && ergebnisIndex == ix) {  //vorablösung
           ergebnisBuchstabe = buchstabe;
-          hideWidget(ix);
+          hideWidget(
+              ix); //ix stand davor da , dies ersetzt die Vorablösung, sodass nun immer der richtige Buchstabe der Reihe nach eingetragen wird.
+          showWidget(stringIndex);
           stringIndex++;
           buchstabenListe[ergebnisIndex] = buchstabe;
           ergebnisIndex++;
+        } else {
+          fehlerZaehler++;
+          if (fehlerZaehler > maxFehlerAnzahl) {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              setState(() {
+                BlocProvider.of<TaskBloc>(context)
+                    .add(AnswerTaskEvent.initBuchstabieren(false));
+              });
+            });
+          }
         }
       },
       child: Text(buchstabe, style: TextStyle(fontSize: 25)),
     );
   }
 
+//ein Container, welcher einen klickbaren Button mit einem Buchstaben beinhaltet
+//wurde er in richtiger Reihenfolge angeklickt, wird er auf "null" gesetzt
+//Falls seine größe im Zustand "null" nicht angepasst wird, so wird eine andere Lösung benötigt
   Widget zeichneContainerMitAntwortButton(x) {
     return Container(
       margin: EdgeInsets.all(10),
@@ -131,11 +161,16 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     }
     buchstabenIndexListe.shuffle();
 
+    //hier wird die Menge an benötigter Buttons festgelegt, welche die Antwortbuchstaben beihalten
     _canShowButton = List<bool>.filled(wort.length, true, growable: false);
+
+    _canShowAntwortButton =
+        List<bool>.filled(wort.length, true, growable: false);
+
     for (int x = 0; x < wort.length; x++) {
       _canShowButton[x] = true;
+      _canShowAntwortButton[x] = false;
     }
-
     return wort;
   }
 
@@ -224,7 +259,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               crossAxisSpacing: 20,
               children: [
                 for (int i = 0; i < wortLaenge; i++)
-                  (_canShowButton[i])
+                  (!_canShowAntwortButton[i])
                       ? leeresFeld()
                       : gefuelltesFeld(buchstabenListe[i]),
               ],
@@ -245,8 +280,11 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               ],
             ),
           ),
+
           Container(
             child: (() {
+              //wenn der letzte Buchstabe richtig angeklickt und angezeigt wurde, soll ein grüner Haken auf dem Bildschirm angezeigt werden
+              //ich anschluss folgt ein neuer Task für den User
               if (!_canShowButton[wortLaenge - 1] &&
                   buchstabenListe.join('') == wort) {
                 Future.delayed(const Duration(milliseconds: 1500), () {
