@@ -87,9 +87,6 @@ class Task {
       case "GridSelect":
         return TaskGridSelect(taskType, json['task_reward'], json['lama_text'],
             json['left_to_solve'], List<String>.from(json['wordsToFind']));
-      case "MoneyTask":
-        return TaskMoney(taskType, json['task_reward'], json['lama_text'],
-            json['left_to_solve'], json['difficulty'], json['optimum']);
       case "VocableTest":
         var wordPairs = json['wordPairs'] as List;
         List<Pair<String, String>> wordPairList =
