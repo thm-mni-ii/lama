@@ -15,6 +15,7 @@ import 'package:lama_app/app/screens/task_type_screens/mark_words_task_screen.da
 import 'package:lama_app/app/screens/task_type_screens/match_Category_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/money_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/number_line_task_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/picture_four_cards_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/vocable_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/zerlegung_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
@@ -313,6 +314,8 @@ class TaskScreenState extends State<TaskScreen> {
         return ConnectTaskScreen(task, constraints);
       case "Equation":
         return EquationTaskScreen(task, constraints);
+      case "Picture4Cards":
+        return Picture4CardsScreen(task, constraints);
       default:
         return Container();
     }

@@ -79,9 +79,8 @@ class TasksetValidator {
                 json["reverse"] is bool &&
                 json.containsKey('zeros') &&
                 json['zeros'] is bool &&
-                json.containsKey('boolThousands')&&
-                json['boolThousands'] is bool)
-                return null;
+                json.containsKey('boolThousands') &&
+                json['boolThousands'] is bool) return null;
             return "Aufgabentyp: Zerlegung";
 
           ///ClozeTest
@@ -95,20 +94,9 @@ class TasksetValidator {
                 _checkListType<String>(json["wrong_answers"])) return null;
             return "Aufgabentyp: ClozeTest";
 
-          ///Bild4Cards
-          case "Bild4Cards":
-            if (json.containsKey("question") &&
-                json["question"] is String &&
-                json.containsKey("right_answer") &&
-                json["right_answer"] is String &&
-                json.containsKey("wrong_answers") &&
-                json["wrong_answers"] is List &&
-                _checkListType<String>(json["wrong_answers"])) return null;
-            return "Aufgabentyp: Bild4Cards";
           case "Buchstabieren":
             if (json.containsKey("words") && json["words"] is List) return null;
             return "Aufgabentyp: Buchstabieren";
-
 
           case "Clock":
             if (json.containsKey("uhr") &&
@@ -253,6 +241,18 @@ class TasksetValidator {
               }
             }
             return "Aufgabentyp: Equation";
+
+          ///Picture4Cards
+          case "Picture4Cards":
+            if (json.containsKey("picture") &&
+                json["picture"] is String &&
+                json.containsKey("right_answer") &&
+                json["right_answer"] is String &&
+                json.containsKey("wrong_answers") &&
+                json["wrong_answers"] is List &&
+                _checkListType<String>(json["wrong_answers"])) return null;
+            return "Aufgabentyp: Picture4Cards";
+
           default:
             return "";
         }

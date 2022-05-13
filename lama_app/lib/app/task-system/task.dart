@@ -35,14 +35,13 @@ class Task {
             List<String>.from(json['wrong_answers']));
       case "Zerlegung":
         return TaskZerlegung(
-          taskType,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          json['reverse'],
-          json['zeros'],
-          json['boolThousands']
-        );
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['reverse'],
+            json['zeros'],
+            json['boolThousands']);
       case "Clock":
         return ClockTest(
             taskType,
@@ -149,6 +148,15 @@ class Task {
             resultRange,
             operatorAmount,
             fieldsToReplace);
+      case "Picture4Cards":
+        return Picture4Cards(
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['picture'],
+            json['right_answer'],
+            List<String>.from(json['wrong_answers']));
       default:
         return null;
     }
@@ -296,6 +304,7 @@ class TaskGridSelect extends Task {
     return s;
   }
 }
+
 //Author Handito Bismo
 class ClockTest extends Task {
   String uhr;
@@ -436,6 +445,7 @@ class TaskEquation extends Task {
     return s;
   }
 }
+
 class TaskZerlegung extends Task {
   bool zeros;
   bool boolThousands;
@@ -448,6 +458,7 @@ class TaskZerlegung extends Task {
   // do toString Method
 
 }
+
 ///Subclass of [Task] for the Tasktype "NumberLine"
 ///
 ///Author: J.Decher
@@ -463,6 +474,29 @@ class TaskNumberLine extends Task {
   @override
   String toString() {
     String s = super.toString();
+    return s;
+  }
+}
+
+///Subclass of [Task] for the Tasktype "Picture4Cards"
+///
+///Author: S.Gaertner
+class Picture4Cards extends Task {
+  String picture;
+  String rightAnswer;
+  List<String> wrongAnswers;
+
+  Picture4Cards(String taskType, int reward, String lamaText, int leftToSolve,
+      this.picture, this.rightAnswer, this.wrongAnswers)
+      : super(taskType, reward, lamaText, leftToSolve);
+
+  @override
+  String toString() {
+    String s = super.toString() + picture + rightAnswer;
+    wrongAnswers.sort();
+    for (int i = 0; i < wrongAnswers.length; i++) {
+      s += wrongAnswers[i];
+    }
     return s;
   }
 }

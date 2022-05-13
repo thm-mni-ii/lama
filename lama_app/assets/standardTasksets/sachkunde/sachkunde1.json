@@ -3,15 +3,24 @@
      "taskset_subject":"Sachkunde",
       "taskset_grade":1,
        "tasks": [
-           {
+         {
+          "task_type":"Picture4Cards",
+          "task_reward":2,
+          "question":"Ich teste hier nur etwas",
+          "lama_text":"Was wird auf dem Bild gezeigt?",
+          "left_to_solve": 3,
+          "right_answer":"Klicke mich!",
+          "wrong_answers":["nicht hier", "nope", "nein"]
+         },
+         {
            "task_type":"4Cards",
             "task_reward":2,
             "question":"Der Igel gehört zu den .. ?",
             "lama_text":"Tippe die richtige Antwort an!",
             "left_to_solve": 3,
             "right_answer":"Säugetieren",
-             "wrong_answers":["Reptilien", "Amphibien", "Vögeln"]
-             },
+            "wrong_answers":["Reptilien", "Amphibien", "Vögeln"]
+         },
          {
            "task_type":"ClozeTest",
            "task_reward":2,

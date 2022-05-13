@@ -70,8 +70,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
-      }
-       else if (t is TaskClozeTest) {
+      } else if (t is TaskClozeTest) {
         if (event.providedAnswer == t.rightAnswer) {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
@@ -83,16 +82,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         if (event.providedAnswer == t.rightAnswer) {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
-        } else if (event.providedAnswerBool == true){
+        } else if (event.providedAnswerBool == true) {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
-        }
-        else { 
+        } else {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
-      }
-      else if (t is TaskClozeTest) {
+      } else if (t is TaskClozeTest) {
         if (event.providedAnswer == t.rightAnswer) {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
@@ -100,7 +97,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
-      }else if (t is TaskMatchCategory) {
+      } else if (t is TaskMatchCategory) {
         if (event.providedanswerStates.contains(false)) {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
@@ -108,7 +105,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         }
-      }else if (t is TaskGridSelect) {
+      } else if (t is TaskGridSelect) {
         if (!DeepCollectionEquality.unordered()
             .equals(event.rightPositions, event.markedPositions)) {
           wrongAnswerCallback(t);
@@ -117,7 +114,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         }
-      }else if (t is TaskMoney) {
+      } else if (t is TaskMoney) {
         if (event.providedAnswerBool) {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
@@ -125,7 +122,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false);
         }
-      }else if (t is TaskVocableTest) {
+      } else if (t is TaskVocableTest) {
         if (event.providedanswerStates.contains(false)) {
           wrongAnswerCallback(t);
           yield TaskAnswerResultState(false,
@@ -145,6 +142,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         }
       } else if (t is TaskEquation) {
         if (evaluateExpression(event.fullAnswer)) {
+          rightAnswerCallback(t);
+          yield TaskAnswerResultState(true);
+        } else {
+          wrongAnswerCallback(t);
+          yield TaskAnswerResultState(false);
+        }
+      } else if (t is Picture4Cards) {
+        if (event.providedAnswer == t.rightAnswer) {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);
         } else {
