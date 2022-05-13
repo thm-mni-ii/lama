@@ -49,9 +49,7 @@ class Picture4CardsScreen extends StatelessWidget {
                       offset: Offset(0, 3))
                 ]),
             child: Align(
-              child: Text(task.picture, //TO-DO: hier wird das Bild angezeigt
-                  textAlign: TextAlign.center,
-                  style: LamaTextTheme.getStyle(fontSize: 30)),
+              child: Image.network(task.picture),
             )),
       ),
       Container(

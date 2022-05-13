@@ -6,11 +6,11 @@
          {
           "task_type":"Picture4Cards",
           "task_reward":2,
-          "picture":"Ich teste hier nur etwas",
+          "picture":"https://raw.githubusercontent.com/handitosb/lamaapps/main/Bilder_Test/Auto.png",
           "lama_text":"Was wird auf dem Bild gezeigt?",
           "left_to_solve": 3,
-          "right_answer":"Klicke mich!",
-          "wrong_answers":["nicht hier", "nope", "nein"]
+          "right_answer":"Auto",
+          "wrong_answers":["Hund", "Traktor", "Zug"]
          },
          {
            "task_type":"4Cards",
