@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,6 +21,8 @@ import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+
+import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
 
 ///[StatefulWidget] for the screen framework containing the current Task Widget.
 ///
@@ -315,7 +316,9 @@ class TaskScreenState extends State<TaskScreen> {
       case "Equation":
         return EquationTaskScreen(task, constraints);
       case "Buchstabieren":
-        return BuchstabierenTaskScreen(task, constraints);
+        int randomNummer = erstelleEineRandomNummer(task);
+        Image image = cacheImageByUrl(context, holeUrl(task, randomNummer));
+        return BuchstabierenTaskScreen(task, constraints, image, randomNummer);
       default:
         return Container();
     }

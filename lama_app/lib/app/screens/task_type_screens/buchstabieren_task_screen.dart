@@ -1,13 +1,11 @@
-import 'dart:math';
-import 'dart:io';
 import 'package:bubble/bubble.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
-import 'dart:convert';
+
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
@@ -30,12 +28,16 @@ int maxFehlerAnzahl = 2;
 class BuchstabierenTaskScreen extends StatefulWidget {
   final TaskBuchstabieren task;
   final BoxConstraints constraints;
+  Image pictureFromNetwork;
+  int randomNummer;
 
-  BuchstabierenTaskScreen(this.task, this.constraints);
+  BuchstabierenTaskScreen(
+      this.task, this.constraints, this.pictureFromNetwork, this.randomNummer);
 
   @override
   State<StatefulWidget> createState() {
-    return BuchstabierenTaskState(task, constraints);
+    return BuchstabierenTaskState(
+        task, constraints, pictureFromNetwork, randomNummer);
   }
 }
 
@@ -43,10 +45,13 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   // task infos and constraints handed over by tasktypeScreen
   final TaskBuchstabieren task;
   final BoxConstraints constraints;
+  Image pictureFromNetwork;
+  int randomNummer;
 
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
   bool answer;
+
 //hier beginnt der erste State der Aufgabe "Buchstabieren"
 //zufalls Nummer wird generiert und das erste Wort wird aus eine json gezogen
 //außerdem werden einige Variablen wieder auf ihren ursprünglichen Zustand gestellt-> wichtig für neue Aufgaben
@@ -59,8 +64,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     ergebnisIndex = 0;
     fehlerZaehler = 0;
 
-    messeLaengeVomWort(holeEinWortAusJSON(
-        erstelleEineRandomNummer(), woerterKeys, woerterURLs));
+    messeLaengeVomWort(
+        holeEinWortAusJSON(randomNummer, woerterKeys, woerterURLs));
   }
 
   void hideWidget(i) {
@@ -186,14 +191,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     return test1;
   }
 
-  int erstelleEineRandomNummer() {
-    var rng = Random();
-    var zufallsZahl = rng.nextInt(task.woerter
-        .length); //hier entsteht eine random Nummer 0..(Anzahl der Wörter in (task.woerter-1))
-    return zufallsZahl;
-  }
-
-  BuchstabierenTaskState(this.task, this.constraints);
+  BuchstabierenTaskState(
+      this.task, this.constraints, this.pictureFromNetwork, this.randomNummer);
 
   @override
   Widget build(BuildContext context) {
@@ -243,9 +242,10 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
             height: MediaQuery.of(context).size.height / 5,
             width: MediaQuery.of(context).size.width / 2,
-            child:
-                //Image.network(wortURL), //Image.memory(byte), // //Image.asset()
-                Image.network(
+            child: pictureFromNetwork,
+            // CachedNetworkImage(imageUrl: "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Auto.png?raw=true",),
+            //Image.network(wortURL), //Image.memory(byte), // //Image.asset()
+            /* Image.network(
               wortURL,
               loadingBuilder: (BuildContext context, Widget child,
                   ImageChunkEvent loadingProgress) {
@@ -259,7 +259,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                   ),
                 );
               },
-            ),
+            ),*/
           ),
           SizedBox(
               //  height: 20,
