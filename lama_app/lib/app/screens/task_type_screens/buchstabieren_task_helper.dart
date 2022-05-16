@@ -27,3 +27,9 @@ String holeUrl(task, int zufallszahl) {
   String url = woerterURLs[zufallszahl];
   return url;
 }
+
+void precacheAllImagesForTask(task, BuildContext context) {
+  for (int i = 0; i < task.woerter.length; i++) {
+    cacheImageByUrl(context, holeUrl(task, i));
+  }
+}

@@ -49,17 +49,11 @@ class TaskScreenState extends State<TaskScreen> {
     //  test2(task);
   }
 
-  void testfuerBilderCache(task) {
+  void setRandomNumberAndImageForBuchstabierenTask(task) {
     //  setState(() {
     randomNummer = erstelleEineRandomNummer(task);
     image = cacheImageByUrl(context, holeUrl(task, randomNummer));
     //  });
-  }
-
-  void test2(task) {
-    for (int i = 0; i < task.woerter.length; i++) {
-      cacheImageByUrl(context, holeUrl(task, i));
-    }
   }
 
   @override
@@ -335,10 +329,8 @@ class TaskScreenState extends State<TaskScreen> {
       case "Equation":
         return EquationTaskScreen(task, constraints);
       case "Buchstabieren":
-        //  int randomNummer = erstelleEineRandomNummer(task);
-        // Image image = cacheImageByUrl(context, holeUrl(task, randomNummer));
-        test2(task);
-        testfuerBilderCache(task);
+        precacheAllImagesForTask(task, context);
+        setRandomNumberAndImageForBuchstabierenTask(task);
         return BuchstabierenTaskScreen(task, constraints, image, randomNummer);
       default:
         return Container();
