@@ -36,11 +36,30 @@ class TaskScreen extends StatefulWidget {
 ///
 ///Author: K.Binder
 class TaskScreenState extends State<TaskScreen> {
+  int randomNummer;
+  Image image;
+  TaskBuchstabieren task;
+
   ///Loads the first Task of the list that was passed by
   ///the [ChooseTasksetScreen] during initialization.
   void initState() {
     super.initState();
     BlocProvider.of<TaskBloc>(context).add(ShowNextTaskEvent());
+    // TaskBuchstabieren task;
+    //  test2(task);
+  }
+
+  void testfuerBilderCache(task) {
+    //  setState(() {
+    randomNummer = erstelleEineRandomNummer(task);
+    image = cacheImageByUrl(context, holeUrl(task, randomNummer));
+    //  });
+  }
+
+  void test2(task) {
+    for (int i = 0; i < task.woerter.length; i++) {
+      cacheImageByUrl(context, holeUrl(task, i));
+    }
   }
 
   @override
@@ -316,8 +335,10 @@ class TaskScreenState extends State<TaskScreen> {
       case "Equation":
         return EquationTaskScreen(task, constraints);
       case "Buchstabieren":
-        int randomNummer = erstelleEineRandomNummer(task);
-        Image image = cacheImageByUrl(context, holeUrl(task, randomNummer));
+        //  int randomNummer = erstelleEineRandomNummer(task);
+        // Image image = cacheImageByUrl(context, holeUrl(task, randomNummer));
+        test2(task);
+        testfuerBilderCache(task);
         return BuchstabierenTaskScreen(task, constraints, image, randomNummer);
       default:
         return Container();
