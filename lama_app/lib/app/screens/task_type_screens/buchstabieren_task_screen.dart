@@ -237,7 +237,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           ),
 
           Container(
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+            //decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
             height: MediaQuery.of(context).size.height / 5,
