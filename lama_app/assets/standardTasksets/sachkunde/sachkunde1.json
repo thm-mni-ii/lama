@@ -2,6 +2,7 @@
     "taskset_name":"Standardaufgaben Klasse 1",
      "taskset_subject":"Sachkunde",
       "taskset_grade":1,
+      "taskset_randomize_order": true,
        "tasks": [
          {
           "task_type":"Picture4Cards",

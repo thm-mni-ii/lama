@@ -1,4 +1,5 @@
 import 'package:bubble/bubble.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,6 +21,9 @@ class Picture4CardsScreen extends StatelessWidget {
   //Its parent is always a container covering the whole available area
   final BoxConstraints constraints;
 
+  //this needs to load the pictures into the cache before the task shows
+  void test() {}
+
   Picture4CardsScreen(this.task, this.constraints) {
     answers.addAll(task.wrongAnswers);
     answers.add(task.rightAnswer);
@@ -35,22 +39,9 @@ class Picture4CardsScreen extends StatelessWidget {
         width: (constraints.maxWidth),
         padding: EdgeInsets.all(25),
         child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(50)),
-                gradient: LinearGradient(colors: [
-                  LamaColors.orangeAccent,
-                  LamaColors.orangePrimary
-                ]),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3))
-                ]),
             child: Align(
-              child: Image.network(task.picture),
-            )),
+          child: CachedNetworkImage(imageUrl: task.picture),
+        )),
       ),
       Container(
         height: (constraints.maxHeight / 100) * 15,
