@@ -111,8 +111,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 //Falls seine größe im Zustand "null" nicht angepasst wird, so wird eine andere Lösung benötigt
   Widget zeichneContainerMitAntwortButton(x) {
     return Container(
-      margin: EdgeInsets.all(10),
-      height: 20.0,
+      alignment: Alignment.center,
+      // margin: EdgeInsets.all(10),
       child: (wortLaenge >= x + 1 &&
               _canShowButton[buchstabenIndexListe[
                   x]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
@@ -125,27 +125,34 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   }
 
   Widget leeresFeld() {
-    return Container(
-      margin: EdgeInsets.all(10),
-      height: 20.0,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey,
+    return Expanded(
+      flex: 1,
+      child: Container(
+        margin: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(
+            color: Colors.black,
+          )),
         ),
       ),
     );
   }
 
   Widget gefuelltesFeld(buchstabe) {
-    return Container(
-      margin: EdgeInsets.all(10),
-      height: 20.0,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey,
-        ),
+    return Expanded(
+      flex: 1,
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        //margin: EdgeInsets.all(10),
+        //height: 20.0,
+        /* decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey,
+          ),
+        ), */
+        child: Text(buchstabe, style: TextStyle(fontSize: 30)),
       ),
-      child: Text(buchstabe, style: TextStyle(fontSize: 30)),
     );
   }
 
@@ -250,13 +257,12 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           ),
 
           Container(
-            height: MediaQuery.of(context).size.height * 0.2,
+            height: MediaQuery.of(context).size.height * 0.1,
             width: MediaQuery.of(context).size.width * 0.9,
-            color: Colors.red,
-            child: GridView.count(
-              crossAxisCount: 5,
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
+            //color: Colors.green,
+            child: Row(
+              //crossAxisCount: wortLaenge,
+
               children: [
                 for (int i = 0; i < wortLaenge; i++)
                   (!_canShowAntwortButton[i])
@@ -265,15 +271,21 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               ],
             ),
           ),
+          SizedBox(
+            height: 20,
+          ),
           Container(
             // legt Größe des Grids fest
-            height: MediaQuery.of(context).size.height * 0.3,
+            height: MediaQuery.of(context).size.height * 0.35,
             width: MediaQuery.of(context).size.width * 0.9,
-            color: Colors.green,
+            //color: Colors.green,
+
             child: GridView.count(
+              //maxCrossAxisExtent: MediaQuery.of(context).size.height * 0.25 / 2,
               // zeigt Buchstaben in nächster Zeile an, wenn crossAxisCount überschritten wird
               crossAxisCount: 5,
-              mainAxisSpacing: 20,
+
+              //mainAxisSpacing: 10,
               children: [
                 for (int i = 0; i < wortLaenge; i++)
                   zeichneContainerMitAntwortButton(i)
