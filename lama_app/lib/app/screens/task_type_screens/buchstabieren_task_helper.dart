@@ -4,6 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+import 'package:lama_app/app/repository/user_repository.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+int getGradeFromCurrentUser(context) {
+  UserRepository userRepository =
+      RepositoryProvider.of<UserRepository>(context);
+  userRepository.getGrade();
+}
+
 Image cacheImageByUrl(BuildContext context, String url) {
   Image image = Image(
     image: CachedNetworkImageProvider(

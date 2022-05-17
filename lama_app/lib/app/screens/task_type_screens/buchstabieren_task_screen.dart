@@ -10,6 +10,8 @@ import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
 
+import 'buchstabieren_task_helper.dart';
+
 List<String> buchstabenListe;
 List<int> buchstabenIndexListe;
 List<bool> _canShowButton;
@@ -30,14 +32,16 @@ class BuchstabierenTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
   Image pictureFromNetwork;
   int randomNummer;
+  int userGrade;
 
   BuchstabierenTaskScreen(
-      this.task, this.constraints, this.pictureFromNetwork, this.randomNummer);
+      this.task, this.constraints, this.pictureFromNetwork, this.randomNummer,
+      [this.userGrade]);
 
   @override
   State<StatefulWidget> createState() {
     return BuchstabierenTaskState(
-        task, constraints, pictureFromNetwork, randomNummer);
+        task, constraints, pictureFromNetwork, randomNummer, userGrade);
   }
 }
 
@@ -47,6 +51,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   final BoxConstraints constraints;
   Image pictureFromNetwork;
   int randomNummer;
+  int userGrade;
 
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
@@ -63,6 +68,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     i = 0;
     ergebnisIndex = 0;
     fehlerZaehler = 0;
+    calculateAllowedMistakes();
+    debugPrint("UserGrade:  " + userGrade.toString());
 
     messeLaengeVomWort(
         holeEinWortAusJSON(randomNummer, woerterKeys, woerterURLs));
@@ -78,6 +85,14 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     setState(() {
       _canShowAntwortButton[i] = true;
     });
+  }
+
+//zur Zeit soll nur einem Schüler der ersten Klasse erlaubt sein, einen Fehler zu machen
+//TODO: man könnte noch die länge des Wortes mit in die Berechnung mit einbeziehen
+  calculateAllowedMistakes() {
+    if (userGrade == 1) {
+      maxFehlerAnzahl = 1;
+    }
   }
 
 //
@@ -203,8 +218,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     return test1;
   }
 
-  BuchstabierenTaskState(
-      this.task, this.constraints, this.pictureFromNetwork, this.randomNummer);
+  BuchstabierenTaskState(this.task, this.constraints, this.pictureFromNetwork,
+      this.randomNummer, this.userGrade);
 
   @override
   Widget build(BuildContext context) {

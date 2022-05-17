@@ -28,8 +28,11 @@ import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper
 ///
 ///Author: K.Binder
 class TaskScreen extends StatefulWidget {
+  int userGrade;
+  TaskScreen([this.userGrade]);
+
   @override
-  State<StatefulWidget> createState() => TaskScreenState();
+  State<StatefulWidget> createState() => TaskScreenState(userGrade);
 }
 
 ///[State] for the [TaskScreen]
@@ -39,6 +42,9 @@ class TaskScreenState extends State<TaskScreen> {
   int randomNummer;
   Image image;
   TaskBuchstabieren task;
+  int userGrade;
+
+  TaskScreenState([this.userGrade]);
 
   ///Loads the first Task of the list that was passed by
   ///the [ChooseTasksetScreen] during initialization.
@@ -331,7 +337,9 @@ class TaskScreenState extends State<TaskScreen> {
       case "Buchstabieren":
         precacheAllImagesForTask(task, context);
         setRandomNumberAndImageForBuchstabierenTask(task);
-        return BuchstabierenTaskScreen(task, constraints, image, randomNummer);
+        //getGradeFromCurrentUser(context);
+        return BuchstabierenTaskScreen(
+            task, constraints, image, randomNummer, userGrade);
       default:
         return Container();
     }

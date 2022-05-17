@@ -36,6 +36,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
   String chosenSubject;
   int userGrade;
   UserRepository userRepository;
+
   ChooseTasksetScreenState(
       this.chosenSubject, this.userGrade, this.userRepository);
 
@@ -165,7 +166,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                   builder: (context) => BlocProvider<TaskBloc>(
                     create: (context) => TaskBloc(taskset.subject,
                         generateTaskList(taskset), userRepository),
-                    child: TaskScreen(),
+                    child: TaskScreen(userGrade),
                   ),
                 ),
               ),
