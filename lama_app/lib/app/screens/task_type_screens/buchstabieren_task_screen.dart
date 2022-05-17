@@ -107,7 +107,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           }
         }
       },
-      child: Text(buchstabe, style: TextStyle(fontSize: 25)),
+      child: Text(buchstabe, style: LamaTextTheme.getStyle(fontSize: 30)),
     );
   }
 
@@ -156,7 +156,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             color: Colors.grey,
           ),
         ), */
-        child: Text(buchstabe, style: TextStyle(fontSize: 30)),
+        child: Text(buchstabe,
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
       ),
     );
   }
