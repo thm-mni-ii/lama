@@ -23,7 +23,7 @@ int stringIndex = 0;
 int ergebnisIndex = 0;
 var ergebnisBuchstabe;
 int fehlerZaehler = 0;
-int maxFehlerAnzahl = 2;
+int maxFehlerAnzahl = 0;
 
 class BuchstabierenTaskScreen extends StatefulWidget {
   final TaskBuchstabieren task;
@@ -107,6 +107,10 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           }
         }
       },
+      style: ElevatedButton.styleFrom(
+        shadowColor: Colors.black,
+        elevation: 10,
+      ),
       child: Text(buchstabe, style: LamaTextTheme.getStyle(fontSize: 30)),
     );
   }
