@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,6 +22,8 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
+
 ///[StatefulWidget] for the screen framework containing the current Task Widget.
 ///
 ///Author: K.Binder
@@ -35,11 +36,24 @@ class TaskScreen extends StatefulWidget {
 ///
 ///Author: K.Binder
 class TaskScreenState extends State<TaskScreen> {
+  int randomNummer;
+  Image image;
+  TaskBuchstabieren task;
+
   ///Loads the first Task of the list that was passed by
   ///the [ChooseTasksetScreen] during initialization.
   void initState() {
     super.initState();
     BlocProvider.of<TaskBloc>(context).add(ShowNextTaskEvent());
+    // TaskBuchstabieren task;
+    //  test2(task);
+  }
+
+  void setRandomNumberAndImageForBuchstabierenTask(task) {
+    //  setState(() {
+    randomNummer = erstelleEineRandomNummer(task);
+    image = cacheImageByUrl(context, holeUrl(task, randomNummer));
+    //  });
   }
 
   @override
@@ -315,7 +329,9 @@ class TaskScreenState extends State<TaskScreen> {
       case "Equation":
         return EquationTaskScreen(task, constraints);
       case "Buchstabieren":
-        return BuchstabierenTaskScreen(task, constraints);
+        precacheAllImagesForTask(task, context);
+        setRandomNumberAndImageForBuchstabierenTask(task);
+        return BuchstabierenTaskScreen(task, constraints, image, randomNummer);
       default:
         return Container();
     }
