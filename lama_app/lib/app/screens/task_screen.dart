@@ -28,7 +28,7 @@ import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper
 ///
 ///Author: K.Binder
 class TaskScreen extends StatefulWidget {
-  int userGrade;
+  final int userGrade;
   TaskScreen([this.userGrade]);
 
   @override
@@ -51,15 +51,6 @@ class TaskScreenState extends State<TaskScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<TaskBloc>(context).add(ShowNextTaskEvent());
-    // TaskBuchstabieren task;
-    //  test2(task);
-  }
-
-  void setRandomNumberAndImageForBuchstabierenTask(task) {
-    //  setState(() {
-    randomNummer = erstelleEineRandomNummer(task);
-    image = cacheImageByUrl(context, holeUrl(task, randomNummer));
-    //  });
   }
 
   @override
@@ -335,11 +326,14 @@ class TaskScreenState extends State<TaskScreen> {
       case "Equation":
         return EquationTaskScreen(task, constraints);
       case "Buchstabieren":
-        precacheAllImagesForTask(task, context);
-        setRandomNumberAndImageForBuchstabierenTask(task);
-        //getGradeFromCurrentUser(context);
+        // precacheAllImagesForTask(task, context);
+        randomNummer = erstelleEineRandomNummer(task);
         return BuchstabierenTaskScreen(
-            task, constraints, image, randomNummer, userGrade);
+            task,
+            constraints,
+            cacheImageByUrl(context, holeUrl(task, randomNummer)),
+            randomNummer,
+            userGrade);
       default:
         return Container();
     }
