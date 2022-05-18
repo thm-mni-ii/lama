@@ -16,6 +16,17 @@ Image cacheImageByUrl(BuildContext context, String url) {
   return image;
 }
 
+void cacheImageByUrl2(BuildContext context, String url) {
+  Image image = Image(
+    image: CachedNetworkImageProvider(
+        url), //max Höhe/Breite kann hier eingestellt werden
+
+    //fit: BoxFit.cover,
+  );
+
+  precacheImage(image.image, context);
+}
+
 int erstelleEineRandomNummer(task) {
   var rng = Random();
   var zufallsZahl = rng.nextInt(task.woerter.length);

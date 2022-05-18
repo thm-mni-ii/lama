@@ -14,6 +14,7 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
 import 'game_list_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
 
 /// [StatefulWidget] that contains the main menu screen
 ///
@@ -271,47 +272,85 @@ class _HomeScreenState extends State<HomeScreen> {
             .length >
         0) {
       children.add(ElevatedButton(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Center(
-              child: Text(
-                "Deutsch",
-                style: LamaTextTheme.getStyle(),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: CircleAvatar(
-                child: SvgPicture.asset(
-                  'assets/images/svg/MainMenu_Icons/deutsch_icon.svg',
-                  semanticsLabel: 'DeutschIcon',
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Deutsch",
+                  style: LamaTextTheme.getStyle(),
                 ),
-                backgroundColor: LamaColors.redPrimary,
               ),
-            )
-          ],
-        ),
-        style: ElevatedButton.styleFrom(
-            primary: LamaColors.redAccent,
-            minimumSize: Size(
-              (constraints.maxWidth / 100) * 80,
-              ((constraints.maxHeight / 100) * 10),
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50)))),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (BuildContext context) =>
-                  ChooseTasksetBloc(context.read<TasksetRepository>()),
-              child: ChooseTasksetScreen(
-                  "Deutsch", userRepository.getGrade(), userRepository),
-            ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  child: SvgPicture.asset(
+                    'assets/images/svg/MainMenu_Icons/deutsch_icon.svg',
+                    semanticsLabel: 'DeutschIcon',
+                  ),
+                  backgroundColor: LamaColors.redPrimary,
+                ),
+              )
+            ],
           ),
-        ).then((value) => (setState(() {}))),
-      ));
+          style: ElevatedButton.styleFrom(
+              primary: LamaColors.redAccent,
+              minimumSize: Size(
+                (constraints.maxWidth / 100) * 80,
+                ((constraints.maxHeight / 100) * 10),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (BuildContext context) =>
+                      ChooseTasksetBloc(context.read<TasksetRepository>()),
+                  child: ChooseTasksetScreen(
+                      "Deutsch", userRepository.getGrade(), userRepository),
+                ),
+              ),
+            ).then((value) => (setState(() {})));
+
+            //TODO: herausfinden, wie man die URL's aus der JSON abgreifen könnte..
+            //      benötigt wir hierzu die Variable task, sodass auf
+            //      die korrekte JSON zugegriffen werden kann, welche
+            //      die URL's der Bilder beinhaltet. die Variable Task wird jedoch erst in
+            //      task_screen.dart gesetzt.
+
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Auto.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Baum.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Biene.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Faultier.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Fisch.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Frosch.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Hund.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Igel.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Jaguar.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Krokodil.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Küken.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Regenwurm.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Robbe.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Schmetterling.png?raw=true");
+            cacheImageByUrl2(context,
+                "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Schnecke.png?raw=true");
+          }));
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
     }
     if (tasksetRepository

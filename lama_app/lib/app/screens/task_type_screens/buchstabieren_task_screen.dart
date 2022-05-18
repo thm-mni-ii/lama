@@ -245,7 +245,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                         child: Text(
                           "Buchstabiere das Wort, indem du auf die Buchstaben in der richtigen Reihenfolge drückst",
                           style: LamaTextTheme.getStyle(
-                              color: LamaColors.greenAccent, fontSize: 15),
+                              color: LamaColors.black, fontSize: 15),
                         ),
                       ),
                     ),
