@@ -89,20 +89,12 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
         holeEinWortAusJSON(randomNummer, woerterKeys, woerterURLs));
   }
 
-  void incorrectAnswerEvent() {
+//depends on given bool
+  void rightOrWrongAnswerEvent(bool isRightOrWrong) {
     Future.delayed(const Duration(milliseconds: 1500), () {
       setState(() {
         BlocProvider.of<TaskBloc>(context)
-            .add(AnswerTaskEvent.initBuchstabieren(false));
-      });
-    });
-  }
-
-  void correctAnswerEvent() {
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      setState(() {
-        BlocProvider.of<TaskBloc>(context)
-            .add(AnswerTaskEvent.initBuchstabieren(true));
+            .add(AnswerTaskEvent.initBuchstabieren(isRightOrWrong));
       });
     });
   }
@@ -158,7 +150,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               for (int i = stringIndex; i < wort.length; i++) {
                 showWidget(i);
               }
-              incorrectAnswerEvent();
+              rightOrWrongAnswerEvent(false);
             }
           }
         }
@@ -167,7 +159,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           if (buchstabenListe[zufallsZahl] == buchstabe) {
             hideWidget(zufallsZahl);
             showWidget(zufallsZahl);
-            correctAnswerEvent();
+            rightOrWrongAnswerEvent(true);
           } else {
             testFarbe2 = Colors.red;
             if (flagForCorrectingModus == 1) {
@@ -183,7 +175,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               hideWidget(zufallsZahl + 2);
             }
 
-            incorrectAnswerEvent();
+            rightOrWrongAnswerEvent(false);
           }
         }
       },
@@ -454,7 +446,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               //wenn der letzte Buchstabe richtig angeklickt und angezeigt wurde, soll ein grüner Haken auf dem Bildschirm angezeigt werden
               //ich anschluss folgt ein neuer Task für den User
               if (wortLaenge == ergebnisIndex) {
-                correctAnswerEvent();
+                rightOrWrongAnswerEvent(true);
               }
             }()),
           ),
