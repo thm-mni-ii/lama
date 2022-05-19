@@ -12,6 +12,9 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'dart:convert' show utf8;
 
+import 'dart:convert';
+import 'dart:io';
+
 ///Class responsible for loading the standard tasks and tasks from a provided url.
 ///
 ///Author: K.Binder
@@ -46,31 +49,114 @@ class TasksetLoader {
         prefs.getBool(AdminUtils.enableDefaultTasksetsPref);
     if (enableDefaultTasksetPref == null || enableDefaultTasksetPref) {
       for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-        String tasksetMathe = await rootBundle
-            .loadString(
-                'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
+        // String tasksetMathe = await rootBundle
+        //     .loadString(
+        //         'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
+        //    .catchError((err) => Future.value(""));
+        // // Map<String, dynamic> tasksetMathe2 = HttpClient()
+        // //     .getUrl(Uri.parse(
+        // //         'https://raw.githubusercontent.com/handitosb/lamaapps/main/JSON_Test/JSONMathe/mathe' +
+        // //             i.toString() +
+        // //             '.json'))
+        // //     .then((HttpClientRequest request) => request.close())
+        // //     .then((HttpClientResponse response) =>
+        // //         response.transform(new Utf8Decoder())) as Map<String, dynamic>;
+
+        String tasksetMathe = await InputValidation.inputUrlWithJsonValidation(
+                'https://raw.githubusercontent.com/handitosb/lamaapps/main/JSON_Test/JSONMathe/mathe' +
+                    i.toString() +
+                    '.json')
             .catchError((err) => Future.value(""));
+
+        var response = await http.get(
+            Uri.parse(
+                'https://raw.githubusercontent.com/handitosb/lamaapps/main/JSON_Test/JSONMathe/mathe' +
+                    i.toString() +
+                    '.json'),
+            headers: {'Content-type': 'application/json'});
+        if (tasksetMathe == null) {
+          await buildTasksetFromJson(utf8.decode(response.bodyBytes));
+        }
+
         if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
 
-        String tasksetDeutsch = await rootBundle
-            .loadString('assets/standardTasksets/deutsch/deutsch' +
+        //deutsch
+
+        String tasksetDeutsch = await InputValidation.inputUrlWithJsonValidation(
+            'https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch' +
                 i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
+                '.json');
+
+        var responseDeutsch = await http.get(
+            Uri.parse(
+                'https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch' +
+                    i.toString() +
+                    '.json'),
+            headers: {'Content-type': 'application/json'});
+        if (tasksetDeutsch == null) {
+          await buildTasksetFromJson(utf8.decode(responseDeutsch.bodyBytes));
+        }
+
         if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
-        String tasksetEnglisch = await rootBundle
-            .loadString('assets/standardTasksets/englisch/englisch' +
+
+//englisch
+        String tasksetEnglisch = await InputValidation.inputUrlWithJsonValidation(
+            'https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch' +
                 i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
+                '.json');
+
+        var responseEnglisch = await http.get(
+            Uri.parse(
+                'https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch' +
+                    i.toString() +
+                    '.json'),
+            headers: {'Content-type': 'application/json'});
+        if (tasksetEnglisch == null) {
+          await buildTasksetFromJson(utf8.decode(responseEnglisch.bodyBytes));
+        }
+
         if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
-        String tasksetSachkunde = await rootBundle
-            .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+
+        //sachkunde
+
+        String tasksetSachkunde = await InputValidation.inputUrlWithJsonValidation(
+            'https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde' +
                 i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
+                '.json');
+
+        var responseSachkunde = await http.get(
+            Uri.parse(
+                'https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde' +
+                    i.toString() +
+                    '.json'),
+            headers: {'Content-type': 'application/json'});
+        if (tasksetSachkunde == null) {
+          await buildTasksetFromJson(utf8.decode(responseSachkunde.bodyBytes));
+        }
+
         if (tasksetSachkunde != "")
           await buildTasksetFromJson(tasksetSachkunde);
+
+        // String tasksetDeutsch = await rootBundle
+        //     .loadString('assets/standardTasksets/deutsch/deutsch' +
+        //         i.toString() +
+        //         '.json')
+        //     .catchError((err) => Future.value(""));
+        // if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+
+        // String tasksetEnglisch = await rootBundle
+        //     .loadString('assets/standardTasksets/englisch/englisch' +
+        //         i.toString() +
+        //         '.json')
+        //     .catchError((err) => Future.value(""));
+        // if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
+        // String tasksetSachkunde = await rootBundle
+        //     .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+        //         i.toString() +
+        //         '.json')
+        //     .catchError((err) => Future.value(""));
+        // if (tasksetSachkunde != "")
+        //   await buildTasksetFromJson(tasksetSachkunde);
       }
     }
 
