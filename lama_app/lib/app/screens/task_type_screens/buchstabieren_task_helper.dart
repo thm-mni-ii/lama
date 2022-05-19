@@ -16,7 +16,7 @@ Image cacheImageByUrl(BuildContext context, String url) {
   return image;
 }
 
-void cacheImageByUrl2(BuildContext context, String url) {
+Future<void> cacheImageByUrl2(BuildContext context, String url) async {
   Image image = Image(
     image: CachedNetworkImageProvider(
         url), //max Höhe/Breite kann hier eingestellt werden
@@ -24,7 +24,7 @@ void cacheImageByUrl2(BuildContext context, String url) {
     //fit: BoxFit.cover,
   );
 
-  precacheImage(image.image, context);
+  await precacheImage(image.image, context);
 }
 
 int erstelleEineRandomNummer(task) {
@@ -84,6 +84,5 @@ Future<void> preloadPngs(context) async {
   };
   for (int i = 0; i < pngs.length; i++) {
     await cacheImageByUrl2(context, pngs.values.toList()[i]);
-    print("I just loaded '${pngs.keys.toList()[i]}'");
   }
 }
