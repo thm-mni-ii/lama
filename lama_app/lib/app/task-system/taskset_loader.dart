@@ -48,93 +48,57 @@ class TasksetLoader {
     bool enableDefaultTasksetPref =
         prefs.getBool(AdminUtils.enableDefaultTasksetsPref);
     if (enableDefaultTasksetPref == null || enableDefaultTasksetPref) {
+      //load all standardtasks
       for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-        var response = await http.get(
-            Uri.parse(
-                'https://raw.githubusercontent.com/handitosb/lamaapps/main/JSON_Test/JSONMathe/mathe' +
-                    i.toString() +
-                    '.json'),
-            headers: {'Content-type': 'application/json'});
+        //load all standardtasks from local assets folder. needed in case
+        //the app user has no internet connection
+        /* String tasksetMathe = await rootBundle
+            .loadString(
+                'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
 
-        await buildTasksetFromJson(utf8.decode(response.bodyBytes));
-
-        //deutsch
-
-        var responseDeutsch = await http.get(
-            Uri.parse(
-                'https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch' +
-                    i.toString() +
-                    '.json'),
-            headers: {'Content-type': 'application/json'});
-
-        await buildTasksetFromJson(utf8.decode(responseDeutsch.bodyBytes));
-
-        //englisch
-
-        var responseEnglisch = await http.get(
-            Uri.parse(
-                'https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch' +
-                    i.toString() +
-                    '.json'),
-            headers: {'Content-type': 'application/json'});
-
-        await buildTasksetFromJson(utf8.decode(responseEnglisch.bodyBytes));
-
-        //sachkunde
-
-        var responseSachkunde = await http.get(
-            Uri.parse(
-                'https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde' +
-                    i.toString() +
-                    '.json'),
-            headers: {'Content-type': 'application/json'});
-
-        await buildTasksetFromJson(utf8.decode(responseSachkunde.bodyBytes));
-
-        // Load Tasks From assets:
-
-        // String tasksetMathe = await rootBundle
-        //     .loadString(
-        //         'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
-        //    .catchError((err) => Future.value(""));
-        // if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
-
-        // String tasksetDeutsch = await rootBundle
-        //     .loadString('assets/standardTasksets/deutsch/deutsch' +
-        //         i.toString() +
-        //         '.json')
-        //     .catchError((err) => Future.value(""));
-        // if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
-
-        // String tasksetEnglisch = await rootBundle
-        //     .loadString('assets/standardTasksets/englisch/englisch' +
-        //         i.toString() +
-        //         '.json')
-        //     .catchError((err) => Future.value(""));
-        // if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
-        // String tasksetSachkunde = await rootBundle
-        //     .loadString('assets/standardTasksets/sachkunde/sachkunde' +
-        //         i.toString() +
-        //         '.json')
-        //     .catchError((err) => Future.value(""));
-        // if (tasksetSachkunde != "")
-        //   await buildTasksetFromJson(tasksetSachkunde);
+        String tasksetDeutsch = await rootBundle
+            .loadString('assets/standardTasksets/deutsch/deutsch' +
+                i.toString() +
+                '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+        String tasksetEnglisch = await rootBundle
+            .loadString('assets/standardTasksets/englisch/englisch' +
+                i.toString() +
+                '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
+        String tasksetSachkunde = await rootBundle
+            .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+                i.toString() +
+                '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetSachkunde != "")
+          await buildTasksetFromJson(tasksetSachkunde); */
+        //load all standardtasks from url
+        List<TaskUrl> standardTaskUrls = [
+          TaskUrl(
+              url:
+                  "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
+          TaskUrl(
+              url:
+                  "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch$i.json"),
+          TaskUrl(
+              url:
+                  "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch$i.json"),
+          TaskUrl(
+              url:
+                  "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde$i.json"),
+        ];
+        await loadTasksFromUrls(standardTaskUrls);
       }
     }
 
     //load all tasksets from url
     List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
-
-    for (int i = 0; i < taskUrls.length; i++) {
-      String result =
-          await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
-
-      var response = await http.get(Uri.parse(taskUrls[i].url),
-          headers: {'Content-type': 'application/json'});
-      if (result == null) {
-        await buildTasksetFromJson(utf8.decode(response.bodyBytes));
-      }
-    }
+    await loadTasksFromUrls(taskUrls);
 
     /* ONLY NEEDED WHEN A LOCAL COPY SHOUL EXIST AND POSSIBLY PERSIST
     //get all files in the taskset directory
@@ -202,5 +166,20 @@ class TasksetLoader {
       return loadedTasksets[sgr];
     else
       return <Taskset>[];
+  }
+
+  ///Loads tasks from a list of [TaskUrl]'s and builds them, making them useable
+  ///for the user
+  Future<void> loadTasksFromUrls(List<TaskUrl> taskUrls) async {
+    for (int i = 0; i < taskUrls.length; i++) {
+      String result =
+          await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
+
+      var response = await http.get(Uri.parse(taskUrls[i].url),
+          headers: {'Content-type': 'application/json'});
+      if (result == null) {
+        await buildTasksetFromJson(utf8.decode(response.bodyBytes));
+      }
+    }
   }
 }
