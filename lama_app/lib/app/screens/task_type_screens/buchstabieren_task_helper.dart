@@ -4,6 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/bloc/task_bloc.dart';
+import 'package:lama_app/app/event/task_events.dart';
+
 Image cacheImageByUrl(BuildContext context, String url) {
   Image image = Image(
     image: CachedNetworkImageProvider(
@@ -98,4 +102,11 @@ int bestimmeEinZufallsZahlFuerWort(String wort) {
   int zufallsZahl = rng.nextInt(wort.length);
 
   return zufallsZahl;
+}
+
+String getRandomLiteral(int length) {
+  const ch = 'abcdefghijklmnopqrstuvwxyz';
+  Random r = Random();
+  return String.fromCharCodes(
+      Iterable.generate(length, (_) => ch.codeUnitAt(r.nextInt(ch.length))));
 }
