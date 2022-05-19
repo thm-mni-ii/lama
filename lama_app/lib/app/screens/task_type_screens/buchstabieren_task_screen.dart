@@ -184,8 +184,13 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   String holeEinWortAusJSON(i, wortkey, worturl) {
     wort = "test";
     wort = wortkey[i];
+    ;
+    if (task.first_Letter_Caps == 0) {
+      wort = wort.toLowerCase();
+    }
     wortURL = worturl[i];
     buchstabenListe = wort.split('');
+
     buchstabenIndexListe;
     buchstabenIndexListe = List<int>.filled(wort.length, 0, growable: false);
     for (int x = 0; x < wort.length; x++) {
@@ -214,6 +219,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   String holeBuchstabe(i) {
     var losungsWort = "Auto"; //default wort
     losungsWort = wort;
+
     String test1 = losungsWort[i];
     return test1;
   }
@@ -333,8 +339,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             child: (() {
               //wenn der letzte Buchstabe richtig angeklickt und angezeigt wurde, soll ein grüner Haken auf dem Bildschirm angezeigt werden
               //ich anschluss folgt ein neuer Task für den User
-              if (!_canShowButton[wortLaenge - 1] &&
-                  buchstabenListe.join('') == wort) {
+              if (wortLaenge == ergebnisIndex) {
                 Future.delayed(const Duration(milliseconds: 1500), () {
                   setState(() {
                     BlocProvider.of<TaskBloc>(context)

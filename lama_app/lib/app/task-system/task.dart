@@ -147,8 +147,9 @@ class Task {
             fieldsToReplace);
       case "Buchstabieren":
         Map<String, String> woerter = Map<String, String>.from(json['woerter']);
+        int firstLetterBig = json['first_Letter_Caps'];
         return TaskBuchstabieren(taskType, json['task_reward'],
-            json['lama_text'], json['left_to_solve'], woerter);
+            json['lama_text'], json['left_to_solve'], woerter, firstLetterBig);
       default:
         return null;
     }
@@ -473,9 +474,10 @@ class TaskNumberLine extends Task {
 ///Author: J.Decher, A.Pusch
 class TaskBuchstabieren extends Task {
   Map<String, String> woerter;
+  int first_Letter_Caps;
 
   TaskBuchstabieren(String taskType, int reward, String lamaText,
-      int leftToSolve, this.woerter)
+      int leftToSolve, this.woerter, this.first_Letter_Caps)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
