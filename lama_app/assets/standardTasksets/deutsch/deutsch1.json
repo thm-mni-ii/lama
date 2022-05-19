@@ -8,7 +8,8 @@
       "task_reward": 2,
       "left_to_solve": 3,
       "lama_text": "Test Text",
-      "first_Letter_Caps": 0,
+      "first_Letter_Caps": 1,
+      "correcting_Modus":1,
       "woerter": {
         "Auto": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Auto.png?raw=true",
         "Baum": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Baum.png?raw=true",

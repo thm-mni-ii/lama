@@ -86,3 +86,16 @@ Future<void> preloadPngs(context) async {
     await cacheImageByUrl2(context, pngs.values.toList()[i]);
   }
 }
+
+String bestimmeEinZufallsBuchstabenAusWort(String wort, int zufallsZahl) {
+  String antwortString;
+  antwortString.substring(zufallsZahl, zufallsZahl + 1);
+  return antwortString;
+}
+
+int bestimmeEinZufallsZahlFuerWort(String wort) {
+  var rng = Random();
+  int zufallsZahl = rng.nextInt(wort.length);
+
+  return zufallsZahl;
+}

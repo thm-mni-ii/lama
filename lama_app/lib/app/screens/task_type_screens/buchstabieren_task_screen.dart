@@ -27,6 +27,10 @@ var ergebnisBuchstabe;
 int fehlerZaehler = 0;
 int maxFehlerAnzahl = 0;
 
+//Der Buchstabieren Task kann auf zwei verschiedene Arten erzeugt werden, welche Art es sein soll wird in der JSON beim CorrectionModus abgefragt
+//ist der CorrectionModus auf fals(bzw. 0), so wir ein Bild aufgerufen, und zu dem Begriff auf dem Bild unsortiere Buchstaben erstellt, welche es anzuklicken gilt, um das Wort zu buchstabieren.
+//ist der CorrectionModus aktiv, wird vom User verlang lediglich einen Buchstaben für eine Lücke auszuwählen, sodass das Wort komplett wird-- zur Auswahl stehen dann natürlich auch falsche Buchstaben
+
 class BuchstabierenTaskScreen extends StatefulWidget {
   final TaskBuchstabieren task;
   final BoxConstraints constraints;
@@ -87,6 +91,14 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     });
   }
 
+  String setTaskMessageAccordingToTaskModus() {
+    if (task.correctingModus == 1) {
+      return "Wähle den richtigen Buchstaben, um die Lücke im Wort korrekt auszufüllen";
+    } else {
+      return "Buchstabiere das Wort, indem du auf die Buchstaben in der richtigen Reihenfolge drückst";
+    }
+  }
+
 //zur Zeit soll nur einem Schüler der ersten Klasse erlaubt sein, einen Fehler zu machen
 //TODO: man könnte noch die länge des Wortes mit in die Berechnung mit einbeziehen
   calculateAllowedMistakes() {
@@ -99,24 +111,39 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   Widget zeichneAntwortButton(buchstabe, ix) {
     return ElevatedButton(
       onPressed: () {
+        //task im normalmodus
         //hier wird überprüft, ob der Buchstabe des Buttons
         //gleich dem nächsten korrekt,anzuklickendem Buchstaben ist
-        if (buchstabenListe[stringIndex] == buchstabe) {
-          // && ergebnisIndex == ix) {  //vorablösung
-          ergebnisBuchstabe = buchstabe;
-          hideWidget(
-              ix); //ix stand davor da , dies ersetzt die Vorablösung, sodass nun immer der richtige Buchstabe der Reihe nach eingetragen wird.
-          showWidget(stringIndex);
-          stringIndex++;
-          buchstabenListe[ergebnisIndex] = buchstabe;
-          ergebnisIndex++;
-        } else {
-          fehlerZaehler++;
-          if (fehlerZaehler > maxFehlerAnzahl) {
-            Future.delayed(const Duration(milliseconds: 500), () {
+        if (task.correctingModus == 0) {
+          if (buchstabenListe[stringIndex] == buchstabe) {
+            ergebnisBuchstabe = buchstabe;
+            hideWidget(ix);
+            showWidget(stringIndex);
+            stringIndex++;
+            buchstabenListe[ergebnisIndex] = buchstabe;
+            ergebnisIndex++;
+          } else {
+            fehlerZaehler++;
+            if (fehlerZaehler > maxFehlerAnzahl) {
+              Future.delayed(const Duration(milliseconds: 500), () {
+                setState(() {
+                  BlocProvider.of<TaskBloc>(context)
+                      .add(AnswerTaskEvent.initBuchstabieren(false));
+                });
+              });
+            }
+          }
+        }
+        //task im correkting Modus
+        if (task.correctingModus == 1) {
+          if (buchstabenListe[zufallsZahl] == buchstabe) {
+            hideWidget(zufallsZahl);
+            showWidget(zufallsZahl);
+
+            Future.delayed(const Duration(milliseconds: 1500), () {
               setState(() {
                 BlocProvider.of<TaskBloc>(context)
-                    .add(AnswerTaskEvent.initBuchstabieren(false));
+                    .add(AnswerTaskEvent.initBuchstabieren(true));
               });
             });
           }
@@ -134,18 +161,31 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 //wurde er in richtiger Reihenfolge angeklickt, wird er auf "null" gesetzt
 //Falls seine größe im Zustand "null" nicht angepasst wird, so wird eine andere Lösung benötigt
   Widget zeichneContainerMitAntwortButton(x) {
-    return Container(
-      alignment: Alignment.center,
-      // margin: EdgeInsets.all(10),
-      child: (wortLaenge >= x + 1 &&
-              _canShowButton[buchstabenIndexListe[
-                  x]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
-          ? zeichneAntwortButton(
-              holeBuchstabe(buchstabenIndexListe[x]),
-              buchstabenIndexListe[
-                  x]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
-          : null,
-    );
+    //Task im Buchstabier Modus
+    if (task.correctingModus == 0) {
+      return Container(
+        alignment: Alignment.center,
+        // margin: EdgeInsets.all(10),
+        child: (wortLaenge >= x + 1 &&
+                _canShowButton[buchstabenIndexListe[
+                    x]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
+            ? zeichneAntwortButton(
+                holeBuchstabe(buchstabenIndexListe[x]),
+                buchstabenIndexListe[
+                    x]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
+            : null,
+      );
+      //Task im Correcting modus
+    } else if (task.correctingModus == 1) {
+      return Container(
+        alignment: Alignment.center,
+        // margin: EdgeInsets.all(10),
+        child: (wortLaenge >= x + 1 && _canShowButton[buchstabenIndexListe[x]])
+            ? zeichneAntwortButton(
+                holeBuchstabe(buchstabenIndexListe[x]), buchstabenIndexListe[x])
+            : null,
+      );
+    }
   }
 
   Widget leeresFeld() {
@@ -204,10 +244,35 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     _canShowAntwortButton =
         List<bool>.filled(wort.length, true, growable: false);
 
-    for (int x = 0; x < wort.length; x++) {
-      _canShowButton[x] = true;
-      _canShowAntwortButton[x] = false;
+    if (task.correctingModus == 0) {
+      for (int x = 0; x < wort.length; x++) {
+        _canShowButton[x] = true;
+        _canShowAntwortButton[x] = false;
+      }
     }
+    //set Task in correcting Modus
+    if (task.correctingModus == 1) {
+      zufallsZahl = bestimmeEinZufallsZahlFuerWort(wort);
+      for (int x = 0; x < wort.length; x++) {
+        _canShowButton[x] = false;
+        _canShowAntwortButton[x] = true;
+      }
+      _canShowButton[zufallsZahl] = true;
+      _canShowAntwortButton[zufallsZahl] = false;
+      //Setze ein paar falsche Antwortmöglichkeiten
+      if (zufallsZahl > wort.length - 2) {
+        _canShowButton[zufallsZahl - 1] = true;
+        _canShowAntwortButton[zufallsZahl - 1] = false;
+        _canShowButton[zufallsZahl - 2] = true;
+        _canShowAntwortButton[zufallsZahl - 2] = false;
+      } else {
+        _canShowButton[zufallsZahl + 1] = true;
+        _canShowAntwortButton[zufallsZahl + 1] = false;
+        _canShowButton[zufallsZahl + 2] = true;
+        _canShowAntwortButton[zufallsZahl + 2] = false;
+      }
+    }
+
     return wort;
   }
 
@@ -249,7 +314,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                       nip: BubbleNip.leftCenter,
                       child: Center(
                         child: Text(
-                          "Buchstabiere das Wort, indem du auf die Buchstaben in der richtigen Reihenfolge drückst",
+                          setTaskMessageAccordingToTaskModus(),
                           style: LamaTextTheme.getStyle(
                               color: LamaColors.black, fontSize: 15),
                         ),
