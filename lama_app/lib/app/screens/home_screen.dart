@@ -10,6 +10,7 @@ import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
@@ -314,13 +315,27 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ).then((value) => (setState(() {})));
 
-            //TODO: herausfinden, wie man die URL's aus der JSON abgreifen könnte..
-            //      benötigt wir hierzu die Variable task, sodass auf
-            //      die korrekte JSON zugegriffen werden kann, welche
-            //      die URL's der Bilder beinhaltet. die Variable Task wird jedoch erst in
-            //      task_screen.dart gesetzt.
-
-            await preloadPngs(context);
+            ///preloads the png urls in every buchstabieren task
+            ///TO-DO: write method
+            for (int j = 0;
+                j <
+                    tasksetRepository
+                        .getTasksetsForSubjectAndGrade(
+                            "Deutsch", userRepository.getGrade())
+                        .length;
+                j++) {
+              TaskBuchstabieren buchTask;
+              List<Task> buchTasks = tasksetRepository
+                  .getTasksetsForSubjectAndGrade(
+                      "Deutsch", userRepository.getGrade())[j]
+                  .tasks
+                  .where((element) => element.type == "Buchstabieren")
+                  .toList();
+              for (int i = 0; i < buchTasks.length; i++) {
+                buchTask = buchTasks[i];
+                await preloadPngs(context, buchTask.woerter);
+              }
+            }
           }));
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
     }
