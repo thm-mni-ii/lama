@@ -49,51 +49,110 @@ class TasksetLoader {
         prefs.getBool(AdminUtils.enableDefaultTasksetsPref);
     if (enableDefaultTasksetPref == null || enableDefaultTasksetPref) {
       //load all standardtasks
-      for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-        //load all standardtasks from local assets folder. needed in case
-        //the app user has no internet connection
-        /* String tasksetMathe = await rootBundle
-            .loadString(
-                'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
 
-        String tasksetDeutsch = await rootBundle
-            .loadString('assets/standardTasksets/deutsch/deutsch' +
-                i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
-        String tasksetEnglisch = await rootBundle
-            .loadString('assets/standardTasksets/englisch/englisch' +
-                i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
-        String tasksetSachkunde = await rootBundle
-            .loadString('assets/standardTasksets/sachkunde/sachkunde' +
-                i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetSachkunde != "")
-          await buildTasksetFromJson(tasksetSachkunde); */
-        //load all standardtasks from url
-        List<TaskUrl> standardTaskUrls = [
-          TaskUrl(
-              url:
-                  "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
-          TaskUrl(
-              url:
-                  "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch$i.json"),
-          TaskUrl(
-              url:
-                  "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch$i.json"),
-          TaskUrl(
-              url:
-                  "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde$i.json"),
-        ];
-        await loadTasksFromUrls(standardTaskUrls);
+      try {
+        final result = await InternetAddress.lookup('example.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          print('connected');
+          for (int i = 1; i <= GRADES_SUPPORTED; i++) {
+            //load all standardtasks from url
+            List<TaskUrl> standardTaskUrls = [
+              TaskUrl(
+                  url:
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
+              TaskUrl(
+                  url:
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch$i.json"),
+              TaskUrl(
+                  url:
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch$i.json"),
+              TaskUrl(
+                  url:
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde$i.json"),
+            ];
+            await loadTasksFromUrls(standardTaskUrls);
+          }
+        }
+      } on SocketException catch (_) {
+        print('not connected');
+        for (int i = 1; i <= GRADES_SUPPORTED; i++) {
+          //load all standardtasks from local assets folder. needed in case
+          //the app user has no internet connection
+          String tasksetMathe = await rootBundle
+              .loadString('assets/standardTasksets/mathe/mathe' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
+
+          String tasksetDeutsch = await rootBundle
+              .loadString('assets/standardTasksets/deutsch/deutsch' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+          String tasksetEnglisch = await rootBundle
+              .loadString('assets/standardTasksets/englisch/englisch' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetEnglisch != "")
+            await buildTasksetFromJson(tasksetEnglisch);
+          String tasksetSachkunde = await rootBundle
+              .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetSachkunde != "")
+            await buildTasksetFromJson(tasksetSachkunde);
+        }
       }
+
+      // for (int i = 1; i <= GRADES_SUPPORTED; i++) {
+      //   //load all standardtasks from local assets folder. needed in case
+      //   //the app user has no internet connection
+      //   String tasksetMathe = await rootBundle
+      //       .loadString(
+      //           'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
+      //       .catchError((err) => Future.value(""));
+      //   if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
+
+      //   String tasksetDeutsch = await rootBundle
+      //       .loadString('assets/standardTasksets/deutsch/deutsch' +
+      //           i.toString() +
+      //           '.json')
+      //       .catchError((err) => Future.value(""));
+      //   if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+      //   String tasksetEnglisch = await rootBundle
+      //       .loadString('assets/standardTasksets/englisch/englisch' +
+      //           i.toString() +
+      //           '.json')
+      //       .catchError((err) => Future.value(""));
+      //   if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
+      //   String tasksetSachkunde = await rootBundle
+      //       .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+      //           i.toString() +
+      //           '.json')
+      //       .catchError((err) => Future.value(""));
+      //   if (tasksetSachkunde != "")
+      //     await buildTasksetFromJson(tasksetSachkunde);
+      //load all standardtasks from url
+      // List<TaskUrl> standardTaskUrls = [
+      //   TaskUrl(
+      //       url:
+      //           "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
+      //   TaskUrl(
+      //       url:
+      //           "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch$i.json"),
+      //   TaskUrl(
+      //       url:
+      //           "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch$i.json"),
+      //   TaskUrl(
+      //       url:
+      //           "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde$i.json"),
+      // ];
+      // await loadTasksFromUrls(standardTaskUrls);
+      //}
     }
 
     //load all tasksets from url
