@@ -61,7 +61,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   Image pictureFromNetwork;
   int randomNummer;
   int userGrade;
-
+  int multiplePoints;
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
   bool answer;
@@ -82,6 +82,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     i = 0;
     ergebnisIndex = 0;
     fehlerZaehler = 0;
+    multiplePoints = task.multiplePoints;
     calculateAllowedMistakes();
     debugPrint("UserGrade:  " + userGrade.toString());
 
@@ -91,12 +92,32 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
 //depends on given bool
   void rightOrWrongAnswerEvent(bool isRightOrWrong) {
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      setState(() {
-        BlocProvider.of<TaskBloc>(context)
-            .add(AnswerTaskEvent.initBuchstabieren(isRightOrWrong));
+    if (multiplePoints == 0) {
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        setState(() {
+          BlocProvider.of<TaskBloc>(context)
+              .add(AnswerTaskEvent.initBuchstabieren(isRightOrWrong));
+        });
       });
-    });
+    } else {
+      setState(() {
+        zufallsChar = getRandomLiteral(1);
+        zufallsChar2 = getRandomLiteral(1);
+        testFarbe = Colors.black;
+        List<String> woerterKeys = task.woerter.keys.toList();
+        List<String> woerterURLs = task.woerter.values.toList();
+        stringIndex = 0;
+        i = 0;
+        ergebnisIndex = 0;
+        fehlerZaehler = 0;
+        multiplePoints--;
+        calculateAllowedMistakes();
+        debugPrint("UserGrade:  " + userGrade.toString());
+
+        messeLaengeVomWort(
+            holeEinWortAusJSON(randomNummer, woerterKeys, woerterURLs));
+      });
+    }
   }
 
   void hideWidget(i) {
@@ -400,10 +421,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               },
             ),*/
           ),
-          SizedBox(
-              //  height: 20,
-              ),
-
           Container(
             height: MediaQuery.of(context).size.height * 0.1,
             width: MediaQuery.of(context).size.width * 0.9,
@@ -419,12 +436,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               ],
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
           Container(
             // legt Größe des Grids fest
-            height: MediaQuery.of(context).size.height * 0.35,
+            height: MediaQuery.of(context).size.height * 0.3,
             width: MediaQuery.of(context).size.width * 0.9,
             //color: Colors.green,
 
@@ -440,13 +454,24 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               ],
             ),
           ),
-
+          Container(
+            alignment: Alignment.center,
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              for (int i = 0; i < task.multiplePoints; i++)
+                CircleAvatar(
+                  backgroundColor: Colors.grey,
+                )
+            ]),
+          ),
           Container(
             child: (() {
               //wenn der letzte Buchstabe richtig angeklickt und angezeigt wurde, soll ein grüner Haken auf dem Bildschirm angezeigt werden
               //ich anschluss folgt ein neuer Task für den User
-              if (wortLaenge == ergebnisIndex) {
+              if (wortLaenge == ergebnisIndex && multiplePoints > 0) {
                 rightOrWrongAnswerEvent(true);
+                print("ich komme hier rein oder");
               }
             }()),
           ),
