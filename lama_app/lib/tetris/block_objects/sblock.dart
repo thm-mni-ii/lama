@@ -1,9 +1,7 @@
 import 'block.dart';
-import '../point.dart';
+import 'point.dart';
 import 'package:flutter/material.dart';
 
-//  --
-// --
 class SBlock extends Block {
   SBlock(double width) {
     fixed_length_list_of_points[0] =

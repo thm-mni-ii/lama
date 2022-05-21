@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-
-import 'action_button.dart';
-import 'game.dart';
+import 'buttons/action_button.dart';
+import 'tetrisGame.dart';
 
 class UserInput extends StatelessWidget {
   final Function onActionButtonPressed;
-  const UserInput(
-      this.onActionButtonPressed); //, {Key? key}) : super(key: key);
+  const UserInput(this.onActionButtonPressed);
   @override
   Widget build(BuildContext context) {
     return Column(

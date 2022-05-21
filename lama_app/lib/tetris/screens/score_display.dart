@@ -9,15 +9,13 @@ class ScoreDisplayTetris extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 100,
-        height: 44,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           border: Border.all(width: 1.0, color: Colors.blue),
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(50.0),
         ),
         child: Text(
-          "$textueberScore\n$score",
+          "$textueberScore: $score",
           textAlign: TextAlign.center,
           style: (const TextStyle(
             color: Colors.white,

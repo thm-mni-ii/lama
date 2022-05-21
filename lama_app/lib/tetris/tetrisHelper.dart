@@ -1,16 +1,17 @@
-import 'package:flutter/material.dart';
-import 'blocks/iblock.dart';
-import 'blocks/block.dart';
-import 'blocks/Jblock.dart';
-import 'blocks/Lblock.dart';
-import 'blocks/SBlock.dart';
-import 'blocks/sqBlock.dart';
-import 'blocks/Tblock.dart';
-import 'blocks/Zblock.dart';
 import 'dart:math';
-import 'game.dart';
+import 'package:flutter/material.dart';
 
-BuildContext context;
+import 'block_objects/iblock.dart';
+import 'block_objects/block.dart';
+import 'block_objects/Jblock.dart';
+import 'block_objects/Lblock.dart';
+import 'block_objects/SBlock.dart';
+import 'block_objects/sqBlock.dart';
+import 'block_objects/Tblock.dart';
+import 'block_objects/Zblock.dart';
+import 'tetrisGame.dart';
+
+import 'package:lama_app/util/LamaColors.dart';
 
 Block getRamdomBlock() {
   int randomNumber = Random().nextInt(7);

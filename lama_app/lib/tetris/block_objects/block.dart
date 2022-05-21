@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../game.dart';
-import '../point.dart';
+import '../tetrisGame.dart';
+import 'point.dart';
 
 class Block {
   // ignore: non_constant_identifier_names
   final fixed_length_list_of_points = List<Point>.filled(4, Point(0, 0));
-  /*late*/ Point rotationCenter;
-  /*late*/ Color color;
+  Point rotationCenter;
+  Color color;
 
   void move(MoveDir dir) {
     switch (dir) {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MenuButton extends StatelessWidget {
   final Function onClickedFunction;
 
-  const MenuButton(this.onClickedFunction); //, {Key? key}) : super(key: key);
+  const MenuButton(this.onClickedFunction);
 
   @override
   Widget build(BuildContext context) {
