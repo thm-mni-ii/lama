@@ -9,7 +9,7 @@ import 'package:lama_app/app/event/task_events.dart';
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
-
+import 'dart:io';
 import 'buchstabieren_task_helper.dart';
 
 List<String> buchstabenListe;
@@ -330,6 +330,19 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     }
   }
 
+  Future<bool> hasInternet() async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+        return true;
+      }
+    } on SocketException catch (_) {
+      print('not connected');
+      return false;
+    }
+  }
+
   BuchstabierenTaskState(this.task, this.constraints, this.pictureFromNetwork,
       this.randomNummer, this.userGrade);
 
@@ -381,7 +394,11 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
             height: MediaQuery.of(context).size.height / 5,
             width: MediaQuery.of(context).size.width / 2,
-            child: pictureFromNetwork,
+            child: ((hasInternet()) == true)
+                ? pictureFromNetwork
+                : SvgPicture.asset(
+                    "assets/images/svg/objects/"+ wort.toLowerCase() + ".svg"),
+
             // CachedNetworkImage(imageUrl: "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Auto.png?raw=true",),
             //Image.network(wortURL), //Image.memory(byte), // //Image.asset()
             /* Image.network(
