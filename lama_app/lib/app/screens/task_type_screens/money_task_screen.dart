@@ -62,7 +62,16 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
     finalMoneyAmount = currentAmountInt;
     maxAmount = 10 * 100;
     rnd = random.nextInt(maxAmount);
-    this.maxAmount = 10;
+    if (task.difficulty == 1) {
+      rnd = (random.nextInt(20) + 1) * 50;
+    }
+    if (task.difficulty == 2) {
+      rnd = (random.nextInt(100) + 1) * 10;
+    }
+    if (task.difficulty == 3) {
+      rnd = (random.nextInt(1000) + 1);
+    }
+
     this.moneyAmount = rnd;
 
     while (this.moneyAmount != this.tempAmount) {
@@ -137,14 +146,6 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
     final sum = amounts.sum;
     tempAmount = 0;
     return Column(children: [
-      // Row(
-      //   children: [
-      //Text("currentAmountInt: " + currentAmountInt.toString()),
-      //Text("tempAmount: " + tempAmount.toString() + " "),
-      //Text("Optimum: " + minCount.toString() + " "),
-      //Text("i:" + i.toString()),
-      //   ],int.parse(finalMoneyAmount.toStringAsFixed(2)
-      // ),
       // Lama Speechbubble
       Container(
         height: (constraints.maxHeight / 100) * 20,
@@ -162,7 +163,9 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                   nip: BubbleNip.leftCenter,
                   child: Center(
                     child: Text(
-                      "Sammle $moneyAmountText€ mit den Münzen zusammen!",
+                      task.optimum
+                          ? "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!"
+                          : "Sammle $moneyAmountText€ mit den Münzen zusammen!",
                       style: LamaTextTheme.getStyle(
                           color: LamaColors.black, fontSize: 15),
                     ),
@@ -230,16 +233,16 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                     //   semanticsLabel: "Ein Euro",
                     //   width: (constraints.maxWidth / 100) * 23,
                     //),
-                    (task.difficulty == 3)
-                        ? Image.asset(
-                            "assets/images/jpg/5_Euro.jpg",
-                            width: (constraints.maxWidth / 100) * 23,
-                          )
-                        : SvgPicture.asset(
-                            "assets/images/svg/EuroCoins/1_Euro.svg",
-                            semanticsLabel: "Ein Euro",
-                            width: (constraints.maxWidth / 100) * 23,
-                          ),
+                    // (task.difficulty == 3)
+                    //     ? Image.asset(
+                    //         "assets/images/jpg/5_Euro.jpg",
+                    //         width: (constraints.maxWidth / 100) * 23,
+                    //       ) :
+                    SvgPicture.asset(
+                      "assets/images/svg/EuroCoins/1_Euro.svg",
+                      semanticsLabel: "Ein Euro",
+                      width: (constraints.maxWidth / 100) * 23,
+                    ),
 
                     Align(
                       alignment: Alignment.bottomRight,
@@ -254,9 +257,9 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                   setState(() {
                     deletions.add(100);
                     amounts[1]++;
-                    (task.difficulty == 3)
-                        ? currentAmountInt = currentAmountInt + 5
-                        : currentAmountInt = currentAmountInt + 100;
+                    // (task.difficulty == 3)
+                    //     ? currentAmountInt = currentAmountInt + 5 :
+                    currentAmountInt = currentAmountInt + 100;
                     currentAmountInt = int.parse(currentAmountInt.toString());
                   });
                 },

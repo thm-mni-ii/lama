@@ -9,29 +9,29 @@
             "task_reward": 2,
             "lama_text": " zerlegt die Zahlen!",
             "left_to_solve": 3,
-            "reverse": true,
+            "reverse": false,
             "zeros": true,
-            "boolThousands": true 
+            "boolThousands": true
         },
         {
             "task_type": "NumberLine",
             "task_reward": 1,
             "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
-            "range": [ 
-                 0,
-                 10000
-              ],
+            "range": [
+                0,
+                10000
+            ],
             "randomRange": false,
             "steps": 500,
             "ontap": true
-          },
+        },
         {
             "task_type": "MoneyTask",
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
-            "difficulty": 1,
+            "difficulty": 3,
             "optimum": true
         },
         {
@@ -39,105 +39,8 @@
             "task_reward": 2,
             "lama_text": "Wie viel Uhr ist es?",
             "left_to_solve": 3,
-            "uhr": "halbeStunde",
+            "uhr": "allStunden",
             "timer": false
-        },
-        {
-            "task_type": "4Cards",
-            "task_reward": 2,
-            "question": "Was ist das Ergebnis der Multiplikation?",
-            "lama_text": "Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "right_answer": "Produkt",
-            "wrong_answers": [
-                "Summe",
-                "Differenz",
-                "Quotient"
-            ]
-        },
-        {
-            "task_type": "4Cards",
-            "task_reward": 2,
-            "question": "Was ist das Ergebnis der Division?",
-            "lama_text": "Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "right_answer": "Quotient",
-            "wrong_answers": [
-                "Summe",
-                "Differenz",
-                "Produkt"
-            ]
-        },
-        {
-            "task_type": "4Cards",
-            "task_reward": 2,
-            "question": "15/5",
-            "lama_text": "Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "right_answer": "3",
-            "wrong_answers": [
-                "5",
-                "10",
-                "20"
-            ]
-        },
-        {
-            "task_type": "4Cards",
-            "task_reward": 2,
-            "question": "3*20",
-            "lama_text": "Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "right_answer": "60",
-            "wrong_answers": [
-                "17",
-                "23",
-                "40"
-            ]
-        },
-        {
-            "task_type": "Equation",
-            "task_reward": 2,
-            "lama_text": "Löse die Gleichung!",
-            "left_to_solve": 4,
-            "equation": [
-                "?",
-                "/",
-                "2",
-                "=",
-                "2"
-            ],
-            "options": [
-                "3",
-                "1",
-                "4",
-                "0",
-                "2",
-                "5"
-            ]
-        },
-        {
-            "task_type": "Equation",
-            "task_reward": 2,
-            "lama_text": "Löse die Gleichung!",
-            "left_to_solve": 4,
-            "equation": [
-                "?",
-                "/",
-                "2",
-                "+",
-                "?",
-                "=",
-                "30"
-            ],
-            "options": [
-                "48",
-                "50",
-                "5",
-                "0",
-                "20",
-                "6",
-                "9"
-            ]
         },
         {
             "task_type": "Equation",
@@ -145,14 +48,29 @@
             "lama_text": "Löse die Gleichung!",
             "left_to_solve": 4,
             "random_allowed_operators": [
-              "+", "-"
+                "*"
             ],
             "operand_range": [
-              0,
-              20
+                0,
+                10
             ],
             "fields_to_replace": 2,
             "allow_replacing_operators": false
-          }
+        },
+        {
+            "task_type": "Equation",
+            "task_reward": 2,
+            "lama_text": "Löse die Gleichung!",
+            "left_to_solve": 4,
+            "random_allowed_operators": [
+                "+"
+            ],
+            "operand_range": [
+                5,
+                100
+            ],
+            "fields_to_replace": 2,
+            "allow_replacing_operators": false
+        }
     ]
 }
