@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'game.dart';
+import '../tetrisGame.dart';
 
 class ActionButton extends StatelessWidget {
   final Function onClickedFunction;
@@ -7,8 +7,6 @@ class ActionButton extends StatelessWidget {
   final LastButtonPressed nextAction;
 
   const ActionButton(this.onClickedFunction, this.buttonIcon, this.nextAction);
-//{Key? key})
-  //    : super(key: key);
 
   @override
   Widget build(BuildContext context) {

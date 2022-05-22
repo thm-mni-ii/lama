@@ -1,5 +1,5 @@
 import 'block.dart';
-import '../point.dart';
+import 'point.dart';
 import 'package:flutter/material.dart';
 
 //   -

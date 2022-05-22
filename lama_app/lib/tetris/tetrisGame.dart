@@ -1,18 +1,21 @@
-// ignore_for_file: constant_identifier_names
 import 'dart:developer' as developer;
-
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-import 'blocks/alive_point.dart';
+import 'block_objects/alive_point.dart';
 import 'userinput.dart';
-import 'helper.dart';
-import 'blocks/block.dart';
-import 'score_display.dart';
+import 'tetrisHelper.dart';
+import 'block_objects/block.dart';
+import 'screens/score_display.dart';
 
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
+
+// This class contains most of the Tetris game logic
+// Author: Artur Pusch
+// some parts of the code are taken from:
+// https://github.com/DennisLovesCoffee/Flutter_Tetris
+// wich was written by DennisLovesCoffee -- see also https://github.com/DennisLovesCoffee
 
 enum LastButtonPressed { LEFT, RIGHT, ROTATE_LEFT, ROTATE_RIGHT, NONE }
 enum MoveDir { LEFT, RIGHT, DOWN }
@@ -20,12 +23,15 @@ enum MoveDir { LEFT, RIGHT, DOWN }
 double WIDTH = 200;
 double HEIGHT = 400;
 
-double BOARD_WIDTH = 10; //vorher int
+double BOARD_WIDTH = 10;
 double BOARD_HEIGHT = 20;
-double POINT_SIZE = 20; //angabe in Px
+double POINT_SIZE = 20;
 
-const int GAME_SPEED = 500; // spielgeschwindigkeit
+int GAME_SPEED =
+    600; //less means faster //increses every time "score" reaches "amountOfPointsUserHasToReachSoHeBecomesFaster"
 Timer timer = Timer(const Duration(milliseconds: 1), () {});
+int amountOfPointsUserHasToReachSoHeBecomesFaster =
+    2; //increses every time the game becomes faster
 
 class Game extends StatefulWidget {
   /// context of the game to allow access to the navigator
@@ -39,36 +45,35 @@ class Game extends StatefulWidget {
 
   var userRepo;
 
-  // const Game({Key? key}) : super(key: key);
-  Game(this.context, this.userRepo) {
+  Game(this.context, this.userRepo, this.userHighScore, this.allTimeHighScore) {
     developer.log("${MediaQuery.of(context).size.width}");
     developer.log("${MediaQuery.of(context).size.height}");
     developer.log("${MediaQuery.of(context).padding}");
   }
   @override
-  State<StatefulWidget> createState() => _Game(userRepo, context);
+  State<StatefulWidget> createState() =>
+      _Game(userRepo, context, userHighScore, allTimeHighScore);
 }
 
 class _Game extends State<Game> {
-  //LastButtonPressed soll sich ändern können, bzw der State soll sich hier ändern können
-  LastButtonPressed performAction = LastButtonPressed.NONE; //anfangs State
+  LastButtonPressed performAction = LastButtonPressed.NONE; //start State
   Block currentBlock;
-  List<AlivePoint> alivePoints = [];
+  List<AlivePoint> alivePoints =
+      []; //used Blocks, which are already on the ground or in other blocks
   int score = 0;
   UserRepository _userRepo;
   BuildContext context;
 
-  _Game(this._userRepo, this.context) {
-    //das macht es fast!!! responsible
+  _Game(
+      this._userRepo, this.context, this.userHighScore, this.allTimeHighScore) {
+    //this makes the game screen responsible
     final mediaQueryData = MediaQuery.of(context);
     WIDTH = (mediaQueryData.size.height - 250) / 2;
-
     POINT_SIZE = WIDTH / 10;
     HEIGHT = WIDTH * 2;
   }
   bool _savedHighscore = false;
 
-  ////////////////////////////////////////////////////////
   /// id of the game
   final gameId = 4;
 
@@ -86,7 +91,9 @@ class _Game extends State<Game> {
   @override
   void initState() {
     super.initState();
-    ladeHighScores();
+    //  ladeHighScores();
+    GAME_SPEED = 600;
+    amountOfPointsUserHasToReachSoHeBecomesFaster = 2;
     startGame();
   }
 
@@ -101,7 +108,7 @@ class _Game extends State<Game> {
       currentBlock = getRamdomBlock();
     });
     timer = Timer.periodic(
-      const Duration(milliseconds: GAME_SPEED),
+      Duration(milliseconds: GAME_SPEED),
       onTimeTick,
     );
   }
@@ -144,7 +151,6 @@ class _Game extends State<Game> {
     }
   }
 
-//oder auch ist ein Block
   bool isAboveOldBlock() {
     bool retVal = false;
 
@@ -186,7 +192,6 @@ class _Game extends State<Game> {
 
   void removeFullRows() {
     for (int currentRow = 0; currentRow < BOARD_HEIGHT; currentRow++) {
-      //kontrolliert alle Reichen von oben nach unten
       int counter = 0;
 
       for (var point in alivePoints) {
@@ -206,20 +211,23 @@ class _Game extends State<Game> {
 
     for (var element in alivePoints) {
       if (element.y <= 0) {
+        safeHighScore();
         retVal = true;
-        //hier wird der Highscore gespeichert
-        if (score > userHighScore) {
-          if (!_savedHighscore) {
-            _savedHighscore = true;
-            _userRepo.addHighscore(Highscore(
-                gameID: gameId,
-                score: score,
-                userID: _userRepo.authenticatedUser.id));
-          }
-        }
       }
     }
     return retVal;
+  }
+
+  void safeHighScore() {
+    if (score > userHighScore) {
+      if (!_savedHighscore) {
+        _savedHighscore = true;
+        _userRepo.addHighscore(Highscore(
+            gameID: gameId,
+            score: score,
+            userID: _userRepo.authenticatedUser.id));
+      }
+    }
   }
 
   void onTimeTick(Timer time) {
@@ -227,30 +235,33 @@ class _Game extends State<Game> {
       timer.cancel();
       return;
     }
+    removeFullRows(); //score++ is in here
+    increaseSpeedIfNecessary();
 
-//entferne volle Reihe
-    removeFullRows();
-    //prüfe, ob der block schon auf dem Boden ist
     if (currentBlock.isAtBottom() || isAboveOldBlock()) {
-      //safe Block
       safeOldBlock();
-      //neuer random Block
       setState(() {
         currentBlock = getRamdomBlock();
       });
     } else {
       setState(() {
-        //if game is running noch hinzufügen, sollte probleme beheben
         currentBlock.move(MoveDir.DOWN);
       });
       checkForUserInput();
     }
   }
 
+  void increaseSpeedIfNecessary() {
+    if (score > amountOfPointsUserHasToReachSoHeBecomesFaster) {
+      amountOfPointsUserHasToReachSoHeBecomesFaster =
+          score + amountOfPointsUserHasToReachSoHeBecomesFaster;
+      GAME_SPEED -= 50;
+    }
+  }
+
   Widget drawTetrisBlocks() {
     List<Positioned> visiblePoints = [];
-
-    //aktueller BLock
+//current Block
     for (var point in currentBlock.fixed_length_list_of_points) {
       Positioned newPoint = Positioned(
         child: getTetrisPoint(currentBlock.color),
@@ -260,7 +271,7 @@ class _Game extends State<Game> {
       visiblePoints.add(newPoint);
     }
 
-//oldBlock
+//oldBlock's
     for (var point in alivePoints) {
       visiblePoints.add(
         Positioned(
@@ -279,7 +290,6 @@ class _Game extends State<Game> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Expanded(
           child: Center(
@@ -295,10 +305,11 @@ class _Game extends State<Game> {
             ),
           ),
         ),
+        ScoreDisplayTetris(score, "Score"),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Expanded(
+            /* Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -307,7 +318,7 @@ class _Game extends State<Game> {
                   ScoreDisplayTetris(score, "Score"),
                 ],
               ),
-            ),
+            ),*/
             Expanded(
               child: (playerLost() == false)
                   ? UserInput(onActionButtonPressed)

@@ -56,7 +56,11 @@ void _navigateToGame(String gameName, BuildContext context,
       gameToLaunch = ClimberGameScreen(userRepository);
       break;
     case "Tetris":
-      gameToLaunch = TetrisScreen(userRepository);
+      //quick solution to get Highscores
+      int userHighScore = await userRepository.getMyHighscore(4);
+      int allTimeHighScore = await userRepository.getHighscore(4);
+      gameToLaunch =
+          TetrisScreen(userRepository, userHighScore, allTimeHighScore);
       break;
     default:
       throw Exception("Trying to launch game that does not exist");
