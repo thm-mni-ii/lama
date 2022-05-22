@@ -5,25 +5,28 @@
     "taskset_randomize_order": true,
     "tasks": [
         {
+            "task_type": "Clock",
+            "task_reward": 2,
+            "lama_text": "Wie viel Uhr ist es?",
+            "left_to_solve": 3,
+            "uhr": "halbeStunde",
+            "timer": false
+          },
+        {
             "task_type": "MoneyTask",
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
-            "difficulty": 1,
+            "difficulty": 2,
             "optimum": false
         },
         {
-            "task_type": "4Cards",
+            "task_type": "MoneyTask",
             "task_reward": 2,
-            "question": "3+14",
-            "lama_text": "Tippe die richtige Antwort an!",
+            "lama_text": "",
             "left_to_solve": 3,
-            "right_answer": "17",
-            "wrong_answers": [
-                "16",
-                "18",
-                "10"
-            ]
+            "difficulty": 2,
+            "optimum": false
         },
         {
             "task_type": "NumberLine",
@@ -56,44 +59,16 @@
             "task_reward": 2,
             "lama_text": "Löse die Gleichung!",
             "left_to_solve": 4,
-            "equation": [
-                "9",
-                "?",
-                "2",
-                "=",
-                "7"
+            "random_allowed_operators": [
+                "-",  "+"
             ],
-            "options": [
-                "3",
-                "4",
-                "0",
-                "2",
-                "5"
-            ]
-        },
-        {
-            "task_type": "Equation",
-            "task_reward": 2,
-            "lama_text": "Löse die Gleichung!",
-            "left_to_solve": 4,
-            "equation": [
-                "?",
-                "-",
-                "6",
-                "+",
-                "?",
-                "=",
-                "4"
+            "operand_range": [
+                0,
+                20
             ],
-            "options": [
-                "8",
-                "2",
-                "3",
-                "4",
-                "0",
-                "1",
-                "5"
-            ]
+            "fields_to_replace": 1,
+            "allow_replacing_operators": false,
+            "operator_amount": 1
         },
         {
             "task_type": "Equation",
@@ -101,7 +76,7 @@
             "lama_text": "Löse die Gleichung!",
             "left_to_solve": 4,
             "random_allowed_operators": [
-                "-"
+                "-",  "+"
             ],
             "operand_range": [
                 0,
@@ -117,7 +92,7 @@
             "lama_text": " zerlegt die Zahlen!",
             "left_to_solve": 3,
             "reverse": false,
-            "zeros": true,
+            "zeros": false,
             "boolThousands": false 
         }
     ]
