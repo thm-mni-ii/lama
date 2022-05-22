@@ -394,10 +394,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
             height: MediaQuery.of(context).size.height / 5,
             width: MediaQuery.of(context).size.width / 2,
-            child: ((hasInternet()) == true)
-                ? pictureFromNetwork
-                : SvgPicture.asset(
-                    "assets/images/svg/objects/"+ wort.toLowerCase() + ".svg"),
+            child: pictureFromNetwork,
 
             // CachedNetworkImage(imageUrl: "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Auto.png?raw=true",),
             //Image.network(wortURL), //Image.memory(byte), // //Image.asset()
