@@ -35,14 +35,13 @@ class Task {
             List<String>.from(json['wrong_answers']));
       case "Zerlegung":
         return TaskZerlegung(
-          taskType,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          json['reverse'],
-          json['zeros'],
-          json['boolThousands']
-        );
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['reverse'],
+            json['zeros'],
+            json['boolThousands']);
       case "Clock":
         return ClockTest(
             taskType,
@@ -88,9 +87,6 @@ class Task {
       case "GridSelect":
         return TaskGridSelect(taskType, json['task_reward'], json['lama_text'],
             json['left_to_solve'], List<String>.from(json['wordsToFind']));
-      case "MoneyTask":
-        return TaskMoney(taskType, json['task_reward'], json['lama_text'],
-            json['left_to_solve'], json['difficulty'], json['optimum']);
       case "VocableTest":
         var wordPairs = json['wordPairs'] as List;
         List<Pair<String, String>> wordPairList =
@@ -149,6 +145,18 @@ class Task {
             resultRange,
             operatorAmount,
             fieldsToReplace);
+      case "Buchstabieren":
+        Map<String, String> woerter = Map<String, String>.from(json['woerter']);
+        int firstLetterBig = json['first_Letter_Caps'];
+        int correctingModus = json['correcting_Modus'];
+        return TaskBuchstabieren(
+            taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            woerter,
+            firstLetterBig,
+            correctingModus);
       default:
         return null;
     }
@@ -296,6 +304,7 @@ class TaskGridSelect extends Task {
     return s;
   }
 }
+
 //Author Handito Bismo
 class ClockTest extends Task {
   String uhr;
@@ -436,6 +445,7 @@ class TaskEquation extends Task {
     return s;
   }
 }
+
 class TaskZerlegung extends Task {
   bool zeros;
   bool boolThousands;
@@ -448,6 +458,7 @@ class TaskZerlegung extends Task {
   // do toString Method
 
 }
+
 ///Subclass of [Task] for the Tasktype "NumberLine"
 ///
 ///Author: J.Decher
@@ -458,6 +469,29 @@ class TaskNumberLine extends Task {
   bool ontap;
   TaskNumberLine(String taskType, int reward, String lamaText, int leftToSolve,
       this.range, this.randomrange, this.steps, this.ontap)
+      : super(taskType, reward, lamaText, leftToSolve);
+
+  @override
+  String toString() {
+    String s = super.toString();
+    return s;
+  }
+}
+
+///Author: J.Decher, A.Pusch
+class TaskBuchstabieren extends Task {
+  Map<String, String> woerter;
+  int first_Letter_Caps;
+  int correctingModus;
+
+  TaskBuchstabieren(
+      String taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.woerter,
+      this.first_Letter_Caps,
+      this.correctingModus)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override

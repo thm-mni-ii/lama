@@ -10,10 +10,12 @@ import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
 import 'game_list_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
 
 /// [StatefulWidget] that contains the main menu screen
 ///
@@ -271,47 +273,70 @@ class _HomeScreenState extends State<HomeScreen> {
             .length >
         0) {
       children.add(ElevatedButton(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Center(
-              child: Text(
-                "Deutsch",
-                style: LamaTextTheme.getStyle(),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: CircleAvatar(
-                child: SvgPicture.asset(
-                  'assets/images/svg/MainMenu_Icons/deutsch_icon.svg',
-                  semanticsLabel: 'DeutschIcon',
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Deutsch",
+                  style: LamaTextTheme.getStyle(),
                 ),
-                backgroundColor: LamaColors.redPrimary,
               ),
-            )
-          ],
-        ),
-        style: ElevatedButton.styleFrom(
-            primary: LamaColors.redAccent,
-            minimumSize: Size(
-              (constraints.maxWidth / 100) * 80,
-              ((constraints.maxHeight / 100) * 10),
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50)))),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (BuildContext context) =>
-                  ChooseTasksetBloc(context.read<TasksetRepository>()),
-              child: ChooseTasksetScreen(
-                  "Deutsch", userRepository.getGrade(), userRepository),
-            ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  child: SvgPicture.asset(
+                    'assets/images/svg/MainMenu_Icons/deutsch_icon.svg',
+                    semanticsLabel: 'DeutschIcon',
+                  ),
+                  backgroundColor: LamaColors.redPrimary,
+                ),
+              )
+            ],
           ),
-        ).then((value) => (setState(() {}))),
-      ));
+          style: ElevatedButton.styleFrom(
+              primary: LamaColors.redAccent,
+              minimumSize: Size(
+                (constraints.maxWidth / 100) * 80,
+                ((constraints.maxHeight / 100) * 10),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+          onPressed: () async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (BuildContext context) =>
+                      ChooseTasksetBloc(context.read<TasksetRepository>()),
+                  child: ChooseTasksetScreen(
+                      "Deutsch", userRepository.getGrade(), userRepository),
+                ),
+              ),
+            ).then((value) => (setState(() {})));
+
+            ///preloads the png urls in every buchstabieren task
+            ///TO-DO: write method
+            for (int j = 0;
+                j <
+                    tasksetRepository
+                        .getTasksetsForSubjectAndGrade(
+                            "Deutsch", userRepository.getGrade())
+                        .length;
+                j++) {
+              TaskBuchstabieren buchTask;
+              List<Task> buchTasks = tasksetRepository
+                  .getTasksetsForSubjectAndGrade(
+                      "Deutsch", userRepository.getGrade())[j]
+                  .tasks
+                  .where((element) => element.type == "Buchstabieren")
+                  .toList();
+              for (int i = 0; i < buchTasks.length; i++) {
+                buchTask = buchTasks[i];
+                await preloadPngs(context, buchTask.woerter);
+              }
+            }
+          }));
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
     }
     if (tasksetRepository

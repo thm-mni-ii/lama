@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/gridselecttask_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/clock_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/connect_task_screen.dart';
@@ -22,18 +22,30 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
+
 ///[StatefulWidget] for the screen framework containing the current Task Widget.
 ///
 ///Author: K.Binder
 class TaskScreen extends StatefulWidget {
+  final int userGrade;
+  TaskScreen([this.userGrade]);
+
   @override
-  State<StatefulWidget> createState() => TaskScreenState();
+  State<StatefulWidget> createState() => TaskScreenState(userGrade);
 }
 
 ///[State] for the [TaskScreen]
 ///
 ///Author: K.Binder
 class TaskScreenState extends State<TaskScreen> {
+  int randomNummer;
+  Image image;
+  TaskBuchstabieren task;
+  int userGrade;
+
+  TaskScreenState([this.userGrade]);
+
   ///Loads the first Task of the list that was passed by
   ///the [ChooseTasksetScreen] during initialization.
   void initState() {
@@ -313,6 +325,15 @@ class TaskScreenState extends State<TaskScreen> {
         return ConnectTaskScreen(task, constraints);
       case "Equation":
         return EquationTaskScreen(task, constraints);
+      case "Buchstabieren":
+        // precacheAllImagesForTask(task, context);
+        randomNummer = erstelleEineRandomNummer(task);
+        return BuchstabierenTaskScreen(
+            task,
+            constraints,
+            cacheImageByUrl(context, holeUrl(task, randomNummer)),
+            randomNummer,
+            userGrade);
       default:
         return Container();
     }

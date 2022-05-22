@@ -12,10 +12,13 @@ class FlappyLama extends AnimationComponent {
   // --------
   /// hitbox padding = [left, right, top, bottom] = negative move inwards / positive move outwards
   final _hitBoxPadding = [-9.0, -7.0, -7.0, -3.0];
+
   /// flag to show the hitbox as an rectangle
   final bool _showHitbox = false;
+
   /// speed increase/decrease when [flap] gets called = flap height
   final double _flapSpeed = -320;
+
   /// gravity of the lama = falling speed
   static const double GRAVITY = 1000;
   // --------
@@ -23,20 +26,26 @@ class FlappyLama extends AnimationComponent {
 
   /// callback when the lama hits an object in [collides(Rect object)]
   Function onCollide;
+
   /// callback when the lama hits the ground
   Function onHitGround;
+
   /// callback when the lama hits the top
   Function onHitTop;
 
   /// animation in idle mode
   Animation _idle;
+
   /// animation in flying up mode
   Animation _up;
+
   /// animation in falling mode
   Animation _fall;
+
   /// width and height of the lama in pixel
   final double _size;
   final FlappyLamaGame _game;
+
   /// actual speed of the lama
   double _speedY = 0.0;
 
@@ -88,11 +97,15 @@ class FlappyLama extends AnimationComponent {
     }
 
     // X
-    if ((object.left > x - _hitBoxPadding[0] && object.left < x + width - _hitBoxPadding[0]) ||
-        (object.right > x - _hitBoxPadding[1] && object.right < x + width - _hitBoxPadding[1])) {
+    if ((object.left > x - _hitBoxPadding[0] &&
+            object.left < x + width - _hitBoxPadding[0]) ||
+        (object.right > x - _hitBoxPadding[1] &&
+            object.right < x + width - _hitBoxPadding[1])) {
       // Y
-      if ((object.top > y - _hitBoxPadding[2] && object.top < y + height - _hitBoxPadding[2]) ||
-          (object.bottom > y - _hitBoxPadding[3] && object.bottom < y + height - _hitBoxPadding[3])) {
+      if ((object.top > y - _hitBoxPadding[2] &&
+              object.top < y + height - _hitBoxPadding[2]) ||
+          (object.bottom > y - _hitBoxPadding[3] &&
+              object.bottom < y + height - _hitBoxPadding[3])) {
         // callback
         onCollide?.call();
         return true;
@@ -181,8 +194,7 @@ class FlappyLama extends AnimationComponent {
   void render(Canvas canvas) {
     // draw the hitboxframe
     if (_showHitbox) {
-      var hitboxPaint = Paint()
-          ..color = Color.fromRGBO(255, 0, 0, 0.5);
+      var hitboxPaint = Paint()..color = Color.fromRGBO(255, 0, 0, 0.5);
       canvas.drawRect(toRect(), hitboxPaint);
     }
 

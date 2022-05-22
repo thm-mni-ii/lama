@@ -79,9 +79,8 @@ class TasksetValidator {
                 json["reverse"] is bool &&
                 json.containsKey('zeros') &&
                 json['zeros'] is bool &&
-                json.containsKey('boolThousands')&&
-                json['boolThousands'] is bool)
-                return null;
+                json.containsKey('boolThousands') &&
+                json['boolThousands'] is bool) return null;
             return "Aufgabentyp: Zerlegung";
 
           ///ClozeTest
@@ -105,10 +104,6 @@ class TasksetValidator {
                 json["wrong_answers"] is List &&
                 _checkListType<String>(json["wrong_answers"])) return null;
             return "Aufgabentyp: Bild4Cards";
-          case "Buchstabieren":
-            if (json.containsKey("words") && json["words"] is List) return null;
-            return "Aufgabentyp: Buchstabieren";
-
 
           case "Clock":
             if (json.containsKey("uhr") &&
@@ -253,6 +248,13 @@ class TasksetValidator {
               }
             }
             return "Aufgabentyp: Equation";
+
+          ///Buchstabieren
+          case "Buchstabieren":
+            
+              return null;
+            return "Aufgabentyp: Buchstabieren";
+
           default:
             return "";
         }
