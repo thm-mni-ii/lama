@@ -40,11 +40,14 @@ class _MenuState extends State<Menu> {
   _MenuState(this.userHighScore, this.allTimeHighScore, this.userRepo);
 
   void onPlayClicked() {
-    if (userRepo.getLamaCoins() < GameListScreen.games[gameId - 1].cost) {
+    if (userRepo.getLamaCoins() < GameListScreen.games[0].cost) {
+      //0 <-> "gameId - 1"
       Navigator.pop(context, "NotEnoughCoins");
       return;
     }
-    userRepo.removeLamaCoins(GameListScreen.games[gameId - 1].cost);
+    userRepo.removeLamaCoins(GameListScreen.games[0].cost);
+    //0 <-> "gameId - 1" da die anderen games raus genommen wurden..
+
     Navigator.push(
       context,
       MaterialPageRoute(

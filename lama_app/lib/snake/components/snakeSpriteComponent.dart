@@ -10,18 +10,23 @@ import 'package:lama_app/snake/components/snake.dart';
 class SnakeSpriteComponent extends SpriteComponent {
   /// direction of this component
   SnakeDirection _direction = SnakeDirection.North;
+
   /// x position on the game field
   int _fieldX = 0;
+
   /// y position on the game field
   int _fieldY = 0;
+
   /// tilesize of the game field
   double _tileSize;
+
   /// part of this component
   SnakePart _part;
 
   /// The constructor need the type of the [part], [_tileSize] and [direction] to
   /// initialize this component.
-  SnakeSpriteComponent(SnakePart part, this._tileSize, SnakeDirection direction) {
+  SnakeSpriteComponent(
+      SnakePart part, this._tileSize, SnakeDirection direction) {
     width = _tileSize;
     height = _tileSize;
     anchor = Anchor.center;
@@ -80,7 +85,7 @@ class SnakeSpriteComponent extends SpriteComponent {
         break;
       case SnakeDirection.West:
         // 90
-        angle =  pi / 2;
+        angle = pi / 2;
         break;
       case SnakeDirection.South:
         // 0
@@ -88,7 +93,7 @@ class SnakeSpriteComponent extends SpriteComponent {
         break;
       case SnakeDirection.East:
         // 270
-        angle = - pi / 2;
+        angle = -pi / 2;
         break;
     }
 
@@ -109,9 +114,4 @@ class SnakeSpriteComponent extends SpriteComponent {
 }
 
 /// This enum represents the different parts of a snake
-enum SnakePart {
-  Head,
-  Tail,
-  Body,
-  BodyCorner
-}
+enum SnakePart { Head, Tail, Body, BodyCorner }

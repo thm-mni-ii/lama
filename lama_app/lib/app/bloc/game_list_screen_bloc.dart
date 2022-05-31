@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/game_list_screen_event.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
-import 'package:lama_app/app/screens/climber_game_screen.dart';
-import 'package:lama_app/app/screens/flappy_game_screen.dart';
 import 'package:lama_app/app/screens/tetris_game_screen.dart';
 import 'package:lama_app/app/screens/snake_screen.dart';
 import 'package:lama_app/app/state/game_list_screen_state.dart';
@@ -49,12 +47,13 @@ void _navigateToGame(String gameName, BuildContext context,
     case "Snake":
       gameToLaunch = SnakeScreen(userRepository);
       break;
+    /*
     case "Flappy-Lama":
       gameToLaunch = FlappyGameScreen(userRepository);
       break;
     case "Affen-Leiter":
       gameToLaunch = ClimberGameScreen(userRepository);
-      break;
+      break;*/
     case "Tetris":
       //quick solution to get Highscores
       int userHighScore = await userRepository.getMyHighscore(4);
