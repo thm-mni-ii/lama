@@ -10,7 +10,7 @@ abstract class EditUserState {}
 ///
 ///{@param}[User] user that should be edited
 class EditUserDefault extends EditUserState {
-  User user;
+  User? user;
   EditUserDefault(this.user);
 }
 
@@ -23,7 +23,7 @@ class EditUserDefault extends EditUserState {
 ///[User] user with old values
 ///[User] changedUser with changed values
 class EditUserChangeSuccess extends EditUserState {
-  User user;
+  User? user;
   User changedUser;
   EditUserChangeSuccess(this.user, this.changedUser);
 }

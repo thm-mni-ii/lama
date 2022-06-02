@@ -4,7 +4,7 @@ import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
 /// This class creates the Flappy Lama game screen
 class FlappyGameScreen extends StatelessWidget {
-  final UserRepository userRepository;
+  final UserRepository? userRepository;
 
   const FlappyGameScreen(this.userRepository);
 

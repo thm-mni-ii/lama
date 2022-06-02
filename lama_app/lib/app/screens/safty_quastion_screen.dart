@@ -25,7 +25,7 @@ import 'package:lama_app/app/state/safty_question_state.dart';
 /// Author: L.Kammerer
 /// latest Changes: 13.09.2021
 class SaftyQuestionScreen extends StatefulWidget {
-  User _user;
+  User? _user;
   SaftyQuestionScreen(this._user);
 
   @override
@@ -38,7 +38,7 @@ class SaftyQuestionScreen extends StatefulWidget {
 class SaftyQuestionScreenState extends State<SaftyQuestionScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  User _user;
+  User? _user;
   SaftyQuestionScreenState(this._user);
 
   @override
@@ -57,10 +57,10 @@ class SaftyQuestionScreenState extends State<SaftyQuestionScreen> {
     return Scaffold(
       //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
-      appBar: _bar(screenSize.width / 5),
+      appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
       body: BlocBuilder<SaftyQuestionBloc, SaftyQuestionState>(
         builder: (context, state) {
-          if (!_user.isAdmin) return _userNoAdmin();
+          if (!_user!.isAdmin!) return _userNoAdmin();
 
           if (state is SaftyQuestionContent) {
             if (InputValidation.isEmpty(state.question))
@@ -91,7 +91,7 @@ Widget _input(BuildContext context, SaftyQuestionContent state,
       child: Column(
         children: [
           SizedBox(height: 50),
-          Text(state.question,
+          Text(state.question!,
               textAlign: TextAlign.center,
               style: LamaTextTheme.getStyle(color: LamaColors.black)),
           Padding(
@@ -104,7 +104,7 @@ Widget _input(BuildContext context, SaftyQuestionContent state,
               validator: (value) =>
                   value == state.answer ? null : 'Eingabe stimmt nicht!',
               onFieldSubmitted: (value) => {
-                if (key.currentState.validate())
+                if (key.currentState!.validate())
                   context
                       .read<SaftyQuestionBloc>()
                       .add(SaftyQuestionPush(context, value))

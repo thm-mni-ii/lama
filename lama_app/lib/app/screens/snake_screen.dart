@@ -4,7 +4,7 @@ import 'package:lama_app/snake/snakeGame.dart';
 
 /// This class creates the Snake game screen
 class SnakeScreen extends StatelessWidget {
-  final UserRepository userRepository;
+  final UserRepository? userRepository;
 
   const SnakeScreen(this.userRepository);
 

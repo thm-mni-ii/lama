@@ -14,9 +14,9 @@ class UserSolvedTaskAmountFields{
 ///
 /// Author: F.Brecher
 class UserSolvedTaskAmount {
-  int userId;
-  int subjectId;
-  int amount;
+  int? userId;
+  int? subjectId;
+  int? amount;
 
   UserSolvedTaskAmount({this.userId, this.subjectId, this.amount});
 

@@ -15,7 +15,7 @@ class VocableTestTaskBloc
     extends Bloc<VocableTestTaskEvent, VocableTestTaskState> {
   final TaskVocableTest task;
   //List with all subTask results
-  List<bool> resultList;
+  List<bool?>? resultList;
   //Index of the current subTask
   int curWordPair = 0;
   //Which "side" is shown word->translation, translation->word
@@ -30,7 +30,7 @@ class VocableTestTaskBloc
   Stream<VocableTestTaskState> mapEventToState(
       VocableTestTaskEvent event) async* {
     if (event is VocableTestTaskGetWordEvent) {
-      if (task.randomizeSide) {
+      if (task.randomizeSide!) {
         var rng = Random();
         int side = rng.nextInt(2);
         if (side == 0) {
@@ -47,30 +47,30 @@ class VocableTestTaskBloc
             task.vocablePairs[curWordPair].a, resultList);
       }
     } else if (event is VocableTestTaskAnswerEvent) {
-      if (task.randomizeSide) {
+      if (task.randomizeSide!) {
         if (sideUsed == 0) {
           if (event.answer == task.vocablePairs[curWordPair].b) {
-            resultList[curWordPair] = true;
+            resultList![curWordPair] = true;
           } else {
-            resultList[curWordPair] = false;
+            resultList![curWordPair] = false;
           }
         } else {
           if (event.answer == task.vocablePairs[curWordPair].a) {
-            resultList[curWordPair] = true;
+            resultList![curWordPair] = true;
           } else {
-            resultList[curWordPair] = false;
+            resultList![curWordPair] = false;
           }
         }
       } else {
         if (event.answer == task.vocablePairs[curWordPair].b) {
-          resultList[curWordPair] = true;
+          resultList![curWordPair] = true;
         } else {
-          resultList[curWordPair] = false;
+          resultList![curWordPair] = false;
         }
       }
       curWordPair++;
       if (curWordPair < task.vocablePairs.length) {
-        if (task.randomizeSide) {
+        if (task.randomizeSide!) {
           var rng = Random();
           int side = rng.nextInt(2);
           if (side == 0) {
@@ -130,8 +130,8 @@ class VocableTestTaskInitState extends VocableTestTaskState {}
 ///
 /// Author: K.Binder
 class VocableTestTaskTranslationState extends VocableTestTaskState {
-  List<bool> resultList;
-  String wordToTranslate;
+  List<bool?>? resultList;
+  String? wordToTranslate;
 
   VocableTestTaskTranslationState(this.wordToTranslate, this.resultList);
 }
@@ -143,6 +143,6 @@ class VocableTestTaskTranslationState extends VocableTestTaskState {
 ///
 /// Author: K.Binder
 class VocableTestFinishedTaskState extends VocableTestTaskState {
-  List<bool> resultList;
+  List<bool?>? resultList;
   VocableTestFinishedTaskState(this.resultList);
 }

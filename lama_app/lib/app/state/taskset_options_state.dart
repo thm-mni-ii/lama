@@ -29,7 +29,7 @@ class TasksetOptionsPushSuccess extends TasksetOptionsState {}
 ///[String] failedUrl contains the url that caused the error
 class TasksetOptionsPushFailed extends TasksetOptionsState {
   String error;
-  String failedUrl;
+  String? failedUrl;
   TasksetOptionsPushFailed(
       {this.error = 'Da ist wohl was gehörig schiefgelaufen', this.failedUrl});
 }
@@ -46,7 +46,7 @@ class TasksetOptionsWaiting extends TasksetOptionsState {
 ///
 ///{@param}[String] url that is selected
 class TasksetOptionsUrlSelected extends TasksetOptionsState {
-  String url;
+  String? url;
   TasksetOptionsUrlSelected(this.url);
 }
 

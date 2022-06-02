@@ -4,7 +4,7 @@ import 'package:lama_app/apeClimber/climberGame.dart';
 
 /// This class creates the Monkey Climber game screen
 class ClimberGameScreen extends StatelessWidget {
-  final UserRepository userRepository;
+  final UserRepository? userRepository;
 
   const ClimberGameScreen(this.userRepository);
 

@@ -11,6 +11,6 @@ abstract class ChooseTasksetEvent {}
 /// Author: K.Binder
 class LoadAllTasksetsEvent extends ChooseTasksetEvent {
   String subject;
-  int grade;
+  int? grade;
   LoadAllTasksetsEvent(this.subject, this.grade);
 }
