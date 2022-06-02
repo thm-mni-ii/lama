@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lama_app/app/bloc/create_admin_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/event/check_screen_event.dart';
@@ -28,8 +29,9 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
   @override
   Stream<CheckScreenState> mapEventToState(CheckScreenEvent event) async* {
     if (event is CheckForAdmin) yield await _hasAdmin(event.context);
-    if (event is DSGVOAccepted) yield await _navigator(event.context);
+    if (event is DSGVOAccepted) yield await _loadWelcome(event.context);
     if (event is CreateAdminEvent) yield await _navigator(event.context);
+    if (event is GotoAdminEvent) yield await _navigateAdminInfo(event.context);
   }
 
   ///(private)
@@ -54,13 +56,21 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     return ShowDSGVO(await _loadDSGVO());
   }
 
+  Future<CheckScreenState> _loadWelcome(BuildContext context) async {
+    return ShowWelcome();
+  }
+
+  Future<CheckScreenState> _navigateAdminInfo(BuildContext context) async {
+    return ShowWelcome();
+  }
+
   ///(private)
   ///used if no admin exists to force the user to create an admin
   ///
   ///{@param} [BuildContext] as context
   Future<CheckScreenState> _navigator(BuildContext context) async {
     await _navigateNoAdmin(context);
-    return CreateAdmin();
+    return ShowWelcome();
   }
 
   ///(private)

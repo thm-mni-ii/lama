@@ -20,3 +20,6 @@ class ShowDSGVO extends CheckScreenState {
 
 ///should provide an CreateAdminScreen
 class CreateAdmin extends CheckScreenState {}
+
+///shows welcome screen
+class ShowWelcome extends CheckScreenState {}

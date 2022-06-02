@@ -32,3 +32,8 @@ class CreateAdminEvent extends CheckScreenEvent {
 
 ///used to denie the DSGVO
 class DSGVODenied extends CheckScreenEvent {}
+
+class GotoAdminEvent extends CheckScreenEvent {
+  BuildContext context;
+  GotoAdminEvent(this.context);
+}

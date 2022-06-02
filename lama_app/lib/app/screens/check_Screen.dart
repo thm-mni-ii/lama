@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:introduction_screen/introduction_screen.dart';
+import 'package:lama_app/app/screens/welcome_screen.dart';
 //Lama defaults
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -12,6 +14,7 @@ import 'package:lama_app/app/bloc/check_screen_bloc.dart';
 import 'package:lama_app/app/event/check_screen_event.dart';
 //States
 import 'package:lama_app/app/state/check_screen_state.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 ///This file creates the Check Screen
 ///Check Screen is the first entry on app start
@@ -148,6 +151,127 @@ class CheckScreenPage extends State<CheckScreen> {
               ),
             );
           }
+          if (state is ShowWelcome) {
+            final controller = PageController();
+            return Scaffold(
+                body: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 25, 0, 5),
+              child: Column(
+                children: [
+                  Flexible(
+                    flex: 15,
+                    child: PageView(
+                      controller: controller,
+                      children: [
+                        PageViewerModel(
+                          title: "Erste Seite",
+                          description:
+                              "Welcome welcome zu der Lama app, hier geht es richtig ab",
+                          image: Image.asset("assets/images/png/sunrise.png"),
+                        ),
+                        PageViewerModel(
+                          title: "Zweite Seite",
+                          description: "Hier gibts nen button zum admin!!",
+                          image: Image.asset("assets/images/png/sun.png"),
+                        ),
+                        PageViewerModel(
+                          title: "Dritte Seite",
+                          description:
+                              "Hier kann man einen Admin erstellen woooow",
+                          image: Image.asset("assets/images/png/sunset.png"),
+                        ),
+                        PageViewerModel(
+                          title: "ich bin der titel",
+                          description: "Ich bin die letzte Seite",
+                          image:
+                              Image.asset("assets/images/png/angrycloud.png"),
+                        )
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            controller.jumpToPage(3);
+                          },
+                          child: Text("Skip"),
+                        ),
+                        Center(
+                          child: SmoothPageIndicator(
+                            controller: controller,
+                            count: 4,
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            context
+                                .read<CheckScreenBloc>()
+                                .add(CreateAdminEvent(context));
+                          },
+                          child: Icon(Icons.navigate_next),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+                /* body: IntroductionScreen(
+              pages: [
+                PageViewModel(
+                  title: "Placeholder Pagetitle 1",
+                  body: "Placeholder bodytext 1",
+                  footer: Text(
+                    "Footer Placeholder",
+                  ),
+                  image: Image.asset("assets/images/png/sunrise.png"),
+                ),
+                PageViewModel(
+                  title: "Placeholder Pagetitle 1",
+                  body: "Placeholder bodytext 2",
+                  footer: ElevatedButton(
+                    child: Text("Goto Admin Page"),
+                    onPressed: () {
+                      context
+                          .read<CheckScreenBloc>()
+                          .add(GotoAdminEvent(context));
+                    }, //do something when pressed
+                  ),
+                  image: Image.asset("assets/images/png/sun.png"),
+                ),
+                PageViewModel(
+                  title: "Placeholder Pagetitle 3",
+                  body: "Placeholder bodytext 3",
+                  image: Image.asset("assets/images/png/sunset.png"),
+                  footer: ElevatedButton(
+                    child: Text("Erstelle Admin"),
+                    onPressed: () {
+                      context
+                          .read<CheckScreenBloc>()
+                          .add(CreateAdminEvent(context));
+                    }, //do something when pressed
+                  ),
+                ),
+                PageViewModel(
+                  title: "Placeholder Pagetitle LAST",
+                  body: "Viel spaß mit der App",
+                  image: Image.asset("assets/images/png/sunrise.png"),
+                ),
+              ],
+              done: Text("Los geht's"),
+              skip: Text("skip"),
+              showSkipButton: true,
+              next: Icon(Icons.navigate_next),
+              onDone: () {
+                context.read<CheckScreenBloc>().add(CreateAdminEvent(context));
+              }, //TO-DO what happens when clicking "done"
+            ) */
+                );
+          }
 
           ///default waiting screen with app icon
           return Container(
@@ -159,6 +283,38 @@ class CheckScreenPage extends State<CheckScreen> {
           );
         },
       ),
+    );
+  }
+
+  Widget PageViewerModel({String title, String description, Image image}) {
+    return Column(
+      children: [
+        Flexible(
+            flex: 4,
+            child: Center(
+              child: image,
+            )),
+        Flexible(
+            flex: 3,
+            child: Column(children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: Text(
+                  title,
+                  style: LamaTextTheme.getStyle(color: Colors.black),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Text(
+                description,
+                style: LamaTextTheme.getStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.normal),
+                textAlign: TextAlign.center,
+              ),
+            ])),
+      ],
     );
   }
 }
