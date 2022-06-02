@@ -1,7 +1,7 @@
 import 'dart:ui';
 import '../snakeGame.dart';
 import 'package:flutter/painting.dart';
-
+/*
 /// This class contains a visualsation of a back button
 class GoBackButton {
   final SnakeGame game;
@@ -73,3 +73,5 @@ class GoBackButton {
 
   void onTapDown() {}
 }
+
+ */

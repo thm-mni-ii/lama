@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:ui';
 import 'dart:developer' as developer;
-
+/*
 import 'package:lama_app/snake/components/snakeSpriteComponent.dart';
 import 'package:lama_app/snake/models/position.dart';
 import 'package:lama_app/snake/snakeGame.dart';
@@ -309,3 +309,6 @@ enum SnakeDirection {
   South,
   East
 }
+
+
+ */

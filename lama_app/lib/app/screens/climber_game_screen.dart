@@ -11,23 +11,19 @@ class ClimberGameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Affenleiter"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Expanded(
-              child: Container(
+        appBar: AppBar(
+          title: Text("Affenleiter"),
+        ),
+        body: Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+              Expanded(
+                  child: Container(
                 color: Colors.green,
-                child: ClimberGame(context, userRepository).widget,
-              )
-            )
-          ]
-        )
-      )
-    );
+                // child: ClimberGame(context, userRepository).widget,
+              ))
+            ])));
   }
 }
