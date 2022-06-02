@@ -57,7 +57,7 @@ class UserLoginScreenState extends State<UserLoginScreen> {
       //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
-      body: BlocBuilder<UserLoginBloc, UserLoginState>(
+      body: BlocBuilder<UserLoginBloc, UserLoginState?>(
         builder: (context, state) {
           if (state is UserLoginPulled) {
             return _input(

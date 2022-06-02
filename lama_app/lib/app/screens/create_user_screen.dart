@@ -57,7 +57,7 @@ class CreateUserScreenState extends State<CreateUserScreen> {
       //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
-      body: BlocBuilder<CreateUserBloc, CreateUserState>(
+      body: BlocBuilder<CreateUserBloc, CreateUserState?>(
           builder: (context, state) {
         if (state is CreateUserLoaded)
           return _userOptions(context, state.grades);

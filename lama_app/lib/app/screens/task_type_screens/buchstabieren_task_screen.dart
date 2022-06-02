@@ -309,7 +309,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     return 0;
   }
 
-  String holeBuchstabe(i) {
+  String? holeBuchstabe(i) {
     if (task.correctingModus == 0) {
       String? losungsWort = "Auto"; //default wort
       losungsWort = wort;
@@ -328,9 +328,10 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
         return zufallsChar2;
       }
     }
+    return null;
   }
 
-  Future<bool> hasInternet() async {
+  Future<bool?> hasInternet() async {
     try {
       final result = await InternetAddress.lookup('example.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -341,6 +342,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
       print('not connected');
       return false;
     }
+    return null;
   }
 
   BuchstabierenTaskState(this.task, this.constraints, this.pictureFromNetwork,

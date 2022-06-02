@@ -69,7 +69,8 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
           if (state is TasksetOptionsPushSuccess) {
             urlInitValue = null;
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(_saveSuccess() as SnackBar);
+            ScaffoldMessenger.of(context)
+                .showSnackBar(_saveSuccess() as SnackBar);
           }
 
           ///url insert failed an error message pops up
@@ -85,7 +86,8 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
           ///old [SnackBar] disappears
           if (state is TasksetOptionsDeleteSuccess) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess() as SnackBar);
+            ScaffoldMessenger.of(context)
+                .showSnackBar(_deleteSuccess() as SnackBar);
           }
 
           ///tapping on an url shows an pop up with details about the url
@@ -93,7 +95,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             showDialog(context: context, builder: (_) => _urlPopUp(state.url!));
           }
         },
-        child: BlocBuilder<TasksetOptionsBloc, TasksetOptionsState>(
+        child: BlocBuilder<TasksetOptionsBloc, TasksetOptionsState?>(
           builder: (context, state) {
             if (state is TasksetOptionsDefault) {
               return Padding(

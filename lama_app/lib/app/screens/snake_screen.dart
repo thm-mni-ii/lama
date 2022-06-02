@@ -22,7 +22,7 @@ class SnakeScreen extends StatelessWidget {
               Expanded(
                   child: SafeArea(
                 //  child: SnakeGame(context, userRepository).widget,
-                bottom: true,
+                bottom: true, child: Text(""),
               ))
             ])));
   }

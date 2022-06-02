@@ -80,7 +80,7 @@ class EditUserScreenState extends State<EditUserScreen> {
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
-    return BlocBuilder<EditUserBloc, EditUserState>(
+    return BlocBuilder<EditUserBloc, EditUserState?>(
       builder: (context, state) {
         if (state is EditUserDeleteCheck)
           return _deleteUserCheck(context, screenSize.width, state);
@@ -654,7 +654,8 @@ class EditUserScreenState extends State<EditUserScreen> {
       BuildContext context, double size, EditUserDeleteCheck state) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: _bar(size / 5, 'Nutzer löschen', LamaColors.redPrimary) as PreferredSizeWidget?,
+        appBar: _bar(size / 5, 'Nutzer löschen', LamaColors.redPrimary)
+            as PreferredSizeWidget?,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

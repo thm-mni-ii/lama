@@ -57,7 +57,8 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: _bar(screensize.width / 5, 'Adminmenü', LamaColors.bluePrimary) as PreferredSizeWidget?,
+      appBar: _bar(screensize.width / 5, 'Adminmenü', LamaColors.bluePrimary)
+          as PreferredSizeWidget?,
       body: BlocListener(
         bloc: BlocProvider.of<AdminMenuBloc>(context),
         listener: (context, dynamic state) {
@@ -66,7 +67,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
             showDialog(context: context, builder: (_) => _gitHubAlert());
           }
         },
-        child: BlocBuilder<AdminMenuBloc, AdminMenuState>(
+        child: BlocBuilder<AdminMenuBloc, AdminMenuState?>(
           builder: (context, state) {
             ///Set the [_isChecked] for the [Checkbox] to ensure it's the current value of [SharedPreferences]
             ///then force the [AdminMenuLoadDefaultEvent] to move on

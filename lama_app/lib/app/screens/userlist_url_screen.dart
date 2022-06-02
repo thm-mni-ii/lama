@@ -59,8 +59,9 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
         //avoid overflow because of the keyboard
         resizeToAvoidBottomInset: false,
         appBar: AdminUtils.appbar(
-            screenSize, LamaColors.bluePrimary, 'Nutzerliste einfügen') as PreferredSizeWidget?,
-        body: BlocBuilder<UserlistUrlBloc, UserlistUrlState>(
+                screenSize, LamaColors.bluePrimary, 'Nutzerliste einfügen')
+            as PreferredSizeWidget?,
+        body: BlocBuilder<UserlistUrlBloc, UserlistUrlState?>(
             builder: (context, state) {
           if (state is UserlistUrlTesting)
             return _loadingWidget('Inhalt wird geprüft und geladen!');
@@ -71,7 +72,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
           if (state is UserlistUrlInsertSuccess) return _insertSuccessWidget();
           return _defaultWidget();
         }),
-        floatingActionButton: BlocBuilder<UserlistUrlBloc, UserlistUrlState>(
+        floatingActionButton: BlocBuilder<UserlistUrlBloc, UserlistUrlState?>(
           builder: (contextB, state) {
             if (state is UserlistUrlParsingSuccessfull)
               return AdminUtils.saveAboardButtons(

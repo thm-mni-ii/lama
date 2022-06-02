@@ -58,7 +58,7 @@ class SaftyQuestionScreenState extends State<SaftyQuestionScreen> {
       //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
-      body: BlocBuilder<SaftyQuestionBloc, SaftyQuestionState>(
+      body: BlocBuilder<SaftyQuestionBloc, SaftyQuestionState?>(
         builder: (context, state) {
           if (!_user!.isAdmin!) return _userNoAdmin();
 

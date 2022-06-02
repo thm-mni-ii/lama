@@ -56,7 +56,7 @@ class UserManagementScreenState extends State<UserManagementScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
-      body: BlocBuilder<UserManagementBloc, UserManagementState>(
+      body: BlocBuilder<UserManagementBloc, UserManagementState?>(
         builder: (context, state) {
           if (state is Loaded) {
             return _userListView(state.userList);
@@ -116,7 +116,7 @@ class UserManagementScreenState extends State<UserManagementScreen> {
   Widget _userCard(User user) {
     ///attache '(Admin)' to the username if the user is an Admin
     String? _nameDisplay = user.isAdmin! ? user.name! + ' (Admin)' : user.name;
-    return BlocBuilder<UserManagementBloc, UserManagementState>(
+    return BlocBuilder<UserManagementBloc, UserManagementState?>(
       builder: (context, state) {
         return Card(
           child: ListTile(

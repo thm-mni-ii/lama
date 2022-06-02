@@ -57,7 +57,7 @@ class UserSelectionScreenState extends State<UserSelectionScreen> {
     return Scaffold(
       key: _scaffold,
       appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
-      body: BlocBuilder<UserSelectionBloc, UserSelectionState>(
+      body: BlocBuilder<UserSelectionBloc, UserSelectionState?>(
         builder: (context, state) {
           if (state is UsersLoaded) {
             return _userListView(state.userList);
@@ -94,7 +94,7 @@ class UserSelectionScreenState extends State<UserSelectionScreen> {
   Widget _userCard(User user) {
     ///attache '(Admin)' to the username if the user is an Admin
     String? _nameDisplay = user.isAdmin! ? user.name! + ' (Admin)' : user.name;
-    return BlocBuilder<UserSelectionBloc, UserSelectionState>(
+    return BlocBuilder<UserSelectionBloc, UserSelectionState?>(
       builder: (context, state) {
         return Card(
           child: ListTile(

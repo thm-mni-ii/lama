@@ -117,9 +117,9 @@ class DatabaseProvider {
   ///
   /// {@return} <List<User>>
   Future<List<User>> getUser() async {
-    final db = await (database as FutureOr<Database>);
+    final db = await (database);
 
-    var users = await db.query(tableUser, columns: [
+    var users = await db?.query(tableUser, columns: [
       UserFields.columnId,
       UserFields.columnName,
       UserFields.columnGrade,
@@ -131,7 +131,7 @@ class DatabaseProvider {
 
     List<User> userList = <User>[];
 
-    users.forEach((currentUser) {
+    users?.forEach((currentUser) {
       User user = User.fromMap(currentUser);
 
       userList.add(user);
@@ -338,14 +338,14 @@ class DatabaseProvider {
   ///
   /// {@return} <List<TaskUrl>>
   Future<List<TaskUrl>> getTaskUrl() async {
-    final db = await (database as FutureOr<Database>);
+    final db = await (database);
 
-    var taskUrl = await db.query(tableTaskUrl,
+    var taskUrl = await db?.query(tableTaskUrl,
         columns: [TaskUrlFields.columnId, TaskUrlFields.columnTaskUrl]);
 
     List<TaskUrl> taskUrlList = <TaskUrl>[];
 
-    taskUrl.forEach((currentTaskUrl) {
+    taskUrl?.forEach((currentTaskUrl) {
       TaskUrl taskUrl = TaskUrl.fromMap(currentTaskUrl);
 
       taskUrlList.add(taskUrl);
@@ -777,8 +777,11 @@ class DatabaseProvider {
   /// {@return} <int> true == 1, false == 0
   //check if the transferred password is the password from the user
   Future<int> checkPassword(String password, User user) async {
-    Password pswd = await (_getPassword(user) as FutureOr<Password>);
-    return (password.compareTo(pswd.password!) == 0 ? 1 : 0);
+    Password? pswd = await (_getPassword(user));
+    if (pswd != null) {
+      return (password.compareTo(pswd.password!) == 0 ? 1 : 0);
+    }
+    return 0;
   }
 
   /// update the password field in table User
@@ -876,15 +879,18 @@ class DatabaseProvider {
   ///
   /// {@return} <Password>
   Future<Password?> _getPassword(User user) async {
-    final db = await (database as FutureOr<Database>);
-    var passwords = await db.query(tableUser,
+    final db = await (database);
+    var passwords = await db?.query(tableUser,
         columns: [UserFields.columnPassword],
         where: "${UserFields.columnId} = ?",
         whereArgs: [user.id]);
-    if (passwords.length > 0) {
-      Password pswd = Password.fromMap(passwords.first);
-      return pswd;
+    if (passwords != null) {
+      if (passwords.length > 0) {
+        Password pswd = Password.fromMap(passwords.first);
+        return pswd;
+      }
     }
+
     return null;
   }
 
@@ -972,10 +978,10 @@ class DatabaseProvider {
   /// {@param} Task t
   ///
   /// {@return} <int> which shows the number of updated rows
-  Future<int> setDoesStillExist(Task t) async {
-    final db = await (database as FutureOr<Database>);
+  Future<int?> setDoesStillExist(Task t) async {
+    final db = await (database);
     print("Set flag for " + t.toString());
-    return await db.update(tableLeftToSolve,
+    return await db?.update(tableLeftToSolve,
         <String, dynamic>{LeftToSolveFields.columnDoesStillExist: 1},
         where: "${LeftToSolveFields.columnTaskString} = ?",
         whereArgs: [t.toString()]);
@@ -984,10 +990,10 @@ class DatabaseProvider {
   /// delete all entry's where the column doesStillExist is 0
   ///
   /// {@return} <int> which shows the number of deleted rows
-  Future<int> removeAllNonExistent() async {
-    final db = await (database as FutureOr<Database>);
+  Future<int?> removeAllNonExistent() async {
+    final db = await (database);
     int val = 0;
-    return await db.delete(tableLeftToSolve,
+    return await db?.delete(tableLeftToSolve,
         where: "${LeftToSolveFields.columnDoesStillExist} = ?",
         whereArgs: [val]);
   }
@@ -995,9 +1001,9 @@ class DatabaseProvider {
   /// update all columns doesStillExist to 0
   ///
   /// {@return} <int> which shows the number of updated rows
-  Future<int> resetAllStillExistFlags() async {
-    final db = await (database as FutureOr<Database>);
-    return await db.update(tableLeftToSolve,
+  Future<int?> resetAllStillExistFlags() async {
+    final db = await (database);
+    return await db?.update(tableLeftToSolve,
         <String, dynamic>{LeftToSolveFields.columnDoesStillExist: 0});
   }
 }

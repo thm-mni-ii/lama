@@ -66,13 +66,14 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
       //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
       appBar: AdminUtils.appbar(
-          screenSize, LamaColors.bluePrimary, 'Highscore-URL Einstellungen') as PreferredSizeWidget?,
+              screenSize, LamaColors.bluePrimary, 'Highscore-URL Einstellungen')
+          as PreferredSizeWidget?,
       body: WillPopScope(
         onWillPop: () async {
           Navigator.pop(context, _changedUserList);
           return null;
         } as Future<bool> Function()?,
-        child: BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState>(
+        child: BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState?>(
             builder: (context, state) {
           if (state is HighscoreUrlPullState) {
             _changedUserList = state.userList;
@@ -254,7 +255,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   ///{@param} [User] as user that should be displayed
   Widget _userCard(User user) {
     ///attache '(Admin)' to the username if the user is an Admin
-    return BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState>(
+    return BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState?>(
       builder: (context, state) {
         return Card(
           child: ListTile(
