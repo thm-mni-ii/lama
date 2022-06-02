@@ -33,7 +33,7 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
       List<String> randomEquation = _buildRandomEquation();
       List<int> numbersInEquation = [];
       List<String> answers = [];
-      int? fieldsToRemove = task.fieldsToReplace;
+      int fieldsToRemove = task.fieldsToReplace;
 
       List<int> possibleFieldsToReplace = [];
       print(randomEquation);
@@ -43,7 +43,7 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
         if (randomEquation[i] == "=") continue;
         //Only remove operators when its enabled for the task
         if (operatorList.contains(randomEquation[i]) &&
-            !task.allowReplacingOperators!) continue;
+            !task.allowReplacingOperators) continue;
 
         possibleFieldsToReplace.add(i);
       }
@@ -67,7 +67,7 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
         }
       } else {
         possibleFieldsToReplace.shuffle();
-        for (int i = 0; i < fieldsToRemove!; i++) {
+        for (int i = 0; i < fieldsToRemove; i++) {
           if (i >= possibleFieldsToReplace.length) break;
           if (int.tryParse(randomEquation[possibleFieldsToReplace[i]]) !=
               null) {

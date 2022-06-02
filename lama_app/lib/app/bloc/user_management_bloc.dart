@@ -24,8 +24,7 @@ import 'package:lama_app/db/database_provider.dart';
 /// latest Changes: 26.06.2021
 class UserManagementBloc
     extends Bloc<UserManagementEvent, UserManagementState> {
-  UserManagementBloc({UserManagementState? initialState})
-      : super(initialState!);
+  UserManagementBloc({UserManagementState initialState}) : super(initialState);
 
   @override
   Stream<UserManagementState> mapEventToState(

@@ -45,7 +45,7 @@ class TasksetLoader {
 
     //load all standard-tasksets for each subject and grade
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? enableDefaultTasksetPref =
+    bool enableDefaultTasksetPref =
         prefs.getBool(AdminUtils.enableDefaultTasksetsPref);
     if (enableDefaultTasksetPref == null || enableDefaultTasksetPref) {
       //load all standardtasks
@@ -182,7 +182,7 @@ class TasksetLoader {
   ///
   ///Also checks if the Taskset is valid via the [TasksetValidator] and skips it if its not.
   Future<void> buildTasksetFromJson(tasksetContent) async {
-    String? isTasksetValid =
+    String isTasksetValid =
         TasksetValidator.isValidTaskset(jsonDecode(tasksetContent));
     print('Is Taskset valid: $isTasksetValid');
     if (isTasksetValid == null) {
@@ -206,20 +206,20 @@ class TasksetLoader {
       SubjectGradeRelation sgr =
           SubjectGradeRelation(taskset.subject, taskset.grade);
       if (loadedTasksets.containsKey(sgr))
-        loadedTasksets[sgr]!.add(taskset);
+        loadedTasksets[sgr].add(taskset);
       else
         loadedTasksets[sgr] = <Taskset>[taskset];
       print("Loaded Taskset: " +
-          taskset.name! +
+          taskset.name +
           " for grade " +
           taskset.grade.toString() +
           " for subject " +
-          taskset.subject!);
+          taskset.subject);
     }
   }
 
   ///Gets all Tasksets that match a specific subject-grade combination (e.g. math and second grade)
-  List<Taskset>? getLoadedTasksetsForSubjectAndGrade(String subject, int? grade) {
+  List<Taskset> getLoadedTasksetsForSubjectAndGrade(String subject, int grade) {
     SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
     if (loadedTasksets.containsKey(sgr))
       return loadedTasksets[sgr];
@@ -231,10 +231,10 @@ class TasksetLoader {
   ///for the user
   Future<void> loadTasksFromUrls(List<TaskUrl> taskUrls) async {
     for (int i = 0; i < taskUrls.length; i++) {
-      String? result =
+      String result =
           await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
 
-      var response = await http.get(Uri.parse(taskUrls[i].url!),
+      var response = await http.get(Uri.parse(taskUrls[i].url),
           headers: {'Content-type': 'application/json'});
       if (result == null) {
         await buildTasksetFromJson(utf8.decode(response.bodyBytes));

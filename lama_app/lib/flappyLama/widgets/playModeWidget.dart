@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lama_app/util/LamaColors.dart';
-/*
+
 /// This class is a [StatelessWidget] for displaying the play Mode Hud of Flappy lama
 /// It needs the [onButtonPressed] [Function] to ensure its workability.
 class PlayModeButton extends StatelessWidget {
@@ -10,8 +10,8 @@ class PlayModeButton extends StatelessWidget {
   final Function onButtonPressed;
 
   const PlayModeButton({
-    required this.onButtonPressed,
-    required this.playMode
+    @required this.onButtonPressed,
+    @required this.playMode
   });
 
   @override
@@ -48,4 +48,3 @@ class PlayModeButton extends StatelessWidget {
     );
   }
 }
-*/

@@ -34,7 +34,7 @@ class CreateUserScreenState extends State<CreateUserScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   var _formKey = GlobalKey<FormState>();
   //temporary save the value of the Dropdown menu
-  String? _dropDown = 'Klasse 1';
+  String _dropDown = 'Klasse 1';
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class CreateUserScreenState extends State<CreateUserScreen> {
     return Scaffold(
       //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
-      appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
+      appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<CreateUserBloc, CreateUserState>(
           builder: (context, state) {
         if (state is CreateUserLoaded)
@@ -82,7 +82,7 @@ class CreateUserScreenState extends State<CreateUserScreen> {
   ///{@param} [BuildContext] as context
   ///
   ///{@return} [Widget] with every input as [TextFormField]
-  Widget _userOptions(BuildContext context, List<String?> grades) {
+  Widget _userOptions(BuildContext context, List<String> grades) {
     return Form(
       key: _formKey,
       child: Column(
@@ -135,7 +135,7 @@ class CreateUserScreenState extends State<CreateUserScreen> {
   ///Grades that could be selected as List<String> grades
   ///
   ///{@return} [Padding] with [DropdownButtonHideUnderline]
-  Widget _gradesList(BuildContext context, List<String?> grades) {
+  Widget _gradesList(BuildContext context, List<String> grades) {
     return Padding(
       padding: EdgeInsets.all(20),
       child: Container(
@@ -147,11 +147,11 @@ class CreateUserScreenState extends State<CreateUserScreen> {
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-            items: grades.map((String? value) {
+            items: grades.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(
-                  value!,
+                  value,
                   style: LamaTextTheme.getStyle(
                     fontSize: 20,
                     color: LamaColors.black,
@@ -198,7 +198,7 @@ class CreateUserScreenState extends State<CreateUserScreen> {
               color: Colors.white,
               tooltip: 'Speichern',
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
+                if (_formKey.currentState.validate()) {
                   context.read<CreateUserBloc>().add(CreateUserPush());
                 }
               },

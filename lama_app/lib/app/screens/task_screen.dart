@@ -28,7 +28,7 @@ import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper
 ///
 ///Author: K.Binder
 class TaskScreen extends StatefulWidget {
-  final int? userGrade;
+  final int userGrade;
   TaskScreen([this.userGrade]);
 
   @override
@@ -39,10 +39,10 @@ class TaskScreen extends StatefulWidget {
 ///
 ///Author: K.Binder
 class TaskScreenState extends State<TaskScreen> {
-  int? randomNummer;
-  Image? image;
-  TaskBuchstabieren? task;
-  int? userGrade;
+  int randomNummer;
+  Image image;
+  TaskBuchstabieren task;
+  int userGrade;
 
   TaskScreenState([this.userGrade]);
 
@@ -55,7 +55,7 @@ class TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    LinearGradient? lg;
+    LinearGradient lg;
     return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
         //State that signals a Task should be displayed
@@ -63,7 +63,7 @@ class TaskScreenState extends State<TaskScreen> {
           SvgPicture coinImg = SvgPicture.asset(
               'assets/images/svg/lama_coin.svg',
               semanticsLabel: 'lama_coin');
-          if (state.task != null && state.task.leftToSolve! <= 0)
+          if (state.task != null && state.task.leftToSolve <= 0)
             coinImg = SvgPicture.asset('assets/images/svg/lama_coin_grey.svg',
                 semanticsLabel: 'lama_coin_grey');
           switch (state.subject) {
@@ -119,7 +119,7 @@ class TaskScreenState extends State<TaskScreen> {
                                   onPressed: () => Navigator.of(context).pop(),
                                 ),
                               ),
-                              Text(state.subject!,
+                              Text(state.subject,
                                   style: LamaTextTheme.getStyle(
                                       color: LamaColors.white,
                                       fontSize: 30,
@@ -186,17 +186,17 @@ class TaskScreenState extends State<TaskScreen> {
                       height: MediaQuery.of(context).size.height / 100 * 10,
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: state.subTaskResult!.length,
+                        itemCount: state.subTaskResult.length,
                         itemBuilder: (context, index) {
-                          if (state.subTaskResult![index] == null) {
+                          if (state.subTaskResult[index] == null) {
                             return CircleAvatar(
                               backgroundColor: Colors.grey,
                             );
-                          } else if (!state.subTaskResult![index]!) {
+                          } else if (!state.subTaskResult[index]) {
                             return CircleAvatar(
                               backgroundColor: LamaColors.redAccent,
                             );
-                          } else if (state.subTaskResult![index]!) {
+                          } else if (state.subTaskResult[index]) {
                             return CircleAvatar(
                               backgroundColor: LamaColors.greenAccent,
                             );
@@ -241,17 +241,17 @@ class TaskScreenState extends State<TaskScreen> {
                       height: MediaQuery.of(context).size.height / 100 * 10,
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: state.subTaskResult!.length,
+                        itemCount: state.subTaskResult.length,
                         itemBuilder: (context, index) {
-                          if (state.subTaskResult![index] == null) {
+                          if (state.subTaskResult[index] == null) {
                             return CircleAvatar(
                               backgroundColor: Colors.grey,
                             );
-                          } else if (!state.subTaskResult![index]!) {
+                          } else if (!state.subTaskResult[index]) {
                             return CircleAvatar(
                               backgroundColor: LamaColors.redAccent,
                             );
-                          } else if (state.subTaskResult![index]!) {
+                          } else if (state.subTaskResult[index]) {
                             return CircleAvatar(
                               backgroundColor: LamaColors.greenAccent,
                             );
@@ -280,7 +280,7 @@ class TaskScreenState extends State<TaskScreen> {
                   child: LayoutBuilder(builder:
                       (BuildContext context, BoxConstraints constraints) {
                     return buildCompletionScreen(
-                        state.tasks!, state.answerResults, constraints);
+                        state.tasks, state.answerResults, constraints);
                   }),
                 ),
               ),
@@ -302,36 +302,36 @@ class TaskScreenState extends State<TaskScreen> {
       Task task, BoxConstraints constraints) {
     switch (task.type) {
       case "4Cards":
-        return FourCardTaskScreen(task as Task4Cards, constraints);
+        return FourCardTaskScreen(task, constraints);
       case "Zerlegung":
-        return ZerlegungTaskScreen(task: task as TaskZerlegung?, constraints: constraints);
+        return ZerlegungTaskScreen(task: task, constraints: constraints);
       case "NumberLine":
-        return NumberLineTaskScreen(task as TaskNumberLine, constraints);
+        return NumberLineTaskScreen(task, constraints);
       case "ClozeTest":
-        return ClozeTestTaskScreen(task as TaskClozeTest, constraints);
+        return ClozeTestTaskScreen(task, constraints);
       case "Clock":
-        return ClockTaskScreen(task as ClockTest, constraints);
+        return ClockTaskScreen(task, constraints);
       case "MarkWords":
-        return MarkWordsScreen(task as TaskMarkWords, constraints);
+        return MarkWordsScreen(task, constraints);
       case "MatchCategory":
-        return MatchCategoryTaskScreen(task as TaskMatchCategory, constraints);
+        return MatchCategoryTaskScreen(task, constraints);
       case "GridSelect":
-        return GridSelectTaskScreen(task as TaskGridSelect, constraints, GridSelectTaskBloc());
+        return GridSelectTaskScreen(task, constraints, GridSelectTaskBloc());
       case "MoneyTask":
-        return MoneyTaskScreen(task as TaskMoney, constraints);
+        return MoneyTaskScreen(task, constraints);
       case "VocableTest":
-        return VocableTestTaskScreen(task as TaskVocableTest, constraints);
+        return VocableTestTaskScreen(task, constraints);
       case "Connect":
-        return ConnectTaskScreen(task as TaskConnect, constraints);
+        return ConnectTaskScreen(task, constraints);
       case "Equation":
-        return EquationTaskScreen(task as TaskEquation, constraints);
+        return EquationTaskScreen(task, constraints);
       case "Buchstabieren":
         // precacheAllImagesForTask(task, context);
         randomNummer = erstelleEineRandomNummer(task);
         return BuchstabierenTaskScreen(
-            task as TaskBuchstabieren,
+            task,
             constraints,
-            cacheImageByUrl(context, holeUrl(task, randomNummer!)),
+            cacheImageByUrl(context, holeUrl(task, randomNummer)),
             randomNummer,
             userGrade);
       default:
@@ -347,7 +347,7 @@ class TaskScreenState extends State<TaskScreen> {
     for (int i = 0; i < results.length; i++) {
       if (results[i]) {
         rightAnswers++;
-        if (tasks[i].leftToSolve! > -1) coinsEarned += tasks[i].reward!;
+        if (tasks[i].leftToSolve > -1) coinsEarned += tasks[i].reward;
       }
     }
     return Column(
@@ -480,7 +480,7 @@ class TaskScreenState extends State<TaskScreen> {
         : Icon(Icons.close, color: LamaColors.redAccent, size: 50);
     Text coinText;
     if (result) {
-      if (task.leftToSolve! > -1)
+      if (task.leftToSolve > -1)
         coinText = Text("+" + task.reward.toString(),
             style: LamaTextTheme.getStyle(color: LamaColors.greenAccent));
       else

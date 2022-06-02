@@ -16,10 +16,10 @@ class HighscoresFields{
 ///
 /// Author: F.Brecher
 class Highscore {
-  int? id;
-  int? gameID;
-  int? score;
-  int? userID;
+  int id;
+  int gameID;
+  int score;
+  int userID;
 
   Highscore({this.gameID, this.score, this.userID});
 

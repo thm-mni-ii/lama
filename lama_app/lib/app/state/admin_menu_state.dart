@@ -11,7 +11,7 @@ class AdminMenuDefaultState extends AdminMenuState {}
 ///
 ///{@param}[bool] as prefDefaultTasksEnable
 class AdminMenuPrefLoadedState extends AdminMenuState {
-  bool? prefDefaultTasksEnable;
+  bool prefDefaultTasksEnable;
   AdminMenuPrefLoadedState(this.prefDefaultTasksEnable);
 }
 

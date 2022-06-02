@@ -22,15 +22,15 @@ class ShowNextTaskEvent extends TaskEvent {}
 ///
 /// Author: K.Binder
 class AnswerTaskEvent extends TaskEvent {
-  late List<String> fullAnswer;
-  String? providedAnswer;
-  double? providedAnswerDouble;
-  bool? providedAnswerBool;
-  List<String>? providedanswerWords;
-  List<bool?>? providedanswerStates;
-  List<int>? answerParts;
-  List<Pair>? rightPositions;
-  List<Pair>? markedPositions;
+  List<String> fullAnswer;
+  String providedAnswer;
+  double providedAnswerDouble;
+  bool providedAnswerBool;
+  List<String> providedanswerWords;
+  List<bool> providedanswerStates;
+  List<int> answerParts;
+  List<Pair> rightPositions;
+  List<Pair> markedPositions;
 
   //Constructor used for simple String answers. (e.g. [Task4Cards])
   AnswerTaskEvent(this.providedAnswer);
@@ -45,7 +45,7 @@ class AnswerTaskEvent extends TaskEvent {
   //Constructor used for [TaskGridSelect]
   AnswerTaskEvent.initGridSelect(this.rightPositions, this.markedPositions);
   //Constructor used for [TaskMoney]
-  AnswerTaskEvent.initMoneyTask(bool? providedAnswerBool) {
+  AnswerTaskEvent.initMoneyTask(bool providedAnswerBool) {
     this.providedAnswerBool = providedAnswerBool;
   }
   //Constructor used for [NumberLine]
@@ -70,7 +70,7 @@ class AnswerTaskEvent extends TaskEvent {
   AnswerTaskEvent.initBuchstabieren(bool fullAnswer) {
     this.providedAnswerBool = fullAnswer;
   }
-  AnswerTaskEvent.initZerlegung(bool? providedAnswerBool) {
+  AnswerTaskEvent.initZerlegung(bool providedAnswerBool) {
     this.providedAnswerBool = providedAnswerBool;
   }
   AnswerTaskEvent.initClockTask(bool providedAnswerBool) {

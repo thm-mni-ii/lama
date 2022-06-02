@@ -12,15 +12,15 @@ import '../../task-system/task.dart';
 import 'dart:io';
 import 'buchstabieren_task_helper.dart';
 
-late List<String> buchstabenListe;
-List<int>? buchstabenIndexListe;
-late List<bool> _canShowButton;
-late List<bool> _canShowAntwortButton;
+List<String> buchstabenListe;
+List<int> buchstabenIndexListe;
+List<bool> _canShowButton;
+List<bool> _canShowAntwortButton;
 
-String? wort;
-String? wortURL;
-int? wortLaenge = 0;
-int? zufallsZahl;
+String wort;
+String wortURL;
+int wortLaenge = 0;
+int zufallsZahl;
 int stringIndex = 0;
 int ergebnisIndex = 0;
 var ergebnisBuchstabe;
@@ -40,8 +40,8 @@ class BuchstabierenTaskScreen extends StatefulWidget {
   final TaskBuchstabieren task;
   final BoxConstraints constraints;
   Image pictureFromNetwork;
-  int? randomNummer;
-  int? userGrade;
+  int randomNummer;
+  int userGrade;
 
   BuchstabierenTaskScreen(
       this.task, this.constraints, this.pictureFromNetwork, this.randomNummer,
@@ -59,12 +59,12 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   final TaskBuchstabieren task;
   final BoxConstraints constraints;
   Image pictureFromNetwork;
-  int? randomNummer;
-  int? userGrade;
+  int randomNummer;
+  int userGrade;
 
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
-  bool? answer;
+  bool answer;
 
   Color testFarbe2 = Colors.blue;
 
@@ -147,7 +147,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             if (fehlerZaehler >= maxFehlerAnzahl) {
               testFarbe2 = Colors.red;
 
-              for (int i = stringIndex; i < wort!.length; i++) {
+              for (int i = stringIndex; i < wort.length; i++) {
                 showWidget(i);
               }
               rightOrWrongAnswerEvent(false);
@@ -156,7 +156,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
         }
         //task im correkting Modus
         if (task.correctingModus == 1) {
-          if (buchstabenListe[zufallsZahl!] == buchstabe) {
+          if (buchstabenListe[zufallsZahl] == buchstabe) {
             hideWidget(zufallsZahl);
             showWidget(zufallsZahl);
             rightOrWrongAnswerEvent(true);
@@ -165,14 +165,14 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             if (flagForCorrectingModus == 1) {
               showWidget(zufallsZahl);
 
-              hideWidget(zufallsZahl! - 1);
-              hideWidget(zufallsZahl! - 2);
+              hideWidget(zufallsZahl - 1);
+              hideWidget(zufallsZahl - 2);
             }
             if (flagForCorrectingModus == 2) {
               showWidget(zufallsZahl);
 
-              hideWidget(zufallsZahl! + 1);
-              hideWidget(zufallsZahl! + 2);
+              hideWidget(zufallsZahl + 1);
+              hideWidget(zufallsZahl + 2);
             }
 
             rightOrWrongAnswerEvent(false);
@@ -196,12 +196,12 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     return Container(
       alignment: Alignment.center,
       // margin: EdgeInsets.all(10),
-      child: (wortLaenge! >= x + 1 &&
-              _canShowButton[buchstabenIndexListe![
+      child: (wortLaenge >= x + 1 &&
+              _canShowButton[buchstabenIndexListe[
                   x]]) // hier wid geschaut, ob es noch buchstaben zu vergeben gibt und ob der Knopf schon in der Richtigen Reihenfolge gedrückt wurde
           ? zeichneAntwortButton(
-              holeBuchstabe(buchstabenIndexListe![x]),
-              buchstabenIndexListe![
+              holeBuchstabe(buchstabenIndexListe[x]),
+              buchstabenIndexListe[
                   x]) //hier soll nun der zufällig ausgewählte Buchstabe noch eingesetzt werden
           : null,
     );
@@ -241,59 +241,59 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     );
   }
 
-  String? holeEinWortAusJSON(i, wortkey, worturl) {
+  String holeEinWortAusJSON(i, wortkey, worturl) {
     wort = "test";
     wort = wortkey[i];
     ;
     if (task.first_Letter_Caps == 0 || task.correctingModus == 1) {
-      wort = wort!.toLowerCase();
+      wort = wort.toLowerCase();
     }
     wortURL = worturl[i];
-    buchstabenListe = wort!.split('');
+    buchstabenListe = wort.split('');
 
     buchstabenIndexListe;
-    buchstabenIndexListe = List<int>.filled(wort!.length, 0, growable: false);
-    for (int x = 0; x < wort!.length; x++) {
-      buchstabenIndexListe![x] = x;
+    buchstabenIndexListe = List<int>.filled(wort.length, 0, growable: false);
+    for (int x = 0; x < wort.length; x++) {
+      buchstabenIndexListe[x] = x;
     }
-    buchstabenIndexListe!.shuffle();
+    buchstabenIndexListe.shuffle();
 
     //hier wird die Menge an benötigter Buttons festgelegt, welche die Antwortbuchstaben beihalten
-    _canShowButton = List<bool>.filled(wort!.length, true, growable: false);
+    _canShowButton = List<bool>.filled(wort.length, true, growable: false);
 
     _canShowAntwortButton =
-        List<bool>.filled(wort!.length, true, growable: false);
+        List<bool>.filled(wort.length, true, growable: false);
 
     if (task.correctingModus == 0) {
-      for (int x = 0; x < wort!.length; x++) {
+      for (int x = 0; x < wort.length; x++) {
         _canShowButton[x] = true;
         _canShowAntwortButton[x] = false;
       }
     }
     //set Task in correcting Modus
     if (task.correctingModus == 1) {
-      zufallsZahl = bestimmeEinZufallsZahlFuerWort(wort!);
-      for (int x = 0; x < wort!.length; x++) {
+      zufallsZahl = bestimmeEinZufallsZahlFuerWort(wort);
+      for (int x = 0; x < wort.length; x++) {
         _canShowButton[x] = false;
         _canShowAntwortButton[x] = true;
       }
-      _canShowButton[zufallsZahl!] = true;
-      _canShowAntwortButton[zufallsZahl!] = false;
+      _canShowButton[zufallsZahl] = true;
+      _canShowAntwortButton[zufallsZahl] = false;
       //Setze ein paar falsche Antwortmöglichkeiten
-      if (zufallsZahl! > wort!.length - 3) {
+      if (zufallsZahl > wort.length - 3) {
         flagForCorrectingModus = 1;
-        _canShowButton[zufallsZahl! - 1] = true;
+        _canShowButton[zufallsZahl - 1] = true;
         //_canShowAntwortButton[zufallsZahl - 1] = false;
-        _canShowButton[zufallsZahl! - 2] = true;
+        _canShowButton[zufallsZahl - 2] = true;
         //_canShowAntwortButton[zufallsZahl - 2] = false;
         //buchstabenListe[zufallsZahl - 1] = "x";
         //buchstabenListe[zufallsZahl - 2] = "x";
       } else {
         flagForCorrectingModus = 2;
 
-        _canShowButton[zufallsZahl! + 1] = true;
+        _canShowButton[zufallsZahl + 1] = true;
         //_canShowAntwortButton[zufallsZahl + 1] = false;
-        _canShowButton[zufallsZahl! + 2] = true;
+        _canShowButton[zufallsZahl + 2] = true;
         //_canShowAntwortButton[zufallsZahl + 2] = false;
         //buchstabenListe[zufallsZahl + 1] = "x";
         //buchstabenListe[zufallsZahl + 2] = "x";
@@ -309,17 +309,15 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     return 0;
   }
 
-  String? holeBuchstabe(i) {
+  String holeBuchstabe(i) {
     if (task.correctingModus == 0) {
-      String? losungsWort = "Auto"; //default wort
+      var losungsWort = "Auto"; //default wort
       losungsWort = wort;
-      String test1 = "";
-      test1 = losungsWort![i];
-
+      String test1 = losungsWort[i];
       return test1;
     }
     if (task.correctingModus == 1 && i == zufallsZahl) {
-      return wort![zufallsZahl!];
+      return wort[zufallsZahl];
     } else if (task.correctingModus == 1 && i != zufallsZahl) {
       if (zufallsCharCounter == 0) {
         zufallsCharCounter++;
@@ -330,10 +328,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
         return zufallsChar2;
       }
     }
-    return null;
   }
 
-  Future<bool?> hasInternet() async {
+  Future<bool> hasInternet() async {
     try {
       final result = await InternetAddress.lookup('example.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -344,7 +341,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
       print('not connected');
       return false;
     }
-    return null;
   }
 
   BuchstabierenTaskState(this.task, this.constraints, this.pictureFromNetwork,
@@ -430,7 +426,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               //crossAxisCount: wortLaenge,
 
               children: [
-                for (int i = 0; i < wortLaenge!; i++)
+                for (int i = 0; i < wortLaenge; i++)
                   (!_canShowAntwortButton[i])
                       ? leeresFeld()
                       : gefuelltesFeld(buchstabenListe[i]),
@@ -453,7 +449,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
               //mainAxisSpacing: 10,
               children: [
-                for (int i = 0; i < wortLaenge!; i++)
+                for (int i = 0; i < wortLaenge; i++)
                   zeichneContainerMitAntwortButton(i)
               ],
             ),

@@ -13,12 +13,12 @@ class Pair<T1, T2> extends Equatable {
   Pair(this.a, this.b);
 
   @override
-  List<Object?> get props => [a, b];
+  List<Object> get props => [a, b];
 
   ///Returns a pair of strings parsed from json.
   ///
   ///Used for the parsing of the "VocableTest" task.
-  static Pair<String?, String?> fromJson(Map<String, dynamic> json) {
+  static Pair<String, String> fromJson(Map<String, dynamic> json) {
     return Pair(json['word'], json['translation']);
   }
 }

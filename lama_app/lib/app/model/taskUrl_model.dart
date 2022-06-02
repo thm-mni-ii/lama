@@ -13,8 +13,8 @@ class TaskUrlFields{
 ///
 /// Author: F.Brecher
 class TaskUrl {
-  int? id;
-  String? url;
+  int id;
+  String url;
 
   TaskUrl({this.url});
 

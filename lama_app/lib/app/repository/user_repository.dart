@@ -12,55 +12,54 @@ import 'package:http/http.dart' as http;
 ///
 /// Author: K.Binder
 class UserRepository {
-  User? authenticatedUser;
+  User authenticatedUser;
 
   UserRepository(this.authenticatedUser);
 
   ///Returns the username of the user thats currently logged in.
-  String? getUserName() {
-    return authenticatedUser!.name;
+  String getUserName() {
+    return authenticatedUser.name;
   }
 
   ///Returns the amount of lama coins of the user thats currently logged in.
-  int? getLamaCoins() {
-    return authenticatedUser!.coins;
+  int getLamaCoins() {
+    return authenticatedUser.coins;
   }
 
   ///Returns the grade of the user thats currently logged in.
-  int? getGrade() {
-    return authenticatedUser!.grade;
+  int getGrade() {
+    return authenticatedUser.grade;
   }
 
   ///Returns the avatar of the user thats currently logged in.
-  String? getAvatar() {
-    return authenticatedUser!.avatar;
+  String getAvatar() {
+    return authenticatedUser.avatar;
   }
 
   ///Adds lama coins to the user thats currently logged in.
   void addLamaCoins(int coinsToAdd) async {
-    authenticatedUser!.coins = (authenticatedUser!.coins! + coinsToAdd);
+    authenticatedUser.coins += coinsToAdd;
     authenticatedUser = await DatabaseProvider.db
-        .updateUserCoins(authenticatedUser!, authenticatedUser!.coins);
+        .updateUserCoins(authenticatedUser, authenticatedUser.coins);
   }
 
   ///Removes lama coins from the user thats currently logged in.
   void removeLamaCoins(int coinsToRemove) async {
-    authenticatedUser!.coins =
-        max(0, authenticatedUser!.coins! - coinsToRemove);
+    authenticatedUser.coins = max(0, authenticatedUser.coins - coinsToRemove);
     authenticatedUser = await DatabaseProvider.db
-        .updateUserCoins(authenticatedUser!, authenticatedUser!.coins);
+        .updateUserCoins(authenticatedUser, authenticatedUser.coins);
   }
 
   ///Adds a highscore for the user thats currently logged in.
   void addHighscore(Highscore score) async {
     await DatabaseProvider.db.insertHighscore(score);
     //TODO: post highscore to link if allowed
-    if (getHighscorePermission()!) {
+    if (getHighscorePermission()) {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
-      String _url = _prefs.getString(AdminUtils.highscoreUploadUrlPref)!;
-      Uri? uri = Uri.tryParse(_url);
+      String _url = _prefs.getString(AdminUtils.highscoreUploadUrlPref);
+      Uri uri = Uri.tryParse(_url);
       var token = new DBCrypt().hashpw(
-          getUserName()! +
+          getUserName() +
               getGrade().toString() +
               score.score.toString() +
               score.gameID.toString(),
@@ -71,7 +70,7 @@ class UserRepository {
         headers: <String, String>{
           'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
         },
-        body: <String, String?>{
+        body: <String, String>{
           "username": getUserName(),
           "grade": getGrade().toString(),
           "highscore": score.score.toString(),
@@ -84,18 +83,18 @@ class UserRepository {
   }
 
   ///Returns the highscore for [gameId] for the user thats currently logged in.
-  Future<int?> getMyHighscore(int gameId) async {
+  Future<int> getMyHighscore(int gameId) async {
     return await DatabaseProvider.db
-        .getHighscoreOfUserInGame(authenticatedUser!, gameId);
+        .getHighscoreOfUserInGame(authenticatedUser, gameId);
   }
 
   ///Returns the highscore for [gameId] among ALL users.
-  Future<int?> getHighscore(int gameId) async {
+  Future<int> getHighscore(int gameId) async {
     return await DatabaseProvider.db.getHighscoreOfGame(gameId);
   }
 
   ///Returns wether or not a highscore may be posted online
-  bool? getHighscorePermission() {
-    return authenticatedUser!.highscorePermission;
+  bool getHighscorePermission() {
+    return authenticatedUser.highscorePermission;
   }
 }

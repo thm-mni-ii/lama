@@ -60,7 +60,7 @@ Future<void> preloadPngs(context, Map<String, String> pngs) async {
 }
 
 String bestimmeEinZufallsBuchstabenAusWort(String wort, int zufallsZahl) {
-  String antwortString = "";
+  String antwortString;
   antwortString.substring(zufallsZahl, zufallsZahl + 1);
   return antwortString;
 }

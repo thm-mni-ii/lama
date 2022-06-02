@@ -1,5 +1,5 @@
 import 'dart:ui';
-/*
+
 import 'package:flame/animation.dart';
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
@@ -179,7 +179,3 @@ enum ClimbSide {
   Left,
   Right
 }
-
-
- */
-

@@ -21,11 +21,10 @@ import 'package:lama_app/db/database_provider.dart';
 class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   ///typed password
   ///incoming events are used to change the value
-  String? _pass;
+  String _pass;
   //user that wants to try the login
-  User? user;
-  UserLoginBloc({UserLoginState? initialState, this.user})
-      : super(initialState!);
+  User user;
+  UserLoginBloc({UserLoginState initialState, this.user}) : super(initialState);
 
   @override
   Stream<UserLoginState> mapEventToState(UserLoginEvent event) async* {
@@ -45,7 +44,7 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
   ///{@param}[UserLogin] as event
   Future<UserLoginState> validateUserLogin(UserLogin event) async {
     if ((_pass != null && event.user != null) &&
-        await DatabaseProvider.db.checkPassword(_pass!, event.user) == 1) {
+        await DatabaseProvider.db.checkPassword(_pass, event.user) == 1) {
       Navigator.pop(event.context, user);
       return UserLoginSuccessful();
     }
@@ -55,7 +54,7 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState> {
 
   Future<UserLoginState> validateSaftyQuestion(
       UserLoginForgotPassword event) async {
-    bool? saftyQuestionBool = await Navigator.push(
+    bool saftyQuestionBool = await Navigator.push(
       event.context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(

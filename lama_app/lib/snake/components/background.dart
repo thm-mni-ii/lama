@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:lama_app/snake/models/position.dart';
 import 'package:lama_app/snake/snakeGame.dart';
-/*
+
 /// This class will render the background of the full screen.
 class Background {
   final SnakeGame game;
@@ -117,5 +117,3 @@ class Background {
 
   void update(double t) {}
 }
-
- */

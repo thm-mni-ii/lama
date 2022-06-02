@@ -17,15 +17,14 @@ import 'package:lama_app/db/database_provider.dart';
 /// latest Changes: 26.06.2021
 class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   //[User] that should be updated in the database
-  User? _user;
+  User _user;
 
   ///[User] to store the changed values
   ///incoming events are used to change the values
   User _changedUser = User();
 
   ///{@param}[User] as user that should be updated or deleted in the database
-  EditUserBloc(User user, {EditUserState? initialState})
-      : super(initialState!) {
+  EditUserBloc(User user, {EditUserState initialState}) : super(initialState) {
     this._user = user;
   }
 
@@ -55,18 +54,18 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   ///{@return} [EditUserChangeSuccess] containing [_user] and [_changedUser]
   Future<EditUserState> _pushUserChanges() async {
     //Username
-    if (_changedUser.name != _user!.name && _changedUser.name != null)
-      await DatabaseProvider.db.updateUserName(_user!, _changedUser.name);
+    if (_changedUser.name != _user.name && _changedUser.name != null)
+      await DatabaseProvider.db.updateUserName(_user, _changedUser.name);
     //Password
-    if (_changedUser.password != _user!.password &&
+    if (_changedUser.password != _user.password &&
         _changedUser.password != null)
-      await DatabaseProvider.db.updatePassword(_changedUser.password, _user!);
+      await DatabaseProvider.db.updatePassword(_changedUser.password, _user);
     //Coins
-    if (_changedUser.coins != _user!.coins && _changedUser.coins != null)
-      await DatabaseProvider.db.updateUserCoins(_user!, _changedUser.coins);
+    if (_changedUser.coins != _user.coins && _changedUser.coins != null)
+      await DatabaseProvider.db.updateUserCoins(_user, _changedUser.coins);
     //Grade
-    if (_changedUser.grade != _user!.grade && _changedUser.grade != null)
-      await DatabaseProvider.db.updateUserGrade(_user!, _changedUser.grade);
+    if (_changedUser.grade != _user.grade && _changedUser.grade != null)
+      await DatabaseProvider.db.updateUserGrade(_user, _changedUser.grade);
     return EditUserChangeSuccess(_user, _changedUser);
   }
 
@@ -74,12 +73,12 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   ///provides warning befor an [User] is delete in the database
   ///if the last admin in the database would be deleted an specific warning returns with [EditUserDeleteCheck]
   Future<EditUserState> _deleteUserCheck() async {
-    if (_user!.isAdmin! && await _checkForLastAdmin())
+    if (_user.isAdmin && await _checkForLastAdmin())
       return EditUserDeleteCheck(
           'HINWEIS: \n Sie sind im Begriff den letzten Admin zu löschen. \n Sind keine Nutzer dieser Art vorhanden, werden Sie nach dem Neustart der App aufgefordert einen neuen Admin Nutzer zu erstellen. \n Dies hat KEINE auswirkungen auf andere Nutzer.');
     else
       return EditUserDeleteCheck(
-          'Sie möchten den Nutzer (${_user!.name}) löschen.');
+          'Sie möchten den Nutzer (${_user.name}) löschen.');
   }
 
   ///(private)
@@ -88,7 +87,7 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   ///
   ///{@param}[BuildContext] context
   Future<void> _deleteUser(BuildContext context) async {
-    await DatabaseProvider.db.deleteUser(_user!.id);
+    await DatabaseProvider.db.deleteUser(_user.id);
     _editUserReturn(context);
   }
 
@@ -108,7 +107,7 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
     List<User> list = await DatabaseProvider.db.getUser();
     int count = 0;
     for (int i = 0; i < list.length; i++) {
-      if (list[i].isAdmin!) count++;
+      if (list[i].isAdmin) count++;
       if (count > 1) return false;
     }
     return true;

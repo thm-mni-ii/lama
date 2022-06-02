@@ -2,7 +2,7 @@ import 'point.dart';
 import 'package:flutter/material.dart';
 
 class AlivePoint extends Point {
-  Color? color;
+  Color color;
 
   AlivePoint(double x, double y, this.color) : super(x, y);
 

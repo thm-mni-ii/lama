@@ -98,7 +98,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                     nip: BubbleNip.leftCenter,
                     child: Center(
                       child: Text(
-                        task.lamaText!,
+                        task.lamaText,
                         style: LamaTextTheme.getStyle(
                             color: LamaColors.black, fontSize: 15),
                       ),
@@ -225,8 +225,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
     if (firstStart) {
       positions.shuffle();
       firstStart = false;
-      double? bottom;
-      double? left;
+      double bottom;
+      double left;
       int length;
       // check if there are more than 8 Items in the list
       if (categorySum.length <= 8) {
@@ -271,7 +271,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             offset: Offset(0, 3)),
                       ]),
                   child: Center(
-                    child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
+                    child: Text(items[i].item, style: LamaTextTheme.getStyle()),
                   )),
               feedback: Material(
                   child: Container(
@@ -288,7 +288,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                                 offset: Offset(0, 3)),
                           ]),
                       child: Center(
-                        child: Text(items[i].item!,
+                        child: Text(items[i].item,
                             style: LamaTextTheme.getStyle()),
                       ))),
               childWhenDragging: Container(
@@ -305,7 +305,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             offset: Offset(0, 3)),
                       ]),
                   child: Center(
-                    child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
+                    child: Text(items[i].item, style: LamaTextTheme.getStyle()),
                   )),
             )),
       );
@@ -322,7 +322,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
   ///
   /// {@return} [Widget] Targetwidget to be displayed on the screen
   Widget buildTargets(BuildContext context, List<String> categoryList,
-      String? taskCategory, Color color) {
+      String taskCategory, Color color) {
     return DragTarget<Item>(
       builder: (context, candidate, rejectedData) => Container(
           height: (constraints.maxHeight / 100) * 45,
@@ -344,7 +344,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                 fit: BoxFit.fitWidth,
                 child: Center(
                   child: Text(
-                    taskCategory!,
+                    taskCategory,
                     style: LamaTextTheme.getStyle(
                       color: LamaColors.white,
                       fontSize: 30,
@@ -383,10 +383,10 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
 /// double [left] Used for positioning
 /// String [item] Stores item text given by TaskMatchCategory [task]
 class Item {
-  double? bottom;
-  double? left;
-  String? item;
-  Item(double? bottom, left, String item) {
+  double bottom;
+  double left;
+  String item;
+  Item(double bottom, left, String item) {
     this.bottom = bottom;
     this.left = left;
     this.item = item;

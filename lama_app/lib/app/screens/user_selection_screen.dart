@@ -56,7 +56,7 @@ class UserSelectionScreenState extends State<UserSelectionScreen> {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffold,
-      appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
+      appBar: _bar(screenSize.width / 5),
       body: BlocBuilder<UserSelectionBloc, UserSelectionState>(
         builder: (context, state) {
           if (state is UsersLoaded) {
@@ -93,18 +93,18 @@ class UserSelectionScreenState extends State<UserSelectionScreen> {
   ///{@param} [User] as user that should be displayed
   Widget _userCard(User user) {
     ///attache '(Admin)' to the username if the user is an Admin
-    String? _nameDisplay = user.isAdmin! ? user.name! + ' (Admin)' : user.name;
+    String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
     return BlocBuilder<UserSelectionBloc, UserSelectionState>(
       builder: (context, state) {
         return Card(
           child: ListTile(
             onTap: () {
-              _scaffold.currentContext!
+              _scaffold.currentContext
                   .read<UserSelectionBloc>()
                   .add(SelectUser(user, _scaffold.currentContext));
             },
             title: Text(
-              _nameDisplay!,
+              _nameDisplay,
               style: LamaTextTheme.getStyle(
                 fontSize: 20,
                 color: LamaColors.black,

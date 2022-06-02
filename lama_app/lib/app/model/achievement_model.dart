@@ -14,8 +14,8 @@ class AchievementsFields{
 ///
 /// Author: F.Brecher
 class Achievement {
-  int? id;
-  String? name;
+  int id;
+  String name;
 
   Achievement({this.name});
 

@@ -20,11 +20,11 @@ import 'package:lama_app/util/input_validation.dart';
 /// Author: L.Kammerer
 /// latest Changes: 15.06.2021
 class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
-  UserlistUrlBloc({UserlistUrlState? initialState}) : super(initialState!);
+  UserlistUrlBloc({UserlistUrlState initialState}) : super(initialState);
 
   ///url that is used to parse the userlist
   ///incoming events are used to change the value
-  String? _url;
+  String _url;
   //list of [User] parsed from the [_url]
   List<User> _userList = [];
 
@@ -53,12 +53,12 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
   ///[UserlistUrlParsingSuccessfull] via [_parsUserList] if the parsing was successfull
   Future<UserlistUrlState> _parsUrl() async {
     //Validat URL
-    String? error = await InputValidation.inputUrlWithJsonValidation(_url);
+    String error = await InputValidation.inputUrlWithJsonValidation(_url);
     if (error != null) return UserlistUrlParsingFailed(error: error);
 
     _userList.clear();
     try {
-      final respons = await http.get(Uri.parse(_url!));
+      final respons = await http.get(Uri.parse(_url));
       return _parsUserList(jsonDecode(respons.body));
     } on SocketException {
       return UserlistUrlParsingFailed(
@@ -88,7 +88,7 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
         error:
             'Feld ("users": [...]) fehlt oder ist fehlerhaft! \n Hinweis: ("users": [NUTZER])',
       );
-    var userList = json['users'] as List?;
+    var userList = json['users'] as List;
     if (userList == null || userList.length == 0)
       return UserlistUrlParsingFailed(
         error:
@@ -97,7 +97,7 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState> {
 
     for (int i = 0; i < userList.length; i++) {
       //Check if user is valid
-      String? error = User.isValidUser(userList[i]);
+      String error = User.isValidUser(userList[i]);
       if (error != null)
         return UserlistUrlParsingFailed(error: error + '\n Nutzer: (${i + 1})');
       //Add valid User to _userList
