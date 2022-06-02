@@ -21,14 +21,14 @@ class UserFields {
 ///
 /// Author: F.Brecher
 class User {
-  int id;
-  String name;
-  String password;
-  int grade;
-  int coins;
-  bool isAdmin;
-  String avatar;
-  bool highscorePermission;
+  int? id;
+  String? name;
+  String? password;
+  int? grade;
+  int? coins;
+  bool? isAdmin;
+  String? avatar;
+  bool? highscorePermission;
 
   User(
       {this.name,
@@ -48,10 +48,10 @@ class User {
       UserFields.columnPassword: password,
       UserFields.columnGrade: grade,
       UserFields.columnCoins: coins,
-      UserFields.columnIsAdmin: (isAdmin == null || !isAdmin) ? 0 : 1,
+      UserFields.columnIsAdmin: (isAdmin == null || !isAdmin!) ? 0 : 1,
       UserFields.columnAvatar: avatar,
       UserFields.columnHighscorePermission:
-          (highscorePermission == null || !highscorePermission) ? 0 : 1
+          (highscorePermission == null || !highscorePermission!) ? 0 : 1
     };
     return map;
   }
@@ -73,7 +73,7 @@ class User {
     bool isAdmin =
         json.containsKey('isAdmin') && json['isAdmin'] == 'ja' ? true : false;
     String avatar = isAdmin ? 'admin' : 'lama';
-    int coins = json.containsKey('coins') ? json['coins'] : 0;
+    int? coins = json.containsKey('coins') ? json['coins'] : 0;
     bool highscorePermission =
         json.containsKey('isAdmin') && json['highscorePermission'] == 'ja'
             ? true
@@ -90,7 +90,7 @@ class User {
     );
   }
 
-  static String isValidUser(Map<String, dynamic> json) {
+  static String? isValidUser(Map<String, dynamic> json) {
     if (!(json.containsKey('name') && json['name'] is String))
       return 'Feld ("name":...) fehlt oder ist fehlerhaft! \n Hinweis: ("name":"NUTZERNAME",)';
     if (!(json.containsKey('password') && json['password'] is String))
@@ -114,7 +114,7 @@ class User {
             (json['highscorePermission'] != 'nein')))
       return 'Optionales Feld ("highscorePermission":...) muss die Werte "ja" oder "nein" enthalten';
 
-    String error = InputValidation.inputPasswortValidation(json['password']);
+    String? error = InputValidation.inputPasswortValidation(json['password']);
     if (error != null) return error;
 
     error = InputValidation.inputUsernameValidation(json['name']);

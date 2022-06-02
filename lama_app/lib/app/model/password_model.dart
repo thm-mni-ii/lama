@@ -4,8 +4,8 @@ import 'package:lama_app/app/model/user_model.dart';
 ///
 /// Author: F.Brecher
 class Password {
-  int id;
- String password;
+  int? id;
+ String? password;
 
   Password({this.id, this.password});
 

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
+/*
 /// This class represents the score display and will render it
 class ScoreDisplay {
   final SnakeGame game;
@@ -103,3 +104,5 @@ class ScoreDisplay {
     _painter.paint(c, _position);
   }
 }
+
+ */

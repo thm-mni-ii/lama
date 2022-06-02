@@ -5,7 +5,7 @@ import '../../app/screens/game_list_screen.dart';
 import '../snakeGame.dart';
 import '../views/view.dart';
 import 'package:flutter/painting.dart';
-
+/*
 /// This class represents a Pause and Play button.
 class StartButton {
   final SnakeGame game;
@@ -91,3 +91,5 @@ class StartButton {
     }
   }
 }
+
+ */

@@ -5,14 +5,14 @@ import 'package:lama_app/app/model/user_model.dart';
 /// Author: L.Kammerer
 /// latest Changes: 14.06.2021
 abstract class UserLoginState {
-  User get user => null;
+  User? get user => null;
 }
 
 ///used to transmit the [User] which try to login
 ///
 ///{@param}[User] user that try to login
 class UserLoginPulled extends UserLoginState {
-  User user;
+  User? user;
   UserLoginPulled(this.user);
 }
 

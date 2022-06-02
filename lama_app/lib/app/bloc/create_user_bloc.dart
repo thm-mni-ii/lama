@@ -30,7 +30,7 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateUserState> {
   ///incoming events are used to change the values of this [User]
   User user = User(grade: 1, coins: 0, isAdmin: false, avatar: 'lama');
 
-  CreateUserBloc({CreateUserState initialState}) : super(initialState);
+  CreateUserBloc({CreateUserState? initialState}) : super(initialState!);
 
   @override
   Stream<CreateUserState> mapEventToState(CreateUserEvent event) async* {

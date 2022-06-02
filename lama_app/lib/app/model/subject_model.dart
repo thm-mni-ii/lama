@@ -13,8 +13,8 @@ class SubjectsFields{
 ///
 /// Author: F.Brecher
 class Subject {
-  int id;
-  String name;
+  int? id;
+  String? name;
 
   Subject({this.name});
 

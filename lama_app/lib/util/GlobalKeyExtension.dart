@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 //TODO delete this
 extension GlobalKeyExtension on GlobalKey {
-  Rect get globalPaintBounds {
+  Rect? get globalPaintBounds {
     final renderObject = currentContext?.findRenderObject();
-    var translation = renderObject?.getTransformTo(null)?.getTranslation();
-    if (translation != null && renderObject.paintBounds != null) {
+    var translation = renderObject?.getTransformTo(null).getTranslation();
+    if (translation != null && renderObject!.paintBounds != null) {
       return renderObject.paintBounds
           .shift(Offset(translation.x, translation.y));
     } else {

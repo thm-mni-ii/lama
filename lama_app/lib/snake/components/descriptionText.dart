@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/snake/snakeGame.dart';
-
+/*
 /// This class contains a centered description text on an Offset to the top.
 class DescriptionText {
   final SnakeGame game;
@@ -62,3 +62,6 @@ class DescriptionText {
 
   void update(double t) {}
 }
+
+
+ */

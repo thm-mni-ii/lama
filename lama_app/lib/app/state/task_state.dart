@@ -18,7 +18,7 @@ class TaskScreenEmptyState extends TaskState {}
 ///
 ///Author: K.Binder
 class DisplayTaskState extends TaskState {
-  String subject;
+  String? subject;
   Task task;
   DisplayTaskState(this.subject, this.task);
 }
@@ -30,7 +30,7 @@ class DisplayTaskState extends TaskState {
 ///
 ///Author: K.Binder
 class TaskAnswerResultState extends TaskState {
-  List<bool> subTaskResult;
+  List<bool?>? subTaskResult;
   bool correct;
   TaskAnswerResultState(this.correct, {this.subTaskResult});
 }
@@ -42,7 +42,7 @@ class TaskAnswerResultState extends TaskState {
 ///
 ///Author: K.Binder
 class AllTasksCompletedState extends TaskState {
-  List<Task> tasks;
+  List<Task>? tasks;
   List<bool> answerResults;
   AllTasksCompletedState(this.tasks, this.answerResults);
 }
