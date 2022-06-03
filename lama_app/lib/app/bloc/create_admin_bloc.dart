@@ -24,7 +24,17 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState?> {
   User _user = User(grade: 1, coins: 0, isAdmin: true, avatar: 'admin');
   SaftyQuestion _saftyQuestion = SaftyQuestion();
 
-  CreateAdminBloc({CreateAdminState? initialState}) : super(initialState);
+  CreateAdminBloc({CreateAdminState? initialState}) : super(initialState) {
+    on<CreateAdminPush>((event, emit) async => await _adminPush(event.context));
+    on<CreateAdminChangeName>((event, emit) => _user.name = event.name);
+    on<CreateAdminChangePassword>(
+        (event, emit) => _user.password = event.password);
+    on<CreateAdminChangeSaftyQuestion>(
+        (event, emit) => _saftyQuestion.question = event.saftyQuestion);
+    on<CreateAdminChangeSaftyAnswer>(
+        (event, emit) => _saftyQuestion.answer = event.saftyAnswer);
+    on<CreateAdminAbort>((event, emit) => _adminAbort(event.context));
+  }
 
   @override
   Stream<CreateAdminState> mapEventToState(CreateAdminEvent event) async* {

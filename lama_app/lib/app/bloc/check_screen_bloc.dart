@@ -23,14 +23,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Author: L.Kammerer
 /// latest Changes: 14.07.2021
 class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
-  CheckScreenBloc({CheckScreenState? initialState}) : super(initialState);
-
+  CheckScreenBloc({CheckScreenState? initialState}) : super(initialState) {
+    on<CheckForAdmin>((event, emit) async {
+      emit(await _hasAdmin(event.context));
+    });
+    on<DSGVOAccepted>((event, emit) async {
+      emit(await _navigator(event.context));
+    });
+    on<CreateAdminEvent>((event, emit) async {
+      emit(await _navigator(event.context));
+    });
+  }
+/* 
   @override
   Stream<CheckScreenState> mapEventToState(CheckScreenEvent event) async* {
     if (event is CheckForAdmin) yield await _hasAdmin(event.context);
     if (event is DSGVOAccepted) yield await _navigator(event.context);
     if (event is CreateAdminEvent) yield await _navigator(event.context);
-  }
+  } */
 
   ///(private)
   ///check if an admin is stored in the Database
