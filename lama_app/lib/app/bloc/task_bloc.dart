@@ -8,6 +8,8 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:collection/collection.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/OperantsEnum.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 /// [Bloc] for the [TaskScreen]
 ///
@@ -26,6 +28,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   int curIndex = 0;
   int timer = 15;
   List<bool> answerResults = [];
+  final FlutterTts flutterTts = FlutterTts();
+
+  readText(String text) async {
+    await flutterTts.setLanguage("de-De");
+    await flutterTts.setVolume(1.0);
+    await flutterTts.speak(text);
+  }
 
   UserRepository userRepository;
   TaskBloc(this.tasksetSubject, this.tasks, this.userRepository)
@@ -38,6 +47,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     } else if (event is AnswerTaskEvent) {
       Task t = tasks[curIndex - 1];
       if (t is Task4Cards) {
+        readText(event.providedAnswer);
         if (event.providedAnswer == t.rightAnswer) {
           rightAnswerCallback(t);
           yield TaskAnswerResultState(true);

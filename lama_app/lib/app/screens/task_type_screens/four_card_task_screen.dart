@@ -7,6 +7,7 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 /// [StatelessWidget] that contains the screen for the 4Cards TaskType.
 ///
@@ -14,6 +15,7 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 class FourCardTaskScreen extends StatelessWidget {
   final Task4Cards task;
   final List<String> answers = [];
+  final FlutterTts flutterTts = FlutterTts();
 
   //The constraints describe the space useable by the task.
   //Its parent is always a container covering the whole available area
@@ -26,8 +28,26 @@ class FourCardTaskScreen extends StatelessWidget {
     answers.shuffle();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+    // reads the question out loud
+    readquestion() async {
+      var text = task.question;
+      await flutterTts.setLanguage("de-De");
+      await flutterTts.setVolume(1.0);
+      await flutterTts.speak(text);
+    }
+    // reads the answers out loud
+    readanswers() async {
+      var text = "Antwort eins: " + answers[0] + ". Antwort zwei: " + answers[1] +
+          ". Antwort drei: " + answers[2] + ". Antwort vier: " + answers[3];
+      await flutterTts.setLanguage("de-De");
+      await flutterTts.setVolume(1.0);
+      await flutterTts.speak(text);
+    }
+    readquestion();
     return Column(children: [
       Container(
         height: (constraints.maxHeight / 100) * 40,
@@ -102,7 +122,9 @@ class FourCardTaskScreen extends StatelessWidget {
                   itemCount: 4,
                   itemBuilder: (context, index) =>
                       _buildCards(context, index)))),
+
     ]);
+
   }
 
   ///Returns one of the four cards that contain the different answers as [Widget].
