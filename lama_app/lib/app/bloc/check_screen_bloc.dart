@@ -31,6 +31,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     if (event is CheckForAdmin) yield await _hasAdmin(event.context);
     if (event is DSGVOAccepted) yield await _loadWelcome(event.context);
     if (event is CreateAdminEvent) yield await _navigator(event.context);
+    if (event is CreateGuestEvent) yield await _navigator(event.context);
     if (event is GotoAdminEvent) yield await _navigateAdminInfo(event.context);
   }
 

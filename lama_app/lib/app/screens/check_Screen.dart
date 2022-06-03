@@ -153,6 +153,7 @@ class CheckScreenPage extends State<CheckScreen> {
           }
           if (state is ShowWelcome) {
             final controller = PageController();
+            final pages = getPages(controller);
             return Scaffold(
                 body: Padding(
               padding: const EdgeInsets.fromLTRB(0, 25, 0, 5),
@@ -162,31 +163,7 @@ class CheckScreenPage extends State<CheckScreen> {
                     flex: 15,
                     child: PageView(
                       controller: controller,
-                      children: [
-                        PageViewerModel(
-                          title: "Erste Seite",
-                          description:
-                              "Welcome welcome zu der Lama app, hier geht es richtig ab",
-                          image: Image.asset("assets/images/png/sunrise.png"),
-                        ),
-                        PageViewerModel(
-                          title: "Zweite Seite",
-                          description: "Hier gibts nen button zum admin!!",
-                          image: Image.asset("assets/images/png/sun.png"),
-                        ),
-                        PageViewerModel(
-                          title: "Dritte Seite",
-                          description:
-                              "Hier kann man einen Admin erstellen woooow",
-                          image: Image.asset("assets/images/png/sunset.png"),
-                        ),
-                        PageViewerModel(
-                          title: "ich bin der titel",
-                          description: "Ich bin die letzte Seite",
-                          image:
-                              Image.asset("assets/images/png/angrycloud.png"),
-                        )
-                      ],
+                      children: pages,
                     ),
                   ),
                   Flexible(
@@ -196,21 +173,27 @@ class CheckScreenPage extends State<CheckScreen> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            controller.jumpToPage(3);
+                            controller.jumpToPage(pages.length);
                           },
                           child: Text("Skip"),
                         ),
                         Center(
                           child: SmoothPageIndicator(
                             controller: controller,
-                            count: 4,
+                            count: pages.length,
                           ),
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            context
-                                .read<CheckScreenBloc>()
-                                .add(CreateAdminEvent(context));
+                            if (controller.page == pages.length - 1) {
+                              context
+                                  .read<CheckScreenBloc>()
+                                  .add(CreateAdminEvent(context));
+                            } else {
+                              controller.nextPage(
+                                  duration: Duration(milliseconds: 200),
+                                  curve: Curves.easeIn);
+                            }
                           },
                           child: Icon(Icons.navigate_next),
                         ),
@@ -286,7 +269,84 @@ class CheckScreenPage extends State<CheckScreen> {
     );
   }
 
-  Widget PageViewerModel({String title, String description, Image image}) {
+  List<Widget> getPages(PageController controller) {
+    return [
+      PageViewerModel(
+        title: "Erste Seite",
+        description: "Welcome welcome zu der Lama app, hier geht es richtig ab",
+        image: Image.asset("assets/images/png/sunrise.png"),
+      ),
+      PageViewerModel(
+        title: "Übersicht",
+        description: "Was wollen Sie machen?",
+        image: Image.asset("assets/images/png/sun.png"),
+        button: ElevatedButton(
+          onPressed: () {
+            controller.jumpToPage(2);
+          },
+          child:
+              Text("Go to Admin", style: LamaTextTheme.getStyle(fontSize: 15)),
+        ),
+        button2: ElevatedButton(
+          onPressed: () {
+            controller.jumpToPage(3);
+          },
+          child: Text(
+            "Go to Gast",
+            style: LamaTextTheme.getStyle(fontSize: 15),
+          ),
+        ),
+      ),
+      PageViewerModel(
+          title: "Admin Seite",
+          description: "Hier kann man einen Admin erstellen woooow",
+          image: Image.asset("assets/images/png/sunset.png"),
+          button: ElevatedButton(
+            onPressed: () {
+              controller.jumpToPage(1);
+            },
+            child: Text("Back to select",
+                style: LamaTextTheme.getStyle(fontSize: 15)),
+          ),
+          button2: ElevatedButton(
+            onPressed: () {
+              context.read<CheckScreenBloc>().add(CreateAdminEvent(context));
+            },
+            child: Text("Erstelle Admin",
+                style: LamaTextTheme.getStyle(fontSize: 15)),
+          )),
+      PageViewerModel(
+          title: "Gast Seite",
+          description: "Hier kann man einen Gast erstellen woooow",
+          image: Image.asset("assets/images/png/sunset.png"),
+          button: ElevatedButton(
+            onPressed: () {
+              controller.jumpToPage(1);
+            },
+            child: Text("Back to select",
+                style: LamaTextTheme.getStyle(fontSize: 15)),
+          ),
+          button2: ElevatedButton(
+            onPressed: () {
+              context.read<CheckScreenBloc>().add(CreateGuestEvent(context));
+            },
+            child: Text("Weiter als Gast",
+                style: LamaTextTheme.getStyle(fontSize: 15)),
+          )),
+      PageViewerModel(
+        title: "ich bin der titel",
+        description: "Ich bin die letzte Seite",
+        image: Image.asset("assets/images/png/angrycloud.png"),
+      )
+    ];
+  }
+
+  Widget PageViewerModel(
+      {String title,
+      String description,
+      Image image,
+      ElevatedButton button,
+      ElevatedButton button2}) {
     return Column(
       children: [
         Flexible(
@@ -312,6 +372,14 @@ class CheckScreenPage extends State<CheckScreen> {
                     fontSize: 18,
                     fontWeight: FontWeight.normal),
                 textAlign: TextAlign.center,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: button,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: button2,
               ),
             ])),
       ],
