@@ -51,12 +51,12 @@ class TapTheLamaGame extends FlameGame with HasTappables{
   final buttonAnimatorDefaultColor =PaletteEntry(Color(0xFFebedf0)).paint();
   final buttonAnimatorColorRed =PaletteEntry(Color(0xffff0006)).paint();
   final buttonAnimatorColorGreen =PaletteEntry(Color(0xff1cff00)).paint();
-  final buttonAnimatorColorOrange =PaletteEntry(Color(0xffff6100)).paint();
+  final buttonAnimatorColorOrange =PaletteEntry(Color(0xffe8ce64)).paint();
 
   //#endregion
 
   //#region Global Variables Lama Heads
-  var amountLamaHeadsPerColumn=6;
+  var amountLamaHeadsPerColumn;
   var lamaHeadsTurkis=<LamaHead>[];
   var lamaHeadsBlue=<LamaHead>[];
   var lamaHeadsPurple=<LamaHead>[];
@@ -77,10 +77,14 @@ class TapTheLamaGame extends FlameGame with HasTappables{
   //#endregion
 
   //#region Global Variables Game Logic
-  var velocity1=2.0;
-  var velocity2=1.0;
+  var velocity1;
+  var velocity2;
   var score= 0;
   var life=100;
+  var scoreIncrementerGoodHit=10;
+  var scoreIncrementerOkayHit=5;
+  var lifeDecreaserStandard=10;
+  var lifeDecreaserRedLamaHit=10;
   var lamaHeadAppearingProbability=.3;
   var lamaHeadIsAngryProbability=0.05;
   var lamaHeadFirstColumExisting=false;
@@ -100,7 +104,7 @@ class TapTheLamaGame extends FlameGame with HasTappables{
   @override
   Future<void> update(double dt) async {
     super.update(dt);
-    flashLamaButtons();
+    checkHits();
     moveLamaHeads(lamaHeadsTurkis,lamaHeadImageTurkis,1);
     moveLamaHeads(lamaHeadsBlue,lamaHeadImageBlue,2);
     moveLamaHeads(lamaHeadsPurple,lamaHeadImagePurple,3);
@@ -110,20 +114,49 @@ class TapTheLamaGame extends FlameGame with HasTappables{
 
   //#region visual effects
 
-  void flashLamaButtons(){
-    //set up flash effect for lama buttons
+
+  Future<void> checkHits() async {
+
     if(lamaButtonTurkis.buttonPressed){
-      flashButton(lamaButtonTurkis, buttonAnimatorColorRed, animatorButtonTurkis);
+      checkSingleHit(lamaHeadsTurkis,lamaButtonTurkis,animatorButtonTurkis);
     }
     else if(lamaButtonBlue.buttonPressed){
-      flashButton(lamaButtonBlue, buttonAnimatorColorRed, animatorButtonBlue);
+      checkSingleHit(lamaHeadsBlue,lamaButtonBlue,animatorButtonBlue);
     }
     else if(lamaButtonPurple.buttonPressed){
-      flashButton(lamaButtonPurple, buttonAnimatorColorRed, animatorButtonPurple);
+      checkSingleHit(lamaHeadsPurple,lamaButtonPurple,animatorButtonPurple);
     }
     else if(lamaButtonPink.buttonPressed){
-      flashButton(lamaButtonPink, buttonAnimatorColorRed, animatorButtonPink);
+      checkSingleHit(lamaHeadsPink,lamaButtonPink,animatorButtonPink);
     }
+  }
+
+  Future<void> checkSingleHit(List<LamaHead> lamaHeads, LamaButton lamaButton, CircleComponent animatorButton) async {
+    LamaHead lamaHeadCopy= lamaHeads.firstWhere((element) => element.isHittable);
+    if(lamaHeadCopy.isExisting){
+      if(lamaHeadCopy.isAngry){
+        life-=lifeDecreaserRedLamaHit;
+      }else{
+        if(lamaHeadCopy.y>=yPosButtons-lamaButtonSize*0.2 && lamaHeadCopy.y<=yPosButtons+lamaButtonSize*0.2){
+          flashButton(lamaButton, buttonAnimatorColorGreen, animatorButton);
+          score+=scoreIncrementerGoodHit;
+        }
+        else if(lamaHeadCopy.y>=yPosButtons-lamaButtonSize*0.6 && lamaHeadCopy.y<=yPosButtons+lamaButtonSize*0.6){
+          flashButton(lamaButton, buttonAnimatorColorOrange, animatorButton);
+          score+=scoreIncrementerOkayHit;
+        }
+        else{
+          flashButton(lamaButton, buttonAnimatorColorRed, animatorButton);
+          life-=lifeDecreaserStandard;
+        }
+      }
+    }
+    else{
+      flashButton(lamaButton, buttonAnimatorColorRed, animatorButton);
+    }
+    //
+    lamaHeads.firstWhere((element) => element.isHittable).sprite=await loadSprite('png/BLANK_ICON.png');
+    lamaHeads.firstWhere((element) => element.isHittable).isExisting=false;
   }
 
   void flashButton(LamaButton lamaButton,Paint paint, CircleComponent animatorButton) async{
@@ -140,6 +173,9 @@ class TapTheLamaGame extends FlameGame with HasTappables{
     //initialising screen size
     screenWidth=size[0];
     screenHeight=size[1];
+    screenHeight/screenWidth>=(16/9) ? amountLamaHeadsPerColumn=6 : amountLamaHeadsPerColumn=5;
+    velocity1=screenHeight/300;
+    velocity2=screenHeight/300;
     yPosButtons=screenHeight*5/6;
 
     //initialise Lama Button and Lama Head sizes
@@ -186,7 +222,6 @@ class TapTheLamaGame extends FlameGame with HasTappables{
   //# endregion
 
   //#region Initialise And Move Lama Heads
-
   Future<void> initLamaHeadColumns() async {
     initLamaHeadColumn(lamaHeadsTurkis, xPosTurkis, lamaHeadImageTurkis,1);
     initLamaHeadColumn(lamaHeadsBlue, xPosBlue,lamaHeadImageBlue,2);
@@ -202,17 +237,6 @@ class TapTheLamaGame extends FlameGame with HasTappables{
       lamaHeadList.elementAt(i).y=(screenHeight/amountLamaHeadsPerColumn*i)-lamaHeadSize;
       lamaHeadList.elementAt(i).x=xPos;
       lamaHeadList.elementAt(i).anchor=Anchor.center;
-      /*
-      if(lamaHead.isExisting){
-        lamaHeadList.elementAt(i).size=Vector2(lamaHeadSize, lamaHeadSize);
-        if(lamaHeadList.elementAt(i).isAngry){
-          lamaHeadList.elementAt(i).sprite=await loadSprite(lamaHeadImageRed);
-        }else{
-          lamaHeadList.elementAt(i).sprite=await loadSprite(imageSource);
-        }
-      }else{
-        lamaHeadList.elementAt(i).sprite=await loadSprite('png/BLANK_ICON.png');
-      }*/
       lamaHeadList.elementAt(i).sprite=await loadSprite('png/BLANK_ICON.png');
       add(lamaHeadList.elementAt(i));
     }
@@ -225,6 +249,9 @@ class TapTheLamaGame extends FlameGame with HasTappables{
 
       if (lamaHeadList.elementAt(i).y >= screenHeight + lamaHeadSize) {
         lamaHeadList.elementAt(i).y = 0-lamaHeadSize/2;
+        if(lamaHeadList.elementAt(i).isExisting&& !lamaHeadList.elementAt(i).isAngry){
+          life-=lifeDecreaserStandard;
+        }
         lamaHeadList.elementAt(i).isAngry=generateRandomBoolean(lamaHeadIsAngryProbability);
         switch(column){
           case 1:
@@ -269,8 +296,22 @@ class TapTheLamaGame extends FlameGame with HasTappables{
           lamaHeadList.elementAt(i).sprite=await loadSprite('png/BLANK_ICON.png');
         }
       } else {
-        lamaHeadList.elementAt(i).y += velocity1;
+        if(column==1 || column==2){
+          lamaHeadList.elementAt(i).y += velocity1;
+        }else{
+          lamaHeadList.elementAt(i).y += velocity2;
+        }
+        setHittableButtonAttribute(lamaHeadList.elementAt(i));
       }
+    }
+  }
+
+  void setHittableButtonAttribute(LamaHead lamaHead) {
+    if(lamaHead.y>=yPosButtons-lamaButtonSize){
+      lamaHead.isHittable=true;
+    }
+    if(lamaHead.y>=yPosButtons+lamaButtonSize){
+      lamaHead.isHittable=false;
     }
   }
 
@@ -281,6 +322,8 @@ class TapTheLamaGame extends FlameGame with HasTappables{
     bool randomBoolean = r.nextDouble() > (1-probability);
     return randomBoolean;
   }
+
+
 
 
 }

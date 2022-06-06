@@ -46,6 +46,7 @@ dependencies:
   dio: ^4.0.0
   dbcrypt: ^2.0.0 
   decimal: ^2.1.0
+  fluttertoast: ^8.0.7
   
 dev_dependencies:
   flutter_test:
