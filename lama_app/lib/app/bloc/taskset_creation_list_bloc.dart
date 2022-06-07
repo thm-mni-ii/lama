@@ -16,7 +16,7 @@ import '../state/taskset_creation_list_state.dart';
 /// latest Changes: 01.06.2022
 class TasksetCreationListBloc extends Bloc<TasksetCreationListEvent, TasksetCreationListState> {
 
-  TasksetCreationListBloc(TasksetCreationListState initialState) : super(initialState);
+  TasksetCreationListBloc({TasksetCreationListState initialState}) : super(initialState);
 
   @override
   Stream<TasksetCreationListState> mapEventToState(TasksetCreationListEvent event) async* {
