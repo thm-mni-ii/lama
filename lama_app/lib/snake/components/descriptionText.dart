@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+/* import 'package:flutter/cupertino.dart';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/snake/snakeGame.dart';
 
@@ -61,4 +61,4 @@ class DescriptionText {
   }
 
   void update(double t) {}
-}
+} */

@@ -13,8 +13,8 @@ class UserHasAchievementsFields{
 ///
 /// Author: F.Brecher
 class UserHasAchievement {
-  int userID;
-  int achievementID;
+  int? userID;
+  int? achievementID;
 
   UserHasAchievement({this.userID, this.achievementID});
 

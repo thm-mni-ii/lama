@@ -12,9 +12,9 @@ import 'package:lama_app/app/repository/user_repository.dart';
 // wich was written by DennisLovesCoffee -- see also https://github.com/DennisLovesCoffee
 
 class TetrisScreen extends StatelessWidget {
-  final UserRepository userRepository;
-  final int userHighScore;
-  final int allTimeHighScore;
+  final UserRepository? userRepository;
+  final int? userHighScore;
+  final int? allTimeHighScore;
 
 //Main Menu
   const TetrisScreen(
@@ -34,9 +34,9 @@ class TetrisScreen extends StatelessWidget {
 }
 
 class GameScreen extends StatelessWidget {
-  final UserRepository userRepository;
-  final int userHighScore;
-  final int allTimeHighScore;
+  final UserRepository? userRepository;
+  final int? userHighScore;
+  final int? allTimeHighScore;
 
   const GameScreen(
       this.userRepository, this.userHighScore, this.allTimeHighScore);

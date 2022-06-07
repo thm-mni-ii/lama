@@ -3,15 +3,15 @@ import 'package:lama_app/util/LamaColors.dart';
 
 /// This class is a [StatelessWidget] for displaying the start screen of Flappy lama
 class StartScreen extends StatelessWidget {
-  final int userHighScore;
-  final int alltimeHighScore;
+  final int? userHighScore;
+  final int? alltimeHighScore;
   // This function will be called when start button is pressed.
   final Function onStartPressed;
 
   const StartScreen({
     this.userHighScore,
     this.alltimeHighScore,
-    @required this.onStartPressed}
+    required this.onStartPressed}
   );
 
   @override

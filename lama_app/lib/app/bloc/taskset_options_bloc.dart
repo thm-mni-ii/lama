@@ -20,12 +20,12 @@ import 'package:lama_app/util/input_validation.dart';
 /// Author: L.Kammerer
 /// Latest Changes: 26.06.2021
 class TasksetOptionsBloc
-    extends Bloc<TasksetOptionsEvent, TasksetOptionsState> {
-  TasksetOptionsBloc({TasksetOptionsState initialState}) : super(initialState);
+    extends Bloc<TasksetOptionsEvent, TasksetOptionsState?> {
+  TasksetOptionsBloc({TasksetOptionsState? initialState}) : super(initialState);
 
   ///url that should be stored in the database later on
   ///incoming events are used to change the value
-  String _tasksetUrl;
+  String? _tasksetUrl;
   //is used to show all urls which are deleted in the time this screen is used
   List<TaskUrl> deletedUrls = [];
 
@@ -86,15 +86,15 @@ class TasksetOptionsBloc
   ///with specific error message
   Future<TasksetOptionsState> _insertUrl(TaskUrl url) async {
     //Check if URL is valid
-    String error = await InputValidation.inputUrlWithJsonValidation(url.url);
+    String? error = await InputValidation.inputUrlWithJsonValidation(url.url);
     if (error != null) {
       return TasksetOptionsPushFailed(error: error, failedUrl: _tasksetUrl);
     }
-    final response = await http.get(Uri.parse(url.url));
+    final response = await http.get(Uri.parse(url.url!));
     //Check if URL is reachable
     if (response.statusCode == 200) {
       //Taskset validtion
-      String tasksetError =
+      String? tasksetError =
           TasksetValidator.isValidTaskset(jsonDecode(response.body));
       if (tasksetError != null) {
         return TasksetOptionsPushFailed(error: tasksetError);

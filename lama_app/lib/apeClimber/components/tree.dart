@@ -1,4 +1,4 @@
-import 'dart:collection';
+/* import 'dart:collection';
 import 'dart:ui';
 
 import 'package:flame/components/component.dart';
@@ -113,4 +113,4 @@ class Tree extends PositionComponent {
     super.resize(size);
   }
 
-}
+} */

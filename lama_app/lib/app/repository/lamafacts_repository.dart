@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 ///
 /// Author K.Binder
 class LamaFactsRepository {
-  List<String> lamafacts;
+  late List<String> lamafacts;
 
   ///Loads all lama facts from the flutter assets (assets/lama_facts.txt)
   loadFacts() async {

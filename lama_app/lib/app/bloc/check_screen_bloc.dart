@@ -22,8 +22,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// Author: L.Kammerer
 /// latest Changes: 14.07.2021
-class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
-  CheckScreenBloc({CheckScreenState initialState}) : super(initialState);
+class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
+  CheckScreenBloc({CheckScreenState? initialState}) : super(initialState);
 
   @override
   Stream<CheckScreenState> mapEventToState(CheckScreenEvent event) async* {
@@ -43,7 +43,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     List<User> userList = await DatabaseProvider.db.getUser();
     if (userList == null) return ShowDSGVO(await _loadDSGVO());
     for (User user in userList) {
-      if (user.isAdmin) {
+      if (user.isAdmin!) {
         _navigateAdminExist(context);
         return AdminExist();
       }
@@ -76,7 +76,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
   ///
   ///{@param} [BuildContext] as context
   Future<void> _navigateNoAdmin(BuildContext context) async {
-    User admin = await Navigator.push(
+    User? admin = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(

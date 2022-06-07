@@ -11,8 +11,8 @@ class MonkeyTimerWidget extends StatelessWidget {
   final double percent;
 
   const MonkeyTimerWidget({
-    @required this.text,
-    @required this.percent,
+    required this.text,
+    required this.percent,
   });
 
   @override

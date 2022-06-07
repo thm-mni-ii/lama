@@ -19,12 +19,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Author: L.Kammerer
 /// latest Changes: 26.06.2021
 class HighscoreUrlScreenBloc
-    extends Bloc<HighscoreUrlScreenEvent, HighscoreUrlScreenState> {
-  String _urlChanged;
-  String _urlCurrent;
-  SharedPreferences _prefs;
+    extends Bloc<HighscoreUrlScreenEvent, HighscoreUrlScreenState?> {
+  String? _urlChanged;
+  String? _urlCurrent;
+  late SharedPreferences _prefs;
   List<User> _userList = [];
-  HighscoreUrlScreenBloc({HighscoreUrlScreenState initialState})
+  HighscoreUrlScreenBloc({HighscoreUrlScreenState? initialState})
       : super(initialState);
 
   @override
@@ -41,11 +41,11 @@ class HighscoreUrlScreenBloc
     _urlCurrent = _prefs.getString(AdminUtils.highscoreUploadUrlPref);
     _urlChanged = _urlCurrent;
     _userList = await DatabaseProvider.db.getUser();
-    _userList.removeWhere((user) => user.isAdmin);
+    _userList.removeWhere((user) => user.isAdmin!);
     return HighscoreUrlPullState(_userList, _urlChanged);
   }
 
   Future<void> _push() async {
-    await _prefs.setString(AdminUtils.highscoreUploadUrlPref, _urlChanged);
+    await _prefs.setString(AdminUtils.highscoreUploadUrlPref, _urlChanged!);
   }
 }

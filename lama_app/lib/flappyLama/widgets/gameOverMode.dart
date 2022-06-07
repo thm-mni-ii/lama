@@ -14,11 +14,11 @@ class GameOverMode extends StatelessWidget {
   final Function onRetryPressed;
 
   const GameOverMode({
-    Key key,
-    @required this.score,
-    @required this.lifes,
-    @required this.onQuitPressed,
-    @required this.onRetryPressed,
+    Key? key,
+    required this.score,
+    required this.lifes,
+    required this.onQuitPressed,
+    required this.onRetryPressed,
   })  : assert(score != null),
         assert(onQuitPressed != null),
         super(key: key);
