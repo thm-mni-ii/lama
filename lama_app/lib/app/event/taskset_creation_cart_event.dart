@@ -1,6 +1,6 @@
 
-import 'package:lama_app/app/bloc/taskset_creation_list_bloc.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_list_screen.dart';
+import 'package:lama_app/app/bloc/taskset_creation_cart_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_cart_screen.dart';
 
 /// Events used by [TasksetCreationListScreen] and [TasksetCreationListBloc]
 ///

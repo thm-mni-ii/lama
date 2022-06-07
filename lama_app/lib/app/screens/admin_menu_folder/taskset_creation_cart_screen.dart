@@ -8,7 +8,9 @@ import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 
+import '../../bloc/taskset_creation_cart_bloc.dart';
 import '../../bloc/user_selection_bloc.dart';
+import '../taskset_option_screen.dart';
 import '../user_selection_screen.dart';
 
 
@@ -56,8 +58,46 @@ class TasksetCreationListScreenState extends State<TasksetCreationListScreen> {
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: navBar(screensize.width / 5, 'Tasksets erstellen', LamaColors.bluePrimary),
-      body: Padding(
+      appBar: _bar(screensize.width / 5, 'Tasksetname', LamaColors.bluePrimary),
+      body: Stack(
+        children: [
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              margin: EdgeInsets.all(25),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) => TasksetCreationListBloc(),
+                        child: TasksetCreationListScreen(),
+                      )
+                  ));
+                },
+                child: const Text("Taskset generieren"),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Container(
+              margin: EdgeInsets.all(25),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) => TasksetOptionsBloc(),
+                        child: OptionTaskScreen(),
+                      )
+                  ));
+                },
+                child: const Text("Task hinzufügen"),
+              ),
+            ),
+          )
+        ],
+      ),
+      /*body: Padding(
         padding: EdgeInsets.all(16.0),
         child: ListView(
           children: [
@@ -324,27 +364,20 @@ class TasksetCreationListScreenState extends State<TasksetCreationListScreen> {
             ),
           ],
         ),
-      ),
+      ),*/
     );
   }
 
 
-  Widget navBar(double size, String titel, Color colors) {
+  ///(private)
+  ///porvides [AppBar] with default design for Screens used by the Admin
+  ///
+  ///{@params}
+  ///[AppBar] size as double size
+  ///
+  ///{@return} [AppBar] with generel AdminMenu specific design
+  Widget _bar(double size, String titel, Color colors) {
     return AppBar(
-      leading: Builder(
-        builder: (BuildContext context) {
-          return IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TasksetCreationScreen()),
-                );
-            },
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          );
-        },
-      ),
       title: Text(
         titel,
         style: LamaTextTheme.getStyle(fontSize: 18),
