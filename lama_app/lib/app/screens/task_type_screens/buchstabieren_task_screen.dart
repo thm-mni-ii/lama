@@ -8,6 +8,7 @@ import 'package:lama_app/app/event/task_events.dart';
 
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
+
 import '../../task-system/task.dart';
 import 'dart:io';
 import 'buchstabieren_task_helper.dart';
@@ -31,7 +32,9 @@ String zufallsChar2 = getRandomLiteral(1);
 int zufallsCharCounter = 0;
 Color testFarbe = Colors.black;
 int flagForCorrectingModus = 0; //  1->represent left   /   2->represents right
-
+int antwortZaehler = 0;
+bool isCorrect =
+    true; //tracks if all answers were correct in multiple_points mode
 //Der Buchstabieren Task kann auf zwei verschiedene Arten erzeugt werden, welche Art es sein soll wird in der JSON beim CorrectionModus abgefragt
 //ist der CorrectionModus auf fals(bzw. 0), so wir ein Bild aufgerufen, und zu dem Begriff auf dem Bild unsortiere Buchstaben erstellt, welche es anzuklicken gilt, um das Wort zu buchstabieren.
 //ist der CorrectionModus aktiv, wird vom User verlang lediglich einen Buchstaben für eine Lücke auszuwählen, sodass das Wort komplett wird-- zur Auswahl stehen dann natürlich auch falsche Buchstaben
@@ -59,20 +62,24 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   final TaskBuchstabieren task;
   final BoxConstraints constraints;
   Image pictureFromNetwork;
+
   int? randomNummer;
   int? userGrade;
-
+ List<Color?> antwortFarben;
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
   bool? answer;
 
   Color testFarbe2 = Colors.blue;
+  BuchstabierenTaskState(this.task, this.constraints, this.pictureFromNetwork,
+      this.randomNummer, this.userGrade);
 
 //hier beginnt der erste State der Aufgabe "Buchstabieren"
 //zufalls Nummer wird generiert und das erste Wort wird aus eine json gezogen
 //außerdem werden einige Variablen wieder auf ihren ursprünglichen Zustand gestellt-> wichtig für neue Aufgaben
   void initState() {
     super.initState();
+    isCorrect = true;
     zufallsChar = getRandomLiteral(1);
     zufallsChar2 = getRandomLiteral(1);
     testFarbe = Colors.black;
@@ -82,14 +89,141 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     i = 0;
     ergebnisIndex = 0;
     fehlerZaehler = 0;
+    antwortZaehler = 0;
     calculateAllowedMistakes();
     debugPrint("UserGrade:  " + userGrade.toString());
-
+    antwortFarben =
+        List<Color>.filled(task.multiplePoints, Colors.grey, growable: false);
     messeLaengeVomWort(
         holeEinWortAusJSON(randomNummer, woerterKeys, woerterURLs));
   }
 
-//depends on given bool
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // Lama Speechbubble
+          Container(
+            height: (constraints.maxHeight / 100) * 15,
+            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+            // create space between each childs
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 75),
+                    height: 60,
+                    width: MediaQuery.of(context).size.width,
+                    child: Bubble(
+                      nip: BubbleNip.leftCenter,
+                      child: Center(
+                        child: Text(
+                          setTaskMessageAccordingToTaskModus(),
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 15),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SvgPicture.asset(
+                    "assets/images/svg/lama_head.svg",
+                    semanticsLabel: "Lama Anna",
+                    width: 75,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Container(
+            //decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+            height: MediaQuery.of(context).size.height / 5,
+            width: MediaQuery.of(context).size.width / 2,
+            child: pictureFromNetwork,
+            // CachedNetworkImage(imageUrl: "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Auto.png?raw=true",),
+            //Image.network(wortURL), //Image.memory(byte), // //Image.asset()
+            /* Image.network(
+                                wortURL,
+                                loadingBuilder: (BuildContext context, Widget child,
+                                    ImageChunkEvent loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress.expectedTotalBytes != null
+                                          ? loadingProgress.cumulativeBytesLoaded /
+                                              loadingProgress.expectedTotalBytes
+                                          : null,
+                                    ),
+                                  );
+                                },
+                              ),*/
+          ),
+
+          Container(
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width * 0.9,
+            //color: Colors.green,
+            child: Row(
+              //crossAxisCount: wortLaenge,
+
+              children: [
+                for (int i = 0; i < wortLaenge; i++)
+                  (!_canShowAntwortButton[i])
+                      ? leeresFeld()
+                      : gefuelltesFeld(buchstabenListe[i]),
+              ],
+            ),
+          ),
+          Container(
+            // legt Größe des Grids fest
+            height: MediaQuery.of(context).size.height * 0.3,
+            width: MediaQuery.of(context).size.width * 0.9,
+            //color: Colors.green,
+            child: GridView.count(
+              //maxCrossAxisExtent: MediaQuery.of(context).size.height * 0.25 / 2,
+              // zeigt Buchstaben in nächster Zeile an, wenn crossAxisCount überschritten wird
+              crossAxisCount: 5,
+
+              //mainAxisSpacing: 10,
+              children: [
+                for (int i = 0; i < wortLaenge; i++)
+                  zeichneContainerMitAntwortButton(i)
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              for (int i = 0; i < task.multiplePoints; i++)
+                CircleAvatar(
+                  backgroundColor: antwortFarben[i],
+                )
+            ]),
+          ),
+          Container(
+            child: (() {
+              //wenn der letzte Buchstabe richtig angeklickt und angezeigt wurde, soll ein grüner Haken auf dem Bildschirm angezeigt werden
+              //ich anschluss folgt ein neuer Task für den User
+              /* if (wortLaenge == ergebnisIndex && multiplePoints > 0) {
+                    rightOrWrongAnswerEvent(true);
+                  } */
+            }()),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //depends on given bool
   void rightOrWrongAnswerEvent(bool isRightOrWrong) {
     Future.delayed(const Duration(milliseconds: 1500), () {
       setState(() {
@@ -119,15 +253,14 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     }
   }
 
-//zur Zeit soll nur einem Schüler der ersten Klasse erlaubt sein, einen Fehler zu machen
-//TODO: man könnte noch die länge des Wortes mit in die Berechnung mit einbeziehen
+  //zur Zeit soll nur einem Schüler der ersten Klasse erlaubt sein, einen Fehler zu machen
+  //TODO: man könnte noch die länge des Wortes mit in die Berechnung mit einbeziehen
   calculateAllowedMistakes() {
     if (userGrade == 1) {
       maxFehlerAnzahl = 1;
     }
   }
 
-//
   Widget zeichneAntwortButton(buchstabe, ix) {
     return ElevatedButton(
       onPressed: () {
@@ -145,12 +278,21 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           } else {
             fehlerZaehler++;
             if (fehlerZaehler >= maxFehlerAnzahl) {
+
               testFarbe2 = Colors.red;
 
               for (int i = stringIndex; i < wort!.length; i++) {
+
                 showWidget(i);
               }
-              rightOrWrongAnswerEvent(false);
+              if (task.multiplePoints == antwortZaehler + 1 ||
+                  task.multiplePoints == 0) {
+                testFarbe2 = Colors.red;
+                rightOrWrongAnswerEvent(false);
+              } else {
+                rerenderTask(Colors.red);
+                isCorrect = false;
+              }
             }
           }
         }
@@ -159,9 +301,16 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           if (buchstabenListe[zufallsZahl!] == buchstabe) {
             hideWidget(zufallsZahl);
             showWidget(zufallsZahl);
-            rightOrWrongAnswerEvent(true);
+            print(
+                "task.multiplePoints: ${task.multiplePoints} antwortZaehler: $antwortZaehler");
+            if (task.multiplePoints == antwortZaehler + 1 ||
+                task.multiplePoints == 0) {
+              rightOrWrongAnswerEvent(isCorrect);
+              testFarbe2 = Colors.green;
+            } else {
+              rerenderTask(Colors.green);
+            }
           } else {
-            testFarbe2 = Colors.red;
             if (flagForCorrectingModus == 1) {
               showWidget(zufallsZahl);
 
@@ -174,8 +323,14 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               hideWidget(zufallsZahl! + 1);
               hideWidget(zufallsZahl! + 2);
             }
-
-            rightOrWrongAnswerEvent(false);
+            if (task.multiplePoints == antwortZaehler + 1 ||
+                task.multiplePoints == 0) {
+              testFarbe2 = Colors.red;
+              rightOrWrongAnswerEvent(false);
+            } else {
+              rerenderTask(Colors.red);
+              isCorrect = false;
+            } //TO-DO: hier wird alles neu aufgerufen
           }
         }
       },
@@ -186,6 +341,19 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
       ),
       child: Text(buchstabe, style: LamaTextTheme.getStyle(fontSize: 30)),
     );
+  }
+
+  ///used for multiple_points feature
+  ///rerenders the whole screen and fills bubble at the bottom with color
+  ///depending on if the answer is right(green) or wrong(red)
+  void rerenderTask(Color answerFarbe) {
+    antwortFarben[antwortZaehler] = answerFarbe;
+    randomNummer = erstelleEineRandomNummer(task);
+    //hier wird alles neu aufgerufen
+    pictureFromNetwork = cacheImageByUrl(context, holeUrl(task, randomNummer));
+    messeLaengeVomWort(holeEinWortAusJSON(randomNummer,
+        task.woerter.keys.toList(), task.woerter.values.toList()));
+    antwortZaehler++;
   }
 
 //ein Container, welcher einen klickbaren Button mit einem Buchstaben beinhaltet
@@ -331,7 +499,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     return null;
   }
 
+
   Future<bool?> hasInternet() async {
+
     try {
       final result = await InternetAddress.lookup('example.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -345,129 +515,4 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     return null;
   }
 
-  BuchstabierenTaskState(this.task, this.constraints, this.pictureFromNetwork,
-      this.randomNummer, this.userGrade);
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Lama Speechbubble
-          Container(
-            height: (constraints.maxHeight / 100) * 15,
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            // create space between each childs
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 75),
-                    height: 60,
-                    width: MediaQuery.of(context).size.width,
-                    child: Bubble(
-                      nip: BubbleNip.leftCenter,
-                      child: Center(
-                        child: Text(
-                          setTaskMessageAccordingToTaskModus(),
-                          style: LamaTextTheme.getStyle(
-                              color: LamaColors.black, fontSize: 15),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SvgPicture.asset(
-                    "assets/images/svg/lama_head.svg",
-                    semanticsLabel: "Lama Anna",
-                    width: 75,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            //decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-            height: MediaQuery.of(context).size.height / 5,
-            width: MediaQuery.of(context).size.width / 2,
-            child: pictureFromNetwork,
-
-            // CachedNetworkImage(imageUrl: "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Auto.png?raw=true",),
-            //Image.network(wortURL), //Image.memory(byte), // //Image.asset()
-            /* Image.network(
-              wortURL,
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes
-                        : null,
-                  ),
-                );
-              },
-            ),*/
-          ),
-          SizedBox(
-              //  height: 20,
-              ),
-
-          Container(
-            height: MediaQuery.of(context).size.height * 0.1,
-            width: MediaQuery.of(context).size.width * 0.9,
-            //color: Colors.green,
-            child: Row(
-              //crossAxisCount: wortLaenge,
-
-              children: [
-                for (int i = 0; i < wortLaenge!; i++)
-                  (!_canShowAntwortButton[i])
-                      ? leeresFeld()
-                      : gefuelltesFeld(buchstabenListe[i]),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            // legt Größe des Grids fest
-            height: MediaQuery.of(context).size.height * 0.35,
-            width: MediaQuery.of(context).size.width * 0.9,
-            //color: Colors.green,
-
-            child: GridView.count(
-              //maxCrossAxisExtent: MediaQuery.of(context).size.height * 0.25 / 2,
-              // zeigt Buchstaben in nächster Zeile an, wenn crossAxisCount überschritten wird
-              crossAxisCount: 5,
-
-              //mainAxisSpacing: 10,
-              children: [
-                for (int i = 0; i < wortLaenge!; i++)
-                  zeichneContainerMitAntwortButton(i)
-              ],
-            ),
-          ),
-
-          Container(
-            child: (() {
-              //wenn der letzte Buchstabe richtig angeklickt und angezeigt wurde, soll ein grüner Haken auf dem Bildschirm angezeigt werden
-              //ich anschluss folgt ein neuer Task für den User
-              if (wortLaenge == ergebnisIndex) {
-                rightOrWrongAnswerEvent(true);
-              }
-            }()),
-          ),
-        ],
-      ),
-    );
-  }
 }
