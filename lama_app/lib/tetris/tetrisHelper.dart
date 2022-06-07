@@ -75,7 +75,7 @@ Widget getGameOverButton(context) {
   );
 }
 
-Widget getGameOverText(int score, int? userHighscore, int allTimeHighScore) {
+Widget getGameOverText(int score, int userHighscore, int allTimeHighScore) {
   if (score > allTimeHighScore) {
     return Center(
       child: Text(
@@ -93,7 +93,7 @@ Widget getGameOverText(int score, int? userHighscore, int allTimeHighScore) {
             ]),
       ),
     );
-  } else if (score > userHighscore!) {
+  } else if (score > userHighscore) {
     return Center(
       child: Text(
         'Klasse, du hast einen neuen persöhnlichen Highscore\n Punkte: $score',

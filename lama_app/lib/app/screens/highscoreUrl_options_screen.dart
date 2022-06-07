@@ -43,7 +43,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //temporary url to prevent losing the url on error states
-  String? _url;
+  String _url;
   //used to store the stats of all true or at least one false
   bool _allPermissionValue = false;
   //store all changes to all users. Is used to apply this changes via [WillPopScope]
@@ -66,14 +66,13 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
       //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
       appBar: AdminUtils.appbar(
-              screenSize, LamaColors.bluePrimary, 'Highscore-URL Einstellungen')
-          as PreferredSizeWidget?,
+          screenSize, LamaColors.bluePrimary, 'Highscore-URL Einstellungen'),
       body: WillPopScope(
         onWillPop: () async {
           Navigator.pop(context, _changedUserList);
           return null;
-        } as Future<bool> Function()?,
-        child: BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState?>(
+        },
+        child: BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState>(
             builder: (context, state) {
           if (state is HighscoreUrlPullState) {
             _changedUserList = state.userList;
@@ -131,7 +130,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
         },
         validator: (value) => InputValidation.inputURLValidation(value),
         onFieldSubmitted: (value) => {
-          if (_formKey.currentState!.validate())
+          if (_formKey.currentState.validate())
             {
               context
                   .read<HighscoreUrlScreenBloc>()
@@ -255,14 +254,14 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
   ///{@param} [User] as user that should be displayed
   Widget _userCard(User user) {
     ///attache '(Admin)' to the username if the user is an Admin
-    return BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState?>(
+    return BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState>(
       builder: (context, state) {
         return Card(
           child: ListTile(
             onTap: () {
               setState(() {
                 int indexOf = _changedUserList.indexOf(user);
-                if (_changedUserList[indexOf].highscorePermission!) {
+                if (_changedUserList[indexOf].highscorePermission) {
                   _changedUserList[indexOf].highscorePermission = false;
                   user.highscorePermission = false;
                 } else {
@@ -272,7 +271,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
               });
             },
             title: Text(
-              user.name!,
+              user.name,
               style: LamaTextTheme.getStyle(
                 fontSize: 20,
                 color: LamaColors.black,
@@ -288,7 +287,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
               radius: 25,
               backgroundColor: LamaColors.mainPink,
             ),
-            trailing: user.highscorePermission!
+            trailing: user.highscorePermission
                 ? Icon(Icons.check_box_rounded, color: LamaColors.greenPrimary)
                 : Icon(Icons.close_outlined, color: LamaColors.redPrimary),
           ),
@@ -299,7 +298,7 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
 
   void _setAllPermissionValue() {
     for (int i = 0; i < _changedUserList.length; i++) {
-      if (!_changedUserList[i].highscorePermission!) {
+      if (!_changedUserList[i].highscorePermission) {
         _allPermissionValue = false;
         return;
       }

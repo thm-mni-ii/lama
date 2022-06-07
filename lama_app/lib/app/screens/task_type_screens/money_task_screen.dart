@@ -41,7 +41,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
   final TaskMoney task;
   final BoxConstraints constraints;
   // Value which is checked after pressing the "fertig" Button
-  int? finalMoneyAmount;
+  int finalMoneyAmount;
   // Stores the pressed coins
   // needed for the undo button
   List<int> deletions = [];
@@ -49,12 +49,12 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
   //index maps to coins => 2€ = 0 1 € = 1, usw..
   List<int> amounts = [0, 0, 0, 0, 0, 0, 0, 0];
   int i = 0;
-  bool? answer;
+  bool answer;
   var random = Random();
   var rnd;
-  int? moneyAmount;
-  late int maxAmount;
-  late String moneyAmountText;
+  int moneyAmount;
+  int maxAmount;
+  String moneyAmountText;
   int minCount = 0;
   int tempAmount = 0;
 
@@ -75,28 +75,28 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
     this.moneyAmount = rnd;
 
     while (this.moneyAmount != this.tempAmount) {
-      if ((this.moneyAmount! - this.tempAmount) >= 200) {
+      if ((this.moneyAmount - this.tempAmount) >= 200) {
         this.tempAmount += 200;
         ++minCount;
-      } else if ((this.moneyAmount! - this.tempAmount) >= 100) {
+      } else if ((this.moneyAmount - this.tempAmount) >= 100) {
         this.tempAmount += 100;
         ++minCount;
-      } else if ((this.moneyAmount! - this.tempAmount) >= 50) {
+      } else if ((this.moneyAmount - this.tempAmount) >= 50) {
         this.tempAmount += 50;
         ++minCount;
-      } else if ((this.moneyAmount! - this.tempAmount) >= 20) {
+      } else if ((this.moneyAmount - this.tempAmount) >= 20) {
         this.tempAmount += 20;
         ++minCount;
-      } else if ((this.moneyAmount! - this.tempAmount) >= 10) {
+      } else if ((this.moneyAmount - this.tempAmount) >= 10) {
         this.tempAmount += 10;
         ++minCount;
-      } else if ((this.moneyAmount! - this.tempAmount) >= 5) {
+      } else if ((this.moneyAmount - this.tempAmount) >= 5) {
         this.tempAmount += 5;
         ++minCount;
-      } else if ((this.moneyAmount! - this.tempAmount) >= 2) {
+      } else if ((this.moneyAmount - this.tempAmount) >= 2) {
         this.tempAmount += 2;
         ++minCount;
-      } else if ((this.moneyAmount! - this.tempAmount) >= 1) {
+      } else if ((this.moneyAmount - this.tempAmount) >= 1) {
         this.tempAmount += 1;
         ++minCount;
       } else {
@@ -163,7 +163,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                   nip: BubbleNip.leftCenter,
                   child: Center(
                     child: Text(
-                      task.optimum!
+                      task.optimum
                           ? "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!"
                           : "Sammle $moneyAmountText€ mit den Münzen zusammen!",
                       style: LamaTextTheme.getStyle(

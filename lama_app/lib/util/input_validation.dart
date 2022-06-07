@@ -31,9 +31,9 @@ abstract class InputValidation {
   ///Used to validate username input
   ///
   ///{@param} String as username
-  static String? inputUsernameValidation(String? username) {
+  static String inputUsernameValidation(String username) {
     if (isEmpty(username)) return 'Der Nutzername darf nicht leer sein!';
-    if (username!.length > allowedNameLength)
+    if (username.length > allowedNameLength)
       return 'Der Nutzername darf nur $allowedNameLength Zeichen lang sein!';
     if (_regExpInvalide(username))
       return 'Bitte keine Sonderzeichen im Nutzernamen!';
@@ -51,9 +51,9 @@ abstract class InputValidation {
   ///String as password
   ///(Optional) secondPass to use the function for two password verfication
   //TODO should be Password not Passwort
-  static String? inputPasswortValidation(String? passwort, {String? secondPass}) {
+  static String inputPasswortValidation(String passwort, {String secondPass}) {
     if (isEmpty(passwort)) return 'Das Passwort darf nicht leer sein!';
-    if (_regExpInvalide(passwort!))
+    if (_regExpInvalide(passwort))
       return 'Bitte keine Sonderzeichen im Passwort!';
     if (passwort.length > passwortMaxLength)
       return 'Das Passwort darf maximal $passwortMaxLength Zeichen haben!';
@@ -66,9 +66,9 @@ abstract class InputValidation {
   ///Used to validate number input
   ///
   ///{@param} [String] as numbers
-  static String? inputNumberValidation(String? numbers) {
+  static String inputNumberValidation(String numbers) {
     if (isEmpty(numbers)) return 'Dieses Feld darf nicht leer sein!';
-    if (numberFilter.hasMatch(numbers!)) return 'Es sind nur Nummern erlaubt!';
+    if (numberFilter.hasMatch(numbers)) return 'Es sind nur Nummern erlaubt!';
     if (int.parse(numbers) > maxNumber)
       return 'Die Zahl überschreitet den Maximalwert ($maxNumber)!';
     return null;
@@ -81,12 +81,12 @@ abstract class InputValidation {
   ///like if it could be parsed to Url.
   ///
   ///{@param} [String] as url
-  static String? inputURLValidation(String? url) {
+  static String inputURLValidation(String url) {
     if (isEmpty(url)) return 'Dieses Feld darf nicht leer sein!';
-    if (RegExp('http://').hasMatch(url!))
+    if (RegExp('http://').hasMatch(url))
       return 'URL darf aus Sicherheitsgründen keine "http" Adresse sein!';
     if (!urlFilter.hasMatch(url)) return 'Die URL muss mit "https://" beginen!';
-    if (!Uri.tryParse(url)!.hasAbsolutePath)
+    if (!Uri.tryParse(url).hasAbsolutePath)
       return 'URL Fehlerhaft! Einige URLs müssen mit "/" enden.';
     return null;
   }
@@ -100,7 +100,7 @@ abstract class InputValidation {
   ///Also this function should only be used when json is expected.
   ///
   ///{@param} [String] as url
-  static Future<String?> inputUrlWithJsonValidation(String? url) async {
+  static Future<String> inputUrlWithJsonValidation(String url) async {
     if (inputURLValidation(url) != null) return inputURLValidation(url);
     //SocketException
     //HandshakeException
@@ -108,7 +108,7 @@ abstract class InputValidation {
     try {
       final response = await Future.wait([
         http
-            .get(Uri.parse(url!))
+            .get(Uri.parse(url))
             .timeout(Duration(seconds: 10))
             .whenComplete(() {})
             .catchError((e) {
@@ -150,7 +150,7 @@ abstract class InputValidation {
   ///Used to check str on empty url
   ///
   ///{@param} [String] as str
-  static bool isEmpty(String? str) {
+  static bool isEmpty(String str) {
     if (str != null && str != '' && str != ' ' && str.isNotEmpty) return false;
     return true;
   }

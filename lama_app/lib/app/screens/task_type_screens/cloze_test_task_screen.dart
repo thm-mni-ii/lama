@@ -24,7 +24,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
   final TaskClozeTest task;
   final BoxConstraints constraints;
   // List of all possible Answers
-  final List<String?> answers = [];
+  final List<String> answers = [];
 
   ClozeTestTaskScreen(this.task, this.constraints) {
     answers.add(task.rightAnswer); //get the right answer
@@ -39,7 +39,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
       Container(
           height: (constraints.maxHeight / 100) * 30,
           child: Align(
-            child: Text(task.question!,
+            child: Text(task.question,
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,)),
             //alignment: Alignment.centerLeft,
@@ -61,7 +61,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   nip: BubbleNip.leftCenter,
                   child: Center(
                     child: Text(
-                      task.lamaText!,
+                      task.lamaText,
                       style:
                           LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 15),
                     ),
@@ -106,7 +106,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                       .add(AnswerTaskEvent(answers[0])),
                   child: Center(
                     child: Text(
-                      answers[0]!,
+                      answers[0],
                       style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
                     ),
                   ),
@@ -130,7 +130,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                       .add(AnswerTaskEvent(answers[1])),
                   child: Center(
                     child: Text(
-                      answers[1]!,
+                      answers[1],
                       style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
                     ),
                   ),
@@ -154,7 +154,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                       .add(AnswerTaskEvent(answers[2])),
                   child: Center(
                     child: Text(
-                      answers[2]!,
+                      answers[2],
                       style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
                     ),
                   ),

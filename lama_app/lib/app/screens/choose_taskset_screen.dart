@@ -18,8 +18,8 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 /// Author: K.Binder
 class ChooseTasksetScreen extends StatefulWidget {
   final String chosenSubject;
-  final int? userGrade;
-  final UserRepository? userRepository;
+  final int userGrade;
+  final UserRepository userRepository;
 
   ChooseTasksetScreen(this.chosenSubject, this.userGrade, this.userRepository);
 
@@ -34,8 +34,8 @@ class ChooseTasksetScreen extends StatefulWidget {
 /// Author: K.Binder
 class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
   String chosenSubject;
-  int? userGrade;
-  UserRepository? userRepository;
+  int userGrade;
+  UserRepository userRepository;
 
   ChooseTasksetScreenState(
       this.chosenSubject, this.userGrade, this.userRepository);
@@ -175,7 +175,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
               children: [
                 FittedBox(
                   child: Text(
-                    taskset.name!,
+                    taskset.name,
                     style: LamaTextTheme.getStyle(fontSize: 20, shadows: [
                       Shadow(
                           color: Colors.blueGrey,
@@ -187,7 +187,7 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                 SizedBox(height: (screenSize.height / 100) * 2),
                 FittedBox(
                   child: Text(
-                    "Aufgaben insgesamt: " + taskset.tasks!.length.toString(),
+                    "Aufgaben insgesamt: " + taskset.tasks.length.toString(),
                     style: LamaTextTheme.getStyle(fontSize: 15, shadows: [
                       Shadow(
                           color: Colors.blueGrey,
@@ -219,20 +219,20 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
   ///This list can contain all Tasks of a Taskset (ordered or unordered),
   ///but can also contain only a fraction of the tasks,
   ///based on the Taskset prameters
-  List<Task>? generateTaskList(Taskset taskset) {
-    if (taskset.randomTaskAmount == taskset.tasks!.length &&
-        !taskset.randomizeOrder!) {
+  List<Task> generateTaskList(Taskset taskset) {
+    if (taskset.randomTaskAmount == taskset.tasks.length &&
+        !taskset.randomizeOrder) {
       return taskset.tasks;
     }
 
     List<Task> tasks = [];
 
     List<Task> tempTasks = [];
-    tempTasks.addAll(taskset.tasks!);
+    tempTasks.addAll(taskset.tasks);
 
     var rng = new Random();
 
-    for (int i = taskset.randomTaskAmount!; i > 0; i--) {
+    for (int i = taskset.randomTaskAmount; i > 0; i--) {
       int index = rng.nextInt(tempTasks.length);
       tasks.add(tempTasks[index]);
       tempTasks.removeAt(index);

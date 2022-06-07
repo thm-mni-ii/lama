@@ -55,8 +55,8 @@ class UserManagementScreenState extends State<UserManagementScreen> {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
-      body: BlocBuilder<UserManagementBloc, UserManagementState?>(
+      appBar: _bar(screenSize.width / 5),
+      body: BlocBuilder<UserManagementBloc, UserManagementState>(
         builder: (context, state) {
           if (state is Loaded) {
             return _userListView(state.userList);
@@ -115,8 +115,8 @@ class UserManagementScreenState extends State<UserManagementScreen> {
   ///{@param} [User] as user that should be displayed
   Widget _userCard(User user) {
     ///attache '(Admin)' to the username if the user is an Admin
-    String? _nameDisplay = user.isAdmin! ? user.name! + ' (Admin)' : user.name;
-    return BlocBuilder<UserManagementBloc, UserManagementState?>(
+    String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
+    return BlocBuilder<UserManagementBloc, UserManagementState>(
       builder: (context, state) {
         return Card(
           child: ListTile(
@@ -124,7 +124,7 @@ class UserManagementScreenState extends State<UserManagementScreen> {
               context.read<UserManagementBloc>().add(EditUser(user, context));
             },
             title: Text(
-              _nameDisplay!,
+              _nameDisplay,
               style: LamaTextTheme.getStyle(
                 fontSize: 20,
                 color: LamaColors.black,

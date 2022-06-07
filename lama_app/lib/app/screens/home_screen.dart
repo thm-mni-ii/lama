@@ -32,9 +32,9 @@ class HomeScreen extends StatefulWidget {
 ///
 /// Author: K.Binder
 class _HomeScreenState extends State<HomeScreen> {
-  UserRepository? userRepository;
+  UserRepository userRepository;
 
-  DateTime? backButtonPressedTime;
+  DateTime backButtonPressedTime;
 
   final snackBar = SnackBar(
       backgroundColor: LamaColors.mainPink,
@@ -125,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   CircleAvatar(
                                     child: SvgPicture.asset(
-                                      'assets/images/svg/avatars/${userRepository!.getAvatar()}.svg',
+                                      'assets/images/svg/avatars/${userRepository.getAvatar()}.svg',
                                       semanticsLabel: 'LAMA',
                                     ),
                                     radius: 25,
@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   SizedBox(width: 5),
                                   Text(
-                                    userRepository!.getUserName()!,
+                                    userRepository.getUserName(),
                                     style: LamaTextTheme.getStyle(
                                         fontSize: 22.5,
                                         fontWeight: FontWeight.w600,
@@ -221,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
         RepositoryProvider.of<TasksetRepository>(context);
 
     if (tasksetRepository
-            .getTasksetsForSubjectAndGrade("Mathe", userRepository!.getGrade())!
+            .getTasksetsForSubjectAndGrade("Mathe", userRepository.getGrade())
             .length >
         0) {
       children.add(ElevatedButton(
@@ -261,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
               create: (BuildContext context) =>
                   ChooseTasksetBloc(context.read<TasksetRepository>()),
               child: ChooseTasksetScreen(
-                  "Mathe", userRepository!.getGrade(), userRepository),
+                  "Mathe", userRepository.getGrade(), userRepository),
             ),
           ),
         ).then((value) => (setState(() {}))),
@@ -269,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
     }
     if (tasksetRepository
-            .getTasksetsForSubjectAndGrade("Deutsch", userRepository!.getGrade())!
+            .getTasksetsForSubjectAndGrade("Deutsch", userRepository.getGrade())
             .length >
         0) {
       children.add(ElevatedButton(
@@ -310,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   create: (BuildContext context) =>
                       ChooseTasksetBloc(context.read<TasksetRepository>()),
                   child: ChooseTasksetScreen(
-                      "Deutsch", userRepository!.getGrade(), userRepository),
+                      "Deutsch", userRepository.getGrade(), userRepository),
                 ),
               ),
             ).then((value) => (setState(() {})));
@@ -321,18 +321,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 j <
                     tasksetRepository
                         .getTasksetsForSubjectAndGrade(
-                            "Deutsch", userRepository!.getGrade())!
+                            "Deutsch", userRepository.getGrade())
                         .length;
                 j++) {
               TaskBuchstabieren buchTask;
               List<Task> buchTasks = tasksetRepository
                   .getTasksetsForSubjectAndGrade(
-                      "Deutsch", userRepository!.getGrade())![j]
-                  .tasks!
+                      "Deutsch", userRepository.getGrade())[j]
+                  .tasks
                   .where((element) => element.type == "Buchstabieren")
                   .toList();
               for (int i = 0; i < buchTasks.length; i++) {
-                buchTask = buchTasks[i] as TaskBuchstabieren;
+                buchTask = buchTasks[i];
                 await preloadPngs(context, buchTask.woerter);
               }
             }
@@ -341,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     if (tasksetRepository
             .getTasksetsForSubjectAndGrade(
-                "Englisch", userRepository!.getGrade())!
+                "Englisch", userRepository.getGrade())
             .length >
         0) {
       children.add(ElevatedButton(
@@ -381,7 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
               create: (BuildContext context) =>
                   ChooseTasksetBloc(context.read<TasksetRepository>()),
               child: ChooseTasksetScreen(
-                  "Englisch", userRepository!.getGrade(), userRepository),
+                  "Englisch", userRepository.getGrade(), userRepository),
             ),
           ),
         ).then((value) => (setState(() {}))),
@@ -390,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     if (tasksetRepository
             .getTasksetsForSubjectAndGrade(
-                "Sachkunde", userRepository!.getGrade())!
+                "Sachkunde", userRepository.getGrade())
             .length >
         0) {
       children.add(ElevatedButton(
@@ -430,7 +430,7 @@ class _HomeScreenState extends State<HomeScreen> {
               create: (BuildContext context) =>
                   ChooseTasksetBloc(context.read<TasksetRepository>()),
               child: ChooseTasksetScreen(
-                  "Sachkunde", userRepository!.getGrade(), userRepository),
+                  "Sachkunde", userRepository.getGrade(), userRepository),
             ),
           ),
         ).then((value) => (setState(() {}))),
@@ -505,7 +505,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             semanticsLabel: 'LAMA'),
                       ),
                     ),
-                    Text(userRepository!.getLamaCoins().toString(),
+                    Text(userRepository.getLamaCoins().toString(),
                         style: LamaTextTheme.getStyle(fontSize: 22.5)),
                   ],
                 ),
@@ -526,7 +526,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
     if (backButtonPressedTime == null ||
-        now.difference(backButtonPressedTime!) > Duration(seconds: 1)) {
+        now.difference(backButtonPressedTime) > Duration(seconds: 1)) {
       backButtonPressedTime = now;
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

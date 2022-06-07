@@ -1,27 +1,27 @@
-/* import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
 /// This class is a [StatelessWidget] for displaying the game over Mode Hud of Affen-Leiter
 class MonkeyEndscreenWidget extends StatelessWidget {
   /// Score to display on game over menu.
-  final String? text;
+  final String text;
   /// score to display
   final int score;
   /// highscore of the current user in the current game
-  final int? userHighScore;
+  final int userHighScore;
   /// highscore of the current game
-  final int? alltimeHighScore;
+  final int alltimeHighScore;
 
   // This function will be called when quit button is pressed.
   final Function onQuitPressed;
 
   const MonkeyEndscreenWidget({
-    Key? key,
+    Key key,
     this.text,
     this.userHighScore,
     this.alltimeHighScore,
-    required this.score,
-    required this.onQuitPressed,
+    @required this.score,
+    @required this.onQuitPressed,
   })  : assert(score != null),
         assert(onQuitPressed != null),
         super(key: key);
@@ -49,7 +49,7 @@ class MonkeyEndscreenWidget extends StatelessWidget {
                     vertical: 10,
                   ),
                 child: Text(
-                  text!,
+                  text,
                   style: TextStyle(
                       shadows: [
                         Shadow(
@@ -109,4 +109,3 @@ class MonkeyEndscreenWidget extends StatelessWidget {
     );
   }
 }
- */

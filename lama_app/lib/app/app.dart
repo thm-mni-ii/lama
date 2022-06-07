@@ -12,7 +12,7 @@ class LamaApp extends MaterialApp {
           builder: (context, child) {
             return ScrollConfiguration(
               behavior: LamaScrollBehaivour(),
-              child: child!,
+              child: child,
             );
           },
           home: BlocProvider(

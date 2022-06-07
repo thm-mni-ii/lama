@@ -1,5 +1,5 @@
 import 'dart:collection';
-/*
+
 import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
@@ -371,5 +371,3 @@ class ClimberGame extends BaseGame with TapDetector, HasWidgetsOverlay {
     }
   }
 }
-
- */

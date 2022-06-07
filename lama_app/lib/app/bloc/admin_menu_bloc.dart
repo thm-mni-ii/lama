@@ -15,11 +15,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// Author: L.Kammerer
 /// latest Changes: 10.09.2021
-class AdminMenuBloc extends Bloc<AdminMenuEvent, AdminMenuState?> {
+class AdminMenuBloc extends Bloc<AdminMenuEvent, AdminMenuState> {
   //temporar storage for [SharedPreferences]
-  late SharedPreferences prefs;
+  SharedPreferences prefs;
 
-  AdminMenuBloc({AdminMenuState? initialState}) : super(initialState);
+  AdminMenuBloc({AdminMenuState initialState}) : super(initialState);
 
   @override
   Stream<AdminMenuState> mapEventToState(AdminMenuEvent event) async* {

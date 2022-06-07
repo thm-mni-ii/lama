@@ -7,7 +7,7 @@ import 'package:lama_app/app/task-system/taskset_model.dart';
 ///
 /// Author: K.Binder
 class TasksetRepository {
-  late TasksetLoader tasksetLoader;
+  TasksetLoader tasksetLoader;
 
   ///Initializes the [TasksetLoader] and loads all tasksets.
   Future<void> initialize() async {
@@ -16,7 +16,7 @@ class TasksetRepository {
   }
 
   ///Returns a List of all [Taskset] that belong to [subject] and are aimed at [grade]
-  List<Taskset>? getTasksetsForSubjectAndGrade(String subject, int? grade) {
+  List<Taskset> getTasksetsForSubjectAndGrade(String subject, int grade) {
     return tasksetLoader.getLoadedTasksetsForSubjectAndGrade(subject, grade);
   }
 

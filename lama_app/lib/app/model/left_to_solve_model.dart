@@ -16,11 +16,11 @@ class LeftToSolveFields{
 ///
 /// Author: F.Brecher
 class LeftToSolve {
-  int? id;
-  String? taskString;
-  int? userLTSId;
-  int? leftToSolve;
-  int? doesStillExist;
+  int id;
+  String taskString;
+  int userLTSId;
+  int leftToSolve;
+  int doesStillExist;
 
   LeftToSolve({this.taskString, this.userLTSId, this.leftToSolve, this.doesStillExist});
 

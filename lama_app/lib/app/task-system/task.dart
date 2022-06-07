@@ -13,7 +13,7 @@ class Task {
   ///factory constructor that creates the corresponding
   ///subclass of [Task] based on the [taskType].
   factory Task.fromJson(Map<String, dynamic> json) {
-    String? taskType = json['task_type'];
+    String taskType = json['task_type'];
     switch (taskType) {
       case "4Cards":
         return Task4Cards(
@@ -89,7 +89,7 @@ class Task {
             json['left_to_solve'], List<String>.from(json['wordsToFind']));
       case "VocableTest":
         var wordPairs = json['wordPairs'] as List;
-        List<Pair<String?, String?>> wordPairList =
+        List<Pair<String, String>> wordPairList =
             wordPairs.map((pair) => Pair.fromJson(pair)).toList();
         return TaskVocableTest(taskType, json['task_reward'], json['lama_text'],
             json['left_to_solve'], wordPairList, json['randomizeSide']);
@@ -107,9 +107,9 @@ class Task {
         List<String> options = [];
         List<String> randomAllowedOperators = [];
         List<int> resultRange = [];
-        bool? allowReplacingOperators;
-        int? fieldsToReplace;
-        int? operatorAmount;
+        bool allowReplacingOperators;
+        int fieldsToReplace;
+        int operatorAmount;
         if (json['equation'] != null)
           equation = List<String>.from(json['equation']);
         if (json['options'] != null)
@@ -147,12 +147,9 @@ class Task {
             fieldsToReplace);
       case "Buchstabieren":
         Map<String, String> woerter = Map<String, String>.from(json['woerter']);
-
-        int? firstLetterBig = json['first_Letter_Caps'];
-        int? correctingModus = json['correcting_Modus'];
-
-        int? multiplePoints = json['multiple_points'];
-
+        int firstLetterBig = json['first_Letter_caps'];
+        int correctingModus = json['correcting_modus'];
+        int multiplePoints = json['multiple_points'];
         return TaskBuchstabieren(
             taskType,
             json['task_reward'],
@@ -163,15 +160,15 @@ class Task {
             correctingModus,
             multiplePoints);
       default:
-        return TaskEmpty("", 0, "", 0);
+        return null;
     }
   }
 
-  String? type;
-  int? reward;
-  String? lamaText;
-  int? originalLeftToSolve;
-  int? leftToSolve;
+  String type;
+  int reward;
+  String lamaText;
+  int originalLeftToSolve;
+  int leftToSolve;
 
   Task(this.type, this.reward, this.lamaText, this.originalLeftToSolve) {
     leftToSolve = originalLeftToSolve;
@@ -179,7 +176,7 @@ class Task {
 
   @override
   String toString() {
-    return type! + reward.toString() + lamaText!;
+    return type + reward.toString() + lamaText;
   }
 }
 
@@ -187,17 +184,17 @@ class Task {
 ///
 ///Author: K.Binder
 class Task4Cards extends Task {
-  String? question;
-  String? rightAnswer;
+  String question;
+  String rightAnswer;
   List<String> wrongAnswers;
 
-  Task4Cards(String? taskType, int? reward, String? lamaText, int? leftToSolve,
+  Task4Cards(String taskType, int reward, String lamaText, int leftToSolve,
       this.question, this.rightAnswer, this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
   String toString() {
-    String s = super.toString() + question! + rightAnswer!;
+    String s = super.toString() + question + rightAnswer;
     wrongAnswers.sort();
     for (int i = 0; i < wrongAnswers.length; i++) {
       s += wrongAnswers[i];
@@ -210,17 +207,17 @@ class Task4Cards extends Task {
 ///
 ///Author: T.Rentsch
 class TaskClozeTest extends Task {
-  String? question;
-  String? rightAnswer;
+  String question;
+  String rightAnswer;
   List<String> wrongAnswers;
 
-  TaskClozeTest(String? taskType, int? reward, String? lamaText,
-      int? leftToSolve, this.question, this.rightAnswer, this.wrongAnswers)
+  TaskClozeTest(String taskType, int reward, String lamaText, int leftToSolve,
+      this.question, this.rightAnswer, this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
   String toString() {
-    String s = super.toString() + question! + rightAnswer!;
+    String s = super.toString() + question + rightAnswer;
     wrongAnswers.sort();
     for (int i = 0; i < wrongAnswers.length; i++) {
       s += wrongAnswers[i];
@@ -234,10 +231,10 @@ class TaskClozeTest extends Task {
 ///Author: F.Leonhardt
 class TaskMarkWords extends Task {
   List<String> rightWords;
-  String? sentence;
+  String sentence;
 
-  TaskMarkWords(String? taskType, int? reward, String? lamaText,
-      int? leftToSolve, this.sentence, this.rightWords)
+  TaskMarkWords(String taskType, int reward, String lamaText, int leftToSolve,
+      this.sentence, this.rightWords)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -247,7 +244,7 @@ class TaskMarkWords extends Task {
     for (int i = 0; i < rightWords.length; i++) {
       s += rightWords[i];
     }
-    s += sentence!;
+    s += sentence;
     return s;
   }
 }
@@ -258,14 +255,14 @@ class TaskMarkWords extends Task {
 class TaskMatchCategory extends Task {
   List<String> categoryOne;
   List<String> categoryTwo;
-  String? nameCatOne;
-  String? nameCatTwo;
+  String nameCatOne;
+  String nameCatTwo;
 
   TaskMatchCategory(
-      String? taskType,
-      int? reward,
-      String? lamaText,
-      int? leftToSolve,
+      String taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
       this.nameCatOne,
       this.nameCatTwo,
       this.categoryOne,
@@ -283,8 +280,8 @@ class TaskMatchCategory extends Task {
     for (int i = 0; i < categoryTwo.length; i++) {
       s += categoryTwo[i];
     }
-    s += nameCatOne!;
-    s += nameCatTwo!;
+    s += nameCatOne;
+    s += nameCatTwo;
     return s;
   }
 }
@@ -295,8 +292,8 @@ class TaskMatchCategory extends Task {
 class TaskGridSelect extends Task {
   List<String> wordsToFind;
 
-  TaskGridSelect(String? taskType, int? reward, String? lamaText,
-      int? leftToSolve, this.wordsToFind)
+  TaskGridSelect(String taskType, int reward, String lamaText, int leftToSolve,
+      this.wordsToFind)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -312,18 +309,18 @@ class TaskGridSelect extends Task {
 
 //Author Handito Bismo
 class ClockTest extends Task {
-  String? uhr;
-  bool? timer;
-  String? rightAnswer;
-  String? wrongAnswers;
+  String uhr;
+  bool timer;
+  String rightAnswer;
+  String wrongAnswers;
 
-  ClockTest(String? taskType, int? reward, String? lamaText, int? leftToSolve,
+  ClockTest(String taskType, int reward, String lamaText, int leftToSolve,
       this.uhr, this.timer, this.rightAnswer, this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
   String toString() {
-    String s = super.toString() + uhr!;
+    String s = super.toString() + uhr;
     return s + timer.toString();
   }
 }
@@ -332,10 +329,10 @@ class ClockTest extends Task {
 ///
 ///Author: T.Rentsch
 class TaskMoney extends Task {
-  int? difficulty;
-  bool? optimum;
+  int difficulty;
+  bool optimum;
 
-  TaskMoney(String? taskType, int? reward, String? lamaText, int? leftToSolve,
+  TaskMoney(String taskType, int reward, String lamaText, int leftToSolve,
       this.difficulty, this.optimum)
       : super(taskType, reward, lamaText, leftToSolve);
 
@@ -349,19 +346,19 @@ class TaskMoney extends Task {
 ///
 ///Author: K.Binder
 class TaskVocableTest extends Task {
-  List<Pair<String?, String?>> vocablePairs;
-  bool? randomizeSide;
+  List<Pair<String, String>> vocablePairs;
+  bool randomizeSide;
 
-  TaskVocableTest(String? taskType, int? reward, String? lamaText,
-      int? leftToSolve, this.vocablePairs, this.randomizeSide)
+  TaskVocableTest(String taskType, int reward, String lamaText, int leftToSolve,
+      this.vocablePairs, this.randomizeSide)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
   String toString() {
     String s = super.toString();
-    vocablePairs.sort((a, b) => a.a!.compareTo(b.a!));
+    vocablePairs.sort((a, b) => a.a.compareTo(b.a));
     for (int i = 0; i < vocablePairs.length; i++) {
-      s += vocablePairs[i].a! + vocablePairs[i].b!;
+      s += vocablePairs[i].a + vocablePairs[i].b;
     }
     return s + randomizeSide.toString();
   }
@@ -375,7 +372,7 @@ class TaskConnect extends Task {
   List<String> pair2;
   List<String> rightAnswers;
 
-  TaskConnect(String? taskType, int? reward, String? lamaText, int? leftToSolve,
+  TaskConnect(String taskType, int reward, String lamaText, int leftToSolve,
       this.pair1, this.pair2, this.rightAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
@@ -408,17 +405,17 @@ class TaskEquation extends Task {
   List<String> randomAllowedOperators;
   List<int> operandRange;
 
-  int? fieldsToReplace;
-  int? operatorAmount;
+  int fieldsToReplace;
+  int operatorAmount;
 
-  bool? allowReplacingOperators;
+  bool allowReplacingOperators;
   bool isRandom = false;
 
   TaskEquation(
-      String? taskType,
-      int? reward,
-      String? lamaText,
-      int? leftToSolve,
+      String taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
       this.equation,
       this.options,
       this.randomAllowedOperators,
@@ -452,12 +449,12 @@ class TaskEquation extends Task {
 }
 
 class TaskZerlegung extends Task {
-  bool? zeros;
-  bool? boolThousands;
-  bool? reverse;
+  bool zeros;
+  bool boolThousands;
+  bool reverse;
 
-  TaskZerlegung(String? taskType, int? reward, String? lamaText,
-      int? leftToSolve, this.reverse, this.zeros, this.boolThousands)
+  TaskZerlegung(String taskType, int reward, String lamaText, int leftToSolve,
+      this.reverse, this.zeros, this.boolThousands)
       : super(taskType, reward, lamaText, leftToSolve);
 
   // do toString Method
@@ -469,11 +466,11 @@ class TaskZerlegung extends Task {
 ///Author: J.Decher
 class TaskNumberLine extends Task {
   List<int> range;
-  bool? randomrange;
-  int? steps;
-  bool? ontap;
-  TaskNumberLine(String? taskType, int? reward, String? lamaText,
-      int? leftToSolve, this.range, this.randomrange, this.steps, this.ontap)
+  bool randomrange;
+  int steps;
+  bool ontap;
+  TaskNumberLine(String taskType, int reward, String lamaText, int leftToSolve,
+      this.range, this.randomrange, this.steps, this.ontap)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -486,38 +483,20 @@ class TaskNumberLine extends Task {
 ///Author: J.Decher, A.Pusch
 class TaskBuchstabieren extends Task {
   Map<String, String> woerter;
-
-  int? first_Letter_Caps;
-  int? correctingModus;
-
-  int? multiplePoints;
-r
+  int first_Letter_Caps;
+  int correctingModus;
+  int multiplePoints;
 
   TaskBuchstabieren(
-      String? taskType,
-      int? reward,
-      String? lamaText,
-      int? leftToSolve,
+      String taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
       this.woerter,
       this.first_Letter_Caps,
       this.correctingModus,
       this.multiplePoints)
       : super(taskType, reward, lamaText, leftToSolve);
-
-  @override
-  String toString() {
-    String s = super.toString();
-    return s;
-  }
-}
-
-class TaskEmpty extends Task {
-  TaskEmpty(
-    String? taskType,
-    int? reward,
-    String? lamaText,
-    int? leftToSolve,
-  ) : super(taskType, reward, lamaText, leftToSolve);
 
   @override
   String toString() {

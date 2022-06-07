@@ -12,8 +12,8 @@ class GamesFields{
 ///
 /// Author: F.Brecher
 class Game {
-  int? id;
-  String? name;
+  int id;
+  String name;
 
 
   Game({this.name});

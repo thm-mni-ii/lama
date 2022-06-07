@@ -46,7 +46,7 @@ class AdminMenuScreen extends StatefulWidget {
 ///_AdminMenuScreenState provides the state for the [AdminMenuScreen]
 class _AdminMenuScreenState extends State<AdminMenuScreen> {
   //save the Checkbox (Standardaufgaben aktivieren?) value as bool
-  bool? _isChecked = true;
+  bool _isChecked = true;
 
   ///override build methode [StatelessWidget]
   ///
@@ -57,17 +57,16 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: _bar(screensize.width / 5, 'Adminmenü', LamaColors.bluePrimary)
-          as PreferredSizeWidget?,
+      appBar: _bar(screensize.width / 5, 'Adminmenü', LamaColors.bluePrimary),
       body: BlocListener(
         bloc: BlocProvider.of<AdminMenuBloc>(context),
-        listener: (context, dynamic state) {
+        listener: (context, state) {
           //shows the GitHub repository link
           if (state is AdminMenuGitHubPopUpState) {
             showDialog(context: context, builder: (_) => _gitHubAlert());
           }
         },
-        child: BlocBuilder<AdminMenuBloc, AdminMenuState?>(
+        child: BlocBuilder<AdminMenuBloc, AdminMenuState>(
           builder: (context, state) {
             ///Set the [_isChecked] for the [Checkbox] to ensure it's the current value of [SharedPreferences]
             ///then force the [AdminMenuLoadDefaultEvent] to move on
@@ -111,7 +110,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   ///which could be used to navigate to another Screen or
   ///configur the App directly.
   Widget _buttonColumne(BuildContext context) {
-    List<User>? userList = [];
+    List<User> userList = [];
     return Padding(
       padding: EdgeInsets.all(50),
       child: Wrap(
@@ -185,7 +184,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
                 ),
               ),
               await DatabaseProvider.db
-                  .updateAllUserHighscorePermission(userList!)
+                  .updateAllUserHighscorePermission(userList)
             },
           ),
           //Checkbox to deaktivate the default Tasksets
@@ -229,7 +228,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
             checkColor: Colors.white,
             fillColor: MaterialStateProperty.resolveWith(getColor),
             value: _isChecked,
-            onChanged: (bool? value) {
+            onChanged: (bool value) {
               setState(() {
                 _isChecked = value;
                 context.read<AdminMenuBloc>().add(AdminMenuChangePrefsEvent(

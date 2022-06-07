@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'dart:math';
-/*
+
 import 'package:flutter/material.dart';
 import 'package:lama_app/snake/components/goBackButton.dart';
 import 'package:lama_app/snake/snakeGame.dart';
@@ -102,6 +102,3 @@ class GameOverView {
     }
   }
 }
-
-
- */

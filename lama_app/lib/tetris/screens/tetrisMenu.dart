@@ -10,9 +10,9 @@ import 'package:lama_app/util/LamaColors.dart';
 class Menu extends StatefulWidget {
   var context;
 
-  int? userHighScore;
-  int? allTimeHighScore;
-  UserRepository? userRepository;
+  int userHighScore;
+  int allTimeHighScore;
+  UserRepository userRepository;
 
   @override
   Menu(this.context, this.userHighScore, this.allTimeHighScore,
@@ -22,16 +22,16 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  UserRepository? userRepo;
+  UserRepository userRepo;
 
   /// id of the game
   final gameId = 4;
 
   /// the personal highScore
-  int? userHighScore;
+  int userHighScore;
 
   /// the all time highScore in this game
-  int? allTimeHighScore;
+  int allTimeHighScore;
 
   void initState() {
     super.initState();
@@ -40,11 +40,11 @@ class _MenuState extends State<Menu> {
   _MenuState(this.userHighScore, this.allTimeHighScore, this.userRepo);
 
   void onPlayClicked() {
-    if (userRepo!.getLamaCoins()! < GameListScreen.games[gameId - 1].cost) {
+    if (userRepo.getLamaCoins() < GameListScreen.games[gameId - 1].cost) {
       Navigator.pop(context, "NotEnoughCoins");
       return;
     }
-    userRepo!.removeLamaCoins(GameListScreen.games[gameId - 1].cost);
+    userRepo.removeLamaCoins(GameListScreen.games[gameId - 1].cost);
     Navigator.push(
       context,
       MaterialPageRoute(

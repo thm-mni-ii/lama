@@ -11,6 +11,6 @@ class UserPushSuccessfull extends CreateUserState {}
 ///
 ///{@param}[List<String>] grades with every provided grade of the app as [String]
 class CreateUserLoaded extends CreateUserState {
-  List<String?> grades;
+  List<String> grades;
   CreateUserLoaded(this.grades);
 }

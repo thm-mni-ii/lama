@@ -50,7 +50,7 @@ class ConnectState extends State<ConnectTaskScreen> {
   // leftTouched indicates if a item on the left side is selected
   bool leftTouched = false;
   // choosenWord stores the Item which is selected
-  late Item choosenWord;
+  Item choosenWord;
 
   ConnectState(this.task, this.constraints) {
     // shuffle every list to create a illusion of dynamic task designe
@@ -90,7 +90,7 @@ class ConnectState extends State<ConnectTaskScreen> {
                     nip: BubbleNip.leftCenter,
                     child: Center(
                       child: Text(
-                        task.lamaText!,
+                        task.lamaText,
                         style: LamaTextTheme.getStyle(
                             color: LamaColors.black, fontSize: 15),
                       ),

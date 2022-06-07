@@ -21,7 +21,7 @@ class ChooseTasksetBloc extends Bloc<ChooseTasksetEvent, ChooseTasksetState> {
   Stream<ChooseTasksetState> mapEventToState(ChooseTasksetEvent event) async* {
     if (event is LoadAllTasksetsEvent) {
       yield LoadingAllTasksetsState();
-      List<Taskset>? tasksets =
+      List<Taskset> tasksets =
           repository.getTasksetsForSubjectAndGrade(event.subject, event.grade);
       //This line displays a very short loading animation, if the taskssets get loaded instantly. It serves no real purpose but it makes it look more professional
       await Future.delayed(Duration(milliseconds: 500));

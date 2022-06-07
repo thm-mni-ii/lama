@@ -22,7 +22,7 @@ void main() async {
 ///
 ///Especially important for the "MoneyTask" since the svgs would need
 ///a second to load otherwise which looks cheap and unprofessional.
-Future<Future<List<void>>> precacheSvgs() async {
+Future<void> precacheSvgs() async {
   return Future.wait([
     precachePicture(
       ExactAssetPicture(SvgPicture.svgStringDecoder,

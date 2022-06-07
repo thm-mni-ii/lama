@@ -56,12 +56,12 @@ class UserLoginScreenState extends State<UserLoginScreen> {
     return Scaffold(
       //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
-      appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
-      body: BlocBuilder<UserLoginBloc, UserLoginState?>(
+      appBar: _bar(screenSize.width / 5),
+      body: BlocBuilder<UserLoginBloc, UserLoginState>(
         builder: (context, state) {
           if (state is UserLoginPulled) {
             return _input(
-                context, null, state.user!, screenSize.width, _formKey);
+                context, null, state.user, screenSize.width, _formKey);
           }
           if (state is UserLoginFailed) {
             return _input(
@@ -96,10 +96,10 @@ class UserLoginScreenState extends State<UserLoginScreen> {
 ///not used double size
 ///
 ///{@return} [Widget] decided by the incoming state of the [UserLoginBloc]
-Widget _input(BuildContext context, String? error, User user, double size,
+Widget _input(BuildContext context, String error, User user, double size,
     GlobalKey<FormState> key) {
   ///attache '(Admin)' to the username if the user is an Admin
-  String _nameDisplay = user.isAdmin! ? user.name! + ' (Admin)' : user.name!;
+  String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
   return Form(
     key: key,
     child: Column(
@@ -146,7 +146,7 @@ Widget _input(BuildContext context, String? error, User user, double size,
                 context.read<UserLoginBloc>().add(UserLoginChangePass(value)),
             obscureText: true,
             onFieldSubmitted: (value) => {
-              if (key.currentState!.validate())
+              if (key.currentState.validate())
                 context.read<UserLoginBloc>().add(UserLogin(user, context))
             },
           ),
@@ -156,7 +156,7 @@ Widget _input(BuildContext context, String? error, User user, double size,
           children: [
             ElevatedButton(
               onPressed: () {
-                if (key.currentState!.validate())
+                if (key.currentState.validate())
                   context.read<UserLoginBloc>().add(UserLogin(user, context));
               },
               child: Row(
