@@ -36,18 +36,6 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState?> {
     on<CreateAdminAbort>((event, emit) => _adminAbort(event.context));
   }
 
-  @override
-  Stream<CreateAdminState> mapEventToState(CreateAdminEvent event) async* {
-    if (event is CreateAdminPush) _adminPush(event.context);
-    if (event is CreateAdminChangeName) _user.name = event.name;
-    if (event is CreateAdminChangePassword) _user.password = event.password;
-    if (event is CreateAdminChangeSaftyQuestion)
-      _saftyQuestion.question = event.saftyQuestion;
-    if (event is CreateAdminChangeSaftyAnswer)
-      _saftyQuestion.answer = event.saftyAnswer;
-    if (event is CreateAdminAbort) _adminAbort(event.context);
-  }
-
   ///(private)
   ///insterting the [User] via [_insterAdmin] and
   ///pops with return value [_user] afterwards

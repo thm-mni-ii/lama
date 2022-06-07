@@ -34,13 +34,6 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
       emit(await _navigator(event.context));
     });
   }
-/* 
-  @override
-  Stream<CheckScreenState> mapEventToState(CheckScreenEvent event) async* {
-    if (event is CheckForAdmin) yield await _hasAdmin(event.context);
-    if (event is DSGVOAccepted) yield await _navigator(event.context);
-    if (event is CreateAdminEvent) yield await _navigator(event.context);
-  } */
 
   ///(private)
   ///check if an admin is stored in the Database

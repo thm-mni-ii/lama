@@ -24,15 +24,14 @@ import 'package:lama_app/db/database_provider.dart';
 /// Author: L.Kammerer
 /// latest Changes: 15.06.2021
 class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState?> {
-  UserSelectionBloc({UserSelectionState? initialState}) : super(initialState);
-
-  @override
-  Stream<UserSelectionState> mapEventToState(UserSelectionEvent event) async* {
-    if (event is LoadUsers) yield await loadUsers();
-    if (event is SelectUser) {
+  UserSelectionBloc({UserSelectionState? initialState}) : super(initialState) {
+    on<LoadUsers>((event, emit) async {
+      emit(await loadUsers());
+    });
+    on<SelectUser>((event, emit) async {
       await _userSelected(event.user, event.context!);
-      yield UserSelected(event.user);
-    }
+      emit(UserSelected(event.user));
+    });
   }
 
   ///load all stored [User] from the database and
