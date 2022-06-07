@@ -33,6 +33,8 @@ int zufallsCharCounter = 0;
 Color testFarbe = Colors.black;
 int flagForCorrectingModus = 0; //  1->represent left   /   2->represents right
 int antwortZaehler = 0;
+bool isCorrect =
+    true; //tracks if all answers were correct in multiple_points mode
 //Der Buchstabieren Task kann auf zwei verschiedene Arten erzeugt werden, welche Art es sein soll wird in der JSON beim CorrectionModus abgefragt
 //ist der CorrectionModus auf fals(bzw. 0), so wir ein Bild aufgerufen, und zu dem Begriff auf dem Bild unsortiere Buchstaben erstellt, welche es anzuklicken gilt, um das Wort zu buchstabieren.
 //ist der CorrectionModus aktiv, wird vom User verlang lediglich einen Buchstaben für eine Lücke auszuwählen, sodass das Wort komplett wird-- zur Auswahl stehen dann natürlich auch falsche Buchstaben
@@ -75,6 +77,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 //außerdem werden einige Variablen wieder auf ihren ursprünglichen Zustand gestellt-> wichtig für neue Aufgaben
   void initState() {
     super.initState();
+    isCorrect = true;
     zufallsChar = getRandomLiteral(1);
     zufallsChar2 = getRandomLiteral(1);
     testFarbe = Colors.black;
@@ -273,16 +276,16 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           } else {
             fehlerZaehler++;
             if (fehlerZaehler >= maxFehlerAnzahl) {
-              testFarbe2 = Colors.red;
-
               for (int i = stringIndex; i < wort.length; i++) {
                 showWidget(i);
               }
               if (task.multiplePoints == antwortZaehler + 1 ||
                   task.multiplePoints == 0) {
+                testFarbe2 = Colors.red;
                 rightOrWrongAnswerEvent(false);
               } else {
                 rerenderTask(Colors.red);
+                isCorrect = false;
               }
             }
           }
@@ -296,13 +299,12 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                 "task.multiplePoints: ${task.multiplePoints} antwortZaehler: $antwortZaehler");
             if (task.multiplePoints == antwortZaehler + 1 ||
                 task.multiplePoints == 0) {
-              print("das event funktioniert nicht mehr??");
-              rightOrWrongAnswerEvent(true);
+              rightOrWrongAnswerEvent(isCorrect);
+              testFarbe2 = Colors.green;
             } else {
               rerenderTask(Colors.green);
             }
           } else {
-            testFarbe2 = Colors.red;
             if (flagForCorrectingModus == 1) {
               showWidget(zufallsZahl);
 
@@ -317,9 +319,11 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             }
             if (task.multiplePoints == antwortZaehler + 1 ||
                 task.multiplePoints == 0) {
+              testFarbe2 = Colors.red;
               rightOrWrongAnswerEvent(false);
             } else {
               rerenderTask(Colors.red);
+              isCorrect = false;
             } //TO-DO: hier wird alles neu aufgerufen
           }
         }
@@ -333,10 +337,13 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     );
   }
 
+  ///used for multiple_points feature
+  ///rerenders the whole screen and fills bubble at the bottom with color
+  ///depending on if the answer is right(green) or wrong(red)
   void rerenderTask(Color answerFarbe) {
     antwortFarben[antwortZaehler] = answerFarbe;
     randomNummer = erstelleEineRandomNummer(task);
-    //TO-DO: hier wird alles neu aufgerufen
+    //hier wird alles neu aufgerufen
     pictureFromNetwork = cacheImageByUrl(context, holeUrl(task, randomNummer));
     messeLaengeVomWort(holeEinWortAusJSON(randomNummer,
         task.woerter.keys.toList(), task.woerter.values.toList()));
