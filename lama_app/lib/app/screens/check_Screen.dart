@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:lama_app/app/screens/welcome_screen.dart';
 //Lama defaults
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -173,9 +172,9 @@ class CheckScreenPage extends State<CheckScreen> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            controller.jumpToPage(pages.length);
+                            controller.jumpToPage(1);
                           },
-                          child: Text("Skip"),
+                          child: Text("Übersicht"),
                         ),
                         Center(
                           child: SmoothPageIndicator(
@@ -202,58 +201,7 @@ class CheckScreenPage extends State<CheckScreen> {
                   ),
                 ],
               ),
-            )
-                /* body: IntroductionScreen(
-              pages: [
-                PageViewModel(
-                  title: "Placeholder Pagetitle 1",
-                  body: "Placeholder bodytext 1",
-                  footer: Text(
-                    "Footer Placeholder",
-                  ),
-                  image: Image.asset("assets/images/png/sunrise.png"),
-                ),
-                PageViewModel(
-                  title: "Placeholder Pagetitle 1",
-                  body: "Placeholder bodytext 2",
-                  footer: ElevatedButton(
-                    child: Text("Goto Admin Page"),
-                    onPressed: () {
-                      context
-                          .read<CheckScreenBloc>()
-                          .add(GotoAdminEvent(context));
-                    }, //do something when pressed
-                  ),
-                  image: Image.asset("assets/images/png/sun.png"),
-                ),
-                PageViewModel(
-                  title: "Placeholder Pagetitle 3",
-                  body: "Placeholder bodytext 3",
-                  image: Image.asset("assets/images/png/sunset.png"),
-                  footer: ElevatedButton(
-                    child: Text("Erstelle Admin"),
-                    onPressed: () {
-                      context
-                          .read<CheckScreenBloc>()
-                          .add(CreateAdminEvent(context));
-                    }, //do something when pressed
-                  ),
-                ),
-                PageViewModel(
-                  title: "Placeholder Pagetitle LAST",
-                  body: "Viel spaß mit der App",
-                  image: Image.asset("assets/images/png/sunrise.png"),
-                ),
-              ],
-              done: Text("Los geht's"),
-              skip: Text("skip"),
-              showSkipButton: true,
-              next: Icon(Icons.navigate_next),
-              onDone: () {
-                context.read<CheckScreenBloc>().add(CreateAdminEvent(context));
-              }, //TO-DO what happens when clicking "done"
-            ) */
-                );
+            ));
           }
 
           ///default waiting screen with app icon
@@ -272,9 +220,14 @@ class CheckScreenPage extends State<CheckScreen> {
   List<Widget> getPages(PageController controller) {
     return [
       PageViewerModel(
-        title: "Erste Seite",
-        description: "Welcome welcome zu der Lama app, hier geht es richtig ab",
-        image: Image.asset("assets/images/png/sunrise.png"),
+        title: "Alles lernen mit Anna",
+        description:
+            "Mit dieser App ist Lernen interaktiv, belohnend und spaßig!"
+            " Hier wird gezeigt wie die App funktioniert.",
+        image: SvgPicture.asset(
+          'assets/images/svg/app_icon.svg',
+          semanticsLabel: 'LAMA',
+        ),
       ),
       PageViewerModel(
         title: "Übersicht",
@@ -298,9 +251,13 @@ class CheckScreenPage extends State<CheckScreen> {
         ),
       ),
       PageViewerModel(
-          title: "Admin Seite",
-          description: "Hier kann man einen Admin erstellen woooow",
-          image: Image.asset("assets/images/png/sunset.png"),
+          title: "Verwalte deine Schüler und ihre Aufgaben",
+          description:
+              "Es kann ein Admin angelegt werden, mit dem jeder Schüler einen "
+              "eigenen Account mit Name, Passwort und Klasse erstellen kann. Es gibt "
+              "pro Klasse ein Set an Standardaufgaben und die Möglichkeit, eigene "
+              "Aufgaben nach einem Muster zu erstellen.",
+          image: Image.asset('assets/images/png/admin_feature.png'),
           button: ElevatedButton(
             onPressed: () {
               controller.jumpToPage(1);
@@ -317,8 +274,10 @@ class CheckScreenPage extends State<CheckScreen> {
           )),
       PageViewerModel(
           title: "Gast Seite",
-          description: "Hier kann man einen Gast erstellen woooow",
-          image: Image.asset("assets/images/png/sunset.png"),
+          description: "Du möchtest als Gast weiter und einfach die "
+              "Standardaufgaben ausprobieren? Einen Admin kann man später "
+              "immernoch anlegen.",
+          image: Image.asset('assets/images/png/features.png'),
           button: ElevatedButton(
             onPressed: () {
               controller.jumpToPage(1);
@@ -334,8 +293,11 @@ class CheckScreenPage extends State<CheckScreen> {
                 style: LamaTextTheme.getStyle(fontSize: 15)),
           )),
       PageViewerModel(
-        title: "ich bin der titel",
-        description: "Ich bin die letzte Seite",
+        title: "Alles Verstanden?",
+        description:
+            "Wende dich bei Fragen an unser github und lese dir die dort "
+            "verfügbaren PDF-Dateien durch! Wir wünschen dir viel Spaß mit der "
+            "App!",
         image: Image.asset("assets/images/png/angrycloud.png"),
       )
     ];
@@ -344,13 +306,13 @@ class CheckScreenPage extends State<CheckScreen> {
   Widget PageViewerModel(
       {String title,
       String description,
-      Image image,
+      var image,
       ElevatedButton button,
       ElevatedButton button2}) {
     return Column(
       children: [
         Flexible(
-            flex: 4,
+            flex: 2,
             child: Center(
               child: image,
             )),
