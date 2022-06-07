@@ -207,8 +207,8 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(
                       builder: (context) => BlocProvider(
-                        create: (BuildContext context) => TasksetCreationListBloc(),
-                        child: TasksetCreationListScreen(),
+                        create: (BuildContext context) => TasksetCreationCartBloc(),
+                        child: TasksetCreationCartScreen(),
                       )
                   ));
                 },
