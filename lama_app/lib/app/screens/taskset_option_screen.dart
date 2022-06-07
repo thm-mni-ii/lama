@@ -42,7 +42,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //temporary url to prevent losing the url on error states
-  String urlInitValue;
+  String? urlInitValue;
 
   @override
   void initState() {
@@ -60,16 +60,17 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
     return Scaffold(
       //avoid overflow because of the keyboard
       resizeToAvoidBottomInset: false,
-      appBar: _bar(screenSize.width / 5),
+      appBar: _bar(screenSize.width / 5) as PreferredSizeWidget?,
       body: BlocListener(
         bloc: BlocProvider.of<TasksetOptionsBloc>(context),
-        listener: (context, state) {
+        listener: (context, dynamic state) {
           ///url insert successfull the [urlInitValue] set to null
           ///old [SnackBar] disappears
           if (state is TasksetOptionsPushSuccess) {
             urlInitValue = null;
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(_saveSuccess());
+            ScaffoldMessenger.of(context)
+                .showSnackBar(_saveSuccess() as SnackBar);
           }
 
           ///url insert failed an error message pops up
@@ -85,15 +86,16 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
           ///old [SnackBar] disappears
           if (state is TasksetOptionsDeleteSuccess) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(_deleteSuccess());
+            ScaffoldMessenger.of(context)
+                .showSnackBar(_deleteSuccess() as SnackBar);
           }
 
           ///tapping on an url shows an pop up with details about the url
           if (state is TasksetOptionsUrlSelected) {
-            showDialog(context: context, builder: (_) => _urlPopUp(state.url));
+            showDialog(context: context, builder: (_) => _urlPopUp(state.url!));
           }
         },
-        child: BlocBuilder<TasksetOptionsBloc, TasksetOptionsState>(
+        child: BlocBuilder<TasksetOptionsBloc, TasksetOptionsState?>(
           builder: (context, state) {
             if (state is TasksetOptionsDefault) {
               return Padding(
@@ -139,7 +141,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
   ///initialValue of [TextFormField] as [String] initValue
   ///
   ///{@return} [Form] with [TextFormField] to provide input with validation
-  Widget _inputFields(BuildContext context, String initValue) {
+  Widget _inputFields(BuildContext context, String? initValue) {
     return Form(
       key: _formKey,
       child: Column(
@@ -158,7 +160,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             },
             validator: (value) => InputValidation.inputURLValidation(value),
             onFieldSubmitted: (value) => {
-              if (_formKey.currentState.validate())
+              if (_formKey.currentState!.validate())
                 context.read<TasksetOptionsBloc>().add(TasksetOptionsPush())
             },
           ),
@@ -192,9 +194,9 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             //show details of the url onPressed
             TextButton(
               child: Text(
-                urls[index].url.length > 30
-                    ? urls[index].url.substring(7, 32) + '...'
-                    : urls[index].url,
+                urls[index].url!.length > 30
+                    ? urls[index].url!.substring(7, 32) + '...'
+                    : urls[index].url!,
                 style: LamaTextTheme.getStyle(
                     color: LamaColors.black, fontSize: 18, monospace: true),
               ),
@@ -245,9 +247,9 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
         return Row(
           children: [
             Text(
-              urls[index].url.length > 30
-                  ? urls[index].url.substring(7, 32) + '...'
-                  : urls[index].url,
+              urls[index].url!.length > 30
+                  ? urls[index].url!.substring(7, 32) + '...'
+                  : urls[index].url!,
               style: LamaTextTheme.getStyle(
                   color: Colors.grey, fontSize: 18, monospace: true),
             ),

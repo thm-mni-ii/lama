@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
@@ -9,7 +9,7 @@ class MonkeyScoreWidget extends StatelessWidget {
   final String text;
 
   const MonkeyScoreWidget({
-    @required this.text
+    required this.text
   });
 
   @override
@@ -44,4 +44,4 @@ class MonkeyScoreWidget extends StatelessWidget {
         )
     );
   }
-}
+} */

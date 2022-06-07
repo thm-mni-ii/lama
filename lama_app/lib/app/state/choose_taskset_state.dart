@@ -16,6 +16,6 @@ class LoadingAllTasksetsState extends ChooseTasksetState {}
 ///
 ///Emitted when all tasksets are loaded. They get passed via [tasksets].
 class LoadedAllTasksetsState extends ChooseTasksetState {
-  List<Taskset> tasksets;
+  List<Taskset>? tasksets;
   LoadedAllTasksetsState(this.tasksets);
 }

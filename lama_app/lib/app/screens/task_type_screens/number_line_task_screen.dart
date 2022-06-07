@@ -27,13 +27,13 @@ class NumberLineState extends State<NumberLineTaskScreen> {
   final TaskNumberLine task;
   final BoxConstraints constraints;
   var random = Random();
-  int endPixel;
-  int rngStart;
-  int rngEnd;
-  int gesuchteZahl;
-  double dgesuchteZahl;
-  int gesuchterPixel;
-  double dgesuchterPixel;
+  int? endPixel;
+  int? rngStart;
+  int? rngEnd;
+  int? gesuchteZahl;
+  double? dgesuchteZahl;
+  int? gesuchterPixel;
+  double? dgesuchterPixel;
   bool firstTry = true;
   bool tappedCorrectly = false;
   bool tappedIncorrectly = false;
@@ -42,54 +42,54 @@ class NumberLineState extends State<NumberLineTaskScreen> {
     this.rngStart = task.range[0];
     this.rngEnd = task.range[1];
 
-    if (task.randomrange) {
-      int temp = rngEnd - rngStart;
+    if (task.randomrange!) {
+      int temp = rngEnd! - rngStart!;
       this.rngStart = random.nextInt(temp ~/ 2) + task.range[0];
       this.rngEnd =
           random.nextInt(temp ~/ 2) + (task.range[0] + task.range[1]) ~/ 2 + 1;
     }
-    if (task.steps > 0) {
-      rngStart = ((rngStart.toDouble() / task.steps).round() * task.steps);
-      rngEnd = ((rngEnd.toDouble() / task.steps).round() * task.steps);
+    if (task.steps! > 0) {
+      rngStart = ((rngStart!.toDouble() / task.steps!).round() * task.steps!);
+      rngEnd = ((rngEnd!.toDouble() / task.steps!).round() * task.steps!);
     }
 
-    this.gesuchteZahl = random.nextInt(rngEnd - rngStart) + rngStart;
+    this.gesuchteZahl = random.nextInt(rngEnd! - rngStart!) + rngStart!;
 
-    if (task.steps > 0) {
+    if (task.steps! > 0) {
       gesuchteZahl =
-          ((gesuchteZahl.toDouble() / task.steps).round() * task.steps);
+          ((gesuchteZahl!.toDouble() / task.steps!).round() * task.steps!);
     }
     while (this.gesuchteZahl == rngStart || this.gesuchteZahl == rngEnd) {
-      if (task.randomrange) {
-        rngStart = random.nextInt((rngEnd - rngStart) ~/ 2) + task.range[0];
-        rngStart = ((rngStart.toDouble() / task.steps).round() * task.steps);
+      if (task.randomrange!) {
+        rngStart = random.nextInt((rngEnd! - rngStart!) ~/ 2) + task.range[0];
+        rngStart = ((rngStart!.toDouble() / task.steps!).round() * task.steps!);
       }
-      this.gesuchteZahl = random.nextInt(rngEnd - rngStart) + rngStart;
-      if (task.steps > 0) {
+      this.gesuchteZahl = random.nextInt(rngEnd! - rngStart!) + rngStart!;
+      if (task.steps! > 0) {
         gesuchteZahl =
-            ((gesuchteZahl.toDouble() / task.steps).round() * task.steps);
+            ((gesuchteZahl!.toDouble() / task.steps!).round() * task.steps!);
       }
     }
-    this.dgesuchteZahl = gesuchteZahl.toDouble();
+    this.dgesuchteZahl = gesuchteZahl!.toDouble();
     this.firstTry = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    bool paintRed = !task.ontap;
+    bool paintRed = !task.ontap!;
     double screenwidth = MediaQuery.of(context).size.width;
     double screenheight = MediaQuery.of(context).size.height;
     endPixel = screenwidth.toInt();
-    double frame = endPixel / 10;
-    endPixel = endPixel - frame.toInt();
+    double frame = endPixel! / 10;
+    endPixel = endPixel! - frame.toInt();
     dgesuchterPixel =
-        (endPixel / (rngEnd - rngStart)) * (dgesuchteZahl - rngStart);
-    int diff = rngEnd - rngStart;
+        (endPixel! / (rngEnd! - rngStart!)) * (dgesuchteZahl! - rngStart!);
+    int diff = rngEnd! - rngStart!;
     // If user has to enter the number in a text field
-    if (!task.ontap) {
+    if (!task.ontap!) {
       return Column(children: [
         SizedBox(height: 20),
-        lamaHead(context, task, constraints, task.ontap),
+        lamaHead(context, task, constraints, task.ontap!),
         SizedBox(height: 50),
 
         // Shows correct answer on screen
@@ -113,7 +113,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
           ),
         ),
         SizedBox(height: 50),
-        keyboard(context, controller, dgesuchteZahl.toInt()),
+        keyboard(context, controller, dgesuchteZahl!.toInt()),
         SizedBox(height: 50),
         fertigButton(context, constraints, controller, dgesuchteZahl, diff),
       ]);
@@ -121,7 +121,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
     } else {
       return Column(children: [
         SizedBox(height: 20),
-        lamaHead(context, task, constraints, task.ontap),
+        lamaHead(context, task, constraints, task.ontap!),
         SizedBox(height: 50),
         Text(
           "Gesuchte Zahl: " + gesuchteZahl.toString(),
@@ -153,7 +153,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
             //Icon correct
             Positioned(
               top: 10,
-              left: dgesuchterPixel + screenwidth / 60,
+              left: dgesuchterPixel! + screenwidth / 60,
               child: Container(
                 width: screenwidth / 15,
                 height: screenheight / 25,
@@ -167,7 +167,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
             //Icon incorrect
             Positioned(
               top: 10,
-              left: dgesuchterPixel + screenwidth / 60,
+              left: dgesuchterPixel! + screenwidth / 60,
               child: Container(
                 width: screenwidth / 15,
                 height: screenheight / 25,
@@ -219,7 +219,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
             ),
             //Incorrect area to the right
             Positioned(
-              left: dgesuchterPixel + screenwidth / 10,
+              left: dgesuchterPixel! + screenwidth / 10,
               child: GestureDetector(
                 onTap: () {
                   setState(() {
@@ -261,12 +261,12 @@ class NumberLineState extends State<NumberLineTaskScreen> {
 
 // original source for LinePainter: https://github.com/JohannesMilke/custom_paint_ii_example/blob/master/lib/page/line_paint_page.dart
 class LinePainter extends CustomPainter {
-  double dgesuchterPixel;
-  int endPixel;
-  bool paintRed;
-  int rngStart;
-  int rngEnd;
-  int diff;
+  double? dgesuchterPixel;
+  int? endPixel;
+  late bool paintRed;
+  int? rngStart;
+  int? rngEnd;
+  int? diff;
   LinePainter(dgesuchterPixel, endPixel, paintRed, rngStart, rngEnd, diff) {
     this.dgesuchterPixel = dgesuchterPixel;
     this.endPixel = endPixel;
@@ -287,8 +287,8 @@ class LinePainter extends CustomPainter {
       ..strokeWidth = 3;
     //Hauptteil des Zahlenstrahls
     canvas.drawLine(
-      Offset(endPixel.toDouble() * 0, size.height * 0.5),
-      Offset(endPixel.toDouble() * 1, size.height * 0.5),
+      Offset(endPixel!.toDouble() * 0, size.height * 0.5),
+      Offset(endPixel!.toDouble() * 1, size.height * 0.5),
       paint,
     );
     /*Teil Pfeilspitze nach oben
@@ -307,44 +307,44 @@ class LinePainter extends CustomPainter {
     //Unterteilung des Zahlenstrahls
 
     for (int i = diff.toString().length - 1; i > 1; i--) {
-      if (diff > 100 && diff.toString()[i] == "0" && rngStart > 0) {
-        diff = diff ~/ 10;
+      if (diff! > 100 && diff.toString()[i] == "0" && rngStart! > 0) {
+        diff = diff! ~/ 10;
       }
     }
-    if (diff <= 100 && diff != 10 && diff % 10 == 0) {
-      for (int i = 0; i <= diff / 10; i++) {
+    if (diff! <= 100 && diff != 10 && diff! % 10 == 0) {
+      for (int i = 0; i <= diff! / 10; i++) {
         if (i == 0 ||
             i == diff ||
-            diff % 2 == 0 && i == diff / 10 / 2 ||
-            i == diff / 10) {
+            diff! % 2 == 0 && i == diff! / 10 / 2 ||
+            i == diff! / 10) {
           canvas.drawLine(
-            Offset(endPixel * i / (diff / 10), size.height * 0.1),
-            Offset(endPixel * i / (diff / 10), size.height * 0.9),
+            Offset(endPixel! * i / (diff! / 10), size.height * 0.1),
+            Offset(endPixel! * i / (diff! / 10), size.height * 0.9),
             paint,
           );
         }
         canvas.drawLine(
-          Offset(endPixel * i / (diff / 10), size.height * 0.2),
-          Offset(endPixel * i / (diff / 10), size.height * 0.8),
+          Offset(endPixel! * i / (diff! / 10), size.height * 0.2),
+          Offset(endPixel! * i / (diff! / 10), size.height * 0.8),
           paint,
         );
       }
-    } else if (diff <= 100 && diff != 10 && diff % 5 == 0) {
-      for (int i = 0; i <= diff / 5; i++) {
+    } else if (diff! <= 100 && diff != 10 && diff! % 5 == 0) {
+      for (int i = 0; i <= diff! / 5; i++) {
         if (i == 0 ||
             i == diff ||
-            diff % 2 == 0 && i == diff / 5 / 2 ||
-            i == diff / 5) {
+            diff! % 2 == 0 && i == diff! / 5 / 2 ||
+            i == diff! / 5) {
           canvas.drawLine(
-            Offset(endPixel * i / (diff / 5), size.height * 0.1),
-            Offset(endPixel * i / (diff / 5), size.height * 0.9),
+            Offset(endPixel! * i / (diff! / 5), size.height * 0.1),
+            Offset(endPixel! * i / (diff! / 5), size.height * 0.9),
             paint,
           );
         }
 
         canvas.drawLine(
-          Offset(endPixel * i / (diff / 5), size.height * 0.2),
-          Offset(endPixel * i / (diff / 5), size.height * 0.8),
+          Offset(endPixel! * i / (diff! / 5), size.height * 0.2),
+          Offset(endPixel! * i / (diff! / 5), size.height * 0.8),
           paint,
         );
       }
@@ -352,14 +352,14 @@ class LinePainter extends CustomPainter {
       for (int i = 0; i <= 10; i++) {
         if (i == 0 || i == 10 || i == 5) {
           canvas.drawLine(
-            Offset(endPixel * i / 10, size.height * 0.1),
-            Offset(endPixel * i / 10, size.height * 0.9),
+            Offset(endPixel! * i / 10, size.height * 0.1),
+            Offset(endPixel! * i / 10, size.height * 0.9),
             paint,
           );
         } else {
           canvas.drawLine(
-            Offset(endPixel * i / 10, size.height * 0.2),
-            Offset(endPixel * i / 10, size.height * 0.8),
+            Offset(endPixel! * i / 10, size.height * 0.2),
+            Offset(endPixel! * i / 10, size.height * 0.8),
             paint,
           );
         }
@@ -367,8 +367,8 @@ class LinePainter extends CustomPainter {
     }
     if (paintRed) {
       canvas.drawLine(
-        Offset(this.dgesuchterPixel, size.height * 0.1),
-        Offset(this.dgesuchterPixel, size.height * 0.9),
+        Offset(this.dgesuchterPixel!, size.height * 0.1),
+        Offset(this.dgesuchterPixel!, size.height * 0.9),
         paint2,
       );
     }
@@ -415,7 +415,7 @@ Widget lamaHead(
   );
 }
 
-Widget numbers(BuildContext context, int rngStart, int rngEnd) {
+Widget numbers(BuildContext context, int? rngStart, int? rngEnd) {
   return Container(
     margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 40, 0,
         MediaQuery.of(context).size.width / 100, 0),
@@ -430,7 +430,7 @@ Widget numbers(BuildContext context, int rngStart, int rngEnd) {
   );
 }
 
-Widget buildText(BuildContext context, int rng) {
+Widget buildText(BuildContext context, int? rng) {
   return Text(
     rng.toString(),
     style: TextStyle(
@@ -462,7 +462,7 @@ Widget keyboard(
 }
 
 Widget fertigButton(BuildContext context, BoxConstraints constraints,
-    TextEditingController controller, double dgesuchteZahl, int diff) {
+    TextEditingController controller, double? dgesuchteZahl, int diff) {
   bool answer;
   if (diff < 0) {
     diff *= -1;
@@ -520,7 +520,7 @@ Widget fertigButton(BuildContext context, BoxConstraints constraints,
               );
             } else {
               if (double.parse(controller.text) == dgesuchteZahl ||
-                  double.parse(controller.text) == dgesuchteZahl - 1 &&
+                  double.parse(controller.text) == dgesuchteZahl! - 1 &&
                       diff > 50 ||
                   double.parse(controller.text) == dgesuchteZahl + 1 &&
                       diff > 50) {

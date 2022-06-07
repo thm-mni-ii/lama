@@ -55,7 +55,7 @@ class CheckScreenPage extends State<CheckScreen> {
       _checkDone = true;
     }
     return Scaffold(
-      body: BlocBuilder<CheckScreenBloc, CheckScreenState>(
+      body: BlocBuilder<CheckScreenBloc, CheckScreenState?>(
         builder: (context, state) {
           ///view for the DSGVO
           ///if the user accept the DSGVO the [DSGVOAccepted] event is triggert

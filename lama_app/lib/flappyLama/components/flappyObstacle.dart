@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'dart:math';
-
+/*
 import 'package:flame/anchor.dart';
 import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
@@ -239,3 +239,7 @@ class FlappyObstacle extends Component {
     }
   }
 }
+
+
+ */
+

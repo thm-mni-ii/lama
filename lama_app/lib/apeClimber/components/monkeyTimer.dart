@@ -1,3 +1,4 @@
+/*
 import 'package:flame/components/timer_component.dart';
 import 'package:flame/time.dart';
 import 'package:lama_app/apeClimber/widgets/monkeyTimerWidget.dart';
@@ -77,3 +78,6 @@ class MonkeyTimer extends TimerComponent {
     super.update(dt);
   }
 }
+
+
+ */

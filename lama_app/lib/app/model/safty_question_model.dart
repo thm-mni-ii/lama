@@ -15,10 +15,10 @@ class SaftyQuestionFields {
 ///
 /// Author: Lars Kammerer
 class SaftyQuestion {
-  int id;
-  int adminID;
-  String question;
-  String answer;
+  int? id;
+  int? adminID;
+  String? question;
+  String? answer;
 
   SaftyQuestion({this.id, this.adminID, this.question, this.answer});
 

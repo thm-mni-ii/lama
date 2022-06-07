@@ -40,7 +40,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //temporary url to prevent losing the url on error states
-  String _url;
+  String? _url;
 
   @override
   void initState() {
@@ -59,8 +59,9 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
         //avoid overflow because of the keyboard
         resizeToAvoidBottomInset: false,
         appBar: AdminUtils.appbar(
-            screenSize, LamaColors.bluePrimary, 'Nutzerliste einfügen'),
-        body: BlocBuilder<UserlistUrlBloc, UserlistUrlState>(
+                screenSize, LamaColors.bluePrimary, 'Nutzerliste einfügen')
+            as PreferredSizeWidget?,
+        body: BlocBuilder<UserlistUrlBloc, UserlistUrlState?>(
             builder: (context, state) {
           if (state is UserlistUrlTesting)
             return _loadingWidget('Inhalt wird geprüft und geladen!');
@@ -71,7 +72,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
           if (state is UserlistUrlInsertSuccess) return _insertSuccessWidget();
           return _defaultWidget();
         }),
-        floatingActionButton: BlocBuilder<UserlistUrlBloc, UserlistUrlState>(
+        floatingActionButton: BlocBuilder<UserlistUrlBloc, UserlistUrlState?>(
           builder: (contextB, state) {
             if (state is UserlistUrlParsingSuccessfull)
               return AdminUtils.saveAboardButtons(
@@ -129,7 +130,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
   //TODO Show more details of the users
   Widget _userCard(User user) {
     ///attache '(Admin)' to the username if the user is an Admin
-    String _nameDisplay = user.isAdmin ? user.name + ' (Admin)' : user.name;
+    String _nameDisplay = user.isAdmin! ? user.name! + ' (Admin)' : user.name!;
     return Padding(
       padding: EdgeInsets.all(5),
       child: Row(
@@ -335,7 +336,7 @@ class UserlistUrlScreenState extends State<UserlistUrlScreen> {
             ? 'Feld darf nicht leer sein!'
             : null,
         onFieldSubmitted: (value) => {
-          if (_formKey.currentState.validate())
+          if (_formKey.currentState!.validate())
             {
               context.read<UserlistUrlBloc>().add(UserlistParseUrl()),
             }
