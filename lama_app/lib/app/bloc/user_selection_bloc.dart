@@ -7,7 +7,7 @@ import 'package:lama_app/app/event/user_selection_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
-import 'package:lama_app/app/screens/admin_menu_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/admin_menu_screen.dart';
 import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/screens/user_login_screen.dart';
 import 'package:lama_app/app/state/user_selection_state.dart';

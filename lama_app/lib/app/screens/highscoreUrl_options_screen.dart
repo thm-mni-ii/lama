@@ -8,7 +8,7 @@ import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
-import 'admin_menu_screen.dart';
+import 'admin_menu_folder/admin_menu_screen.dart';
 //Blocs
 import 'package:lama_app/app/bloc/highscoreUrl_screen_bloc.dart';
 //Events

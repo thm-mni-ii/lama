@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/highscoreUrl_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/screens/admin_menu_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/admin_menu_screen.dart';
 import 'package:lama_app/app/state/highscoreUrl_screen_state.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

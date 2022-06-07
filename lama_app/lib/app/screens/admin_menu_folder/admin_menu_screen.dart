@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/bloc/taskset_manage_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
@@ -24,7 +26,7 @@ import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/screens/userlist_url_screen.dart';
-import 'highscoreUrl_options_screen.dart';
+import '../highscoreUrl_options_screen.dart';
 
 ///This file creates the Admin Menu Screen
 ///The Admin Menu Screen provides every navigation to screens
@@ -154,14 +156,14 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           _menuButton(
             context,
             Icon(Icons.add_link),
-            'Aufgabenverwaltung',
+            'Tasksetverwaltung',
             () => {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
-                    create: (BuildContext context) => TasksetOptionsBloc(),
-                    child: OptionTaskScreen(),
+                    create: (BuildContext context) => TasksetManageBloc(),
+                    child: TasksetManageScreen(),
                   ),
                 ),
               ).then((_) {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:lama_app/app/screens/admin_menu_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/admin_menu_screen.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
