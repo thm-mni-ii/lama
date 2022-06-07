@@ -12,6 +12,9 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'dart:convert' show utf8;
 
+import 'dart:convert';
+import 'dart:io';
+
 ///Class responsible for loading the standard tasks and tasks from a provided url.
 ///
 ///Author: K.Binder
@@ -45,48 +48,116 @@ class TasksetLoader {
     bool enableDefaultTasksetPref =
         prefs.getBool(AdminUtils.enableDefaultTasksetsPref);
     if (enableDefaultTasksetPref == null || enableDefaultTasksetPref) {
-      for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-        String tasksetMathe = await rootBundle
-            .loadString(
-                'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
+      //load all standardtasks
 
-        String tasksetDeutsch = await rootBundle
-            .loadString('assets/standardTasksets/deutsch/deutsch' +
-                i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
-        String tasksetEnglisch = await rootBundle
-            .loadString('assets/standardTasksets/englisch/englisch' +
-                i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
-        String tasksetSachkunde = await rootBundle
-            .loadString('assets/standardTasksets/sachkunde/sachkunde' +
-                i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetSachkunde != "")
-          await buildTasksetFromJson(tasksetSachkunde);
+      try {
+        final result = await InternetAddress.lookup('example.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          print('connected');
+          for (int i = 1; i <= GRADES_SUPPORTED; i++) {
+            //load all standardtasks from url
+            List<TaskUrl> standardTaskUrls = [
+              TaskUrl(
+                  url:
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
+              TaskUrl(
+                  url:
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch$i.json"),
+              TaskUrl(
+                  url:
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch$i.json"),
+              TaskUrl(
+                  url:
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde$i.json"),
+            ];
+            await loadTasksFromUrls(standardTaskUrls);
+          }
+        }
+      } on SocketException catch (_) {
+        print('not connected');
+        for (int i = 1; i <= GRADES_SUPPORTED; i++) {
+          //load all standardtasks from local assets folder. needed in case
+          //the app user has no internet connection
+          String tasksetMathe = await rootBundle
+              .loadString('assets/standardTasksets/mathe/mathe' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
+
+          String tasksetDeutsch = await rootBundle
+              .loadString('assets/standardTasksets/deutsch/deutsch' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+          String tasksetEnglisch = await rootBundle
+              .loadString('assets/standardTasksets/englisch/englisch' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetEnglisch != "")
+            await buildTasksetFromJson(tasksetEnglisch);
+          String tasksetSachkunde = await rootBundle
+              .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetSachkunde != "")
+            await buildTasksetFromJson(tasksetSachkunde);
+        }
       }
+
+      // for (int i = 1; i <= GRADES_SUPPORTED; i++) {
+      //   //load all standardtasks from local assets folder. needed in case
+      //   //the app user has no internet connection
+      //   String tasksetMathe = await rootBundle
+      //       .loadString(
+      //           'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
+      //       .catchError((err) => Future.value(""));
+      //   if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
+
+      //   String tasksetDeutsch = await rootBundle
+      //       .loadString('assets/standardTasksets/deutsch/deutsch' +
+      //           i.toString() +
+      //           '.json')
+      //       .catchError((err) => Future.value(""));
+      //   if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+      //   String tasksetEnglisch = await rootBundle
+      //       .loadString('assets/standardTasksets/englisch/englisch' +
+      //           i.toString() +
+      //           '.json')
+      //       .catchError((err) => Future.value(""));
+      //   if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
+      //   String tasksetSachkunde = await rootBundle
+      //       .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+      //           i.toString() +
+      //           '.json')
+      //       .catchError((err) => Future.value(""));
+      //   if (tasksetSachkunde != "")
+      //     await buildTasksetFromJson(tasksetSachkunde);
+      //load all standardtasks from url
+      // List<TaskUrl> standardTaskUrls = [
+      //   TaskUrl(
+      //       url:
+      //           "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
+      //   TaskUrl(
+      //       url:
+      //           "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch$i.json"),
+      //   TaskUrl(
+      //       url:
+      //           "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch$i.json"),
+      //   TaskUrl(
+      //       url:
+      //           "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde$i.json"),
+      // ];
+      // await loadTasksFromUrls(standardTaskUrls);
+      //}
     }
 
     //load all tasksets from url
     List<TaskUrl> taskUrls = await DatabaseProvider.db.getTaskUrl();
-
-    for (int i = 0; i < taskUrls.length; i++) {
-      String result =
-          await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
-
-      var response = await http.get(Uri.parse(taskUrls[i].url),
-          headers: {'Content-type': 'application/json'});
-      if (result == null) {
-        await buildTasksetFromJson(utf8.decode(response.bodyBytes));
-      }
-    }
+    await loadTasksFromUrls(taskUrls);
 
     /* ONLY NEEDED WHEN A LOCAL COPY SHOUL EXIST AND POSSIBLY PERSIST
     //get all files in the taskset directory
@@ -154,5 +225,20 @@ class TasksetLoader {
       return loadedTasksets[sgr];
     else
       return <Taskset>[];
+  }
+
+  ///Loads tasks from a list of [TaskUrl]'s and builds them, making them useable
+  ///for the user
+  Future<void> loadTasksFromUrls(List<TaskUrl> taskUrls) async {
+    for (int i = 0; i < taskUrls.length; i++) {
+      String result =
+          await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
+
+      var response = await http.get(Uri.parse(taskUrls[i].url),
+          headers: {'Content-type': 'application/json'});
+      if (result == null) {
+        await buildTasksetFromJson(utf8.decode(response.bodyBytes));
+      }
+    }
   }
 }

@@ -109,7 +109,7 @@ abstract class InputValidation {
       final response = await Future.wait([
         http
             .get(Uri.parse(url))
-            .timeout(Duration(seconds: 4))
+            .timeout(Duration(seconds: 10))
             .whenComplete(() {})
             .catchError((e) {
           return null;

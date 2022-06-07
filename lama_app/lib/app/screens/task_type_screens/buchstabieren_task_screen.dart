@@ -10,7 +10,7 @@ import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 
 import '../../task-system/task.dart';
-
+import 'dart:io';
 import 'buchstabieren_task_helper.dart';
 
 List<String> buchstabenListe;
@@ -489,6 +489,18 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
         return zufallsChar2;
       }
+    }
+  }
+  Future<bool> hasInternet() async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+        return true;
+      }
+    } on SocketException catch (_) {
+      print('not connected');
+      return false;
     }
   }
 }

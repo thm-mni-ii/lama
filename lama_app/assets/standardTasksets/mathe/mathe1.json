@@ -5,102 +5,38 @@
     "taskset_randomize_order": true,
     "tasks": [
         {
-            "task_type": "Zerlegung",
+            "task_type": "Clock",
             "task_reward": 2,
-            "lama_text": " zerlegt die Zahlen!",
+            "lama_text": "Wie viel Uhr ist es?",
             "left_to_solve": 3,
-            "reverse": false,
-            "zeros": false,
-            "boolThousands": false 
+            "uhr": "vollStunde",
+            "timer": false
+          },
+        {
+            "task_type": "NumberLine",
+            "task_reward": 2,
+            "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
+            "left_to_solve": 3,
+            "range": [
+                0,
+                10
+            ],
+            "randomRange": false,
+            "steps": 1,
+            "ontap": true
         },
         {
             "task_type": "NumberLine",
             "task_reward": 2,
             "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
-            "range": [ 
-                 0,
-                 10
-              ],
+            "range": [
+                0,
+                10
+            ],
             "randomRange": false,
             "steps": 1,
-            "ontap": true
-          },
-        {
-            "task_type": "MoneyTask",
-            "task_reward": 2,
-            "lama_text": "",
-            "left_to_solve": 3,
-            "difficulty": 1,
-            "optimum": false
-        },
-        {
-            "task_type": "4Cards",
-            "task_reward": 2,
-            "question": "3+4",
-            "lama_text": "Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "right_answer": "7",
-            "wrong_answers": [
-                "6",
-                "1",
-                "8"
-            ]
-        },
-        {
-            "task_type": "4Cards",
-            "task_reward": 2,
-            "question": "3+1",
-            "lama_text": "Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "right_answer": "4",
-            "wrong_answers": [
-                "2",
-                "5",
-                "3"
-            ]
-        },
-        {
-            "task_type": "Equation",
-            "task_reward": 2,
-            "lama_text": "Löse die Gleichung!",
-            "left_to_solve": 4,
-            "equation": [
-                "?",
-                "+",
-                "1",
-                "=",
-                "2"
-            ],
-            "options": [
-                "3",
-                "4",
-                "0",
-                "2",
-                "5",
-                "1"
-            ]
-        },
-        {
-            "task_type": "Equation",
-            "task_reward": 2,
-            "lama_text": "Löse die Gleichung!",
-            "left_to_solve": 4,
-            "equation": [
-                "?",
-                "+",
-                "2",
-                "=",
-                "4"
-            ],
-            "options": [
-                "3",
-                "4",
-                "0",
-                "2",
-                "5",
-                "1"
-            ]
+            "ontap": false
         },
         {
             "task_type": "Equation",
@@ -132,7 +68,23 @@
             ],
             "fields_to_replace": 1,
             "allow_replacing_operators": false,
-            "operator_amount": 2
+            "operator_amount": 1
+        },
+        {
+            "task_type": "MoneyTask",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "difficulty": 1,
+            "optimum": false
+        },
+        {
+            "task_type": "MoneyTask",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "difficulty": 1,
+            "optimum": false
         }
     ]
 }
