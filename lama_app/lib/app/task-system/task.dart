@@ -147,8 +147,9 @@ class Task {
             fieldsToReplace);
       case "Buchstabieren":
         Map<String, String> woerter = Map<String, String>.from(json['woerter']);
-        int firstLetterBig = json['first_Letter_Caps'];
-        int correctingModus = json['correcting_Modus'];
+        int firstLetterBig = json['first_Letter_caps'];
+        int correctingModus = json['correcting_modus'];
+        int multiplePoints = json['multiple_points'];
         return TaskBuchstabieren(
             taskType,
             json['task_reward'],
@@ -156,7 +157,8 @@ class Task {
             json['left_to_solve'],
             woerter,
             firstLetterBig,
-            correctingModus);
+            correctingModus,
+            multiplePoints);
       default:
         return null;
     }
@@ -483,6 +485,7 @@ class TaskBuchstabieren extends Task {
   Map<String, String> woerter;
   int first_Letter_Caps;
   int correctingModus;
+  int multiplePoints;
 
   TaskBuchstabieren(
       String taskType,
@@ -491,7 +494,8 @@ class TaskBuchstabieren extends Task {
       int leftToSolve,
       this.woerter,
       this.first_Letter_Caps,
-      this.correctingModus)
+      this.correctingModus,
+      this.multiplePoints)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
