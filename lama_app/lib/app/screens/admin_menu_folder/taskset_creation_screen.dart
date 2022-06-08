@@ -73,7 +73,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
     var _currentSelectedValue;
     var _currentSelectedValue2;
     return Scaffold(
-      appBar: CustomAppbar(size: screenSize.width/5, titel: "Taskset erstellen", color:  LamaColors.bluePrimary) as PreferredSizeWidget,
+      appBar: CustomAppbar(size: screenSize.width/5, titel: "Taskset erstellen", color:  LamaColors.bluePrimary),
       body: Stack(
         children: [
           Container(
