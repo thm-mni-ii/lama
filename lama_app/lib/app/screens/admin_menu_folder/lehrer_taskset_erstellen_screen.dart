@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/tasksets_name_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -15,14 +16,11 @@ import '../user_selection_screen.dart';
 //In this class, the teacher should be able to create a list of tasksets and save it to the server.
 //The teacher have the option to name the taskset in text field Tasksetname and the description in Kurzbeschreibung.
 class LehrerTasksetsErstellenScreen extends StatefulWidget {
-  final BoxConstraints constraints;
-
-  const LehrerTasksetsErstellenScreen({Key key, this.constraints})
-      : super(key: key);
+  String? value;
+  String? value2;
   @override
-  State<StatefulWidget> createState() {
-    return LehrerTasksetsErstellenScreenState(constraints);
-  }
+  LehrerTasksetsErstellenScreenState createState() =>
+      LehrerTasksetsErstellenScreenState();
 }
 
 ///OptionTaskScreennState provides the state for the [OptionTaskScreen]
@@ -30,9 +28,9 @@ class LehrerTasksetsErstellenScreenState
     extends State<LehrerTasksetsErstellenScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final BoxConstraints constraints;
-
-  LehrerTasksetsErstellenScreenState(this.constraints);
+  String? value;
+  String? value2;
+  LehrerTasksetsErstellenScreenState();
 
   @override
   void initState() {
@@ -52,11 +50,9 @@ class LehrerTasksetsErstellenScreenState
 
     var facher = ["Mathe", "Deutsch", "Englisch", "Sachkunde"];
     Size screenSize = MediaQuery.of(context).size;
-    var _currentSelectedValue;
-    var _currentSelectedValue2;
     return Scaffold(
-      appBar: navBar(
-          screenSize.width / 5, 'Tasksets erstellen', LamaColors.bluePrimary),
+      appBar: navBar(screenSize.width / 5, "Tasksets erstellen",
+          LamaColors.bluePrimary) as PreferredSizeWidget?,
       body: Column(
         children: [
           Container(
@@ -107,20 +103,13 @@ class LehrerTasksetsErstellenScreenState
                                 color: Colors.redAccent, fontSize: 16.0),
                             hintText: 'Klassenstufe auswählen',
                           ),
-                          isEmpty: _currentSelectedValue == '',
+                          isEmpty: value == '',
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
-                              value: _currentSelectedValue,
-                              isDense: true,
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  _currentSelectedValue = newValue;
-                                });
-                              },
-                              items: klassenStufe.map((String value) {
-                                return DropdownMenuItem<String>(
-                                    value: value, child: Text(value));
-                              }).toList(),
+                              value: value,
+                              items: klassenStufe.map(buildMenuItem).toList(),
+                              onChanged: (value) =>
+                                  setState(() => this.value = value),
                             ),
                           )),
                     ),
@@ -143,20 +132,13 @@ class LehrerTasksetsErstellenScreenState
                                 color: Colors.redAccent, fontSize: 16.0),
                             hintText: 'Fach auswählen',
                           ),
-                          isEmpty: _currentSelectedValue2 == '',
+                          isEmpty: value == '',
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
-                              value: _currentSelectedValue2,
-                              isDense: true,
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  _currentSelectedValue2 = newValue;
-                                });
-                              },
-                              items: facher.map((String value) {
-                                return DropdownMenuItem<String>(
-                                    value: value, child: Text(value));
-                              }).toList(),
+                              value: value2,
+                              items: facher.map(buildMenuItem).toList(),
+                              onChanged: (value2) =>
+                                  setState(() => this.value2 = value2),
                             ),
                           )),
                     ),
@@ -168,8 +150,7 @@ class LehrerTasksetsErstellenScreenState
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const TasksetsNameScreen()),
+                                  builder: (context) => TasksetsNameScreen()),
                             );
                           },
                           child: Text.rich(
@@ -191,6 +172,14 @@ class LehrerTasksetsErstellenScreenState
       ),
     );
   }
+
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+        value: item,
+        child: Text(
+          item,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      );
 
   Widget navBar(double size, String titel, Color colors) {
     return AppBar(

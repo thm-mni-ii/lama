@@ -24,6 +24,8 @@ import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/screens/userlist_url_screen.dart';
+import 'admin_menu_folder/lehrer_taskset_erstellen_screen.dart';
+import 'admin_menu_folder/tasksets_name_screen.dart';
 import 'highscoreUrl_options_screen.dart';
 
 ///This file creates the Admin Menu Screen
@@ -160,10 +162,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) => TasksetOptionsBloc(),
-                    child: OptionTaskScreen(),
-                  ),
+                  builder: (context) => LehrerTasksetsErstellenScreen(),
                 ),
               ).then((_) {
                 AdminUtils.reloadTasksets(context);
