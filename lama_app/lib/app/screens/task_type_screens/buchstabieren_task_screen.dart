@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bubble/bubble.dart';
 
 import 'package:flutter/material.dart';
@@ -68,6 +70,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   // Value which is checked after pressing the "fertig" Button
   int i = 0;
   bool? answer;
+  late List<String> woerterKeys;
+  late List<String> woerterURLs;
   Color testFarbe2 = Colors.blue;
   BuchstabierenTaskState(this.task, this.constraints, this.pictureFromNetwork,
       this.randomNummer, this.userGrade);
@@ -80,8 +84,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     zufallsChar = getRandomLiteral(1);
     zufallsChar2 = getRandomLiteral(1);
     testFarbe = Colors.black;
-    List<String> woerterKeys = task.woerter.keys.toList();
-    List<String> woerterURLs = task.woerter.values.toList();
+    woerterKeys = task.woerter.keys.toList();
+    woerterURLs = task.woerter.values.toList();
     stringIndex = 0;
     i = 0;
     ergebnisIndex = 0;
@@ -89,7 +93,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     antwortZaehler = 0;
     calculateAllowedMistakes();
     debugPrint("UserGrade:  " + userGrade.toString());
-    antwortFarben = List<Color>.filled(3, Colors.grey, growable: false);
+    antwortFarben =
+        List<Color>.filled(task.multiplePoints!, Colors.grey, growable: false);
     messeLaengeVomWort(
         holeEinWortAusJSON(randomNummer, woerterKeys, woerterURLs));
     super.initState();
@@ -200,7 +205,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             height: MediaQuery.of(context).size.height * 0.1,
             width: MediaQuery.of(context).size.width * 0.9,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              for (int i = 0; i < 3; i++)
+              for (int i = 0; i < task.multiplePoints!; i++)
                 CircleAvatar(
                   backgroundColor: antwortFarben[i],
                 )
@@ -210,9 +215,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             child: (() {
               //wenn der letzte Buchstabe richtig angeklickt und angezeigt wurde, soll ein grüner Haken auf dem Bildschirm angezeigt werden
               //ich anschluss folgt ein neuer Task für den User
-              /* if (wortLaenge == ergebnisIndex && multiplePoints > 0) {
-                    rightOrWrongAnswerEvent(true);
-                  } */
             }()),
           ),
         ],
@@ -272,15 +274,24 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             stringIndex++;
             buchstabenListe[ergebnisIndex] = buchstabe;
             ergebnisIndex++;
+            if (!_canShowButton[wortLaenge - 1] &&
+                buchstabenListe.join('') == wort) {
+              if (task.multiplePoints == antwortZaehler + 1 ||
+                  task.multiplePoints == 0) {
+                rightOrWrongAnswerEvent(isCorrect);
+              } else {
+                rerenderTask(Colors.green);
+              }
+            }
           } else {
             fehlerZaehler++;
+            testFarbe2 = Colors.red;
             if (fehlerZaehler >= maxFehlerAnzahl) {
               for (int i = stringIndex; i < wort!.length; i++) {
                 showWidget(i);
               }
               if (task.multiplePoints == antwortZaehler + 1 ||
                   task.multiplePoints == 0) {
-                testFarbe2 = Colors.red;
                 rightOrWrongAnswerEvent(false);
               } else {
                 rerenderTask(Colors.red);
@@ -294,19 +305,19 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
           if (buchstabenListe[zufallsZahl] == buchstabe) {
             hideWidget(zufallsZahl);
             showWidget(zufallsZahl);
+            testFarbe2 = Colors.green;
             print(
                 "task.multiplePoints: ${task.multiplePoints} antwortZaehler: $antwortZaehler");
             if (task.multiplePoints == antwortZaehler + 1 ||
                 task.multiplePoints == 0) {
               rightOrWrongAnswerEvent(isCorrect);
-              testFarbe2 = Colors.green;
             } else {
               rerenderTask(Colors.green);
             }
           } else {
+            testFarbe2 = Colors.red;
             if (flagForCorrectingModus == 1) {
               showWidget(zufallsZahl);
-
               hideWidget(zufallsZahl - 1);
               hideWidget(zufallsZahl - 2);
             }
@@ -318,7 +329,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             }
             if (task.multiplePoints == antwortZaehler + 1 ||
                 task.multiplePoints == 0) {
-              testFarbe2 = Colors.red;
               rightOrWrongAnswerEvent(false);
             } else {
               rerenderTask(Colors.red);
@@ -340,13 +350,26 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   ///rerenders the whole screen and fills bubble at the bottom with color
   ///depending on if the answer is right(green) or wrong(red)
   void rerenderTask(Color answerFarbe) {
-    antwortFarben[antwortZaehler] = answerFarbe;
-    randomNummer = erstelleEineRandomNummer(task);
-    //hier wird alles neu aufgerufen
-    pictureFromNetwork = cacheImageByUrl(context, holeUrl(task, randomNummer!));
-    messeLaengeVomWort(holeEinWortAusJSON(randomNummer,
-        task.woerter.keys.toList(), task.woerter.values.toList()));
-    antwortZaehler++;
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      setState(() {
+        antwortFarben[antwortZaehler] = answerFarbe;
+        //removes last shown picture from pool of pictures
+        var rng = Random();
+        woerterKeys.remove(woerterKeys[randomNummer!]);
+        woerterURLs.remove(woerterURLs[randomNummer!]);
+        randomNummer = rng.nextInt(woerterKeys.length);
+        //hier wird alles neu aufgerufen
+        pictureFromNetwork =
+            cacheImageByUrl(context, woerterURLs[randomNummer!]);
+        messeLaengeVomWort(
+            holeEinWortAusJSON(randomNummer, woerterKeys, woerterURLs));
+
+        antwortZaehler++;
+        ergebnisIndex = 0;
+        stringIndex = 0;
+        testFarbe2 = Colors.blue;
+      });
+    });
   }
 
 //ein Container, welcher einen klickbaren Button mit einem Buchstaben beinhaltet
