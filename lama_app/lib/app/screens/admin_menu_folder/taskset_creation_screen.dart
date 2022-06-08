@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_creation_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_cart_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
@@ -72,7 +73,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
     var _currentSelectedValue;
     var _currentSelectedValue2;
     return Scaffold(
-      appBar: _bar(screenSize.width/5, "Taskset erstellen", LamaColors.bluePrimary),
+      appBar: CustomAppbar(size: screenSize.width/5, titel: "Taskset erstellen", color:  LamaColors.bluePrimary) as PreferredSizeWidget,
       body: Stack(
         children: [
           Container(
@@ -351,28 +352,5 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
         ],
       ),
     );*/
-  }
-
-  ///(private)
-  ///porvides [AppBar] with default design for Screens used by the Admin
-  ///
-  ///{@params}
-  ///[AppBar] size as double size
-  ///
-  ///{@return} [AppBar] with generel AdminMenu specific design
-  Widget _bar(double size, String titel, Color colors) {
-    return AppBar(
-      title: Text(
-        titel,
-        style: LamaTextTheme.getStyle(fontSize: 18),
-      ),
-      toolbarHeight: size,
-      backgroundColor: colors,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(30),
-        ),
-      ),
-    );
   }
 }
