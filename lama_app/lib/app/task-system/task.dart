@@ -185,6 +185,7 @@ class Task4Cards extends Task {
   String question;
   String rightAnswer;
   List<String> wrongAnswers;
+  String selectedAnswer = "";
 
   Task4Cards(String taskType, int reward, String lamaText, int leftToSolve,
       this.question, this.rightAnswer, this.wrongAnswers)

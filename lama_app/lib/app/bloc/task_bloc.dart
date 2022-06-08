@@ -47,13 +47,19 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     } else if (event is AnswerTaskEvent) {
       Task t = tasks[curIndex - 1];
       if (t is Task4Cards) {
-        readText(event.providedAnswer);
-        if (event.providedAnswer == t.rightAnswer) {
-          rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
-        } else {
-          wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+        if(event.providedAnswer == t.selectedAnswer) {
+          if (event.providedAnswer == t.rightAnswer) {
+            rightAnswerCallback(t);
+            yield TaskAnswerResultState(true);
+          } else {
+            wrongAnswerCallback(t);
+            yield TaskAnswerResultState(false);
+          }
+        }
+        if(event.providedAnswer != t.selectedAnswer) {
+          readText(event.providedAnswer);
+          t.selectedAnswer = event.providedAnswer;
+          yield TaskAnswerSelected(this.tasksetSubject, tasks[curIndex-1]);
         }
       } else if (t is TaskMarkWords) {
         if (equals(t.rightWords, event.providedanswerWords)) {

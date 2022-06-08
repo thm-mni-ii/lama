@@ -39,14 +39,6 @@ class FourCardTaskScreen extends StatelessWidget {
       await flutterTts.setVolume(1.0);
       await flutterTts.speak(text);
     }
-    // reads the answers out loud
-    readanswers() async {
-      var text = "Antwort eins: " + answers[0] + ". Antwort zwei: " + answers[1] +
-          ". Antwort drei: " + answers[2] + ". Antwort vier: " + answers[3];
-      await flutterTts.setLanguage("de-De");
-      await flutterTts.setVolume(1.0);
-      await flutterTts.speak(text);
-    }
     readquestion();
     return Column(children: [
       Container(
@@ -131,6 +123,9 @@ class FourCardTaskScreen extends StatelessWidget {
   Widget _buildCards(context, index) {
     Color color =
         index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;
+    if(answers[index] == task.selectedAnswer) {
+      color = LamaColors.purpleAccent;
+    }
     return Container(
       height: 50,
       decoration: BoxDecoration(
@@ -138,6 +133,7 @@ class FourCardTaskScreen extends StatelessWidget {
           color: color,
           boxShadow: [
             BoxShadow(
+
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 1,
                 blurRadius: 7,
