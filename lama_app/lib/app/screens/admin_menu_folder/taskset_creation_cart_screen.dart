@@ -14,9 +14,9 @@ import '../taskset_option_screen.dart';
 import '../user_selection_screen.dart';
 
 
-///This file creates the Taskset Option Screen
-///This Screen provides an option to store an link
-///which provides tasksets as json.
+///This file creates the Taskset Creation Cart Screen
+///This Screen provides an option to add a task to the current taskset
+///or to generate a JSON from it.
 ///
 ///
 ///{@important} the url given via input should be validated with the
@@ -25,12 +25,12 @@ import '../user_selection_screen.dart';
 ///The connection erros are handelt through the [TasksetOptionsBloc]
 ///
 /// * see also
-///    [TasksetOptionsBloc]
-///    [TasksetOptionsEvent]
-///    [TasksetOptionsState]
+///    [TasksetCreationCartBloc]
+///    [TasksetCreationCartEvent]
+///    [TasksetCreationState]
 ///
-/// Author: L.Kammerer
-/// latest Changes: 15.07.2021
+/// Author: Nico Soethe
+/// latest Changes: 08.06.2022
 class TasksetCreationCartScreen extends StatefulWidget {
   final BoxConstraints constraints;
 

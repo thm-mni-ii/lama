@@ -1,37 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/bloc/taskset_creation_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_cart_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
-import 'package:lama_app/app/event/taskset_options_event.dart';
-import 'package:lama_app/app/model/taskUrl_model.dart';
 
-import '../../bloc/taskset_creation_bloc.dart';
 import '../../bloc/taskset_creation_cart_bloc.dart';
-import '../../bloc/user_selection_bloc.dart';
 import '../taskset_option_screen.dart';
-import '../user_selection_screen.dart';
 
 
-///This file creates the Taskset Option Screen
-///This Screen provides an option to store an link
-///which provides tasksets as json.
-///
-///
-///{@important} the url given via input should be validated with the
-///[InputValidation] to prevent any Issue with Exceptions. However
-///in this screen the [InputValidation] is only used to prevent simple issues.
-///The connection erros are handelt through the [TasksetOptionsBloc]
+///This file creates the Taskset Creation Screen
+///This Screen provides all needed input forms to create a taskset object.
 ///
 /// * see also
-///    [TasksetOptionsBloc]
-///    [TasksetOptionsEvent]
-///    [TasksetOptionsState]
+///    [TasksetCreationBloc]
+///    [TasksetCreationEvent]
+///    [TasksetCreationState]
 ///
-/// Author: L.Kammerer
-/// latest Changes: 15.07.2021
+/// author: Nico Soethe
+/// latest Changes: 08.06.2022
 class TasksetCreationScreen extends StatefulWidget {
   final BoxConstraints constraints;
 
@@ -42,7 +31,7 @@ class TasksetCreationScreen extends StatefulWidget {
   }
 }
 
-///OptionTaskScreennState provides the state for the [OptionTaskScreen]
+///TasksetCreationScreenState provides the state for the [TasksetCreationScreen]
 class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -61,7 +50,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   ///
   ///{@param} [BuildContext] as context
   ///
-  ///{@return} [Widget] decided by the incoming state of the [TasksetOptionsBloc]
+  ///{@return} [Widget] decided by the incoming state of the [TasksetCreationBloc]
   @override
   Widget build(BuildContext context) {
     var klassenStufe = [
