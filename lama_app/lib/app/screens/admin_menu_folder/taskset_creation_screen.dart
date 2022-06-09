@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_creation_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_cart_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
+import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
@@ -36,10 +37,9 @@ class TasksetCreationScreen extends StatefulWidget {
 class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  //temporary url to prevent losing the url on error states
-  String urlInitValue;
   var _currentSelectedValue;
   var _currentSelectedValue2;
+  Taskset actualTaskset;
   final BoxConstraints constraints;
 
   TasksetCreationScreenState(this.constraints);
@@ -56,6 +56,9 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   ///{@return} [Widget] decided by the incoming state of the [TasksetCreationBloc]
   @override
   Widget build(BuildContext context) {
+
+    Size screenSize = MediaQuery.of(context).size;
+
     var klassenStufe = [
       "1",
       "2",
@@ -71,11 +74,12 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
       "Englisch",
       "Sachkunde"
     ];
-    Size screenSize = MediaQuery.of(context).size;
+
 
     return Scaffold(
-      appBar: CustomAppbar(size: screenSize.width, titel: "Taskset erstellen", color:  LamaColors.bluePrimary),
-      body: Stack(
+        resizeToAvoidBottomInset: false,
+        appBar: CustomAppbar(size: screenSize.width, titel: "Taskset erstellen", color:  LamaColors.bluePrimary),
+      body: Column(
         children: [
           Container(
             margin: EdgeInsets.all(10),
@@ -186,21 +190,29 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              margin: EdgeInsets.all(25),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (BuildContext context) => TasksetCreationCartBloc(),
-                        child: TasksetCreationCartScreen(),
-                      )
-                  ));
-                },
-                child: const Text("Weiter"),
+          Container(
+            child: (
+            Expanded(
+              child: (
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      margin: EdgeInsets.all(25),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (BuildContext context) => TasksetCreationCartBloc(),
+                                child: TasksetCreationCartScreen(),
+                              )
+                          ));
+                        },
+                        child: const Text("Weiter"),
+                      ),
+                    ),
+                  )
               ),
+            )
             ),
           ),
         ],
