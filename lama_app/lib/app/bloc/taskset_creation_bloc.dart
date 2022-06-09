@@ -16,12 +16,12 @@ import '../state/taskset_creation_state.dart';
 ///
 /// Author: N. Soethe
 /// latest Changes: 01.06.2022
-class TasksetCreationBloc extends Bloc<TasksetCreationEvent, TasksetCreationState> {
+class TasksetCreationBloc extends Bloc<CreateTasksetEvent, TasksetCreationState> {
 
   TasksetCreationBloc({TasksetCreationState initialState}) : super(initialState);
 
   @override
-  Stream<TasksetCreationState> mapEventToState(TasksetCreationEvent event) async* {
+  Stream<TasksetCreationState> mapEventToState(CreateTasksetEvent event) async* {
 
   }
 }
