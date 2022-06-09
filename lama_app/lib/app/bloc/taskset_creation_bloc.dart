@@ -19,7 +19,7 @@ import '../task-system/taskset_model.dart';
 /// latest Changes: 01.06.2022
 class TasksetCreationBloc extends Bloc<CreateTasksetEvent, TasksetCreationState> {
 
-  Taskset _taskset;
+  Taskset _taskset = Taskset("", "", 1);
 
   TasksetCreationBloc({TasksetCreationState initialState}) : super(initialState);
 
@@ -29,6 +29,8 @@ class TasksetCreationBloc extends Bloc<CreateTasksetEvent, TasksetCreationState>
     if(event is CreateTasksetChangeSubject) _taskset.subject = event.subject;
     if(event is CreateTasksetChangeGrade) _taskset.grade = event.grade;
     if(event is CreateTasksetAbort) _abort(event.context);
+    //TODO: Delete this after implementation
+    print("Name: ${_taskset.name}, Subject: ${_taskset.subject}, Grade: ${_taskset.grade}\n");
   }
 
   /// private method to abort the current creation process

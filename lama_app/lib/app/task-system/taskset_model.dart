@@ -16,6 +16,13 @@ class Taskset {
   int randomTaskAmount;
   List<Task> tasks;
 
+  Taskset(String name, String subject, int grade) {
+    this.name = name;
+    this.subject = subject;
+    this.grade = grade;
+    this.randomizeOrder = true;
+  }
+
   Taskset.fromJson(Map<String, dynamic> json) {
     name = json['taskset_name'];
     subject = json['taskset_subject'];

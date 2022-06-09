@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_creation_bloc.dart';
+import 'package:lama_app/app/event/taskset_creation_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_cart_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -93,6 +94,9 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     decoration: InputDecoration(
                       hintText: "Tasksetname"
                     ),
+                    onChanged: (value) => context
+                      .read<TasksetCreationBloc>()
+                      .add(CreateTasksetChangeName(value)),
                   )
                 ),
 
