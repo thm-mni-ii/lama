@@ -4,10 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lama_app/app/bloc/create_admin_bloc.dart';
+import 'package:lama_app/app/bloc/create_user_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/event/check_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/repository/lamafacts_repository.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/create_admin_screen.dart';
+import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
 import 'package:lama_app/db/database_provider.dart';
@@ -31,7 +35,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     if (event is CheckForAdmin) yield await _hasAdmin(event.context);
     if (event is DSGVOAccepted) yield await _loadWelcome(event.context);
     if (event is CreateAdminEvent) yield await _navigator(event.context);
-    if (event is CreateGuestEvent) yield await _navigator(event.context);
+    if (event is CreateGuestEvent) yield await _navigateToHome(event.context);
     if (event is GotoAdminEvent) yield await _navigateAdminInfo(event.context);
   }
 
@@ -71,6 +75,29 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
   ///{@param} [BuildContext] as context
   Future<CheckScreenState> _navigator(BuildContext context) async {
     await _navigateNoAdmin(context);
+    return ShowWelcome();
+  }
+
+  Future<CheckScreenState> _navigateToHome(BuildContext context) async {
+    //loda lama facts
+    LamaFactsRepository lamaFactsRepository = LamaFactsRepository();
+    await lamaFactsRepository.loadFacts();
+    //create and push guest user into database
+    User user =
+        User(grade: 1, coins: 0, isAdmin: false, avatar: 'lama', name: "Gast");
+    await DatabaseProvider.db.insertUser(user);
+    //load guest user
+    UserRepository repository = UserRepository(user);
+    //go to home screen with guest user
+    await Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MultiRepositoryProvider(providers: [
+                  RepositoryProvider<UserRepository>(
+                      create: (context) => repository),
+                  RepositoryProvider<LamaFactsRepository>(
+                      create: (context) => lamaFactsRepository)
+                ], child: HomeScreen())));
     return ShowWelcome();
   }
 
