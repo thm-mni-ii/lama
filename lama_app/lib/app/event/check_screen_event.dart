@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/repository/lamafacts_repository.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 
 /// Events used by [CheckScreen] and [CheckScreenBloc]
 ///
@@ -38,7 +41,12 @@ class CreateGuestEvent extends CheckScreenEvent {
 ///used to denie the DSGVO
 class DSGVODenied extends CheckScreenEvent {}
 
-class GotoAdminEvent extends CheckScreenEvent {
+class LoadGuest extends CheckScreenEvent {
   BuildContext context;
-  GotoAdminEvent(this.context);
+  User user;
+
+  LoadGuest(
+    this.context,
+    this.user,
+  );
 }

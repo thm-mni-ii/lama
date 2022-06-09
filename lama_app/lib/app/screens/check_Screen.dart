@@ -203,6 +203,11 @@ class CheckScreenPage extends State<CheckScreen> {
               ),
             ));
           }
+          if (state is HasGuest) {
+            context
+                .read<CheckScreenBloc>()
+                .add(LoadGuest(state.context, state.user));
+          }
 
           ///default waiting screen with app icon
           return Container(

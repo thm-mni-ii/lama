@@ -35,8 +35,10 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     if (event is CheckForAdmin) yield await _hasAdmin(event.context);
     if (event is DSGVOAccepted) yield await _loadWelcome(event.context);
     if (event is CreateAdminEvent) yield await _navigator(event.context);
-    if (event is CreateGuestEvent) yield await _navigateToHome(event.context);
-    if (event is GotoAdminEvent) yield await _navigateAdminInfo(event.context);
+    if (event is CreateGuestEvent) yield await _createGuest(event.context);
+    if (event is LoadGuest) {
+      await _loadGuest(event.context, event.user);
+    }
   }
 
   ///(private)
@@ -49,6 +51,9 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
   Future<CheckScreenState> _hasAdmin(BuildContext context) async {
     List<User> userList = await DatabaseProvider.db.getUser();
     if (userList == null) return ShowDSGVO(await _loadDSGVO());
+    //gets first user if its a guest / no admin
+    if (userList.length == 1 && !userList[0].isAdmin)
+      return HasGuest(context, userList[0]);
     for (User user in userList) {
       if (user.isAdmin) {
         _navigateAdminExist(context);
@@ -65,10 +70,6 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     return ShowWelcome();
   }
 
-  Future<CheckScreenState> _navigateAdminInfo(BuildContext context) async {
-    return ShowWelcome();
-  }
-
   ///(private)
   ///used if no admin exists to force the user to create an admin
   ///
@@ -78,18 +79,25 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     return ShowWelcome();
   }
 
-  Future<CheckScreenState> _navigateToHome(BuildContext context) async {
+  Future<CheckScreenState> _createGuest(BuildContext context) async {
     //loda lama facts
-    LamaFactsRepository lamaFactsRepository = LamaFactsRepository();
-    await lamaFactsRepository.loadFacts();
+
     //create and push guest user into database
     User user =
         User(grade: 1, coins: 0, isAdmin: false, avatar: 'lama', name: "Gast");
     await DatabaseProvider.db.insertUser(user);
     //load guest user
-    UserRepository repository = UserRepository(user);
+
     //go to home screen with guest user
-    await Navigator.pushReplacement(
+    _loadGuest(context, user);
+    return HasGuest(context, user);
+  }
+
+  Future<void> _loadGuest(BuildContext context, User user) async {
+    UserRepository repository = UserRepository(user);
+    LamaFactsRepository lamaFactsRepository = LamaFactsRepository();
+    await lamaFactsRepository.loadFacts();
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => MultiRepositoryProvider(providers: [
@@ -98,7 +106,6 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
                   RepositoryProvider<LamaFactsRepository>(
                       create: (context) => lamaFactsRepository)
                 ], child: HomeScreen())));
-    return ShowWelcome();
   }
 
   ///(private)
