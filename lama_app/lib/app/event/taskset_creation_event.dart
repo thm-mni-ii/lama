@@ -32,7 +32,7 @@ class CreateTasksetChangeSubtitle extends CreateTasksetEvent {
 ///
 /// {@param}[String] grade that should be set
 class CreateTasksetChangeGrade extends CreateTasksetEvent {
-  String grade;
+  int grade;
   CreateTasksetChangeGrade(this.grade);
 }
 

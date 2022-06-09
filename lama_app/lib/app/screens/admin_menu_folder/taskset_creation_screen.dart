@@ -39,7 +39,6 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var _currentSelectedValue;
   var _currentSelectedValue2;
-  Taskset actualTaskset;
   final BoxConstraints constraints;
 
   TasksetCreationScreenState(this.constraints);
