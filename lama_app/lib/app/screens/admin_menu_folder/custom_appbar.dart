@@ -3,7 +3,15 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 
 /// Author: T. Steinmüller
 /// latest Changes: 08.06.2022
-class CustomAppbar extends StatelessWidget {
+///
+///porvides [AppBar] with default design for Screens used by the Admin
+///
+///{@params}
+///[AppBar] size as double size
+///[AppBar] color of background as Color (LamaColors)
+///
+///{@return} [AppBar] with generel AdminMenu specific design
+class CustomAppbar extends StatelessWidget with PreferredSizeWidget {
   final String titel;
   final double size;
   final Color color;
@@ -30,4 +38,7 @@ class CustomAppbar extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

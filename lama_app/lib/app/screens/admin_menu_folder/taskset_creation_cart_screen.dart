@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/custom_appbar.dart';
 import 'package:lama_app/util/LamaColors.dart';
-import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
-import 'package:lama_app/app/event/taskset_options_event.dart';
-import 'package:lama_app/app/model/taskUrl_model.dart';
 
 import '../../bloc/taskset_creation_cart_bloc.dart';
-import '../../bloc/user_selection_bloc.dart';
 import '../taskset_option_screen.dart';
-import '../user_selection_screen.dart';
 
 
 ///This file creates the Taskset Option Screen
@@ -56,9 +51,13 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size screensize = MediaQuery.of(context).size;
+    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: _bar(screensize.width / 5, 'Tasksetname', LamaColors.bluePrimary),
+      appBar: CustomAppbar(
+          size: screenSize.width / 5,
+          titel: "Tasksetname",
+          color: LamaColors.bluePrimary,
+        ),
       body: Stack(
         children: [
           Align(
@@ -365,30 +364,6 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
           ],
         ),
       ),*/
-    );
-  }
-
-
-  ///(private)
-  ///porvides [AppBar] with default design for Screens used by the Admin
-  ///
-  ///{@params}
-  ///[AppBar] size as double size
-  ///
-  ///{@return} [AppBar] with generel AdminMenu specific design
-  Widget _bar(double size, String titel, Color colors) {
-    return AppBar(
-      title: Text(
-        titel,
-        style: LamaTextTheme.getStyle(fontSize: 18),
-      ),
-      toolbarHeight: size,
-      backgroundColor: colors,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(30),
-        ),
-      ),
     );
   }
 }

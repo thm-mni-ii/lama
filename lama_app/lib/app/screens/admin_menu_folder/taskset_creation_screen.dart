@@ -5,15 +5,9 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
-import 'package:lama_app/app/event/taskset_options_event.dart';
-import 'package:lama_app/app/model/taskUrl_model.dart';
 
-import '../../bloc/taskset_creation_bloc.dart';
 import '../../bloc/taskset_creation_cart_bloc.dart';
-import '../../bloc/user_selection_bloc.dart';
 import '../taskset_option_screen.dart';
-import '../user_selection_screen.dart';
-
 
 ///This file creates the Taskset Option Screen
 ///This Screen provides an option to store an link
@@ -73,152 +67,139 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
       "6",
     ];
 
-    var facher = [
-      "Mathe",
-      "Deutsch",
-      "Englisch",
-      "Sachkunde"
-    ];
+    var facher = ["Mathe", "Deutsch", "Englisch", "Sachkunde"];
     Size screenSize = MediaQuery.of(context).size;
     var _currentSelectedValue;
     var _currentSelectedValue2;
     return Scaffold(
-      appBar: _bar(screenSize.width/5, "Taskset erstellen", LamaColors.bluePrimary),
-      body: Stack(
-        children: [
-          Container(
-            margin: EdgeInsets.all(10),
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child:
-            Column(
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text.rich(
-                    TextSpan(
-                        text: 'Tasksetname',
-                        style: TextStyle(
-                          fontSize: 16,
+        appBar: _bar(
+            screenSize.width / 5, "Taskset erstellen", LamaColors.bluePrimary),
+        body: Stack(
+          children: [
+            Container(
+              margin: EdgeInsets.all(10),
+              padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text.rich(
+                      TextSpan(
+                          text: 'Tasksetname',
+                          style: TextStyle(
+                            fontSize: 16,
+                          )),
+                    ),
+                  ),
+                  Divider(),
+                  Container(
+                    margin: EdgeInsets.only(top: 15),
+                    alignment: Alignment.centerLeft,
+                    child: Text.rich(
+                      TextSpan(
+                          text: 'Kurzbeschreibung',
+                          style: TextStyle(
+                            fontSize: 16,
+                          )),
+                    ),
+                  ),
+                  Divider(),
+                  Container(
+                    margin: EdgeInsets.only(top: 45),
+                    alignment: Alignment.centerLeft,
+                    child: Text.rich(
+                      TextSpan(
+                          text: 'Klassenstufe',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                  ),
+                  Container(
+                    child: InputDecorator(
+                        decoration: InputDecoration(
+                          errorStyle: TextStyle(
+                              color: Colors.redAccent, fontSize: 16.0),
+                          hintText: 'Klassenstufe auswählen',
+                        ),
+                        isEmpty: _currentSelectedValue == '',
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: _currentSelectedValue,
+                            isDense: true,
+                            onChanged: (String newValue) {
+                              setState(() {
+                                _currentSelectedValue = newValue;
+                              });
+                            },
+                            items: klassenStufe.map((String value) {
+                              return DropdownMenuItem<String>(
+                                  value: value, child: Text(value));
+                            }).toList(),
+                          ),
                         )),
                   ),
-                ),
-                Divider(),
-
-                Container(
-                  margin: EdgeInsets.only(top: 15),
-                  alignment: Alignment.centerLeft,
-                  child: Text.rich(
-                    TextSpan(
-                        text: 'Kurzbeschreibung',
-                        style: TextStyle(
-                          fontSize: 16,
+                  Container(
+                    margin: EdgeInsets.only(top: 15),
+                    alignment: Alignment.centerLeft,
+                    child: Text.rich(
+                      TextSpan(
+                          text: 'Fach',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                  ),
+                  Container(
+                    child: InputDecorator(
+                        decoration: InputDecoration(
+                          errorStyle: TextStyle(
+                              color: Colors.redAccent, fontSize: 16.0),
+                          hintText: 'Fach auswählen',
+                        ),
+                        isEmpty: _currentSelectedValue2 == '',
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: _currentSelectedValue2,
+                            isDense: true,
+                            onChanged: (String newValue) {
+                              setState(() {
+                                _currentSelectedValue2 = newValue;
+                              });
+                            },
+                            items: facher.map((String value) {
+                              return DropdownMenuItem<String>(
+                                  value: value, child: Text(value));
+                            }).toList(),
+                          ),
                         )),
                   ),
-                ),
-                Divider(),
-
-                Container(
-                  margin: EdgeInsets.only(top: 45),
-                  alignment: Alignment.centerLeft,
-                  child: Text.rich(
-                    TextSpan(
-                        text: 'Klassenstufe',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
-                ),
-
-                Container(
-                  child: InputDecorator(
-                      decoration: InputDecoration(
-                        errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                        hintText: 'Klassenstufe auswählen',
-                      ),
-                      isEmpty: _currentSelectedValue == '',
-                      child: DropdownButtonHideUnderline(
-                        child:
-                        DropdownButton<String>(
-                          value: _currentSelectedValue,
-                          isDense: true,
-                          onChanged: (String newValue){
-                            setState(() {
-                              _currentSelectedValue = newValue;
-                            });
-                          },
-                          items: klassenStufe.map((String value){
-                            return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value)
-                            );
-                          }).toList(),
-                        ),)
-                  ),
-                ),
-
-                Container(
-                  margin: EdgeInsets.only(top: 15),
-                  alignment: Alignment.centerLeft,
-                  child: Text.rich(
-                    TextSpan(
-                        text: 'Fach',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
-                ),
-
-                Container(
-                  child: InputDecorator(
-                      decoration: InputDecoration(
-                        errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                        hintText: 'Fach auswählen',
-                      ),
-                      isEmpty: _currentSelectedValue2 == '',
-                      child: DropdownButtonHideUnderline(
-                        child:
-                        DropdownButton<String>(
-                          value: _currentSelectedValue2,
-                          isDense: true,
-                          onChanged: (String newValue){
-                            setState(() {
-                              _currentSelectedValue2 = newValue;
-                            });
-                          },
-                          items: facher.map((String value){
-                            return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value)
-                            );
-                          }).toList(),
-                        ),)
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              margin: EdgeInsets.all(25),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (BuildContext context) => TasksetCreationCartBloc(),
-                        child: TasksetCreationCartScreen(),
-                      )
-                  ));
-                },
-                child: const Text("Weiter"),
+                ],
               ),
             ),
-          ),
-            ],
-          )
-        );
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                margin: EdgeInsets.all(25),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                                  create: (BuildContext context) =>
+                                      TasksetCreationCartBloc(),
+                                  child: TasksetCreationCartScreen(),
+                                )));
+                  },
+                  child: const Text("Weiter"),
+                ),
+              ),
+            ),
+          ],
+        ));
     /*return Scaffold(
       appBar: _bar(screenSize.width / 5, 'Tasksets erstellen', LamaColors.bluePrimary),
       body: Column(

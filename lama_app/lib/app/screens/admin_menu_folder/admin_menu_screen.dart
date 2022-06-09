@@ -1,17 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lama_app/app/bloc/taskset_manage_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 //Blocs
 import 'package:lama_app/app/bloc/admin_menu_bloc.dart';
-import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
@@ -22,7 +20,6 @@ import 'package:lama_app/app/event/admin_menu_event.dart';
 //States
 import 'package:lama_app/app/state/admin_menu_state.dart';
 //Screens
-import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/screens/userlist_url_screen.dart';
@@ -233,18 +230,23 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
             onChanged: (bool value) {
               setState(() {
                 _isChecked = value;
-                context.read<AdminMenuBloc>().add(AdminMenuChangePrefsEvent(
-                    AdminUtils.enableDefaultTasksetsPref,
-                    _isChecked,
-                    RepositoryProvider.of<TasksetRepository>(context)));
+                context.read<AdminMenuBloc>().add(
+                      AdminMenuChangePrefsEvent(
+                        AdminUtils.enableDefaultTasksetsPref,
+                        _isChecked,
+                        RepositoryProvider.of<TasksetRepository>(context),
+                      ),
+                    );
                 AdminUtils.reloadTasksets(context);
               });
             },
           ),
           Text(
             'Standardaufgaben aktivieren?',
-            style:
-                LamaTextTheme.getStyle(fontSize: 14, color: LamaColors.black),
+            style: LamaTextTheme.getStyle(
+              fontSize: 14,
+              color: LamaColors.black,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -290,6 +292,20 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
     );
   }
 
+// wenn nullable möglich => TextAlign? textAlign, null in den aufrufen kann weggelassen werden
+  Widget _customTextWidget(
+          String text, FontWeight fontWeight, TextAlign textAlign) =>
+      Text(
+        text,
+        style: LamaTextTheme.getStyle(
+          color: LamaColors.black,
+          fontSize: 16,
+          fontWeight: fontWeight,
+          monospace: true,
+        ),
+        textAlign: textAlign,
+      );
+
   ///(private)
   ///Alert to show the GitHub repository link with authors
   Widget _gitHubAlert() {
@@ -302,101 +318,51 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
         ),
         textAlign: TextAlign.center,
       ),
-      content: Column(children: [
-        SvgPicture.asset(
-          'assets/images/svg/GitHub.svg',
-          semanticsLabel: 'LAMA',
-        ),
-        SizedBox(height: 50),
-        Text(
-          "Link",
-          style: LamaTextTheme.getStyle(
-            color: LamaColors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
-            monospace: true,
+      content: Column(
+        children: [
+          SvgPicture.asset(
+            'assets/images/svg/GitHub.svg',
+            semanticsLabel: 'LAMA',
           ),
-        ),
-        Text(
-          "https://github.com/thm-mni-ii/lama",
-          style: LamaTextTheme.getStyle(
-            color: LamaColors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            monospace: true,
+          SizedBox(height: 50),
+          _customTextWidget("Link", FontWeight.w800, null),
+          _customTextWidget(
+            "https://github.com/thm-mni-ii/lama",
+            FontWeight.w500,
+            TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 25),
-            Text(
-              "Projektleitung:",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                monospace: true,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 25),
+              _customTextWidget(
+                "Projektleitung:",
+                FontWeight.w800,
+                TextAlign.left,
               ),
-              textAlign: TextAlign.left,
-            ),
-            Text(
-              "Dario Pläschke",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                monospace: true,
+              _customTextWidget("Dario Pläschke", FontWeight.w500, null),
+              SizedBox(height: 15),
+              _customTextWidget("App:", FontWeight.w800, null),
+              _customTextWidget(
+                "Kevin Binder (Leitung)\nLars Kammerer\nFranz Leonhardt\nTobias Rentsch\nFabian Brescher",
+                FontWeight.w500,
+                null,
               ),
-            ),
-            SizedBox(height: 15),
-            Text(
-              "App:",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                monospace: true,
+              SizedBox(height: 15),
+              _customTextWidget("Spiele:", FontWeight.w800, null),
+              _customTextWidget(
+                "Vinzenz Branzk (Leitung)\nFlorian Silber",
+                FontWeight.w500,
+                null,
               ),
-            ),
-            Text(
-              "Kevin Binder (Leitung)\nLars Kammerer\nFranz Leonhardt\nTobias Rentsch\nFabian Brescher",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                monospace: true,
-              ),
-            ),
-            SizedBox(height: 15),
-            Text(
-              "Spiele:",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                monospace: true,
-              ),
-            ),
-            Text(
-              "Vinzenz Branzk (Leitung)\nFlorian Silber",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                monospace: true,
-              ),
-            ),
-          ],
-        ),
-      ]),
+            ],
+          ),
+        ],
+      ),
       actions: [
         TextButton(
-          child: Text('Schließen'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          child: const Text('Schließen'),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ],
     );
@@ -521,8 +487,7 @@ abstract class AdminUtils {
   ///[VoidCallback] as functionRight. onPressed for the 'Abbrechen' (abort) Button.
   ///
   ///{@return} [Row] with two [Ink] Buttons
-  //TODO Rename to abort not Aboard
-  static Widget saveAboardButtons(
+  static Widget saveAbordButtons(
       VoidCallback functionLeft, VoidCallback functionRight) {
     return Row(
       children: [
@@ -535,10 +500,11 @@ abstract class AdminUtils {
             ),
             padding: EdgeInsets.all(7.0),
             child: IconButton(
-                icon: Icon(Icons.save, size: 28),
-                color: Colors.white,
-                tooltip: 'Bestätigen',
-                onPressed: functionLeft),
+              icon: Icon(Icons.save, size: 28),
+              color: Colors.white,
+              tooltip: 'Bestätigen',
+              onPressed: functionLeft,
+            ),
           ),
         ),
         Ink(
@@ -548,10 +514,11 @@ abstract class AdminUtils {
           ),
           padding: EdgeInsets.all(2.0),
           child: IconButton(
-              icon: Icon(Icons.close_rounded),
-              color: Colors.white,
-              tooltip: 'Abbrechen',
-              onPressed: functionRight),
+            icon: Icon(Icons.close_rounded),
+            color: Colors.white,
+            tooltip: 'Abbrechen',
+            onPressed: functionRight,
+          ),
         ),
       ],
       mainAxisAlignment: MainAxisAlignment.end,
