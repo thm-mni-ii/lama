@@ -278,6 +278,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                 buchstabenListe.join('') == wort) {
               if (task.multiplePoints == antwortZaehler + 1 ||
                   task.multiplePoints == 0) {
+                fillBubble(Colors.green);
                 rightOrWrongAnswerEvent(isCorrect);
               } else {
                 rerenderTask(Colors.green);
@@ -292,6 +293,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
               }
               if (task.multiplePoints == antwortZaehler + 1 ||
                   task.multiplePoints == 0) {
+                fillBubble(Colors.red);
                 rightOrWrongAnswerEvent(false);
               } else {
                 rerenderTask(Colors.red);
@@ -310,6 +312,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                 "task.multiplePoints: ${task.multiplePoints} antwortZaehler: $antwortZaehler");
             if (task.multiplePoints == antwortZaehler + 1 ||
                 task.multiplePoints == 0) {
+              fillBubble(Colors.green);
               rightOrWrongAnswerEvent(isCorrect);
             } else {
               rerenderTask(Colors.green);
@@ -329,6 +332,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             }
             if (task.multiplePoints == antwortZaehler + 1 ||
                 task.multiplePoints == 0) {
+              fillBubble(Colors.red);
               rightOrWrongAnswerEvent(false);
             } else {
               rerenderTask(Colors.red);
@@ -350,9 +354,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   ///rerenders the whole screen and fills bubble at the bottom with color
   ///depending on if the answer is right(green) or wrong(red)
   void rerenderTask(Color answerFarbe) {
+    fillBubble(answerFarbe);
     Future.delayed(const Duration(milliseconds: 1500), () {
       setState(() {
-        antwortFarben[antwortZaehler] = answerFarbe;
         //removes last shown picture from pool of pictures
         var rng = Random();
         woerterKeys.remove(woerterKeys[randomNummer!]);
@@ -370,6 +374,11 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
         testFarbe2 = Colors.blue;
       });
     });
+  }
+
+  ///fills bubble at the bottom of the screen with color after answering
+  void fillBubble(Color answerFarbe) {
+    antwortFarben[antwortZaehler] = answerFarbe;
   }
 
 //ein Container, welcher einen klickbaren Button mit einem Buchstaben beinhaltet
