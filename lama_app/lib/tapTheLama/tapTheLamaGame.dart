@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/tapTheLama/components/LifeBar.dart';
 import 'package:lama_app/tapTheLama/components/lamaButton.dart';
 import 'package:lama_app/tapTheLama/components/lamaHead.dart';
+import 'package:lama_app/tapTheLama/components/missedHeadAnimator.dart';
 import 'dart:math';
 
 import 'package:lama_app/tapTheLama/components/upperInGameDisplay.dart';
@@ -28,13 +29,17 @@ class TapTheLamaGame extends FlameGame with HasTappables{
   late double upperInGameDisplayHeight;
   late UpperInGameDisplay upperInGameDisplay;
   final upperInGameDisplayColor =PaletteEntry(Color(0xfff4f4f6)).paint();
+  final lifeBarRedColor =PaletteEntry(Color(0xffff0006)).paint();
+  final lifeBarGreenColor =PaletteEntry(Color(0xff1cff00)).paint();
   late TextPaint scoreText;
-  late TextPaint multiplierText;
+  late TextPaint streakText;
   var lifeBarHorizontalPosition;
   var lifeBarVerticalPosition;
   var lifeBarWidth;
   var lifeBarHeight;
   late LifeBar lifeBar;
+  var multiplier=1;
+  late MissedHeadAnimator missedHeadAnimator;
 
 
   //#endregion
@@ -68,9 +73,9 @@ class TapTheLamaGame extends FlameGame with HasTappables{
 
   //declare and initialise the colors for button animators
   final buttonAnimatorDefaultColor =PaletteEntry(Color(0xFFebedf0)).paint();
-  final buttonAnimatorColorRed =PaletteEntry(Color(0xffff0006)).paint();
-  final buttonAnimatorColorGreen =PaletteEntry(Color(0xff1cff00)).paint();
-  final buttonAnimatorColorOrange =PaletteEntry(Color(0xfff5ff00)).paint();
+  final buttonAnimatorColorRed =PaletteEntry(Color(0x4cff0006)).paint();
+  final buttonAnimatorColorGreen =PaletteEntry(Color(0x6b1cff00)).paint();
+  final buttonAnimatorColorOrange =PaletteEntry(Color(0x81ffdd00)).paint();
 
   //#endregion
 
@@ -101,10 +106,10 @@ class TapTheLamaGame extends FlameGame with HasTappables{
   var velocity2;
   var score= 0;
   var lifePercent=100.0;
-  var multiplier=1;
+  var streakCounter=0;
   var scoreIncrementerGoodHit=10;
   var scoreIncrementerOkayHit=5;
-  var lifeDecreaserStandard=10.0;
+  var lifeDecreaserStandard=5.0;
   var lifeDecreaserRedLamaHit=20.0;
   var lamaHeadAppearingProbability=.3;
   var lamaHeadIsAngryProbability=0.05;
@@ -142,7 +147,7 @@ class TapTheLamaGame extends FlameGame with HasTappables{
   void render(Canvas canvas) {
     super.render(canvas);
     scoreText.render(canvas, "Score: "+ score.toString(), Vector2(screenWidth*0.05 ,screenHeight*0.05));
-    multiplierText.render(canvas, "Multiplier: "+ multiplier.toString(), Vector2(screenWidth*0.5, screenHeight*0.05));
+    streakText.render(canvas, "Streak: "+ streakCounter.toString(), Vector2(screenWidth*0.6, screenHeight*0.05));
   }
   //# endregion
 
@@ -185,6 +190,7 @@ class TapTheLamaGame extends FlameGame with HasTappables{
     }
     else{
       flashButton(lamaButton, buttonAnimatorColorRed, animatorButton);
+      lifePercent-=lifeDecreaserStandard;
     }
     //
     lamaHeads.firstWhere((element) => element.isHittable).sprite=await loadSprite('png/BLANK_ICON.png');
@@ -200,8 +206,13 @@ class TapTheLamaGame extends FlameGame with HasTappables{
     animatorButton.paint=buttonAnimatorDefaultColor;
   }
 
+  Future<void> flashMissedHeadAnimator() async {
+    missedHeadAnimator.paint=buttonAnimatorColorRed;
+    await Future.delayed(Duration(milliseconds: 100));
+    missedHeadAnimator.paint=upperInGameDisplayColor;
+  }
+
   void updateLifeBar() {
-    //Todo: lifebar updaten
     lifeBar.x=lifePercent*lifeBarWidth/100;
   }
 
@@ -229,15 +240,19 @@ class TapTheLamaGame extends FlameGame with HasTappables{
     lifeBarVerticalPosition=screenHeight*0.03;
     lifeBarWidth=screenWidth;
     lifeBarHeight=screenHeight*0.03;
-    //Todo: make text size responsive
-    scoreText=TextPaint(style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black));
-    multiplierText=TextPaint(style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black));
-    RectangleComponent lifebarRedRectangle=RectangleComponent(position: Vector2(lifeBarHorizontalPosition,lifeBarVerticalPosition),anchor: Anchor.center,size: Vector2(lifeBarWidth,lifeBarHeight),paint: buttonAnimatorColorRed,priority: 4);
+    var textSize= screenWidth/15;
+    scoreText=TextPaint(style: TextStyle(fontSize: textSize,fontWeight: FontWeight.bold,color: Colors.black));
+    streakText=TextPaint(style: TextStyle(fontSize: textSize,fontWeight: FontWeight.bold,color: Colors.black));
+    RectangleComponent lifebarRedRectangle=RectangleComponent(position: Vector2(lifeBarHorizontalPosition,lifeBarVerticalPosition),anchor: Anchor.center,size: Vector2(lifeBarWidth,lifeBarHeight),paint: lifeBarRedColor,priority: 4);
     add(lifebarRedRectangle);
     lifeBar=LifeBar(lifeBarWidth, lifeBarHeight, lifeBarHorizontalPosition, lifeBarVerticalPosition);
-    lifeBar.paint=buttonAnimatorColorGreen;
+    lifeBar.paint=lifeBarGreenColor;
     lifeBar.anchor=Anchor.centerRight;
     add(lifeBar);
+    missedHeadAnimator=MissedHeadAnimator(screenWidth, screenHeight*0.03, screenWidth, screenHeight*0.985);
+    missedHeadAnimator.paint=upperInGameDisplayColor;
+    missedHeadAnimator.anchor=Anchor.centerRight;
+    add(missedHeadAnimator);
 
   }
 
@@ -295,7 +310,7 @@ class TapTheLamaGame extends FlameGame with HasTappables{
 
   Future<void> initLamaHeadColumn(List<LamaHead> lamaHeadList, double xPos, String imageSource,int column) async {
     for(int i=0;i<=amountLamaHeadsPerColumn;i++){
-      LamaHead lamaHead=LamaHead(generateRandomBoolean(lamaHeadAppearingProbability), generateRandomBoolean(lamaHeadIsAngryProbability));
+      LamaHead lamaHead=LamaHead(false, generateRandomBoolean(lamaHeadIsAngryProbability));
       lamaHeadList.add(lamaHead);
       lamaHeadList.elementAt(i).y=(screenHeight/amountLamaHeadsPerColumn*i)-lamaHeadSize;
       lamaHeadList.elementAt(i).x=xPos;
@@ -314,6 +329,7 @@ class TapTheLamaGame extends FlameGame with HasTappables{
         lamaHeadList.elementAt(i).y = 0-lamaHeadSize/2;
         if(lamaHeadList.elementAt(i).isExisting&& !lamaHeadList.elementAt(i).isAngry){
           lifePercent-=lifeDecreaserStandard;
+          flashMissedHeadAnimator();
         }
         lamaHeadList.elementAt(i).isAngry=generateRandomBoolean(lamaHeadIsAngryProbability);
         switch(column){
