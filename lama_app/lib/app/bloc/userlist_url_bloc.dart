@@ -20,27 +20,28 @@ import 'package:lama_app/util/input_validation.dart';
 /// Author: L.Kammerer
 /// latest Changes: 15.06.2021
 class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState?> {
-  UserlistUrlBloc({UserlistUrlState? initialState}) : super(initialState);
+  UserlistUrlBloc({UserlistUrlState? initialState}) : super(initialState) {
+    on<UserlistUrlChangeUrl>((event, emit) async {
+      _url = event.url;
+    });
+    on<UserlistParseUrl>((event, emit) async {
+      emit(UserlistUrlTesting());
+      emit(await _parsUrl());
+    });
+    on<UserlistAbort>((event, emit) async {
+      emit(UserlistUrlDefault());
+    });
+    on<UserlistInsertList>((event, emit) async {
+      _insertList();
+      emit(UserlistUrlInsertSuccess());
+    });
+  }
 
   ///url that is used to parse the userlist
   ///incoming events are used to change the value
   String? _url;
   //list of [User] parsed from the [_url]
   List<User> _userList = [];
-
-  @override
-  Stream<UserlistUrlState> mapEventToState(UserlistUrlEvent event) async* {
-    if (event is UserlistUrlChangeUrl) _url = event.url;
-    if (event is UserlistParseUrl) {
-      yield UserlistUrlTesting();
-      yield await _parsUrl();
-    }
-    if (event is UserlistAbort) yield UserlistUrlDefault();
-    if (event is UserlistInsertList) {
-      _insertList();
-      yield UserlistUrlInsertSuccess();
-    }
-  }
 
   ///(private)
   ///parsing all users using [_parsUserList] from [_url] and

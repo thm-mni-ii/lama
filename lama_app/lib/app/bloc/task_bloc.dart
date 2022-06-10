@@ -29,140 +29,138 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   UserRepository? userRepository;
   TaskBloc(this.tasksetSubject, this.tasks, this.userRepository)
-      : super(TaskScreenEmptyState());
-
-  @override
-  Stream<TaskState> mapEventToState(TaskEvent event) async* {
-    if (event is ShowNextTaskEvent) {
-      yield await displayNextTask(tasksetSubject, tasks![curIndex++]);
-    } else if (event is AnswerTaskEvent) {
+      : super(TaskScreenEmptyState()) {
+    on<ShowNextTaskEvent>((event, emit) async {
+      emit(await displayNextTask(tasksetSubject, tasks![curIndex++]));
+    });
+    on<AnswerTaskEvent>((event, emit) async {
       Task t = tasks![curIndex - 1];
       if (t is Task4Cards) {
         if (event.providedAnswer == t.rightAnswer) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       } else if (t is TaskMarkWords) {
         if (equals(t.rightWords, event.providedanswerWords)) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       } else if (t is TaskZerlegung) {
         //print("Zelegung validation"); // To remove after
         if (event.providedAnswerBool!) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       } else if (t is TaskNumberLine) {
         if (event.providedAnswerBool!) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       } else if (t is TaskBuchstabieren) {
         if (event.providedAnswerBool!) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       } else if (t is TaskClozeTest) {
         if (event.providedAnswer == t.rightAnswer) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       } else if (t is ClockTest) {
         if (event.providedAnswer == t.rightAnswer) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else if (event.providedAnswerBool == true) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       } else if (t is TaskClozeTest) {
         if (event.providedAnswer == t.rightAnswer) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       } else if (t is TaskMatchCategory) {
         if (event.providedanswerStates!.contains(false)) {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         } else {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         }
       } else if (t is TaskGridSelect) {
         if (!DeepCollectionEquality.unordered()
             .equals(event.rightPositions, event.markedPositions)) {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         } else {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         }
       } else if (t is TaskMoney) {
         if (event.providedAnswerBool!) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       } else if (t is TaskVocableTest) {
         if (event.providedanswerStates!.contains(false)) {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false,
-              subTaskResult: event.providedanswerStates);
+          emit(TaskAnswerResultState(false,
+              subTaskResult: event.providedanswerStates));
         } else {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true,
-              subTaskResult: event.providedanswerStates);
+          emit(TaskAnswerResultState(true,
+              subTaskResult: event.providedanswerStates));
         }
       } else if (t is TaskConnect) {
         if (event.providedAnswerBool!) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       } else if (t is TaskEquation) {
         if (evaluateExpression(event.fullAnswer)) {
           rightAnswerCallback(t);
-          yield TaskAnswerResultState(true);
+          emit(TaskAnswerResultState(true));
         } else {
           wrongAnswerCallback(t);
-          yield TaskAnswerResultState(false);
+          emit(TaskAnswerResultState(false));
         }
       }
       await Future.delayed(Duration(seconds: 1));
       if (curIndex >= tasks!.length)
-        yield AllTasksCompletedState(tasks, answerResults);
+        emit(AllTasksCompletedState(tasks, answerResults));
       else
-        yield await displayNextTask(tasksetSubject, tasks![curIndex++]);
-    }
+        emit(await displayNextTask(tasksetSubject, tasks![curIndex++]));
+    });
   }
 
   /// Returns a [DisplayTaskState] containing the next task.

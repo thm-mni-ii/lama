@@ -13,16 +13,14 @@ class GridSelectTaskBloc
     extends Bloc<SelectGridLetterEvent, GridSelectTaskState> {
   List<Pair> selectedTableItems = [];
 
-  GridSelectTaskBloc() : super(GridSelectTaskState([]));
-
-  @override
-  Stream<GridSelectTaskState> mapEventToState(
-      SelectGridLetterEvent event) async* {
-    if (!selectedTableItems.contains(event.position))
-      selectedTableItems.add(event.position);
-    else
-      selectedTableItems.remove(event.position);
-    yield GridSelectTaskState(selectedTableItems);
+  GridSelectTaskBloc() : super(GridSelectTaskState([])) {
+    on<SelectGridLetterEvent>((event, emit) async {
+      if (!selectedTableItems.contains(event.position))
+        selectedTableItems.add(event.position);
+      else
+        selectedTableItems.remove(event.position);
+      emit(GridSelectTaskState(selectedTableItems));
+    });
   }
 }
 

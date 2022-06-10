@@ -21,12 +21,17 @@ class SaftyQuestionBloc extends Bloc<SaftyQuestionEvent, SaftyQuestionState?> {
   User? user;
   SaftyQuestion? saftyQuestion;
   SaftyQuestionBloc({SaftyQuestionState? initialState, this.user})
-      : super(initialState);
-
-  @override
-  Stream<SaftyQuestionState> mapEventToState(SaftyQuestionEvent event) async* {
-    if (event is SaftyQuestionPull) yield await _saftyQuestionContent();
-    if (event is SaftyQuestionPush) _saftyQuestionCheck(event);
+      : super(initialState) {
+    on<SaftyQuestionPull>(
+      (event, emit) async {
+        emit(await _saftyQuestionContent());
+      },
+    );
+    on<SaftyQuestionPush>(
+      (event, emit) async {
+        _saftyQuestionCheck(event);
+      },
+    );
   }
 
   Future<SaftyQuestionContent> _saftyQuestionContent() async {

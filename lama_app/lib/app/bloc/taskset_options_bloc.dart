@@ -21,37 +21,36 @@ import 'package:lama_app/util/input_validation.dart';
 /// Latest Changes: 26.06.2021
 class TasksetOptionsBloc
     extends Bloc<TasksetOptionsEvent, TasksetOptionsState?> {
-  TasksetOptionsBloc({TasksetOptionsState? initialState}) : super(initialState);
+  TasksetOptionsBloc({TasksetOptionsState? initialState})
+      : super(initialState) {
+    on<TasksetOptionsPush>((event, emit) async {
+      emit(TasksetOptionsWaiting("Aufgaben werden überprüft und geladen..."));
+      emit(await _tasksetOptionsPush());
+    });
+    on<TasksetOptionsDelete>((event, emit) async {
+      emit(TasksetOptionsWaiting("Aufgaben werden gelöscht..."));
+      emit(await _deleteUrl(event.url));
+    });
+    on<TasksetOptionsChangeURL>((event, emit) async {
+      _tasksetUrl = event.tasksetUrl;
+    });
+    on<TasksetOptionsReload>((event, emit) async {
+      emit(await await _reload());
+    });
+    on<TasksetOptionsSelectUrl>((event, emit) async {
+      emit(TasksetOptionsUrlSelected(event.url.url));
+    });
+    on<TasksetOptionsReAddUrl>((event, emit) async {
+      emit(TasksetOptionsWaiting("Aufgaben werden überprüft und geladen..."));
+      emit(await _tasksetOptionsReAddUrl(event.url));
+    });
+  }
 
   ///url that should be stored in the database later on
   ///incoming events are used to change the value
   String? _tasksetUrl;
   //is used to show all urls which are deleted in the time this screen is used
   List<TaskUrl> deletedUrls = [];
-
-  @override
-  Stream<TasksetOptionsState> mapEventToState(
-      TasksetOptionsEvent event) async* {
-    if (event is TasksetOptionsPush) {
-      yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
-      yield await _tasksetOptionsPush();
-    }
-    if (event is TasksetOptionsDelete) {
-      yield TasksetOptionsWaiting("Aufgaben werden gelöscht...");
-      yield await _deleteUrl(event.url);
-    }
-    if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
-    if (event is TasksetOptionsReload) {
-      yield await _reload();
-    }
-    if (event is TasksetOptionsSelectUrl)
-      yield TasksetOptionsUrlSelected(event.url.url);
-
-    if (event is TasksetOptionsReAddUrl) {
-      yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
-      yield await _tasksetOptionsReAddUrl(event.url);
-    }
-  }
 
   ///(private)
   ///stores the [_tasksetUrl] in the Database using [_insertUrl]
