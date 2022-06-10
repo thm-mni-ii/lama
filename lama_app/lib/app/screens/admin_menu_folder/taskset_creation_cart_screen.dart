@@ -32,22 +32,18 @@ import '../user_selection_screen.dart';
 /// Author: Handito Bismo, Nico Soethe
 /// latest Changes: 09.06.2022
 class TasksetCreationCartScreen extends StatefulWidget {
-  final BoxConstraints constraints;
 
-  const TasksetCreationCartScreen({Key key, this.constraints}) : super(key: key);
+  const TasksetCreationCartScreen() : super();
   @override
   State<StatefulWidget> createState() {
-    return TasksetCreationCartScreenState(constraints);
+    return TasksetCreationCartScreenState();
   }
 }
 
 ///OptionTaskScreennState provides the state for the [OptionTaskScreen]
 class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
-  //[_formKey] should be used to identify every Form in this Screen
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final BoxConstraints constraints;
 
-  TasksetCreationCartScreenState(this.constraints);
+  TasksetCreationCartScreenState();
 
   @override
   void initState() {
@@ -75,6 +71,23 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
                   Row(
                     children: [
                       Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Container(
+                          margin: EdgeInsets.all(25),
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (BuildContext context) => TasksetOptionsBloc(),
+                                    child: OptionTaskScreen(),
+                                  )
+                              ));
+                            },
+                            child: const Text("Task hinzufügen"),
+                          ),
+                        ),
+                      ),
+                      Align(
                         alignment: Alignment.bottomRight,
                         child: Container(
                           margin: EdgeInsets.all(25),
@@ -91,23 +104,6 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
                           ),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Container(
-                          margin: EdgeInsets.all(25),
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                    create: (BuildContext context) => TasksetOptionsBloc(),
-                                    child: OptionTaskScreen(),
-                                  )
-                              ));
-                            },
-                            child: const Text("Task hinzufügen"),
-                          ),
-                        ),
-                      )
                     ],
                   )
                   ),
