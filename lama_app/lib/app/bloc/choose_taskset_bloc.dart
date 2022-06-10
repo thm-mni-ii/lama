@@ -15,17 +15,14 @@ import 'package:lama_app/app/task-system/taskset_model.dart';
 class ChooseTasksetBloc extends Bloc<ChooseTasksetEvent, ChooseTasksetState> {
   TasksetRepository repository;
 
-  ChooseTasksetBloc(this.repository) : super(LoadingAllTasksetsState());
-
-  @override
-  Stream<ChooseTasksetState> mapEventToState(ChooseTasksetEvent event) async* {
-    if (event is LoadAllTasksetsEvent) {
-      yield LoadingAllTasksetsState();
-      List<Taskset> tasksets =
+  ChooseTasksetBloc(this.repository) : super(LoadingAllTasksetsState()) {
+    on<LoadAllTasksetsEvent>((event, emit) async {
+      emit(LoadingAllTasksetsState());
+      List<Taskset>? tasksets =
           repository.getTasksetsForSubjectAndGrade(event.subject, event.grade);
       //This line displays a very short loading animation, if the taskssets get loaded instantly. It serves no real purpose but it makes it look more professional
       await Future.delayed(Duration(milliseconds: 500));
-      yield LoadedAllTasksetsState(tasksets);
-    }
+      emit(LoadedAllTasksetsState(tasksets));
+    });
   }
 }

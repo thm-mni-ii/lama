@@ -18,24 +18,22 @@ import 'package:lama_app/util/input_validation.dart';
 ///
 /// Author: L.Kammerer
 /// latest Changes: 14.07.2021
-class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
+class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState?> {
   ///[User] that is inserted in to the Database later on
   ///incoming events are used to change the values of this [User]
   User _user = User(grade: 1, coins: 0, isAdmin: true, avatar: 'admin');
   SaftyQuestion _saftyQuestion = SaftyQuestion();
 
-  CreateAdminBloc({CreateAdminState initialState}) : super(initialState);
-
-  @override
-  Stream<CreateAdminState> mapEventToState(CreateAdminEvent event) async* {
-    if (event is CreateAdminPush) _adminPush(event.context);
-    if (event is CreateAdminChangeName) _user.name = event.name;
-    if (event is CreateAdminChangePassword) _user.password = event.password;
-    if (event is CreateAdminChangeSaftyQuestion)
-      _saftyQuestion.question = event.saftyQuestion;
-    if (event is CreateAdminChangeSaftyAnswer)
-      _saftyQuestion.answer = event.saftyAnswer;
-    if (event is CreateAdminAbort) _adminAbort(event.context);
+  CreateAdminBloc({CreateAdminState? initialState}) : super(initialState) {
+    on<CreateAdminPush>((event, emit) async => await _adminPush(event.context));
+    on<CreateAdminChangeName>((event, emit) => _user.name = event.name);
+    on<CreateAdminChangePassword>(
+        (event, emit) => _user.password = event.password);
+    on<CreateAdminChangeSaftyQuestion>(
+        (event, emit) => _saftyQuestion.question = event.saftyQuestion);
+    on<CreateAdminChangeSaftyAnswer>(
+        (event, emit) => _saftyQuestion.answer = event.saftyAnswer);
+    on<CreateAdminAbort>((event, emit) => _adminAbort(event.context));
   }
 
   ///(private)
@@ -55,7 +53,7 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
   ///
   ///{@param}[User] as user that should be stored in the database
   Future<void> _insterAdmin(User user) async {
-    if (user.isAdmin != null || user.isAdmin)
+    if (user.isAdmin != null || user.isAdmin!)
       user = await DatabaseProvider.db.insertUser(user);
     if (!InputValidation.isEmpty(_saftyQuestion.question)) {
       _saftyQuestion.adminID = user.id;

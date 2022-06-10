@@ -36,7 +36,7 @@ class EquationTaskScreen extends StatefulWidget {
 class EquationTaskState extends State<EquationTaskScreen> {
   final BoxConstraints constraints;
   final TaskEquation task;
-  EquationBloc bloc;
+  late EquationBloc bloc;
   EquationTaskState(this.task, this.constraints) {
     bloc = EquationBloc(task);
   }
@@ -130,7 +130,7 @@ class EquationTaskState extends State<EquationTaskScreen> {
                 nip: BubbleNip.leftCenter,
                 child: Center(
                   child: Text(
-                    task.lamaText,
+                    task.lamaText!,
                     style: LamaTextTheme.getStyle(
                         fontSize: 15, color: LamaColors.black),
                   ),
@@ -277,8 +277,8 @@ class EquationTaskState extends State<EquationTaskScreen> {
                 ),
               ),
             ),
-        onWillAccept: (data) => true,
-        onAccept: (data) {
+        onWillAccept: (dynamic data) => true,
+        onAccept: (dynamic data) {
           BlocProvider.of<EquationBloc>(context)
               .add(UpdateEquationEvent(data, index));
         }

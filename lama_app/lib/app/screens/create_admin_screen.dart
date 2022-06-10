@@ -30,9 +30,9 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //temporary password for double password validation
-  String _secondPass;
+  String? _secondPass;
   //temporary _saftyQuestion to avoid an empty safty answer if an safty question is used
-  String _saftyQuestion;
+  String? _saftyQuestion;
 
   ///override build methode [StatelessWidget]
   ///
@@ -49,7 +49,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
         screenSize.width / 5,
         'Administrator erstellen',
         LamaColors.bluePrimary,
-      ),
+      ) as PreferredSizeWidget?,
       body: _form(context),
       floatingActionButton: _userOptionsButtons(context),
     );
@@ -76,7 +76,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
               children: [
                 TextFormField(
                     decoration: InputDecoration(hintText: 'Nutzername'),
-                    validator: (String value) {
+                    validator: (String? value) {
                       return InputValidation.inputUsernameValidation(value);
                     },
                     onChanged: (value) => context
@@ -85,7 +85,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
                 SizedBox(height: 25),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Passwort'),
-                  validator: (String value) {
+                  validator: (String? value) {
                     return InputValidation.inputPasswortValidation(value);
                   },
 
@@ -98,7 +98,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
                 SizedBox(height: 10),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Passwort wiederholen'),
-                  validator: (String value) {
+                  validator: (String? value) {
                     ///this value and the [_secondPass] is used to validat the password input
                     ///in generell. If both values aren't equal an error message returns.
                     ///Else the validation returns with null.
@@ -128,7 +128,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
                 SizedBox(height: 10),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Frage'),
-                  validator: (String value) {
+                  validator: (String? value) {
                     return null;
                   },
                   onChanged: (value) {
@@ -140,7 +140,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Antwort'),
-                  validator: (String value) {
+                  validator: (String? value) {
                     if (InputValidation.isEmpty(value) &&
                         !InputValidation.isEmpty(_saftyQuestion))
                       return "Feld darf nicht leer sein, wenn eine Sicherheitsfrage genutzt wird.";
@@ -180,7 +180,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
               color: Colors.white,
               tooltip: 'Speichern',
               onPressed: () {
-                if (_formKey.currentState.validate())
+                if (_formKey.currentState!.validate())
                   context.read<CreateAdminBloc>().add(CreateAdminPush(context));
               },
             ),

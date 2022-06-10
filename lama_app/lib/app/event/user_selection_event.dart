@@ -18,6 +18,6 @@ class LoadUsers extends UserSelectionEvent {}
 ///[BuildContext] as context for navigation
 class SelectUser extends UserSelectionEvent {
   User user;
-  BuildContext context;
+  BuildContext? context;
   SelectUser(this.user, this.context);
 }

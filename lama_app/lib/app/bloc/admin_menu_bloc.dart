@@ -15,18 +15,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// Author: L.Kammerer
 /// latest Changes: 10.09.2021
-class AdminMenuBloc extends Bloc<AdminMenuEvent, AdminMenuState> {
+class AdminMenuBloc extends Bloc<AdminMenuEvent, AdminMenuState?> {
   //temporar storage for [SharedPreferences]
-  SharedPreferences prefs;
+  late SharedPreferences prefs;
 
-  AdminMenuBloc({AdminMenuState initialState}) : super(initialState);
-
-  @override
-  Stream<AdminMenuState> mapEventToState(AdminMenuEvent event) async* {
-    if (event is AdminMenuLoadPrefsEvent) yield await _loadPrefs();
-    if (event is AdminMenuChangePrefsEvent) await _changePref(event);
-    if (event is AdminMenuLoadDefaultEvent) yield AdminMenuDefaultState();
-    if (event is AdminMenuGitHubPopUpEvent) yield AdminMenuGitHubPopUpState();
+  AdminMenuBloc({AdminMenuState? initialState}) : super(initialState) {
+    on<AdminMenuLoadPrefsEvent>((event, emit) async {
+      emit(await _loadPrefs());
+    });
+    on<AdminMenuChangePrefsEvent>((event, emit) async {
+      await _changePref(event);
+    });
+    on<AdminMenuLoadDefaultEvent>((event, emit) async {
+      emit(AdminMenuDefaultState());
+    });
+    on<AdminMenuGitHubPopUpEvent>((event, emit) async {
+      emit(AdminMenuGitHubPopUpState());
+    });
   }
 
   ///(private)

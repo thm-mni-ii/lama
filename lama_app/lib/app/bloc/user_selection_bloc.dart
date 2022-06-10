@@ -23,16 +23,15 @@ import 'package:lama_app/db/database_provider.dart';
 ///
 /// Author: L.Kammerer
 /// latest Changes: 15.06.2021
-class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
-  UserSelectionBloc({UserSelectionState initialState}) : super(initialState);
-
-  @override
-  Stream<UserSelectionState> mapEventToState(UserSelectionEvent event) async* {
-    if (event is LoadUsers) yield await loadUsers();
-    if (event is SelectUser) {
-      await _userSelected(event.user, event.context);
-      yield UserSelected(event.user);
-    }
+class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState?> {
+  UserSelectionBloc({UserSelectionState? initialState}) : super(initialState) {
+    on<LoadUsers>((event, emit) async {
+      emit(await loadUsers());
+    });
+    on<SelectUser>((event, emit) async {
+      await _userSelected(event.user, event.context!);
+      emit(UserSelected(event.user));
+    });
   }
 
   ///load all stored [User] from the database and
@@ -58,7 +57,7 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
   ///[User] as user which try to login
   ///[BuildContext] as context
   Future<void> _userSelected(User user, BuildContext context) async {
-    User selectedUser = await Navigator.push(
+    User? selectedUser = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(
@@ -69,7 +68,7 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState> {
     );
     if (selectedUser == null) return;
     UserRepository repository = UserRepository(selectedUser);
-    if (selectedUser.isAdmin) {
+    if (selectedUser.isAdmin!) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

@@ -1,4 +1,4 @@
-import 'dart:ui';
+/* import 'dart:ui';
 import 'dart:math';
 
 import 'package:flame/anchor.dart';
@@ -239,3 +239,4 @@ class FlappyObstacle extends Component {
     }
   }
 }
+ */

@@ -20,21 +20,17 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 /// Author: K.Binder
 class GameListScreenBloc
     extends Bloc<GameListScreenEvent, GameListScreenState> {
-  UserRepository userRepository;
+  UserRepository? userRepository;
 
-  GameListScreenBloc(this.userRepository) : super(GameListScreenState());
-
-  @override
-  Stream<GameListScreenState> mapEventToState(
-      GameListScreenEvent event) async* {
-    if (event is TryStartGameEvent) {
+  GameListScreenBloc(this.userRepository) : super(GameListScreenState()) {
+    on<TryStartGameEvent>((event, emit) async {
       /*if (userRepository.getLamaCoins() >= event.gameCost) {
         userRepository.removeLamaCoins(event.gameCost);*/
       _navigateToGame(event.gameToStart, event.context, userRepository);
       /*} else {
         yield NotEnoughCoinsState();
       }*/
-    }
+    });
   }
 }
 
@@ -43,7 +39,7 @@ class GameListScreenBloc
 ///
 /// Throws an [Exception] if there is no game with the name [gameName].
 void _navigateToGame(String gameName, BuildContext context,
-    UserRepository userRepository) async {
+    UserRepository? userRepository) async {
   Widget gameToLaunch;
   switch (gameName) {
     case "Snake":
@@ -57,8 +53,8 @@ void _navigateToGame(String gameName, BuildContext context,
       break;
     case "Tetris":
       //quick solution to get Highscores
-      int userHighScore = await userRepository.getMyHighscore(4);
-      int allTimeHighScore = await userRepository.getHighscore(4);
+      int? userHighScore = await userRepository!.getMyHighscore(4);
+      int? allTimeHighScore = await userRepository.getHighscore(4);
       gameToLaunch =
           TetrisScreen(userRepository, userHighScore, allTimeHighScore);
       break;

@@ -38,10 +38,10 @@ class Game extends StatefulWidget {
   BuildContext context;
 
   /// the personal highScore
-  int userHighScore;
+  int? userHighScore;
 
   /// the all time highScore in this game
-  int allTimeHighScore;
+  int? allTimeHighScore;
 
   var userRepo;
 
@@ -57,11 +57,11 @@ class Game extends StatefulWidget {
 
 class _Game extends State<Game> {
   LastButtonPressed performAction = LastButtonPressed.NONE; //start State
-  Block currentBlock;
+  Block? currentBlock;
   List<AlivePoint> alivePoints =
       []; //used Blocks, which are already on the ground or in other blocks
   int score = 0;
-  UserRepository _userRepo;
+  UserRepository? _userRepo;
   BuildContext context;
 
   _Game(
@@ -78,14 +78,14 @@ class _Game extends State<Game> {
   final gameId = 4;
 
   /// the personal highScore
-  int userHighScore;
+  int? userHighScore;
 
   /// the all time highScore in this game
-  int allTimeHighScore;
+  int? allTimeHighScore;
 
   void ladeHighScores() async {
-    userHighScore = await _userRepo.getMyHighscore(gameId);
-    allTimeHighScore = await _userRepo.getHighscore(gameId);
+    userHighScore = await _userRepo!.getMyHighscore(gameId);
+    allTimeHighScore = await _userRepo!.getHighscore(gameId);
   }
 
   @override
@@ -118,20 +118,20 @@ class _Game extends State<Game> {
       setState(() {
         switch (performAction) {
           case LastButtonPressed.LEFT:
-            currentBlock.move(MoveDir.LEFT);
-            if (isInOldBlock()) currentBlock.move(MoveDir.RIGHT);
+            currentBlock!.move(MoveDir.LEFT);
+            if (isInOldBlock()) currentBlock!.move(MoveDir.RIGHT);
             break;
           case LastButtonPressed.RIGHT:
-            currentBlock.move(MoveDir.RIGHT);
-            if (isInOldBlock()) currentBlock.move(MoveDir.LEFT);
+            currentBlock!.move(MoveDir.RIGHT);
+            if (isInOldBlock()) currentBlock!.move(MoveDir.LEFT);
             break;
           case LastButtonPressed.ROTATE_LEFT:
-            currentBlock.rotateLeft();
-            if (isInOldBlock()) currentBlock.rotateRight();
+            currentBlock!.rotateLeft();
+            if (isInOldBlock()) currentBlock!.rotateRight();
             break;
           case LastButtonPressed.ROTATE_RIGHT:
-            currentBlock.rotateRight();
-            if (isInOldBlock()) currentBlock.rotateLeft();
+            currentBlock!.rotateRight();
+            if (isInOldBlock()) currentBlock!.rotateLeft();
             break;
           default:
             break;
@@ -143,8 +143,8 @@ class _Game extends State<Game> {
   }
 
   void safeOldBlock() {
-    for (var point in currentBlock.fixed_length_list_of_points) {
-      AlivePoint newPoint = AlivePoint(point.x, point.y, currentBlock.color);
+    for (var point in currentBlock!.fixed_length_list_of_points) {
+      AlivePoint newPoint = AlivePoint(point.x, point.y, currentBlock!.color);
       setState(() {
         alivePoints.add(newPoint);
       });
@@ -156,7 +156,7 @@ class _Game extends State<Game> {
 
     for (var oldPoint in alivePoints) {
       if (oldPoint
-          .checkIfPointsCollide(currentBlock.fixed_length_list_of_points)) {
+          .checkIfPointsCollide(currentBlock!.fixed_length_list_of_points)) {
         retVal = true;
       }
     }
@@ -169,7 +169,7 @@ class _Game extends State<Game> {
 
     for (var oldPoint in alivePoints) {
       if (oldPoint.checkIfPointsCollideCollide(
-          currentBlock.fixed_length_list_of_points)) {
+          currentBlock!.fixed_length_list_of_points)) {
         retVal = true;
       }
     }
@@ -219,13 +219,13 @@ class _Game extends State<Game> {
   }
 
   void safeHighScore() {
-    if (score > userHighScore) {
+    if (score > userHighScore!) {
       if (!_savedHighscore) {
         _savedHighscore = true;
-        _userRepo.addHighscore(Highscore(
+        _userRepo!.addHighscore(Highscore(
             gameID: gameId,
             score: score,
-            userID: _userRepo.authenticatedUser.id));
+            userID: _userRepo!.authenticatedUser!.id));
       }
     }
   }
@@ -238,14 +238,14 @@ class _Game extends State<Game> {
     removeFullRows(); //score++ is in here
     increaseSpeedIfNecessary();
 
-    if (currentBlock.isAtBottom() || isAboveOldBlock()) {
+    if (currentBlock!.isAtBottom() || isAboveOldBlock()) {
       safeOldBlock();
       setState(() {
         currentBlock = getRamdomBlock();
       });
     } else {
       setState(() {
-        currentBlock.move(MoveDir.DOWN);
+        currentBlock!.move(MoveDir.DOWN);
       });
       checkForUserInput();
     }
@@ -262,9 +262,9 @@ class _Game extends State<Game> {
   Widget drawTetrisBlocks() {
     List<Positioned> visiblePoints = [];
 //current Block
-    for (var point in currentBlock.fixed_length_list_of_points) {
+    for (var point in currentBlock!.fixed_length_list_of_points) {
       Positioned newPoint = Positioned(
-        child: getTetrisPoint(currentBlock.color),
+        child: getTetrisPoint(currentBlock!.color!),
         left: point.x * POINT_SIZE,
         top: point.y * POINT_SIZE,
       );
@@ -275,7 +275,7 @@ class _Game extends State<Game> {
     for (var point in alivePoints) {
       visiblePoints.add(
         Positioned(
-          child: getTetrisPoint(point.color),
+          child: getTetrisPoint(point.color!),
           left: point.x * POINT_SIZE,
           top: point.y * POINT_SIZE,
         ),
@@ -301,7 +301,7 @@ class _Game extends State<Game> {
               ),
               child: (playerLost() == false)
                   ? drawTetrisBlocks()
-                  : getGameOverText(score, userHighScore, allTimeHighScore),
+                  : getGameOverText(score, userHighScore, allTimeHighScore!),
             ),
           ),
         ),

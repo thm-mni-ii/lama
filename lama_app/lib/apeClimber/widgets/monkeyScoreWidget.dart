@@ -9,7 +9,7 @@ class MonkeyScoreWidget extends StatelessWidget {
   final String text;
 
   const MonkeyScoreWidget({
-    @required this.text
+    required this.text
   });
 
   @override

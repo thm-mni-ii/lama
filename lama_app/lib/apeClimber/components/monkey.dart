@@ -1,4 +1,4 @@
-import 'dart:ui';
+/* import 'dart:ui';
 
 import 'package:flame/animation.dart';
 import 'package:flame/components/animation_component.dart';
@@ -178,4 +178,4 @@ class Monkey extends AnimationComponent {
 enum ClimbSide {
   Left,
   Right
-}
+} */

@@ -1,4 +1,4 @@
-import 'dart:ui';
+/* import 'dart:ui';
 import 'dart:math';
 
 import 'package:flame/anchor.dart';
@@ -178,4 +178,4 @@ class ClimberBranches extends Component {
       c.restore();
     });
   }
-}
+} */

@@ -1,4 +1,4 @@
-import 'dart:math';
+/* import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/anchor.dart';
@@ -114,4 +114,4 @@ enum SnakePart {
   Tail,
   Body,
   BodyCorner
-}
+} */

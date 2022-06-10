@@ -27,18 +27,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// Author: L.Kammerer
 /// latest Changes: 14.07.2021
-class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
-  CheckScreenBloc({CheckScreenState initialState}) : super(initialState);
 
-  @override
-  Stream<CheckScreenState> mapEventToState(CheckScreenEvent event) async* {
-    if (event is CheckForAdmin) yield await _hasAdmin(event.context);
-    if (event is DSGVOAccepted) yield await _loadWelcome(event.context);
-    if (event is CreateAdminEvent) yield await _navigator(event.context);
-    if (event is CreateGuestEvent) yield await _createGuest(event.context);
-    if (event is LoadGuest) {
+class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
+  CheckScreenBloc({CheckScreenState? initialState}) : super(initialState) {
+    on<CheckForAdmin>((event, emit) async {
+      emit(await _hasAdmin(event.context));
+    });
+    on<DSGVOAccepted>((event, emit) async {
+      emit(await _loadWelcome(event.context));
+    });
+    on<CreateAdminEvent>((event, emit) async {
+      emit(await _navigator(event.context));
+    });
+    on<CreateGuestEvent>((event, emit) async {
+      emit(await _createGuest(event.context));
+    });
+    on<LoadGuest>((event, emit) async {
       await _loadGuest(event.context, event.user);
-    }
+    });
   }
 
   ///(private)
@@ -55,7 +61,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
     if (userList.length == 1 && !userList[0].isAdmin)
       return HasGuest(context, userList[0]);
     for (User user in userList) {
-      if (user.isAdmin) {
+      if (user.isAdmin!) {
         _navigateAdminExist(context);
         return AdminExist();
       }
@@ -121,7 +127,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState> {
   ///
   ///{@param} [BuildContext] as context
   Future<void> _navigateNoAdmin(BuildContext context) async {
-    User admin = await Navigator.push(
+    User? admin = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(

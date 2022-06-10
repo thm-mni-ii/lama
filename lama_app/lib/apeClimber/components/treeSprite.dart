@@ -1,4 +1,4 @@
-import 'package:flame/components/component.dart';
+/* import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
 
 /// This class is [SpriteComponent] with a tree [Sprite].
@@ -15,4 +15,4 @@ class TreeSprite extends SpriteComponent {
     this.x = x;
     this.y = y;
   }
-}
+} */

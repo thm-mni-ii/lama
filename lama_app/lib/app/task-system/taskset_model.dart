@@ -9,12 +9,12 @@ import 'package:lama_app/db/database_provider.dart';
 ///
 ///Author: K.Binder
 class Taskset {
-  String name;
-  String subject;
-  int grade;
-  bool randomizeOrder;
-  int randomTaskAmount;
-  List<Task> tasks;
+  String? name;
+  String? subject;
+  int? grade;
+  bool? randomizeOrder;
+  int? randomTaskAmount;
+  List<Task>? tasks;
 
   Taskset.fromJson(Map<String, dynamic> json) {
     name = json['taskset_name'];
@@ -28,13 +28,13 @@ class Taskset {
     }
     tasks = tasksetTasksList;
     if (!json.containsKey('taskset_choose_amount')) {
-      randomTaskAmount = tasks.length;
+      randomTaskAmount = tasks!.length;
       if (json.containsKey('taskset_randomize_order')) {
         randomizeOrder = json["taskset_randomize_order"];
       } else
         randomizeOrder = false;
     } else {
-      randomTaskAmount = min(tasks.length, json['taskset_choose_amount']);
+      randomTaskAmount = min(tasks!.length, json['taskset_choose_amount']);
     }
   }
 }

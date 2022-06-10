@@ -19,21 +19,33 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Author: L.Kammerer
 /// latest Changes: 26.06.2021
 class HighscoreUrlScreenBloc
-    extends Bloc<HighscoreUrlScreenEvent, HighscoreUrlScreenState> {
-  String _urlChanged;
-  String _urlCurrent;
-  SharedPreferences _prefs;
+    extends Bloc<HighscoreUrlScreenEvent, HighscoreUrlScreenState?> {
+  String? _urlChanged;
+  String? _urlCurrent;
+  late SharedPreferences _prefs;
   List<User> _userList = [];
-  HighscoreUrlScreenBloc({HighscoreUrlScreenState initialState})
-      : super(initialState);
-
-  @override
-  Stream<HighscoreUrlScreenState> mapEventToState(
-      HighscoreUrlScreenEvent event) async* {
-    if (event is HighscoreUrlPullEvent) yield await _pull();
-    if (event is HighscoreUrlPushEvent) await _push();
-    if (event is HighscoreUrlChangeEvent) _urlChanged = event.url;
-    if (event is HighscoreUrlReloadEvent) yield HighscoreUrlReloadState();
+  HighscoreUrlScreenBloc({HighscoreUrlScreenState? initialState})
+      : super(initialState) {
+    on<HighscoreUrlPullEvent>(
+      (event, emit) async {
+        emit(await _pull());
+      },
+    );
+    on<HighscoreUrlPushEvent>(
+      (event, emit) async {
+        await _push();
+      },
+    );
+    on<HighscoreUrlChangeEvent>(
+      (event, emit) async {
+        _urlChanged = event.url;
+      },
+    );
+    on<HighscoreUrlReloadEvent>(
+      (event, emit) {
+        emit(HighscoreUrlReloadState());
+      },
+    );
   }
 
   Future<HighscoreUrlPullState> _pull() async {
@@ -41,11 +53,11 @@ class HighscoreUrlScreenBloc
     _urlCurrent = _prefs.getString(AdminUtils.highscoreUploadUrlPref);
     _urlChanged = _urlCurrent;
     _userList = await DatabaseProvider.db.getUser();
-    _userList.removeWhere((user) => user.isAdmin);
+    _userList.removeWhere((user) => user.isAdmin!);
     return HighscoreUrlPullState(_userList, _urlChanged);
   }
 
   Future<void> _push() async {
-    await _prefs.setString(AdminUtils.highscoreUploadUrlPref, _urlChanged);
+    await _prefs.setString(AdminUtils.highscoreUploadUrlPref, _urlChanged!);
   }
 }

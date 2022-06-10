@@ -16,7 +16,7 @@ class TasksetValidator {
   ///Use jsonDecode() with the corresponding json-string as argument when calling this method.
   ///
   ///Confirms whether all mandatory json keys are present and if the have the right type.
-  static String isValidTaskset(Map<String, dynamic> json) {
+  static String? isValidTaskset(Map<String, dynamic> json) {
     if (json.containsKey("taskset_name") &&
         json.containsKey("taskset_subject") &&
         json.containsKey("taskset_grade") &&
@@ -35,7 +35,7 @@ class TasksetValidator {
         //VALIDATE TASKS
         var tasksetTasks = json['tasks'] as List;
         for (int i = 0; i < tasksetTasks.length; i++) {
-          String isValid = _isValidTask(tasksetTasks[i]);
+          String? isValid = _isValidTask(tasksetTasks[i]);
           if (isValid != null)
             return "Fehler in Aufgabe ${i + 1} \n\n $isValid";
         }
@@ -52,7 +52,7 @@ class TasksetValidator {
   ///the have the right type for the corresponding TaskType.
   ///
   ///Used internally by [isValidTaskset()]
-  static String _isValidTask(Map<String, dynamic> json) {
+  static String? _isValidTask(Map<String, dynamic> json) {
     if (json.containsKey("task_type") &&
         json.containsKey("task_reward") &&
         json.containsKey("lama_text") &&
@@ -185,7 +185,7 @@ class TasksetValidator {
                 json["randomizeSide"] is bool &&
                 json.containsKey("wordPairs")) {
               var wordPairs = json['wordPairs'] as List;
-              List<Pair<String, String>> wordPairList =
+              List<Pair<String?, String?>> wordPairList =
                   wordPairs.map((pair) => Pair.fromJson(pair)).toList();
               for (int i = 0; i < wordPairList.length; i++) {
                 if (wordPairList[i].a == null ||
