@@ -22,10 +22,7 @@ class FourCardTaskScreen extends StatefulWidget {
   final Task4Cards task;
   final List<String> answers = [];
 
-  FourCardTaskScreen( this.task, this.constraints) {
-    // ?
-  }
-
+  FourCardTaskScreen( this.task, this.constraints);
 
   @override
   State<StatefulWidget> createState() {
@@ -33,21 +30,20 @@ class FourCardTaskScreen extends StatefulWidget {
   }
 }
 
-
-
 class FourCardTaskScreenState extends State<FourCardTaskScreen> {
   final BoxConstraints constraints;
   final Task4Cards task;
   final List<String> answers = [];
-  TtsBloc ttsBloc;
+  late TtsBloc ttsBloc;
 
-  FourCardTaskScreenState( this.task,this.constraints) {
-    ttsBloc = TtsBloc(); // todo
+  FourCardTaskScreenState(this.task, this.constraints) {
+    ttsBloc = TtsBloc();
   }
 
   @override
   void initState() {
     super.initState();
+    ttsBloc.add(InitTtsEvent());
   }
 
   @override
@@ -64,7 +60,7 @@ class FourCardTaskScreenState extends State<FourCardTaskScreen> {
             return Column(
               children: [
                 BlocProvider(
-                  create: (BuildContext context) => TtsBloc(state),
+                  create: (BuildContext context) => TtsBloc(),
                   child: firstWidget(context, constraints, task, answers),
                 ),
                 // todo BlocProvider needed in next widget ?

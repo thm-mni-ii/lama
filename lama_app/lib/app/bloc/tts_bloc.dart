@@ -23,7 +23,7 @@ class TtsBloc extends Bloc<TtsEvent,TtsState> {
   String? language;
   String? engine;
 
-  TtsBloc(TtsState initialState) : super(initialState);
+  TtsBloc() : super(InitTts());
 
 
   @override
