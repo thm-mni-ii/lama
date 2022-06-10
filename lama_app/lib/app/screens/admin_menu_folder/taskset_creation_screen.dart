@@ -222,4 +222,10 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
       )
     );
   }
+
+  Color _getColor(String subject) {
+    if(subject == "Deutsch") {
+      return LamaColors.redPrimary;
+    }
+  }
 }

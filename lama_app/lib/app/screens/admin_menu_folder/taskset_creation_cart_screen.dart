@@ -29,8 +29,8 @@ import '../user_selection_screen.dart';
 ///    [TasksetCreationCartEvent]
 ///    [TasksetCreationState]
 ///
-/// Author: Nico Soethe
-/// latest Changes: 08.06.2022
+/// Author: Handito Bismo, Nico Soethe
+/// latest Changes: 09.06.2022
 class TasksetCreationCartScreen extends StatefulWidget {
   final BoxConstraints constraints;
 
@@ -58,43 +58,62 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: _bar(screensize.width / 5, 'Tasksetname', LamaColors.bluePrimary),
-      body: Stack(
+      appBar: _bar(screensize.width / 5, "Tasksetname", LamaColors.bluePrimary),
+      body: Column(
         children: [
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              margin: EdgeInsets.all(25),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (BuildContext context) => TasksetCreationCartBloc(),
-                        child: TasksetCreationCartScreen(),
+          /*Container(
+            child: (
+            ListView.builder(
+              itemCount: ,
+              itemBuilder: ,
+            )),
+          ),*/
+          Container(
+            child: (
+                Expanded(
+                  child: (
+                  Row(
+                    children: [
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          margin: EdgeInsets.all(25),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (BuildContext context) => TasksetCreationCartBloc(),
+                                    child: TasksetCreationCartScreen(),
+                                  )
+                              ));
+                            },
+                            child: const Text("Taskset generieren"),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Container(
+                          margin: EdgeInsets.all(25),
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (BuildContext context) => TasksetOptionsBloc(),
+                                    child: OptionTaskScreen(),
+                                  )
+                              ));
+                            },
+                            child: const Text("Task hinzufügen"),
+                          ),
+                        ),
                       )
-                  ));
-                },
-                child: const Text("Taskset generieren"),
-              ),
+                    ],
+                  )
+                  ),
+                )
             ),
           ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              margin: EdgeInsets.all(25),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (BuildContext context) => TasksetOptionsBloc(),
-                        child: OptionTaskScreen(),
-                      )
-                  ));
-                },
-                child: const Text("Task hinzufügen"),
-              ),
-            ),
-          )
         ],
       ),
       /*body: Padding(
