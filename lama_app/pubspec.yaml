@@ -45,7 +45,8 @@ dependencies:
   dio: ^4.0.0
   dbcrypt: ^2.0.0 
   decimal: ^2.1.0
-  
+  introduction_screen: any
+  smooth_page_indicator: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
