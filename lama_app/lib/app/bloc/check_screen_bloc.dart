@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lama_app/app/bloc/create_admin_bloc.dart';
 import 'package:lama_app/app/bloc/create_user_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
@@ -58,7 +57,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     List<User> userList = await DatabaseProvider.db.getUser();
     if (userList == null) return ShowDSGVO(await _loadDSGVO());
     //gets first user if its a guest / no admin
-    if (userList.length == 1 && !userList[0].isAdmin)
+    if (userList.length == 1 && userList[0].isAdmin != true)
       return HasGuest(context, userList[0]);
     for (User user in userList) {
       if (user.isAdmin!) {

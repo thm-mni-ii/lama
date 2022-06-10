@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:introduction_screen/introduction_screen.dart';
+
 //Lama defaults
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -309,11 +309,11 @@ class CheckScreenPage extends State<CheckScreen> {
   }
 
   Widget PageViewerModel(
-      {String title,
-      String description,
+      {String? title,
+      String? description,
       var image,
-      ElevatedButton button,
-      ElevatedButton button2}) {
+      ElevatedButton? button,
+      ElevatedButton? button2}) {
     return Column(
       children: [
         Flexible(
@@ -327,13 +327,13 @@ class CheckScreenPage extends State<CheckScreen> {
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                 child: Text(
-                  title,
+                  title!,
                   style: LamaTextTheme.getStyle(color: Colors.black),
                   textAlign: TextAlign.center,
                 ),
               ),
               Text(
-                description,
+                description!,
                 style: LamaTextTheme.getStyle(
                     color: Colors.black,
                     fontSize: 18,
