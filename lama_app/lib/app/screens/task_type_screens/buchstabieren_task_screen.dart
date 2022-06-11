@@ -35,6 +35,8 @@ int zufallsCharCounter = 0;
 Color testFarbe = Colors.black;
 int flagForCorrectingModus = 0; //  1->represent left   /   2->represents right
 int antwortZaehler = 0;
+int counterForCorrektPushedButtons =
+    0; //increments if the correct button was pressed
 bool isCorrect =
     true; //tracks if all answers were correct in multiple_points mode
 //Der Buchstabieren Task kann auf zwei verschiedene Arten erzeugt werden, welche Art es sein soll wird in der JSON beim CorrectionModus abgefragt
@@ -80,6 +82,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 //zufalls Nummer wird generiert und das erste Wort wird aus eine json gezogen
 //außerdem werden einige Variablen wieder auf ihren ursprünglichen Zustand gestellt-> wichtig für neue Aufgaben
   void initState() {
+    counterForCorrektPushedButtons = 0;
     isCorrect = true;
     zufallsChar = getRandomLiteral(1);
     zufallsChar2 = getRandomLiteral(1);
@@ -274,8 +277,10 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             stringIndex++;
             buchstabenListe[ergebnisIndex] = buchstabe;
             ergebnisIndex++;
+            counterForCorrektPushedButtons++;
             if (!_canShowButton[wortLaenge - 1] &&
-                buchstabenListe.join('') == wort) {
+                //    buchstabenListe.join('') == wort &&
+                counterForCorrektPushedButtons == wortLaenge) {
               if (task.multiplePoints == antwortZaehler + 1 ||
                   task.multiplePoints == 0) {
                 fillBubble(Colors.green);
@@ -371,6 +376,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
         antwortZaehler++;
         ergebnisIndex = 0;
         stringIndex = 0;
+        counterForCorrektPushedButtons = 0;
         testFarbe2 = Colors.blue;
       });
     });
