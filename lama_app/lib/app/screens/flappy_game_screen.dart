@@ -1,6 +1,9 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
+
+import '../../newFlappyLamaGame/new_flappyLamGame.dart';
 
 /// This class creates the Flappy Lama game screen
 class FlappyGameScreen extends StatelessWidget {
@@ -23,6 +26,9 @@ class FlappyGameScreen extends StatelessWidget {
                   child: Container(
                 color: Colors.green,
                 // child: FlappyLamaGame(context, userRepository).widget,
+                child: GameWidget(
+                  game: NewFlappyGame(),
+                ),
               ))
             ])));
   }

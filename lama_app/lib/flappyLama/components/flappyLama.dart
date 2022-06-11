@@ -1,6 +1,7 @@
-import 'dart:ui';
-/*
-import 'package:lama_app/flappyLama/flappyLamaGame.dart';
+/*  import 'dart:ui';
+import 'package:flame'
+
+import 'package:flutter/animation.dart';import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 import 'package:flame/animation.dart';
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
@@ -215,4 +216,4 @@ class FlappyLama extends AnimationComponent {
 
 
 
- */
+  */ 

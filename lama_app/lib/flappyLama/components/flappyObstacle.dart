@@ -1,8 +1,7 @@
-import 'dart:ui';
+/* import 'dart:ui';
 import 'dart:math';
-/*
-import 'package:flame/anchor.dart';
-import 'package:flame/components/component.dart';
+
+import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
@@ -16,9 +15,9 @@ class FlappyObstacle extends Component {
   /// amount of tiles = size of the sprites / width of the obstacle
   final double _sizeInTiles = 1.5;
   /// minimum size of the hole = multiples by [_sizeInTiles] {[minHoleSize] * [_sizeInTiles]}
-  double minHoleSize = 2;
+  double? minHoleSize = 2;
   /// maximum size of the hole = multiples by [_sizeInTiles] {[maxHoleSize] * [_sizeInTiles]}
-  double maxHoleSize = 3;
+  double? maxHoleSize = 3;
   /// maximum distance between the different holes
   final int _maxHoleDistance = 3;
   // --------
@@ -27,7 +26,7 @@ class FlappyObstacle extends Component {
   /// This function gets called when [_passingObjectX] passes this obstacles X coordinate
   Function(FlappyObstacle) onPassing;
   /// This function gets called when an [Rect] collides with this obstacle in [collides]
-  Function onCollide;
+   Function? onCollide;
   /// This function gets called when the obstacle gets reset (holeIndex, holeSize).
   Function(int, int) onResetting;
 
@@ -60,6 +59,7 @@ class FlappyObstacle extends Component {
 
   FlappyObstacle(this._game, this._alter, this._passingObjectX, this.onPassing,
       [this.onCollide, this.minHoleSize, this.maxHoleSize]);
+      
 
   /// This method will generate the obstacle [_sprites] for the rendering.
   ///
@@ -241,5 +241,6 @@ class FlappyObstacle extends Component {
 }
 
 
- */
+ 
 
+ */
