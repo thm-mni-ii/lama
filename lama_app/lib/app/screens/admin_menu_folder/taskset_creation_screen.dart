@@ -136,10 +136,13 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                         DropdownButton<String>(
                           value: _currentSelectedValue,
                           isDense: true,
-                          onChanged: (String newValue){
+                          onChanged: (String newValue) => {
                             setState(() {
                               _currentSelectedValue = newValue;
-                            });
+                            }),
+                            context
+                                .read<TasksetCreationBloc>()
+                                .add(CreateTasksetChangeGrade(int.parse(newValue)))
                           },
                           items: klassenStufe.map((String value){
                             return DropdownMenuItem<String>(
@@ -176,10 +179,13 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                         DropdownButton<String>(
                           value: _currentSelectedValue2,
                           isDense: true,
-                          onChanged: (String newValue){
+                          onChanged: (String newValue) => {
                             setState(() {
-                              _currentSelectedValue2 = newValue;
-                            });
+                                _currentSelectedValue2 = newValue;
+                                }),
+                            context
+                                .read<TasksetCreationBloc>()
+                                .add(CreateTasksetChangeSubject(newValue))
                           },
                           items: facher.map((String value){
                             return DropdownMenuItem<String>(
