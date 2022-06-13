@@ -39,8 +39,8 @@ class TasksetOptionsBloc
     }
     if (event is TasksetOptionsDelete) {
       yield TasksetOptionsWaiting("Aufgaben werden gelöscht...");
-      await sleep(Duration(seconds: 5));
       yield await _deleteUrl(event.url);
+      //yield await _reload();
     }
     if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
     if (event is TasksetOptionsReload) {

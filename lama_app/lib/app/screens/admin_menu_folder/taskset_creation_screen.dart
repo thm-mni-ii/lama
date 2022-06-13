@@ -77,21 +77,22 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
               child: Column(
                 children: [
                   Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      alignment: Alignment.centerLeft,
-                      child: TextFormField(
-                        decoration: InputDecoration(hintText: "Tasksetname"),
-                        onChanged: (value) => context
-                            .read<CreateTasksetBloc>()
-                            .add(CreateTasksetChangeName(value)),
-                      )),
+                    margin: EdgeInsets.only(bottom: 10),
+                    alignment: Alignment.centerLeft,
+                    child: TextFormField(
+                      decoration: InputDecoration(hintText: "Tasksetname"),
+                      onChanged: (value) => context
+                          .read<CreateTasksetBloc>()
+                          .add(CreateTasksetChangeName(value)),
+                    ),
+                  ),
                   Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      alignment: Alignment.centerLeft,
-                      child: TextFormField(
-                        decoration:
-                            InputDecoration(hintText: "Kurzbeschreibung"),
-                      )),
+                    margin: EdgeInsets.only(bottom: 10),
+                    alignment: Alignment.centerLeft,
+                    child: TextFormField(
+                      decoration: InputDecoration(hintText: "Kurzbeschreibung"),
+                    ),
+                  ),
                   Container(
                     margin: EdgeInsets.only(top: 45),
                     alignment: Alignment.centerLeft,
