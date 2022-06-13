@@ -6,6 +6,7 @@ import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 
 import '../../bloc/create_taskset_bloc.dart';
+import '../../state/create_taskset_state.dart';
 import '../taskset_option_screen.dart';
 
 ///This file creates the Taskset Creation Cart Screen
@@ -46,10 +47,17 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: CustomAppbar(
+      appBar: PreferredSize(
+        preferredSize: screenSize/5,
+        child: BlocBuilder<CreateTasksetBloc, CreateTasksetState>(
+            builder: (context, state) {
+              return CustomAppbar(titel: state.taskset.name, size: screenSize.width / 5, color: state.color);
+            }),
+      ),
+      /*appBar: CustomAppbar(
           size: screenSize.width / 5,
           titel: "Tasksetname",
-          color: LamaColors.bluePrimary),
+          color: LamaColors.bluePrimary),*/
       body: Column(
         children: [
           Container(
