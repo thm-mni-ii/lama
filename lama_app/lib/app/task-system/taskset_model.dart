@@ -18,6 +18,13 @@ class Taskset {
   int randomTaskAmount;
   List<Task> tasks;
 
+  Taskset(String name, String subject, int grade) {
+    this.name = name;
+    this.subject = subject;
+    this.grade = grade;
+    this.randomizeOrder = true;
+  }
+
   Taskset.fromJson(Map<String, dynamic> json) {
     //print("Taskseturl String" + TaskUrl.fromMap(json['taskset_url']).toString());
     //print("Taskseturl json" + json['taskset_url']);

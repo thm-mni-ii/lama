@@ -5,13 +5,12 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 
-import '../../bloc/taskset_creation_cart_bloc.dart';
+import '../../bloc/create_taskset_bloc.dart';
 import '../taskset_option_screen.dart';
 
-
-///This file creates the Taskset Option Screen
-///This Screen provides an option to store an link
-///which provides tasksets as json.
+///This file creates the Taskset Creation Cart Screen
+///This Screen provides an option to add a task to the current taskset
+///or to generate a JSON from it.
 ///
 ///
 ///{@important} the url given via input should be validated with the
@@ -20,29 +19,23 @@ import '../taskset_option_screen.dart';
 ///The connection erros are handelt through the [TasksetOptionsBloc]
 ///
 /// * see also
-///    [TasksetOptionsBloc]
-///    [TasksetOptionsEvent]
-///    [TasksetOptionsState]
+///    [TasksetCreationCartBloc]
+///    [TasksetCreationCartEvent]
+///    [TasksetCreationState]
 ///
-/// Author: L.Kammerer
-/// latest Changes: 15.07.2021
+/// Author: Handito Bismo, Nico Soethe
+/// latest Changes: 09.06.2022
 class TasksetCreationCartScreen extends StatefulWidget {
-  final BoxConstraints constraints;
-
-  const TasksetCreationCartScreen({Key key, this.constraints}) : super(key: key);
+  const TasksetCreationCartScreen() : super();
   @override
   State<StatefulWidget> createState() {
-    return TasksetCreationCartScreenState(constraints);
+    return TasksetCreationCartScreenState();
   }
 }
 
 ///OptionTaskScreennState provides the state for the [OptionTaskScreen]
 class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
-  //[_formKey] should be used to identify every Form in this Screen
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final BoxConstraints constraints;
-
-  TasksetCreationCartScreenState(this.constraints);
+  TasksetCreationCartScreenState();
 
   @override
   void initState() {
@@ -56,44 +49,56 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
       appBar: CustomAppbar(
           size: screenSize.width / 5,
           titel: "Tasksetname",
-          color: LamaColors.bluePrimary,
-        ),
-      body: Stack(
+          color: LamaColors.bluePrimary),
+      body: Column(
         children: [
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              margin: EdgeInsets.all(25),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (BuildContext context) => TasksetCreationCartBloc(),
-                        child: TasksetCreationCartScreen(),
-                      )
-                  ));
-                },
-                child: const Text("Taskset generieren"),
-              ),
-            ),
+          Container(
+            child: (Expanded(
+              child: (Row(
+                children: [
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      margin: EdgeInsets.all(25),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                        create: (BuildContext context) =>
+                                            TasksetOptionsBloc(),
+                                        child: OptionTaskScreen(),
+                                      )));
+                        },
+                        child: const Text("Task hinzufügen"),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      margin: EdgeInsets.all(25),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => BlocProvider.value(
+                                        value:
+                                            BlocProvider.of<CreateTasksetBloc>(
+                                                context),
+                                        child: TasksetCreationCartScreen(),
+                                      )));
+                        },
+                        child: const Text("Taskset generieren"),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+            )),
           ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              margin: EdgeInsets.all(25),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (BuildContext context) => TasksetOptionsBloc(),
-                        child: OptionTaskScreen(),
-                      )
-                  ));
-                },
-                child: const Text("Task hinzufügen"),
-              ),
-            ),
-          )
         ],
       ),
       /*body: Padding(

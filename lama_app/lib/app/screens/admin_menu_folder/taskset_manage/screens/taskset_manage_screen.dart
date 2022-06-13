@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/bloc/taskset_creation_bloc.dart';
+import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/custom_appbar.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/widgets/taskset_expansion_tile_widget.dart';
@@ -81,7 +81,7 @@ class TasksetManageScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => BlocProvider(
                             create: (BuildContext context) =>
-                                TasksetCreationBloc(),
+                                CreateTasksetBloc(),
                             child: TasksetCreationScreen(),
                           ),
                         ),
