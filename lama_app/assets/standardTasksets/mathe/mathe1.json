@@ -1,4 +1,8 @@
 {
+    "taskset_url": {
+        "id": 1,
+        "url": "assets/standardTasksets/mathe/mathe1.json"
+    },
     "taskset_name": "Standardaufgaben Klasse 1",
     "taskset_subject": "Mathe",
     "taskset_grade": 1,
@@ -11,7 +15,7 @@
             "left_to_solve": 3,
             "uhr": "vollStunde",
             "timer": false
-          },
+        },
         {
             "task_type": "NumberLine",
             "task_reward": 2,

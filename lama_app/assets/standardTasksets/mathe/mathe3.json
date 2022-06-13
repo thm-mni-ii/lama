@@ -1,4 +1,8 @@
 {
+  "taskset_url": {
+      "id": 1,
+      "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe3.json"
+  },
   "taskset_name": "Standardaufgaben Klasse 3",
   "taskset_subject": "Mathe",
   "taskset_grade": 3,

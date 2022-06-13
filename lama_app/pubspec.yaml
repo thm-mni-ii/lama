@@ -85,6 +85,12 @@ flutter:
     - assets/md/
     - assets/lama_facts.txt
   #   - images/a_dot_ham.jpeg
+    - assets/standardTasksets/mathe/mathe1.json
+    - assets/standardTasksets/mathe/mathe2.json
+    - assets/standardTasksets/mathe/mathe3.json
+    - assets/standardTasksets/mathe/mathe4.json
+    - assets/standardTasksets/mathe/mathe5.json
+    - assets/standardTasksets/mathe/mathe6.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

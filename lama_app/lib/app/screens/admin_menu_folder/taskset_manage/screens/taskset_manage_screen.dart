@@ -5,6 +5,7 @@ import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/custom_appbar.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/widgets/taskset_expansion_tile_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
+import 'package:lama_app/app/task-system/taskset_loader.dart';
 // blocs
 
 //Lama default
@@ -22,101 +23,104 @@ class TasksetManageScreen extends StatelessWidget {
     TasksetRepository tasksetRepository =
         RepositoryProvider.of<TasksetRepository>(context);
     Size screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: CustomAppbar(
-        size: screenSize.width / 5,
-        titel: "Meine erstellten Tasks",
-        color: LamaColors.bluePrimary,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              children: [
-                for (int i = 1; i <= 6; i++)
-                  TasksetExpansionTileWidget(
-                    classString: 'Klasse $i',
-                    listOfTasksets: tasksetRepository.getTasksetsForGrade(i),
-                  ),
-/*                   TasksetExpansionTileWidget(
-                    classString: 'Klasse 2',
-                    listOfTasksets: tasksetRepository.getTasksetsForGrade(2),
-                  ),
-                  TasksetExpansionTileWidget(
-                    classString: 'Klasse 3',
-                    listOfTasksets: tasksetRepository.getTasksetsForGrade(3),
-                  ),
-                  TasksetExpansionTileWidget(
-                    classString: 'Klasse 4',
-                    listOfTasksets: tasksetRepository.getTasksetsForGrade(4),
-                  ),
-                  TasksetExpansionTileWidget(
-                    classString: 'Klasse 5',
-                    listOfTasksets: tasksetRepository.getTasksetsForGrade(5),
-                  ),
-                  TasksetExpansionTileWidget(
-                    classString: 'Klasse 6',
-                    listOfTasksets: tasksetRepository.getTasksetsForGrade(6),
-                  ),
- */
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                TextButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(LamaColors.bluePrimary),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (BuildContext context) =>
-                              TasksetCreationBloc(),
-                          child: TasksetCreationScreen(),
-                        ),
+    return BlocProvider(
+      create: (context) => TasksetOptionsBloc(),
+      child: Scaffold(
+        appBar: CustomAppbar(
+          size: screenSize.width / 5,
+          titel: "Meine erstellten Tasks",
+          color: LamaColors.bluePrimary,
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
+                  for (int i = 1; i <= TasksetLoader.GRADES_SUPPORTED; i++)
+                    TasksetExpansionTileWidget(
+                      classString: 'Klasse $i',
+                      listOfTasksets: tasksetRepository.getTasksetsForGrade(i),
+                    ),
+                  /*                   TasksetExpansionTileWidget(
+                        classString: 'Klasse 2',
+                        listOfTasksets: tasksetRepository.getTasksetsForGrade(2),
                       ),
-                    );
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      "Taskset erstellen",
-                      style: TextStyle(color: Colors.white),
+                      TasksetExpansionTileWidget(
+                        classString: 'Klasse 3',
+                        listOfTasksets: tasksetRepository.getTasksetsForGrade(3),
+                      ),
+                      TasksetExpansionTileWidget(
+                        classString: 'Klasse 4',
+                        listOfTasksets: tasksetRepository.getTasksetsForGrade(4),
+                      ),
+                      TasksetExpansionTileWidget(
+                        classString: 'Klasse 5',
+                        listOfTasksets: tasksetRepository.getTasksetsForGrade(5),
+                      ),
+                      TasksetExpansionTileWidget(
+                        classString: 'Klasse 6',
+                        listOfTasksets: tasksetRepository.getTasksetsForGrade(6),
+                      ),
+     */
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(LamaColors.bluePrimary),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (BuildContext context) =>
+                                TasksetCreationBloc(),
+                            child: TasksetCreationScreen(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Taskset erstellen",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (BuildContext context) =>
-                              TasksetOptionsBloc(),
-                          child: OptionTaskScreen(),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (BuildContext context) =>
+                                TasksetOptionsBloc(),
+                            child: OptionTaskScreen(),
+                          ),
                         ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Taskset importieren",
+                        style: TextStyle(color: LamaColors.bluePrimary),
                       ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      "Taskset importieren",
-                      style: TextStyle(color: LamaColors.bluePrimary),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/db/database_provider.dart';
 
@@ -9,6 +10,7 @@ import 'package:lama_app/db/database_provider.dart';
 ///
 ///Author: K.Binder
 class Taskset {
+  TaskUrl taskurl;
   String name;
   String subject;
   int grade;
@@ -17,6 +19,10 @@ class Taskset {
   List<Task> tasks;
 
   Taskset.fromJson(Map<String, dynamic> json) {
+    //print("Taskseturl String" + TaskUrl.fromMap(json['taskset_url']).toString());
+    //print("Taskseturl json" + json['taskset_url']);
+    print("json" + json.toString());
+    taskurl = TaskUrl.fromMap(json['taskset_url']);
     name = json['taskset_name'];
     subject = json['taskset_subject'];
     grade = json['taskset_grade'];
