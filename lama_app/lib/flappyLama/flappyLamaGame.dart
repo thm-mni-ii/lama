@@ -21,7 +21,7 @@ import '../app/screens/game_list_screen.dart';
 import 'widgets/gameOverMode.dart';
 
 /// This class represents the Flappy Lama game and its components.
-class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
+class FlappyLamaGame with TapDetector, Game {
   // SETTINGS
   // --------
   /// the id of flappyLama game which is used in the database
@@ -351,4 +351,4 @@ class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
 
 
 
-  */
+     */    

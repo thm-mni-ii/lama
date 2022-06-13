@@ -1,14 +1,15 @@
 /*  import 'dart:ui';
 import 'package:flame'
 
-import 'package:flutter/animation.dart';import 'package:lama_app/flappyLama/flappyLamaGame.dart';
+
+import 'package:flame/components.dart';import 'package:flutter/animation.dart';import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 import 'package:flame/animation.dart';
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
 
 /// This class extends [AnimationComponent] and describes a flying lama.
 /// It contains three different animations for idle, up and falling.
-class FlappyLama extends AnimationComponent {
+class FlappyLama extends SpriteAnimationComponent {
   // SETTINGS
   // --------
   /// hitbox padding = [left, right, top, bottom] = negative move inwards / positive move outwards
@@ -95,7 +96,7 @@ class FlappyLama extends AnimationComponent {
       if ((object.top > y - _hitBoxPadding[2] && object.top < y + height - _hitBoxPadding[2]) ||
           (object.bottom > y - _hitBoxPadding[3] && object.bottom < y + height - _hitBoxPadding[3])) {
         // callback
-        onCollide?.call();
+        onCollide.call();
         return true;
       }
     }
@@ -216,4 +217,4 @@ class FlappyLama extends AnimationComponent {
 
 
 
-  */ 
+       */   

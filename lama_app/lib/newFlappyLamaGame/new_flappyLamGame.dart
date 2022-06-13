@@ -1,4 +1,4 @@
-import 'dart:math';
+/* import 'dart:math';
 import 'dart:ui';
 import 'dart:developer' as developer;
 
@@ -29,6 +29,37 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
   }
 }
 
+
+
+
+enum LamaComponentState { idel, up, down }
+
+class LamaComponent extends SpriteGroupComponent<LamaComponentState>
+    with HasGameRef<NewFlappyGame> {
+  @override
+  Future<void> onLoad() async {
+    final pressedSprite = await gameRef.loadSprite(
+      'buttons.png',
+      srcPosition: Vector2(0, 20),
+      srcSize: Vector2(60, 20),
+    );
+    final unpressedSprite = await gameRef.loadSprite(
+      'buttons.png',
+      srcSize: Vector2(60, 20),
+    );
+
+/*    
+    sprites = {
+      LamaComponent.up: pressedSprite,
+      LamaComponent.down: unpressedSprite,
+    };
+
+    current = LamaComponent.idel;
+  } */
+}
+
+
+
 class NewFlappyGame extends FlameGame with TapDetector {
   late Player player;
   double time = 1;
@@ -38,33 +69,44 @@ class NewFlappyGame extends FlameGame with TapDetector {
     await super.onLoad();
 
     // loads the spritesheet from assets
-    final spriteSheet = SpriteSheet(
+    final spriteSheet3 = SpriteSheet(
       image: await images.load('png/lama_animation.png'),
       srcSize: Vector2(16.0, 18.0),
     );
 
     // idle / hover animation
     final idleAnimation =
-        spriteSheet.createAnimation(row: 0, from: 0, to: 4, stepTime: 0.1);
+        spriteSheet3.createAnimation(row: 0, from: 0, to: 4, stepTime: 0.1);
 
     // up animation
     final upAnimation =
-        spriteSheet.createAnimation(row: 0, from: 5, to: 8, stepTime: 0.1);
+        spriteSheet3.createAnimation(row: 0, from: 5, to: 8, stepTime: 0.1);
 
     // fall animation
     final fallAnimation =
-        spriteSheet.createAnimation(row: 0, from: 9, to: 12, stepTime: 0.1);
+        spriteSheet3.createAnimation(row: 0, from: 9, to: 12, stepTime: 0.1);
 
     /*  final Sprite playerSprite =
         Sprite(await images.load('png/lama_animation.png')); */
 
+    /*    final spriteSheet = SpriteSheet(
+      image: 'png/lama_animation.png',
+      textureWidth: 24,
+      textureHeight: 24,
+      columns: 12,
+      rows: 1,
+    ); */
+
     SpriteAnimation animation = idleAnimation;
-    /*    player = Player()
+    final Sprite playerSprite =
+        Sprite(await images.load('png/lama_animation.png'));
+
+/*     player = Player()
       ..sprite = playerSprite
       ..size = playerSprite.srcSize * 2
       ..position = size / 2
-      ..anchor = Anchor.center; */
-    add(player);
+      ..anchor = Anchor.center;
+    add(player); */
   }
 
   @override
@@ -84,3 +126,4 @@ class NewFlappyGame extends FlameGame with TapDetector {
     player.jump(time);
   }
 }
+ */ 

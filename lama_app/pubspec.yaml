@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.8.6
 
 environment:
-  sdk: '>=2.12.0 <3.0.0' 
+  sdk: '>=2.17.0 <3.0.0' 
 
 dependencies:
   flutter:
@@ -35,7 +35,7 @@ dependencies:
   equatable: ^2.0.0
   path_provider: ^2.0.1
   flutter_svg: ^0.22.0
-  flame: ^1.1.1
+  flame: ^1.2.0
   bubble: ^1.2.1
   google_fonts: ^2.1.0
   flutter_markdown: ^0.6.2
@@ -85,6 +85,7 @@ flutter:
     - assets/standardTasksets/sachkunde/
     - assets/md/
     - assets/lama_facts.txt
+    - assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
