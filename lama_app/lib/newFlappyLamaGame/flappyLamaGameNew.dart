@@ -19,9 +19,6 @@ import 'package:flame/input.dart';
 import 'package:flame/text.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/services.dart';
-import 'package:lama_app/trexGame/background/horizon.dart';
-import 'package:lama_app/trexGame/game_over.dart';
-import 'package:lama_app/trexGame/player.dart';
 
 enum GameState { playing, intro, gameOver }
 
