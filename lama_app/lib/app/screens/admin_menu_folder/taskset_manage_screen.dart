@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/bloc/taskset_creation_bloc.dart';
+import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
 // blocs
 
@@ -39,7 +39,7 @@ class TasksetManageScreenState extends State<TasksetManageScreen> {
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context) => BlocProvider(
-                          create: (BuildContext context) => TasksetCreationBloc(),
+                          create: (BuildContext context) => CreateTasksetBloc(),
                           child: TasksetCreationScreen(),
                         )
                     ));

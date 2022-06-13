@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/bloc/taskset_creation_bloc.dart';
-import 'package:lama_app/app/event/taskset_creation_event.dart';
+import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
+import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_cart_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
-import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
-import 'package:lama_app/util/LamaTextTheme.dart';
-import 'package:lama_app/util/input_validation.dart';
-import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
-
-import '../../bloc/taskset_creation_cart_bloc.dart';
-import '../taskset_option_screen.dart';
 
 
 ///This file creates the Taskset Creation Screen
@@ -53,7 +46,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   ///
   ///{@param} [BuildContext] as context
   ///
-  ///{@return} [Widget] decided by the incoming state of the [TasksetCreationBloc]
+  ///{@return} [Widget] decided by the incoming state of the [CreateTasksetBloc]
   @override
   Widget build(BuildContext context) {
 
@@ -95,7 +88,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                       hintText: "Tasksetname"
                     ),
                     onChanged: (value) => context
-                      .read<TasksetCreationBloc>()
+                      .read<CreateTasksetBloc>()
                       .add(CreateTasksetChangeName(value)),
                   )
                 ),
@@ -141,7 +134,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                               _currentSelectedValue = newValue;
                             }),
                             context
-                                .read<TasksetCreationBloc>()
+                                .read<CreateTasksetBloc>()
                                 .add(CreateTasksetChangeGrade(int.parse(newValue)))
                           },
                           items: klassenStufe.map((String value){
@@ -184,7 +177,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                                 _currentSelectedValue2 = newValue;
                                 }),
                             context
-                                .read<TasksetCreationBloc>()
+                                .read<CreateTasksetBloc>()
                                 .add(CreateTasksetChangeSubject(newValue))
                           },
                           items: facher.map((String value){
@@ -210,8 +203,8 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => BlocProvider(
-                                create: (BuildContext context) => TasksetCreationCartBloc(),
+                              builder: (_) => BlocProvider.value(
+                                value: BlocProvider.of<CreateTasksetBloc>(context),
                                 child: TasksetCreationCartScreen(),
                               )
                           ));

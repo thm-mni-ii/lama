@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
-import 'package:lama_app/app/event/taskset_options_event.dart';
-import 'package:lama_app/app/model/taskUrl_model.dart';
 
-import '../../bloc/taskset_creation_cart_bloc.dart';
-import '../../bloc/user_selection_bloc.dart';
+import '../../bloc/create_taskset_bloc.dart';
+import '../../event/create_taskset_event.dart';
 import '../taskset_option_screen.dart';
-import '../user_selection_screen.dart';
 
 
 ///This file creates the Taskset Creation Cart Screen
@@ -57,13 +53,6 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
       appBar: _bar(screensize.width / 5, "Tasksetname", LamaColors.bluePrimary),
       body: Column(
         children: [
-          /*Container(
-            child: (
-            ListView.builder(
-              itemCount: ,
-              itemBuilder: ,
-            )),
-          ),*/
           Container(
             child: (
                 Expanded(
@@ -94,8 +83,8 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                    create: (BuildContext context) => TasksetCreationCartBloc(),
+                                  builder: (_) => BlocProvider.value(
+                                    value: BlocProvider.of<CreateTasksetBloc>(context),
                                     child: TasksetCreationCartScreen(),
                                   )
                               ));
