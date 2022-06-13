@@ -38,66 +38,48 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
   TasksetCreationCartScreenState();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppbar(
-          size: screenSize.width / 5,
-          titel: "Tasksetname",
-          color: LamaColors.bluePrimary),
+        size: screenSize.width / 5,
+        titel: "Tasksetname",
+        color: LamaColors.bluePrimary,
+      ),
       body: Column(
         children: [
-          Container(
-            child: (Expanded(
-              child: (Row(
-                children: [
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
-                      margin: EdgeInsets.all(25),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                        create: (BuildContext context) =>
-                                            TasksetOptionsBloc(),
-                                        child: OptionTaskScreen(),
-                                      )));
-                        },
-                        child: const Text("Task hinzufügen"),
-                      ),
+          ListView.builder(
+            itemBuilder: (context, index) => Card(),
+            itemCount: 2,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (BuildContext context) => TasksetOptionsBloc(),
+                      child: OptionTaskScreen(),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                      margin: EdgeInsets.all(25),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => BlocProvider.value(
-                                        value:
-                                            BlocProvider.of<CreateTasksetBloc>(
-                                                context),
-                                        child: TasksetCreationCartScreen(),
-                                      )));
-                        },
-                        child: const Text("Taskset generieren"),
-                      ),
+                ),
+                child: const Text("Task hinzufügen"),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<CreateTasksetBloc>(context),
+                      child: TasksetCreationCartScreen(),
                     ),
                   ),
-                ],
-              )),
-            )),
+                ),
+                child: const Text("Taskset generieren"),
+              ),
+            ],
           ),
         ],
       ),
