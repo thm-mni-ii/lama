@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/creation_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
@@ -70,13 +71,14 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
                       child: TextButton(
                         onPressed: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                        create: (BuildContext context) =>
-                                            TasksetOptionsBloc(),
-                                        child: OptionTaskScreen(),
-                                      )));
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider.value(
+                                value: BlocProvider.of<CreateTasksetBloc>(context),
+                                child: ChooseTaskScreen(),
+                              ),
+                            ),
+                          );
                         },
                         child: const Text("Task hinzufügen"),
                       ),
