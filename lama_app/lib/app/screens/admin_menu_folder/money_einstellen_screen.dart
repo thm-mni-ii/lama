@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../util/LamaColors.dart';
@@ -118,19 +119,100 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                           title: Text(item.headerValue),
                         );
                       },
-                      body: ListTile(
-                          title: Text(item.expandedValue),
-                          subtitle: const Text(
-                              'To delete this panel, tap the trash can icon'),
-                          trailing: const Icon(Icons.delete),
-                          onTap: () {
-                            setState(() {
-                              _data.removeWhere(
-                                  (Item currentItem) => item == currentItem);
-                            });
-                          }));
+                      body: CheckboxListTile(
+                        title: Text("Nur volle Euro"),
+                        onChanged: (bool? value) {
+                          setState(() {
+                            timeDilation = value! ? 10.0 : 1.0;
+                          });
+                        },
+                        value: timeDilation != 1.0,
+                      ));
                 }).toList(),
               ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 30),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Erreichbare Lamacoins',
+                ),
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return "Beitrag fehlt!";
+                  }
+                  return null;
+                },
+                onSaved: (text) {
+                  von = text;
+                },
+                onChanged: (text) => setState(() => this.von = text),
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: EdgeInsets.all(50),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Colors.white),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MoneyEinstellenScreen()),
+                        );
+                        /*   if (_formKey.currentState!.validate()) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Processing Data')),
+                                );
+                              }
+                              _formKey.currentState?.save();
+                              print(tasksetName);
+                              print(kurzBeschreibung);
+                              print(value);
+                              print(value2); */
+                      },
+                      child: Text.rich(
+                        TextSpan(
+                            text: 'Preview',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black)),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MoneyEinstellenScreen()),
+                        );
+                        /*   if (_formKey.currentState!.validate()) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Processing Data')),
+                                );
+                              }
+                              _formKey.currentState?.save();
+                              print(tasksetName);
+                              print(kurzBeschreibung);
+                              print(value);
+                              print(value2); */
+                      },
+                      child: Text.rich(
+                        TextSpan(
+                            text: 'Hinzufügen',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                    )
+                  ]),
             )
           ],
         ),
@@ -191,7 +273,7 @@ List<Item> generateItems(int numberOfItems) {
     return Item(
       id: index,
       headerValue: 'Erweiterte Optionen',
-      expandedValue: "",
+      expandedValue: "Nur volle Euro",
     );
   });
 }
