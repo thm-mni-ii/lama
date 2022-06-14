@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
 import 'package:lama_app/app/state/taskset_options_state.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -43,7 +44,10 @@ class TasksetExpansionTileCardWidget extends StatelessWidget {
                     color: Colors.white,
                   ),
                   IconButton(
-                    onPressed: () {}, // navigieren zu edit screen
+                    onPressed: () => MaterialPageRoute(
+                      builder: (context) =>
+                          TasksetCreationScreen(taskset: taskset),
+                    ), // navigieren zu edit screen
                     icon: Icon(Icons.edit),
                     color: Colors.white,
                   ),

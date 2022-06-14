@@ -4,6 +4,7 @@ import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_cart_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
+import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
 ///This file creates the Taskset Creation Screen
@@ -17,29 +18,34 @@ import 'package:lama_app/util/LamaColors.dart';
 /// author(s): Handito Bismo, Nico Soethe
 /// latest Changes: 08.06.2022
 class TasksetCreationScreen extends StatefulWidget {
-  final BoxConstraints constraints;
-
-  const TasksetCreationScreen({Key key, this.constraints}) : super(key: key);
+  final Taskset taskset;
+  const TasksetCreationScreen({Key key, @required this.taskset})
+      : super(key: key);
   @override
-  State<StatefulWidget> createState() {
-    return TasksetCreationScreenState(constraints);
-  }
+  State<StatefulWidget> createState() => TasksetCreationScreenState();
 }
 
 ///TasksetCreationScreenState provides the state for the [TasksetCreationScreen]
 class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var _currentSelectedValue;
-  var _currentSelectedValue2;
-  final BoxConstraints constraints;
+  var _currentSelectedClass;
+  var _currentSelectedSubject;
 
-  TasksetCreationScreenState(this.constraints);
+  TextEditingController _nameController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  var klassenStufe = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+  ];
+
+  var facher = ["Mathe", "Deutsch", "Englisch", "Sachkunde"];
+
+  bool first = true;
 
   ///override build methode [StatelessWidget]
   ///
@@ -50,16 +56,13 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
-    var klassenStufe = [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-    ];
+    if (first) {
+      _currentSelectedClass = widget.taskset.grade;
+      _currentSelectedSubject = widget.taskset.subject;
+      _nameController.text = widget.taskset.name;
 
-    var facher = ["Mathe", "Deutsch", "Englisch", "Sachkunde"];
+      first = false;
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -114,16 +117,17 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                             TextStyle(color: Colors.redAccent, fontSize: 16.0),
                         hintText: 'Klassenstufe auswählen',
                       ),
-                      isEmpty: _currentSelectedValue == '',
+                      isEmpty: _currentSelectedClass == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           hint: Text("Klassenstufe auswählen"),
-                          value: _currentSelectedValue,
+                          value: _currentSelectedClass,
                           isDense: true,
                           onChanged: (String newValue) => {
-                            setState(() => _currentSelectedValue = newValue),
+                            setState(() => _currentSelectedClass = newValue),
                             context.read<CreateTasksetBloc>().add(
-                                CreateTasksetChangeGrade(int.parse(newValue)))
+                                  CreateTasksetChangeGrade(int.parse(newValue)),
+                                )
                           },
                           items: klassenStufe.map((String value) {
                             return DropdownMenuItem<String>(
@@ -137,31 +141,32 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                   ),
                   Container(
                     child: InputDecorator(
-                        decoration: InputDecoration(
-                          errorStyle: TextStyle(
-                              color: Colors.redAccent, fontSize: 16.0),
-                          hintText: '',
+                      decoration: InputDecoration(
+                        errorStyle:
+                            TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                        hintText: '',
+                      ),
+                      isEmpty: _currentSelectedSubject == '',
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          hint: Text("Fach auswählen"),
+                          value: _currentSelectedSubject,
+                          isDense: true,
+                          onChanged: (String newValue) => {
+                            setState(() => _currentSelectedSubject = newValue),
+                            context
+                                .read<CreateTasksetBloc>()
+                                .add(CreateTasksetChangeSubject(newValue))
+                          },
+                          items: facher.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
                         ),
-                        isEmpty: _currentSelectedValue2 == '',
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            hint: Text("Fach auswählen"),
-                            value: _currentSelectedValue2,
-                            isDense: true,
-                            onChanged: (String newValue) => {
-                              setState(() {
-                                _currentSelectedValue2 = newValue;
-                              }),
-                              context
-                                  .read<CreateTasksetBloc>()
-                                  .add(CreateTasksetChangeSubject(newValue))
-                            },
-                            items: facher.map((String value) {
-                              return DropdownMenuItem<String>(
-                                  value: value, child: Text(value));
-                            }).toList(),
-                          ),
-                        )),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -172,17 +177,15 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
             child: Container(
               margin: EdgeInsets.all(25),
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetCreationCartScreen(),
-                      ),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<CreateTasksetBloc>(context),
+                      child: TasksetCreationCartScreen(),
                     ),
-                  );
-                },
+                  ),
+                ),
                 child: const Text("Weiter"),
               ),
             ),
@@ -190,11 +193,5 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
         ],
       ),
     );
-  }
-
-  Color _getColor(String subject) {
-    if (subject == "Deutsch") {
-      return LamaColors.redPrimary;
-    }
   }
 }
