@@ -18,14 +18,14 @@ class TasksetExpansionTileCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TasksetOptionsBloc, TasksetOptionsState>(
       builder: (context, state) {
-        if (state is TasksetOptionsWaiting)
+        if (state is TasksetOptionsWaiting) {
           return Column(
             children: [
               CircularProgressIndicator(),
               Text(state.waitingText),
             ],
           );
-        else {
+        } else {
           return Card(
             margin: const EdgeInsets.all(8.0),
             color: LamaColors.findSubjectColor(taskset),
@@ -44,10 +44,13 @@ class TasksetExpansionTileCardWidget extends StatelessWidget {
                     color: Colors.white,
                   ),
                   IconButton(
-                    onPressed: () => MaterialPageRoute(
-                      builder: (context) =>
-                          TasksetCreationScreen(taskset: taskset),
-                    ), // navigieren zu edit screen
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            TasksetCreationScreen(taskset: taskset),
+                      ),
+                    ),
                     icon: Icon(Icons.edit),
                     color: Colors.white,
                   ),

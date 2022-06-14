@@ -56,8 +56,8 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
-    if (first) {
-      _currentSelectedClass = widget.taskset.grade;
+    if (widget.taskset != null && first) {
+      _currentSelectedClass = widget.taskset.grade.toString();
       _currentSelectedSubject = widget.taskset.subject;
       _nameController.text = widget.taskset.name;
 
@@ -83,6 +83,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     margin: EdgeInsets.only(bottom: 10),
                     alignment: Alignment.centerLeft,
                     child: TextFormField(
+                      controller: _nameController,
                       decoration: InputDecoration(hintText: "Tasksetname"),
                       onChanged: (value) => context
                           .read<CreateTasksetBloc>()
@@ -113,8 +114,10 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     margin: EdgeInsets.only(bottom: 10),
                     child: InputDecorator(
                       decoration: InputDecoration(
-                        errorStyle:
-                            TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                        errorStyle: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 16.0,
+                        ),
                         hintText: 'Klassenstufe auswählen',
                       ),
                       isEmpty: _currentSelectedClass == '',
@@ -142,8 +145,10 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                   Container(
                     child: InputDecorator(
                       decoration: InputDecoration(
-                        errorStyle:
-                            TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                        errorStyle: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 16.0,
+                        ),
                         hintText: '',
                       ),
                       isEmpty: _currentSelectedSubject == '',

@@ -27,7 +27,7 @@ class TasksetManageScreen extends StatelessWidget {
       create: (context) => TasksetOptionsBloc(),
       child: Scaffold(
         appBar: CustomAppbar(
-          size: screenSize.width / 5,
+          size: screenSize.width,
           titel: "Meine erstellten Tasks",
           color: LamaColors.bluePrimary,
         ),
@@ -70,23 +70,20 @@ class TasksetManageScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  TextButton(
+                  ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all(LamaColors.bluePrimary),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (BuildContext context) =>
-                                CreateTasksetBloc(),
-                            child: TasksetCreationScreen(),
-                          ),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (BuildContext context) => CreateTasksetBloc(),
+                          child: TasksetCreationScreen(taskset: null),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
@@ -96,18 +93,16 @@ class TasksetManageScreen extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (BuildContext context) =>
-                                TasksetOptionsBloc(),
-                            child: OptionTaskScreen(),
-                          ),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (BuildContext context) =>
+                              TasksetOptionsBloc(),
+                          child: OptionTaskScreen(),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
