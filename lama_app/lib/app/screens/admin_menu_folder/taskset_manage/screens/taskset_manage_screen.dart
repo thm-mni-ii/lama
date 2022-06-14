@@ -70,6 +70,27 @@ class TasksetManageScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (BuildContext context) =>
+                                  TasksetOptionsBloc(),
+                              child: OptionTaskScreen(),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          "Taskset importieren",
+                          style: TextStyle(color: LamaColors.bluePrimary),
+                        ),
+                      ),
+                    ),
                   TextButton(
                     style: ButtonStyle(
                       backgroundColor:
@@ -92,27 +113,6 @@ class TasksetManageScreen extends StatelessWidget {
                       child: Text(
                         "Taskset erstellen",
                         style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (BuildContext context) =>
-                                TasksetOptionsBloc(),
-                            child: OptionTaskScreen(),
-                          ),
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        "Taskset importieren",
-                        style: TextStyle(color: LamaColors.bluePrimary),
                       ),
                     ),
                   ),
