@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/money_einstellen_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/tasksets_name_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -172,7 +173,13 @@ class LehrerTasksetsErstellenScreenState
                           alignment: Alignment.bottomRight,
                           child: ElevatedButton(
                             onPressed: () {
-                              if (_formKey.currentState!.validate()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MoneyEinstellenScreen()),
+                              );
+                              /*   if (_formKey.currentState!.validate()) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text('Processing Data')),
@@ -180,9 +187,9 @@ class LehrerTasksetsErstellenScreenState
                               }
                               _formKey.currentState?.save();
                               print(tasksetName);
-                              print(value);
-                              print(value2);
                               print(kurzBeschreibung);
+                              print(value);
+                              print(value2); */
                             },
                             child: Text.rich(
                               TextSpan(
