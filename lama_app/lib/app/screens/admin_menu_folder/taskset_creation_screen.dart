@@ -64,7 +64,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CustomAppbar(
-        size: screenSize.width,
+        size: screenSize.width/5,
         titel: "Taskset erstellen",
         color: LamaColors.bluePrimary,
       ),

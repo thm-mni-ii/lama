@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
-import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 
@@ -48,10 +47,10 @@ class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: screenSize/5,
+        preferredSize: new Size.fromHeight(screenSize.width/5),
         child: BlocBuilder<CreateTasksetBloc, CreateTasksetState>(
             builder: (context, state) {
-              return CustomAppbar(titel: state.taskset.name, size: screenSize.width / 5, color: state.color);
+              return CustomAppbar(titel: state.taskset.name, size: screenSize.width/5, color: state.color);
             }),
       ),
       /*appBar: CustomAppbar(
