@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_cart_screen.dart';
 
 import '../event/taskset_creation_cart_event.dart';
-import '../state/taskset_creation_cart_state.dart';
+import '../state/create_taskset_state.dart';
 
 ///[Bloc] for the [TasksetCreationCartScreen]
 ///
@@ -14,12 +14,12 @@ import '../state/taskset_creation_cart_state.dart';
 ///
 /// Author: N. Soethe
 /// latest Changes: 01.06.2022
-class TasksetCreationCartBloc extends Bloc<TasksetCreationListEvent, TasksetCreationListState> {
+class TasksetCreationCartBloc extends Bloc<TasksetCreationListEvent, CreateTasksetState> {
 
-  TasksetCreationCartBloc({TasksetCreationListState initialState}) : super(initialState);
+  TasksetCreationCartBloc({CreateTasksetState initialState}) : super(initialState);
 
   @override
-  Stream<TasksetCreationListState> mapEventToState(TasksetCreationListEvent event) async* {
+  Stream<CreateTasksetState> mapEventToState(TasksetCreationListEvent event) async* {
 
   }
 }
