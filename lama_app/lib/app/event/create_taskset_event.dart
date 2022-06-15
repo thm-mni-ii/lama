@@ -70,6 +70,8 @@ class EditTaskset extends CreateTasksetEvent {
 /// Provides the initial empty taskset
 class InitialTaskset extends CreateTasksetEvent {}
 
+class SetMissingAttributes extends CreateTasksetEvent {}
+
 /// used to add a [Task] to the [Taskset] in Bloc
 ///
 /// {@param}[Task] task that should be added to the list

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_creation_cart_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/widgets/taskset_creation_cart_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 
-import '../../bloc/create_taskset_bloc.dart';
-import '../../state/create_taskset_state.dart';
-import '../taskset_option_screen.dart';
+import '../../../../bloc/create_taskset_bloc.dart';
+import '../../../../state/create_taskset_state.dart';
+import '../../../taskset_option_screen.dart';
 
 ///This file creates the Taskset Creation Cart Screen
 ///This Screen provides an option to add a task to the current taskset
@@ -29,12 +30,12 @@ import '../taskset_option_screen.dart';
 /// Author: Handito Bismo, Nico Soethe
 /// latest Changes: 09.06.2022
 class TasksetCreationCartScreen extends StatelessWidget {
-  final Taskset taskset;
-  const TasksetCreationCartScreen({@required this.taskset}) : super();
+  const TasksetCreationCartScreen() : super();
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    Taskset taskset = BlocProvider.of<CreateTasksetBloc>(context).taskset;
     return Scaffold(
       appBar: CustomAppbar(
         titel: taskset.name,
@@ -45,10 +46,11 @@ class TasksetCreationCartScreen extends StatelessWidget {
         children: [
           Expanded(
             child: ListView.builder(
-              itemBuilder: (context, index) => Card(
-                child: Text("test"),
-              ),
-              itemCount: 3,
+              itemBuilder: (context, index) {
+                print(taskset.tasks[index]);
+                return TasksetCreationCartWidget(index: index);
+              },
+              itemCount: taskset.tasks.length,
             ),
           ),
           Row(
@@ -70,10 +72,7 @@ class TasksetCreationCartScreen extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
-                      value: BlocProvider.of<CreateTasksetBloc>(context),
-                      child: TasksetCreationCartScreen(taskset: taskset),//TODO falsch
-                    ),
+                    builder: (_) => TasksetCreationCartScreen(),
                   ),
                 ),
                 child: const Text("Taskset generieren"),

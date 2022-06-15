@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_cart_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/screens/taskset_creation_cart_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -191,18 +191,13 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     if (_nameController.text.isNotEmpty &&
                         _currentSelectedClass != null &&
                         _currentSelectedSubject != null) {
+                      // initilize everything else in taskset
+                      BlocProvider.of<CreateTasksetBloc>(context)
+                          .add(SetMissingAttributes());
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TasksetCreationCartScreen(
-                            taskset: BlocProvider.of<CreateTasksetBloc>(context)
-                                    .taskset ??
-                                Taskset(
-                                  _nameController.text,
-                                  _currentSelectedSubject,
-                                  int.parse(_currentSelectedClass),
-                                ),
-                          ),
+                          builder: (context) => TasksetCreationCartScreen(),
                         ),
                       );
                     } else {
