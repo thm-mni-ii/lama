@@ -29,8 +29,8 @@ class TasksetCreationScreen extends StatefulWidget {
 class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var _currentSelectedClass;
-  var _currentSelectedSubject;
+  String _currentSelectedClass;
+  String _currentSelectedSubject;
 
   TextEditingController _nameController = TextEditingController();
 
@@ -100,7 +100,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                   Container(
                     margin: EdgeInsets.only(top: 45),
                     alignment: Alignment.centerLeft,
-                    child: Text.rich(
+                    child: const Text.rich(
                       TextSpan(
                         text: 'Klasse',
                         style: TextStyle(
@@ -144,7 +144,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                   ),
                   Container(
                     child: InputDecorator(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         errorStyle: TextStyle(
                           color: Colors.redAccent,
                           fontSize: 16.0,
@@ -154,7 +154,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                       isEmpty: _currentSelectedSubject == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          hint: Text("Fach auswählen"),
+                          hint: const Text("Fach auswählen"),
                           value: _currentSelectedSubject,
                           isDense: true,
                           onChanged: (String newValue) => {
@@ -182,15 +182,37 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
             child: Container(
               margin: EdgeInsets.all(25),
               child: ElevatedButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
-                      value: BlocProvider.of<CreateTasksetBloc>(context),
-                      child: TasksetCreationCartScreen(),
-                    ),
-                  ),
-                ),
+                onPressed: () {
+                  // TODO state comit wenn erfolgreich in nächsten screen wenn nicht snackbar anzeigen
+                  if (_nameController.text.isNotEmpty &&
+                      _currentSelectedClass !=null &&
+                      _currentSelectedSubject != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TasksetCreationCartScreen(
+                          taskset: widget.taskset ??
+                              Taskset(
+                                  _nameController.text,
+                                  _currentSelectedSubject,
+                                  int.parse(_currentSelectedClass)),
+                        ),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: LamaColors.redAccent,
+                        content: Text(
+                          'Fülle alle Felder aus',
+                          textAlign: TextAlign.center,
+                          //style: LamaTextTheme.getStyle(fontSize: 15),
+                        ),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
+                  }
+                },
                 child: const Text("Weiter"),
               ),
             ),
