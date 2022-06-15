@@ -28,8 +28,8 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
     // TODO: implement build
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: navBar(screenSize.width / 5, "Tasksets erstellen",
-          LamaColors.bluePrimary) as PreferredSizeWidget?,
+      appBar: navBar(screenSize.width / 5, "MoneyTask", LamaColors.bluePrimary)
+          as PreferredSizeWidget?,
       body: Form(
         key: _formKey,
         child: Column(
