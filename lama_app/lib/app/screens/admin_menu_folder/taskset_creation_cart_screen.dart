@@ -28,40 +28,15 @@ import '../taskset_option_screen.dart';
 ///
 /// Author: Handito Bismo, Nico Soethe
 /// latest Changes: 09.06.2022
-<<<<<<< HEAD
-class TasksetCreationCartScreen extends StatefulWidget {
-  const TasksetCreationCartScreen() : super();
-  @override
-  State<StatefulWidget> createState() {
-    return TasksetCreationCartScreenState();
-  }
-}
-
-///OptionTaskScreennState provides the state for the [OptionTaskScreen]
-class TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
-  TasksetCreationCartScreenState();
-=======
 class TasksetCreationCartScreen extends StatelessWidget {
   final Taskset taskset;
   const TasksetCreationCartScreen({@required this.taskset}) : super();
->>>>>>> taskset_erstellung-taskset_manage_screen
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppbar(
-<<<<<<< HEAD
-        size: screenSize.width / 5,
-        titel: "Tasksetname",
-        color: LamaColors.bluePrimary,
-      ),
-      body: Column(
-        children: [
-          ListView.builder(
-            itemBuilder: (context, index) => Card(),
-            itemCount: 2,
-=======
         titel: taskset.name,
         size: screenSize.width,
         color: LamaColors.findSubjectColor(taskset),
@@ -75,7 +50,6 @@ class TasksetCreationCartScreen extends StatelessWidget {
               ),
               itemCount: 3,
             ),
->>>>>>> taskset_erstellung-taskset_manage_screen
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -98,11 +72,7 @@ class TasksetCreationCartScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => BlocProvider.value(
                       value: BlocProvider.of<CreateTasksetBloc>(context),
-<<<<<<< HEAD
-                      child: TasksetCreationCartScreen(),
-=======
                       child: TasksetCreationCartScreen(taskset: taskset),//TODO falsch
->>>>>>> taskset_erstellung-taskset_manage_screen
                     ),
                   ),
                 ),
