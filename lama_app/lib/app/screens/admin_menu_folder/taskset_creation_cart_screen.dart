@@ -43,54 +43,42 @@ class TasksetCreationCartScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Container(
-            child: Expanded(
-              child: Row(
-                children: [
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
-                      margin: EdgeInsets.all(25),
-                      child: TextButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                              create: (BuildContext context) =>
-                                  TasksetOptionsBloc(),
-                              child: OptionTaskScreen(),
-                            ),
-                          ),
-                        ),
-                        child: const Text("Task hinzufügen"),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                      margin: EdgeInsets.all(25),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => BlocProvider.value(
-                                value: BlocProvider.of<CreateTasksetBloc>(
-                                    context),
-                                child: TasksetCreationCartScreen(
-                                    taskset: taskset),
-                              ),
-                            ),
-                          );
-                        },
-                        child: const Text("Taskset generieren"),
-                      ),
-                    ),
-                  ),
-                ],
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index) => Card(
+                child: Text("test"),
               ),
+              itemCount: 3,
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (BuildContext context) => TasksetOptionsBloc(),
+                      child: OptionTaskScreen(),
+                    ),
+                  ),
+                ),
+                child: const Text("Task hinzufügen"),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<CreateTasksetBloc>(context),
+                      child: TasksetCreationCartScreen(taskset: taskset),//TODO falsch
+                    ),
+                  ),
+                ),
+                child: const Text("Taskset generieren"),
+              ),
+            ],
           ),
         ],
       ),

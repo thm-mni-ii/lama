@@ -19,17 +19,19 @@ import '../task-system/taskset_model.dart';
 /// Author: N. Soethe
 /// latest Changes: 01.06.2022
 class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
-
-  CreateTasksetBloc({CreateTasksetState initialState}) : super(CreateTasksetState(taskset: Taskset("", "", 1)));
+  Taskset taskset;
+  CreateTasksetBloc({this.taskset}) : super(CreateTasksetState());
 
   @override
   Stream<CreateTasksetState> mapEventToState(CreateTasksetEvent event) async* {
-    if(event is CreateTasksetChangeName) state.taskset.name = event.name;
-    if(event is CreateTasksetChangeSubject) {state.taskset.subject= event.subject; state.color = LamaColors.findSubjectColor(state.taskset);};
-    if(event is CreateTasksetChangeGrade) state.taskset.grade = event.grade;
+    if(event is CreateTasksetChangeName) taskset.name = event.name;
+    if(event is CreateTasksetChangeSubject) {taskset.subject= event.subject; state.color = LamaColors.findSubjectColor(taskset);};
+    if(event is CreateTasksetChangeGrade) taskset.grade = event.grade;
     if(event is CreateTasksetAbort) _abort(event.context);
+    if(event is EditTaskset) taskset = event.taskset;
+    if(event is InitialTaskset) taskset = null;
     //TODO: Delete this after implementation
-    print("Name: ${state.taskset.name}, Subject: ${state.taskset.subject}, Grade: ${state.taskset.grade}\n");
+    if(taskset != null)print("Name: ${taskset.name}, Subject: ${taskset.subject}, Grade: ${taskset.grade}\n");
   }
 
   /// private method to abort the current creation process

@@ -60,6 +60,16 @@ class CreateTasksetAbort extends CreateTasksetEvent {
   CreateTasksetAbort(this.context);
 }
 
+/// Provides the editable taskset
+class EditTaskset extends CreateTasksetEvent {
+  final Taskset taskset;
+
+  EditTaskset(this.taskset);
+}
+
+/// Provides the initial empty taskset
+class InitialTaskset extends CreateTasksetEvent {}
+
 /// used to add a [Task] to the [Taskset] in Bloc
 ///
 /// {@param}[Task] task that should be added to the list

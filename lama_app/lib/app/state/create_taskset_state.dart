@@ -12,10 +12,7 @@ import '../task-system/taskset_model.dart';
 /// latest Changes: 01.06.2022
 
 class CreateTasksetState {
-  Taskset taskset;
   Color color = LamaColors.redPrimary;
 
-  CreateTasksetState({
-    @required this.taskset,
-  });
+  CreateTasksetState();
 }
