@@ -67,13 +67,6 @@ class EditTaskset extends CreateTasksetEvent {
   EditTaskset(this.taskset);
 }
 
-/// Creates a new Taskset with Tasks
-class BuildNewTaskset extends CreateTasksetEvent {
-  final Taskset taskset;
-
-  BuildNewTaskset(this.taskset);
-}
-
 /// When hitting the back button the bloc provided taskset should be flushed
 class FlushTaskset extends CreateTasksetEvent {}
 

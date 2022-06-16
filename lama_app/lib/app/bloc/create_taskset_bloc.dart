@@ -24,7 +24,6 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   Stream<CreateTasksetState> mapEventToState(CreateTasksetEvent event) async* {
     if (event is FlushTaskset) taskset = null;
     if (event is CreateTasksetChangeName) {
-      print(taskset.toString());
       taskset.name = event.name;
     }
     if (event is CreateTasksetChangeSubject) {
@@ -34,15 +33,6 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
     if (event is CreateTasksetChangeGrade) taskset.grade = event.grade;
     if (event is CreateTasksetAbort) _abort(event.context);
     if (event is EditTaskset) taskset = event.taskset;
-    if (event is BuildNewTaskset) {
-      taskset = event.taskset;
-      taskset.tasks = [];
-      // TODO default values + url from db?
-      /* taskset.randomTaskAmount = ; 
-      taskset.randomizeOrder = ; 
-      taskset.taskurl = ;  */
-    }
-    ;
     //TODO: Delete this after implementation
     /* if (taskset != null)
       print(

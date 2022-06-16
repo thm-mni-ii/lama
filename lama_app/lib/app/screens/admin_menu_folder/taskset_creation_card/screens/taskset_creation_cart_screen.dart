@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/bloc/taskset_creation_cart_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/widgets/taskset_creation_cart_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -9,7 +8,6 @@ import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 
 import '../../../../bloc/create_taskset_bloc.dart';
-import '../../../../state/create_taskset_state.dart';
 import '../../../taskset_option_screen.dart';
 
 ///This file creates the Taskset Creation Cart Screen
@@ -45,39 +43,43 @@ class TasksetCreationCartScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                print(taskset.tasks[index]);
-                return TasksetCreationCartWidget(index: index);
-              },
-              itemCount: taskset.tasks.length,
+            child: Container(
+              margin: EdgeInsets.all(5),
+              child: ListView.builder(
+                itemBuilder: (context, index) =>
+                    TasksetCreationCartWidget(index: index),
+                itemCount: taskset.tasks.length,
+              ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (BuildContext context) => TasksetOptionsBloc(),
-                      child: OptionTaskScreen(),
+          Container(
+            margin: const EdgeInsets.only(bottom: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) => TasksetOptionsBloc(),
+                        child: OptionTaskScreen(),
+                      ),
                     ),
                   ),
+                  child: const Text("Task hinzufügen"),
                 ),
-                child: const Text("Task hinzufügen"),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => TasksetCreationCartScreen(),
+                ElevatedButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => TasksetCreationCartScreen(),
+                    ),
                   ),
+                  child: const Text("Taskset generieren"),
                 ),
-                child: const Text("Taskset generieren"),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

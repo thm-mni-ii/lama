@@ -10,6 +10,7 @@ class TasksetRepository {
   TasksetLoader tasksetLoader;
 
   List<String> subjectList = ["Mathe", "Deutsch", "Englisch", "Sachkunde"];
+  List<String> klassenStufe = ["1", "2", "3", "4", "5", "6"];
 
   ///Initializes the [TasksetLoader] and loads all tasksets.
   Future<void> initialize() async {
