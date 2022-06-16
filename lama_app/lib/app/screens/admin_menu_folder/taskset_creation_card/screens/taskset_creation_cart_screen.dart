@@ -40,7 +40,7 @@ class TasksetCreationCartScreen extends StatelessWidget {
       appBar: CustomAppbar(
         titel: taskset.name,
         size: screenSize.width,
-        color: LamaColors.findSubjectColor(taskset),
+        color: LamaColors.findSubjectColor(taskset.subject),
       ),
       body: Column(
         children: [

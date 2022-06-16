@@ -25,9 +25,7 @@ class TasksetCreationScreen extends StatefulWidget {
 
 ///TasksetCreationScreenState provides the state for the [TasksetCreationScreen]
 class TasksetCreationScreenState extends State<TasksetCreationScreen> {
-  //[_formKey] should be used to identify every Form in this Screen
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String _currentSelectedClass;
+  String _currentSelectedGrade;
   String _currentSelectedSubject;
 
   TextEditingController _nameController = TextEditingController();
@@ -54,9 +52,11 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset;
+    //BlocProvider.of<CreateTasksetBloc>(context).add(FlushTaskset());
 
     if (blocTaskset != null && first) {
-      _currentSelectedClass = blocTaskset.grade.toString();
+      print("object");
+      _currentSelectedGrade = blocTaskset.grade.toString();
       _currentSelectedSubject = blocTaskset.subject;
       _nameController.text = blocTaskset.name;
 
@@ -70,7 +70,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
         appBar: CustomAppbar(
           size: screenSize.width,
           titel: "Taskset erstellen",
-          color: LamaColors.bluePrimary,
+          color: LamaColors.findSubjectColor(_currentSelectedSubject ?? "normal"),
         ),
         body: Column(
           children: [
@@ -86,9 +86,9 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                       child: TextFormField(
                         controller: _nameController,
                         decoration: InputDecoration(hintText: "Tasksetname"),
-                        onChanged: (value) => context
-                            .read<CreateTasksetBloc>()
-                            .add(CreateTasksetChangeName(value)),
+                        //onChanged: (value) =>
+                        /* BlocProvider.of<CreateTasksetBloc>(context)
+                                .add(CreateTasksetChangeName(value)), */
                       ),
                     ),
                     Container(
@@ -112,70 +112,42 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                         ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          errorStyle: TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 16.0,
-                          ),
-                          hintText: 'Klassenstufe auswählen',
-                        ),
-                        isEmpty: _currentSelectedClass == '',
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            hint: Text("Klassenstufe auswählen"),
-                            value: _currentSelectedClass,
-                            isDense: true,
-                            onChanged: (String newValue) => {
-                              setState(() => _currentSelectedClass = newValue),
-                              context.read<CreateTasksetBloc>().add(
-                                    CreateTasksetChangeGrade(
-                                        int.parse(newValue)),
-                                  )
-                            },
-                            items: klassenStufe.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
+                    DropdownButtonFormField<String>(
+                      hint: Text("Klassenstufe auswählen"),
+                      value: _currentSelectedGrade,
+                      isDense: true,
+                      onChanged: (String newValue) => {
+                        setState(() => _currentSelectedGrade = newValue),
+                        /* BlocProvider.of<CreateTasksetBloc>(context).add(
+                          CreateTasksetChangeGrade(int.parse(newValue)),
+                        ), */
+                      },
+                      items: klassenStufe.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                     ),
-                    Container(
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                          errorStyle: TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 16.0,
-                          ),
-                          hintText: '',
-                        ),
-                        isEmpty: _currentSelectedSubject == '',
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            hint: const Text("Fach auswählen"),
-                            value: _currentSelectedSubject,
-                            isDense: true,
-                            onChanged: (String newValue) => {
-                              setState(
-                                  () => _currentSelectedSubject = newValue),
-                              context
-                                  .read<CreateTasksetBloc>()
-                                  .add(CreateTasksetChangeSubject(newValue))
-                            },
-                            items: facher.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
+                    DropdownButtonFormField<String>(
+                      hint: const Text("Fach auswählen"),
+                      value: _currentSelectedSubject,
+                      isDense: true,
+                      onChanged: (String newValue) => {
+                        setState(() => _currentSelectedSubject = newValue),
+                        /* BlocProvider.of<CreateTasksetBloc>(context).add(
+                          CreateTasksetChangeSubject(_currentSelectedSubject),
+                        ), */
+                        /* context
+                            .read<CreateTasksetBloc>()
+                            .add(CreateTasksetChangeSubject(newValue)) */
+                      },
+                      items: facher.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
@@ -189,11 +161,18 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                   onPressed: () {
                     // TODO state comit wenn erfolgreich in nächsten screen wenn nicht snackbar anzeigen
                     if (_nameController.text.isNotEmpty &&
-                        _currentSelectedClass != null &&
+                        _currentSelectedGrade != null &&
                         _currentSelectedSubject != null) {
                       // initilize everything else in taskset
-                      BlocProvider.of<CreateTasksetBloc>(context)
-                          .add(SetMissingAttributes());
+                      BlocProvider.of<CreateTasksetBloc>(context).add(
+                        BuildNewTaskset(
+                          Taskset(
+                            _nameController.text,
+                            _currentSelectedSubject,
+                            int.parse(_currentSelectedGrade),
+                          ),
+                        ),
+                      );
                       Navigator.push(
                         context,
                         MaterialPageRoute(

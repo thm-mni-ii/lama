@@ -55,17 +55,12 @@ class TasksetManageScreen extends StatelessWidget {
                       backgroundColor:
                           MaterialStateProperty.all(LamaColors.bluePrimary),
                     ),
-                    onPressed: () {
-                      //context.read<CreateTasksetBloc>().add(EditTaskset(null));
-                      BlocProvider.of<CreateTasksetBloc>(context)
-                          .add(InitialTaskset());
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TasksetCreationScreen(),
-                        ),
-                      );
-                    },
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TasksetCreationScreen(),
+                      ),
+                    ),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(

@@ -67,10 +67,15 @@ class EditTaskset extends CreateTasksetEvent {
   EditTaskset(this.taskset);
 }
 
-/// Provides the initial empty taskset
-class InitialTaskset extends CreateTasksetEvent {}
+/// Creates a new Taskset with Tasks
+class BuildNewTaskset extends CreateTasksetEvent {
+  final Taskset taskset;
 
-class SetMissingAttributes extends CreateTasksetEvent {}
+  BuildNewTaskset(this.taskset);
+}
+
+/// When hitting the back button the bloc provided taskset should be flushed
+class FlushTaskset extends CreateTasksetEvent {}
 
 /// used to add a [Task] to the [Taskset] in Bloc
 ///

@@ -32,7 +32,7 @@ class TasksetExpansionTileCardWidget extends StatelessWidget {
             create: (context) => CreateTasksetBloc(),
             child: Card(
               margin: const EdgeInsets.all(8.0),
-              color: LamaColors.findSubjectColor(taskset),
+              color: LamaColors.findSubjectColor(taskset.subject),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(

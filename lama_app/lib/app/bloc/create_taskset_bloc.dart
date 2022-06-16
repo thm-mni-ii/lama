@@ -22,17 +22,20 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
 
   @override
   Stream<CreateTasksetState> mapEventToState(CreateTasksetEvent event) async* {
-    if (event is CreateTasksetChangeName) taskset.name = event.name;
+    if (event is FlushTaskset) taskset = null;
+    if (event is CreateTasksetChangeName) {
+      print(taskset.toString());
+      taskset.name = event.name;
+    }
     if (event is CreateTasksetChangeSubject) {
       taskset.subject = event.subject;
-      state.color = LamaColors.findSubjectColor(taskset);
+      state.color = LamaColors.findSubjectColor(taskset.subject);
     }
-    ;
     if (event is CreateTasksetChangeGrade) taskset.grade = event.grade;
     if (event is CreateTasksetAbort) _abort(event.context);
     if (event is EditTaskset) taskset = event.taskset;
-    if (event is InitialTaskset) taskset = null;
-    if (event is SetMissingAttributes) {
+    if (event is BuildNewTaskset) {
+      taskset = event.taskset;
       taskset.tasks = [];
       // TODO default values + url from db?
       /* taskset.randomTaskAmount = ; 
@@ -41,9 +44,9 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
     }
     ;
     //TODO: Delete this after implementation
-    if (taskset != null)
+    /* if (taskset != null)
       print(
-          "Name: ${taskset.name}, Subject: ${taskset.subject}, Grade: ${taskset.grade}\n");
+          "Name: ${taskset.name ?? "testname"}, Subject: ${taskset.subject ?? "testsubject"}, Grade: ${taskset.grade ?? "testgrade"}\n"); */
   }
 
   /// private method to abort the current creation process

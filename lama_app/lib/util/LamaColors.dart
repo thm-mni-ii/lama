@@ -28,8 +28,8 @@ class LamaColors {
   static Color errorColor = Color.fromARGB(255, 255, 0, 0);
 
   /// Determin Color depending on the Subject
-  static findSubjectColor(Taskset taskset) {
-    switch (taskset.subject) {
+  static findSubjectColor(String subject) {
+    switch (subject) {
       case "Mathe":
         return blueAccent;
       case "Deutsch":
@@ -38,6 +38,8 @@ class LamaColors {
         return orangeAccent;
       case "Sachkunde":
         return purpleAccent;
+      case "normal":
+        return bluePrimary;
       default:
         return errorColor;
     }
