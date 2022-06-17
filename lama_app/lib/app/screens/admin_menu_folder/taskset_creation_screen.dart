@@ -90,9 +90,6 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     child: TextFormField(
                       controller: _nameController,
                       decoration: InputDecoration(hintText: "Tasksetname"),
-                      //onChanged: (value) =>
-                      /* BlocProvider.of<CreateTasksetBloc>(context)
-                              .add(CreateTasksetChangeName(value)), */
                     ),
                   ),
                   Container(
@@ -121,9 +118,6 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     isDense: true,
                     onChanged: (String newValue) {
                       setState(() => _currentSelectedGrade = newValue);
-                      /* BlocProvider.of<CreateTasksetBloc>(context).add(
-                        CreateTasksetChangeGrade(int.parse(newValue)),
-                      ), */
                     },
                     items: tasksetRepo.klassenStufe.map((String value) {
                       return DropdownMenuItem<String>(
@@ -136,14 +130,8 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     hint: const Text("Fach auswählen"),
                     value: _currentSelectedSubject,
                     isDense: true,
-                    onChanged: (String newValue) => {
-                      setState(() => _currentSelectedSubject = newValue),
-                      /* BlocProvider.of<CreateTasksetBloc>(context).add(
-                        CreateTasksetChangeSubject(_currentSelectedSubject),
-                      ), */
-                      /* context
-                          .read<CreateTasksetBloc>()
-                          .add(CreateTasksetChangeSubject(newValue)) */
+                    onChanged: (String newValue) {
+                      setState(() => _currentSelectedSubject = newValue);
                     },
                     items: tasksetRepo.subjectList.map((String value) {
                       return DropdownMenuItem<String>(

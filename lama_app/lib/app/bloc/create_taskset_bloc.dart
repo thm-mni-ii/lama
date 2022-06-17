@@ -23,14 +23,6 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   @override
   Stream<CreateTasksetState> mapEventToState(CreateTasksetEvent event) async* {
     if (event is FlushTaskset) taskset = null;
-    if (event is CreateTasksetChangeName) {
-      taskset.name = event.name;
-    }
-    if (event is CreateTasksetChangeSubject) {
-      taskset.subject = event.subject;
-      state.color = LamaColors.findSubjectColor(taskset.subject);
-    }
-    if (event is CreateTasksetChangeGrade) taskset.grade = event.grade;
     if (event is CreateTasksetAbort) _abort(event.context);
     if (event is EditTaskset) taskset = event.taskset;
     //TODO: Delete this after implementation
