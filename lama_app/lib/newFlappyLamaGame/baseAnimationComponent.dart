@@ -109,7 +109,7 @@ class LamaAnimationComponent extends SpriteAnimationComponent
     );
 
     animation2 = _idleComponent;
-    add(animation2);
+    // add(animation2);
   }
 
   void flap() {

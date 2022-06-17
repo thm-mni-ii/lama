@@ -160,10 +160,10 @@ class AnimatedComponent extends SpriteAnimationComponent
     // new y
     position.y += _speedY * dt;
     // hits the ground?
-/*     if (!isHittingGround()) {
+    if (!isHittingGround()) {
       // hit the top?
       isHittingTop(dt);
-    } */
+    }
     // choose animation
     if (lastY > y) {
       animation = _upAnimation;
@@ -220,7 +220,7 @@ class AnimatedComponent extends SpriteAnimationComponent
       position.y += _speedY * t;
 
       // callback
-      onHitTop.call();
+      // onHitTop.call();
       return true;
     }
 
