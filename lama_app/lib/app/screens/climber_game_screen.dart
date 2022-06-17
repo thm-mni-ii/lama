@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/apeClimber/climberGame.dart';
 
-import '../../trexGame/trex_game.dart';
+//import '../../trexGame/trex_game.dart';
 
 /// This class creates the Monkey Climber game screen
 class ClimberGameScreen extends StatelessWidget {
@@ -25,7 +25,7 @@ class ClimberGameScreen extends StatelessWidget {
               Expanded(
                   child: Container(
                 color: Colors.green,
-                child: GameWidget(game: TRexGame()),
+                //child: GameWidget(game: TRexGame()),
               ))
             ])));
   }
