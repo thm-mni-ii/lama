@@ -12,7 +12,10 @@ class TasksetCreationCartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Taskset taskset = BlocProvider.of<CreateTasksetBloc>(context).taskset;
     return Card(
-      child: Text(taskset.tasks[index].lamaText),
+      child: ListTile(
+        title: Text(taskset.tasks[index].type),
+        subtitle: Text(taskset.tasks[index].lamaText),
+      ),
     );
   }
 }
