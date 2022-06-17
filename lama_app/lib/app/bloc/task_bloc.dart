@@ -30,12 +30,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   List<bool> answerResults = [];
   final FlutterTts flutterTts = FlutterTts();
 
-  readText(String text) async {
-    await flutterTts.setLanguage("de-De");
-    await flutterTts.setVolume(1.0);
-    await flutterTts.speak(text);
-  }
-
   UserRepository userRepository;
   TaskBloc(this.tasksetSubject, this.tasks, this.userRepository)
       : super(TaskScreenEmptyState());
@@ -47,7 +41,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     } else if (event is AnswerTaskEvent) {
       Task t = tasks[curIndex - 1];
       if (t is Task4Cards) {
-        if(event.providedAnswer == t.selectedAnswer) {
           if (event.providedAnswer == t.rightAnswer) {
             rightAnswerCallback(t);
             yield TaskAnswerResultState(true);
@@ -55,12 +48,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
             wrongAnswerCallback(t);
             yield TaskAnswerResultState(false);
           }
-        }
-        if(event.providedAnswer != t.selectedAnswer) {
-          readText(event.providedAnswer);
-          t.selectedAnswer = event.providedAnswer;
-          yield TaskAnswerSelected(this.tasksetSubject, tasks[curIndex-1]);
-        }
       } else if (t is TaskMarkWords) {
         if (equals(t.rightWords, event.providedanswerWords)) {
           rightAnswerCallback(t);

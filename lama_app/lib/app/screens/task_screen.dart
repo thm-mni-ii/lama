@@ -9,7 +9,7 @@ import 'package:lama_app/app/screens/task_type_screens/clock_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/connect_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/equation_task_screen.dart';
-import 'package:lama_app/app/screens/task_type_screens/four_card_task_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/four_card_task_screen_stateful.dart';
 import 'package:lama_app/app/screens/task_type_screens/grid_select_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/mark_words_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/match_Category_task_screen.dart';
@@ -302,7 +302,7 @@ class TaskScreenState extends State<TaskScreen> {
       Task task, BoxConstraints constraints) {
     switch (task.type) {
       case "4Cards":
-        return FourCardTaskScreen(task, constraints);
+        return FourCardTaskScreenStateful(task, constraints);
       case "Zerlegung":
         return ZerlegungTaskScreen(task: task, constraints: constraints);
       case "NumberLine":
