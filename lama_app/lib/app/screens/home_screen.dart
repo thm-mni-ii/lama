@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
+import 'package:lama_app/app/bloc/edit_user_bloc.dart';
 import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
+import 'package:lama_app/app/screens/edit_user_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -120,26 +122,48 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50)),
                               ),
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    child: SvgPicture.asset(
-                                      'assets/images/svg/avatars/${userRepository!.getAvatar()}.svg',
-                                      semanticsLabel: 'LAMA',
+                              child: ElevatedButton(
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      child: SvgPicture.asset(
+                                        'assets/images/svg/avatars/${userRepository!.getAvatar()}.svg',
+                                        semanticsLabel: 'LAMA',
+                                      ),
+                                      radius: 25,
+                                      backgroundColor: LamaColors.mainPink,
                                     ),
-                                    radius: 25,
-                                    backgroundColor: LamaColors.mainPink,
+                                    SizedBox(width: 5),
+                                    Text(
+                                      userRepository!.getUserName()!,
+                                      style: LamaTextTheme.getStyle(
+                                          fontSize: 22.5,
+                                          fontWeight: FontWeight.w600,
+                                          monospace: true),
+                                    ),
+                                  ],
+                                ),
+                                onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BlocProvider(
+                                      create: (BuildContext context) =>
+                                          EditUserBloc(userRepository!
+                                              .authenticatedUser!),
+                                      child: EditUserScreen(
+                                          userRepository!.authenticatedUser!),
+                                    ),
                                   ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    userRepository!.getUserName()!,
-                                    style: LamaTextTheme.getStyle(
-                                        fontSize: 22.5,
-                                        fontWeight: FontWeight.w600,
-                                        monospace: true),
-                                  ),
-                                ],
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    primary: LamaColors.mainPink,
+                                    minimumSize: Size(
+                                      (constraints.maxHeight / 100) * 10,
+                                      ((constraints.maxWidth / 100) * 60),
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(50)))),
                               ),
                             ),
                           )
@@ -269,7 +293,8 @@ class _HomeScreenState extends State<HomeScreen> {
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
     }
     if (tasksetRepository
-            .getTasksetsForSubjectAndGrade("Deutsch", userRepository!.getGrade())!
+            .getTasksetsForSubjectAndGrade(
+                "Deutsch", userRepository!.getGrade())!
             .length >
         0) {
       children.add(ElevatedButton(
