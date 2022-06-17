@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/widgets/taskset_expansion_tile_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
@@ -27,7 +26,7 @@ class TasksetManageScreen extends StatelessWidget {
       create: (context) => TasksetOptionsBloc(),
       child: Scaffold(
         appBar: CustomAppbar(
-          size: screenSize.width / 5,
+          size: screenSize.width,
           titel: "Meine erstellten Tasks",
           color: LamaColors.bluePrimary,
         ),
@@ -41,27 +40,6 @@ class TasksetManageScreen extends StatelessWidget {
                       classString: 'Klasse $i',
                       listOfTasksets: tasksetRepository.getTasksetsForGrade(i),
                     ),
-                  /*                   TasksetExpansionTileWidget(
-                        classString: 'Klasse 2',
-                        listOfTasksets: tasksetRepository.getTasksetsForGrade(2),
-                      ),
-                      TasksetExpansionTileWidget(
-                        classString: 'Klasse 3',
-                        listOfTasksets: tasksetRepository.getTasksetsForGrade(3),
-                      ),
-                      TasksetExpansionTileWidget(
-                        classString: 'Klasse 4',
-                        listOfTasksets: tasksetRepository.getTasksetsForGrade(4),
-                      ),
-                      TasksetExpansionTileWidget(
-                        classString: 'Klasse 5',
-                        listOfTasksets: tasksetRepository.getTasksetsForGrade(5),
-                      ),
-                      TasksetExpansionTileWidget(
-                        classString: 'Klasse 6',
-                        listOfTasksets: tasksetRepository.getTasksetsForGrade(6),
-                      ),
-     */
                 ],
               ),
             ),
@@ -70,49 +48,41 @@ class TasksetManageScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                              create: (BuildContext context) =>
-                                  TasksetOptionsBloc(),
-                              child: OptionTaskScreen(),
-                            ),
-                          ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          "Taskset importieren",
-                          style: TextStyle(color: LamaColors.bluePrimary),
-                        ),
-                      ),
-                    ),
-                  TextButton(
+                  ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all(LamaColors.bluePrimary),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (BuildContext context) =>
-                                CreateTasksetBloc(),
-                            child: TasksetCreationScreen(),
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TasksetCreationScreen(),
+                      ),
+                    ),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         "Taskset erstellen",
                         style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (BuildContext context) =>
+                              TasksetOptionsBloc(),
+                          child: OptionTaskScreen(),
+                        ),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Taskset importieren",
+                        style: TextStyle(color: LamaColors.bluePrimary),
                       ),
                     ),
                   ),

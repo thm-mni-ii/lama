@@ -11,14 +11,6 @@ import '../task-system/taskset_model.dart';
 /// latest Changes: 09.06.2022
 abstract class CreateTasksetEvent {}
 
-/// used to change [Taskset]name in Bloc
-///
-/// {@param}[String] name that should be set
-class CreateTasksetChangeName extends CreateTasksetEvent {
-  String name;
-  CreateTasksetChangeName(this.name);
-}
-
 /// used to change [Taskset]subtitle in Bloc
 /// this param isnt used yet, must be implemented later
 ///
@@ -26,22 +18,6 @@ class CreateTasksetChangeName extends CreateTasksetEvent {
 class CreateTasksetChangeSubtitle extends CreateTasksetEvent {
   String subtitle;
   CreateTasksetChangeSubtitle(this.subtitle);
-}
-
-/// used to change [Taskset]grade in Bloc
-///
-/// {@param}[String] grade that should be set
-class CreateTasksetChangeGrade extends CreateTasksetEvent {
-  int grade;
-  CreateTasksetChangeGrade(this.grade);
-}
-
-/// used to change [Taskset]subject in Bloc
-///
-/// {@param}[String] subject that should be set
-class CreateTasksetChangeSubject extends CreateTasksetEvent {
-  String subject;
-  CreateTasksetChangeSubject(this.subject);
 }
 
 /// used to generate a JSON file from the given [Taskset] object
@@ -59,6 +35,16 @@ class CreateTasksetAbort extends CreateTasksetEvent {
   BuildContext context;
   CreateTasksetAbort(this.context);
 }
+
+/// Provides the editable taskset
+class EditTaskset extends CreateTasksetEvent {
+  final Taskset taskset;
+
+  EditTaskset(this.taskset);
+}
+
+/// When hitting the back button the bloc provided taskset should be flushed
+class FlushTaskset extends CreateTasksetEvent {}
 
 /// used to add a [Task] to the [Taskset] in Bloc
 ///
