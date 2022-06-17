@@ -8,7 +8,6 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:collection/collection.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/OperantsEnum.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 
 /// [Bloc] for the [TaskScreen]
@@ -28,7 +27,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   int curIndex = 0;
   int timer = 15;
   List<bool> answerResults = [];
-  final FlutterTts flutterTts = FlutterTts();
 
   UserRepository userRepository;
   TaskBloc(this.tasksetSubject, this.tasks, this.userRepository)

@@ -115,7 +115,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                 nip: BubbleNip.leftCenter,
                 child: Center(
                   child: Text(
-                    task.lamaText,
+                    "Tippe einmal, um die Antwort anzuhören.",
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),
