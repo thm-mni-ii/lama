@@ -9,6 +9,23 @@ import 'package:lama_app/util/pair.dart';
 ///This should be changed in the future since this is not enforced by the compiler at the moment.
 ///
 ///Author: K.Binder
+///
+enum TaskType {
+  fourCards,
+  clozeTest,
+  zerlegung,
+  clock,
+  moneyTask,
+  markWords,
+  numberLine,
+  matchCategory,
+  gridSelect,
+  vocableTest,
+  connect,
+  equation,
+  buchstabieren
+}
+
 class Task {
   ///factory constructor that creates the corresponding
   ///subclass of [Task] based on the [taskType].
