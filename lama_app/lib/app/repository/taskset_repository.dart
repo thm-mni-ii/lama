@@ -1,3 +1,4 @@
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_loader.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 
@@ -41,5 +42,17 @@ class TasksetRepository {
   void reloadTasksetLoader() async {
     tasksetLoader = TasksetLoader();
     await tasksetLoader.loadAllTasksets();
+  }
+
+  /// gives a List of TaskType depending on a specific subject
+  List<TaskType> t(String subject) {
+    switch (subject) {
+      case "Mathe":
+        return [
+          TaskType.fourCards,
+        ];
+      default:
+        return [];
+    }
   }
 }
