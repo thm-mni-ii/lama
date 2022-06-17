@@ -102,6 +102,7 @@ class TapTheLamaGame extends FlameGame with HasTappables{
 
   //#region Global Variables Game Logic
   bool gameOver=false;
+  var referenceVelocity;
   var velocity1;
   var velocity2;
   var score= 0;
@@ -112,9 +113,17 @@ class TapTheLamaGame extends FlameGame with HasTappables{
   var lifeDecreaserStandard=5.0;
   var lifeDecreaserRedLamaHit=20.0;
   var lamaHeadAppearingProbability=.3;
-  var lamaHeadIsAngryProbability=0.05;
+  var lamaHeadIsAngryProbability=0.1;
   var lamaHeadFirstColumExisting=false;
   var lamaHeadThirdColumnExisting=false;
+  var scoreThresholdDifferentVelocity=150;
+  var scoreThresholdIncreaseVelocity=300;
+  var scoreThresholdSpacer=300;
+  var firstColumnIsFaster=true;
+  var velocityIncreaseFactor1=1.2;
+  var velocityIncreaseFactor2=1.5;
+  var recoveryThreshold=30;
+  var multiplierIncreaseThreshold=20;
   //# endregion
 
   //# region Override Methods
@@ -137,6 +146,7 @@ class TapTheLamaGame extends FlameGame with HasTappables{
         moveLamaHeads(lamaHeadsBlue,lamaHeadImageBlue,2);
         moveLamaHeads(lamaHeadsPurple,lamaHeadImagePurple,3);
         moveLamaHeads(lamaHeadsPink,lamaHeadImagePink,4);
+        updateSpeedParameters();
         checkGameOver();
       }
 
@@ -173,24 +183,31 @@ class TapTheLamaGame extends FlameGame with HasTappables{
     if(lamaHeadCopy.isExisting){
       if(lamaHeadCopy.isAngry){
         lifePercent-=lifeDecreaserRedLamaHit;
+        streakCounter=0;
       }else{
         if(lamaHeadCopy.y>=yPosButtons-lamaButtonSize*0.2 && lamaHeadCopy.y<=yPosButtons+lamaButtonSize*0.2){
           flashButton(lamaButton, buttonAnimatorColorGreen, animatorButton);
           score+=scoreIncrementerGoodHit*multiplier;
+          streakCounter++;
+          recoverLifeBarCheck();
         }
         else if(lamaHeadCopy.y>=yPosButtons-lamaButtonSize*0.6 && lamaHeadCopy.y<=yPosButtons+lamaButtonSize*0.6){
           flashButton(lamaButton, buttonAnimatorColorOrange, animatorButton);
           score+=scoreIncrementerOkayHit*multiplier;
+          streakCounter++;
+          recoverLifeBarCheck();
         }
         else{
           flashButton(lamaButton, buttonAnimatorColorRed, animatorButton);
           lifePercent-=lifeDecreaserStandard;
+          streakCounter=0;
         }
       }
     }
     else{
       flashButton(lamaButton, buttonAnimatorColorRed, animatorButton);
       lifePercent-=lifeDecreaserStandard;
+      streakCounter=0;
     }
     //
     lamaHeads.firstWhere((element) => element.isHittable).sprite=await loadSprite('png/BLANK_ICON.png');
@@ -225,8 +242,9 @@ class TapTheLamaGame extends FlameGame with HasTappables{
     screenWidth=size[0];
     screenHeight=size[1];
     screenHeight/screenWidth>=(16/9) ? amountLamaHeadsPerColumn=6 : amountLamaHeadsPerColumn=5;
-    velocity1=screenHeight/300;
-    velocity2=screenHeight/300;
+    referenceVelocity=screenHeight/300;
+    velocity1=referenceVelocity;
+    velocity2=referenceVelocity;
     yPosButtons=screenHeight*5/6;
 
     //initialise upper in game display
@@ -329,6 +347,7 @@ class TapTheLamaGame extends FlameGame with HasTappables{
         lamaHeadList.elementAt(i).y = 0-lamaHeadSize/2;
         if(lamaHeadList.elementAt(i).isExisting&& !lamaHeadList.elementAt(i).isAngry){
           lifePercent-=lifeDecreaserStandard;
+          streakCounter=0;
           flashMissedHeadAnimator();
         }
         lamaHeadList.elementAt(i).isAngry=generateRandomBoolean(lamaHeadIsAngryProbability);
@@ -381,6 +400,9 @@ class TapTheLamaGame extends FlameGame with HasTappables{
           lamaHeadList.elementAt(i).y += velocity2;
         }
         setHittableButtonAttribute(lamaHeadList.elementAt(i));
+        if(isAStreak()){
+          lamaHeadList.elementAt(i).angle+=0.1;
+        }
       }
     }
   }
@@ -407,6 +429,55 @@ class TapTheLamaGame extends FlameGame with HasTappables{
   void checkGameOver() {
     if(lifePercent<=0){
       gameOver=true;
+    }
+  }
+
+  void updateSpeedParameters() {
+
+    if(score>1000){
+      velocityIncreaseFactor1=1.1;
+      velocityIncreaseFactor2=1.25;
+      lamaHeadIsAngryProbability=0.2;
+    }
+
+    if(score>=scoreThresholdDifferentVelocity-scoreIncrementerGoodHit&&score<=scoreThresholdDifferentVelocity+scoreIncrementerGoodHit){
+      if(firstColumnIsFaster){
+        velocity1=referenceVelocity*velocityIncreaseFactor2;
+        velocity2=referenceVelocity;
+        firstColumnIsFaster=false;
+      }else{
+        velocity1=referenceVelocity;
+        velocity2=referenceVelocity*velocityIncreaseFactor2;
+        firstColumnIsFaster=true;
+      }
+      scoreThresholdDifferentVelocity=scoreThresholdDifferentVelocity+scoreThresholdSpacer;
+    }
+    else if(score>=scoreThresholdIncreaseVelocity-scoreIncrementerGoodHit&&score<=scoreThresholdIncreaseVelocity+scoreIncrementerGoodHit){
+      referenceVelocity=referenceVelocity*velocityIncreaseFactor1;
+
+      velocity1=referenceVelocity;
+      velocity2=referenceVelocity;
+      scoreThresholdIncreaseVelocity=scoreThresholdIncreaseVelocity+scoreThresholdSpacer;
+    }
+  }
+
+  bool isAStreak() {
+    if(streakCounter>=multiplierIncreaseThreshold){
+      multiplier=2;
+      return true;
+    }else{
+      multiplier=1;
+      return false;
+    }
+  }
+
+  void recoverLifeBarCheck() {
+    if(streakCounter!=0 && streakCounter%recoveryThreshold==0){
+      lifePercent=lifePercent+10.0;
+      if(lifePercent>=100){
+        lifePercent=100;
+      }
+
     }
   }
   //#endregion
