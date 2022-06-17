@@ -1,10 +1,7 @@
-
 import 'package:flame/components.dart';
-import 'package:flame/input.dart';
 
+class Obstacle5 extends SpriteComponent {
+  bool isExisting = true;
 
-class LamaButton extends SpriteComponent with {
-  LamaButton(): super(priority: 1);
-
-
+  Obstacle5(this.isExisting) : super(priority: 10);
 }

@@ -35,8 +35,40 @@ import 'CollidableAnimationComponent.dart';
 import 'backgroundFlappyLama.dart';
 import 'baseAnimationComponent.dart';
 import 'flappyObstacleComponent.dart';
+import 'newTest176.dart';
 
 class FlappyLamaGame2 extends FlameGame with HasTappables {
+  late SpriteComponent test5;
+  //Obstacle Stuff
+  var amountObstaclesPerColumn = 3;
+  var obstacleTopEndList = <Obstacle5>[];
+  var obstacleBottomEndList = <Obstacle5>[];
+  var obstacleBodyList = <Obstacle5>[];
+  static double obstacleSize = 0.0;
+
+  Obstacle5 obstacleTopEnd = Obstacle5(false);
+  Obstacle5 obstacleBottomEnd = Obstacle5(false);
+  Obstacle5 obstacleBody = Obstacle5(false);
+
+  double xTopEnd = 50;
+  double xBottomEnd = 100;
+  double xBody = 200;
+  double yPosObstacle = 250;
+
+  var obstacleTopEndImage = 'png/kaktus_end_top.png';
+  var obstacleBottomEndImage = 'png/kaktus_end_bottom.png';
+  var obstacleBodyImage = 'png/kaktus_body.png';
+
+  var obstacleProbability = .3;
+  var obstacleFirstColumExisting = false;
+  var obstacleThirdColumnExisting = false;
+
+  var velocity1;
+  var velocity2;
+  var referenceVelocity;
+  //###########################Obstacle Stuff End
+
+  //
   /// score where the difficulty will increase
   final int _difficultyScore = 5;
 
@@ -59,6 +91,9 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
 
   /// screensize of the game
   late Size _screenSize;
+
+  double xComponent = 200;
+  double yComponent = 200;
 
   /// Getter of [_screenSize]
   Size get screenSize {
@@ -142,8 +177,18 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
     //  super.resize(size);
   }
 
-  void update(double t) {
-    super.update(t);
+  @override
+  Future<void> update(double dt) async {
+    super.update(dt);
+    test5.y -= 10 * dt;
+    /*   yComponent += 10 * dt;
+    add(SpriteComponent(
+      sprite: await loadSprite(obstacleBodyImage),
+      position: Vector2(xComponent, yComponent),
+      size: Vector2(24.0, 24.0),
+      anchor: Anchor.topLeft,
+    )); */
+
     //  _lama.y += 150;
   }
 
@@ -165,6 +210,9 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
 
   @override
   Future<void> onLoad() async {
+    referenceVelocity = screenSize.height / 300;
+    velocity1 = referenceVelocity;
+    velocity2 = referenceVelocity;
     // load all obstacle pngs
     Flame.images.loadAll([
       'png/kaktus_body.png',
@@ -193,15 +241,16 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
     obstacles[1].setConstraints(obstacles[0].holeIndex, obstacles[0].holeSize);
     obstacles[1].resetObstacle();
     obstacles[0].resetObstacle(); */
+    test5 = SpriteComponent(
+      sprite: await loadSprite(obstacleBodyImage),
+      position: Vector2(xComponent, yComponent),
+      size: Vector2(24.0, 24.0),
+      anchor: Anchor.topLeft,
+    );
 
     add(ScreenHitbox());
     final componentSize = Vector2(80.0, 90.0);
-    add(SpriteComponent(
-      sprite: await loadSprite('png/kaktus_body.png'),
-      position: Vector2(150, 200),
-      size: Vector2(24.0, 24.0),
-      anchor: Anchor.topLeft,
-    ));
+    add(test5);
     add(
       AnimatedComponent(
         _lamaSize,
