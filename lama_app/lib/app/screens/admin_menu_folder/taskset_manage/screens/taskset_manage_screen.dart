@@ -26,7 +26,7 @@ class TasksetManageScreen extends StatelessWidget {
       create: (context) => TasksetOptionsBloc(),
       child: Scaffold(
         appBar: CustomAppbar(
-          size: screenSize.width,
+          size: screenSize.width/5,
           titel: "Meine erstellten Tasks",
           color: LamaColors.bluePrimary,
         ),
@@ -48,25 +48,6 @@ class TasksetManageScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(LamaColors.bluePrimary),
-                    ),
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TasksetCreationScreen(),
-                      ),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        "Taskset erstellen",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
                   TextButton(
                     onPressed: () => Navigator.push(
                       context,
@@ -83,6 +64,25 @@ class TasksetManageScreen extends StatelessWidget {
                       child: Text(
                         "Taskset importieren",
                         style: TextStyle(color: LamaColors.bluePrimary),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(LamaColors.bluePrimary),
+                    ),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TasksetCreationScreen(),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Taskset erstellen",
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
