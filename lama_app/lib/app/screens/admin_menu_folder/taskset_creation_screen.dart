@@ -28,7 +28,6 @@ class TasksetCreationScreen extends StatefulWidget {
 class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   String _currentSelectedGrade;
   String _currentSelectedSubject;
-
   TextEditingController _nameController = TextEditingController();
 
   bool first = true;
@@ -156,9 +155,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                       _currentSelectedSubject != null) {
                     // initilize everything else in taskset
                     BlocProvider.of<CreateTasksetBloc>(context).add(
-                      EditTaskset(
-                        buildWholeTaskset(blocTaskset),
-                      ),
+                      EditTaskset(buildWholeTaskset(blocTaskset)),
                     );
                     Navigator.push(
                       context,
@@ -170,10 +167,9 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: LamaColors.redAccent,
-                        content: Text(
+                        content: const Text(
                           'Fülle alle Felder aus',
                           textAlign: TextAlign.center,
-                          //style: LamaTextTheme.getStyle(fontSize: 15),
                         ),
                         duration: Duration(seconds: 1),
                       ),

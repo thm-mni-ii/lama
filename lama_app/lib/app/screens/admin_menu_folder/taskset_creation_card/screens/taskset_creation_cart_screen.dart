@@ -8,7 +8,6 @@ import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 
 import '../../../../bloc/create_taskset_bloc.dart';
-import '../../../taskset_option_screen.dart';
 
 ///This file creates the Taskset Creation Cart Screen
 ///This Screen provides an option to add a task to the current taskset

@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/state/create_taskset_state.dart';
-import 'package:lama_app/util/LamaColors.dart';
 
 import '../event/create_taskset_event.dart';
 import '../task-system/taskset_model.dart';

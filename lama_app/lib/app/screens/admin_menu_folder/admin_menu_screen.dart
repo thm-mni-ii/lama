@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/db/database_provider.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
@@ -56,7 +57,11 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: _bar(screensize.width / 5, 'Adminmenü', LamaColors.bluePrimary),
+      appBar: CustomAppbar(
+        size: screensize.width,
+        titel: 'Adminmenü',
+        color: LamaColors.bluePrimary,
+      ),
       body: BlocListener(
         bloc: BlocProvider.of<AdminMenuBloc>(context),
         listener: (context, state) {
@@ -90,8 +95,9 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           'assets/images/svg/GitHub.svg',
           semanticsLabel: 'LAMA',
         ),
-        onPressed: () =>
-            context.read<AdminMenuBloc>().add(AdminMenuGitHubPopUpEvent()),
+        onPressed: () {
+          context.read<AdminMenuBloc>().add(AdminMenuGitHubPopUpEvent());
+        },
       ),
     );
   }
@@ -120,59 +126,53 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
             context,
             Icon(Icons.group_add),
             'Nutzerverwaltung',
-            () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) => UserManagementBloc(),
-                    child: UserManagementScreen(),
-                  ),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (BuildContext context) => UserManagementBloc(),
+                  child: UserManagementScreen(),
                 ),
-              )
-            },
+              ),
+            ),
           ),
           //Navigation Button to 'Nutzerliste einfügen' [UserlistUrlScreen]
           _menuButton(
             context,
             Icon(Icons.assignment_ind_sharp),
             'Nutzerliste einfügen',
-            () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) => UserlistUrlBloc(),
-                    child: UserlistUrlScreen(),
-                  ),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (BuildContext context) => UserlistUrlBloc(),
+                  child: UserlistUrlScreen(),
                 ),
-              )
-            },
+              ),
+            ),
           ),
           //Navigation Button to 'Aufgabenverwaltung' [OptionTaskScreen]
           _menuButton(
             context,
             Icon(Icons.add_link),
             'Tasksetverwaltung',
-            () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) => TasksetManageBloc(),
-                    child: TasksetManageScreen(),
-                  ),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (BuildContext context) => TasksetManageBloc(),
+                  child: TasksetManageScreen(),
                 ),
-              ).then((_) {
-                AdminUtils.reloadTasksets(context);
-              })
-            },
+              ),
+            ).then((_) {
+              AdminUtils.reloadTasksets(context);
+            }),
           ),
           _menuButton(
             context,
             Icon(Icons.settings),
             'Highscore Einstellungen',
-            () async => {
+            () async {
               userList = await Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -181,9 +181,9 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
                     child: HighscoreUrlOptionScreen(),
                   ),
                 ),
-              ),
+              );
               await DatabaseProvider.db
-                  .updateAllUserHighscorePermission(userList)
+                  .updateAllUserHighscorePermission(userList);
             },
           ),
           //Checkbox to deaktivate the default Tasksets
@@ -213,44 +213,38 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
         MaterialState.hovered,
         MaterialState.focused,
       };
-      if (states.any(interactiveStates.contains)) {
-        return LamaColors.blueAccent;
-      }
+      if (states.any(interactiveStates.contains)) return LamaColors.blueAccent;
       return LamaColors.bluePrimary;
     }
 
     //return [Checkbox] 'Standardaufgaben aktivieren?'
-    return Center(
-      child: Row(
-        children: [
-          Checkbox(
-            checkColor: Colors.white,
-            fillColor: MaterialStateProperty.resolveWith(getColor),
-            value: _isChecked,
-            onChanged: (bool value) {
-              setState(() {
-                _isChecked = value;
-                context.read<AdminMenuBloc>().add(
-                      AdminMenuChangePrefsEvent(
-                        AdminUtils.enableDefaultTasksetsPref,
-                        _isChecked,
-                        RepositoryProvider.of<TasksetRepository>(context),
-                      ),
-                    );
-                AdminUtils.reloadTasksets(context);
-              });
-            },
+    return Row(
+      children: [
+        Checkbox(
+          checkColor: Colors.white,
+          fillColor: MaterialStateProperty.resolveWith(getColor),
+          value: _isChecked,
+          onChanged: (bool value) => setState(() {
+            _isChecked = value;
+            context.read<AdminMenuBloc>().add(
+                  AdminMenuChangePrefsEvent(
+                    AdminUtils.enableDefaultTasksetsPref,
+                    _isChecked,
+                    RepositoryProvider.of<TasksetRepository>(context),
+                  ),
+                );
+            AdminUtils.reloadTasksets(context);
+          }),
+        ),
+        Text(
+          'Standardaufgaben aktivieren?',
+          style: LamaTextTheme.getStyle(
+            fontSize: 14,
+            color: LamaColors.black,
           ),
-          Text(
-            'Standardaufgaben aktivieren?',
-            style: LamaTextTheme.getStyle(
-              fontSize: 14,
-              color: LamaColors.black,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 
@@ -365,54 +359,6 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ],
-    );
-  }
-
-  ///(private)
-  ///porvides [AppBar] with [AdminMenuScreen] specific default design
-  ///
-  ///Customise the leading of the [AppBar] to provide
-  ///an logout function which leads to [UserSelectionScreen] via
-  ///[Navigator].pushReplacement
-  ///
-  ///{@params}
-  ///[AppBar] size as double size
-  ///[AppBar] titel as String title
-  ///[AppBar] [Color] as colors
-  ///
-  ///{@return} [AppBar] with generel AdminMenu specific design
-  Widget _bar(double size, String titel, Color colors) {
-    return AppBar(
-      leading: Builder(
-        builder: (BuildContext context) {
-          return IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) => UserSelectionBloc(),
-                    child: UserSelectionScreen(),
-                  ),
-                ),
-              );
-            },
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          );
-        },
-      ),
-      title: Text(
-        titel,
-        style: LamaTextTheme.getStyle(fontSize: 18),
-      ),
-      toolbarHeight: size,
-      backgroundColor: colors,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(30),
-        ),
-      ),
     );
   }
 }
