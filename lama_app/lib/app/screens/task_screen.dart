@@ -301,31 +301,31 @@ class TaskScreenState extends State<TaskScreen> {
   Widget getScreenForTaskWithConstraints(
       Task task, BoxConstraints constraints) {
     switch (task.type) {
-      case "4Cards":
+      case TaskType.fourCards:
         return FourCardTaskScreen(task, constraints);
-      case "Zerlegung":
+      case TaskType.zerlegung:
         return ZerlegungTaskScreen(task: task, constraints: constraints);
-      case "NumberLine":
+      case TaskType.numberLine:
         return NumberLineTaskScreen(task, constraints);
-      case "ClozeTest":
+      case TaskType.clozeTest:
         return ClozeTestTaskScreen(task, constraints);
-      case "Clock":
+      case TaskType.clock:
         return ClockTaskScreen(task, constraints);
-      case "MarkWords":
+      case TaskType.markWords:
         return MarkWordsScreen(task, constraints);
-      case "MatchCategory":
+      case TaskType.matchCategory:
         return MatchCategoryTaskScreen(task, constraints);
-      case "GridSelect":
+      case TaskType.gridSelect:
         return GridSelectTaskScreen(task, constraints, GridSelectTaskBloc());
-      case "MoneyTask":
+      case TaskType.moneyTask:
         return MoneyTaskScreen(task, constraints);
-      case "VocableTest":
+      case TaskType.vocableTest:
         return VocableTestTaskScreen(task, constraints);
-      case "Connect":
+      case TaskType.connect:
         return ConnectTaskScreen(task, constraints);
-      case "Equation":
+      case TaskType.equation:
         return EquationTaskScreen(task, constraints);
-      case "Buchstabieren":
+      case TaskType.buchstabieren:
         // precacheAllImagesForTask(task, context);
         randomNummer = erstelleEineRandomNummer(task);
         return BuchstabierenTaskScreen(

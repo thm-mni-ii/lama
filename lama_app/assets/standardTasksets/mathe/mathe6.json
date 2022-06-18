@@ -1,7 +1,7 @@
 {
    "taskset_url": {
-       "id": 1,
-       "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe1.json"
+      "id": 1,
+      "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe1.json"
    },
    "taskset_name": "Standardaufgaben Klasse 6",
    "taskset_subject": "Mathe",
@@ -9,7 +9,7 @@
    "taskset_randomize_order": true,
    "tasks": [
       {
-         "task_type": "NumberLine",
+         "task_type": "TaskType.numberLine",
          "task_reward": 1,
          "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
          "left_to_solve": 3,
@@ -22,7 +22,7 @@
          "ontap": true
       },
       {
-         "task_type": "NumberLine",
+         "task_type": "TaskType.numberLine",
          "task_reward": 1,
          "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
          "left_to_solve": 3,
@@ -35,7 +35,7 @@
          "ontap": false
       },
       {
-         "task_type": "Equation",
+         "task_type": "TaskType.equation",
          "task_reward": 2,
          "lama_text": "Löse die Gleichung!",
          "left_to_solve": 4,
@@ -52,7 +52,7 @@
          "operator_amount": 2
       },
       {
-         "task_type": "Equation",
+         "task_type": "TaskType.equation",
          "task_reward": 2,
          "lama_text": "Löse die Gleichung!",
          "left_to_solve": 4,
@@ -68,7 +68,7 @@
          "operator_amount": 2
       },
       {
-         "task_type": "Equation",
+         "task_type": "TaskType.equation",
          "task_reward": 2,
          "lama_text": "Löse die Gleichung!",
          "left_to_solve": 4,
@@ -80,7 +80,7 @@
          "allow_replacing_operators": true
       },
       {
-         "task_type": "Equation",
+         "task_type": "TaskType.equation",
          "task_reward": 2,
          "lama_text": "Löse die Gleichung!",
          "left_to_solve": 4,
@@ -92,7 +92,7 @@
          "allow_replacing_operators": true
       },
       {
-         "task_type": "Equation",
+         "task_type": "TaskType.equation",
          "task_reward": 2,
          "lama_text": "Löse die Gleichung!",
          "left_to_solve": 4,

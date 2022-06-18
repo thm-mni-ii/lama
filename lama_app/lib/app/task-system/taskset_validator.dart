@@ -1,5 +1,6 @@
 // import 'dart:ffi';
 
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/pair.dart';
 
 ///This class provides methods to validate a [Taskset] and a [Task].
@@ -62,9 +63,8 @@ class TasksetValidator {
           json["lama_text"] is String &&
           json["left_to_solve"] is int) {
         switch (json["task_type"]) {
-
           ///4Cards
-          case "4Cards":
+          case "TaskType.fourCards":
             if (json.containsKey("question") &&
                 json["question"] is String &&
                 json.containsKey("right_answer") &&
@@ -74,7 +74,7 @@ class TasksetValidator {
                 _checkListType<String>(json["wrong_answers"])) return null;
             return "Aufgabentyp: 4Cards";
 
-          case "Zerlegung":
+          case "TaskType.zerlegung":
             if (json.containsKey("reverse") &&
                 json["reverse"] is bool &&
                 json.containsKey('zeros') &&
@@ -84,7 +84,7 @@ class TasksetValidator {
             return "Aufgabentyp: Zerlegung";
 
           ///ClozeTest
-          case "ClozeTest":
+          case "TaskType.clozeTest":
             if (json.containsKey("question") &&
                 json["question"] is String &&
                 json.containsKey("right_answer") &&
@@ -95,7 +95,7 @@ class TasksetValidator {
             return "Aufgabentyp: ClozeTest";
 
           ///Bild4Cards
-          case "Bild4Cards":
+          case "TaskType.bild4Cards":
             if (json.containsKey("question") &&
                 json["question"] is String &&
                 json.containsKey("right_answer") &&
@@ -105,7 +105,7 @@ class TasksetValidator {
                 _checkListType<String>(json["wrong_answers"])) return null;
             return "Aufgabentyp: Bild4Cards";
 
-          case "Clock":
+          case "TaskType.clock":
             if (json.containsKey("uhr") &&
                 json["uhr"] is String &&
                 json.containsKey("timer") &&
@@ -113,7 +113,7 @@ class TasksetValidator {
             return "Aufgabentyp: Clock";
 
           ///MarkWords
-          case "MarkWords":
+          case "TaskType.markWords":
             if (json.containsKey("right_words") &&
                 json["right_words"] is List &&
                 _checkListType<String>(json["right_words"]) &&
@@ -122,7 +122,7 @@ class TasksetValidator {
             return "Aufgabentyp: MarkWords";
 
           ///MatchCategory
-          case "MatchCategory":
+          case "TaskType.matchCategory":
             if (json.containsKey("nameCatOne") &&
                 json["nameCatOne"] is String &&
                 json.containsKey("nameCatTwo") &&
@@ -136,7 +136,7 @@ class TasksetValidator {
             return "Aufgabentyp: MatchCategory";
 
           ///MatchRandom
-          case "MatchRandom":
+          case "TaskType.matchRandom":
             if (json.containsKey("boxLeft") &&
                 json["boxLeft"] is String &&
                 json.containsKey("boxMiddle") &&
@@ -155,20 +155,20 @@ class TasksetValidator {
             return "Aufgabentyp: MatchRandom";
 
           ///GridSelect
-          case "GridSelect":
+          case "TaskType.gridSelect":
             if (json.containsKey("wordsToFind") &&
                 json["wordsToFind"] is List &&
                 _checkListType<String>(json["wordsToFind"])) return null;
             return "Aufgabentyp: GridSelect";
 
           ///MoneyTask
-          case "MoneyTask":
+          case "TaskType.moneyTask":
             if (json.containsKey("difficulty") &&
                 json["difficulty"] is int &&
                 json['optimum'] is bool) return null;
             return "Aufgabentyp: MoneyTask";
 
-          case "NumberLine":
+          case "TaskType.numberLine":
             if (json.containsKey("steps") &&
                 json["steps"] is int &&
                 json.containsKey("randomRange") &&
@@ -180,7 +180,7 @@ class TasksetValidator {
             return "Aufgabentyp: NumberLine";
 
           ///VocableTest
-          case "VocableTest":
+          case "TaskType.vocableTest":
             if (json.containsKey("randomizeSide") &&
                 json["randomizeSide"] is bool &&
                 json.containsKey("wordPairs")) {
@@ -201,7 +201,7 @@ class TasksetValidator {
             return "Aufgabentyp: VocableTest";
 
           ///Connect
-          case "Connect":
+          case "TaskType.connect":
             if (json.containsKey("pair1") &&
                 json.containsKey("pair2") &&
                 json.containsKey("rightAnswers")) {
@@ -217,7 +217,7 @@ class TasksetValidator {
             return "Aufgabentyp: Connect";
 
           ///Equation
-          case "Equation":
+          case "TaskType.equation":
             if (json.containsKey("equation") && json.containsKey("options")) {
               if (json["equation"] is List &&
                   _checkListType<String>(json["equation"]) &&
@@ -250,7 +250,7 @@ class TasksetValidator {
             return "Aufgabentyp: Equation";
 
           ///Buchstabieren
-          case "Buchstabieren":
+          case "TaskType.buchstabieren":
             
               return null;
             return "Aufgabentyp: Buchstabieren";

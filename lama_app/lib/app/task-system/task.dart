@@ -27,62 +27,75 @@ enum TaskType {
 }
 
 class Task {
+// TODO jetzt muss string zu TaskType machen
   ///factory constructor that creates the corresponding
   ///subclass of [Task] based on the [taskType].
   factory Task.fromJson(Map<String, dynamic> json) {
     String taskType = json['task_type'];
     switch (taskType) {
-      case "4Cards":
+      case "TaskType.fourCards":
+        print(taskType);
         return Task4Cards(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['left_to_solve'],
-            json['question'],
-            json['right_answer'],
-            List<String>.from(json['wrong_answers']));
-      case "ClozeTest":
+          TaskType.fourCards,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          json['question'],
+          json['right_answer'],
+          List<String>.from(json['wrong_answers']),
+        );
+      case "TaskType.clozeTest":
         return TaskClozeTest(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['left_to_solve'],
-            json['question'],
-            json['right_answer'],
-            List<String>.from(json['wrong_answers']));
-      case "Zerlegung":
+          TaskType.clozeTest,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          json['question'],
+          json['right_answer'],
+          List<String>.from(json['wrong_answers']),
+        );
+      case "TaskType.zerlegung":
         return TaskZerlegung(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['left_to_solve'],
-            json['reverse'],
-            json['zeros'],
-            json['boolThousands']);
-      case "Clock":
+          TaskType.zerlegung,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          json['reverse'],
+          json['zeros'],
+          json['boolThousands'],
+        );
+      case "TaskType.clock":
         return ClockTest(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['left_to_solve'],
-            json['uhr'],
-            json['timer'],
-            json['right_answer'],
-            json['wrong_answers']);
-      case "MoneyTask":
-        return TaskMoney(taskType, json['task_reward'], json['lama_text'],
-            json['left_to_solve'], json['difficulty'], json['optimum']);
-      case "MarkWords":
+          TaskType.clock,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          json['uhr'],
+          json['timer'],
+          json['right_answer'],
+          json['wrong_answers'],
+        );
+      case "TaskType.moneyTask":
+        return TaskMoney(
+          TaskType.moneyTask,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          json['difficulty'],
+          json['optimum'],
+        );
+      case "TaskType.markWords":
         return TaskMarkWords(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['left_to_solve'],
-            json['sentence'],
-            List<String>.from(json['right_words']));
-      case "NumberLine":
+          TaskType.markWords,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          json['sentence'],
+          List<String>.from(json['right_words']),
+        );
+      case "TaskType.numberLine":
         return TaskNumberLine(
-          taskType,
+          TaskType.numberLine,
           json['task_reward'],
           json['lama_text'],
           json['left_to_solve'],
@@ -91,35 +104,48 @@ class Task {
           json['steps'],
           json['ontap'],
         );
-      case "MatchCategory":
+      case "TaskType.matchCategory":
         return TaskMatchCategory(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['left_to_solve'],
-            json['nameCatOne'],
-            json['nameCatTwo'],
-            List<String>.from(json['categoryOne']),
-            List<String>.from(json['categoryTwo']));
-      case "GridSelect":
-        return TaskGridSelect(taskType, json['task_reward'], json['lama_text'],
-            json['left_to_solve'], List<String>.from(json['wordsToFind']));
-      case "VocableTest":
+          TaskType.matchCategory,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          json['nameCatOne'],
+          json['nameCatTwo'],
+          List<String>.from(json['categoryOne']),
+          List<String>.from(json['categoryTwo']),
+        );
+      case "TaskType.gridSelect":
+        return TaskGridSelect(
+          TaskType.gridSelect,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          List<String>.from(json['wordsToFind']),
+        );
+      case "TaskType.vocableTest":
         var wordPairs = json['wordPairs'] as List;
         List<Pair<String, String>> wordPairList =
             wordPairs.map((pair) => Pair.fromJson(pair)).toList();
-        return TaskVocableTest(taskType, json['task_reward'], json['lama_text'],
-            json['left_to_solve'], wordPairList, json['randomizeSide']);
-      case "Connect":
+        return TaskVocableTest(
+          TaskType.vocableTest,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          wordPairList,
+          json['randomizeSide'],
+        );
+      case "TaskType.connect":
         return TaskConnect(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['left_to_solve'],
-            List<String>.from(json['pair1']),
-            List<String>.from(json['pair2']),
-            List<String>.from(json['rightAnswers']));
-      case "Equation":
+          TaskType.connect,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          List<String>.from(json['pair1']),
+          List<String>.from(json['pair2']),
+          List<String>.from(json['rightAnswers']),
+        );
+      case "TaskType.equation":
         List<String> equation = [];
         List<String> options = [];
         List<String> randomAllowedOperators = [];
@@ -151,35 +177,37 @@ class Task {
                     : json['operator_amount']
             : operatorAmount = null;
         return TaskEquation(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['left_to_solve'],
-            equation,
-            options,
-            randomAllowedOperators,
-            allowReplacingOperators,
-            resultRange,
-            operatorAmount,
-            fieldsToReplace);
-      case "Buchstabieren":
+          TaskType.equation,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          equation,
+          options,
+          randomAllowedOperators,
+          allowReplacingOperators,
+          resultRange,
+          operatorAmount,
+          fieldsToReplace,
+        );
+      case "TaskType.buchstabieren":
         Map<String, String> woerter = Map<String, String>.from(json['woerter']);
         int firstLetterBig = json['first_Letter_Caps'];
         int correctingModus = json['correcting_Modus'];
         return TaskBuchstabieren(
-            taskType,
-            json['task_reward'],
-            json['lama_text'],
-            json['left_to_solve'],
-            woerter,
-            firstLetterBig,
-            correctingModus);
+          TaskType.buchstabieren,
+          json['task_reward'],
+          json['lama_text'],
+          json['left_to_solve'],
+          woerter,
+          firstLetterBig,
+          correctingModus,
+        );
       default:
         return null;
     }
   }
 
-  String type;
+  TaskType type;
   int reward;
   String lamaText;
   int originalLeftToSolve;
@@ -191,7 +219,7 @@ class Task {
 
   @override
   String toString() {
-    return type + reward.toString() + lamaText;
+    return type.toString() + reward.toString() + lamaText;
   }
 }
 
@@ -203,7 +231,7 @@ class Task4Cards extends Task {
   String rightAnswer;
   List<String> wrongAnswers;
 
-  Task4Cards(String taskType, int reward, String lamaText, int leftToSolve,
+  Task4Cards(TaskType taskType, int reward, String lamaText, int leftToSolve,
       this.question, this.rightAnswer, this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
@@ -226,7 +254,7 @@ class TaskClozeTest extends Task {
   String rightAnswer;
   List<String> wrongAnswers;
 
-  TaskClozeTest(String taskType, int reward, String lamaText, int leftToSolve,
+  TaskClozeTest(TaskType taskType, int reward, String lamaText, int leftToSolve,
       this.question, this.rightAnswer, this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
@@ -248,7 +276,7 @@ class TaskMarkWords extends Task {
   List<String> rightWords;
   String sentence;
 
-  TaskMarkWords(String taskType, int reward, String lamaText, int leftToSolve,
+  TaskMarkWords(TaskType taskType, int reward, String lamaText, int leftToSolve,
       this.sentence, this.rightWords)
       : super(taskType, reward, lamaText, leftToSolve);
 
@@ -274,7 +302,7 @@ class TaskMatchCategory extends Task {
   String nameCatTwo;
 
   TaskMatchCategory(
-      String taskType,
+      TaskType taskType,
       int reward,
       String lamaText,
       int leftToSolve,
@@ -307,8 +335,8 @@ class TaskMatchCategory extends Task {
 class TaskGridSelect extends Task {
   List<String> wordsToFind;
 
-  TaskGridSelect(String taskType, int reward, String lamaText, int leftToSolve,
-      this.wordsToFind)
+  TaskGridSelect(TaskType taskType, int reward, String lamaText,
+      int leftToSolve, this.wordsToFind)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -329,7 +357,7 @@ class ClockTest extends Task {
   String rightAnswer;
   String wrongAnswers;
 
-  ClockTest(String taskType, int reward, String lamaText, int leftToSolve,
+  ClockTest(TaskType taskType, int reward, String lamaText, int leftToSolve,
       this.uhr, this.timer, this.rightAnswer, this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
@@ -347,7 +375,7 @@ class TaskMoney extends Task {
   int difficulty;
   bool optimum;
 
-  TaskMoney(String taskType, int reward, String lamaText, int leftToSolve,
+  TaskMoney(TaskType taskType, int reward, String lamaText, int leftToSolve,
       this.difficulty, this.optimum)
       : super(taskType, reward, lamaText, leftToSolve);
 
@@ -364,8 +392,8 @@ class TaskVocableTest extends Task {
   List<Pair<String, String>> vocablePairs;
   bool randomizeSide;
 
-  TaskVocableTest(String taskType, int reward, String lamaText, int leftToSolve,
-      this.vocablePairs, this.randomizeSide)
+  TaskVocableTest(TaskType taskType, int reward, String lamaText,
+      int leftToSolve, this.vocablePairs, this.randomizeSide)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -387,7 +415,7 @@ class TaskConnect extends Task {
   List<String> pair2;
   List<String> rightAnswers;
 
-  TaskConnect(String taskType, int reward, String lamaText, int leftToSolve,
+  TaskConnect(TaskType taskType, int reward, String lamaText, int leftToSolve,
       this.pair1, this.pair2, this.rightAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
@@ -427,7 +455,7 @@ class TaskEquation extends Task {
   bool isRandom = false;
 
   TaskEquation(
-      String taskType,
+      TaskType taskType,
       int reward,
       String lamaText,
       int leftToSolve,
@@ -468,7 +496,7 @@ class TaskZerlegung extends Task {
   bool boolThousands;
   bool reverse;
 
-  TaskZerlegung(String taskType, int reward, String lamaText, int leftToSolve,
+  TaskZerlegung(TaskType taskType, int reward, String lamaText, int leftToSolve,
       this.reverse, this.zeros, this.boolThousands)
       : super(taskType, reward, lamaText, leftToSolve);
 
@@ -484,8 +512,8 @@ class TaskNumberLine extends Task {
   bool randomrange;
   int steps;
   bool ontap;
-  TaskNumberLine(String taskType, int reward, String lamaText, int leftToSolve,
-      this.range, this.randomrange, this.steps, this.ontap)
+  TaskNumberLine(TaskType taskType, int reward, String lamaText,
+      int leftToSolve, this.range, this.randomrange, this.steps, this.ontap)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -502,7 +530,7 @@ class TaskBuchstabieren extends Task {
   int correctingModus;
 
   TaskBuchstabieren(
-      String taskType,
+      TaskType taskType,
       int reward,
       String lamaText,
       int leftToSolve,

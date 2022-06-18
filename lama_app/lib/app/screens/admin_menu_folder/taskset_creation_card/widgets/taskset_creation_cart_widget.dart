@@ -22,10 +22,14 @@ class TasksetCreationCartWidget extends StatelessWidget {
         ),
       ),
       direction: DismissDirection.endToStart,
-      onDismissed: (DismissDirection dismissDirection) {},
+      onDismissed: (DismissDirection dismissDirection) {
+        taskset.tasks.remove(taskset.tasks[index]);
+      },
       child: Card(
         child: ListTile(
-          title: Text(taskset.tasks[index].type),
+          title: Text(
+            taskset.tasks[index].type.toString().toUpperCase().substring(9),
+          ),
           subtitle: Text(taskset.tasks[index].lamaText),
           trailing: SizedBox(
             width: MediaQuery.of(context).size.width * 0.3,
@@ -37,7 +41,7 @@ class TasksetCreationCartWidget extends StatelessWidget {
                   color: Colors.black,
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => taskset.tasks.remove(taskset.tasks[index]),
                   icon: Icon(Icons.delete),
                   color: Colors.black,
                 ),

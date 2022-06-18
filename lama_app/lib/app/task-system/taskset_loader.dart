@@ -57,9 +57,8 @@ class TasksetLoader {
           for (int i = 1; i <= GRADES_SUPPORTED; i++) {
             //load all standardtasks from url
             List<TaskUrl> standardTaskUrls = [
-              TaskUrl(
-                  url: "assets/standardTasksets/mathe/mathe$i.json"),
-                      //"https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
+              TaskUrl(url: "assets/standardTasksets/mathe/mathe$i.json"),
+              //"https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
 /*               TaskUrl(
                   url:
                       "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch$i.json"),
@@ -233,14 +232,17 @@ class TasksetLoader {
     for (int i = 0; i < taskUrls.length; i++) {
       String result =
           await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
-      
+
+      //TODO delete when production
       String temp = await rootBundle.loadString(taskUrls[i].url);
-        await buildTasksetFromJson(temp);
+      await buildTasksetFromJson(temp);
+      // TODO uncomand when production
 /*       var response = await http.get(Uri.parse(taskUrls[i].url),
           headers: {'Content-type': 'application/json'});
       if (result == null) {
         await buildTasksetFromJson(utf8.decode(response.bodyBytes));
       }
- */    }
+ */
+    }
   }
 }

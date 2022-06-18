@@ -9,42 +9,42 @@
     "taskset_randomize_order": true,
     "tasks": [
         {
-            "task_type": "Zerlegung",
+            "task_type": "TaskType.zerlegung",
             "task_reward": 2,
             "lama_text": " zerlegt die Zahlen!",
             "left_to_solve": 3,
             "reverse": true,
             "zeros": true,
-            "boolThousands": true 
+            "boolThousands": true
         },
         {
-            "task_type": "NumberLine",
+            "task_type": "TaskType.numberLine",
             "task_reward": 1,
             "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
-            "range": [ 
-                 0,
-                 100
-              ],
+            "range": [
+                0,
+                100
+            ],
             "randomRange": true,
             "steps": 5,
             "ontap": true
-          },
-          {
-            "task_type": "NumberLine",
+        },
+        {
+            "task_type": "TaskType.numberLine",
             "task_reward": 1,
             "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
-            "range": [ 
-                 0,
-                 10000
-              ],
+            "range": [
+                0,
+                10000
+            ],
             "randomRange": false,
             "steps": 250,
             "ontap": false
-          },
+        },
         {
-            "task_type": "MoneyTask",
+            "task_type": "TaskType.moneyTask",
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
@@ -52,7 +52,7 @@
             "optimum": true
         },
         {
-            "task_type": "Equation",
+            "task_type": "TaskType.equation",
             "task_reward": 2,
             "lama_text": "Löse die Gleichung!",
             "left_to_solve": 4,
