@@ -435,7 +435,7 @@ class DatabaseProvider {
   /// {@return} <TaskUrl> with the autoincremented id
   Future<TaskUrl> insertTaskUrl(TaskUrl taskUrl) async {
     final db = await database;
-    taskUrl.id = await db.insert(tableTaskUrl, taskUrl.toMap());
+    taskUrl.id = await db.insert(tableTaskUrl, taskUrl.toJson());
     return taskUrl;
   }
 
@@ -765,7 +765,7 @@ class DatabaseProvider {
   Future<int> updateTaskUrl(TaskUrl taskUrl) async {
     final db = await database;
 
-    return await db.update(tableTaskUrl, taskUrl.toMap(),
+    return await db.update(tableTaskUrl, taskUrl.toJson(),
         where: " ${TaskUrlFields.columnId} = ?", whereArgs: [taskUrl.id]);
   }
 

@@ -43,10 +43,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   }
 
   @override
-  void initState() {
-    BlocProvider.of<CreateTasksetBloc>(context).add(FlushTaskset());
-    super.initState();
-  }
+  void initState() {super.initState();}
 
   ///override build methode [StatelessWidget]
   ///
@@ -71,7 +68,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CustomAppbar(
-        size: screenSize.width,
+        size: screenSize.width/5,
         titel: "Taskset erstellen",
         color: LamaColors.findSubjectColor(_currentSelectedSubject ?? "normal"),
       ),
@@ -160,7 +157,10 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TasksetCreationCartScreen(),
+                      builder: (_) => BlocProvider.value(
+                        value: BlocProvider.of<CreateTasksetBloc>(context),
+                        child: TasksetCreationCartScreen(),
+                        )
                       ),
                     );
                   } else {

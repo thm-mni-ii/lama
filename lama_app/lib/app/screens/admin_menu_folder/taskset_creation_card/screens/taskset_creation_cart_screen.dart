@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/widgets/taskset_creation_cart_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -36,8 +37,8 @@ class TasksetCreationCartScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppbar(
         titel: taskset.name,
-        size: screenSize.width,
-        color: LamaColors.findSubjectColor(taskset.subject),
+        size: screenSize.width/5,
+        color: LamaColors.findSubjectColor(taskset.subject), //TODO: BLOC
       ),
       body: Column(
         children: [
@@ -61,10 +62,10 @@ class TasksetCreationCartScreen extends StatelessWidget {
                   /* => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (BuildContext context) => TasksetOptionsBloc(),
-                        child: OptionTaskScreen(),
-                      ),
+                      builder: (_) => BlocProvider.value(
+                        value: BlocProvider.of<CreateTasksetBloc>(context),
+                        child: TasksetChooseTaskScreen(),
+                        )
                     ),
                   ), */
                   child: const Text("Task hinzufügen"),
@@ -74,7 +75,10 @@ class TasksetCreationCartScreen extends StatelessWidget {
                   /* => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => TasksetCreationCartScreen(),
+                      builder: (_) => BlocProvider.value(
+                        value: BlocProvider.of<CreateTasksetBloc>(context),
+                        child: TasksetChooseTaskScreen(),
+                        )
                     ),
                   ), */
                   child: const Text("Taskset generieren"),

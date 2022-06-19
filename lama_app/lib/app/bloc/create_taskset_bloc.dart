@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/state/create_taskset_state.dart';
+import 'package:lama_app/util/LamaColors.dart';
 
 import '../event/create_taskset_event.dart';
 import '../task-system/taskset_model.dart';
@@ -13,8 +14,8 @@ import '../task-system/taskset_model.dart';
 ///    [TasksetCreationScreenState]
 ///    [Bloc]
 ///
-/// Author: N. Soethe
-/// latest Changes: 01.06.2022
+/// Author: Nico Soethe
+/// latest Changes: 17.06.2022
 class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   Taskset taskset;
   CreateTasksetBloc({this.taskset}) : super(CreateTasksetState());
@@ -34,5 +35,9 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   /// pops the screen and return null
   void _abort(BuildContext context) {
     Navigator.pop(context, null);
+  }
+
+  Color colorizeAppbar(String subject) {
+    LamaColors.findSubjectColor(subject);
   }
 }

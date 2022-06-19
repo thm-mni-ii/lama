@@ -27,14 +27,12 @@ enum TaskType {
 }
 
 class Task {
-// TODO jetzt muss string zu TaskType machen
   ///factory constructor that creates the corresponding
   ///subclass of [Task] based on the [taskType].
   factory Task.fromJson(Map<String, dynamic> json) {
     String taskType = json['task_type'];
     switch (taskType) {
       case "TaskType.fourCards":
-        print(taskType);
         return Task4Cards(
           TaskType.fourCards,
           json['task_reward'],
@@ -207,6 +205,15 @@ class Task {
     }
   }
 
+  Map<String, dynamic> toJson() => {
+        "task_type": type,
+        "task_reward": reward,
+        "lama_text": lamaText,
+        "left_to_solve": leftToSolve
+        "uhr": "vollStunde",
+        "timer": false
+      };
+
   TaskType type;
   int reward;
   String lamaText;
@@ -372,16 +379,17 @@ class ClockTest extends Task {
 ///
 ///Author: T.Rentsch
 class TaskMoney extends Task {
-  int difficulty;
+  double von;
+  double bis;
   bool optimum;
 
   TaskMoney(TaskType taskType, int reward, String lamaText, int leftToSolve,
-      this.difficulty, this.optimum)
+      this.von, this.bis)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
   String toString() {
-    return super.toString() + difficulty.toString();
+    return super.toString() + von.toString() + bis.toString();
   }
 }
 

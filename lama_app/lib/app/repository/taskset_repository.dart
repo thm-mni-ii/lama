@@ -45,11 +45,43 @@ class TasksetRepository {
   }
 
   /// gives a List of TaskType depending on a specific subject
-  List<TaskType> t(String subject) {
+  static List<TaskType> t(String subject) {
     switch (subject) {
       case "Mathe":
         return [
           TaskType.fourCards,
+          TaskType.moneyTask,
+          TaskType.equation,
+          TaskType.zerlegung,
+          TaskType.numberLine,
+          TaskType.clock
+        ];
+      case "Deutsch":
+        return [
+          TaskType.fourCards,
+          TaskType.markWords,
+          TaskType.matchCategory,
+          TaskType.gridSelect,
+          TaskType.buchstabieren,
+          TaskType.clozeTest
+        ];
+      case "Englisch":
+        return [
+          TaskType.fourCards,
+          TaskType.markWords,
+          TaskType.matchCategory,
+          TaskType.gridSelect,
+          TaskType.buchstabieren, 
+          TaskType.vocableTest,
+          TaskType.clozeTest
+        ];
+      case "Sachkunde":
+        return [
+          TaskType.fourCards,
+          TaskType.markWords,
+          TaskType.matchCategory,
+          TaskType.gridSelect,
+          TaskType.buchstabieren, 
         ];
       default:
         return [];
