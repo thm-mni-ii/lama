@@ -61,7 +61,10 @@ class TasksetCreationCartScreen extends StatelessWidget {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TasksetChooseTaskScreen(),
+                      builder: (_) => BlocProvider.value(
+                        value: BlocProvider.of<CreateTasksetBloc>(context),
+                        child: TasksetChooseTaskScreen(),
+                        )
                     ),
                   ),
                   child: const Text("Task hinzufügen"),
@@ -70,7 +73,10 @@ class TasksetCreationCartScreen extends StatelessWidget {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => TasksetCreationCartScreen(),
+                      builder: (_) => BlocProvider.value(
+                        value: BlocProvider.of<CreateTasksetBloc>(context),
+                        child: TasksetChooseTaskScreen(),
+                        )
                     ),
                   ),
                   child: const Text("Taskset generieren"),

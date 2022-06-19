@@ -344,16 +344,17 @@ class ClockTest extends Task {
 ///
 ///Author: T.Rentsch
 class TaskMoney extends Task {
-  int difficulty;
+  double von;
+  double bis;
   bool optimum;
 
   TaskMoney(String taskType, int reward, String lamaText, int leftToSolve,
-      this.difficulty, this.optimum)
+      this.von, this.bis)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
   String toString() {
-    return super.toString() + difficulty.toString();
+    return super.toString() + von.toString() + bis.toString();
   }
 }
 

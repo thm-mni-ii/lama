@@ -62,7 +62,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
     finalMoneyAmount = currentAmountInt;
     maxAmount = 10 * 100;
     rnd = random.nextInt(maxAmount);
-    if (task.difficulty == 1) {
+/*     if (task.difficulty == 1) {
       rnd = (random.nextInt(20) + 1) * 50;
     }
     if (task.difficulty == 2) {
@@ -70,7 +70,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
     }
     if (task.difficulty == 3) {
       rnd = (random.nextInt(1000) + 1);
-    }
+    } */
 
     this.moneyAmount = rnd;
 

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
-import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
-import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
-import 'package:lama_app/util/LamaTextTheme.dart';
 
 
 class MoneyEinstellenScreen extends StatefulWidget {
@@ -17,20 +13,20 @@ class MoneyEinstellenScreen extends StatefulWidget {
 }
 
 class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
-  final List<Item> _data = generateItems(1);
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String von;
-  String bis;
+  double von;
+  double bis;
+  int reward;
 
   @override
   void initState() {
     super.initState();
   }
 
-  @override
+
+   @override
   Widget build(BuildContext context) {
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset;
-    TaskMoney moneyTask;
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppbar(
@@ -75,10 +71,10 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                               return null;
                             },
                             onSaved: (text) {
-                              von = text;
+                              von = double.parse(text);
                             },
                             onChanged: (text) =>
-                                setState(() => this.von = text),
+                                setState(() => this.von = double.parse(text)),
                           ),
                         ),
                       ),
@@ -105,17 +101,17 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                               return null;
                             },
                             onSaved: (text) {
-                              von = text;
+                              bis = double.parse(text);
                             },
                             onChanged: (text) =>
-                                setState(() => this.bis = text),
+                                setState(() => this.bis = double.parse(text)),
                           ),
                         ),
                       ),
                     ],
                   ),
                 )),
-            Container(
+/*             Container(
               margin: EdgeInsets.only(top: 15, bottom: 15),
               child: ExpansionPanelList.radio(
                 expansionCallback: (int index, bool isExpanded) {},
@@ -131,14 +127,12 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         title: Text("Nur volle Euro"),
                         onChanged: (bool value) {
                           setState(() {
-                            timeDilation = value ? 10.0 : 1.0;
                           });
                         },
-                        value: timeDilation != 1.0,
                       ));
                 }).toList(),
               ),
-            ),
+            ), */
             Container(
               margin: EdgeInsets.only(top: 30),
               child: TextFormField(
@@ -152,9 +146,9 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                   return null;
                 },
                 onSaved: (text) {
-                  von = text;
+                  this.reward = int.parse(text);
                 },
-                onChanged: (text) => setState(() => this.von = text),
+                onChanged: (text) => setState(() => this.reward = int.parse(text)),
               ),
             ),
             Container(
@@ -194,22 +188,11 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MoneyEinstellenScreen()),
-                        );
-                        /*   if (_formKey.currentState!.validate()) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Processing Data')),
-                                );
-                              }
-                              _formKey.currentState?.save();
-                              print(tasksetName);
-                              print(kurzBeschreibung);
-                              print(value);
-                              print(value2); */
+                        //TODO: bloc und event
+                        TaskMoney moneyTask = TaskMoney("MoneyTask", this.reward, "", 3, von, bis);
+                        Taskset taskset = BlocProvider.of<CreateTasksetBloc>(context).taskset;
+                        taskset.tasks.add(moneyTask);
+                        Navigator.pop(context);
                       },
                       child: Text.rich(
                         TextSpan(
@@ -226,41 +209,10 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
         ),
       ),
     );
-  }
+  } 
 
-  Widget navBar(double size, String titel, Color colors) {
-    return AppBar(
-      leading: Builder(
-        builder: (BuildContext context) {
-          return IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) => UserSelectionBloc(),
-                    child: UserSelectionScreen(),
-                  ),
-                ),
-              );
-            },
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          );
-        },
-      ),
-      title: Text(
-        titel,
-        style: LamaTextTheme.getStyle(fontSize: 18),
-      ),
-      toolbarHeight: size,
-      backgroundColor: colors,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(30),
-        ),
-      ),
-    );
+  Widget _customBoldText(String text) {
+    return Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
   }
 }
 

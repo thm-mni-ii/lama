@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/app.dart';
-import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 
 ///Main method that launches the app.
@@ -13,19 +12,10 @@ void main() async {
   tasksetRepository.initialize();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await precacheSvgs();
-  runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider<CreateTasksetBloc>(
-          create: (context) => CreateTasksetBloc(),
-        ),
-      ],
-      child: RepositoryProvider(
-        create: (context) => tasksetRepository,
-        child: LamaApp(),
-      ),
-    ),
-  );
+  runApp(RepositoryProvider(
+    create: (context) => tasksetRepository,
+    child: LamaApp(),
+  ));
 }
 
 ///Precaches the svgs files.

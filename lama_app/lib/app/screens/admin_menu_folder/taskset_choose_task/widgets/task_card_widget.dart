@@ -17,7 +17,7 @@ class TaskCardWidget extends StatelessWidget{
     List<TaskType> list = TasksetRepository.t(taskset.subject);
     return Card(
       child: ListTile(
-        title: Text(list[index].toString()),
+        title: Text(list[index].toString().substring(9).toUpperCase()),
         trailing: SizedBox(
           child: IconButton(
             onPressed: (() {
@@ -26,7 +26,10 @@ class TaskCardWidget extends StatelessWidget{
                       Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MoneyEinstellenScreen(),
+                      builder: (_) => BlocProvider.value(
+                        value: BlocProvider.of<CreateTasksetBloc>(context),
+                        child: MoneyEinstellenScreen(),
+                        )
                       ),
                     );
                   break;
