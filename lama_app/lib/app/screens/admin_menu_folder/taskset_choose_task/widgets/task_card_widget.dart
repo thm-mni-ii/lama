@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/create_task_screens/create_moneytask.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_moneytask/create_moneytask_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 
