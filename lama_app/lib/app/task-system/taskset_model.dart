@@ -50,4 +50,13 @@ class Taskset {
       randomTaskAmount = min(tasks.length, json['taskset_choose_amount']);
     }
   }
+
+  Map<String, dynamic> toJSON(Taskset taskset) => {
+    "taskset_url": TaskUrl.toJSON(taskset.taskurl),
+    "taskset_name": taskset.name, 
+    "taskset_subject": taskset.subject,
+    "taskset_grade": taskset.grade,
+    "taskset_randomize_order": true,
+    "tasks": Task.toJSON(taskset.tasks)
+  };
 }

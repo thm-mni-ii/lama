@@ -193,6 +193,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         Taskset taskset = BlocProvider.of<CreateTasksetBloc>(context).taskset;
                         taskset.tasks.add(moneyTask);
                         Navigator.pop(context);
+                        Navigator.pop(context);
                       },
                       child: Text.rich(
                         TextSpan(
