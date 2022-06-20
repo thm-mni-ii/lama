@@ -18,14 +18,21 @@ import '../task-system/taskset_model.dart';
 /// latest Changes: 17.06.2022
 class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   Taskset taskset;
-  CreateTasksetBloc({this.taskset}) : super(CreateTasksetState());
+  CreateTasksetBloc({this.taskset}) : super(InitialState());
 
   @override
   Stream<CreateTasksetState> mapEventToState(CreateTasksetEvent event) async* {
     if (event is FlushTaskset) taskset = null;
     if (event is CreateTasksetAbort) _abort(event.context);
     if (event is EditTaskset) taskset = event.taskset;
-    if (event is CreateTasksetAddTask) taskset.tasks.add(event.task);
+    if (event is CreateTasksetAddTask) {
+      taskset.tasks.add(event.task);
+      yield ChangedTasksListState();
+    }
+    if (event is RemoveTask) {
+      taskset.tasks.removeAt(event.index);
+      yield ChangedTasksListState();
+    }
     //TODO: Delete this after implementation
     /* if (taskset != null)
       print(
