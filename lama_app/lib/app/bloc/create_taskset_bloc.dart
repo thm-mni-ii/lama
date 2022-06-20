@@ -29,6 +29,7 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
       taskset.tasks.add(event.task);
       yield ChangedTasksListState();
     }
+    if (event is CreateTasksetGenerate) taskset.toJson();
     if (event is RemoveTask) {
       taskset.tasks.removeAt(event.index);
       yield ChangedTasksListState();
