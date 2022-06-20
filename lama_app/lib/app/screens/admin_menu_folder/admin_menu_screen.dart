@@ -58,7 +58,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
     Size screensize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppbar(
-        size: screensize.width,
+        size: screensize.width/5,
         titel: 'Adminmenü',
         color: LamaColors.bluePrimary,
       ),

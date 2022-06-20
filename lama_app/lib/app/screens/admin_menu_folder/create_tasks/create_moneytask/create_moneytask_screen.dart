@@ -37,11 +37,13 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
         body: Column(children: [
           Expanded(
             child: Container(
+              margin: EdgeInsets.all(5),
               child: Form(
                 key: _formKey,
-                child: Column(children: [
+                child: Column(
+                  children: [
                   Container(
-                    margin: EdgeInsets.all(15),
+                    margin: EdgeInsets.only(top: 25),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -53,70 +55,68 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 15, bottom: 15, right: 30),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(right: 30),
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Von',
-                                  ),
-                                  validator: (text) {
-                                    if (text == null || text.isEmpty) {
-                                      return "Beitrag fehlt!";
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (text) {
-                                    von = double.parse(text);
-                                  },
-                                  onChanged: (text) => setState(
-                                      () => this.von = double.parse(text)),
+                  Container(
+                    margin: EdgeInsets.only(left: 15, bottom: 15, right: 30),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(right: 30),
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Von',
                                 ),
+                                validator: (text) {
+                                  if (text == null || text.isEmpty) {
+                                    return "Beitrag fehlt!";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (text) {
+                                  von = double.parse(text);
+                                },
+                                onChanged: (text) => setState(
+                                    () => this.von = double.parse(text)),
                               ),
                             ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(left: 30),
-                                child: Text(
-                                  "bis",
-                                  style: TextStyle(fontSize: 16),
-                                ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(left: 30),
+                              child: Text(
+                                "bis",
+                                style: TextStyle(fontSize: 16),
                               ),
                             ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(left: 30),
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Bis',
-                                  ),
-                                  validator: (text) {
-                                    if (text == null || text.isEmpty) {
-                                      return "Beitrag fehlt!";
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (text) {
-                                    bis = double.parse(text);
-                                  },
-                                  onChanged: (text) => setState(
-                                      () => this.bis = double.parse(text)),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(left: 30),
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Bis',
                                 ),
+                                validator: (text) {
+                                  if (text == null || text.isEmpty) {
+                                    return "Beitrag fehlt!";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (text) {
+                                  bis = double.parse(text);
+                                },
+                                onChanged: (text) => setState(
+                                    () => this.bis = double.parse(text)),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -148,7 +148,9 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
           ),
           Container(
             margin: EdgeInsets.only(bottom: 25),
-            child: Row(children: [
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
               TextButton(
                 onPressed: () => Navigator.push(
                   context,
