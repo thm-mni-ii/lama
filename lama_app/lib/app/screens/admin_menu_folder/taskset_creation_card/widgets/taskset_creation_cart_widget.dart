@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
+import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 
 class TasksetCreationCartWidget extends StatelessWidget {
@@ -23,7 +24,7 @@ class TasksetCreationCartWidget extends StatelessWidget {
       ),
       direction: DismissDirection.endToStart,
       onDismissed: (DismissDirection dismissDirection) {
-        taskset.tasks.remove(taskset.tasks[index]);
+        BlocProvider.of<CreateTasksetBloc>(context).add(RemoveTask(index));
       },
       child: Card(
         child: ListTile(
@@ -41,7 +42,8 @@ class TasksetCreationCartWidget extends StatelessWidget {
                   color: Colors.black,
                 ),
                 IconButton(
-                  onPressed: () => taskset.tasks.remove(taskset.tasks[index]),
+                  onPressed: () => BlocProvider.of<CreateTasksetBloc>(context)
+                      .add(RemoveTask(index)),
                   icon: Icon(Icons.delete),
                   color: Colors.black,
                 ),

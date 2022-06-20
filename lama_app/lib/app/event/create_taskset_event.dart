@@ -46,6 +46,12 @@ class EditTaskset extends CreateTasksetEvent {
 /// When hitting the back button the bloc provided taskset should be flushed
 class FlushTaskset extends CreateTasksetEvent {}
 
+class RemoveTask extends CreateTasksetEvent {
+  final int index;
+
+  RemoveTask(this.index);
+}
+
 /// used to add a [Task] to the [Taskset] in Bloc
 ///
 /// {@param}[Task] task that should be added to the list
