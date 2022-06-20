@@ -9,8 +9,11 @@ import 'package:lama_app/util/LamaColors.dart';
 /// Author: N. Soethe
 /// latest Changes: 01.06.2022
 
-class CreateTasksetState {
+abstract class CreateTasksetState{
   Color color = LamaColors.redPrimary;
 
   CreateTasksetState();
 }
+ class InitialState extends CreateTasksetState {}
+
+class ChangedTasksListState extends CreateTasksetState {}
