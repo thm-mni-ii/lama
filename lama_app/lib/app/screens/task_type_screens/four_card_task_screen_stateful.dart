@@ -147,6 +147,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
                   ),
+                  itemCount: 4,
                   itemBuilder: (context, index) =>
                       _buildCards(context, index)))),
 
@@ -168,7 +169,6 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           color: color,
           boxShadow: [
             BoxShadow(
-
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 1,
                 blurRadius: 7,
