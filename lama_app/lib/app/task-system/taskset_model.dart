@@ -51,12 +51,12 @@ class Taskset {
     }
   }
 
-  Map<String, dynamic> toJson(Taskset taskset) => {
-        "taskset_url": taskset.taskurl.toJson(),
-        "taskset_name": taskset.name,
-        "taskset_subject": taskset.subject,
-        "taskset_grade": taskset.grade,
+  Map<String, dynamic> toJson() => {
+        "taskset_url": taskurl.toJson(),
+        "taskset_name": name,
+        "taskset_subject": subject,
+        "taskset_grade": grade,
         "taskset_randomize_order": true,
-        "tasks": taskset.tasks.map((e) => e.toJson()).toList(),
+        "tasks": tasks.map((e) => e.toJson()).toList(),
       };
 }

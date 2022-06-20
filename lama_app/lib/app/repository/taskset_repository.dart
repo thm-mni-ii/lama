@@ -1,6 +1,7 @@
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_loader.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
+import 'package:http/http.dart' as http;
 
 /// Repository that provides access to the loaded tasksets.
 ///
@@ -44,6 +45,15 @@ class TasksetRepository {
     await tasksetLoader.loadAllTasksets();
   }
 
+  Future<void> writeToServer(Taskset taskset) async {
+    String url = "";
+    var response = await http.post(
+      Uri.parse(url),
+      body: taskset.toJson(),
+    );
+    // response abfangen (error)
+  }
+
   /// gives a List of TaskType depending on a specific subject
   static List<TaskType> t(String subject) {
     switch (subject) {
@@ -71,7 +81,7 @@ class TasksetRepository {
           TaskType.markWords,
           TaskType.matchCategory,
           TaskType.gridSelect,
-          TaskType.buchstabieren, 
+          TaskType.buchstabieren,
           TaskType.vocableTest,
           TaskType.clozeTest
         ];
@@ -81,7 +91,7 @@ class TasksetRepository {
           TaskType.markWords,
           TaskType.matchCategory,
           TaskType.gridSelect,
-          TaskType.buchstabieren, 
+          TaskType.buchstabieren,
         ];
       default:
         return [];
