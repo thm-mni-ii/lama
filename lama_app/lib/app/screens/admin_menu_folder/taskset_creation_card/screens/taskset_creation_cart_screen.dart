@@ -53,7 +53,7 @@ class TasksetCreationCartScreen extends StatelessWidget {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(bottom: 5),
+            margin: const EdgeInsets.only(bottom: 25),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

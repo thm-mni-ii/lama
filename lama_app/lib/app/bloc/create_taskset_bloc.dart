@@ -25,6 +25,7 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
     if (event is FlushTaskset) taskset = null;
     if (event is CreateTasksetAbort) _abort(event.context);
     if (event is EditTaskset) taskset = event.taskset;
+    if (event is CreateTasksetAddTask) taskset.tasks.add(event.task);
     //TODO: Delete this after implementation
     /* if (taskset != null)
       print(
