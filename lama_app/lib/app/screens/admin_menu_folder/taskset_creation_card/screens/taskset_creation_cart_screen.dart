@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/widgets/taskset_creation_cart_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
+import 'package:lama_app/app/state/create_taskset_state.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/input_validation.dart';
@@ -37,56 +38,59 @@ class TasksetCreationCartScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppbar(
         titel: taskset.name,
-        size: screenSize.width/5,
+        size: screenSize.width / 5,
         color: LamaColors.findSubjectColor(taskset.subject), //TODO: BLOC
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.all(5),
-              child: ListView.builder(
-                itemBuilder: (context, index) =>
-                    TasksetCreationCartWidget(index: index),
-                itemCount: taskset.tasks.length,
+      body: BlocListener<CreateTasksetBloc, CreateTasksetState>(
+        listener: (context, state) {
+          // TODO: implement listener
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.all(5),
+                child: ListView.builder(
+                  itemBuilder: (context, index) =>
+                      TasksetCreationCartWidget(index: index),
+                  itemCount: taskset.tasks.length,
+                ),
               ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  /* => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetChooseTaskScreen(),
-                        )
+            Container(
+              margin: const EdgeInsets.only(bottom: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider.value(
+                          value: BlocProvider.of<CreateTasksetBloc>(context),
+                          child: TasksetChooseTaskScreen(),
+                        ),
+                      ),
                     ),
-                  ), */
-                  child: const Text("Task hinzufügen"),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  /* => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetChooseTaskScreen(),
-                        )
+                    child: const Text("Task hinzufügen"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider.value(
+                          value: BlocProvider.of<CreateTasksetBloc>(context),
+                          child: TasksetChooseTaskScreen(),
+                        ),
+                      ),
                     ),
-                  ), */
-                  child: const Text("Taskset generieren"),
-                ),
-              ],
+                    child: const Text("Taskset generieren"),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
