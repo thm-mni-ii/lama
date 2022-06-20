@@ -1,6 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/model/taskUrl_model.dart';
+import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/state/create_taskset_state.dart';
+import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
 import '../event/create_taskset_event.dart';
@@ -34,10 +38,11 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
       taskset.tasks.removeAt(event.index);
       yield ChangedTasksListState();
     }
-    //TODO: Delete this after implementation
-    /* if (taskset != null)
-      print(
-          "Name: ${taskset.name ?? "testname"}, Subject: ${taskset.subject ?? "testsubject"}, Grade: ${taskset.grade ?? "testgrade"}\n"); */
+    /* if (event is GenerateTaskset) {
+      DatabaseProvider.db.insertTaskUrl(TaskUrl(url: ""));
+      // TODO write to server
+      RepositoryProvider.of<TasksetRepository>(context).writeToServer(taskset);
+    } */
   }
 
   /// private method to abort the current creation process

@@ -46,11 +46,15 @@ class EditTaskset extends CreateTasksetEvent {
 /// When hitting the back button the bloc provided taskset should be flushed
 class FlushTaskset extends CreateTasksetEvent {}
 
+/// removes a task from a taskset while editing 
 class RemoveTask extends CreateTasksetEvent {
   final int index;
 
   RemoveTask(this.index);
 }
+
+/// writes a Taskset to the db and a json to the server with a specific url
+class GenerateTaskset extends CreateTasksetEvent{}
 
 /// used to add a [Task] to the [Taskset] in Bloc
 ///
