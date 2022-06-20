@@ -42,9 +42,6 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
     return taskset;
   }
 
-  @override
-  void initState() {super.initState();}
-
   ///override build methode [StatelessWidget]
   ///
   ///{@param} [BuildContext] as context

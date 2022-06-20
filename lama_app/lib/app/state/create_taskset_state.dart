@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/bloc/taskset_creation_cart_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/screens/taskset_creation_cart_screen.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_event.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
-import '../task-system/taskset_model.dart';
 
 /// States used by [TasksetCreationCartScreen] and [TasksetCreationCartBloc]
 ///
