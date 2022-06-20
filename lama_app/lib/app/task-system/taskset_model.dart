@@ -57,6 +57,6 @@ class Taskset {
         "taskset_subject": taskset.subject,
         "taskset_grade": taskset.grade,
         "taskset_randomize_order": true,
-        "tasks": taskset.tasks.toJson()
+        "tasks": taskset.tasks.map((e) => e.toJson()).toList(),
       };
 }

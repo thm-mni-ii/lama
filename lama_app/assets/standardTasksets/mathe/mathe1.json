@@ -79,15 +79,17 @@
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
-            "difficulty": 1,
-            "optimum": false
+            "von": 0.0,
+            "bis": 5.0,
+            "optimum": true
         },
         {
             "task_type": "TaskType.moneyTask",
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
-            "difficulty": 1,
+            "von": 0.0,
+            "bis": 5.0,
             "optimum": false
         }
     ]

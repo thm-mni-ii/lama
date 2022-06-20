@@ -163,8 +163,9 @@ class TasksetValidator {
 
           ///MoneyTask
           case "TaskType.moneyTask":
-            if (json.containsKey("difficulty") &&
-                json["difficulty"] is int &&
+            if (json.containsKey("von") &&json.containsKey("bis") &&
+                json["von"] is double &&
+                json["bis"] is double &&
                 json['optimum'] is bool) return null;
             return "Aufgabentyp: MoneyTask";
 
