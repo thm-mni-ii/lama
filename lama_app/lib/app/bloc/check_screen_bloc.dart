@@ -88,8 +88,13 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     //loda lama facts
 
     //create and push guest user into database
-    User user =
-        User(grade: 1, coins: 0, isAdmin: false, avatar: 'lama', name: "Gast");
+    User user = User(
+        grade: 1,
+        coins: 0,
+        isAdmin: false,
+        avatar: 'lama',
+        name: "Gast",
+        isGuest: true);
     await DatabaseProvider.db.insertUser(user);
     //load guest user
 
