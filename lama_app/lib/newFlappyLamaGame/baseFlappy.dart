@@ -38,8 +38,9 @@ import 'baseAnimationComponent.dart';
 import 'flappyObstacleComponent.dart';
 import 'newTest176.dart';
 
-class FlappyLamaGame2 extends FlameGame with HasTappables {
-  late SpriteComponent test44;
+class FlappyLamaGame2 extends FlameGame
+    with TapDetector, HasCollisionDetection {
+  late AnimatedComponent userLama;
 
   late SpriteComponent test5;
   late SpriteComponent test6;
@@ -283,15 +284,14 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
     /*    add(test5);
     add(test6);
     add(test7); */
-    add(
-      AnimatedComponent(
-        _lamaSize,
-        this,
-        Vector2(0, 0),
-        Vector2(150, y),
-        componentSize,
-      ),
+    userLama = AnimatedComponent(
+      _lamaSize,
+      this,
+      Vector2(0, 0),
+      Vector2(150, y),
+      componentSize,
     );
+    add(userLama);
 
     add(ObstacleComp(this, Vector2(0, 0), _context));
 /*     add(
@@ -309,4 +309,13 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
       Vector2(200, y),
     )); */
   }
+
+  void onTap() {}
+
+  void onTapCancel() {}
+  void onTapDown(TapDownInfo info) {
+    userLama.flap();
+  }
+
+  void onTapUp(TapUpInfo info) {}
 }

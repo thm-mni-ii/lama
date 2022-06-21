@@ -8,13 +8,14 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/animation.dart';
 
 import 'baseFlappy.dart';
 
 class AnimatedComponent extends SpriteAnimationComponent
-    with CollisionCallbacks, HasGameRef, Tappable {
+    with CollisionCallbacks, HasGameRef {
   final Vector2 velocity;
 
   late SpriteAnimation _upAnimation;
@@ -43,10 +44,10 @@ class AnimatedComponent extends SpriteAnimationComponent
   double _speedY = 0.0;
 
   /// gravity of the lama = falling speed
-  static const double GRAVITY = 100;
+  static const double GRAVITY = 1000;
 
   /// speed increase/decrease when [flap] gets called = flap height
-  final double _flapSpeed = -220;
+  final double _flapSpeed = -320;
 
   /// width and height of the lama in pixel
   final double _size;
@@ -123,22 +124,26 @@ class AnimatedComponent extends SpriteAnimationComponent
     ////////////////////////////////////////////////////////////
     ///
     ///
-/*     final hitboxPaint = BasicPalette.white.paint()
+    final hitboxPaint = BasicPalette.white.paint()
       ..style = PaintingStyle.stroke;
     add(
       PolygonHitbox.relative(
         [
+          Vector2(-1.0, 0.0),
+          Vector2(-1.0, -1.0),
           Vector2(0.0, -1.0),
+          Vector2(0.0, 0.0),
+          /*       Vector2(0.0, -1.0),
           Vector2(-1.0, -0.1),
           Vector2(-0.2, 0.4),
           Vector2(0.2, 0.4),
-          Vector2(1.0, -0.1),
+          Vector2(1.0, -0.1), */
         ],
-        parentSize: size,
+        parentSize: spriteSize,
       )
         ..paint = hitboxPaint
         ..renderShape = true,
-    ); */
+    );
   }
 
   /// This method let the lama fly up with an impuls.
@@ -160,10 +165,10 @@ class AnimatedComponent extends SpriteAnimationComponent
     // new y
     position.y += _speedY * dt;
     // hits the ground?
-    if (!isHittingGround()) {
+/*     if (!isHittingGround()) {
       // hit the top?
       isHittingTop(dt);
-    }
+    } */
     // choose animation
     if (lastY > y) {
       animation = _upAnimation;
@@ -177,29 +182,6 @@ class AnimatedComponent extends SpriteAnimationComponent
 ////////////////////////////////
   ///tap logic
   ///
-
-  bool _beenPressed = false;
-
-  @override
-  bool onTapUp(_) {
-    _beenPressed = false;
-    return true;
-  }
-
-  @override
-  bool onTapDown(_) {
-    _beenPressed = true;
-    // simulates one flap
-    flap();
-    // position.y -= 300.0;
-    return true;
-  }
-
-  @override
-  bool onTapCancel() {
-    _beenPressed = false;
-    return true;
-  }
 
 //////////////////////////////////
   ///
@@ -243,7 +225,7 @@ class AnimatedComponent extends SpriteAnimationComponent
       // remove the speed
       _speedY = 0.0;
       // callback
-      onHitGround.call();
+      // onHitGround.call();
       return true;
     }
 
@@ -254,13 +236,12 @@ class AnimatedComponent extends SpriteAnimationComponent
     ..style = PaintingStyle.stroke;
   final Paint dotPaint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
  */
-/*   @override
+  @override
   void onCollisionStart(
     Set<Vector2> intersectionPoints,
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
-    velocity.negate();
-    flipVertically();
-  } */
+    flap();
+  }
 }
