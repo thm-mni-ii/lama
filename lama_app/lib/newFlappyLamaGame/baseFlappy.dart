@@ -18,7 +18,6 @@ import 'package:lama_app/flappyLama/widgets/playModeWidget.dart';
 import 'package:lama_app/flappyLama/widgets/startScreen.dart';
 import 'package:lama_app/newFlappyLamaGame/flappyObstacleComponent.dart';
 import 'package:lama_app/newFlappyLamaGame/obstacleFlappyLama.dart';
-import 'package:lama_app/newFlappyLamaGame/obstacleTest.dart';
 
 import '../app/screens/game_list_screen.dart';
 import 'package:flame/events.dart';
@@ -34,19 +33,14 @@ import 'package:flame/palette.dart';
 
 import 'CollidableAnimationComponent.dart';
 import 'backgroundFlappyLama.dart';
-import 'baseAnimationComponent.dart';
 import 'flappyObstacleComponent.dart';
-import 'newTest176.dart';
 
 class FlappyLamaGame2 extends FlameGame
     with TapDetector, HasCollisionDetection {
   late AnimatedComponent userLama;
 
-  late SpriteComponent test5;
-  late SpriteComponent test6;
-  late SpriteComponent test7;
   //Obstacle Stuff
-  var amountObstaclesPerColumn = 3;
+/*   var amountObstaclesPerColumn = 3;
   var obstacleTopEndList = <Obstacle5>[];
   var obstacleBottomEndList = <Obstacle5>[];
   var obstacleBodyList = <Obstacle5>[];
@@ -54,7 +48,7 @@ class FlappyLamaGame2 extends FlameGame
 
   Obstacle5 obstacleTopEnd = Obstacle5(false);
   Obstacle5 obstacleBottomEnd = Obstacle5(false);
-  Obstacle5 obstacleBody = Obstacle5(false);
+  Obstacle5 obstacleBody = Obstacle5(false); */
 
   double xTopEnd = 50;
   double xBottomEnd = 100;
@@ -89,7 +83,7 @@ class FlappyLamaGame2 extends FlameGame
   final int _gameId = 2;
 
   /// obstacle list
-  List<FlappyObstacle> obstacles = [];
+  //List<FlappyObstacle> obstacles = [];
 
   /// the achieved score in this round
   int score = 0;
@@ -139,7 +133,7 @@ class FlappyLamaGame2 extends FlameGame
   }
 
   /// the lama [AnimationComponent]
-  late LamaAnimationComponent _lama;
+
   late AnimatedComponent _lama2;
 
   /// necessary context for determine the actual screensize
@@ -152,10 +146,7 @@ class FlappyLamaGame2 extends FlameGame
     initializeAsync();
   }
 
-  void loadStartScreenAsync() async {
-    _lama = LamaAnimationComponent(this, _lamaSize); //..onHitGround = gameOver;
-    // add(_lama);
-  }
+  void loadStartScreenAsync() async {}
 
   /// This method load the [Size] of the screen and loads the StartScreen
   void initializeAsync() async {
@@ -190,9 +181,6 @@ class FlappyLamaGame2 extends FlameGame
   @override
   Future<void> update(double dt) async {
     super.update(dt);
-    test5.x -= 10 * dt;
-    test6.x -= 10 * dt;
-    test7.x -= 10 * dt;
 
     /*   yComponent += 10 * dt;
     add(SpriteComponent(
@@ -212,14 +200,14 @@ class FlappyLamaGame2 extends FlameGame
   }
 
   /// This methods adds up the score and changes the holesize depending on the score
-  void addScore(FlappyObstacle obstacle) {
+/*   void addScore(FlappyObstacle obstacle) {
     score++;
 
     if (score > _difficultyScore) {
       obstacle.maxHoleSize = 3;
       obstacle.minHoleSize = 2;
     }
-  }
+  } */
 
   @override
   Future<void> onLoad() async {
@@ -254,29 +242,6 @@ class FlappyLamaGame2 extends FlameGame
     obstacles[1].setConstraints(obstacles[0].holeIndex, obstacles[0].holeSize);
     obstacles[1].resetObstacle();
     obstacles[0].resetObstacle(); */
-    double obstacleYPos = (tileSize * _sizeInTiles) * 0;
-    test5 = SpriteComponent(
-      sprite: await loadSprite(obstacleBottomEndImage),
-      position: Vector2(screenSize.width, obstacleYPos),
-      size: Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
-      anchor: Anchor.topLeft,
-    );
-
-    obstacleYPos = (tileSize * _sizeInTiles) * 1;
-    test6 = SpriteComponent(
-      sprite: await loadSprite(obstacleBodyImage),
-      position: Vector2(screenSize.width, obstacleYPos),
-      size: Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
-      anchor: Anchor.topLeft,
-    );
-
-    obstacleYPos = (tileSize * _sizeInTiles) * 2;
-    test7 = SpriteComponent(
-      sprite: await loadSprite(obstacleTopEndImage),
-      position: Vector2(screenSize.width, obstacleYPos),
-      size: Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
-      anchor: Anchor.topLeft,
-    );
 
     add(ScreenHitbox());
     final componentSize = Vector2(80.0, 90.0);
@@ -294,20 +259,6 @@ class FlappyLamaGame2 extends FlameGame
     add(userLama);
 
     add(ObstacleComp(this, Vector2(0, 0), _context));
-/*     add(
-      AnimatedComponent(
-        _lamaSize,
-        this,
-        Vector2(0, 0),
-        Vector2(200, y),
-        componentSize,
-      ),
-    ); */
-/*    add(FlappyObstacle2(
-      this,
-      Vector2(0, 0),
-      Vector2(200, y),
-    )); */
   }
 
   void onTap() {}

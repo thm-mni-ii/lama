@@ -1,13 +1,10 @@
-/* 
-import 'dart:ui';
+/*  import 'dart:ui';
 import 'dart:developer' as developer;
 
-import 'package:flame/components.dart';
 import 'package:flame/components/parallax_component.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
-import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -21,7 +18,7 @@ import '../app/screens/game_list_screen.dart';
 import 'widgets/gameOverMode.dart';
 
 /// This class represents the Flappy Lama game and its components.
-class FlappyLamaGame with TapDetector, Game {
+class FlappyLamaGame extends BaseGame with TapDetector, HasWidgetsOverlay {
   // SETTINGS
   // --------
   /// the id of flappyLama game which is used in the database
@@ -184,9 +181,9 @@ class FlappyLamaGame with TapDetector, Game {
   ///   ... the start Screen widget
   void loadStartScreenAsync() async {
     // load highscore
-    this._userHighScore = (await _userRepo.getMyHighscore(_gameId))!;
+    this._userHighScore = await _userRepo.getMyHighscore(_gameId);
     // load alltimeHighscore
-    this._alltimeHighScore = (await _userRepo.getHighscore(_gameId))!;
+    this._alltimeHighScore = await _userRepo.getHighscore(_gameId);
 
     // add lama
     _lama = FlappyLama(this, _lamaSize)..onHitGround = gameOver;
@@ -348,7 +345,4 @@ class FlappyLamaGame with TapDetector, Game {
     }
   }
 }
-
-
-
-     */      
+ */ 

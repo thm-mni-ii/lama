@@ -126,24 +126,18 @@ class AnimatedComponent extends SpriteAnimationComponent
     ///
     final hitboxPaint = BasicPalette.white.paint()
       ..style = PaintingStyle.stroke;
-    add(
-      PolygonHitbox.relative(
-        [
-          Vector2(-1.0, 0.0),
-          Vector2(-1.0, -1.0),
-          Vector2(0.0, -1.0),
-          Vector2(0.0, 0.0),
-          /*       Vector2(0.0, -1.0),
-          Vector2(-1.0, -0.1),
-          Vector2(-0.2, 0.4),
-          Vector2(0.2, 0.4),
-          Vector2(1.0, -0.1), */
-        ],
-        parentSize: spriteSize,
-      )
-        ..paint = hitboxPaint
-        ..renderShape = true,
-    );
+    add(PolygonHitbox.relative(
+      [
+        Vector2(-1.0, 0.0),
+        Vector2(-1.0, -1.0),
+        Vector2(0.0, -1.0),
+        Vector2(0.0, 0.0),
+      ],
+      parentSize: spriteSize,
+    )
+        /*   ..paint = hitboxPaint
+        ..renderShape = true, */
+        );
   }
 
   /// This method let the lama fly up with an impuls.
@@ -165,10 +159,10 @@ class AnimatedComponent extends SpriteAnimationComponent
     // new y
     position.y += _speedY * dt;
     // hits the ground?
-/*     if (!isHittingGround()) {
+    if (!isHittingGround()) {
       // hit the top?
       isHittingTop(dt);
-    } */
+    }
     // choose animation
     if (lastY > y) {
       animation = _upAnimation;
@@ -242,6 +236,7 @@ class AnimatedComponent extends SpriteAnimationComponent
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
+
     flap();
   }
 }
