@@ -17,6 +17,7 @@ import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
 import 'package:lama_app/flappyLama/widgets/playModeWidget.dart';
 import 'package:lama_app/flappyLama/widgets/startScreen.dart';
 import 'package:lama_app/newFlappyLamaGame/flappyObstacleComponent.dart';
+import 'package:lama_app/newFlappyLamaGame/obstacleFlappyLama.dart';
 import 'package:lama_app/newFlappyLamaGame/obstacleTest.dart';
 
 import '../app/screens/game_list_screen.dart';
@@ -38,6 +39,8 @@ import 'flappyObstacleComponent.dart';
 import 'newTest176.dart';
 
 class FlappyLamaGame2 extends FlameGame with HasTappables {
+  late SpriteComponent test44;
+
   late SpriteComponent test5;
   late SpriteComponent test6;
   late SpriteComponent test7;
@@ -189,6 +192,7 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
     test5.x -= 10 * dt;
     test6.x -= 10 * dt;
     test7.x -= 10 * dt;
+
     /*   yComponent += 10 * dt;
     add(SpriteComponent(
       sprite: await loadSprite(obstacleBodyImage),
@@ -276,9 +280,9 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
     add(ScreenHitbox());
     final componentSize = Vector2(80.0, 90.0);
     // addAll(test5,test6);
-    add(test5);
+    /*    add(test5);
     add(test6);
-    add(test7);
+    add(test7); */
     add(
       AnimatedComponent(
         _lamaSize,
@@ -289,7 +293,7 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
       ),
     );
 
-    //add(ObstacleFlappy(_lamaSize * 2, this, Vector2(150, 200), componentSize));
+    add(ObstacleComp(this, Vector2(0, 0), _context));
 /*     add(
       AnimatedComponent(
         _lamaSize,

@@ -42,13 +42,14 @@ class ObstacleFlappy extends SpriteComponent with HasGameRef {
       size: Vector2(24.0, 24.0),
       anchor: Anchor.topLeft,
     ));
+
     // add(kaktus);
   }
 
-  @override
+/*   @override
   void update(double dt) {
     super.update(dt);
-  }
+  } */
 }
 
 /* class Obstacle2 extends SpriteComponent with HasGameRef {
