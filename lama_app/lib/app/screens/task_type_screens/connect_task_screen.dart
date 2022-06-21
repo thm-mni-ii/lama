@@ -1,5 +1,4 @@
 import 'package:bubble/bubble.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,7 +7,6 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
-import 'package:lama_app/util/GlobalKeyExtension.dart';
 
 ///This file creates the Connect task Screen
 ///The connect task is a task where two list of words gets showen on the screen
