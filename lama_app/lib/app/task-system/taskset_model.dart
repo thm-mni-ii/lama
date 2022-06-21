@@ -56,7 +56,7 @@ class Taskset {
         "taskset_name": name,
         "taskset_subject": subject,
         "taskset_grade": grade,
-        "taskset_randomize_order": true,
-        "tasks": tasks.map((e) => e.toJson()).toList(),
+        "taskset_randomize_order": randomizeOrder,
+        "tasks": tasks.map((task) => task.toJson()).toList(),
       };
 }

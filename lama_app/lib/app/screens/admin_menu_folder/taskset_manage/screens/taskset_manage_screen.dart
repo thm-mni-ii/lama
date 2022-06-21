@@ -14,7 +14,7 @@ import 'package:lama_app/util/LamaColors.dart';
 import '../../../../bloc/taskset_options_bloc.dart';
 import '../../../taskset_option_screen.dart';
 
-/// Author: N. Soethe
+/// Author: N. Soethe, Tim Steinmüller
 /// latest Changes: 09.06.2022
 
 class TasksetManageScreen extends StatelessWidget {
@@ -27,7 +27,7 @@ class TasksetManageScreen extends StatelessWidget {
       create: (context) => TasksetOptionsBloc(),
       child: Scaffold(
         appBar: CustomAppbar(
-          size: screenSize.width/5,
+          size: screenSize.width / 5,
           titel: "Meine erstellten Tasks",
           color: LamaColors.bluePrimary,
         ),
@@ -77,11 +77,10 @@ class TasksetManageScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => BlocProvider(
-                            create: (BuildContext context) =>
-                                CreateTasksetBloc(),
-                            child: TasksetCreationScreen(),
-                        )
-                      ),
+                                create: (BuildContext context) =>
+                                    CreateTasksetBloc(),
+                                child: TasksetCreationScreen(),
+                              )),
                     ),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),

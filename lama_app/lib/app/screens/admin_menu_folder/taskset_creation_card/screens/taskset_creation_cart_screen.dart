@@ -31,17 +31,11 @@ import '../../../../bloc/create_taskset_bloc.dart';
 ///    [TasksetCreationCartEvent]
 ///    [TasksetCreationState]
 ///
-/// Author: Handito Bismo, Nico Soethe
+/// Author: Handito Bismo, Nico Soethe, Tim Steinmüller
 /// latest Changes: 09.06.2022
-class TasksetCreationCartScreen extends StatefulWidget {
+class TasksetCreationCartScreen extends StatelessWidget {
   const TasksetCreationCartScreen() : super();
 
-  @override
-  State<TasksetCreationCartScreen> createState() =>
-      _TasksetCreationCartScreenState();
-}
-
-class _TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -54,13 +48,9 @@ class _TasksetCreationCartScreenState extends State<TasksetCreationCartScreen> {
       ),
       body: Column(
         children: [
-          BlocListener<CreateTasksetBloc, CreateTasksetState>(
-            listener: (context, state) {
-              if (state is ChangedTasksListState) {
-                setState(() {});
-              }
-            },
-            child: Expanded(
+          BlocBuilder<CreateTasksetBloc, CreateTasksetState>(
+            bloc: BlocProvider.of<CreateTasksetBloc>(context),
+            builder: (context, state) => Expanded(
               child: Container(
                 margin: EdgeInsets.all(5),
                 child: ListView.builder(
