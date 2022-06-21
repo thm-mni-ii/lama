@@ -282,7 +282,7 @@ class CheckScreenPage extends State<CheckScreen> {
                 style: LamaTextTheme.getStyle(fontSize: 15)),
           )),
       PageViewerModel(
-          title: "Gast Seite",
+          title: "Spring einfach rein!",
           description: "Du möchtest als Gast weiter und einfach die "
               "Standardaufgaben ausprobieren? Einen Admin kann man später "
               "immernoch anlegen.",
