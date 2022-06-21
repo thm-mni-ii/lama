@@ -8,16 +8,13 @@ import 'package:lama_app/app/bloc/edit_user_bloc.dart';
 import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
-import 'package:lama_app/app/event/user_management_event.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
 import 'package:lama_app/app/screens/edit_user_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
-import 'package:lama_app/app/state/check_screen_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
-import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
@@ -197,6 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   ///if the user is a guest, the description turns into a button to edit user details
+  ///after the user was changed, the userRepository gets updated
   Widget descriptionButton(BuildContext context, BoxConstraints constraints) {
     if (userRepository!.getGuestStatus()!) {
       return ElevatedButton(
@@ -216,9 +214,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: EditUserScreen(userRepository!.authenticatedUser!),
               ),
             ),
-          ).then((value) => setState(
-                () {},
-              ));
+          )
+              .then((value) async => await userRepository!.updateUser())
+              .then((value) => setState(
+                    () {},
+                  ));
         },
         style: ElevatedButton.styleFrom(
             primary: LamaColors.mainPink,

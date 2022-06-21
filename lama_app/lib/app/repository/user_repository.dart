@@ -36,6 +36,11 @@ class UserRepository {
     return authenticatedUser!.avatar;
   }
 
+  Future<void> updateUser() async {
+    authenticatedUser =
+        await DatabaseProvider.db.refreshUser(authenticatedUser!);
+  }
+
   ///Adds lama coins to the user thats currently logged in.
   void addLamaCoins(int coinsToAdd) async {
     if (authenticatedUser!.coins != null) {

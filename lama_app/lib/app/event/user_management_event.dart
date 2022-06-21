@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/repository/user_repository.dart';
 
 /// Events used by [UserManagementScreen] and [UserManagementBloc]
 ///
@@ -45,9 +44,4 @@ class EditUser extends UserManagementEvent {
   BuildContext context;
   User user;
   EditUser(this.user, this.context);
-}
-
-class EditGuest extends UserManagementEvent {
-  UserRepository? userRepository;
-  EditGuest(this.userRepository);
 }

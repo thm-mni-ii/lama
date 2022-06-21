@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 
 /// Events used by [EditUserScreen] and [EditUserBloc]
 ///

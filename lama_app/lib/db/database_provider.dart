@@ -867,6 +867,11 @@ class DatabaseProvider {
         whereArgs: [adminId]);
   }
 
+  ///refreshes current user (used for userRepository)
+  Future<User?> refreshUser(User user) async {
+    return await _getUser(user.id);
+  }
+
   ///(private)
   ///get an user from table User
   ///
