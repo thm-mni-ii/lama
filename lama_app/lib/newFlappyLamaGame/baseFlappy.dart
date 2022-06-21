@@ -39,6 +39,8 @@ import 'newTest176.dart';
 
 class FlappyLamaGame2 extends FlameGame with HasTappables {
   late SpriteComponent test5;
+  late SpriteComponent test6;
+  late SpriteComponent test7;
   //Obstacle Stuff
   var amountObstaclesPerColumn = 3;
   var obstacleTopEndList = <Obstacle5>[];
@@ -66,6 +68,13 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
   var velocity1;
   var velocity2;
   var referenceVelocity;
+
+  /// amount of tiles = size of the sprites / width of the obstacle
+  final double _sizeInTiles = 1.5;
+
+  /// amount of tiles on the x coordinate
+  final int tilesX = 9;
+
   //###########################Obstacle Stuff End
 
   //
@@ -74,9 +83,6 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
 
   /// the id of flappyLama game which is used in the database
   final int _gameId = 2;
-
-  /// amount of tiles on the x coordinate
-  final int tilesX = 9;
 
   /// obstacle list
   List<FlappyObstacle> obstacles = [];
@@ -180,7 +186,9 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
   @override
   Future<void> update(double dt) async {
     super.update(dt);
-    test5.y -= 10 * dt;
+    test5.x -= 10 * dt;
+    test6.x -= 10 * dt;
+    test7.x -= 10 * dt;
     /*   yComponent += 10 * dt;
     add(SpriteComponent(
       sprite: await loadSprite(obstacleBodyImage),
@@ -241,16 +249,36 @@ class FlappyLamaGame2 extends FlameGame with HasTappables {
     obstacles[1].setConstraints(obstacles[0].holeIndex, obstacles[0].holeSize);
     obstacles[1].resetObstacle();
     obstacles[0].resetObstacle(); */
+    double obstacleYPos = (tileSize * _sizeInTiles) * 0;
     test5 = SpriteComponent(
+      sprite: await loadSprite(obstacleBottomEndImage),
+      position: Vector2(screenSize.width, obstacleYPos),
+      size: Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+      anchor: Anchor.topLeft,
+    );
+
+    obstacleYPos = (tileSize * _sizeInTiles) * 1;
+    test6 = SpriteComponent(
       sprite: await loadSprite(obstacleBodyImage),
-      position: Vector2(xComponent, yComponent),
-      size: Vector2(24.0, 24.0),
+      position: Vector2(screenSize.width, obstacleYPos),
+      size: Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+      anchor: Anchor.topLeft,
+    );
+
+    obstacleYPos = (tileSize * _sizeInTiles) * 2;
+    test7 = SpriteComponent(
+      sprite: await loadSprite(obstacleTopEndImage),
+      position: Vector2(screenSize.width, obstacleYPos),
+      size: Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
       anchor: Anchor.topLeft,
     );
 
     add(ScreenHitbox());
     final componentSize = Vector2(80.0, 90.0);
+    // addAll(test5,test6);
     add(test5);
+    add(test6);
+    add(test7);
     add(
       AnimatedComponent(
         _lamaSize,
