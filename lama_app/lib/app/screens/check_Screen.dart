@@ -154,9 +154,7 @@ class CheckScreenPage extends State<CheckScreen> {
             final controller = PageController();
             final pages = getPages(controller);
             return Scaffold(
-                body: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 25, 0, 5),
-              child: Column(
+              body: Column(
                 children: [
                   Flexible(
                     flex: 15,
@@ -170,38 +168,49 @@ class CheckScreenPage extends State<CheckScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            controller.jumpToPage(1);
-                          },
-                          child: Text("Übersicht"),
+                        Flexible(
+                          flex: 2,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              controller.jumpToPage(1);
+                            },
+                            child: Icon(Icons.home),
+                            style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(0)),
+                          ),
                         ),
-                        Center(
+                        Flexible(
+                          flex: 14,
                           child: SmoothPageIndicator(
                             controller: controller,
                             count: pages.length,
                           ),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (controller.page == pages.length - 1) {
-                              context
-                                  .read<CheckScreenBloc>()
-                                  .add(CreateAdminEvent(context));
-                            } else {
-                              controller.nextPage(
-                                  duration: Duration(milliseconds: 200),
-                                  curve: Curves.easeIn);
-                            }
-                          },
-                          child: Icon(Icons.navigate_next),
+                        Flexible(
+                          flex: 2,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (controller.page == pages.length - 1) {
+                                context
+                                    .read<CheckScreenBloc>()
+                                    .add(CreateAdminEvent(context));
+                              } else {
+                                controller.nextPage(
+                                    duration: Duration(milliseconds: 200),
+                                    curve: Curves.easeIn);
+                              }
+                            },
+                            child: Icon(Icons.navigate_next),
+                            style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(0)),
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-            ));
+            );
           }
           if (state is HasGuest) {
             context
@@ -236,21 +245,23 @@ class CheckScreenPage extends State<CheckScreen> {
       ),
       PageViewerModel(
         title: "Übersicht",
-        description: "Was wollen Sie machen?",
-        image: Image.asset("assets/images/png/sun.png"),
+        description:
+            "Du weißt bereits wie die App funktioniert? Dann benutze die unten "
+            "angezeigten Navigationstasten, um schnell einzusteigen. ",
+        image: Image.asset("assets/images/png/no_login_home.png"),
         button: ElevatedButton(
           onPressed: () {
             controller.jumpToPage(2);
           },
-          child:
-              Text("Go to Admin", style: LamaTextTheme.getStyle(fontSize: 15)),
+          child: Text("Zur Adminseite",
+              style: LamaTextTheme.getStyle(fontSize: 15)),
         ),
         button2: ElevatedButton(
           onPressed: () {
             controller.jumpToPage(3);
           },
           child: Text(
-            "Go to Gast",
+            "Zur Gastseite",
             style: LamaTextTheme.getStyle(fontSize: 15),
           ),
         ),
@@ -265,16 +276,9 @@ class CheckScreenPage extends State<CheckScreen> {
           image: Image.asset('assets/images/png/admin_feature.png'),
           button: ElevatedButton(
             onPressed: () {
-              controller.jumpToPage(1);
-            },
-            child: Text("Back to select",
-                style: LamaTextTheme.getStyle(fontSize: 15)),
-          ),
-          button2: ElevatedButton(
-            onPressed: () {
               context.read<CheckScreenBloc>().add(CreateAdminEvent(context));
             },
-            child: Text("Erstelle Admin",
+            child: Text("Weiter als Admin",
                 style: LamaTextTheme.getStyle(fontSize: 15)),
           )),
       PageViewerModel(
@@ -285,25 +289,18 @@ class CheckScreenPage extends State<CheckScreen> {
           image: Image.asset('assets/images/png/features.png'),
           button: ElevatedButton(
             onPressed: () {
-              controller.jumpToPage(1);
-            },
-            child: Text("Back to select",
-                style: LamaTextTheme.getStyle(fontSize: 15)),
-          ),
-          button2: ElevatedButton(
-            onPressed: () {
               context.read<CheckScreenBloc>().add(CreateGuestEvent(context));
             },
             child: Text("Weiter als Gast",
                 style: LamaTextTheme.getStyle(fontSize: 15)),
           )),
       PageViewerModel(
-        title: "Alles Verstanden?",
+        title: "Alles Verstanden? Los geht's!",
         description:
             "Wende dich bei Fragen an unser github und lese dir die dort "
             "verfügbaren PDF-Dateien durch! Wir wünschen dir viel Spaß mit der "
             "App!",
-        image: Image.asset("assets/images/png/angrycloud.png"),
+        image: Image.asset("assets/images/png/plane-1598084_1280.png"),
       )
     ];
   }
@@ -317,35 +314,41 @@ class CheckScreenPage extends State<CheckScreen> {
     return Column(
       children: [
         Flexible(
-            flex: 2,
-            child: Center(
-              child: image,
+            flex: 3,
+            child: Padding(
+              padding: EdgeInsets.all(40),
+              child: Center(
+                child: image,
+              ),
             )),
         Flexible(
             flex: 3,
             child: Column(children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                padding: EdgeInsets.only(left: 20, right: 20),
                 child: Text(
                   title!,
                   style: LamaTextTheme.getStyle(color: Colors.black),
                   textAlign: TextAlign.center,
                 ),
               ),
-              Text(
-                description!,
-                style: LamaTextTheme.getStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.normal),
-                textAlign: TextAlign.center,
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Text(
+                  description!,
+                  style: LamaTextTheme.getStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal),
+                  textAlign: TextAlign.center,
+                ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                padding: EdgeInsets.only(bottom: 5),
                 child: button,
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: EdgeInsets.only(top: 5),
                 child: button2,
               ),
             ])),
