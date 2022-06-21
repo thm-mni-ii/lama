@@ -150,6 +150,9 @@ class CheckScreenPage extends State<CheckScreen> {
               ),
             );
           }
+
+          ///if there are no users a welcomescreen gets drawn
+          ///from there one can create an admin or a guest
           if (state is ShowWelcome) {
             final controller = PageController();
             final pages = getPages(controller);

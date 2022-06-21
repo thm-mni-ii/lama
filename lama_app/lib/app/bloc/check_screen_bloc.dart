@@ -42,6 +42,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
       emit(await _createGuest(event.context));
     });
     on<LoadGuest>((event, emit) async {
+      ///wait for tasks to load
+      await Future.delayed(Duration(milliseconds: 5000));
       await _loadGuest(event.context, event.user);
     });
   }
@@ -56,8 +58,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   Future<CheckScreenState> _hasAdmin(BuildContext context) async {
     List<User> userList = await DatabaseProvider.db.getUser();
     if (userList == null) return ShowDSGVO(await _loadDSGVO());
-    //gets first user if its a guest / no admin
-    if (userList.length == 1 && userList[0].isAdmin != true)
+    //gets first user if its a guest
+    if (userList.length == 1 && userList[0].isGuest == true)
       return HasGuest(context, userList[0]);
     for (User user in userList) {
       if (user.isAdmin!) {
