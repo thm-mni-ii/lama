@@ -197,8 +197,15 @@ class _HomeScreenState extends State<HomeScreen> {
   ///after the user was changed, the userRepository gets updated
   Widget descriptionButton(BuildContext context, BoxConstraints constraints) {
     if (userRepository!.getGuestStatus()!) {
-      return ElevatedButton(
-        child: userDescription(),
+      return TextButton(
+        child: Row(children: [
+          userDescription(),
+          SizedBox(width: 10),
+          Icon(
+            Icons.edit,
+            color: LamaColors.white,
+          )
+        ]),
         onPressed: () {
           Navigator.push(
             context,
@@ -220,10 +227,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     () {},
                   ));
         },
-        style: ElevatedButton.styleFrom(
-            primary: LamaColors.mainPink,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50)))),
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.all(0),
+        ),
       );
     } else {
       return userDescription();
@@ -249,7 +255,6 @@ class _HomeScreenState extends State<HomeScreen> {
           style: LamaTextTheme.getStyle(
               fontSize: 22.5, fontWeight: FontWeight.w600, monospace: true),
         ),
-        SizedBox(width: 10),
       ],
     );
   }
