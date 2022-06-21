@@ -103,4 +103,9 @@ class UserRepository {
   bool? getHighscorePermission() {
     return authenticatedUser!.highscorePermission;
   }
+
+  ///Returns weather or not the current user is a guest
+  bool? getGuestStatus() {
+    return authenticatedUser!.isGuest;
+  }
 }

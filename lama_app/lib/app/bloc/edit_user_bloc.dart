@@ -57,6 +57,9 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState?> {
     on<EditUserChangeGrade>((event, emit) async {
       _changedUser.grade = event.grade;
     });
+    on<EditUserChangeGuest>(((event, emit) async {
+      await DatabaseProvider.db.updateUserIsGuest(_user!, false);
+    }));
   }
 
   ///(private)

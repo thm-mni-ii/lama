@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lama_app/app/bloc/user_management_bloc.dart';
+import 'package:lama_app/app/event/user_management_event.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -120,15 +122,17 @@ class EditUserScreenState extends State<EditUserScreen> {
               //[TextFormField] to change the Username
               _usernameTextField(context),
               //[TextFormField] to change the Password
-              _passwortTextField(context),
+              //TO-DO change if to state with blocpattern - add a gueststate
+              if (!_user.isGuest!) _passwortTextField(context),
               //[TextFormField] to repead the Password for safety
-              _passwortTextField2(context),
+              if (!_user.isGuest!) _passwortTextField2(context),
               //[TextFormField] to change the coins
-              _coinsTextField(context),
+              if (!_user.isGuest!) _coinsTextField(context),
               //[DropdownButtonHideUnderline] to change the grade
               _gradesList(context, _grades),
               //[ElevatedButton] to delete the user
-              _deletUserButoon(context),
+              if (!_user.isGuest!) _deletUserButoon(context),
+              if (_user.isGuest!) _createAdminButton(context),
             ],
           ),
         ),
@@ -740,4 +744,31 @@ class EditUserScreenState extends State<EditUserScreen> {
       ),
     );
   }
+}
+
+///provides a button to create an admin with, if the current user is a guest
+Widget _createAdminButton(BuildContext context) {
+  return ElevatedButton(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Icon(Icons.add),
+        Text(
+          'Erstelle Admin',
+          style: LamaTextTheme.getStyle(fontSize: 14),
+        ),
+        SizedBox(
+          width: 5,
+        ),
+      ],
+    ),
+    onPressed: () => {
+      context.read<EditUserBloc>().add(EditUserChangeGuest(context)),
+      context.read<UserManagementBloc>().add(CreateAdmin(context)),
+    },
+    style: ElevatedButton.styleFrom(
+      minimumSize: Size(50, 45),
+      primary: LamaColors.bluePrimary,
+    ),
+  );
 }

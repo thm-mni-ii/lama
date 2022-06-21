@@ -75,3 +75,8 @@ class EditUserReturn extends EditUserEvent {
   BuildContext context;
   EditUserReturn(this.context);
 }
+
+class EditUserChangeGuest extends EditUserEvent {
+  BuildContext context;
+  EditUserChangeGuest(this.context);
+}
