@@ -87,15 +87,12 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   LamaHead lamaHeadPurple = LamaHead(false, false);
   LamaHead lamaHeadPink = LamaHead(false, false);
 
-  var lamaHeadImageTurkis = 'png/kaktus_end_top.png';
-  var lamaHeadImageBlue = 'png/kaktus_end_bottom.png';
-  var lamaHeadImagePurple = 'png/kaktus_end_bottom.png';
-  var lamaHeadImagePink = 'png/kaktus_body.png';
+  var lamaHeadImageTurkis = 'png/lama_head_turkis.png';
+  var lamaHeadImageBlue = 'png/lama_head_blue.png';
+  var lamaHeadImagePurple = 'png/lama_head_purple.png';
+  var lamaHeadImagePink = 'png/lama_head_pink.png';
   var lamaHeadImageRed = 'png/lama_head_red.png';
 
-  var obstacleTopEndImage = 'png/kaktus_end_top.png';
-  var obstacleBottomEndImage = 'png/kaktus_end_bottom.png';
-  var obstacleBodyImage = 'png/kaktus_body.png';
 
   //#endregion
 
