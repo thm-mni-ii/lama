@@ -425,7 +425,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
   Widget _bar(double size) {
     return AppBar(
       title: Text(
-        'Aufgabenverwaltung',
+        'Taskset importieren',
         style: LamaTextTheme.getStyle(fontSize: 18),
       ),
       toolbarHeight: size,

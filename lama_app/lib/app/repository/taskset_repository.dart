@@ -1,5 +1,7 @@
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_loader.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
+import 'package:http/http.dart' as http;
 
 /// Repository that provides access to the loaded tasksets.
 ///
@@ -8,6 +10,9 @@ import 'package:lama_app/app/task-system/taskset_model.dart';
 /// Author: K.Binder
 class TasksetRepository {
   late TasksetLoader tasksetLoader;
+
+  List<String> subjectList = ["Mathe", "Deutsch", "Englisch", "Sachkunde"];
+  List<String> klassenStufe = ["1", "2", "3", "4", "5", "6"];
 
   ///Initializes the [TasksetLoader] and loads all tasksets.
   Future<void> initialize() async {
@@ -20,6 +25,16 @@ class TasksetRepository {
     return tasksetLoader.getLoadedTasksetsForSubjectAndGrade(subject, grade);
   }
 
+  ///Returns a List of all [Taskset] that belong to [subject] and are aimed at [grade]
+  List<Taskset> getTasksetsForGrade(int grade) {
+    List<Taskset> classTaskset = [];
+    for (var subject in subjectList) {
+      classTaskset.addAll(getTasksetsForSubjectAndGrade(subject, grade)!);
+    }
+
+    return classTaskset;
+  }
+
   ///Reloads the [TasksetLoader] and loads all tasksets.
   ///
   ///Under the hood this method is identical to [initialize()] except it doesnt return a Future.
@@ -28,5 +43,58 @@ class TasksetRepository {
   void reloadTasksetLoader() async {
     tasksetLoader = TasksetLoader();
     await tasksetLoader.loadAllTasksets();
+  }
+
+  Future<void> writeToServer(Taskset taskset) async {
+    String url = "";
+    var response = await http.post(
+      Uri.parse(url),
+      body: taskset.toJson(),
+    );
+    // response abfangen (error)
+  }
+
+  /// gives a List of TaskType depending on a specific subject
+  static List<TaskType> giveEnumBySubject(String subject) {
+    switch (subject) {
+      case "Mathe":
+        return [
+          TaskType.fourCards,
+          TaskType.moneyTask,
+          TaskType.equation,
+          TaskType.zerlegung,
+          TaskType.numberLine,
+          TaskType.clock
+        ];
+      case "Deutsch":
+        return [
+          TaskType.fourCards,
+          TaskType.markWords,
+          TaskType.matchCategory,
+          TaskType.gridSelect,
+          TaskType.buchstabieren,
+          TaskType.clozeTest
+        ];
+      case "Englisch":
+        return [
+          TaskType.fourCards,
+          TaskType.markWords,
+          TaskType.matchCategory,
+          TaskType.gridSelect,
+          TaskType.buchstabieren,
+          TaskType.vocableTest,
+          TaskType.clozeTest
+        ];
+      case "Sachkunde":
+        return [
+          TaskType.fourCards,
+          TaskType.markWords,
+          TaskType.matchCategory,
+          TaskType.gridSelect,
+          TaskType.buchstabieren,
+        ];
+      default:
+        return [];
+    }
   }
 }

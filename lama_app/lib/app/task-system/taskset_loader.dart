@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:lama_app/app/screens/admin_menu_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/admin_menu_screen.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
@@ -57,10 +57,9 @@ class TasksetLoader {
           for (int i = 1; i <= GRADES_SUPPORTED; i++) {
             //load all standardtasks from url
             List<TaskUrl> standardTaskUrls = [
-              TaskUrl(
-                  url:
-                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
-              TaskUrl(
+              TaskUrl(url: "assets/standardTasksets/mathe/mathe$i.json"),
+              //"https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
+/*               TaskUrl(
                   url:
                       "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch$i.json"),
               TaskUrl(
@@ -68,7 +67,7 @@ class TasksetLoader {
                       "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch$i.json"),
               TaskUrl(
                   url:
-                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde$i.json"),
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde$i.json"), */
             ];
             await loadTasksFromUrls(standardTaskUrls);
           }

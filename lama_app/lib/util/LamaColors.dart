@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/task-system/taskset_model.dart';
 
 ///Utility class that contains all colors used in the app.
 class LamaColors {
@@ -23,4 +24,24 @@ class LamaColors {
   static Color greenAccent = Color.fromARGB(255, 50, 225, 83);
 
   static Color mainPink = Color.fromARGB(255, 253, 74, 111);
+
+  static Color errorColor = Color.fromARGB(255, 255, 0, 0);
+
+  /// Determin Color depending on the Subject
+  static findSubjectColor(String subject) {
+    switch (subject) {
+      case "Mathe":
+        return blueAccent;
+      case "Deutsch":
+        return redAccent;
+      case "Englisch":
+        return orangeAccent;
+      case "Sachkunde":
+        return purpleAccent;
+      case "normal":
+        return bluePrimary;
+      default:
+        return errorColor;
+    }
+  }
 }
