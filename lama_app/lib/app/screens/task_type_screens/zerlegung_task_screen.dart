@@ -10,11 +10,14 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'dart:math';
+import 'package:flutter_tts/flutter_tts.dart';
+
  
 class NumberBox extends StatelessWidget {
   final Function(int value) onChanged;
   NumberBox({Key key, this.onChanged}) : super(key: key);
- 
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -54,9 +57,22 @@ class NumberBox extends StatelessWidget {
 }
  
 class ZerlegungTaskScreen extends StatefulWidget {
-  ZerlegungTaskScreen({Key key, this.task, this.constraints}) : super(key: key);
+  ZerlegungTaskScreen({Key key, this.task, this.constraints}) : super(key: key) {
+    readquestion();
+  }
   final TaskZerlegung task;
   final BoxConstraints constraints;
+  final FlutterTts flutterTts = FlutterTts();
+
+  readquestion() async {
+    String text = task.boolThousands
+        ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
+        : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!";
+    await flutterTts.setLanguage("de-De");
+    await flutterTts.setVolume(1.0);
+    await flutterTts.speak(text);
+  }
+
   @override
   State<StatefulWidget> createState() {
     return ZerlegungTaskScreenState(constraints,task);

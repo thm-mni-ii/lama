@@ -8,6 +8,8 @@ import 'package:lama_app/app/event/task_events.dart';
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 // Author J.Decher
 
@@ -37,6 +39,15 @@ class NumberLineState extends State<NumberLineTaskScreen> {
   bool firstTry = true;
   bool tappedCorrectly = false;
   bool tappedIncorrectly = false;
+  final FlutterTts flutterTts = FlutterTts();
+
+  readquestion() async {
+    String text = task.ontap ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
+    : "Gib den im Zahlenstrahl rot markierten Wert an!";
+    await flutterTts.setLanguage("de-De");
+    await flutterTts.setVolume(1.0);
+    await flutterTts.speak(text);
+  }
   //double rating = 40; for Slider
   NumberLineState(this.task, this.constraints) {
     this.rngStart = task.range[0];
@@ -72,6 +83,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
     }
     this.dgesuchteZahl = gesuchteZahl.toDouble();
     this.firstTry = true;
+    readquestion();
   }
 
   @override

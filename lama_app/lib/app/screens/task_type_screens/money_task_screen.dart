@@ -10,6 +10,8 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:collection/collection.dart';
 import 'dart:math';
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 /// This file creates the Money task Screen
 /// The Money Task is used to learn the calculating with money.
@@ -26,6 +28,7 @@ import 'dart:math';
 class MoneyTaskScreen extends StatefulWidget {
   final TaskMoney task;
   final BoxConstraints constraints;
+
 
   MoneyTaskScreen(this.task, this.constraints);
 
@@ -57,6 +60,21 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
   String moneyAmountText;
   int minCount = 0;
   int tempAmount = 0;
+  int questionRead = 0;
+  final FlutterTts flutterTts = FlutterTts();
+
+  readquestion() async {
+    if(questionRead > 0) {
+      return;
+    }
+    String text = task.optimum  ?
+          "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!"
+        : "Sammle $moneyAmountText€ mit den Münzen zusammen!";
+    await flutterTts.setLanguage("de-De");
+    await flutterTts.setVolume(1.0);
+    await flutterTts.speak(text);
+    questionRead++;
+  }
 
   MoneyTaskState(this.task, this.constraints) {
     finalMoneyAmount = currentAmountInt;
@@ -139,6 +157,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
               this.moneyAmount.toString().length - 2,
               this.moneyAmount.toString().length);
     }
+    readquestion();
   }
 
   @override
