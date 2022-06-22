@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -18,6 +19,7 @@ class ClockTaskScreen extends StatefulWidget {
   final ClockTest task;
   final BoxConstraints constraints;
   ClockTaskScreen(this.task, this.constraints);
+  //final FlutterTts flutterTts = FlutterTts();
 
   @override
   State<StatefulWidget> createState() {
@@ -52,6 +54,32 @@ class ClockTaskState extends State<ClockTaskScreen> {
   var vierMinute;
   var allMinuten;
   List<String> wrongAnswer;
+
+  final FlutterTts flutterTts = FlutterTts();
+  String selectedAnswer = "leer";
+
+  readText(String text) async {
+
+    await flutterTts.setLanguage("de-De");
+    await flutterTts.setVolume(1.0);
+    await flutterTts.speak(text);
+  }
+
+  readQuestion() async {
+    var text = task.lamaText;
+    await flutterTts.setLanguage("de-De");
+    await flutterTts.speak(text);
+  }
+
+
+  confirmAnswer(String answer, index) {
+    if(answer != selectedAnswer) {
+      readText(answer);
+    } else {
+      BlocProvider.of<TaskBloc>(context)
+          .add(AnswerTaskEvent(answers[index]));
+    }
+  }
 
   String setImage() {
     if (this.randStunde < 5 || this.randStunde > 17) {
@@ -94,6 +122,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
     answers.add(wrgAnswer2()); // add the wrong answers
     answers.shuffle();
     print(answers);
+
+    readQuestion();
   }
 
   @override
@@ -449,11 +479,18 @@ class ClockTaskState extends State<ClockTaskScreen> {
                   child: Bubble(
                     nip: BubbleNip.leftCenter,
                     child: Center(
-                      child: Text(
-                        task.lamaText,
-                        style: LamaTextTheme.getStyle(
-                            color: LamaColors.black, fontSize: 15),
+                      child: InkWell(
+                        onTap: () {
+                          readText(task.lamaText);
+                        },
+                        child: Text(
+                          // doing
+                          task.lamaText,
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 15),
+                        ),
                       ),
+
                     ),
                   ),
                 ),
@@ -522,7 +559,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 width: 150,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: LamaColors.greenAccent,
+                    color: answers[0] == selectedAnswer ? LamaColors.purpleAccent: LamaColors.greenAccent,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -531,8 +568,13 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3)),
                     ]),
                 child: InkWell(
-                  onTap: () => BlocProvider.of<TaskBloc>(context)
-                      .add(AnswerTaskEvent(answers[0])),
+
+                  onTap: () {
+                    confirmAnswer(answers[0], 0);
+                    setState(() {
+                      selectedAnswer = answers[0];
+                    });
+                  },
                   child: Center(
                     child: Text(
                       answers[0],
@@ -549,7 +591,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 width: 150,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: LamaColors.blueAccent,
+                    color: answers[1] == selectedAnswer ? LamaColors.purpleAccent: LamaColors.greenAccent,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -558,13 +600,17 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3))
                     ]),
                 child: InkWell(
-                  onTap: () => BlocProvider.of<TaskBloc>(context)
-                      .add(AnswerTaskEvent(answers[1])),
+                  onTap: () {
+                    confirmAnswer(answers[1], 1);
+                    setState(() {
+                      selectedAnswer = answers[1];
+                    });
+                  },
                   child: Center(
                     child: Text(
                       answers[1],
                       style: LamaTextTheme.getStyle(
-                        color: LamaColors.white,
+                        color:  LamaColors.white,
                         fontSize: 30,
                       ),
                     ),
@@ -576,7 +622,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 width: 150,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: LamaColors.greenAccent,
+                    color: answers[2] == selectedAnswer ? LamaColors.purpleAccent: LamaColors.greenAccent,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -585,8 +631,12 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3))
                     ]),
                 child: InkWell(
-                  onTap: () => BlocProvider.of<TaskBloc>(context)
-                      .add(AnswerTaskEvent(answers[2])),
+                onTap: () {
+                  confirmAnswer(answers[2], 2);
+                  setState(() {
+                  selectedAnswer = answers[2];
+                  });
+                  },
                   child: Center(
                     child: Text(
                       answers[2],
