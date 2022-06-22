@@ -57,6 +57,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
 
   final FlutterTts flutterTts = FlutterTts();
   String selectedAnswer = "leer";
+  String selectedQuestion = "";
 
   readText(String text) async {
 
@@ -482,12 +483,15 @@ class ClockTaskState extends State<ClockTaskScreen> {
                       child: InkWell(
                         onTap: () {
                           readText(task.lamaText);
+                          setState(() {
+                            selectedQuestion = task.lamaText;
+                          });
                         },
                         child: Text(
                           // doing
                           task.lamaText,
                           style: LamaTextTheme.getStyle(
-                              color: LamaColors.black, fontSize: 15),
+                              color: selectedQuestion == task.lamaText ? LamaColors.purpleAccent: LamaColors.black , fontSize: 15),
                         ),
                       ),
 
@@ -573,6 +577,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     confirmAnswer(answers[0], 0);
                     setState(() {
                       selectedAnswer = answers[0];
+                      selectedQuestion = "";
                     });
                   },
                   child: Center(
@@ -604,6 +609,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     confirmAnswer(answers[1], 1);
                     setState(() {
                       selectedAnswer = answers[1];
+                      selectedQuestion = "";
                     });
                   },
                   child: Center(
@@ -635,6 +641,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                   confirmAnswer(answers[2], 2);
                   setState(() {
                   selectedAnswer = answers[2];
+                  selectedQuestion = "";
                   });
                   },
                   child: Center(
