@@ -16,7 +16,7 @@ import 'package:lama_app/util/LamaColors.dart';
 ///    [TasksetCreationEvent]
 ///    [TasksetCreationState]
 ///
-/// author(s): Handito Bismo, Nico Soethe
+/// author(s): Handito Bismo, Nico Soethe, Tim Steinmüller
 /// latest Changes: 08.06.2022
 class TasksetCreationScreen extends StatefulWidget {
   const TasksetCreationScreen({Key key}) : super(key: key);
@@ -105,6 +105,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                       ),
                     ),
                   ),
+                  // möglicher weise auch in block => statelesswidget
                   DropdownButtonFormField<String>(
                     hint: Text("Klassenstufe auswählen"),
                     value: _currentSelectedGrade,

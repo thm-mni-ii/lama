@@ -12,7 +12,6 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 //Blocs
 import 'package:lama_app/app/bloc/admin_menu_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
-import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/bloc/highscoreUrl_screen_bloc.dart';
@@ -22,7 +21,6 @@ import 'package:lama_app/app/event/admin_menu_event.dart';
 import 'package:lama_app/app/state/admin_menu_state.dart';
 //Screens
 import 'package:lama_app/app/screens/user_management_screen.dart';
-import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/screens/userlist_url_screen.dart';
 import '../highscoreUrl_options_screen.dart';
 
@@ -58,7 +56,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
     Size screensize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppbar(
-        size: screensize.width/5,
+        size: screensize.width / 5,
         titel: 'Adminmenü',
         color: LamaColors.bluePrimary,
       ),
