@@ -290,7 +290,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     lamaButtonSize = screenWidth / 6;
     lamaHeadSize = lamaButtonSize * 0.95;
 
-    //initialise all relevant button postions
+    //initialise all relevant button positions
     xPosTurkis = 1 / 8 * screenWidth;
     xPosBlue = 3 / 8 * screenWidth;
     xPosPurple = 5 / 8 * screenWidth;

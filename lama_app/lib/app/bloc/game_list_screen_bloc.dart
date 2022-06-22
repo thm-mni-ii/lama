@@ -64,8 +64,10 @@ void _navigateToGame(String gameName, BuildContext context,
           TetrisScreen(userRepository, userHighScore, allTimeHighScore);
       break;
     case "Tap The Lama":
+      int? userHighScore = await userRepository!.getMyHighscore(5);
+      int? allTimeHighScore = await userRepository.getHighscore(5);
       gameToLaunch =
-          TapTheLamaScreen(userRepository);
+          TapTheLamaScreen(userRepository,userHighScore, allTimeHighScore);
       break;
     default:
       throw Exception("Trying to launch game that does not exist");
