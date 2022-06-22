@@ -7,7 +7,6 @@ import '../../tapTheLama/screens/tapTheLamaMenu.dart';
 import '../../tapTheLama/tapTheLamaGame.dart';
 
 
-
 class TapTheLamaScreen extends StatelessWidget {
   final UserRepository? userRepository;
   final int? userHighScore;
@@ -22,7 +21,7 @@ class TapTheLamaScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text('Wilkommen bei Tap the Lama'),
+        title: const Text('Tap the Lama'),
       ),
       backgroundColor:Colors.white,
       body: Menu(context, userHighScore, allTimeHighScore, userRepository),
@@ -44,6 +43,14 @@ class TapTheLamaGameScreen extends StatelessWidget{
     return Scaffold(
         appBar: AppBar(
           title: Text("Tap the Lama"),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              //two pop's so user can reach the game_list_screen
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+          ),
         ),
         body: Center(
             child: Column(
@@ -54,11 +61,8 @@ class TapTheLamaGameScreen extends StatelessWidget{
                       child: Container(
                           color: Colors.white,
                           child: GameWidget(
-                            game: TapTheLamaGame(),
-
-
+                            game: TapTheLamaGame(context, userRepository, userHighScore, allTimeHighScore),
                           )
-
                       )
                   )
                 ]

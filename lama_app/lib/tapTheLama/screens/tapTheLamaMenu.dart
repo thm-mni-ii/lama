@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:lama_app/app/repository/user_repository.dart';
-import 'package:lama_app/app/screens/tap_the_lama_game_screen.dart';
 import '../../../app/screens/game_list_screen.dart';
 
-
+import 'package:lama_app/app/screens/tap_the_lama_game_screen.dart';
 import '../buttons/menu_button.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
@@ -26,6 +25,7 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
 
   UserRepository? userRepo;
+
 
   /// id of the game
   final gameId = 5;

@@ -3,6 +3,8 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/model/highscore_model.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/tapTheLama/components/LifeBar.dart';
 import 'package:lama_app/tapTheLama/components/lamaButton.dart';
 import 'package:lama_app/tapTheLama/components/lamaHead.dart';
@@ -12,6 +14,14 @@ import 'dart:math';
 import 'package:lama_app/tapTheLama/components/upperInGameDisplay.dart';
 
 class TapTheLamaGame extends FlameGame with HasTappables {
+
+  //constructor and necessary data
+  BuildContext context;
+  UserRepository? userRepo;
+  int? userHighScore;
+  int? allTimeHighScore;
+  TapTheLamaGame(this.context,this.userRepo, this.userHighScore, this.allTimeHighScore);
+
   //sets background color
   Color backgroundColor() => Colors.white70;
 
@@ -97,11 +107,11 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   //#endregion
 
   //#region Global Variables Game Logic
+
+  final gameId=5;
+  var score = 0;
   bool gameOver = false;
   var referenceVelocity;
-  var velocity1;
-  var velocity2;
-  var score = 0;
   var lifePercent = 100.0;
   var streakCounter = 0;
   var scoreIncrementerGoodHit = 10;
@@ -116,6 +126,8 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var scoreThresholdIncreaseVelocity = 300;
   var scoreThresholdSpacer = 300;
   var firstColumnIsFaster = true;
+  var velocity1;
+  var velocity2;
   var velocityIncreaseFactor1 = 1.2;
   var velocityIncreaseFactor2 = 1.5;
   var recoveryThreshold = 30;
@@ -126,6 +138,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    loadHighScores();
     initScoreCounterAndLifebar();
     initLamaButtonsWithEffects();
     initLamaHeadColumns();
@@ -461,6 +474,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   void checkGameOver() {
     if (lifePercent <= 0) {
       gameOver = true;
+      saveHighScore();
     }
   }
 
@@ -513,6 +527,24 @@ class TapTheLamaGame extends FlameGame with HasTappables {
         lifePercent = 100;
       }
     }
+  }
+
+  void saveHighScore() {
+    if(score>userHighScore!){
+      userRepo!.addHighscore(
+          Highscore(
+            gameID: gameId,
+            score: score,
+            userID: userRepo!.authenticatedUser!.id
+          )
+      );
+    }
+  }
+
+  void loadHighScores() async {
+    userHighScore = await userRepo!.getMyHighscore(gameId);
+    print(userHighScore.toString());
+    allTimeHighScore = await userRepo!.getHighscore(gameId);
   }
   //#endregion
 
