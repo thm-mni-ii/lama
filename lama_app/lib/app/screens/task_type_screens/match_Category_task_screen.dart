@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -32,6 +33,8 @@ class MatchCategoryTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
   MatchCategoryTaskScreen(this.task, this.constraints);
 
+  // todo readquestion
+
   @override
   State<StatefulWidget> createState() {
     return MatchCategoryState(task, constraints);
@@ -39,6 +42,11 @@ class MatchCategoryTaskScreen extends StatefulWidget {
 }
 
 class MatchCategoryState extends State<MatchCategoryTaskScreen> {
+
+  final FlutterTts flutterTts = FlutterTts();
+  String selectedAnswer = "";
+
+
   // task infos and constraints handed over by tasktypeScreen
   final BoxConstraints constraints;
   final TaskMatchCategory task;
@@ -63,6 +71,13 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
       categorySum.shuffle();
       firstShuffel = false;
     }*/
+  }
+
+  readText(String text) async {
+
+    await flutterTts.setLanguage("de-De");
+    await flutterTts.setVolume(1.0);
+    await flutterTts.speak(text);
   }
 
   @override
@@ -261,6 +276,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                   height: (constraints.maxHeight / 100) * 8,
                   width: (constraints.maxWidth / 100) * 38,
                   decoration: BoxDecoration(
+                    // doing
                       color: LamaColors.greenAccent,
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       boxShadow: [
@@ -278,6 +294,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                       height: 50,
                       width: 150,
                       decoration: BoxDecoration(
+                        // todo here ?
                           color: LamaColors.mainPink,
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
@@ -288,9 +305,20 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                                 offset: Offset(0, 3)),
                           ]),
                       child: Center(
-                        child: Text(items[i].item,
-                            style: LamaTextTheme.getStyle()),
-                      ))),
+                        //todo here
+                        child: InkWell(
+                            onTap: () {
+                              readText("aaaaaa");
+                              //readText(items[i].item);
+                            },
+                          child: Text(items[i].item,
+                              style: LamaTextTheme.getStyle()),
+
+                        ),
+
+                      )
+                  )
+              ),
               childWhenDragging: Container(
                   height: 50,
                   width: 150,
@@ -376,6 +404,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
       },
     );
   }
+
 }
 
 /// class Item used to store information of every given word
