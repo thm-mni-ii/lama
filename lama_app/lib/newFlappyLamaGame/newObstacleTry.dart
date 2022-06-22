@@ -22,8 +22,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
 
-// add(ObstacleComp(this, Vector2(0, 0), _context));
-class ObstacleComp extends PositionComponent
+//add(ObstacleComp(this, Vector2(0, 0), Vector2(screenSize.width, 0),
+//     Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles), _context));
+class ObstacleCompNewTry extends PositionComponent
     with HasGameRef, CollisionCallbacks {
   late SpriteComponent kaktusTopComponent;
   late SpriteComponent kaktusBodyComponent;
@@ -75,7 +76,27 @@ class ObstacleComp extends PositionComponent
 
   late Size screenSize;
 
-  ObstacleComp(this._game, this.velocity, BuildContext _context) {
+  ObstacleCompNewTry(
+    this._game,
+    this.velocity,
+    Vector2 position,
+    Vector2 size,
+    BuildContext _context,
+  ) : super(
+          position: position,
+          size: size,
+          anchor: Anchor.center,
+        ) {
+    var hitbox = PolygonHitbox.relative(
+      [
+        Vector2(-1.0, 0.0),
+        Vector2(-1.0, -1.0),
+        Vector2(0.0, -1.0),
+        Vector2(0.0, 0.0),
+      ],
+      parentSize: size,
+    )..renderShape = true;
+    // add(hitbox);
     screenSize = Size(
         MediaQuery.of(_context).size.width -
             MediaQuery.of(_context).padding.left -
@@ -90,27 +111,28 @@ class ObstacleComp extends PositionComponent
 
   @override
   Future<void> onLoad() async {
-    double obstacleYPos = (tileSize * _sizeInTiles) * 0;
+    position.y = (tileSize * _sizeInTiles) * 0;
+
     kaktusBottomComponent = SpriteComponent(
       sprite: await gameRef.loadSprite(obstacleBottomEndImage),
-      position: Vector2(screenSize.width, obstacleYPos),
-      size: Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+      position: position,
+      size: size,
       anchor: Anchor.topLeft,
     );
 
-    obstacleYPos = (tileSize * _sizeInTiles) * 1;
+    position.y = (tileSize * _sizeInTiles) * 1;
     kaktusBodyComponent = SpriteComponent(
       sprite: await gameRef.loadSprite(obstacleBodyImage),
-      position: Vector2(screenSize.width, obstacleYPos),
-      size: Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+      position: position,
+      size: size,
       anchor: Anchor.topLeft,
     );
 
-    obstacleYPos = (tileSize * _sizeInTiles) * 2;
+    position.y = (tileSize * _sizeInTiles) * 2;
     kaktusTopComponent = SpriteComponent(
       sprite: await gameRef.loadSprite(obstacleTopEndImage),
-      position: Vector2(screenSize.width, obstacleYPos),
-      size: Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+      position: position,
+      size: size,
       anchor: Anchor.topLeft,
     );
     add(kaktusBodyComponent);
@@ -119,62 +141,50 @@ class ObstacleComp extends PositionComponent
     ///
     final hitboxPaint = BasicPalette.white.paint();
     // ..style = PaintingStyle.stroke;
-    add(
-      PolygonHitbox.relative(
-        [
-          Vector2(-1.0, 0.0),
-          Vector2(-1.0, -1.0),
-          Vector2(0.0, -1.0),
-          Vector2(0.0, 0.0),
-        ],
-        position: Vector2(kaktusBodyComponent.x, kaktusBodyComponent.y),
-        parentSize: kaktusBodyComponent.size,
-      )
-        ..paint = hitboxPaint
-        ..renderShape = true,
-    );
+    add(PolygonHitbox.relative(
+      [
+        Vector2(-2.0, 0.0),
+        Vector2(-2.0, -2.0),
+        Vector2(0.0, -2.0),
+        Vector2(0.0, 0.0),
+      ],
+      position: Vector2(kaktusBodyComponent.x, kaktusBodyComponent.y),
+      parentSize: kaktusBodyComponent.size,
+    ));
     add(kaktusBottomComponent);
     ////////////////////////////////////////////////////////////
     ///
     ///
 
-    add(
-      PolygonHitbox.relative(
-        [
-          Vector2(-1.0, 0.0),
-          Vector2(-1.0, -1.0),
-          Vector2(0.0, -1.0),
-          Vector2(0.0, 0.0),
-        ],
-        position: Vector2(kaktusBottomComponent.x, kaktusBottomComponent.y),
-        parentSize: kaktusBottomComponent.size,
-      )
-        ..paint = hitboxPaint
-        ..renderShape = true,
-    );
+    add(PolygonHitbox.relative(
+      [
+        Vector2(-2.0, 0.0),
+        Vector2(-2.0, -2.0),
+        Vector2(0.0, -2.0),
+        Vector2(0.0, 0.0),
+      ],
+      position: Vector2(kaktusBottomComponent.x, kaktusBottomComponent.y),
+      parentSize: kaktusBottomComponent.size,
+    ));
     add(kaktusTopComponent);
-    add(
-      PolygonHitbox.relative(
-        [
-          Vector2(-1.0, 0.0),
-          Vector2(-1.0, -1.0),
-          Vector2(0.0, -1.0),
-          Vector2(0.0, 0.0),
-        ],
-        position: Vector2(kaktusTopComponent.x, kaktusTopComponent.y),
-        parentSize: kaktusTopComponent.size,
-      )
-        ..paint = hitboxPaint
-        ..renderShape = true,
-    );
+    add(PolygonHitbox.relative(
+      [
+        Vector2(-2.0, 0.0),
+        Vector2(-2.0, -2.0),
+        Vector2(0.0, -2.0),
+        Vector2(0.0, 0.0),
+      ],
+      position: Vector2(kaktusTopComponent.x, kaktusTopComponent.y),
+      parentSize: kaktusTopComponent.size,
+    ));
   }
 
   @override
   Future<void> update(double dt) async {
     super.update(dt);
-    kaktusBottomComponent.x -= 100 * dt;
-    kaktusBodyComponent.x -= 100 * dt;
-    kaktusTopComponent.x -= 100 * dt;
+    position.x -= 100 * dt;
+    /* kaktusBodyComponent.x -= 100 * dt;
+    kaktusTopComponent.x -= 100 * dt; */
   }
 
   @override
@@ -183,5 +193,6 @@ class ObstacleComp extends PositionComponent
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
+    print("COOOOOOOOOOOOKISIIIIIIIIIIIIIOOOON");
   }
 }

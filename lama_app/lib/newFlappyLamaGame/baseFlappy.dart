@@ -34,10 +34,17 @@ import 'package:flame/palette.dart';
 import 'CollidableAnimationComponent.dart';
 import 'backgroundFlappyLama.dart';
 import 'flappyObstacleComponent.dart';
+import 'newObstacleTry.dart';
+import 'obstacleTest.dart';
 
 class FlappyLamaGame2 extends FlameGame
     with TapDetector, HasCollisionDetection {
+  /// amount of tiles = size of the sprites / width of the obstacle
+  final double _sizeInTiles = 1.5;
   late AnimatedComponent userLama;
+
+  /// obstacle list
+  List<ObstacleCompTest> obstacles = [];
 
   //Obstacle Stuff
 /*   var amountObstaclesPerColumn = 3;
@@ -66,9 +73,6 @@ class FlappyLamaGame2 extends FlameGame
   var velocity1;
   var velocity2;
   var referenceVelocity;
-
-  /// amount of tiles = size of the sprites / width of the obstacle
-  final double _sizeInTiles = 1.5;
 
   /// amount of tiles on the x coordinate
   final int tilesX = 9;
@@ -120,11 +124,11 @@ class FlappyLamaGame2 extends FlameGame
   late double _tileSize;
 
   /// amount of tiles on the y coordinate
-  late int _tilesY;
+  int? _tilesY;
 
   /// Getter of [_tilesY]
   int get tilesY {
-    return _tilesY;
+    return _tilesY!;
   }
 
   /// Getter of [_tileSize]
@@ -143,6 +147,12 @@ class FlappyLamaGame2 extends FlameGame
   UserRepository _userRepo;
 
   FlappyLamaGame2(this._context, this._userRepo) {
+    // load all obstacle pngs
+    Flame.images.loadAll([
+      'png/kaktus_body.png',
+      'png/kaktus_end_bottom.png',
+      'png/kaktus_end_top.png',
+    ]);
     initializeAsync();
   }
 
@@ -151,7 +161,7 @@ class FlappyLamaGame2 extends FlameGame
   /// This method load the [Size] of the screen and loads the StartScreen
   void initializeAsync() async {
     // resize();
-    resize(_context);
+    // resize(_context);
 
     loadStartScreenAsync();
   }
@@ -162,7 +172,7 @@ class FlappyLamaGame2 extends FlameGame
     }
   } */
 
-  void resize(_context) {
+  void onGameResize(Vector2 size) {
     // get the screensize fom [MediaQuery] because [size] is incorrect on some devices
     _screenSize = Size(
         MediaQuery.of(_context).size.width -
@@ -174,40 +184,21 @@ class FlappyLamaGame2 extends FlameGame
     // calculates by the width of the screen
     _tileSize = screenSize.width / tilesX;
     _tilesY = screenSize.height ~/ tileSize;
+    print("_tilesY = $_tilesY");
+    print("_tilesY = $_tilesY");
 
+    super.onGameResize(size);
     //  super.resize(size);
   }
 
   @override
   Future<void> update(double dt) async {
     super.update(dt);
-
-    /*   yComponent += 10 * dt;
-    add(SpriteComponent(
-      sprite: await loadSprite(obstacleBodyImage),
-      position: Vector2(xComponent, yComponent),
-      size: Vector2(24.0, 24.0),
-      anchor: Anchor.topLeft,
-    )); */
-
-    //  _lama.y += 150;
   }
 
   void render(Canvas canvas) {
-    // draw the hitboxframe
-
     super.render(canvas);
   }
-
-  /// This methods adds up the score and changes the holesize depending on the score
-/*   void addScore(FlappyObstacle obstacle) {
-    score++;
-
-    if (score > _difficultyScore) {
-      obstacle.maxHoleSize = 3;
-      obstacle.minHoleSize = 2;
-    }
-  } */
 
   @override
   Future<void> onLoad() async {
@@ -223,32 +214,9 @@ class FlappyLamaGame2 extends FlameGame
 
     add(MyParallaxComponent());
 
-/*     // add obstacles
-    obstacles.clear();
-    obstacles.add(FlappyObstacle(this, false, _lamaSize, addScore, null, 7, 8));
-    obstacles.add(FlappyObstacle(this, true, _lamaSize, addScore, null, 7, 8));
-
-    add(obstacles[0]);
-    add(obstacles[1]);
-
-    // add reset function = set the ref hole to constraint the hole size and position
-    obstacles[0].onResetting = obstacles[1].setConstraints;
-    obstacles[1].onResetting = obstacles[0].setConstraints;
-//////////////////////////////////////////////////////
-    ///temporäre lösung.. but wrong
-    // obstacles[0].up(_screenSize);
-
-    // initial change the second obstacle to avoid a to large gap
-    obstacles[1].setConstraints(obstacles[0].holeIndex, obstacles[0].holeSize);
-    obstacles[1].resetObstacle();
-    obstacles[0].resetObstacle(); */
-
     add(ScreenHitbox());
     final componentSize = Vector2(80.0, 90.0);
-    // addAll(test5,test6);
-    /*    add(test5);
-    add(test6);
-    add(test7); */
+
     userLama = AnimatedComponent(
       _lamaSize,
       this,
@@ -258,7 +226,38 @@ class FlappyLamaGame2 extends FlameGame
     );
     add(userLama);
 
-    add(ObstacleComp(this, Vector2(0, 0), _context));
+    // add obstacles
+    obstacles.clear();
+    obstacles
+        .add(ObstacleCompTest(this, false, _lamaSize, addScore, null, 7, 8));
+    obstacles
+        .add(ObstacleCompTest(this, true, _lamaSize, addScore, null, 7, 8));
+
+    add(obstacles[0]);
+    add(obstacles[1]);
+
+    // add reset function = set the ref hole to constraint the hole size and position
+    obstacles[0].onResetting = obstacles[1].setConstraints;
+    obstacles[1].onResetting = obstacles[0].setConstraints;
+
+    // initial change the second obstacle to avoid a to large gap
+    obstacles[1].setConstraints(obstacles[0].holeIndex, obstacles[0].holeSize);
+    // obstacles[1].resetObstacle();
+    // obstacles[0].resetObstacle();
+
+    //add(ObstacleComp(this, Vector2(0, 0), _context));
+    add(ObstacleCompNewTry(this, Vector2(0, 0), Vector2(screenSize.width, 0),
+        Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles), _context));
+  }
+
+  /// This methods adds up the score and changes the holesize depending on the score
+  void addScore(ObstacleCompTest obstacle) {
+    score++;
+
+    if (score > _difficultyScore) {
+      obstacle.maxHoleSize = 3;
+      obstacle.minHoleSize = 2;
+    }
   }
 
   void onTap() {}

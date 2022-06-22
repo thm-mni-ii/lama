@@ -1,15 +1,36 @@
-/* import 'dart:ui';
+import 'dart:core';
 import 'dart:math';
+import 'dart:ui';
+import 'dart:ui';
 
-
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
+import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
+import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
-import 'package:lama_app/flappyLama/flappyLamaGame.dart';
+import 'package:flutter/animation.dart';
 
-/// This class extends [Component] and describes an obstacle.
-/// It will move from the right end to the start and will generate a random hole at a random position each time.
-class FlappyObstacle extends Component {
+import 'baseFlappy.dart';
+import 'package:flame/components.dart';
+import 'package:flame/game.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/input.dart';
+import 'package:flame/parallax.dart';
+import 'package:flutter/material.dart';
+
+import 'package:flutter/services.dart';
+
+class ObstacleCompTest extends Component with HasGameRef {
+  late Sprite kaktusTopComponent;
+  late Sprite kaktusBodyComponent;
+  late Sprite kaktusBottomComponent;
+
+  var obstacleTopEndImage = 'png/kaktus_end_top.png';
+  var obstacleBottomEndImage = 'png/kaktus_end_bottom.png';
+  var obstacleBodyImage = 'png/kaktus_body.png';
   // SETTINGS
   // --------
   /// velocity of the obstacles [negative = right to left; positive = left to right]
@@ -29,41 +50,46 @@ class FlappyObstacle extends Component {
   // --------
   // SETTINGS
 
+  //FUNCTIONS
+  // --------
   /// This function gets called when [_passingObjectX] passes this obstacles X coordinate
-  Function(FlappyObstacle) onPassing;
+  Function(ObstacleCompTest)? onPassing;
 
   /// This function gets called when an [Rect] collides with this obstacle in [collides]
-  Function onCollide;
+  Function? onCollide;
 
   /// This function gets called when the obstacle gets reset (holeIndex, holeSize).
-  Function(int, int) onResetting;
+  Function(int, int)? onResetting;
 
-  int _refHoleIndex;
-  int _refHoleSize;
+  int? _refHoleIndex;
+  int? _refHoleSize;
+
+  // --------
+  //FUNCTIONS
 
   /// actual size of the hole = multiples by [_sizeInTiles] {[_holeSize] * [_sizeInTiles]}
-  int _holeSize;
+  int? _holeSize;
 
   /// hole Index (index of the start of the hole)
-  int _holeIndex;
+  int? _holeIndex;
 
   /// the x Coordinate of the object which will gets checked for passing in [_checkPassingObject]
-  final double _passingObjectX;
+  late final double _passingObjectX;
 
   /// alter start location (true = starts at 1.5 screenwidth; false = start at 1.0 screenwidth)
-  bool _alter;
+  bool? _alter;
 
   /// indicates if the [_passingObjectX] already passed the obstacle (resets after [resetObstacle] has called
   bool _objectPassed = false;
 
   /// list of all the single sprites of the component
-  List<SpriteComponent> _sprites;
+  List<SpriteComponent>? _sprites;
+  SpriteComponent? _first;
 
-  /// first component to get the position data
-  SpriteComponent _first;
-  final FlappyLamaGame _game;
+  final FlappyLamaGame2 _game;
+  //final Vector2 velocity;
+
   final Random _randomNumber = Random();
-
   get holeIndex {
     return _holeIndex;
   }
@@ -72,14 +98,14 @@ class FlappyObstacle extends Component {
     return _holeSize;
   }
 
-  FlappyObstacle(this._game, this._alter, this._passingObjectX, this.onPassing,
-      [this.onCollide, this.minHoleSize, this.maxHoleSize]);
+  ObstacleCompTest(this._game, this._alter, this._passingObjectX,
+      this.onPassing, this.onCollide, this.minHoleSize, this.maxHoleSize);
 
   /// This method will generate the obstacle [_sprites] for the rendering.
   ///
   /// sideeffects:
   ///   [_sprites]
-  void _createObstacleParts() {
+  Future<void> _createObstacleParts() async {
     // reset the sprites
     _sprites = [];
 
@@ -89,37 +115,38 @@ class FlappyObstacle extends Component {
         ..height = _game.tileSize * _sizeInTiles
         ..width = _game.tileSize * _sizeInTiles
         ..x = _game.screenSize.width +
-            (_alter
+            (_alter!
                 ? (_game.tilesX ~/ 2) * _game.tileSize +
                     _game.tileSize * _sizeInTiles
                 : 0)
         ..y = (_game.tileSize * _sizeInTiles) * i
-        ..anchor = Anchor.topLeft;
+        ..anchor = Anchor.topRight;
 
       // start of the hole
       if (_holeIndex == i + 1) {
-        tmp.sprite = Sprite('png/kaktus_end_top.png');
-        _sprites.add(tmp);
+        tmp.sprite = await gameRef.loadSprite(obstacleTopEndImage);
+        _sprites!.add(tmp);
       }
       // end of the hole
-      else if (_holeIndex + _holeSize == i) {
-        tmp.sprite = Sprite('png/kaktus_end_bottom.png');
-        _sprites.add(tmp);
+      else if (_holeIndex! + _holeSize! == i) {
+        tmp.sprite = await gameRef.loadSprite(obstacleBottomEndImage);
+        _sprites!.add(tmp);
       }
       // body of the obstacle
-      else if (!(i >= _holeIndex && i <= _holeIndex + _holeSize)) {
-        tmp.sprite = Sprite('png/kaktus_body.png');
-        _sprites.add(tmp);
+      else if (!(i >= _holeIndex! && i <= _holeIndex! + _holeSize!)) {
+        tmp.sprite = await gameRef.loadSprite(obstacleBodyImage);
+        _sprites!.add(tmp);
       }
+      _sprites!.add(tmp);
     }
 
     // sets the first part of the obstacle
-    _first = _sprites[0];
+    _first = _sprites![0];
   }
 
   void setConstraints(int alterHoleIndex, int alterHoleSize) {
     _refHoleIndex = alterHoleIndex;
-    _refHoleSize = alterHoleSize;
+    _refHoleSize = alterHoleIndex;
   }
 
   /// This method generate a new hole depending on the [minHoleSize], [maxHoleSize] and [_sizeInTiles].
@@ -135,21 +162,21 @@ class FlappyObstacle extends Component {
 
     // index of the position of the hole
     _holeIndex =
-        _randomNumber.nextInt((_game.tilesY ~/ _sizeInTiles) - _holeSize);
+        _randomNumber.nextInt((_game.tilesY ~/ _sizeInTiles) - _holeSize!);
 
     if (_refHoleIndex != null && _refHoleSize != null) {
       // new hole lower ref && Distance to large
-      if ((_holeIndex > _refHoleIndex) &&
-          _holeIndex - (_refHoleIndex + _refHoleSize) > _maxHoleDistance) {
-        _holeIndex = (_refHoleIndex + _refHoleSize) + _maxHoleDistance > 0
-            ? (_refHoleIndex + _refHoleSize) + _maxHoleDistance
+      if ((_holeIndex! > _refHoleIndex!) &&
+          _holeIndex! - (_refHoleIndex! + _refHoleSize!) > _maxHoleDistance) {
+        _holeIndex = (_refHoleIndex! + _refHoleSize!) + _maxHoleDistance > 0
+            ? (_refHoleIndex! + _refHoleSize!) + _maxHoleDistance
             : 0;
       }
       // new hole higher ref && Distance to large
-      else if ((_holeIndex < _refHoleIndex) &&
-          _refHoleIndex - (_holeIndex + _holeSize) > _maxHoleDistance) {
-        _holeIndex = _refHoleIndex - _maxHoleDistance > 0
-            ? _refHoleIndex - _holeSize - _maxHoleDistance
+      else if ((_holeIndex! < _refHoleIndex!) &&
+          _refHoleIndex! - (_holeIndex! + _holeSize!) > _maxHoleDistance) {
+        _holeIndex = _refHoleIndex! - _maxHoleDistance > 0
+            ? _refHoleIndex! - _holeSize! - _maxHoleDistance
             : 0;
       }
     }
@@ -166,16 +193,17 @@ class FlappyObstacle extends Component {
   bool collides(Rect object) {
     if (object == null ||
         _sprites == null ||
-        _sprites.isEmpty ||
-        _sprites.length <= 0) {
+        _sprites!.isEmpty ||
+        _sprites!.length <= 0) {
       return false;
     }
 
     // X
-    if ((object.left > _first.x && object.left < _first.x + _first.width) ||
-        (object.right > _first.x && object.right < _first.x + _first.width)) {
-      var holeTop = _holeIndex * _game.tileSize * _sizeInTiles;
-      var holeBot = holeTop + (_holeSize * _game.tileSize * _sizeInTiles);
+    if ((object.left > _first!.x && object.left < _first!.x + _first!.width) ||
+        (object.right > _first!.x &&
+            object.right < _first!.x + _first!.width)) {
+      var holeTop = _holeIndex! * _game.tileSize * _sizeInTiles;
+      var holeBot = holeTop + (_holeSize! * _game.tileSize * _sizeInTiles);
       // Y
       if (!((object.top >= holeTop || _holeIndex == 0) &&
           object.bottom <= holeBot)) {
@@ -200,7 +228,7 @@ class FlappyObstacle extends Component {
     _generateHole();
     _createObstacleParts();
     // run callback
-    onResetting?.call(_holeIndex, _holeSize);
+    //   onResetting?.call(_holeIndex, _holeSize);
     _objectPassed = false;
   }
 
@@ -212,16 +240,77 @@ class FlappyObstacle extends Component {
   void _checkPassingObject() {
     if (_passingObjectX != null &&
         !_objectPassed &&
-        _passingObjectX > _first.x + _first.width) {
+        _passingObjectX > _first!.x + _first!.width) {
       onPassing?.call(this);
       _objectPassed = true;
     }
   }
 
-  void update(double t) {
-    if (_sprites.isNotEmpty) {
+  @override
+  Future<void> onLoad() async {
+/*     add(kaktusBodyComponent);
+    ////////////////////////////////////////////////////////////
+    ///
+    ///
+    final hitboxPaint = BasicPalette.white.paint();
+    // ..style = PaintingStyle.stroke;
+    add(
+      PolygonHitbox.relative(
+        [
+          Vector2(-1.0, 0.0),
+          Vector2(-1.0, -1.0),
+          Vector2(0.0, -1.0),
+          Vector2(0.0, 0.0),
+        ],
+        position: Vector2(kaktusBodyComponent.x, kaktusBodyComponent.y),
+        parentSize: kaktusBodyComponent.size,
+      )
+        ..paint = hitboxPaint
+        ..renderShape = true,
+    );
+    add(kaktusBottomComponent);
+    ////////////////////////////////////////////////////////////
+    ///
+    ///
+
+    add(
+      PolygonHitbox.relative(
+        [
+          Vector2(-1.0, 0.0),
+          Vector2(-1.0, -1.0),
+          Vector2(0.0, -1.0),
+          Vector2(0.0, 0.0),
+        ],
+        position: Vector2(kaktusBottomComponent.x, kaktusBottomComponent.y),
+        parentSize: kaktusBottomComponent.size,
+      )
+        ..paint = hitboxPaint
+        ..renderShape = true,
+    );
+    add(kaktusTopComponent);
+    add(
+      PolygonHitbox.relative(
+        [
+          Vector2(-1.0, 0.0),
+          Vector2(-1.0, -1.0),
+          Vector2(0.0, -1.0),
+          Vector2(0.0, 0.0),
+        ],
+        position: Vector2(kaktusTopComponent.x, kaktusTopComponent.y),
+        parentSize: kaktusTopComponent.size,
+      )
+        ..paint = hitboxPaint
+        ..renderShape = true,
+    ); */
+  }
+
+  @override
+  Future<void> update(double dt) async {
+    super.update(dt);
+
+    if (_sprites!.isNotEmpty) {
       // generate new holeSize and position and all parts when moving out of the screen
-      if (_sprites[0].x <= -(_game.tileSize * _sizeInTiles)) {
+      if (_sprites![0].x <= -(_game.tileSize * _sizeInTiles)) {
         // remove the initial offset
         _alter = false;
         resetObstacle();
@@ -231,13 +320,13 @@ class FlappyObstacle extends Component {
       _checkPassingObject();
 
       // moves the obstacles by [_velocity]
-      _sprites?.forEach((element) => element.x += _velocity * t);
+      _sprites!.forEach((element) => element.x -= _velocity * dt);
     }
   }
 
   void render(Canvas c) {
     // render each part of the obstacle
-    for (SpriteComponent obstaclePart in _sprites) {
+    for (SpriteComponent obstaclePart in _sprites!) {
       // has to save the canvas because otherwise it will lead to a render problem by adding up the x and y fields
       c.save();
       // render the part of the obstacle
@@ -247,14 +336,24 @@ class FlappyObstacle extends Component {
     }
   }
 
-  void resize(Size size) {
+  @mustCallSuper
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
     if (this._game.tileSize > 0) {
       // generates the hole and all the obstacle parts
       _generateHole();
       _createObstacleParts();
       // run callback
-      onResetting?.call(_holeIndex, _holeSize);
+
+      onResetting?.call(_holeIndex!, _holeSize!);
     }
   }
+
+/*   @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    super.onCollisionStart(intersectionPoints, other);
+  } */
 }
- */   
