@@ -103,11 +103,18 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                       blurRadius: 7,
                       offset: Offset(0, 3))
                 ]),
-            child: Align(
+          child: Align(
+            child: InkWell(
+              onTap: () {
+                readText(task.question);
+              },
               child: Text(task.question,
                   textAlign: TextAlign.center,
-                  style: LamaTextTheme.getStyle(fontSize: 30)),
-            )),
+                  style: LamaTextTheme.getStyle(fontSize: 30)
+              ),
+            ),
+          ),
+        ),
       ),
       Container(
         height: (constraints.maxHeight / 100) * 15,
@@ -123,7 +130,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                 nip: BubbleNip.leftCenter,
                 child: Center(
                   child: Text(
-                    "Tippe einmal, um die Antwort anzuhören.",
+                    "Tippe einmal, um die Antwort oder Frage anzuhören.",
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),
