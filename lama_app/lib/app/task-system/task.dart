@@ -34,6 +34,8 @@ class Task {
             json['left_to_solve'],
             json['question'],
             json['right_answer'],
+            json['answer_language'],
+            json['task_language'],
             List<String>.from(json['wrong_answers']));
       case "Zerlegung":
         return TaskZerlegung(
@@ -93,8 +95,15 @@ class Task {
         var wordPairs = json['wordPairs'] as List;
         List<Pair<String, String>> wordPairList =
             wordPairs.map((pair) => Pair.fromJson(pair)).toList();
-        return TaskVocableTest(taskType, json['task_reward'], json['lama_text'],
-            json['left_to_solve'], wordPairList, json['randomizeSide']);
+        return TaskVocableTest(taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            wordPairList,
+            json['randomizeSide'],
+            json['question_language'],
+            json['answer_language']
+        );
       case "Connect":
         return TaskConnect(
             taskType,
@@ -214,9 +223,11 @@ class TaskClozeTest extends Task {
   String question;
   String rightAnswer;
   List<String> wrongAnswers;
+  String questionLanguage;
+  String answerLanguage;
 
   TaskClozeTest(String taskType, int reward, String lamaText, int leftToSolve,
-      this.question, this.rightAnswer, this.wrongAnswers)
+      this.question, this.rightAnswer, this.questionLanguage, this.answerLanguage, this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -352,9 +363,11 @@ class TaskMoney extends Task {
 class TaskVocableTest extends Task {
   List<Pair<String, String>> vocablePairs;
   bool randomizeSide;
+  String answerLanguage;
+  String questionLanguage;
 
   TaskVocableTest(String taskType, int reward, String lamaText, int leftToSolve,
-      this.vocablePairs, this.randomizeSide)
+      this.vocablePairs, this.randomizeSide, this.answerLanguage, this.questionLanguage)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override

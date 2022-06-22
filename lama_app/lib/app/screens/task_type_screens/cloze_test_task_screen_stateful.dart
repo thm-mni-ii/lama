@@ -36,7 +36,11 @@ class ClozeTestTaskScreen extends StatefulWidget {
 
     readquestion() async {
       var text = task.question;
-      await flutterTts.setLanguage("de-De");
+      if(task.answerLanguage == "Englisch") {
+        await flutterTts.setLanguage("en-En");
+      } else {
+        await flutterTts.setLanguage("de-De");
+      }
       await flutterTts.setVolume(1.0);
       await flutterTts.speak(text);
     }
@@ -66,7 +70,11 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
   }
 
   readText(String text) async {
-    await flutterTts.setLanguage("de-De");
+    if(task.answerLanguage == "Englisch") {
+      await flutterTts.setLanguage("en-En");
+    } else {
+      await flutterTts.setLanguage("de-De");
+    }
     await flutterTts.setVolume(1.0);
     await flutterTts.speak(text);
   }

@@ -9,6 +9,8 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 /// [StatefulWidget] that contains the screen for the VocableTest TaskType.
 ///
@@ -16,8 +18,21 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 class VocableTestTaskScreen extends StatefulWidget {
   final TaskVocableTest task;
   final BoxConstraints constraints;
+  final FlutterTts flutterTts = FlutterTts();
 
-  VocableTestTaskScreen(this.task, this.constraints);
+  readquestion() async {
+    var text = "Translate the shown word";
+    if(task.questionLanguage == "Englisch") {
+      await flutterTts.setLanguage("en-EN");
+      await flutterTts.setSpeechRate(0.4);
+    } else {
+      await flutterTts.setLanguage("de-De");
+    }await flutterTts.setVolume(1.0);
+    await flutterTts.speak(text);
+  }
+  VocableTestTaskScreen(this.task, this.constraints) {
+    readquestion();
+  }
 
   @override
   State<StatefulWidget> createState() {

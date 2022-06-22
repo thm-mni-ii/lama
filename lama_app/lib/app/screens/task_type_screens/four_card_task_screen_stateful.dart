@@ -23,7 +23,7 @@ class FourCardTaskScreenStateful extends StatefulWidget {
     answers.shuffle();
 
     readquestion() async {
-      var text = task.questionLanguage;
+      var text = task.question;
       if(task.questionLanguage == "Englisch") {
         await flutterTts.setLanguage("en-EN");
       } else {
