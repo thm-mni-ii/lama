@@ -10,7 +10,9 @@
             "lama_text":"Tap the right Answer!",
             "left_to_solve": 3,
             "right_answer":"Auto",
-             "wrong_answers":["Bagger", "See", "Clown"]
+             "wrong_answers":["Bagger", "See", "Clown"],
+             "question_language":"Englisch",
+             "answer_language":"Deutsch"
              },
          {
            "task_type": "ClozeTest",
@@ -22,7 +24,9 @@
            "wrong_answers": [
              "go",
              "horse"
-           ]
+           ],
+           "question_language":"Englisch",
+           "answer_language":"Englisch"
          },
          {
            "task_type":"ClozeTest",
@@ -31,7 +35,9 @@
            "lama_text":"Tap the right Answer!",
            "left_to_solve": 3,
            "right_answer":"am",
-           "wrong_answers":["be", "horse"]
+           "wrong_answers":["be", "horse"],
+           "question_language":"Englisch",
+           "answer_language":"Englisch"
          },
          {
            "task_type": "MatchCategory",
@@ -41,7 +47,9 @@
            "nameCatOne": "Simple Present",
            "nameCatTwo": "Simple Past",
            "categoryOne": ["work", "go", "see", "sell"],
-           "categoryTwo": ["worked", "went", "saw", "sold"]
+           "categoryTwo": ["worked", "went", "saw", "sold"],
+           "question_language":"Englisch",
+           "answer_language":"Englisch"
          },
          {
            "task_type": "MatchCategory",
@@ -51,7 +59,9 @@
            "nameCatOne": "Simple Past",
            "nameCatTwo": "Past Participle",
            "categoryOne": ["was", "came", "did", "knew"],
-           "categoryTwo": ["been", "come", "done", "known"]
+           "categoryTwo": ["been", "come", "done", "known"],
+           "question_language":"Englisch",
+           "answer_language":"Englisch"
          },
          {
           "task_type":"VocableTest",
@@ -59,7 +69,9 @@
           "lama_text": "Translate the shown word!",
           "left_to_solve": 3,
           "wordPairs": [{"word":"to draw","translation":"ziehen"}, {"word":"to breath", "translation":"atmen"}, {"word":"Katze", "translation": "cat"}],
-          "randomizeSide": true
+          "randomizeSide": true,
+           "question_language":"Englisch",
+           "answer_language":"Englisch"
         }
         ]
 }

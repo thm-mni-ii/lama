@@ -23,6 +23,8 @@ class Task {
             json['left_to_solve'],
             json['question'],
             json['right_answer'],
+            json['question_language'],
+            json['answer_language'],
             List<String>.from(json['wrong_answers']));
       case "ClozeTest":
         return TaskClozeTest(
@@ -185,10 +187,13 @@ class Task4Cards extends Task {
   String question;
   String rightAnswer;
   List<String> wrongAnswers;
-  String selectedAnswer = "";
+  String questionLanguage;
+  String answerLaguage;
+
 
   Task4Cards(String taskType, int reward, String lamaText, int leftToSolve,
-      this.question, this.rightAnswer, this.wrongAnswers)
+      this.question, this.rightAnswer, this.questionLanguage, this.answerLaguage,
+      this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override

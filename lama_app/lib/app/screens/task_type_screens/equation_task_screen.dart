@@ -11,6 +11,7 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/OperatorWidget.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 /// [StatefulWidget] that contains the screen for the Equation TaskType
 ///
@@ -20,11 +21,20 @@ import 'package:lama_app/util/OperatorWidget.dart';
 class EquationTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
   final TaskEquation task;
+  final FlutterTts flutterTts = FlutterTts();
 
   EquationTaskScreen(this.task, this.constraints);
 
   @override
   State<StatefulWidget> createState() {
+
+    readquestion() async {
+      var text = "Löse die Gleichung";
+      await flutterTts.setLanguage("de-De");
+      await flutterTts.setVolume(1.0);
+      await flutterTts.speak(text);
+    }
+    readquestion();
     return EquationTaskState(task, constraints);
   }
 }

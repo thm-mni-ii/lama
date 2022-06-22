@@ -9,7 +9,9 @@
             "lama_text": "Translate the shown word!",
             "left_to_solve": 3,
             "wordPairs": [{"word":"house","translation":"Haus"}, {"word":"sun", "translation":"Sonne"}],
-            "randomizeSide": true
+            "randomizeSide": true,
+            "question_language":"Englisch",
+            "answer_language":"Englisch"
           },
            {
            "task_type":"4Cards",
@@ -18,7 +20,9 @@
             "lama_text":"Tap the right Answer!",
             "left_to_solve": 3,
             "right_answer":"Apfel",
-             "wrong_answers":["Auto", "Buch", "Kran"]
+             "wrong_answers":["Auto", "Buch", "Kran"],
+             "question_language":"Englisch",
+             "answer_language":"Deutsch"
              }
         ]
 }

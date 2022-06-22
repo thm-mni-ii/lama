@@ -184,7 +184,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
         shadowColor: Colors.black,
         elevation: 10,
       ),
-      child: Text(buchstabe, style: LamaTextTheme.getStyle(fontSize: 30)),
+      child: Text(
+          buchstabe,
+          style: LamaTextTheme.getStyle(fontSize: 30)),
     );
   }
 
@@ -321,10 +323,12 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     } else if (task.correctingModus == 1 && i != zufallsZahl) {
       if (zufallsCharCounter == 0) {
         zufallsCharCounter++;
+        print(zufallsChar);
         return zufallsChar;
       } else {
         zufallsCharCounter--;
 
+        print(zufallsChar2);
         return zufallsChar2;
       }
     }
@@ -368,6 +372,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                       nip: BubbleNip.leftCenter,
                       child: Center(
                         child: Text(
+                          //"a",
                           setTaskMessageAccordingToTaskModus(),
                           style: LamaTextTheme.getStyle(
                               color: LamaColors.black, fontSize: 15),

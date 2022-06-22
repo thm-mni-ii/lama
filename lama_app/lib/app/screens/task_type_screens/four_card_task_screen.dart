@@ -123,9 +123,6 @@ class FourCardTaskScreen extends StatelessWidget {
   Widget _buildCards(context, index) {
     Color color =
         index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;
-    if(answers[index] == task.selectedAnswer) {
-      color = LamaColors.purpleAccent;
-    }
     return Container(
       height: 50,
       decoration: BoxDecoration(

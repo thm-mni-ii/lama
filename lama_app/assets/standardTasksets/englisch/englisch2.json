@@ -11,7 +11,9 @@
                 "lama_text":"Tap the right Answer!",
                 "left_to_solve": 3,
                 "right_answer":"Buch",
-                "wrong_answers":["Baum", "Boden", "Apfel"]
+                "wrong_answers":["Baum", "Boden", "Apfel"],
+                "question_language":"Englisch",
+                "answer_language":"Deutsch"
              },
              {
                 "task_type":"VocableTest",
@@ -19,7 +21,9 @@
                 "lama_text": "Translate the shown word!",
                 "left_to_solve": 3,
                 "wordPairs": [{"word":"window","translation":"Fenster"}, {"word":"Eimer", "translation":"bucket"}],
-                "randomizeSide": true
+                "randomizeSide": true,
+                "question_language":"Englisch",
+                "answer_language":"Deutsch"
              }
         ]
 }

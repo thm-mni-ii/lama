@@ -23,9 +23,12 @@ class FourCardTaskScreenStateful extends StatefulWidget {
     answers.shuffle();
 
     readquestion() async {
-      var text = task.question;
-      await flutterTts.setLanguage("de-De");
-      await flutterTts.setVolume(1.0);
+      var text = task.questionLanguage;
+      if(task.questionLanguage == "Englisch") {
+        await flutterTts.setLanguage("en-EN");
+      } else {
+        await flutterTts.setLanguage("de-De");
+      }await flutterTts.setVolume(1.0);
       await flutterTts.speak(text);
     }
     readquestion();
@@ -51,7 +54,11 @@ class FourCards extends State<FourCardTaskScreenStateful> {
   String selectedAnswer = "";
 
   readText(String text) async {
-    await flutterTts.setLanguage("de-De");
+    if(task.answerLaguage == "Englisch") {
+      await flutterTts.setLanguage("en-EN");
+    } else {
+      await flutterTts.setLanguage("de-De");
+    }
     await flutterTts.setVolume(1.0);
     await flutterTts.speak(text);
   }
@@ -72,6 +79,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           .add(AnswerTaskEvent(answers[index]));
     }
   }
+
   @override
   Widget build(BuildContext context) {
 
