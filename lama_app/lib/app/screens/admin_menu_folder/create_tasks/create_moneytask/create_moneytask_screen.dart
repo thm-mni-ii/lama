@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/bloc/create_task_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -19,22 +20,42 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
   double? bis;
   int? reward;
 
-  @override
+  bool first = true;
+
+/*   @override
   void initState() {
+    TaskMoney? task = BlocProvider.of<CreateTaskBloc>(context).task as TaskMoney?;
+    if (task != null) {
+      von = task.von;
+      bis = task.bis;
+      reward = task.reward;
+    }
     super.initState();
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
+    TaskMoney? moneyTask =
+        BlocProvider.of<CreateTaskBloc>(context).task as TaskMoney?;
     Size screenSize = MediaQuery.of(context).size;
+
+    if (moneyTask != null && first) {
+      von = moneyTask.von;
+      bis = moneyTask.bis;
+      reward = moneyTask.reward;
+
+      first = false;
+    }
+
     return Scaffold(
-        appBar: CustomAppbar(
-          size: screenSize.width / 5,
-          titel: "MoneyTask",
-          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
-        ),
-        body: Column(children: [
+      appBar: CustomAppbar(
+        size: screenSize.width / 5,
+        titel: "MoneyTask",
+        color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+      ),
+      body: Column(
+        children: [
           Expanded(
             child: Container(
               margin: EdgeInsets.all(5),
@@ -42,107 +63,104 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 25),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Geldbetrag",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                    Container(
+                      margin: EdgeInsets.only(top: 25),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Geldbetrag",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 15, bottom: 15, right: 30),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(right: 30),
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Von',
+                    Container(
+                      margin: EdgeInsets.only(left: 15, bottom: 15, right: 30),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(right: 30),
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Von',
+                                  ),
+                                  validator: (text) {
+                                    if (text == null || text.isEmpty) {
+                                      return "Beitrag fehlt!";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (text) => von = double.parse(text!),
+                                  onChanged: (text) => setState(
+                                      () => this.von = double.parse(text)),
                                 ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return "Beitrag fehlt!";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (text) {
-                                  von = double.parse(text!);
-                                },
-                                onChanged: (text) => setState(
-                                    () => this.von = double.parse(text)),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(left: 30),
-                              child: Text(
-                                "bis",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(left: 30),
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Bis',
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(left: 30),
+                                child: Text(
+                                  "bis",
+                                  style: TextStyle(fontSize: 16),
                                 ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return "Beitrag fehlt!";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (text) {
-                                  bis = double.parse(text!);
-                                },
-                                onChanged: (text) => setState(
-                                    () => this.bis = double.parse(text)),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(top: 30),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Erreichbare Lamacoins',
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(left: 30),
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Bis',
+                                  ),
+                                  validator: (text) {
+                                    if (text == null || text.isEmpty) {
+                                      return "Beitrag fehlt!";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (text) {
+                                    bis = double.parse(text!);
+                                  },
+                                  onChanged: (text) => setState(
+                                      () => this.bis = double.parse(text)),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return "Beitrag fehlt!";
-                          }
-                          return null;
-                        },
-                        onSaved: (text) {
-                          this.reward = int.parse(text!);
-                        },
-                        onChanged: (text) =>
-                            setState(() => this.reward = int.parse(text)),
                       ),
                     ),
-                  ),
-                ]),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(top: 30),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Erreichbare Lamacoins',
+                          ),
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return "Beitrag fehlt!";
+                            }
+                            return null;
+                          },
+                          onSaved: (String? text) => reward = int.parse(text!),
+                          onChanged: (String text) =>
+                              setState(() => reward = int.parse(text)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -151,31 +169,42 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              TextButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
+                TextButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
                       builder: (_) => BlocProvider.value(
-                            value: BlocProvider.of<CreateTasksetBloc>(context),
-                            child: TasksetChooseTaskScreen(),
-                          )),
+                        value: BlocProvider.of<CreateTasksetBloc>(context),
+                        child: TasksetChooseTaskScreen(),
+                      ),
+                    ),
+                  ),
+                  child: const Text("Preview"),
                 ),
-                child: const Text("Preview"),
-              ),
-              ElevatedButton(
+                ElevatedButton(
                   onPressed: () {
                     TaskMoney moneyTask = TaskMoney(
-                        TaskType.moneyTask, reward!, "", 3, von!, bis!);
+                      TaskType.moneyTask,
+                      reward!,
+                      "",
+                      3,
+                      von!,
+                      bis!,
+                    );
                     context
                         .read<CreateTasksetBloc>()
                         .add(CreateTasksetAddTask(moneyTask));
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },
-                  child: Text("Task hinzufügen"))
-            ]),
+                  child: Text("Task hinzufügen"),
+                )
+              ],
+            ),
           )
-        ]));
+        ],
+      ),
+    );
   }
 }
 

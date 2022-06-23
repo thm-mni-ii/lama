@@ -18,6 +18,8 @@ import '../../../taskset_option_screen.dart';
 /// latest Changes: 09.06.2022
 
 class TasksetManageScreen extends StatelessWidget {
+  static const routeName ="/tasksetmanagescreen";
+
   @override
   Widget build(BuildContext context) {
     TasksetRepository tasksetRepository =

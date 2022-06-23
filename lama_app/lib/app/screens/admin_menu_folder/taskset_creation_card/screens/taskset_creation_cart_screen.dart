@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
@@ -53,8 +54,10 @@ class TasksetCreationCartScreen extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.all(5),
                 child: ListView.builder(
-                  itemBuilder: (context, index) =>
-                      TasksetCreationCartWidget(index: index),
+                  itemBuilder: (context, index) => TasksetCreationCartWidget(
+                    index: index,
+                    task: taskset.tasks![index],
+                  ),
                   itemCount: taskset.tasks!.length,
                 ),
               ),
@@ -79,23 +82,19 @@ class TasksetCreationCartScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    DatabaseProvider.db.insertTaskUrl(TaskUrl(url: ""));
-                    RepositoryProvider.of<TasksetRepository>(context)
-                        .writeToServer(taskset);
-                    Navigator.popUntil(
+                    /*DatabaseProvider.db.insertTaskUrl(TaskUrl(url: ""));
+                     RepositoryProvider.of<TasksetRepository>(context)
+                        .writeToServer(taskset); */
+                    /* Navigator.popUntil(
                       context,
-                      (route) => route == TasksetManageScreen(),
-                    );
-                  },
-                  /* Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetChooseTaskScreen(),
+                      ModalRoute.withName(
+                        TasksetManageScreen.routeName,
                       ),
-                    ),
-                  ), */
+                    ); */
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
                   child: const Text("Taskset generieren"),
                 ),
               ],
