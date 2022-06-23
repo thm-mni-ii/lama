@@ -107,6 +107,10 @@ class ObstacleCompTest extends Component with HasGameRef {
   ///   [_sprites]
   Future<void> _createObstacleParts() async {
     // reset the sprites
+    if (_sprites != null) {
+      //  removeAll(_sprites!);
+    }
+
     _sprites = [];
 
     for (int i = 0; i < (this._game.tilesY / this._sizeInTiles); i++) {
@@ -139,7 +143,7 @@ class ObstacleCompTest extends Component with HasGameRef {
       }
       _sprites!.add(tmp);
     }
-
+    addAll(_sprites!);
     // sets the first part of the obstacle
     _first = _sprites![0];
   }
@@ -317,10 +321,10 @@ class ObstacleCompTest extends Component with HasGameRef {
       }
 
       // check if the [_passingObjectX] passes the obstacle
-      _checkPassingObject();
+      // _checkPassingObject();
 
       // moves the obstacles by [_velocity]
-      _sprites!.forEach((element) => element.x -= _velocity * dt);
+      _sprites!.forEach((element) => element.x += _velocity * dt);
     }
   }
 

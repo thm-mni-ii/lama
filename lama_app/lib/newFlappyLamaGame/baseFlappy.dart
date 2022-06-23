@@ -16,7 +16,6 @@ import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
 import 'package:lama_app/flappyLama/widgets/playModeWidget.dart';
 import 'package:lama_app/flappyLama/widgets/startScreen.dart';
-import 'package:lama_app/newFlappyLamaGame/flappyObstacleComponent.dart';
 import 'package:lama_app/newFlappyLamaGame/obstacleFlappyLama.dart';
 
 import '../app/screens/game_list_screen.dart';
@@ -33,7 +32,7 @@ import 'package:flame/palette.dart';
 
 import 'CollidableAnimationComponent.dart';
 import 'backgroundFlappyLama.dart';
-import 'flappyObstacleComponent.dart';
+
 import 'newObstacleTry.dart';
 import 'obstacleTest.dart';
 
@@ -45,6 +44,9 @@ class FlappyLamaGame2 extends FlameGame
 
   /// obstacle list
   List<ObstacleCompNewTry> obstacles = [];
+
+  /// obstacle list
+  List<ObstacleCompTest> obstaclesPre = [];
 
   //Obstacle Stuff
 /*   var amountObstaclesPerColumn = 3;
@@ -225,25 +227,26 @@ class FlappyLamaGame2 extends FlameGame
       componentSize,
     );
     add(userLama);
-
-/*     // add obstacles
-    obstacles.clear();
-    obstacles
+/* 
+    // add obstacles
+    obstaclesPre.clear();
+    obstaclesPre
         .add(ObstacleCompTest(this, false, _lamaSize, addScore, null, 7, 8));
-    obstacles
+    obstaclesPre
         .add(ObstacleCompTest(this, true, _lamaSize, addScore, null, 7, 8));
 
-    add(obstacles[0]);
-    add(obstacles[1]);
+    add(obstaclesPre[0]);
+    add(obstaclesPre[1]);
 
     // add reset function = set the ref hole to constraint the hole size and position
-    obstacles[0].onResetting = obstacles[1].setConstraints;
-    obstacles[1].onResetting = obstacles[0].setConstraints;
+    obstaclesPre[0].onResetting = obstaclesPre[1].setConstraints;
+    obstaclesPre[1].onResetting = obstaclesPre[0].setConstraints;
 
     // initial change the second obstacle to avoid a to large gap
-    obstacles[1].setConstraints(obstacles[0].holeIndex, obstacles[0].holeSize);
-    // obstacles[1].resetObstacle();
-    // obstacles[0].resetObstacle(); */
+    obstaclesPre[1]
+        .setConstraints(obstaclesPre[0].holeIndex, obstaclesPre[0].holeSize);
+    obstaclesPre[1].resetObstacle();
+    obstaclesPre[0].resetObstacle(); */
 
     //add(ObstacleComp(this, Vector2(0, 0), _context));
     obstacles.clear();
@@ -252,8 +255,20 @@ class FlappyLamaGame2 extends FlameGame
         Vector2(0, 0),
         Vector2(screenSize.width, 0),
         Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
-        _context));
+        _context,
+        tileSize,
+        screenSize));
+
+    obstacles.add(ObstacleCompNewTry(
+        this,
+        Vector2(0, 0),
+        Vector2(screenSize.width, 0),
+        Vector2((tileSize * _sizeInTiles), (tileSize * _sizeInTiles)),
+        _context,
+        tileSize * 2,
+        screenSize));
     add(obstacles[0]);
+    add(obstacles[1]);
     /*  add(ObstacleCompNewTry(this, Vector2(0, 0), Vector2(screenSize.width, 0),
         Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles), _context)); */
   }
