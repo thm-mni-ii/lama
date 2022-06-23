@@ -467,7 +467,8 @@ class ClockTest extends Task {
       };
 
   @override
-  String toString() => super.toString() + (uhr ?? "Uhr is null") + timer.toString();
+  String toString() =>
+      super.toString() + (uhr ?? "Uhr is null") + timer.toString();
 }
 
 ///Subclass of [Task] for the Tasktype "MoneyTask"
@@ -622,16 +623,12 @@ class TaskEquation extends Task {
   @override
   String toString() {
     String s = super.toString();
-    if (equation != null)
-      for (int i = 0; i < equation.length; i++) s += equation[i];
-    if (options != null)
-      for (int i = 0; i < options.length; i++) s += options[i];
-    if (randomAllowedOperators != null)
-      for (int i = 0; i < randomAllowedOperators.length; i++)
-        s += randomAllowedOperators[i];
-    if (operandRange != null)
-      for (int i = 0; i < operandRange.length; i++)
-        s += operandRange[i].toString();
+    for (int i = 0; i < equation.length; i++) s += equation[i];
+    for (int i = 0; i < options.length; i++) s += options[i];
+    for (int i = 0; i < randomAllowedOperators.length; i++)
+      s += randomAllowedOperators[i];
+    for (int i = 0; i < operandRange.length; i++)
+      s += operandRange[i].toString();
     return s;
   }
 }

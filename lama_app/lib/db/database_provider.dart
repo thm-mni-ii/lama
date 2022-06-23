@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/achievement_model.dart';
 import 'package:lama_app/app/model/game_model.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
