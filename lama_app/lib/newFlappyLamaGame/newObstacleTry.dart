@@ -49,21 +49,42 @@ class ObstacleCompNewTry extends PositionComponent
 
   /// maximum distance between the different holes
   final int _maxHoleDistance = 3;
+
+  int? _refHoleIndex;
+  int? _refHoleSize;
+
+  /// actual size of the hole = multiples by [_sizeInTiles] {[_holeSize] * [_sizeInTiles]}
+  int? _holeSize;
+
+  /// hole Index (index of the start of the hole)
+  int? _holeIndex;
+
+  /// the x Coordinate of the object which will gets checked for passing in [_checkPassingObject]
+  late final double _passingObjectX;
+
+  /// alter start location (true = starts at 1.5 screenwidth; false = start at 1.0 screenwidth)
+  bool? _alter;
+
+  /// indicates if the [_passingObjectX] already passed the obstacle (resets after [resetObstacle] has called
+  bool _objectPassed = false;
+
+  /// list of all the single sprites of the component
+  List<SpriteComponent>? _sprites;
+
+  /// first component to get the position data
+  SpriteComponent? _first;
+
+  final Random _randomNumber = Random();
+
+  get holeIndex {
+    return _holeIndex;
+  }
+
+  get holeSize {
+    return _holeSize;
+  }
   // --------
   // SETTINGS
-
-  //FUNCTIONS
-  // --------
-  /// This function gets called when [_passingObjectX] passes this obstacles X coordinate
-/*   Function(FlappyObstacle) onPassing;
-
-  /// This function gets called when an [Rect] collides with this obstacle in [collides]
-  Function onCollide;
-
-  /// This function gets called when the obstacle gets reset (holeIndex, holeSize).
-  Function(int, int) onResetting; */
-  // --------
-  //FUNCTIONS
 
   /// pixel of the quadratic tiles
   late double tileSize;
@@ -87,16 +108,6 @@ class ObstacleCompNewTry extends PositionComponent
           size: size,
           anchor: Anchor.center,
         ) {
-    var hitbox = PolygonHitbox.relative(
-      [
-        Vector2(-1.0, 0.0),
-        Vector2(-1.0, -1.0),
-        Vector2(0.0, -1.0),
-        Vector2(0.0, 0.0),
-      ],
-      parentSize: size,
-    )..renderShape = true;
-    // add(hitbox);
     screenSize = Size(
         MediaQuery.of(_context).size.width -
             MediaQuery.of(_context).padding.left -
@@ -111,7 +122,9 @@ class ObstacleCompNewTry extends PositionComponent
 
   @override
   Future<void> onLoad() async {
-    position.y = (tileSize * _sizeInTiles) * 0;
+    position.y = (tileSize * _sizeInTiles) * 0 - size.y;
+    var testvar = position.y;
+    print("SCREENWIDTH ----- $testvar-----");
 
     kaktusBottomComponent = SpriteComponent(
       sprite: await gameRef.loadSprite(obstacleBottomEndImage),
@@ -120,7 +133,9 @@ class ObstacleCompNewTry extends PositionComponent
       anchor: Anchor.topLeft,
     );
 
-    position.y = (tileSize * _sizeInTiles) * 1;
+    position.y = (tileSize * _sizeInTiles) * 1 - size.y;
+    testvar = position.y;
+    print("SCREENWIDTH ----- $testvar-----");
     kaktusBodyComponent = SpriteComponent(
       sprite: await gameRef.loadSprite(obstacleBodyImage),
       position: position,
@@ -128,19 +143,76 @@ class ObstacleCompNewTry extends PositionComponent
       anchor: Anchor.topLeft,
     );
 
-    position.y = (tileSize * _sizeInTiles) * 2;
+    position.y = (tileSize * _sizeInTiles) * 2 - size.y;
+    testvar = size.y;
+    print("SCREENWIDTH ----- $testvar-----");
     kaktusTopComponent = SpriteComponent(
       sprite: await gameRef.loadSprite(obstacleTopEndImage),
       position: position,
       size: size,
       anchor: Anchor.topLeft,
     );
-    add(kaktusBodyComponent);
+
+    // size of the hole
+    _holeSize = _randomNumber
+            .nextInt(((maxHoleSize - minHoleSize) / _sizeInTiles).ceil() + 1) +
+        (minHoleSize / _sizeInTiles).ceil();
+
+    // index of the position of the hole
+    _holeIndex =
+        _randomNumber.nextInt((_game.tilesY ~/ _sizeInTiles) - _holeSize!);
+    var test = this._game.tilesY / this._sizeInTiles;
+    print("TESTVAR --------------  $test");
+    /*  for (int i = 0; i < (this._game.tilesY / this._sizeInTiles); i++) {
+      // start of the hole
+      if (_holeIndex == i + 1) {
+        add(kaktusTopComponent);
+        add(PolygonHitbox.relative(
+          [
+            Vector2(-2.0, 0.0),
+            Vector2(-2.0, -2.0),
+            Vector2(0.0, -2.0),
+            Vector2(0.0, 0.0),
+          ],
+          position: Vector2(kaktusTopComponent.x, kaktusTopComponent.y),
+          parentSize: kaktusTopComponent.size,
+        ));
+        ;
+      }
+      // end of the hole
+      else if (_holeIndex! + _holeSize! == i) {
+        add(kaktusBottomComponent);
+        add(PolygonHitbox.relative(
+          [
+            Vector2(-2.0, 0.0),
+            Vector2(-2.0, -2.0),
+            Vector2(0.0, -2.0),
+            Vector2(0.0, 0.0),
+          ],
+          position: Vector2(kaktusBottomComponent.x, kaktusBottomComponent.y),
+          parentSize: kaktusBottomComponent.size,
+        ));
+      }
+      // body of the obstacle
+      else if (!(i >= _holeIndex! && i <= _holeIndex! + _holeSize!)) {
+        add(kaktusBodyComponent);
+        add(PolygonHitbox.relative(
+          [
+            Vector2(-2.0, 0.0),
+            Vector2(-2.0, -2.0),
+            Vector2(0.0, -2.0),
+            Vector2(0.0, 0.0),
+          ],
+          position: Vector2(kaktusBodyComponent.x, kaktusBodyComponent.y),
+          parentSize: kaktusBodyComponent.size,
+        ));
+      }
+    } */
+
     ////////////////////////////////////////////////////////////
-    ///
-    ///
+    add(kaktusBodyComponent);
     final hitboxPaint = BasicPalette.white.paint();
-    // ..style = PaintingStyle.stroke;
+    //..style = PaintingStyle.stroke;
     add(PolygonHitbox.relative(
       [
         Vector2(-2.0, 0.0),
@@ -150,12 +222,12 @@ class ObstacleCompNewTry extends PositionComponent
       ],
       position: Vector2(kaktusBodyComponent.x, kaktusBodyComponent.y),
       parentSize: kaktusBodyComponent.size,
-    ));
-    add(kaktusBottomComponent);
+    )
+        /*  ..paint = hitboxPaint
+        ..renderShape = true, */
+        );
     ////////////////////////////////////////////////////////////
-    ///
-    ///
-
+    add(kaktusBottomComponent);
     add(PolygonHitbox.relative(
       [
         Vector2(-2.0, 0.0),
@@ -165,7 +237,11 @@ class ObstacleCompNewTry extends PositionComponent
       ],
       position: Vector2(kaktusBottomComponent.x, kaktusBottomComponent.y),
       parentSize: kaktusBottomComponent.size,
-    ));
+    )
+        /*  ..paint = hitboxPaint
+        ..renderShape = true, */
+        );
+    ////////////////////////////////////////////////////////////
     add(kaktusTopComponent);
     add(PolygonHitbox.relative(
       [
@@ -176,15 +252,22 @@ class ObstacleCompNewTry extends PositionComponent
       ],
       position: Vector2(kaktusTopComponent.x, kaktusTopComponent.y),
       parentSize: kaktusTopComponent.size,
-    ));
+    )
+        /*   ..paint = hitboxPaint
+        ..renderShape = true, */
+        );
   }
 
+  var testpos;
   @override
   Future<void> update(double dt) async {
     super.update(dt);
-    position.x -= 100 * dt;
-    /* kaktusBodyComponent.x -= 100 * dt;
-    kaktusTopComponent.x -= 100 * dt; */
+    position.x = velocity.x * dt;
+    testpos = position.x;
+    if (position.x < -(screenSize.width + 50)) {
+      position.x = 100;
+    }
+    // print("POSITION = $testpos");
   }
 
   @override
@@ -193,6 +276,7 @@ class ObstacleCompNewTry extends PositionComponent
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
+    print("POSITION = $testpos");
     print("COOOOOOOOOOOOKISIIIIIIIIIIIIIOOOON");
   }
 }

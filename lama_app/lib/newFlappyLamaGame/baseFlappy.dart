@@ -44,7 +44,7 @@ class FlappyLamaGame2 extends FlameGame
   late AnimatedComponent userLama;
 
   /// obstacle list
-  List<ObstacleCompTest> obstacles = [];
+  List<ObstacleCompNewTry> obstacles = [];
 
   //Obstacle Stuff
 /*   var amountObstaclesPerColumn = 3;
@@ -226,7 +226,7 @@ class FlappyLamaGame2 extends FlameGame
     );
     add(userLama);
 
-    // add obstacles
+/*     // add obstacles
     obstacles.clear();
     obstacles
         .add(ObstacleCompTest(this, false, _lamaSize, addScore, null, 7, 8));
@@ -243,11 +243,19 @@ class FlappyLamaGame2 extends FlameGame
     // initial change the second obstacle to avoid a to large gap
     obstacles[1].setConstraints(obstacles[0].holeIndex, obstacles[0].holeSize);
     // obstacles[1].resetObstacle();
-    // obstacles[0].resetObstacle();
+    // obstacles[0].resetObstacle(); */
 
     //add(ObstacleComp(this, Vector2(0, 0), _context));
-    add(ObstacleCompNewTry(this, Vector2(0, 0), Vector2(screenSize.width, 0),
-        Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles), _context));
+    obstacles.clear();
+    obstacles.add(ObstacleCompNewTry(
+        this,
+        Vector2(0, 0),
+        Vector2(screenSize.width, 0),
+        Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+        _context));
+        add(obstacle[0]);
+    /*  add(ObstacleCompNewTry(this, Vector2(0, 0), Vector2(screenSize.width, 0),
+        Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles), _context)); */
   }
 
   /// This methods adds up the score and changes the holesize depending on the score
