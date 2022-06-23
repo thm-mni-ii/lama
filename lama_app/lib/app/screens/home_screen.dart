@@ -13,6 +13,7 @@ import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
 
 import 'game_list_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
@@ -154,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Container(
                                   width: (constraints.maxWidth / 100) * 75,
-                                  height: (constraints.maxHeight / 100) * 75,
+                                  height: (constraints.maxHeight / 100) * 95,
                                   child: _buildMenuButtonColumn(constraints)),
                             ),
                             Align(
@@ -217,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ///from the column.
   Widget _buildMenuButtonColumn(BoxConstraints constraints) {
     List<Widget> children = [];
+    String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     TasksetRepository tasksetRepository =
         RepositoryProvider.of<TasksetRepository>(context);
 
@@ -224,6 +226,32 @@ class _HomeScreenState extends State<HomeScreen> {
             .getTasksetsForSubjectAndGrade("Mathe", userRepository.getGrade())
             .length >
         0) {
+      children.add(SizedBox(
+
+          child: Stack(
+            alignment: Alignment.topRight,
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                      child: CircleAvatar(
+                        maxRadius: 29,
+                        child: SvgPicture.asset(
+                          path,
+                          semanticsLabel: 'TonIcon',
+                        ),
+                        backgroundColor: LamaColors.white,
+                      ),
+                    onTap: () {
+                      home_screen_state.toggle();
+                      setState(() {});
+                    },
+                  ),
+                ),
+
+              ]
+          ))
+      );
       children.add(ElevatedButton(
         child: Stack(
           alignment: Alignment.center,
