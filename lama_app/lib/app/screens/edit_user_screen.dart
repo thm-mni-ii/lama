@@ -775,8 +775,23 @@ Widget _createAdminButton(BuildContext context) {
           ),
         ),
       ).then((value) {
-        if (value != null)
+        //if an admin gets created
+        if (value != null) {
+          //render snackbar for confirmation
+          final snackBar = SnackBar(
+              backgroundColor: LamaColors.mainPink,
+              content: Text(
+                'Admin wurde erstellt!',
+                textAlign: TextAlign.center,
+                style: LamaTextTheme.getStyle(
+                    fontSize: 15, color: LamaColors.white),
+              ),
+              duration: Duration(seconds: 2));
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          //remove the guest status from the user
           context.read<EditUserBloc>().add(EditUserChangeGuest(context));
+        }
       }),
     },
     style: ElevatedButton.styleFrom(
