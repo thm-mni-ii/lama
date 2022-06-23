@@ -54,7 +54,7 @@ class MarkWordsScreen extends StatelessWidget {
                         nip: BubbleNip.leftCenter,
                         child: Center(
                           child: Text(
-                            task.lamaText!,
+                            task.lamaText,
                             style: LamaTextTheme.getStyle(
                                 fontSize: 15, color: LamaColors.black),
                           ),

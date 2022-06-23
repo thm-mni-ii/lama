@@ -195,7 +195,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   void rightAnswerCallback(Task t) async {
     if (t.leftToSolve! > 0) {
       answerResults.add(true);
-      userRepository!.addLamaCoins(t.reward!);
+      userRepository!.addLamaCoins(t.reward);
     } else
       answerResults.add(true);
     int? updatedRows = await DatabaseProvider.db
@@ -337,7 +337,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       case Operants.NUMBER:
         return 0;
     }
-    return 0;
   }
 
   /// returns the corresponding operant of the passed string

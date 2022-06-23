@@ -42,32 +42,32 @@ class NumberLineState extends State<NumberLineTaskScreen> {
     this.rngStart = task.range[0];
     this.rngEnd = task.range[1];
 
-    if (task.randomrange!) {
+    if (task.randomrange) {
       int temp = rngEnd! - rngStart!;
       this.rngStart = random.nextInt(temp ~/ 2) + task.range[0];
       this.rngEnd =
           random.nextInt(temp ~/ 2) + (task.range[0] + task.range[1]) ~/ 2 + 1;
     }
-    if (task.steps! > 0) {
-      rngStart = ((rngStart!.toDouble() / task.steps!).round() * task.steps!);
-      rngEnd = ((rngEnd!.toDouble() / task.steps!).round() * task.steps!);
+    if (task.steps > 0) {
+      rngStart = ((rngStart!.toDouble() / task.steps).round() * task.steps);
+      rngEnd = ((rngEnd!.toDouble() / task.steps).round() * task.steps);
     }
 
     this.gesuchteZahl = random.nextInt(rngEnd! - rngStart!) + rngStart!;
 
-    if (task.steps! > 0) {
+    if (task.steps > 0) {
       gesuchteZahl =
-          ((gesuchteZahl!.toDouble() / task.steps!).round() * task.steps!);
+          ((gesuchteZahl!.toDouble() / task.steps).round() * task.steps);
     }
     while (this.gesuchteZahl == rngStart || this.gesuchteZahl == rngEnd) {
-      if (task.randomrange!) {
+      if (task.randomrange) {
         rngStart = random.nextInt((rngEnd! - rngStart!) ~/ 2) + task.range[0];
-        rngStart = ((rngStart!.toDouble() / task.steps!).round() * task.steps!);
+        rngStart = ((rngStart!.toDouble() / task.steps).round() * task.steps);
       }
       this.gesuchteZahl = random.nextInt(rngEnd! - rngStart!) + rngStart!;
-      if (task.steps! > 0) {
+      if (task.steps > 0) {
         gesuchteZahl =
-            ((gesuchteZahl!.toDouble() / task.steps!).round() * task.steps!);
+            ((gesuchteZahl!.toDouble() / task.steps).round() * task.steps);
       }
     }
     this.dgesuchteZahl = gesuchteZahl!.toDouble();
@@ -76,7 +76,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool paintRed = !task.ontap!;
+    bool paintRed = !task.ontap;
     double screenwidth = MediaQuery.of(context).size.width;
     double screenheight = MediaQuery.of(context).size.height;
     endPixel = screenwidth.toInt();
@@ -86,10 +86,10 @@ class NumberLineState extends State<NumberLineTaskScreen> {
         (endPixel! / (rngEnd! - rngStart!)) * (dgesuchteZahl! - rngStart!);
     int diff = rngEnd! - rngStart!;
     // If user has to enter the number in a text field
-    if (!task.ontap!) {
+    if (!task.ontap) {
       return Column(children: [
         SizedBox(height: 20),
-        lamaHead(context, task, constraints, task.ontap!),
+        lamaHead(context, task, constraints, task.ontap),
         SizedBox(height: 50),
 
         // Shows correct answer on screen
@@ -121,7 +121,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
     } else {
       return Column(children: [
         SizedBox(height: 20),
-        lamaHead(context, task, constraints, task.ontap!),
+        lamaHead(context, task, constraints, task.ontap),
         SizedBox(height: 50),
         Text(
           "Gesuchte Zahl: " + gesuchteZahl.toString(),

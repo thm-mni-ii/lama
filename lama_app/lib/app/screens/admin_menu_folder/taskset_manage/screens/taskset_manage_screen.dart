@@ -76,11 +76,11 @@ class TasksetManageScreen extends StatelessWidget {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                                create: (BuildContext context) =>
-                                    CreateTasksetBloc(),
-                                child: TasksetCreationScreen(),
-                              )),
+                        builder: (context) => BlocProvider(
+                          create: (BuildContext context) => CreateTasksetBloc(),
+                          child: TasksetCreationScreen(),
+                        ),
+                      ),
                     ),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),

@@ -269,7 +269,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                       nip: BubbleNip.leftCenter,
                       child: Center(
                         child: Text(
-                          task.lamaText!,
+                          task.lamaText,
                           style: LamaTextTheme.getStyle(
                               color: LamaColors.black, fontSize: 15),
                         ),
@@ -448,7 +448,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     nip: BubbleNip.leftCenter,
                     child: Center(
                       child: Text(
-                        task.lamaText!,
+                        task.lamaText,
                         style: LamaTextTheme.getStyle(
                             color: LamaColors.black, fontSize: 15),
                       ),

@@ -67,7 +67,7 @@ class FourCardTaskScreen extends StatelessWidget {
                 nip: BubbleNip.leftCenter,
                 child: Center(
                   child: Text(
-                    task.lamaText!,
+                    task.lamaText,
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),

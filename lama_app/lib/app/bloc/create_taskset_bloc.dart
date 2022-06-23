@@ -22,26 +22,20 @@ import '../task-system/taskset_model.dart';
 /// latest Changes: 17.06.2022
 class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   Taskset? taskset;
-  CreateTasksetBloc({this.taskset}) : super(InitialState());
-
-  @override
-  Stream<CreateTasksetState> mapEventToState(CreateTasksetEvent event) async* {
-    if (event is CreateTasksetAbort) _abort(event.context);
-    if (event is EditTaskset) taskset = event.taskset;
-    if (event is CreateTasksetAddTask) {
-      taskset!.tasks!.add(event.task);
-      yield ChangedTasksListState();
-    }
-    if (event is CreateTasksetGenerate) taskset!.toJson();
-    if (event is RemoveTask) {
+  CreateTasksetBloc({this.taskset}) : super(InitialState()) {
+    on<CreateTasksetAbort>((event, emit) => _abort(event.context));
+    on<EditTaskset>((event, emit) => taskset = event.taskset);
+    on<CreateTasksetAddTask>(
+      (event, emit) {
+        taskset!.tasks!.add(event.task);
+        emit(ChangedTasksListState());
+      },
+    );
+    on<CreateTasksetGenerate>((event, emit) => taskset!.toJson());
+    on<RemoveTask>((event, emit) {
       taskset!.tasks!.removeAt(event.index);
-      yield ChangedTasksListState();
-    }
-    /* if (event is GenerateTaskset) {
-      DatabaseProvider.db.insertTaskUrl(TaskUrl(url: ""));
-      // TODO write to server
-      RepositoryProvider.of<TasksetRepository>(context).writeToServer(taskset);
-    } */
+      emit(ChangedTasksListState());
+    });
   }
 
   /// private method to abort the current creation process

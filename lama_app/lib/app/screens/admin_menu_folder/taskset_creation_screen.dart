@@ -32,7 +32,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
 
   bool first = true;
 
-  Taskset buildWholeTaskset(Taskset blocTaskset) {
+  Taskset buildWholeTaskset(Taskset? blocTaskset) {
     Taskset taskset = Taskset(
       _nameController.text,
       _currentSelectedSubject,
@@ -50,7 +50,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
+    Taskset? blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset;
     TasksetRepository tasksetRepo =
         RepositoryProvider.of<TasksetRepository>(context);
 
