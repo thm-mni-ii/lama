@@ -45,6 +45,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
 
   final FlutterTts flutterTts = FlutterTts();
   String selectedAnswer = "";
+  String selectedQuestion = "";
 
 
   // task infos and constraints handed over by tasktypeScreen
@@ -112,10 +113,21 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                   child: Bubble(
                     nip: BubbleNip.leftCenter,
                     child: Center(
-                      child: Text(
-                        task.lamaText,
-                        style: LamaTextTheme.getStyle(
-                            color: LamaColors.black, fontSize: 15),
+                      child: InkWell(
+                        onTap: () {
+                          readText( task.lamaText );
+                          //confirmAnswer(answers[index], index);
+                          setState(() {
+                            selectedQuestion = task.lamaText;
+                            selectedAnswer = "";
+                          }
+                          );
+                        },
+                        child: Text(
+                          task.lamaText,
+                          style: LamaTextTheme.getStyle(
+                              color: selectedQuestion == task.lamaText ? LamaColors.purpleAccent : LamaColors.black, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),
@@ -182,6 +194,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                   color: LamaColors.black,
                   onPressed: () {
                     setState(() {
+                      selectedAnswer = "";
+                      selectedQuestion = "";
                       if (deletinons.isNotEmpty) {
                         results.removeLast();
                         items.add(deletinons.last);
@@ -277,7 +291,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                   width: (constraints.maxWidth / 100) * 38,
                   decoration: BoxDecoration(
                     // doing
-                      color: LamaColors.greenAccent,
+                      color: selectedAnswer == items[i].item ? LamaColors.purpleAccent : LamaColors.greenAccent,
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       boxShadow: [
                         BoxShadow(
@@ -286,15 +300,26 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             blurRadius: 7,
                             offset: Offset(0, 3)),
                       ]),
-                  child: Center(
-                    child: Text(items[i].item, style: LamaTextTheme.getStyle()),
+                  child: InkWell(
+                    // die Antwoerte
+                    onTap: () {
+                      readText( items[i].item );
+                      //confirmAnswer(answers[index], index);
+                      setState(() {
+                        selectedAnswer =  items[i].item;
+                        selectedQuestion = "";
+                      }
+                      );
+                    },
+                    child: Center(
+                      child: Text(items[i].item, style: LamaTextTheme.getStyle()),
+                    ),
                   )),
               feedback: Material(
                   child: Container(
                       height: 50,
                       width: 150,
                       decoration: BoxDecoration(
-                        // todo here ?
                           color: LamaColors.mainPink,
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
@@ -305,17 +330,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                                 offset: Offset(0, 3)),
                           ]),
                       child: Center(
-                        //todo here
-                        child: InkWell(
-                            onTap: () {
-                              readText("aaaaaa");
-                              //readText(items[i].item);
-                            },
                           child: Text(items[i].item,
                               style: LamaTextTheme.getStyle()),
-
-                        ),
-
                       )
                   )
               ),
@@ -332,8 +348,14 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             blurRadius: 7,
                             offset: Offset(0, 3)),
                       ]),
-                  child: Center(
-                    child: Text(items[i].item, style: LamaTextTheme.getStyle()),
+                  child: InkWell(
+                    // 2 Varianten fur einordnung
+                    onTap: () {
+                      readText( items[i].item );
+                    },
+                    child: Center(
+                      child: Text(items[i].item, style: LamaTextTheme.getStyle()),
+                    ),
                   )),
             )),
       );
@@ -371,11 +393,16 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
               child: FittedBox(
                 fit: BoxFit.fitWidth,
                 child: Center(
-                  child: Text(
-                    taskCategory,
-                    style: LamaTextTheme.getStyle(
-                      color: LamaColors.white,
-                      fontSize: 30,
+                  child: InkWell(
+                    onTap: () {
+                      readText( taskCategory );
+                    },
+                    child: Text(
+                      taskCategory,
+                      style: LamaTextTheme.getStyle(
+                        color: LamaColors.white,
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                 ),
