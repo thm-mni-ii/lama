@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lama_app/app/bloc/create_admin_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/event/user_management_event.dart';
+import 'package:lama_app/app/screens/create_admin_screen.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -131,8 +133,9 @@ class EditUserScreenState extends State<EditUserScreen> {
               //[DropdownButtonHideUnderline] to change the grade
               _gradesList(context, _grades),
               //[ElevatedButton] to delete the user
-              if (!_user.isGuest!) _deletUserButoon(context),
-              if (_user.isGuest!) _createAdminButton(context),
+              !_user.isGuest!
+                  ? _deletUserButoon(context)
+                  : _createAdminButton(context),
             ],
           ),
         ),
@@ -763,8 +766,18 @@ Widget _createAdminButton(BuildContext context) {
       ],
     ),
     onPressed: () => {
-      context.read<EditUserBloc>().add(EditUserChangeGuest(context)),
-      context.read<UserManagementBloc>().add(CreateAdmin(context)),
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (BuildContext context) => CreateAdminBloc(),
+            child: CreateAdminScreen(),
+          ),
+        ),
+      ).then((value) {
+        if (value != null)
+          context.read<EditUserBloc>().add(EditUserChangeGuest(context));
+      }),
     },
     style: ElevatedButton.styleFrom(
       minimumSize: Size(50, 45),

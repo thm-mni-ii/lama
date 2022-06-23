@@ -43,7 +43,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     });
     on<LoadGuest>((event, emit) async {
       ///wait for tasks to load
-      await Future.delayed(Duration(milliseconds: 5000));
+      await Future.delayed(Duration(milliseconds: 2000));
       await _loadGuest(event.context, event.user);
     });
   }
@@ -59,14 +59,15 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     List<User> userList = await DatabaseProvider.db.getUser();
     if (userList == null) return ShowDSGVO(await _loadDSGVO());
     //gets first user if its a guest
-    if (userList.length == 1 && userList[0].isGuest == true)
-      return HasGuest(context, userList[0]);
     for (User user in userList) {
       if (user.isAdmin!) {
         _navigateAdminExist(context);
         return AdminExist();
+      } else if (user.isGuest!) {
+        return HasGuest(context, user);
       }
     }
+
     //set [SharedPreferences]
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('enableDefaultTaskset', true);
@@ -91,17 +92,19 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
 
     //create and push guest user into database
     User user = User(
-        grade: 1,
-        coins: 0,
-        isAdmin: false,
-        avatar: 'lama',
-        name: "Gast",
-        isGuest: true);
+      grade: 1,
+      coins: 0,
+      isAdmin: false,
+      avatar: 'lama',
+      name: "Gast",
+      isGuest: true,
+      password: "0",
+    );
     await DatabaseProvider.db.insertUser(user);
     //load guest user
 
     //go to home screen with guest user
-    _loadGuest(context, user);
+    //_loadGuest(context, user);
     return HasGuest(context, user);
   }
 
