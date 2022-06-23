@@ -253,7 +253,7 @@ class FlappyLamaGame2 extends FlameGame
         Vector2(screenSize.width, 0),
         Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
         _context));
-        add(obstacle[0]);
+    add(obstacles[0]);
     /*  add(ObstacleCompNewTry(this, Vector2(0, 0), Vector2(screenSize.width, 0),
         Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles), _context)); */
   }
