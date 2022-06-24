@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lama_app/app/task-system/taskset_model.dart';
 
 ///Utility class that contains all colors used in the app.
 class LamaColors {

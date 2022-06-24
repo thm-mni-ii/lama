@@ -19,6 +19,8 @@ import '../../../taskset_option_screen.dart';
 /// latest Changes: 09.06.2022
 
 class TasksetManageScreen extends StatelessWidget {
+  static const routeName ="/tasksetmanagescreen";
+
   @override
   Widget build(BuildContext context) {
     TasksetRepository tasksetRepository =
@@ -77,11 +79,11 @@ class TasksetManageScreen extends StatelessWidget {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                                create: (BuildContext context) =>
-                                    CreateTasksetBloc(taskset: Taskset("aa", "aa", 1)),
-                                child: TasksetCreationScreen(),
-                              )),
+                        builder: (context) => BlocProvider(
+                          create: (BuildContext context) => CreateTasksetBloc(),
+                          child: TasksetCreationScreen(),
+                        ),
+                      ),
                     ),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),

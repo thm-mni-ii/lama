@@ -60,7 +60,7 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   nip: BubbleNip.leftCenter,
                   child: Center(
                     child: Text(
-                      task.lamaText!,
+                      task.lamaText,
                       style:
                           LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 15),
                     ),

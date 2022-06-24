@@ -7,23 +7,21 @@ import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dar
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
-class TasksetChooseTaskScreen extends StatelessWidget{
+class TasksetChooseTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     Taskset taskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     return Scaffold(
       appBar: CustomAppbar(
-        size: screenSize.width/5, 
-        titel: taskset.name!, 
-        color: LamaColors.findSubjectColor(taskset.subject!)
-        ),
-      body: 
-          ListView.builder(
-              itemBuilder: ((context, index) => TaskCardWidget(index: index)),
-              itemCount: TasksetRepository.giveEnumBySubject(taskset.subject!).length
-            ),
+        size: screenSize.width / 5,
+        titel: taskset.name!,
+        color: LamaColors.findSubjectColor(taskset.subject!),
+      ),
+      body: ListView.builder(
+        itemBuilder: (context, index) => TaskCardWidget(index: index),
+        itemCount: TasksetRepository.giveEnumBySubject(taskset.subject!).length,
+      ),
     );
   }
-
 }

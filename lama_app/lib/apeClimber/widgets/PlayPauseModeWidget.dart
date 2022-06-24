@@ -40,7 +40,7 @@ class PlayPauseModeWidget extends StatelessWidget {
                       size: 30.0,
                     ),
                     onPressed: () {
-                      onButtonPressed?.call();
+                      onButtonPressed.call();
                     },
                   ),
                 ])

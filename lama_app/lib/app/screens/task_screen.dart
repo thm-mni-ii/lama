@@ -347,7 +347,7 @@ class TaskScreenState extends State<TaskScreen> {
     for (int i = 0; i < results.length; i++) {
       if (results[i]) {
         rightAnswers++;
-        if (tasks[i].leftToSolve! > -1) coinsEarned += tasks[i].reward!;
+        if (tasks[i].leftToSolve! > -1) coinsEarned += tasks[i].reward;
       }
     }
     return Column(
