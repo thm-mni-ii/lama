@@ -21,15 +21,22 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   CreateTasksetBloc({this.taskset}) : super(InitialState()) {
     on<CreateTasksetAbort>((event, emit) => _abort(event.context));
     on<EditTaskset>((event, emit) => taskset = event.taskset);
-    on<CreateTasksetAddTask>(
+    on<AddTask>(
       (event, emit) {
         taskset!.tasks!.add(event.task);
         emit(ChangedTasksListState());
       },
     );
     on<CreateTasksetGenerate>((event, emit) => taskset!.toJson());
+    on<EditTask>((event, emit) {
+      int pos = taskset!.tasks!.indexWhere(
+        (element) => element.id == event.task.id,
+      );
+      taskset!.tasks!.removeWhere((element) => element.id == event.task.id);
+      taskset!.tasks!.insert(pos, event.task);
+    });
     on<RemoveTask>((event, emit) {
-      taskset!.tasks!.removeAt(event.index);
+      taskset!.tasks!.removeWhere((element) => element.id == event.id);
       emit(ChangedTasksListState());
     });
   }

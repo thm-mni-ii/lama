@@ -56,7 +56,6 @@ class TasksetCreationCartScreen extends StatelessWidget {
                 child: ListView.builder(
                   // möglicher weise nur das im builder ??
                   itemBuilder: (context, index) => TasksetCreationCartWidget(
-                    index: index,
                     task: taskset.tasks![index],
                   ),
                   itemCount: taskset.tasks!.length,

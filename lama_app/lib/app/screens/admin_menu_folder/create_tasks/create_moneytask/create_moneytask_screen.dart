@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/bloc/create_task_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/key_generator.dart';
 
 class MoneyEinstellenScreen extends StatefulWidget {
+  final TaskMoney? task;
+
+  const MoneyEinstellenScreen({Key? key, required this.task}) : super(key: key);
   @override
   MoneyEinstellenScreenState createState() => MoneyEinstellenScreenState();
 }
@@ -20,7 +23,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
   TextEditingController _bisController = TextEditingController();
   TextEditingController _rewardController = TextEditingController();
 
-  bool first = true;
+  bool newTask = true;
 
 /*   @override
   void initState() {
@@ -36,16 +39,14 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
   @override
   Widget build(BuildContext context) {
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
-    TaskMoney? moneyTask =
-        BlocProvider.of<CreateTaskBloc>(context).task as TaskMoney?;
     Size screenSize = MediaQuery.of(context).size;
 
-    if (moneyTask != null && first) {
-      _vonController.text = moneyTask.von.toString();
-      _bisController.text = moneyTask.bis.toString();
-      _rewardController.text = moneyTask.reward.toString();
+    if (widget.task != null && newTask) {
+      _vonController.text = widget.task!.von.toString();
+      _bisController.text = widget.task!.bis.toString();
+      _rewardController.text = widget.task!.reward.toString();
 
-      first = false;
+      newTask = false;
     }
 
     return Scaffold(
@@ -101,9 +102,6 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                                   },
                                   onSaved: (text) =>
                                       _vonController.text = text!,
-                                  onChanged: (text) => setState(
-                                    () => _vonController.text = text,
-                                  ),
                                 ),
                               ),
                             ),
@@ -134,9 +132,6 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                                   onSaved: (text) {
                                     _bisController.text = text!;
                                   },
-                                  onChanged: (text) => setState(
-                                    () => _bisController.text = text,
-                                  ),
                                 ),
                               ),
                             ),
@@ -144,27 +139,22 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(top: 30),
-                        child: TextFormField(
-                          controller: _rewardController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Erreichbare Lamacoins',
-                          ),
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return "Beitrag fehlt!";
-                            }
-                            return null;
-                          },
-                          onSaved: (String? text) =>
-                              _rewardController.text = text!,
-                          onChanged: (String text) => setState(
-                            () => _rewardController.text = text,
-                          ),
+                    Container(
+                      margin: EdgeInsets.only(top: 30),
+                      child: TextFormField(
+                        controller: _rewardController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Erreichbare Lamacoins',
                         ),
+                        validator: (text) {
+                          if (text == null || text.isEmpty) {
+                            return "Beitrag fehlt!";
+                          }
+                          return null;
+                        },
+                        onSaved: (String? text) =>
+                            _rewardController.text = text!,
                       ),
                     ),
                   ],
@@ -191,21 +181,32 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    TaskMoney moneyTask = TaskMoney(
-                      TaskType.moneyTask,
-                      int.parse(_rewardController.text),
-                      "",
-                      3,
-                      double.parse(_vonController.text),
-                      double.parse(_bisController.text),
-                    );
-                    context
-                        .read<CreateTasksetBloc>()
-                        .add(CreateTasksetAddTask(moneyTask));
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                    if (_formKey.currentState!.validate()) {
+                      TaskMoney moneyTask = TaskMoney(
+                        widget.task?.id ??
+                            KeyGenerator.generateRandomUniqueKey(
+                                blocTaskset.tasks!),
+                        TaskType.moneyTask,
+                        int.parse(_rewardController.text),
+                        "",
+                        3,
+                        double.parse(_vonController.text),
+                        double.parse(_bisController.text),
+                      );
+                      if (newTask) {
+                        // add Task
+                        BlocProvider.of<CreateTasksetBloc>(context)
+                            .add(AddTask(moneyTask));
+                        Navigator.pop(context);
+                      } else {
+                        // edit Task
+                        BlocProvider.of<CreateTasksetBloc>(context)
+                            .add(EditTask(moneyTask));
+                      }
+                      Navigator.pop(context);
+                    }
                   },
-                  child: Text("Task hinzufügen"),
+                  child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
                 )
               ],
             ),

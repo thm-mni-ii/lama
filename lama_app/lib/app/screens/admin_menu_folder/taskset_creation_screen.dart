@@ -144,6 +144,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
               margin: EdgeInsets.all(25),
               child: ElevatedButton(
                 onPressed: () {
+                  // TODO über validator
                   // TODO state comit wenn erfolgreich in nächsten screen wenn nicht snackbar anzeigen
                   if (_nameController.text.isNotEmpty &&
                       _currentSelectedGrade != null &&
