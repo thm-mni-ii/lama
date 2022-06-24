@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_moneytask/create_moneytask_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/four_cards/create_four_cards_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 
 ///This file creates the Taskset Creation Cart Widget
@@ -24,11 +25,12 @@ class TasksetCreationCartWidget extends StatelessWidget {
     required this.task,
   }) : super(key: key);
 
-// auch in anderer datei muss static in utils
   Widget screenDependingOnTaskType(TaskType taskType) {
     switch (taskType) {
       case TaskType.moneyTask:
         return MoneyEinstellenScreen(task: task as TaskMoney);
+      case TaskType.fourCards:
+        return CreateFourCardsScreen();
       default:
         return Placeholder();
     }

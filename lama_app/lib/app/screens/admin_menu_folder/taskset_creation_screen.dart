@@ -29,6 +29,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   String? _currentSelectedGrade;
   String? _currentSelectedSubject;
   TextEditingController _nameController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
 
   bool first = true;
 
@@ -36,6 +37,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
     Taskset taskset = Taskset(
       _nameController.text,
       _currentSelectedSubject,
+      _descriptionController.text,
       int.parse(_currentSelectedGrade!),
     );
     taskset.tasks = blocTaskset != null ? blocTaskset.tasks : [];
@@ -58,6 +60,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
       _currentSelectedGrade = blocTaskset.grade.toString();
       _currentSelectedSubject = blocTaskset.subject;
       _nameController.text = blocTaskset.name!;
+      _descriptionController.text = blocTaskset.description!;
 
       first = false;
     }
@@ -89,6 +92,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     margin: EdgeInsets.only(bottom: 10),
                     alignment: Alignment.centerLeft,
                     child: TextFormField(
+                      controller: _descriptionController,
                       decoration: InputDecoration(hintText: "Kurzbeschreibung"),
                     ),
                   ),
@@ -144,7 +148,6 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
               margin: EdgeInsets.all(25),
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO über validator
                   // TODO state comit wenn erfolgreich in nächsten screen wenn nicht snackbar anzeigen
                   if (_nameController.text.isNotEmpty &&
                       _currentSelectedGrade != null &&

@@ -27,11 +27,12 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
 
 /*   @override
   void initState() {
-    TaskMoney? task = BlocProvider.of<CreateTaskBloc>(context).task as TaskMoney?;
-    if (task != null) {
-      von = task.von;
-      bis = task.bis;
-      reward = task.reward;
+    if (widget.task != null) {
+      _vonController.text = widget.task!.von.toString();
+      _bisController.text = widget.task!.bis.toString();
+      _rewardController.text = widget.task!.reward.toString();
+    
+      newTask = false;
     }
     super.initState();
   } */
