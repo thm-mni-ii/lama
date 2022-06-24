@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/state/create_taskset_state.dart';
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
@@ -22,9 +23,24 @@ import '../task-system/taskset_model.dart';
 /// latest Changes: 17.06.2022
 class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   Taskset? taskset;
-  CreateTasksetBloc({this.taskset}) : super(InitialState());
+  //CreateTasksetBloc({this.taskset}) : super(InitialState());
 
-  @override
+    CreateTasksetBloc({Taskset? taskset, CreateTasksetState? initialState}) : super(initialState!) {
+    on<CreateTasksetAddTask>((event, emit)  => addTask(event.task));
+    on<EditTaskset>((event, emit) => taskset = event.taskset);
+    on<CreateTasksetGenerate>(
+        (event, emit) => taskset!.toJson());
+    on<RemoveTask>(
+        (event, emit) => removeTask(event.index));
+  }
+
+  Stream<void> addTask(Task task) async* {taskset!.tasks!.add(task);
+      yield ChangedTasksListState();}
+
+    Stream<void> removeTask(int index) async* {      taskset!.tasks!.removeAt(index);
+      yield ChangedTasksListState();}
+
+/*   @override
   Stream<CreateTasksetState> mapEventToState(CreateTasksetEvent event) async* {
     if (event is CreateTasksetAbort) _abort(event.context);
     if (event is EditTaskset) taskset = event.taskset;
@@ -37,12 +53,12 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
       taskset!.tasks!.removeAt(event.index);
       yield ChangedTasksListState();
     }
-    /* if (event is GenerateTaskset) {
+     if (event is GenerateTaskset) {
       DatabaseProvider.db.insertTaskUrl(TaskUrl(url: ""));
       // TODO write to server
       RepositoryProvider.of<TasksetRepository>(context).writeToServer(taskset);
-    } */
-  }
+    } 
+  } */
 
   /// private method to abort the current creation process
   /// pops the screen and return null

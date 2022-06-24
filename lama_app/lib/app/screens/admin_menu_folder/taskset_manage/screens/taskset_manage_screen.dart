@@ -6,6 +6,7 @@ import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/widgets/ta
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/taskset_loader.dart';
+import 'package:lama_app/app/task-system/taskset_model.dart';
 // blocs
 
 //Lama default
@@ -78,7 +79,7 @@ class TasksetManageScreen extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => BlocProvider(
                                 create: (BuildContext context) =>
-                                    CreateTasksetBloc(),
+                                    CreateTasksetBloc(taskset: Taskset("aa", "aa", 1)),
                                 child: TasksetCreationScreen(),
                               )),
                     ),

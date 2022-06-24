@@ -30,7 +30,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   String? _currentSelectedSubject;
   TextEditingController _nameController = TextEditingController();
 
-  bool first = true;
+  //bool first = true;
 
   Taskset buildWholeTaskset(Taskset blocTaskset) {
     Taskset taskset = Taskset(
@@ -54,13 +54,13 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
     TasksetRepository tasksetRepo =
         RepositoryProvider.of<TasksetRepository>(context);
 
-    if (blocTaskset != null && first) {
+/*     if (blocTaskset != null && first) {
       _currentSelectedGrade = blocTaskset.grade.toString();
       _currentSelectedSubject = blocTaskset.subject;
       _nameController.text = blocTaskset.name!;
 
       first = false;
-    }
+    } */
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
