@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/bloc/create_task_bloc.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/taskset_choose_task_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -16,9 +16,9 @@ class MoneyEinstellenScreen extends StatefulWidget {
 
 class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  double? von;
-  double? bis;
-  int? reward;
+  TextEditingController _vonController = TextEditingController();
+  TextEditingController _bisController = TextEditingController();
+  TextEditingController _rewardController = TextEditingController();
 
   bool first = true;
 
@@ -41,9 +41,9 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
     Size screenSize = MediaQuery.of(context).size;
 
     if (moneyTask != null && first) {
-      von = moneyTask.von;
-      bis = moneyTask.bis;
-      reward = moneyTask.reward;
+      _vonController.text = moneyTask.von.toString();
+      _bisController.text = moneyTask.bis.toString();
+      _rewardController.text = moneyTask.reward.toString();
 
       first = false;
     }
@@ -88,6 +88,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                               child: Container(
                                 margin: EdgeInsets.only(right: 30),
                                 child: TextFormField(
+                                  controller: _vonController,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
                                     labelText: 'Von',
@@ -98,9 +99,11 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                                     }
                                     return null;
                                   },
-                                  onSaved: (text) => von = double.parse(text!),
+                                  onSaved: (text) =>
+                                      _vonController.text = text!,
                                   onChanged: (text) => setState(
-                                      () => this.von = double.parse(text)),
+                                    () => _vonController.text = text,
+                                  ),
                                 ),
                               ),
                             ),
@@ -117,6 +120,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                               child: Container(
                                 margin: EdgeInsets.only(left: 30),
                                 child: TextFormField(
+                                  controller: _bisController,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
                                     labelText: 'Bis',
@@ -128,10 +132,11 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                                     return null;
                                   },
                                   onSaved: (text) {
-                                    bis = double.parse(text!);
+                                    _bisController.text = text!;
                                   },
                                   onChanged: (text) => setState(
-                                      () => this.bis = double.parse(text)),
+                                    () => _bisController.text = text,
+                                  ),
                                 ),
                               ),
                             ),
@@ -143,6 +148,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                       child: Container(
                         margin: EdgeInsets.only(top: 30),
                         child: TextFormField(
+                          controller: _rewardController,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             labelText: 'Erreichbare Lamacoins',
@@ -153,9 +159,11 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                             }
                             return null;
                           },
-                          onSaved: (String? text) => reward = int.parse(text!),
-                          onChanged: (String text) =>
-                              setState(() => reward = int.parse(text)),
+                          onSaved: (String? text) =>
+                              _rewardController.text = text!,
+                          onChanged: (String text) => setState(
+                            () => _rewardController.text = text,
+                          ),
                         ),
                       ),
                     ),
@@ -185,11 +193,11 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                   onPressed: () {
                     TaskMoney moneyTask = TaskMoney(
                       TaskType.moneyTask,
-                      reward!,
+                      int.parse(_rewardController.text),
                       "",
                       3,
-                      von!,
-                      bis!,
+                      double.parse(_vonController.text),
+                      double.parse(_bisController.text),
                     );
                     context
                         .read<CreateTasksetBloc>()
@@ -207,29 +215,6 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
     );
   }
 }
-
-/*             Container(
-                  margin: EdgeInsets.only(top: 15, bottom: 15),
-                  child: ExpansionPanelList.radio(
-                    expansionCallback: (int index, bool isExpanded) {},
-                    children: _data.map<ExpansionPanelRadio>((Item item) {
-                      return ExpansionPanelRadio(
-                          value: item.id,
-                          headerBuilder: (BuildContext context, bool isExpanded) {
-                            return ListTile(
-                              title: Text(item.headerValue),
-                            );
-                          },
-                          body: CheckboxListTile(
-                            title: Text("Nur volle Euro"),
-                            onChanged: (bool value) {
-                              setState(() {
-                              });
-                            },
-                          ));
-                    }).toList(),
-                  ),
-                ), */
 
 class Item {
   Item({

@@ -27,6 +27,7 @@ class TasksetCreationCartWidget extends StatelessWidget {
     required this.task,
   }) : super(key: key);
 
+// auch in anderer datei muss static in utils 
   Widget screenDependingOnTaskType(BuildContext context) {
     switch (task.type) {
       case TaskType.moneyTask:
@@ -67,7 +68,7 @@ class TasksetCreationCartWidget extends StatelessWidget {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MultiBlocProvider(
+                      builder: (_) => MultiBlocProvider(
                         providers: [
                           BlocProvider(
                             create: (context) => CreateTaskBloc(task),

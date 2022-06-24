@@ -32,7 +32,7 @@ class TaskCardWidget extends StatelessWidget {
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MultiBlocProvider(
+                builder: (_) => MultiBlocProvider(
                   providers: [
                     BlocProvider(
                       create: (context) => CreateTaskBloc(null),
@@ -41,12 +41,12 @@ class TaskCardWidget extends StatelessWidget {
                       value: BlocProvider.of<CreateTasksetBloc>(context),
                     ),
                   ],
-                  child:
-                      screenDependingOnTaskType(context, taskset.tasks![index]),
+                  child: MoneyEinstellenScreen(),
+                  //screenDependingOnTaskType(context, taskset.tasks![index]),
                 ),
               ),
             ),
-            icon: Icon(Icons.keyboard_arrow_right),
+            icon: const Icon(Icons.keyboard_arrow_right),
           ),
         ),
       ),
