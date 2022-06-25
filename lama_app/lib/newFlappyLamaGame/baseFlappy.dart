@@ -41,6 +41,8 @@ class FlappyLamaGame2 extends FlameGame
   /// amount of tiles = size of the sprites / width of the obstacle
   final double _sizeInTiles = 1.5;
   late AnimatedComponent userLama;
+  late PositionComponent obst1;
+  late PositionComponent obst2;
 
   /// obstacle list
   List<ObstacleCompNewTry> obstacles = [];
@@ -196,9 +198,69 @@ class FlappyLamaGame2 extends FlameGame
     //  super.resize(size);
   }
 
+  var testuse = true;
   @override
   Future<void> update(double dt) async {
     super.update(dt);
+
+    /*    if (obstacles[0].position.x <= -(screenSize.width + 50)) {
+      remove(obstacles[0]);
+      obstacles[0] = ObstacleCompNewTry(
+          this,
+          Vector2(0, 0),
+          false,
+          Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+          _context,
+          tileSize,
+          screenSize);
+      add(obstacles[0]);
+    }
+
+    if (obstacles[1].position.x <= -(screenSize.width + 50)) {
+      remove(obstacles[1]);
+      obstacles[1] = ObstacleCompNewTry(
+          this,
+          Vector2(0, 0),
+          false,
+          Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+          _context,
+          tileSize,
+          screenSize);
+      add(obstacles[1]);
+    } */
+
+    if (obst1.x <= -(screenSize.width + 50)) {
+      remove(obst1);
+      obst1 = ObstacleCompNewTry(
+          this,
+          Vector2(0, 0),
+          false,
+          Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+          _context,
+          tileSize,
+          screenSize);
+      add(obst1);
+    }
+
+    if ((obst2.x <=
+                -(screenSize.width +
+                    (tilesX ~/ 2) * tileSize +
+                    tileSize * _sizeInTiles +
+                    50)) &&
+            testuse ||
+        !testuse && (obst2.x <= -(screenSize.width + 50))) {
+      testuse = false;
+      remove(obst2);
+      obst2 = ObstacleCompNewTry(
+          this,
+          Vector2(0, 0),
+          false,
+          Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+          _context,
+          tileSize,
+          screenSize);
+      add(obst2);
+    }
   }
 
   void render(Canvas canvas) {
@@ -252,30 +314,48 @@ class FlappyLamaGame2 extends FlameGame
     obstaclesPre[0].resetObstacle(); */
 
     //add(ObstacleComp(this, Vector2(0, 0), _context));
-    obstacles.clear();
+    /*    obstacles.clear();
     obstacles.add(ObstacleCompNewTry(
         this,
         Vector2(0, 0),
-        Vector2(screenSize.width, 0),
-        obstaclesChilds,
+        false,
         Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
         _context,
         tileSize,
         screenSize));
+    add(obstacles[0]);
 
     obstacles.add(ObstacleCompNewTry(
         this,
         Vector2(0, 0),
-        Vector2(screenSize.width, 0),
-        obstaclesChilds,
+        true,
         Vector2((tileSize * _sizeInTiles), (tileSize * _sizeInTiles)),
         _context,
-        tileSize * 2,
+        tileSize,
         screenSize));
-    add(obstacles[0]);
-    // add(obstacles[1]);
+
+    add(obstacles[1]); */
     /*  add(ObstacleCompNewTry(this, Vector2(0, 0), Vector2(screenSize.width, 0),
         Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles), _context)); */
+
+    obst1 = ObstacleCompNewTry(
+        this,
+        Vector2(0, 0),
+        false,
+        Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+        _context,
+        tileSize,
+        screenSize);
+    add(obst1);
+    obst2 = ObstacleCompNewTry(
+        this,
+        Vector2(0, 0),
+        true,
+        Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
+        _context,
+        tileSize,
+        screenSize);
+    add(obst2);
   }
 
   /// This methods adds up the score and changes the holesize depending on the score

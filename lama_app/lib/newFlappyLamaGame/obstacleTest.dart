@@ -99,7 +99,20 @@ class ObstacleCompTest extends Component with HasGameRef {
   }
 
   ObstacleCompTest(this._game, this._alter, this._passingObjectX,
-      this.onPassing, this.onCollide, this.minHoleSize, this.maxHoleSize);
+      this.onPassing, this.onCollide, this.minHoleSize, this.maxHoleSize) {
+    SpriteComponent tmp = SpriteComponent()
+      ..height = _game.tileSize * _sizeInTiles
+      ..width = _game.tileSize * _sizeInTiles
+      ..x = _game.screenSize.width +
+          (_alter!
+              ? (_game.tilesX ~/ 2) * _game.tileSize +
+                  _game.tileSize * _sizeInTiles
+              : 0)
+      ..y = (_game.tileSize * _sizeInTiles) * 0
+      ..anchor = Anchor.topRight;
+
+    final fixedLengthList = new List<SpriteComponent>.filled(20, tmp);
+  }
 
   /// This method will generate the obstacle [_sprites] for the rendering.
   ///
@@ -112,6 +125,18 @@ class ObstacleCompTest extends Component with HasGameRef {
     }
 
     _sprites = [];
+    SpriteComponent tmp = SpriteComponent()
+      ..height = _game.tileSize * _sizeInTiles
+      ..width = _game.tileSize * _sizeInTiles
+      ..x = _game.screenSize.width +
+          (_alter!
+              ? (_game.tilesX ~/ 2) * _game.tileSize +
+                  _game.tileSize * _sizeInTiles
+              : 0)
+      ..y = (_game.tileSize * _sizeInTiles) * 0
+      ..anchor = Anchor.topRight;
+
+    final fixedLengthList = new List<SpriteComponent>.filled(20, tmp);
 
     for (int i = 0; i < (this._game.tilesY / this._sizeInTiles); i++) {
       // common sprite component
@@ -130,21 +155,32 @@ class ObstacleCompTest extends Component with HasGameRef {
       // start of the hole
       if (_holeIndex == i + 1) {
         tmp.sprite = await gameRef.loadSprite(obstacleTopEndImage);
-        _sprites!.add(tmp);
+        fixedLengthList[i] = tmp;
+        if (fixedLengthList[i].isLoaded) {
+          remove(fixedLengthList[i]);
+        }
+        add(fixedLengthList[i]);
       }
       // end of the hole
       else if (_holeIndex! + _holeSize! == i) {
         tmp.sprite = await gameRef.loadSprite(obstacleBottomEndImage);
-        _sprites!.add(tmp);
+        fixedLengthList[i] = tmp;
+        if (fixedLengthList[i].isLoaded) {
+          remove(fixedLengthList[i]);
+        }
+        add(fixedLengthList[i]);
       }
       // body of the obstacle
       else if (!(i >= _holeIndex! && i <= _holeIndex! + _holeSize!)) {
         tmp.sprite = await gameRef.loadSprite(obstacleBodyImage);
-        _sprites!.add(tmp);
+        fixedLengthList[i] = tmp;
+        if (fixedLengthList[i].isLoaded) {
+          remove(fixedLengthList[i]);
+        }
+        add(fixedLengthList[i]);
       }
-      _sprites!.add(tmp);
     }
-    addAll(_sprites!);
+
     // sets the first part of the obstacle
     _first = _sprites![0];
   }

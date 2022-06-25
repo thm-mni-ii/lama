@@ -116,15 +116,12 @@ class ObstacleCompNewTry extends PositionComponent
   ObstacleCompNewTry(
     this._game,
     this.velocity,
-    Vector2 position,
-    Iterable<Component> children,
+    this._alter,
     Vector2 size,
     BuildContext _context,
     this.tileSize,
     this.screenSize,
   ) : super(
-          children: children,
-          position: position,
           size: size,
           anchor: Anchor.center,
         ) {
@@ -145,23 +142,36 @@ class ObstacleCompNewTry extends PositionComponent
     _sprites = [];
     _generateHole();
 
-    tmp = SpriteComponent(
-      sprite: await gameRef.loadSprite(obstacleTopEndImage),
-      position: Vector2(position.x, (tileSize * _sizeInTiles) * 0 - size.y),
-      size: size,
-      anchor: Anchor.topLeft,
-    );
+    final hitboxPaint = BasicPalette.white.paint();
+
+    tmp = SpriteComponent()
+      ..sprite = await gameRef.loadSprite(obstacleTopEndImage)
+      ..height = _game.tileSize * _sizeInTiles
+      ..width = _game.tileSize * _sizeInTiles
+      ..x = _game.screenSize.width +
+          (_alter!
+              ? (_game.tilesX ~/ 2) * _game.tileSize +
+                  _game.tileSize * _sizeInTiles
+              : 0)
+      ..y = (_game.tileSize * _sizeInTiles) * 0
+      ..anchor = Anchor.topLeft;
+
     final fixedLengthList = new List<SpriteComponent>.filled(20, tmp);
 
     for (int i = 0; i < (this._game.tilesY / this._sizeInTiles); i++) {
       // start of the hole
       if (_holeIndex == i + 1) {
-        tmp = SpriteComponent(
-          sprite: await gameRef.loadSprite(obstacleTopEndImage),
-          position: Vector2(position.x, (tileSize * _sizeInTiles) * i - size.y),
-          size: size,
-          anchor: Anchor.topLeft,
-        );
+        tmp = SpriteComponent()
+          ..sprite = await gameRef.loadSprite(obstacleTopEndImage)
+          ..height = _game.tileSize * _sizeInTiles
+          ..width = _game.tileSize * _sizeInTiles
+          ..x = _game.screenSize.width +
+              (_alter!
+                  ? (_game.tilesX ~/ 2) * _game.tileSize +
+                      _game.tileSize * _sizeInTiles
+                  : 0)
+          ..y = (_game.tileSize * _sizeInTiles) * i - size.y
+          ..anchor = Anchor.topLeft;
         fixedLengthList[i] = tmp;
         if (fixedLengthList[i].isLoaded) {
           remove(fixedLengthList[i]);
@@ -176,20 +186,26 @@ class ObstacleCompNewTry extends PositionComponent
           ],
           position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
           parentSize: fixedLengthList[i].size,
-        ));
+        )
+            /*  ..paint = hitboxPaint
+            ..renderShape = true, */
+            );
       }
       // end of the hole
       else if (_holeIndex! + _holeSize! == i) {
-        tmp = SpriteComponent(
-          sprite: await gameRef.loadSprite(obstacleBottomEndImage),
-          position: Vector2(position.x, (tileSize * _sizeInTiles) * i - size.y),
-          size: size,
-          anchor: Anchor.topLeft,
-        );
+        tmp = SpriteComponent()
+          ..sprite = await gameRef.loadSprite(obstacleBottomEndImage)
+          ..height = _game.tileSize * _sizeInTiles
+          ..width = _game.tileSize * _sizeInTiles
+          ..x = _game.screenSize.width +
+              (_alter!
+                  ? (_game.tilesX ~/ 2) * _game.tileSize +
+                      _game.tileSize * _sizeInTiles
+                  : 0)
+          ..y = (_game.tileSize * _sizeInTiles) * i - size.y
+          ..anchor = Anchor.topLeft;
         fixedLengthList[i] = tmp;
-        if (fixedLengthList[i].isLoaded) {
-          remove(fixedLengthList[i]);
-        }
+
         add(fixedLengthList[i]);
         add(PolygonHitbox.relative(
           [
@@ -204,16 +220,19 @@ class ObstacleCompNewTry extends PositionComponent
       }
       // body of the obstacle
       else if (!(i >= _holeIndex! && i <= _holeIndex! + _holeSize!)) {
-        tmp = SpriteComponent(
-          sprite: await gameRef.loadSprite(obstacleBodyImage),
-          position: Vector2(position.x, (tileSize * _sizeInTiles) * i - size.y),
-          size: size,
-          anchor: Anchor.topLeft,
-        );
+        tmp = SpriteComponent()
+          ..sprite = await gameRef.loadSprite(obstacleBodyImage)
+          ..height = _game.tileSize * _sizeInTiles
+          ..width = _game.tileSize * _sizeInTiles
+          ..x = _game.screenSize.width +
+              (_alter!
+                  ? (_game.tilesX ~/ 2) * _game.tileSize +
+                      _game.tileSize * _sizeInTiles
+                  : 0)
+          ..y = (_game.tileSize * _sizeInTiles) * i - size.y
+          ..anchor = Anchor.topLeft;
         fixedLengthList[i] = tmp;
-        if (fixedLengthList[i].isLoaded) {
-          remove(fixedLengthList[i]);
-        }
+
         add(fixedLengthList[i]);
         add(PolygonHitbox.relative(
           [
@@ -295,14 +314,155 @@ class ObstacleCompNewTry extends PositionComponent
     )); */
   }
 
+  /// This method will generate the obstacle [_sprites] for the rendering.
+  ///
+  /// sideeffects:
+  ///   [_sprites]
+  Future<void> _createObstacleParts() async {
+    _sprites = [];
+    _generateHole();
+
+    final hitboxPaint = BasicPalette.white.paint();
+
+    tmp = SpriteComponent()
+      ..sprite = await gameRef.loadSprite(obstacleTopEndImage)
+      ..height = _game.tileSize * _sizeInTiles
+      ..width = _game.tileSize * _sizeInTiles
+      ..x = _game.screenSize.width +
+          (_alter!
+              ? (_game.tilesX ~/ 2) * _game.tileSize +
+                  _game.tileSize * _sizeInTiles
+              : 0)
+      ..y = (_game.tileSize * _sizeInTiles) * 0
+      ..anchor = Anchor.topLeft;
+
+    final fixedLengthList = new List<SpriteComponent>.filled(20, tmp);
+
+    for (int i = 0; i < (this._game.tilesY / this._sizeInTiles); i++) {
+      // start of the hole
+      if (_holeIndex == i + 1) {
+        tmp = SpriteComponent()
+          ..sprite = await gameRef.loadSprite(obstacleTopEndImage)
+          ..height = _game.tileSize * _sizeInTiles
+          ..width = _game.tileSize * _sizeInTiles
+          ..x = _game.screenSize.width +
+              (_alter!
+                  ? (_game.tilesX ~/ 2) * _game.tileSize +
+                      _game.tileSize * _sizeInTiles
+                  : 0)
+          ..y = (_game.tileSize * _sizeInTiles) * i - size.y
+          ..anchor = Anchor.topLeft;
+        fixedLengthList[i] = tmp;
+        if (fixedLengthList[i].isLoaded) {
+          remove(fixedLengthList[i]);
+        }
+        add(fixedLengthList[i]);
+        add(PolygonHitbox.relative(
+          [
+            Vector2(-2.0, 0.0),
+            Vector2(-2.0, -2.0),
+            Vector2(0.0, -2.0),
+            Vector2(0.0, 0.0),
+          ],
+          position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
+          parentSize: fixedLengthList[i].size,
+        )
+            /*  ..paint = hitboxPaint
+            ..renderShape = true, */
+            );
+      }
+      // end of the hole
+      else if (_holeIndex! + _holeSize! == i) {
+        tmp = SpriteComponent()
+          ..sprite = await gameRef.loadSprite(obstacleBottomEndImage)
+          ..height = _game.tileSize * _sizeInTiles
+          ..width = _game.tileSize * _sizeInTiles
+          ..x = _game.screenSize.width +
+              (_alter!
+                  ? (_game.tilesX ~/ 2) * _game.tileSize +
+                      _game.tileSize * _sizeInTiles
+                  : 0)
+          ..y = (_game.tileSize * _sizeInTiles) * i - size.y
+          ..anchor = Anchor.topLeft;
+        fixedLengthList[i] = tmp;
+        if (fixedLengthList[i].isLoaded) {
+          remove(fixedLengthList[i]);
+        }
+        add(fixedLengthList[i]);
+        add(PolygonHitbox.relative(
+          [
+            Vector2(-2.0, 0.0),
+            Vector2(-2.0, -2.0),
+            Vector2(0.0, -2.0),
+            Vector2(0.0, 0.0),
+          ],
+          position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
+          parentSize: fixedLengthList[i].size,
+        ));
+      }
+      // body of the obstacle
+      else if (!(i >= _holeIndex! && i <= _holeIndex! + _holeSize!)) {
+        tmp = SpriteComponent()
+          ..sprite = await gameRef.loadSprite(obstacleBodyImage)
+          ..height = _game.tileSize * _sizeInTiles
+          ..width = _game.tileSize * _sizeInTiles
+          ..x = _game.screenSize.width +
+              (_alter!
+                  ? (_game.tilesX ~/ 2) * _game.tileSize +
+                      _game.tileSize * _sizeInTiles
+                  : 0)
+          ..y = (_game.tileSize * _sizeInTiles) * i - size.y
+          ..anchor = Anchor.topLeft;
+        fixedLengthList[i] = tmp;
+        if (fixedLengthList[i].isLoaded) {
+          remove(fixedLengthList[i]);
+        }
+        add(fixedLengthList[i]);
+        add(PolygonHitbox.relative(
+          [
+            Vector2(-2.0, 0.0),
+            Vector2(-2.0, -2.0),
+            Vector2(0.0, -2.0),
+            Vector2(0.0, 0.0),
+          ],
+          position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
+          parentSize: fixedLengthList[i].size,
+        ));
+      }
+    }
+    //sets the position for all Sprite Components
+    position.y = (tileSize * _sizeInTiles) * 2 - size.y;
+  }
+
+  void setConstraints(int alterHoleIndex, int alterHoleSize) {
+    _refHoleIndex = alterHoleIndex;
+    _refHoleSize = alterHoleIndex;
+  }
+
+  void resetObstacle() {
+    _generateHole();
+    _createObstacleParts();
+    // run callback
+    //   onResetting?.call(_holeIndex, _holeSize);
+    //  _objectPassed = false;
+  }
+
   @override
   Future<void> update(double dt) async {
     super.update(dt);
     position.x += _velocity * dt;
 
-    if (position.x < -(screenSize.width + 50)) {
+    /*    if (position.x < -(screenSize.width + 50)) {
       position.x = 100;
-    }
+    } */
+/* 
+    if (position.x <= -(screenSize.width + 50)) {
+      // remove the initial offset
+      _alter = false;
+
+      resetObstacle();
+      position.x = 100;
+    } */
     /* kaktusBodyComponent.x -= 100 * dt;
     kaktusTopComponent.x -= 100 * dt; */
   }
