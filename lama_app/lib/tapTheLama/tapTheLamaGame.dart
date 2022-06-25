@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
@@ -12,6 +14,9 @@ import 'package:lama_app/tapTheLama/components/missedHeadAnimator.dart';
 import 'dart:math';
 
 import 'package:lama_app/tapTheLama/components/upperInGameDisplay.dart';
+import 'package:lama_app/tetris/tetrisHelper.dart';
+
+import '../util/LamaColors.dart';
 
 class TapTheLamaGame extends FlameGame with HasTappables {
 
@@ -44,6 +49,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var lifeBarWidth;
   var lifeBarHeight;
   late LifeBar lifeBar;
+  late RectangleComponent lifebarRedRectangle;
   var multiplier = 1;
   late MissedHeadAnimator missedHeadAnimator;
 
@@ -69,6 +75,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   LamaButton lamaButtonBlue = LamaButton();
   LamaButton lamaButtonPurple = LamaButton();
   LamaButton lamaButtonPink = LamaButton();
+  LamaButton gameOverLamaButton=LamaButton();
 
   //initialise button animators
   late CircleComponent animatorButtonTurkis;
@@ -134,6 +141,16 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var multiplierIncreaseThreshold = 20;
   //# endregion
 
+  //#region Global Game Over Variables
+  late TextPaint gameOverText;
+  late TextPaint gameOverSuccessText;
+  late TextPaint gameOverScoreText;
+  late TextPaint leaveApplicationText;
+  var tempUserHighScore;
+  var tempAllTimeHighScore;
+  var tempSuccessText="";
+  //#endregion
+
   //# region Override Methods
   @override
   Future<void> onLoad() async {
@@ -155,17 +172,25 @@ class TapTheLamaGame extends FlameGame with HasTappables {
       moveLamaHeads(lamaHeadsPurple, lamaHeadImagePurple, 3);
       moveLamaHeads(lamaHeadsPink, lamaHeadImagePink, 4);
       updateSpeedParameters();
-      checkGameOver();
+      checkIfGameOver();
+    }else{
+      animateGameOverButton();
+      checkIfGameOverButtonIsTapped();
     }
   }
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    scoreText.render(canvas, "Score: " + score.toString(),
-        Vector2(screenWidth * 0.05, screenHeight * 0.05));
-    streakText.render(canvas, "Streak: " + streakCounter.toString(),
-        Vector2(screenWidth * 0.6, screenHeight * 0.05));
+    if(!gameOver){
+      scoreText.render(canvas, "Score: " + score.toString(),
+          Vector2(screenWidth * 0.05, screenHeight * 0.05));
+      streakText.render(canvas, "Streak: " + streakCounter.toString(),
+          Vector2(screenWidth * 0.6, screenHeight * 0.05));
+    }else{
+
+      showGameOverText(canvas);
+    }
   }
   //# endregion
 
@@ -240,6 +265,9 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     lifeBar.x = lifePercent * lifeBarWidth / 100;
   }
 
+  void animateGameOverButton() {
+    gameOverLamaButton.angle-=0.1;
+  }
   //# endregion
 
   //#region Initialise Score Counter, Life Bar, Lama Buttons and Button Animators
@@ -279,7 +307,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
             fontSize: textSize,
             fontWeight: FontWeight.bold,
             color: Colors.black));
-    RectangleComponent lifebarRedRectangle = RectangleComponent(
+    lifebarRedRectangle = RectangleComponent(
         position: Vector2(lifeBarHorizontalPosition, lifeBarVerticalPosition),
         anchor: Anchor.center,
         size: Vector2(lifeBarWidth, lifeBarHeight),
@@ -309,7 +337,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     xPosPurple = 5 / 8 * screenWidth;
     xPosPink = 7 / 8 * screenWidth;
 
-    //specify all button circles
+    //specify all button animator circles
     animatorButtonTurkis = CircleComponent(
         radius: lamaButtonSize * 0.6,
         position: Vector2(xPosTurkis, yPosButtons),
@@ -471,19 +499,24 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     return randomBoolean;
   }
 
-  void checkGameOver() {
+  void checkIfGameOver() {
     if (lifePercent <= 0) {
-      gameOver = true;
       saveHighScore();
+      openGameOverMenu();
+      createGameOverText();
+      gameOver = true;
     }
   }
 
   void updateSpeedParameters() {
+    //Todo: don't ask for this if-case when score is already over 1000 use boolean flag to ask for
     if (score > 1000) {
       velocityIncreaseFactor1 = 1.1;
       velocityIncreaseFactor2 = 1.25;
       lamaHeadIsAngryProbability = 0.2;
     }
+
+    //Todo: set probability of heads appearing lower when score is over 2000
 
     if (score >= scoreThresholdDifferentVelocity - scoreIncrementerGoodHit &&
         score <= scoreThresholdDifferentVelocity + scoreIncrementerGoodHit) {
@@ -528,14 +561,16 @@ class TapTheLamaGame extends FlameGame with HasTappables {
       }
     }
   }
+  //#endregion
 
+  //#region load/save score and open game over menu
   void saveHighScore() {
     if(score>userHighScore!){
       userRepo!.addHighscore(
           Highscore(
-            gameID: gameId,
-            score: score,
-            userID: userRepo!.authenticatedUser!.id
+              gameID: gameId,
+              score: score,
+              userID: userRepo!.authenticatedUser!.id
           )
       );
     }
@@ -548,4 +583,110 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   }
   //#endregion
 
+  //#region Game Over Methods
+  Future<void> openGameOverMenu() async {
+    remove(lifeBar);
+    remove(upperInGameDisplay);
+    remove(lifebarRedRectangle);
+    RectangleComponent gameOverBackground = RectangleComponent(
+        position: Vector2(0, 0),
+        anchor: Anchor.topLeft,
+        size: Vector2(screenWidth, screenHeight),
+        paint: PaletteEntry(Color(0xeaeceaea)).paint(),
+        priority: 5
+    );
+    add(gameOverBackground);
+
+
+    gameOverLamaButton.sprite= await loadSprite(lamaButtonImagePurple);
+    gameOverLamaButton.size=Vector2(lamaButtonSize*1.5, lamaButtonSize*1.5);
+    gameOverLamaButton.x=screenWidth/2;
+    gameOverLamaButton.y=yPosButtons;
+    gameOverLamaButton.anchor=Anchor.center;
+    gameOverLamaButton.priority=6;
+    add(gameOverLamaButton);
+
+  }
+
+  void createGameOverText() {
+    gameOverText = TextPaint(
+        style: TextStyle(
+            fontSize: screenWidth*0.15,
+            fontWeight: FontWeight.bold,
+            color: LamaColors.purplePrimary)
+
+    );
+
+
+    gameOverSuccessText = TextPaint(
+        style: TextStyle(
+            fontSize: screenWidth*0.06,
+            fontWeight: FontWeight.bold,
+            color: LamaColors.purplePrimary)
+    );
+
+    gameOverScoreText = TextPaint(
+        style: TextStyle(
+            fontSize: screenWidth*0.08,
+            fontWeight: FontWeight.bold,
+            color: LamaColors.blueAccent)
+    );
+
+    leaveApplicationText = TextPaint(
+        style: TextStyle(
+            fontSize: screenWidth*0.06,
+            fontWeight: FontWeight.bold,
+            color: LamaColors.purpleAccent)
+    );
+
+    tempUserHighScore=userHighScore;
+    tempAllTimeHighScore=allTimeHighScore;
+    tempSuccessText="";
+
+    if(score>userHighScore!){
+      tempSuccessText="Super, dein bestes Spiel bisher!";
+      userHighScore=score;
+      tempUserHighScore=score;
+      if(score>allTimeHighScore!){
+        tempSuccessText="Wow, ein neuer Highscore!";
+        userHighScore=score;
+        allTimeHighScore=score;
+        tempAllTimeHighScore=score;
+      }
+    }else if(score==0){
+      tempSuccessText="Das war wohl nichts :(";
+    }
+    else if(score==userHighScore){
+      tempSuccessText="Fast!";
+    }
+    else{
+      tempSuccessText="Das war wohl nichts :(";
+    }
+  }
+
+  void showGameOverText(Canvas canvas) {
+    gameOverText.render(canvas, "Game Over!",
+        Vector2(screenWidth * 0.5, screenHeight * 0.1), anchor: Anchor.center);
+
+    gameOverSuccessText.render(canvas,tempSuccessText,
+        Vector2(screenWidth*0.5, screenHeight*0.2), anchor: Anchor.center);
+
+    gameOverScoreText.render(canvas,"Dein Score:\t\t$score\n\nDein Rekord: \t$tempUserHighScore\n\nHigh Score:\t\t$tempAllTimeHighScore",
+        Vector2(screenWidth*0.5, screenHeight*0.45), anchor: Anchor.center);
+
+    leaveApplicationText.render(canvas,"Zum Verlassen das Lama drücken",
+        Vector2(screenWidth*0.5, screenHeight*0.7), anchor: Anchor.center);
+
+  }
+
+
+
+  void checkIfGameOverButtonIsTapped() {
+    if(gameOverLamaButton.buttonPressed){
+      //Navigator.pop(context);
+    }
+  }
+
+
+  //#endregion
 }
