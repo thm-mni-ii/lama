@@ -115,6 +115,7 @@ class ObstacleCompTest extends Component with HasGameRef {
 
     for (int i = 0; i < (this._game.tilesY / this._sizeInTiles); i++) {
       // common sprite component
+
       var tmp = SpriteComponent()
         ..height = _game.tileSize * _sizeInTiles
         ..width = _game.tileSize * _sizeInTiles

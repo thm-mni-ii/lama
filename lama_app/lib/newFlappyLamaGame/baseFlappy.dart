@@ -46,6 +46,9 @@ class FlappyLamaGame2 extends FlameGame
   List<ObstacleCompNewTry> obstacles = [];
 
   /// obstacle list
+  List<ObstacleCompNewTry> obstaclesChilds = [];
+
+  /// obstacle list
   List<ObstacleCompTest> obstaclesPre = [];
 
   //Obstacle Stuff
@@ -254,6 +257,7 @@ class FlappyLamaGame2 extends FlameGame
         this,
         Vector2(0, 0),
         Vector2(screenSize.width, 0),
+        obstaclesChilds,
         Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
         _context,
         tileSize,
@@ -263,12 +267,13 @@ class FlappyLamaGame2 extends FlameGame
         this,
         Vector2(0, 0),
         Vector2(screenSize.width, 0),
+        obstaclesChilds,
         Vector2((tileSize * _sizeInTiles), (tileSize * _sizeInTiles)),
         _context,
         tileSize * 2,
         screenSize));
     add(obstacles[0]);
-    add(obstacles[1]);
+    // add(obstacles[1]);
     /*  add(ObstacleCompNewTry(this, Vector2(0, 0), Vector2(screenSize.width, 0),
         Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles), _context)); */
   }

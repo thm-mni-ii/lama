@@ -28,7 +28,13 @@ class ObstacleCompNewTry extends PositionComponent
     with HasGameRef, CollisionCallbacks {
   late SpriteComponent kaktusTopComponent;
   late SpriteComponent kaktusBodyComponent;
+  late SpriteComponent kaktusBodyComponent2;
+  late SpriteComponent kaktusBodyComponent3;
   late SpriteComponent kaktusBottomComponent;
+  late SpriteComponent tmp;
+
+  /// list of all the single sprites of the component
+  late List<SpriteComponent> _sprites = [];
 
   var obstacleTopEndImage = 'png/kaktus_end_top.png';
   var obstacleBottomEndImage = 'png/kaktus_end_bottom.png';
@@ -64,9 +70,6 @@ class ObstacleCompNewTry extends PositionComponent
   Function(int, int) onResetting; */
   // --------
   //FUNCTIONS
-
-  /// list of all the single sprites of the component
-  late List<Component> _sprites = [];
 
   /// first component to get the position data
   late PositionComponent _first;
@@ -106,6 +109,7 @@ class ObstacleCompNewTry extends PositionComponent
 
   final FlappyLamaGame2 _game;
   final Vector2 velocity;
+  Iterable<Component>? children2;
 
   Size screenSize;
 
@@ -113,11 +117,13 @@ class ObstacleCompNewTry extends PositionComponent
     this._game,
     this.velocity,
     Vector2 position,
+    Iterable<Component> children,
     Vector2 size,
     BuildContext _context,
     this.tileSize,
     this.screenSize,
   ) : super(
+          children: children,
           position: position,
           size: size,
           anchor: Anchor.center,
@@ -137,51 +143,130 @@ class ObstacleCompNewTry extends PositionComponent
   @override
   Future<void> onLoad() async {
     _sprites = [];
+    _generateHole();
 
-    position.y = (tileSize * _sizeInTiles) * 0 - size.y;
-
-    kaktusBottomComponent = SpriteComponent(
-      sprite: await gameRef.loadSprite(obstacleBottomEndImage),
-      position: position,
+    tmp = SpriteComponent(
+      sprite: await gameRef.loadSprite(obstacleTopEndImage),
+      position: Vector2(position.x, (tileSize * _sizeInTiles) * 0 - size.y),
       size: size,
       anchor: Anchor.topLeft,
     );
+    final fixedLengthList = new List<SpriteComponent>.filled(20, tmp);
 
-    position.y = (tileSize * _sizeInTiles) * 1 - size.y;
-    kaktusBodyComponent = SpriteComponent(
-      sprite: await gameRef.loadSprite(obstacleBodyImage),
-      position: position,
-      size: size,
-      anchor: Anchor.topLeft,
-    );
-    position.y = (tileSize * _sizeInTiles) * 1 + size.y;
-    _sprites.add(kaktusBodyComponent);
-    position.y = (tileSize * _sizeInTiles) * 1 - 2 * size.y;
-    _sprites.add(kaktusBodyComponent);
-
+    for (int i = 0; i < (this._game.tilesY / this._sizeInTiles); i++) {
+      // start of the hole
+      if (_holeIndex == i + 1) {
+        tmp = SpriteComponent(
+          sprite: await gameRef.loadSprite(obstacleTopEndImage),
+          position: Vector2(position.x, (tileSize * _sizeInTiles) * i - size.y),
+          size: size,
+          anchor: Anchor.topLeft,
+        );
+        fixedLengthList[i] = tmp;
+        if (fixedLengthList[i].isLoaded) {
+          remove(fixedLengthList[i]);
+        }
+        add(fixedLengthList[i]);
+        add(PolygonHitbox.relative(
+          [
+            Vector2(-2.0, 0.0),
+            Vector2(-2.0, -2.0),
+            Vector2(0.0, -2.0),
+            Vector2(0.0, 0.0),
+          ],
+          position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
+          parentSize: fixedLengthList[i].size,
+        ));
+      }
+      // end of the hole
+      else if (_holeIndex! + _holeSize! == i) {
+        tmp = SpriteComponent(
+          sprite: await gameRef.loadSprite(obstacleBottomEndImage),
+          position: Vector2(position.x, (tileSize * _sizeInTiles) * i - size.y),
+          size: size,
+          anchor: Anchor.topLeft,
+        );
+        fixedLengthList[i] = tmp;
+        if (fixedLengthList[i].isLoaded) {
+          remove(fixedLengthList[i]);
+        }
+        add(fixedLengthList[i]);
+        add(PolygonHitbox.relative(
+          [
+            Vector2(-2.0, 0.0),
+            Vector2(-2.0, -2.0),
+            Vector2(0.0, -2.0),
+            Vector2(0.0, 0.0),
+          ],
+          position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
+          parentSize: fixedLengthList[i].size,
+        ));
+      }
+      // body of the obstacle
+      else if (!(i >= _holeIndex! && i <= _holeIndex! + _holeSize!)) {
+        tmp = SpriteComponent(
+          sprite: await gameRef.loadSprite(obstacleBodyImage),
+          position: Vector2(position.x, (tileSize * _sizeInTiles) * i - size.y),
+          size: size,
+          anchor: Anchor.topLeft,
+        );
+        fixedLengthList[i] = tmp;
+        if (fixedLengthList[i].isLoaded) {
+          remove(fixedLengthList[i]);
+        }
+        add(fixedLengthList[i]);
+        add(PolygonHitbox.relative(
+          [
+            Vector2(-2.0, 0.0),
+            Vector2(-2.0, -2.0),
+            Vector2(0.0, -2.0),
+            Vector2(0.0, 0.0),
+          ],
+          position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
+          parentSize: fixedLengthList[i].size,
+        ));
+      }
+    }
+    //sets the position for all Sprite Components
     position.y = (tileSize * _sizeInTiles) * 2 - size.y;
+    /*  kaktusBottomComponent = SpriteComponent(
+      sprite: await gameRef.loadSprite(obstacleBottomEndImage),
+      position: Vector2(position.x, (tileSize * _sizeInTiles) * 0 - size.y),
+      size: size,
+      anchor: Anchor.topLeft,
+    );
+
+    for (int i = 1; i < 4; i++) {
+      tmp = SpriteComponent(
+        sprite: await gameRef.loadSprite(obstacleBodyImage),
+        position: Vector2(position.x, (tileSize * _sizeInTiles) * i - size.y),
+        size: size,
+        anchor: Anchor.topLeft,
+      );
+      _sprites.add(tmp);
+      add(_sprites[i - 1]);
+      add(PolygonHitbox.relative(
+        [
+          Vector2(-2.0, 0.0),
+          Vector2(-2.0, -2.0),
+          Vector2(0.0, -2.0),
+          Vector2(0.0, 0.0),
+        ],
+        position: Vector2(_sprites[i - 1].x, _sprites[i - 1].y),
+        parentSize: _sprites[i - 1].size,
+      ));
+    }
+
     kaktusTopComponent = SpriteComponent(
       sprite: await gameRef.loadSprite(obstacleTopEndImage),
-      position: position,
+      position: Vector2(position.x, (tileSize * _sizeInTiles) * 4 - size.y),
       size: size,
       anchor: Anchor.topLeft,
     );
-    add(kaktusBodyComponent);
-    ////////////////////////////////////////////////////////////
-    ///
-    ///
-    final hitboxPaint = BasicPalette.white.paint();
-    // ..style = PaintingStyle.stroke;
-    add(PolygonHitbox.relative(
-      [
-        Vector2(-2.0, 0.0),
-        Vector2(-2.0, -2.0),
-        Vector2(0.0, -2.0),
-        Vector2(0.0, 0.0),
-      ],
-      position: Vector2(kaktusBodyComponent.x, kaktusBodyComponent.y),
-      parentSize: kaktusBodyComponent.size,
-    ));
+
+    //sets the position for all Sprite Components
+    position.y = (tileSize * _sizeInTiles) * 2 - size.y;
+
     add(kaktusBottomComponent);
     ////////////////////////////////////////////////////////////
     ///
@@ -207,9 +292,7 @@ class ObstacleCompNewTry extends PositionComponent
       ],
       position: Vector2(kaktusTopComponent.x, kaktusTopComponent.y),
       parentSize: kaktusTopComponent.size,
-    ));
-    /*    add(_sprites[0]);
-    add(_sprites[1]); */
+    )); */
   }
 
   @override
