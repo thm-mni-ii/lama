@@ -50,7 +50,6 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var lifeBarHeight;
   late LifeBar lifeBar;
   late RectangleComponent lifebarRedRectangle;
-  var multiplier = 1;
   late MissedHeadAnimator missedHeadAnimator;
 
   //#endregion
@@ -117,10 +116,14 @@ class TapTheLamaGame extends FlameGame with HasTappables {
 
   final gameId=5;
   var score = 0;
+  var streakScore=0;
+  var scoreSum=0;
   bool gameOver = false;
+  bool streak=false;
   var referenceVelocity;
   var lifePercent = 100.0;
   var streakCounter = 0;
+
   var scoreIncrementerGoodHit = 10;
   var scoreIncrementerOkayHit = 5;
   var lifeDecreaserStandard = 5.0;
@@ -137,14 +140,17 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var velocity2;
   var velocityIncreaseFactor1 = 1.2;
   var velocityIncreaseFactor2 = 1.5;
-  var recoveryThreshold = 30;
-  var multiplierIncreaseThreshold = 20;
+  var recoveryModuloDivider = 10;
+  var recoverRate=5;
+  var streakThreshold = 20;
+
   //# endregion
 
   //#region Global Game Over Variables
   late TextPaint gameOverText;
   late TextPaint gameOverSuccessText;
   late TextPaint gameOverScoreText;
+  late TextPaint gameOverAdditionalScoreText;
   late TextPaint leaveApplicationText;
   var tempUserHighScore;
   var tempAllTimeHighScore;
@@ -219,13 +225,15 @@ class TapTheLamaGame extends FlameGame with HasTappables {
         if (lamaHeadCopy.y >= yPosButtons - lamaButtonSize * 0.2 &&
             lamaHeadCopy.y <= yPosButtons + lamaButtonSize * 0.2) {
           flashButton(lamaButton, buttonAnimatorColorGreen, animatorButton);
-          score += scoreIncrementerGoodHit * multiplier;
+          score += scoreIncrementerGoodHit;
+          if(streak){streakScore+=scoreIncrementerGoodHit;}
           streakCounter++;
           recoverLifeBarCheck();
         } else if (lamaHeadCopy.y >= yPosButtons - lamaButtonSize * 0.6 &&
             lamaHeadCopy.y <= yPosButtons + lamaButtonSize * 0.6) {
           flashButton(lamaButton, buttonAnimatorColorOrange, animatorButton);
-          score += scoreIncrementerOkayHit * multiplier;
+          score += scoreIncrementerOkayHit;
+          if(streak){streakScore+=scoreIncrementerOkayHit;}
           streakCounter++;
           recoverLifeBarCheck();
         } else {
@@ -544,18 +552,18 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   }
 
   bool isAStreak() {
-    if (streakCounter >= multiplierIncreaseThreshold) {
-      multiplier = 2;
+    if (streakCounter >= streakThreshold) {
+      streak=true;
       return true;
     } else {
-      multiplier = 1;
+      streak=false;
       return false;
     }
   }
 
   void recoverLifeBarCheck() {
-    if (streakCounter != 0 && streakCounter % recoveryThreshold == 0) {
-      lifePercent = lifePercent + 10.0;
+    if (streak && streakCounter != 0 && streakCounter % recoveryModuloDivider == 0) {
+      lifePercent = lifePercent + recoverRate;
       if (lifePercent >= 100) {
         lifePercent = 100;
       }
@@ -565,11 +573,12 @@ class TapTheLamaGame extends FlameGame with HasTappables {
 
   //#region load/save score and open game over menu
   void saveHighScore() {
-    if(score>userHighScore!){
+    scoreSum=score+streakScore;
+    if(score+streakScore>userHighScore!){
       userRepo!.addHighscore(
           Highscore(
               gameID: gameId,
-              score: score,
+              score: scoreSum,
               userID: userRepo!.authenticatedUser!.id
           )
       );
@@ -632,6 +641,12 @@ class TapTheLamaGame extends FlameGame with HasTappables {
             color: LamaColors.blueAccent)
     );
 
+    gameOverAdditionalScoreText= TextPaint(
+        style: TextStyle(
+            fontSize: screenWidth*0.04,
+            color: LamaColors.blueAccent)
+    );
+
     leaveApplicationText = TextPaint(
         style: TextStyle(
             fontSize: screenWidth*0.06,
@@ -645,13 +660,13 @@ class TapTheLamaGame extends FlameGame with HasTappables {
 
     if(score>userHighScore!){
       tempSuccessText="Super, dein bestes Spiel bisher!";
-      userHighScore=score;
-      tempUserHighScore=score;
+      userHighScore=scoreSum;
+      tempUserHighScore=scoreSum;
       if(score>allTimeHighScore!){
         tempSuccessText="Wow, ein neuer Highscore!";
-        userHighScore=score;
-        allTimeHighScore=score;
-        tempAllTimeHighScore=score;
+        userHighScore=scoreSum;
+        allTimeHighScore=scoreSum;
+        tempAllTimeHighScore=scoreSum;
       }
     }else if(score==0){
       tempSuccessText="Das war wohl nichts :(";
@@ -666,13 +681,16 @@ class TapTheLamaGame extends FlameGame with HasTappables {
 
   void showGameOverText(Canvas canvas) {
     gameOverText.render(canvas, "Game Over!",
-        Vector2(screenWidth * 0.5, screenHeight * 0.1), anchor: Anchor.center);
+        Vector2(screenWidth * 0.5, screenHeight * 0.075), anchor: Anchor.center);
 
     gameOverSuccessText.render(canvas,tempSuccessText,
-        Vector2(screenWidth*0.5, screenHeight*0.2), anchor: Anchor.center);
+        Vector2(screenWidth*0.5, screenHeight*0.175), anchor: Anchor.center);
 
-    gameOverScoreText.render(canvas,"Dein Score:\t\t$score\n\nDein Rekord: \t$tempUserHighScore\n\nHigh Score:\t\t$tempAllTimeHighScore",
+    gameOverScoreText.render(canvas,"Dein Score:\t\t$scoreSum\n\nDein Rekord: \t$tempUserHighScore\n\nHigh Score:\t\t$tempAllTimeHighScore",
         Vector2(screenWidth*0.5, screenHeight*0.45), anchor: Anchor.center);
+
+    gameOverAdditionalScoreText.render(canvas," Regulärer Score:\t\t\t\t\t\t\t$score\n\t\t\t+\n Streak-Score:  \t\t\t\t\t\t\t\t$streakScore\n\t\t\t=",
+        Vector2(screenWidth*0.1, screenHeight*0.275), anchor: Anchor.centerLeft);
 
     leaveApplicationText.render(canvas,"Zum Verlassen das Lama drücken",
         Vector2(screenWidth*0.5, screenHeight*0.7), anchor: Anchor.center);
