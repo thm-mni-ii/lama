@@ -128,13 +128,15 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var scoreIncrementerOkayHit = 5;
   var lifeDecreaserStandard = 5.0;
   var lifeDecreaserRedLamaHit = 20.0;
-  var lamaHeadAppearingProbability = .3;
+  var lamaHeadAppearingProbability = 0.3;
   var lamaHeadIsAngryProbability = 0.1;
   var lamaHeadFirstColumExisting = false;
   var lamaHeadThirdColumnExisting = false;
   var scoreThresholdDifferentVelocity = 150;
   var scoreThresholdIncreaseVelocity = 300;
   var scoreThresholdSpacer = 300;
+  bool scoreOver1000=false;
+  bool scoreOver2500=false;
   var firstColumnIsFaster = true;
   var velocity1;
   var velocity2;
@@ -417,7 +419,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
       List<LamaHead> lamaHeadList, String imageSource, int column) async {
     for (int i = 0; i <= amountLamaHeadsPerColumn; i++) {
       if (lamaHeadList.elementAt(i).y >= screenHeight + lamaHeadSize) {
-        lamaHeadList.elementAt(i).y = 0 - lamaHeadSize / 2;
+        lamaHeadList.elementAt(i).y = 0 - lamaHeadSize /4*3;
         if (lamaHeadList.elementAt(i).isExisting &&
             !lamaHeadList.elementAt(i).isAngry) {
           lifePercent -= lifeDecreaserStandard;
@@ -458,7 +460,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
               lamaHeadList.elementAt(i).isExisting = false;
             } else {
               lamaHeadList.elementAt(i).isExisting =
-                  generateRandomBoolean(lamaHeadAppearingProbability);
+                  generateRandomBoolean(lamaHeadAppearingProbability*2);
             }
             break;
         }
@@ -517,14 +519,25 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   }
 
   void updateSpeedParameters() {
-    //Todo: don't ask for this if-case when score is already over 1000 use boolean flag to ask for
-    if (score > 1000) {
-      velocityIncreaseFactor1 = 1.1;
-      velocityIncreaseFactor2 = 1.25;
-      lamaHeadIsAngryProbability = 0.2;
+    if(!scoreOver1000){
+      if (score > 1000) {
+        velocityIncreaseFactor1 = 1.1;
+        velocityIncreaseFactor2 = 1.25;
+        lamaHeadIsAngryProbability = 0.2;
+        scoreOver1000=true;
+      }
     }
 
-    //Todo: set probability of heads appearing lower when score is over 2000
+    if(scoreOver1000 &&!scoreOver2500){
+      if(score>2500){
+        lamaHeadAppearingProbability=0.2;
+        lamaHeadIsAngryProbability = 0.3;
+        scoreOver2500=true;
+      }
+    }
+
+
+
 
     if (score >= scoreThresholdDifferentVelocity - scoreIncrementerGoodHit &&
         score <= scoreThresholdDifferentVelocity + scoreIncrementerGoodHit) {
@@ -658,20 +671,20 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     tempAllTimeHighScore=allTimeHighScore;
     tempSuccessText="";
 
-    if(score>userHighScore!){
+    if(scoreSum>userHighScore!){
       tempSuccessText="Super, dein bestes Spiel bisher!";
       userHighScore=scoreSum;
       tempUserHighScore=scoreSum;
-      if(score>allTimeHighScore!){
+      if(scoreSum>allTimeHighScore!){
         tempSuccessText="Wow, ein neuer Highscore!";
         userHighScore=scoreSum;
         allTimeHighScore=scoreSum;
         tempAllTimeHighScore=scoreSum;
       }
-    }else if(score==0){
+    }else if(scoreSum==0){
       tempSuccessText="Das war wohl nichts :(";
     }
-    else if(score==userHighScore){
+    else if(scoreSum==userHighScore){
       tempSuccessText="Fast!";
     }
     else{
@@ -680,17 +693,30 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   }
 
   void showGameOverText(Canvas canvas) {
+    var horizontalResponsivenessSpacer;
+    var verticalResponsivenessSpacer;
+    if(screenHeight / screenWidth >= (16 / 9)){
+      horizontalResponsivenessSpacer=0.1;
+      verticalResponsivenessSpacer=0.45;
+    }else{
+      horizontalResponsivenessSpacer=0.15;
+      verticalResponsivenessSpacer=0.5;
+    }
+
+
+
+
     gameOverText.render(canvas, "Game Over!",
         Vector2(screenWidth * 0.5, screenHeight * 0.075), anchor: Anchor.center);
 
     gameOverSuccessText.render(canvas,tempSuccessText,
         Vector2(screenWidth*0.5, screenHeight*0.175), anchor: Anchor.center);
 
-    gameOverScoreText.render(canvas,"Dein Score:\t\t$scoreSum\n\nDein Rekord: \t$tempUserHighScore\n\nHigh Score:\t\t$tempAllTimeHighScore",
-        Vector2(screenWidth*0.5, screenHeight*0.45), anchor: Anchor.center);
-
     gameOverAdditionalScoreText.render(canvas," Regulärer Score:\t\t\t\t\t\t\t$score\n\t\t\t+\n Streak-Score:  \t\t\t\t\t\t\t\t$streakScore\n\t\t\t=",
-        Vector2(screenWidth*0.1, screenHeight*0.275), anchor: Anchor.centerLeft);
+        Vector2(screenWidth*horizontalResponsivenessSpacer, screenHeight*0.275), anchor: Anchor.centerLeft);
+
+    gameOverScoreText.render(canvas,"Dein Score:\t\t$scoreSum\n\nDein Rekord: \t$tempUserHighScore\n\nHigh Score:\t\t$tempAllTimeHighScore",
+        Vector2(screenWidth*0.5, screenHeight*verticalResponsivenessSpacer), anchor: Anchor.center);
 
     leaveApplicationText.render(canvas,"Zum Verlassen das Lama drücken",
         Vector2(screenWidth*0.5, screenHeight*0.7), anchor: Anchor.center);
