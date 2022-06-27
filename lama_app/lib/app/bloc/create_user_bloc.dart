@@ -28,7 +28,8 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateUserState?> {
 
   ///[User] that is inserted in to the Database later on
   ///incoming events are used to change the values of this [User]
-  User user = User(grade: 1, coins: 0, isAdmin: false, avatar: 'lama');
+  User user =
+      User(grade: 1, coins: 0, isAdmin: false, avatar: 'lama', isGuest: false);
 
   CreateUserBloc({CreateUserState? initialState}) : super(initialState) {
     on<LoadGrades>((event, emit) async {
