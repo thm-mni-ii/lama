@@ -171,7 +171,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
               borderRadius: BorderRadius.all(Radius.circular(20)),
               color: state is VoiceAnswerTtsState &&
                   state.selectedAnswer == answers[index] ? LamaColors
-                  .purpleAccent : LamaColors.greenAccent,
+                  .purpleAccent : color,
               boxShadow: [
                 BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
