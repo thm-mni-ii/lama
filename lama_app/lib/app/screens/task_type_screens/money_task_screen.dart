@@ -11,6 +11,8 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:collection/collection.dart';
 import 'dart:math';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
+
 
 
 /// This file creates the Money task Screen
@@ -65,6 +67,9 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
 
   readquestion() async {
     if(questionRead > 0) {
+      return;
+    }
+    if(!home_screen_state.isTTs()) {
       return;
     }
     String text = task.optimum  ?

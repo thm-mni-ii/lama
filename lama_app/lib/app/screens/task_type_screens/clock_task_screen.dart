@@ -12,6 +12,8 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
+
 
 /// Author: H.Bismo
 
@@ -60,13 +62,18 @@ class ClockTaskState extends State<ClockTaskScreen> {
   String selectedQuestion = "";
 
   readText(String text) async {
-
+    if(!home_screen_state.isTTs()) {
+      return;
+    }
     await flutterTts.setLanguage("de-De");
     await flutterTts.setVolume(1.0);
     await flutterTts.speak(text);
   }
 
   readQuestion() async {
+    if(!home_screen_state.isTTs()) {
+      return;
+    }
     var text = task.lamaText;
     await flutterTts.setLanguage("de-De");
     await flutterTts.speak(text);

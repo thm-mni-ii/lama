@@ -10,6 +10,8 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
+
 
 
 /// [StatefulWidget] that contains the screen for the VocableTest TaskType.
@@ -21,13 +23,17 @@ class VocableTestTaskScreen extends StatefulWidget {
   final FlutterTts flutterTts = FlutterTts();
 
   readquestion() async {
+    if(!home_screen_state.isTTs()) {
+      return;
+    }
     var text = "Translate the shown word";
     if(task.questionLanguage == "Englisch") {
       await flutterTts.setLanguage("en-EN");
       await flutterTts.setSpeechRate(0.4);
     } else {
       await flutterTts.setLanguage("de-De");
-    }await flutterTts.setVolume(1.0);
+    }
+    await flutterTts.setVolume(1.0);
     await flutterTts.speak(text);
   }
   VocableTestTaskScreen(this.task, this.constraints) {

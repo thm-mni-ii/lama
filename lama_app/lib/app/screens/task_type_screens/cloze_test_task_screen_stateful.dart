@@ -7,6 +7,8 @@ import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
+
 
 
 import '../../../util/LamaColors.dart';
@@ -35,6 +37,9 @@ class ClozeTestTaskScreen extends StatefulWidget {
     answers.shuffle(); // randomize in list
 
     readquestion() async {
+      if(!home_screen_state.isTTs()) {
+        return;
+      }
       var text = task.question;
       if(task.answerLanguage == "Englisch") {
         await flutterTts.setLanguage("en-En");
@@ -70,6 +75,9 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
   }
 
   readText(String text) async {
+    if(!home_screen_state.isTTs()) {
+      return;
+    }
     if(task.answerLanguage == "Englisch") {
       await flutterTts.setLanguage("en-En");
     } else {

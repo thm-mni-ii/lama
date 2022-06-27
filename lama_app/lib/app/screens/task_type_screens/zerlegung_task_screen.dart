@@ -11,6 +11,8 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'dart:math';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
+
 
  
 class NumberBox extends StatelessWidget {
@@ -65,6 +67,9 @@ class ZerlegungTaskScreen extends StatefulWidget {
   final FlutterTts flutterTts = FlutterTts();
 
   readquestion() async {
+    if(!home_screen_state.isTTs()) {
+      return;
+    }
     String text = task.boolThousands
         ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
         : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!";

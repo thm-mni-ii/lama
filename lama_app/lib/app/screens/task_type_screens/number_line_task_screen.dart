@@ -9,6 +9,8 @@ import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
+
 
 
 // Author J.Decher
@@ -42,6 +44,9 @@ class NumberLineState extends State<NumberLineTaskScreen> {
   final FlutterTts flutterTts = FlutterTts();
 
   readquestion() async {
+    if(!home_screen_state.isTTs()) {
+      return;
+    }
     String text = task.ontap ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
     : "Gib den im Zahlenstrahl rot markierten Wert an!";
     await flutterTts.setLanguage("de-De");

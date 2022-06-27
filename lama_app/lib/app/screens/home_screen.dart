@@ -14,6 +14,8 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 import 'game_list_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
@@ -25,10 +27,56 @@ import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper
 ///
 /// Author: K.Binder
 class HomeScreen extends StatefulWidget {
+  String text = "";
   @override
   State<StatefulWidget> createState() => _HomeScreenState();
 }
 
+class ToggleTextToSpeech extends StatefulWidget {
+  @override
+  ToggleTextToSpeechWidget createState() => ToggleTextToSpeechWidget();
+}
+
+class ToggleTextToSpeechWidget extends State<ToggleTextToSpeech> {
+  List<Widget> children = [];
+  String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
+  final FlutterTts flutterTts = FlutterTts();
+  talk (String text) async {
+    flutterTts.speak(text);
+  }
+  @override
+  Widget build(BuildContext context) {
+    talk(path);
+    children.add(SizedBox(
+        child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  child: CircleAvatar(
+                    maxRadius: 29,
+                    child: SvgPicture.asset(
+                      path,
+                    ),
+                    backgroundColor: LamaColors.blueAccent,
+                  ),
+                  onTap: () {
+                    home_screen_state.toggle();
+                    setState(() {
+                     // finaltooltipp = tooltipptext;
+                      path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
+                    });
+                  },
+                ),
+              ),
+
+            ]
+        ))
+    );
+    return children[0];
+  }
+}
 /// [State] that contains the UI side logic for the [HomeScreen]
 ///
 /// Author: K.Binder
@@ -36,6 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
   UserRepository userRepository;
 
   DateTime backButtonPressedTime;
+
+  static String finaltooltipp = "";
 
   final snackBar = SnackBar(
       backgroundColor: LamaColors.mainPink,
@@ -49,6 +99,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     userRepository = RepositoryProvider.of<UserRepository>(context);
+    String tooltipptext = RepositoryProvider.of<LamaFactsRepository>(context).getRandomLamaFact();
+    if(finaltooltipp == "") {
+      finaltooltipp = tooltipptext;
+    } else {
+      tooltipptext = finaltooltipp;
+    }
     return Scaffold(
       body: WillPopScope(
         onWillPop: onWillPop,
@@ -185,9 +241,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     shadowColor: LamaColors.black,
                                     child: Center(
                                       child: Text(
-                                        RepositoryProvider.of<
-                                                LamaFactsRepository>(context)
-                                            .getRandomLamaFact(),
+                                        tooltipptext,
+                                        //RepositoryProvider.of<
+                                        //        LamaFactsRepository>(context)
+                                        //    .getRandomLamaFact(),
                                         style: LamaTextTheme.getStyle(
                                             fontSize: 15),
                                       ),
@@ -210,6 +267,37 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /*Widget buildtooltip(BoxConstraints constraints) {
+    Widget child;
+    Align(
+      alignment: Alignment.bottomLeft,
+      child: Padding(
+        padding: EdgeInsets.only(
+            bottom: 20,
+            right: (constraints.maxWidth / 100) * 15),
+        child: Container(
+          height: (constraints.maxHeight / 100) * 10,
+          width: (constraints.maxWidth / 100) * 80,
+          child: Bubble(
+            nip: BubbleNip.rightCenter,
+            color: LamaColors.mainPink,
+            borderColor: LamaColors.mainPink,
+            shadowColor: LamaColors.black,
+            child: Center(
+              child: Text(
+                RepositoryProvider.of<
+                    LamaFactsRepository>(context)
+                    .getRandomLamaFact(),
+                style: LamaTextTheme.getStyle(
+                    fontSize: 15),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    return child;
+  }*/
   ///Return a Widget that contains the complete center column with
   ///all subjects and the game button.
   ///
@@ -221,11 +309,11 @@ class _HomeScreenState extends State<HomeScreen> {
     String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     TasksetRepository tasksetRepository =
         RepositoryProvider.of<TasksetRepository>(context);
-
     if (tasksetRepository
             .getTasksetsForSubjectAndGrade("Mathe", userRepository.getGrade())
             .length >
         0) {
+      //children.add(ToggleTextToSpeech());
       children.add(SizedBox(
 
           child: Stack(
@@ -295,6 +383,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ).then((value) => (setState(() {}))),
       ));
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
+      //children.add(buildtooltip(constraints));
     }
     if (tasksetRepository
             .getTasksetsForSubjectAndGrade("Deutsch", userRepository.getGrade())
