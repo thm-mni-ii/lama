@@ -256,7 +256,7 @@ class CheckScreenPage extends State<CheckScreen> {
           onPressed: () {
             controller.jumpToPage(2);
           },
-          child: Text("Zur Adminseite",
+          child: Text("Zur Gastseite",
               style: LamaTextTheme.getStyle(fontSize: 15)),
         ),
         button2: ElevatedButton(
@@ -264,11 +264,24 @@ class CheckScreenPage extends State<CheckScreen> {
             controller.jumpToPage(3);
           },
           child: Text(
-            "Zur Gastseite",
+            "Zur Adminseite",
             style: LamaTextTheme.getStyle(fontSize: 15),
           ),
         ),
       ),
+      PageViewerModel(
+          title: "Spring einfach rein!",
+          description: "Du möchtest als Gast weiter und einfach die "
+              "Standardaufgaben ausprobieren? Einen Admin kann man später "
+              "immernoch anlegen.",
+          image: Image.asset('assets/images/png/features.png'),
+          button: ElevatedButton(
+            onPressed: () {
+              context.read<CheckScreenBloc>().add(CreateGuestEvent(context));
+            },
+            child: Text("Weiter als Gast",
+                style: LamaTextTheme.getStyle(fontSize: 15)),
+          )),
       PageViewerModel(
           title: "Verwalte deine Schüler und ihre Aufgaben",
           description:
@@ -282,19 +295,6 @@ class CheckScreenPage extends State<CheckScreen> {
               context.read<CheckScreenBloc>().add(CreateAdminEvent(context));
             },
             child: Text("Weiter als Admin",
-                style: LamaTextTheme.getStyle(fontSize: 15)),
-          )),
-      PageViewerModel(
-          title: "Spring einfach rein!",
-          description: "Du möchtest als Gast weiter und einfach die "
-              "Standardaufgaben ausprobieren? Einen Admin kann man später "
-              "immernoch anlegen.",
-          image: Image.asset('assets/images/png/features.png'),
-          button: ElevatedButton(
-            onPressed: () {
-              context.read<CheckScreenBloc>().add(CreateGuestEvent(context));
-            },
-            child: Text("Weiter als Gast",
                 style: LamaTextTheme.getStyle(fontSize: 15)),
           )),
       PageViewerModel(
