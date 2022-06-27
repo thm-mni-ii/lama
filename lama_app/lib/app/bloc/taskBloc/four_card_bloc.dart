@@ -18,6 +18,16 @@ class FourCardBloc extends Bloc<FourCardEvent,FourCardState> {
   @override
   Stream<FourCardState> mapEventToState(FourCardEvent event) async* {
 
+    //yield AnswerOnInitState();
+
+    // if (event is EmptyFCardState) {
+    //   yield AnswerOnInitState();
+    // }
+    if (event is AnswerOnInitEvent) {
+      readText(event.answer, event.answerLanguage);
+    }
+
+
     if (event is ClickOnWordQuestion) {
 
       readText(event.texttoPlay, event.answerLanguage);

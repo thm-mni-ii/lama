@@ -66,6 +66,9 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           padding: EdgeInsets.all(25),
           child: BlocBuilder<FourCardBloc, FourCardState>(
             builder: (context, FourCardState state) {
+              if (state is EmptyFCardState) {
+                context.read<FourCardBloc>().add(AnswerOnInitEvent(task.question));
+              }
               return Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(50)),
