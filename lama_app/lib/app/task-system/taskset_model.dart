@@ -13,16 +13,18 @@ class Taskset {
   String? name;
   TaskUrl? taskurl;
   String? subject;
+  String? description;
   int? grade;
   bool? randomizeOrder;
   int? randomTaskAmount;
   List<Task>? tasks;
 
-  Taskset(this.name, this.subject, this.grade, {this.randomizeOrder = true});
+  Taskset(this.name, this.subject, this.description, this.grade, {this.randomizeOrder = true});
 
   Taskset.fromJson(Map<String, dynamic> json) {
     name = json['taskset_name'];
     subject = json['taskset_subject'];
+    description = json['taskset_description'];
     grade = json['taskset_grade'];
     var tasksetTasks = json['tasks'] as List;
     List<Task> tasksetTasksList =
@@ -46,6 +48,7 @@ class Taskset {
         "taskset_url": taskurl!.toJson(),
         "taskset_name": name,
         "taskset_subject": subject,
+        "taskset_description": description,
         "taskset_grade": grade,
         "taskset_randomize_order": randomizeOrder,
         "tasks": tasks!.map((task) => task.toJson()).toList(),

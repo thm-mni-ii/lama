@@ -56,7 +56,6 @@ class TasksetCreationCartScreen extends StatelessWidget {
                 child: ListView.builder(
                   // möglicher weise nur das im builder ??
                   itemBuilder: (context, index) => TasksetCreationCartWidget(
-                    index: index,
                     task: taskset.tasks![index],
                   ),
                   itemCount: taskset.tasks!.length,
@@ -83,8 +82,8 @@ class TasksetCreationCartScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    /*DatabaseProvider.db.insertTaskUrl(TaskUrl(url: ""));
-                     RepositoryProvider.of<TasksetRepository>(context)
+                    /* DatabaseProvider.db.insertTaskUrl(TaskUrl(url: ""));
+                    RepositoryProvider.of<TasksetRepository>(context)
                         .writeToServer(taskset); */
                     /* Navigator.popUntil(
                       context,
