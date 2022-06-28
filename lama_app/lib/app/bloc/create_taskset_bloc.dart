@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:external_path/external_path.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_event.dart';
 import 'package:lama_app/app/state/create_taskset_state.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../event/create_taskset_event.dart';
 import '../task-system/taskset_model.dart';
@@ -25,9 +30,10 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
       (event, emit) {
         taskset!.tasks!.add(event.task);
         emit(ChangedTasksListState());
+        print(event.task.toString());
       },
     );
-    on<CreateTasksetGenerate>((event, emit) => taskset!.toJson());
+    on<CreateTasksetGenerate>((event, emit) => _generate());
     on<EditTask>((event, emit) {
       int pos = taskset!.tasks!.indexWhere(
         (element) => element.id == event.task.id,
@@ -45,5 +51,18 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   /// pops the screen and return null
   void _abort(BuildContext context) {
     Navigator.pop(context, null);
+  }
+
+ Future<void> _generate() async {
+    var path = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
+    File file = File(path + '/' + taskset!.name! + '.json');
+    print(file.path);
+    print(taskset!.tasks![0].toJson());
+    String json = jsonEncode(taskset);
+    print(json);
+    String json1 = jsonEncode(taskset!.tasks![0]);
+    print(json1);
+    file.createSync();
+    file.writeAsStringSync(json);
   }
 }

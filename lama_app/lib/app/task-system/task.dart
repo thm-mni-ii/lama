@@ -515,14 +515,14 @@ class TaskMoney extends Task {
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        "task_type": type,
-        'task_reward': reward,
-        'lama_text': lamaText,
-        'left_to_solve': leftToSolve,
-        'von': von,
-        'bis': bis,
-        'optimum': optimum,
+        "id": id,
+        "task_type": type.toString(),
+        "task_reward": reward,
+        "lama_text": lamaText,
+        "left_to_solve": leftToSolve,
+        "von": von,
+        "bis": bis,
+        "optimum": optimum,
       };
 
   @override

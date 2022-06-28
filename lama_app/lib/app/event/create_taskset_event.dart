@@ -24,8 +24,8 @@ class CreateTasksetChangeSubtitle extends CreateTasksetEvent {
 ///
 /// {@param}[Taskset] taskset that should be generated
 class CreateTasksetGenerate extends CreateTasksetEvent {
-  Taskset taskset;
-  CreateTasksetGenerate(this.taskset);
+  //Taskset taskset;
+  //CreateTasksetGenerate(this.taskset);
 }
 
 /// used to abort the process
