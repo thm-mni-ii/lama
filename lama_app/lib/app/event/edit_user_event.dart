@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 
 /// Events used by [EditUserScreen] and [EditUserBloc]
 ///
@@ -74,4 +75,9 @@ class EditUserDeleteUser extends EditUserEvent {
 class EditUserReturn extends EditUserEvent {
   BuildContext context;
   EditUserReturn(this.context);
+}
+
+class EditUserChangeGuest extends EditUserEvent {
+  BuildContext context;
+  EditUserChangeGuest(this.context);
 }
