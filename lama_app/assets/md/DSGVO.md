@@ -49,8 +49,7 @@ Sie haben das Recht, die in diesem Dokument erklärten Bedingungen nicht zu akze
 ## •	Weitere Informationen
 Stimmen Sie den Punkten dieser Datenschutzerklärung zu, können Sie die App verwenden. Wir wünschen Ihnen ein schönes und spannendes Lernerlebnis.
 ```sh
-Version: 1.3
-Datum: 24.09.2021
-Verfasser: T.Rentsch, F.Leonhardt
+Version: 1.4
+Datum: 27.06.2022
 Kontakt: Lernapp.Lama@gmail.com
 ```
