@@ -1,4 +1,4 @@
-import 'dart:math';
+/* import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components/component.dart';
@@ -89,4 +89,4 @@ class FlappyScoreDisplay extends Component {
     // draw text
     _painter.paint(c, _position);
   }
-}
+} */

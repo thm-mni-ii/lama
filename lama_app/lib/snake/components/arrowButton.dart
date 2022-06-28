@@ -1,4 +1,4 @@
-import 'package:lama_app/snake/snakeGame.dart';
+/* import 'package:lama_app/snake/snakeGame.dart';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 
@@ -192,4 +192,4 @@ class ArrowButton {
       }
     }
   }
-}
+} */

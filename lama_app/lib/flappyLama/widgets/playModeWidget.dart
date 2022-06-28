@@ -10,8 +10,8 @@ class PlayModeButton extends StatelessWidget {
   final Function onButtonPressed;
 
   const PlayModeButton({
-    @required this.onButtonPressed,
-    @required this.playMode
+    required this.onButtonPressed,
+    required this.playMode
   });
 
   @override

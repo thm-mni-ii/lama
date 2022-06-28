@@ -16,9 +16,9 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 
  
 class NumberBox extends StatelessWidget {
-  final Function(int value) onChanged;
-  NumberBox({Key key, this.onChanged}) : super(key: key);
 
+  final Function(int value)? onChanged;
+  NumberBox({Key? key, this.onChanged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class NumberBox extends StatelessWidget {
               borderSide: BorderSide.none),
         ),
         onChanged: (value) {
-          onChanged(int.tryParse(value) ?? 0);
+          onChanged!(int.tryParse(value) ?? 0);
         },
         textAlign: TextAlign.center,
         style: TextStyle(
@@ -59,18 +59,18 @@ class NumberBox extends StatelessWidget {
 }
  
 class ZerlegungTaskScreen extends StatefulWidget {
-  ZerlegungTaskScreen({Key key, this.task, this.constraints}) : super(key: key) {
+  ZerlegungTaskScreen({Key? key, this.task, this.constraints}) : super(key: key) {
     readquestion();
   }
-  final TaskZerlegung task;
-  final BoxConstraints constraints;
+  final TaskZerlegung? task;
+  final BoxConstraints? constraints;
   final FlutterTts flutterTts = FlutterTts();
 
   readquestion() async {
     if(!home_screen_state.isTTs()) {
       return;
     }
-    String text = task.boolThousands
+    String text = task!.boolThousands!
         ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
         : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!";
     await flutterTts.setLanguage("de-De");
@@ -80,25 +80,25 @@ class ZerlegungTaskScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return ZerlegungTaskScreenState(constraints,task);
+    return ZerlegungTaskScreenState(constraints,task!);
   }
 }
  
 class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
   TextEditingController controller = TextEditingController();
-  final BoxConstraints constraints;
+  final BoxConstraints? constraints;
   final TaskZerlegung task;
   var random = Random();
-  int thousands;
-  int hundreds;
-  int tens;
-  int ones;
-  int rightAnswer;
+  int? thousands;
+  int? hundreds;
+  int? tens;
+  int? ones;
+  int? rightAnswer;
   List<int> _answerParts = [];
-  int givenAnswer;
-  bool answer;
+  int? givenAnswer;
+  bool? answer;
   ZerlegungTaskScreenState(this.constraints, this.task) {
-    if (task.zeros) {
+    if (task.zeros!) {
       thousands = random.nextInt(10) * 1000;
       hundreds = random.nextInt(10) * 100;
       tens = random.nextInt(10) * 10;
@@ -110,11 +110,11 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
       ones = (random.nextInt(9) + 1) * 1;
     } 
  
-    if (task.boolThousands) {
-      rightAnswer = thousands + hundreds + tens + ones;
+    if (task.boolThousands!) {
+      rightAnswer = thousands! + hundreds! + tens! + ones!;
       print (rightAnswer);
     } else {
-      rightAnswer = hundreds + tens + ones;
+      rightAnswer = hundreds! + tens! + ones!;
       print (rightAnswer);
     }
   }
@@ -142,7 +142,7 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
                 nip: BubbleNip.leftCenter,
                 child: Center(
                   child: Text(
-                    task.boolThousands
+                    task.boolThousands!
                         ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
                         : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!",
                     style: LamaTextTheme.getStyle(
@@ -174,7 +174,7 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
         ),
       ),
       SizedBox(height: 50),
-      if (task.boolThousands) ...[
+      if (task.boolThousands!) ...[
         Container(
           child: Row(
             children: [
@@ -182,9 +182,9 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
               Column(
                 children: [
                   Container(
-                    height: (constraints.maxHeight / 100) * 8,
+                    height: (constraints!.maxHeight / 100) * 8,
                     child: Text(
-                      widget.task.reverse ? "E" : "T",
+                      widget.task!.reverse! ? "E" : "T",
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 35,
@@ -216,9 +216,9 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
               Column(
                 children: [
                   Container(
-                    height: (constraints.maxHeight / 100) * 8,
+                    height: (constraints!.maxHeight / 100) * 8,
                     child: Text(
-                      widget.task.reverse ? "Z" : "H",
+                      widget.task!.reverse! ? "Z" : "H",
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 35,
@@ -249,9 +249,9 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
               Column(
                 children: [
                   Container(
-                    height: (constraints.maxHeight / 100) * 8,
+                    height: (constraints!.maxHeight / 100) * 8,
                     child: Text(
-                      widget.task.reverse ? "H" : "Z",
+                      widget.task!.reverse! ? "H" : "Z",
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 35,
@@ -278,9 +278,9 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
               Column(
                 children: [
                   Container(
-                    height: (constraints.maxHeight / 100) * 8,
+                    height: (constraints!.maxHeight / 100) * 8,
                     child: Text(
-                      widget.task.reverse ? "T" : "E",
+                      widget.task!.reverse! ? "T" : "E",
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 35,
@@ -304,9 +304,9 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
               Column(
                 children: [
                   Container(
-                    height: (constraints.maxHeight / 100) * 8,
+                    height: (constraints!.maxHeight / 100) * 8,
                     child: Text(
-                      widget.task.reverse ? "E" : "H",
+                      widget.task!.reverse! ? "E" : "H",
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 35,
@@ -337,7 +337,7 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
               Column(
                 children: [
                   Container(
-                    height: (constraints.maxHeight / 100) * 8,
+                    height: (constraints!.maxHeight / 100) * 8,
                     child: Text(
                       'Z',
                       style: TextStyle(
@@ -366,9 +366,9 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
               Column(
                 children: [
                   Container(
-                    height: (constraints.maxHeight / 100) * 8,
+                    height: (constraints!.maxHeight / 100) * 8,
                     child: Text(
-                      widget.task.reverse ? "H" : "E",
+                      widget.task!.reverse! ? "H" : "E",
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 35,
@@ -386,12 +386,12 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
         ),
       ],
       Container(
-        height: (constraints.maxHeight / 100) * 25,
+        height: (constraints!.maxHeight / 100) * 25,
         child: Center(
           child: InkWell(
             child: Container(
-              height: (constraints.maxHeight / 100) * 15,
-              width: (constraints.maxWidth / 100) * 70,
+              height: (constraints!.maxHeight / 100) * 15,
+              width: (constraints!.maxWidth / 100) * 70,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(25),
@@ -414,7 +414,7 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
             ),
             onTap: () {
               if (task.reverse == true){
-                if (task.boolThousands) {
+                if (task.boolThousands!) {
                 if(_answerParts[3] == thousands){
                   if (_answerParts[2] == hundreds){
                     if(_answerParts[1] == tens){
@@ -439,7 +439,7 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
                     answer = false;
                   }
                 }
-              } else if (task.boolThousands) {
+              } else if (task.boolThousands!) {
                 if(_answerParts[0] == thousands){
                   if (_answerParts[1] == hundreds){
                     if(_answerParts[2] == tens){

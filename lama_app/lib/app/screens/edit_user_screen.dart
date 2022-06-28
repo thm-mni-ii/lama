@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lama_app/app/bloc/create_admin_bloc.dart';
+import 'package:lama_app/app/bloc/user_management_bloc.dart';
+import 'package:lama_app/app/event/user_management_event.dart';
+import 'package:lama_app/app/screens/create_admin_screen.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -44,14 +48,14 @@ class EditUserScreen extends StatefulWidget {
 class EditUserScreenState extends State<EditUserScreen> {
   //[_formKey] should be used to identify every Form in this Screen
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Size screenSize;
+  late Size screenSize;
 
   ///[User] thats selected by the Admin
   User _user;
   //temporary password for double password validation
-  String _pass;
+  String? _pass;
   //List of grades wich are supported in the App
-  List<String> _grades = [
+  List<String?> _grades = [
     'Klasse 1',
     'Klasse 2',
     'Klasse 3',
@@ -60,7 +64,7 @@ class EditUserScreenState extends State<EditUserScreen> {
     'Klasse 6',
   ];
   //temporary save the value of the Dropdown menu
-  String _dropDown;
+  String? _dropDown;
 
   ///constructor with the needed attribute [User] as _user
   EditUserScreenState(this._user);
@@ -68,7 +72,7 @@ class EditUserScreenState extends State<EditUserScreen> {
   //setting the default value for the _gradesList] by the current grade of [_user]
   @override
   void initState() {
-    _dropDown = _grades[_user.grade - 1];
+    _dropDown = _grades[_user.grade! - 1];
     super.initState();
   }
 
@@ -80,7 +84,7 @@ class EditUserScreenState extends State<EditUserScreen> {
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
-    return BlocBuilder<EditUserBloc, EditUserState>(
+    return BlocBuilder<EditUserBloc, EditUserState?>(
       builder: (context, state) {
         if (state is EditUserDeleteCheck)
           return _deleteUserCheck(context, screenSize.width, state);
@@ -91,7 +95,7 @@ class EditUserScreenState extends State<EditUserScreen> {
             //avoid overflow because of the keyboard
             resizeToAvoidBottomInset: false,
             appBar: _bar(screenSize.width / 5, 'Editiere den Nutzer',
-                LamaColors.bluePrimary),
+                LamaColors.bluePrimary) as PreferredSizeWidget?,
             body: _userEditOptions(context),
             floatingActionButton: _userOptionsButtons(context),
           );
@@ -120,15 +124,18 @@ class EditUserScreenState extends State<EditUserScreen> {
               //[TextFormField] to change the Username
               _usernameTextField(context),
               //[TextFormField] to change the Password
-              _passwortTextField(context),
+              //TO-DO change if to state with blocpattern - add a gueststate
+              if (!_user.isGuest!) _passwortTextField(context),
               //[TextFormField] to repead the Password for safety
-              _passwortTextField2(context),
+              if (!_user.isGuest!) _passwortTextField2(context),
               //[TextFormField] to change the coins
-              _coinsTextField(context),
+              if (!_user.isGuest!) _coinsTextField(context),
               //[DropdownButtonHideUnderline] to change the grade
               _gradesList(context, _grades),
               //[ElevatedButton] to delete the user
-              _deletUserButoon(context),
+              !_user.isGuest!
+                  ? _deletUserButoon(context)
+                  : _createAdminButton(context),
             ],
           ),
         ),
@@ -267,7 +274,7 @@ class EditUserScreenState extends State<EditUserScreen> {
   ///Grades that could be selected as List<String> grades
   ///
   ///{@return} [Padding] with [DropdownButtonHideUnderline]
-  Widget _gradesList(BuildContext context, List<String> grades) {
+  Widget _gradesList(BuildContext context, List<String?> grades) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Container(
@@ -279,11 +286,11 @@ class EditUserScreenState extends State<EditUserScreen> {
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-            items: grades.map((String value) {
+            items: grades.map((String? value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(
-                  value,
+                  value!,
                   style: LamaTextTheme.getStyle(
                     fontSize: 20,
                     color: LamaColors.black,
@@ -356,7 +363,7 @@ class EditUserScreenState extends State<EditUserScreen> {
   Widget _showChanges(BuildContext context, EditUserChangeSuccess state) {
     ///[passString] is used to show the password.
     ///If no changes are taken the password value of `state.changedUser` should be empty.
-    String passString;
+    String? passString;
 
     ///The password is set equal to '******' if the password of `state.changedUser` is empty
     if (InputValidation.isEmpty(state.changedUser.password))
@@ -367,12 +374,12 @@ class EditUserScreenState extends State<EditUserScreen> {
       ///`state.changedUser.password` greater or equal than 9
       ///the middle part is cuted to '***' but the first and last 3 character are still available
       ///Example: "12345678910" -> 123***910
-      passString = state.changedUser.password.length >= 9
-          ? state.changedUser.password.substring(0, 3) +
+      passString = state.changedUser.password!.length >= 9
+          ? state.changedUser.password!.substring(0, 3) +
               '***' +
-              state.changedUser.password.substring(
-                  state.changedUser.password.length - 3,
-                  state.changedUser.password.length)
+              state.changedUser.password!.substring(
+                  state.changedUser.password!.length - 3,
+                  state.changedUser.password!.length)
           : state.changedUser.password;
 
     ///END [passString]
@@ -382,7 +389,7 @@ class EditUserScreenState extends State<EditUserScreen> {
         MediaQuery.of(context).size.width / 5,
         'Ihre Änderungen',
         LamaColors.bluePrimary,
-      ),
+      ) as PreferredSizeWidget?,
       body: Padding(
         padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
         child: Column(
@@ -392,7 +399,7 @@ class EditUserScreenState extends State<EditUserScreen> {
             //Headline for the Username change
             _changesHeadline('Nutzername'),
             //Row that shows the username change
-            _changeRow(state.user.name, state.changedUser.name),
+            _changeRow(state.user!.name, state.changedUser.name),
             //Headline for the Password change
             _changesHeadline('Password'),
             //Row that shows the Password change
@@ -400,7 +407,7 @@ class EditUserScreenState extends State<EditUserScreen> {
             //Headline for the coin change
             _changesHeadline('Lamamünzen'),
             //Row that shows the coin change
-            _changeRow(state.user.coins, state.changedUser.coins),
+            _changeRow(state.user!.coins, state.changedUser.coins),
             //Headline for the grade change
             _changesHeadline('Klasse'),
             //Row that shows the coin change
@@ -408,10 +415,10 @@ class EditUserScreenState extends State<EditUserScreen> {
 
                 ///if the grade isn't changed `state.changedUser.grade` is equal to null
                 ///to prevent any issues the `state.user.grade` is used on empty
-                _grades[state.user.grade - 1],
+                _grades[state.user!.grade! - 1],
                 state.changedUser.grade != null
-                    ? _grades[state.changedUser.grade - 1]
-                    : _grades[state.user.grade - 1]),
+                    ? _grades[state.changedUser.grade! - 1]
+                    : _grades[state.user!.grade! - 1]),
             SizedBox(
               height: 15,
             ),
@@ -609,7 +616,7 @@ class EditUserScreenState extends State<EditUserScreen> {
               color: Colors.white,
               tooltip: 'Bestätigen',
               onPressed: () {
-                if (_formKey.currentState.validate())
+                if (_formKey.currentState!.validate())
                   context.read<EditUserBloc>().add(EditUserPush());
               },
             ),
@@ -654,7 +661,8 @@ class EditUserScreenState extends State<EditUserScreen> {
       BuildContext context, double size, EditUserDeleteCheck state) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: _bar(size / 5, 'Nutzer löschen', LamaColors.redPrimary),
+        appBar: _bar(size / 5, 'Nutzer löschen', LamaColors.redPrimary)
+            as PreferredSizeWidget?,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -739,4 +747,56 @@ class EditUserScreenState extends State<EditUserScreen> {
       ),
     );
   }
+}
+
+///provides a button to create an admin with, if the current user is a guest
+Widget _createAdminButton(BuildContext context) {
+  return ElevatedButton(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Icon(Icons.add),
+        Text(
+          'Erstelle Admin',
+          style: LamaTextTheme.getStyle(fontSize: 14),
+        ),
+        SizedBox(
+          width: 5,
+        ),
+      ],
+    ),
+    onPressed: () => {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (BuildContext context) => CreateAdminBloc(),
+            child: CreateAdminScreen(),
+          ),
+        ),
+      ).then((value) {
+        //if an admin gets created
+        if (value != null) {
+          //render snackbar for confirmation
+          final snackBar = SnackBar(
+              backgroundColor: LamaColors.mainPink,
+              content: Text(
+                'Admin wurde erstellt!',
+                textAlign: TextAlign.center,
+                style: LamaTextTheme.getStyle(
+                    fontSize: 15, color: LamaColors.white),
+              ),
+              duration: Duration(seconds: 2));
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          //remove the guest status from the user
+          context.read<EditUserBloc>().add(EditUserChangeGuest(context));
+        }
+      }),
+    },
+    style: ElevatedButton.styleFrom(
+      minimumSize: Size(50, 45),
+      primary: LamaColors.bluePrimary,
+    ),
+  );
 }

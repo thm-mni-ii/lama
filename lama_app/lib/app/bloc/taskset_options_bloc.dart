@@ -20,38 +20,37 @@ import 'package:lama_app/util/input_validation.dart';
 /// Author: L.Kammerer
 /// Latest Changes: 26.06.2021
 class TasksetOptionsBloc
-    extends Bloc<TasksetOptionsEvent, TasksetOptionsState> {
-  TasksetOptionsBloc({TasksetOptionsState initialState}) : super(initialState);
+    extends Bloc<TasksetOptionsEvent, TasksetOptionsState?> {
+  TasksetOptionsBloc({TasksetOptionsState? initialState})
+      : super(initialState) {
+    on<TasksetOptionsPush>((event, emit) async {
+      emit(TasksetOptionsWaiting("Aufgaben werden überprüft und geladen..."));
+      emit(await _tasksetOptionsPush());
+    });
+    on<TasksetOptionsDelete>((event, emit) async {
+      emit(TasksetOptionsWaiting("Aufgaben werden gelöscht..."));
+      emit(await _deleteUrl(event.url));
+    });
+    on<TasksetOptionsChangeURL>((event, emit) async {
+      _tasksetUrl = event.tasksetUrl;
+    });
+    on<TasksetOptionsReload>((event, emit) async {
+      emit(await await _reload());
+    });
+    on<TasksetOptionsSelectUrl>((event, emit) async {
+      emit(TasksetOptionsUrlSelected(event.url.url));
+    });
+    on<TasksetOptionsReAddUrl>((event, emit) async {
+      emit(TasksetOptionsWaiting("Aufgaben werden überprüft und geladen..."));
+      emit(await _tasksetOptionsReAddUrl(event.url));
+    });
+  }
 
   ///url that should be stored in the database later on
   ///incoming events are used to change the value
-  String _tasksetUrl;
+  String? _tasksetUrl;
   //is used to show all urls which are deleted in the time this screen is used
   List<TaskUrl> deletedUrls = [];
-
-  @override
-  Stream<TasksetOptionsState> mapEventToState(
-      TasksetOptionsEvent event) async* {
-    if (event is TasksetOptionsPush) {
-      yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
-      yield await _tasksetOptionsPush();
-    }
-    if (event is TasksetOptionsDelete) {
-      yield TasksetOptionsWaiting("Aufgaben werden gelöscht...");
-      yield await _deleteUrl(event.url);
-    }
-    if (event is TasksetOptionsChangeURL) _tasksetUrl = event.tasksetUrl;
-    if (event is TasksetOptionsReload) {
-      yield await _reload();
-    }
-    if (event is TasksetOptionsSelectUrl)
-      yield TasksetOptionsUrlSelected(event.url.url);
-
-    if (event is TasksetOptionsReAddUrl) {
-      yield TasksetOptionsWaiting("Aufgaben werden überprüft und geladen...");
-      yield await _tasksetOptionsReAddUrl(event.url);
-    }
-  }
 
   ///(private)
   ///stores the [_tasksetUrl] in the Database using [_insertUrl]
@@ -86,15 +85,15 @@ class TasksetOptionsBloc
   ///with specific error message
   Future<TasksetOptionsState> _insertUrl(TaskUrl url) async {
     //Check if URL is valid
-    String error = await InputValidation.inputUrlWithJsonValidation(url.url);
+    String? error = await InputValidation.inputUrlWithJsonValidation(url.url);
     if (error != null) {
       return TasksetOptionsPushFailed(error: error, failedUrl: _tasksetUrl);
     }
-    final response = await http.get(Uri.parse(url.url));
+    final response = await http.get(Uri.parse(url.url!));
     //Check if URL is reachable
     if (response.statusCode == 200) {
       //Taskset validtion
-      String tasksetError =
+      String? tasksetError =
           TasksetValidator.isValidTaskset(jsonDecode(response.body));
       if (tasksetError != null) {
         return TasksetOptionsPushFailed(error: tasksetError);

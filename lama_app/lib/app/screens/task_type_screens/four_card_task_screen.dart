@@ -14,7 +14,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 /// Author: K.Binder
 class FourCardTaskScreen extends StatelessWidget {
   final Task4Cards task;
-  final List<String> answers = [];
+  final List<String?> answers = [];
   final FlutterTts flutterTts = FlutterTts();
 
   //The constraints describe the space useable by the task.
@@ -60,7 +60,7 @@ class FourCardTaskScreen extends StatelessWidget {
                       offset: Offset(0, 3))
                 ]),
             child: Align(
-              child: Text(task.question,
+              child: Text(task.question!,
                   textAlign: TextAlign.center,
                   style: LamaTextTheme.getStyle(fontSize: 30)),
             )),
@@ -79,7 +79,7 @@ class FourCardTaskScreen extends StatelessWidget {
                 nip: BubbleNip.leftCenter,
                 child: Center(
                   child: Text(
-                    task.lamaText,
+                    task.lamaText!,
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -143,7 +143,7 @@ class FourCardTaskScreen extends StatelessWidget {
           padding: EdgeInsets.all(5),
           child: Center(
             child: Text(
-              answers[index],
+              answers[index]!,
               textAlign: TextAlign.center,
               style: LamaTextTheme.getStyle(),
             ),

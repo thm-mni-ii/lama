@@ -54,7 +54,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
   final BoxConstraints constraints;
   final TextEditingController controller = TextEditingController();
 
-  VocableTestTaskBloc bloc;
+  late VocableTestTaskBloc bloc;
   VocableTestTaskScreenState(this.task, this.constraints) {
     bloc = VocableTestTaskBloc(task);
   }
@@ -100,7 +100,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                           VocableTestTaskState>(builder: (context, state) {
                         if (state is VocableTestTaskTranslationState)
                           return Text(
-                            state.wordToTranslate,
+                            state.wordToTranslate!,
                             textAlign: TextAlign.center,
                             style: LamaTextTheme.getStyle(fontSize: 35),
                           );
@@ -164,7 +164,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                       nip: BubbleNip.leftCenter,
                       child: Center(
                         child: Text(
-                          task.lamaText,
+                          task.lamaText!,
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
@@ -224,17 +224,17 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                   if (state is VocableTestTaskTranslationState)
                     return ListView.builder(
                       shrinkWrap: true,
-                      itemCount: state.resultList.length,
+                      itemCount: state.resultList!.length,
                       itemBuilder: (context, index) {
-                        if (state.resultList[index] == null) {
+                        if (state.resultList![index] == null) {
                           return CircleAvatar(
                             backgroundColor: Colors.grey,
                           );
-                        } else if (!state.resultList[index]) {
+                        } else if (!state.resultList![index]!) {
                           return CircleAvatar(
                             backgroundColor: LamaColors.redAccent,
                           );
-                        } else if (state.resultList[index]) {
+                        } else if (state.resultList![index]!) {
                           return CircleAvatar(
                             backgroundColor: LamaColors.greenAccent,
                           );

@@ -32,7 +32,7 @@ class ClozeTestTaskScreen extends StatefulWidget {
 
 
   ClozeTestTaskScreen(this.task, this.constraints) {
-    answers.add(task.rightAnswer); //get the right answer
+    answers.add(task.rightAnswer!); //get the right answer
     answers.addAll(task.wrongAnswers); // add the wrong answers
     answers.shuffle(); // randomize in list
 
@@ -106,7 +106,8 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
       Container(
           height: (constraints.maxHeight / 100) * 30,
           child: Align(
-            child: Text(task.question,
+            child: Text(
+                task.question!,
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,)),
             //alignment: Alignment.centerLeft,
@@ -128,7 +129,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                   nip: BubbleNip.leftCenter,
                   child: Center(
                     child: Text(
-                      task.lamaText,
+                      task.lamaText!,
                       style:
                       LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 15),
                     ),

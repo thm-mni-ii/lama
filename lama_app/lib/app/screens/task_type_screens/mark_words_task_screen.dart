@@ -20,10 +20,10 @@ class MarkWordsScreen extends StatelessWidget {
   final TaskMarkWords task;
   final List<String> sentence = [];
   List<String> providedanswerWords = [];
-  MarkWordsBloc neededBloc;
+  late MarkWordsBloc neededBloc;
 
   MarkWordsScreen(this.task, this.constraints) {
-    sentence.addAll(task.sentence.split(" "));
+    sentence.addAll(task.sentence!.split(" "));
     print(sentence.length);
   }
 
@@ -56,7 +56,7 @@ class MarkWordsScreen extends StatelessWidget {
                         nip: BubbleNip.leftCenter,
                         child: Center(
                           child: Text(
-                            task.lamaText,
+                            task.lamaText!,
                             style: LamaTextTheme.getStyle(
                                 fontSize: 15, color: LamaColors.black),
                           ),

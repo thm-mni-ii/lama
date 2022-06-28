@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
+import 'package:lama_app/app/bloc/create_admin_bloc.dart';
+import 'package:lama_app/app/bloc/edit_user_bloc.dart';
 import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
+import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
+import 'package:lama_app/app/screens/edit_user_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -81,9 +85,9 @@ class ToggleTextToSpeechWidget extends State<ToggleTextToSpeech> {
 ///
 /// Author: K.Binder
 class _HomeScreenState extends State<HomeScreen> {
-  UserRepository userRepository;
+  UserRepository? userRepository;
 
-  DateTime backButtonPressedTime;
+  DateTime? backButtonPressedTime;
 
   static String finaltooltipp = "";
 
@@ -177,27 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50)),
                               ),
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    child: SvgPicture.asset(
-                                      'assets/images/svg/avatars/${userRepository.getAvatar()}.svg',
-                                      semanticsLabel: 'LAMA',
-                                    ),
-                                    radius: 25,
-                                    backgroundColor: LamaColors.mainPink,
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    userRepository.getUserName(),
-                                    style: LamaTextTheme.getStyle(
-                                        fontSize: 22.5,
-                                        fontWeight: FontWeight.w600,
-                                        monospace: true),
-                                  ),
-                                ],
-                              ),
+                              child: descriptionButton(context, constraints),
                             ),
                           )
                         ],
@@ -298,6 +282,72 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     return child;
   }*/
+  ///if the user is a guest, the description turns into a button to edit user details
+  ///after the user was changed, the userRepository gets updated
+  Widget descriptionButton(BuildContext context, BoxConstraints constraints) {
+    if (userRepository!.getGuestStatus()!) {
+      return TextButton(
+        child: Row(children: [
+          userDescription(),
+          SizedBox(width: 10),
+          Icon(
+            Icons.edit,
+            color: LamaColors.white,
+          )
+        ]),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                      create: (BuildContext context) =>
+                          EditUserBloc(userRepository!.authenticatedUser!)),
+                  BlocProvider(
+                      create: (BuildContext context) => UserManagementBloc()),
+                ],
+                child: EditUserScreen(userRepository!.authenticatedUser!),
+              ),
+            ),
+          )
+              .then((value) async => await userRepository!.updateUser())
+              .then((value) => setState(
+                    () {},
+                  ));
+        },
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.all(0),
+        ),
+      );
+    } else {
+      return userDescription();
+    }
+  }
+
+  ///Draws the Avatar and Username at the top of the screen
+  Row userDescription() {
+    return Row(
+      children: [
+        SizedBox(width: 10),
+        CircleAvatar(
+          child: SvgPicture.asset(
+            'assets/images/svg/avatars/${userRepository!.getAvatar()}.svg',
+            semanticsLabel: 'LAMA',
+          ),
+          radius: 25,
+          backgroundColor: LamaColors.mainPink,
+        ),
+        SizedBox(width: 5),
+        Text(
+          userRepository!.getUserName()!,
+          style: LamaTextTheme.getStyle(
+              fontSize: 22.5, fontWeight: FontWeight.w600, monospace: true),
+        ),
+      ],
+    );
+  }
+
   ///Return a Widget that contains the complete center column with
   ///all subjects and the game button.
   ///
@@ -310,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
     TasksetRepository tasksetRepository =
         RepositoryProvider.of<TasksetRepository>(context);
     if (tasksetRepository
-            .getTasksetsForSubjectAndGrade("Mathe", userRepository.getGrade())
+            .getTasksetsForSubjectAndGrade("Mathe", userRepository!.getGrade())!
             .length >
         0) {
       //children.add(ToggleTextToSpeech());
@@ -377,7 +427,7 @@ class _HomeScreenState extends State<HomeScreen> {
               create: (BuildContext context) =>
                   ChooseTasksetBloc(context.read<TasksetRepository>()),
               child: ChooseTasksetScreen(
-                  "Mathe", userRepository.getGrade(), userRepository),
+                  "Mathe", userRepository!.getGrade(), userRepository),
             ),
           ),
         ).then((value) => (setState(() {}))),
@@ -386,7 +436,8 @@ class _HomeScreenState extends State<HomeScreen> {
       //children.add(buildtooltip(constraints));
     }
     if (tasksetRepository
-            .getTasksetsForSubjectAndGrade("Deutsch", userRepository.getGrade())
+            .getTasksetsForSubjectAndGrade(
+                "Deutsch", userRepository!.getGrade())!
             .length >
         0) {
       children.add(ElevatedButton(
@@ -427,7 +478,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   create: (BuildContext context) =>
                       ChooseTasksetBloc(context.read<TasksetRepository>()),
                   child: ChooseTasksetScreen(
-                      "Deutsch", userRepository.getGrade(), userRepository),
+                      "Deutsch", userRepository!.getGrade(), userRepository),
                 ),
               ),
             ).then((value) => (setState(() {})));
@@ -438,18 +489,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 j <
                     tasksetRepository
                         .getTasksetsForSubjectAndGrade(
-                            "Deutsch", userRepository.getGrade())
+                            "Deutsch", userRepository!.getGrade())!
                         .length;
                 j++) {
               TaskBuchstabieren buchTask;
               List<Task> buchTasks = tasksetRepository
                   .getTasksetsForSubjectAndGrade(
-                      "Deutsch", userRepository.getGrade())[j]
-                  .tasks
+                      "Deutsch", userRepository!.getGrade())![j]
+                  .tasks!
                   .where((element) => element.type == "Buchstabieren")
                   .toList();
               for (int i = 0; i < buchTasks.length; i++) {
-                buchTask = buchTasks[i];
+                buchTask = buchTasks[i] as TaskBuchstabieren;
                 await preloadPngs(context, buchTask.woerter);
               }
             }
@@ -458,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     if (tasksetRepository
             .getTasksetsForSubjectAndGrade(
-                "Englisch", userRepository.getGrade())
+                "Englisch", userRepository!.getGrade())!
             .length >
         0) {
       children.add(ElevatedButton(
@@ -498,7 +549,7 @@ class _HomeScreenState extends State<HomeScreen> {
               create: (BuildContext context) =>
                   ChooseTasksetBloc(context.read<TasksetRepository>()),
               child: ChooseTasksetScreen(
-                  "Englisch", userRepository.getGrade(), userRepository),
+                  "Englisch", userRepository!.getGrade(), userRepository),
             ),
           ),
         ).then((value) => (setState(() {}))),
@@ -507,7 +558,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     if (tasksetRepository
             .getTasksetsForSubjectAndGrade(
-                "Sachkunde", userRepository.getGrade())
+                "Sachkunde", userRepository!.getGrade())!
             .length >
         0) {
       children.add(ElevatedButton(
@@ -547,7 +598,7 @@ class _HomeScreenState extends State<HomeScreen> {
               create: (BuildContext context) =>
                   ChooseTasksetBloc(context.read<TasksetRepository>()),
               child: ChooseTasksetScreen(
-                  "Sachkunde", userRepository.getGrade(), userRepository),
+                  "Sachkunde", userRepository!.getGrade(), userRepository),
             ),
           ),
         ).then((value) => (setState(() {}))),
@@ -622,7 +673,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             semanticsLabel: 'LAMA'),
                       ),
                     ),
-                    Text(userRepository.getLamaCoins().toString(),
+                    Text(userRepository!.getLamaCoins().toString(),
                         style: LamaTextTheme.getStyle(fontSize: 22.5)),
                   ],
                 ),
@@ -643,7 +694,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
     if (backButtonPressedTime == null ||
-        now.difference(backButtonPressedTime) > Duration(seconds: 1)) {
+        now.difference(backButtonPressedTime!) > Duration(seconds: 1)) {
       backButtonPressedTime = now;
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

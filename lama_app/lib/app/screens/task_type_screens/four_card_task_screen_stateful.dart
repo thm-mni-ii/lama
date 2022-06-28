@@ -67,7 +67,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           child: BlocBuilder<FourCardBloc, FourCardState>(
             builder: (context, FourCardState state) {
               if (state is EmptyFCardState) {
-                context.read<FourCardBloc>().add(AnswerOnInitEvent(task.question));
+                context.read<FourCardBloc>().add(AnswerOnInitEvent(task.question!));
               }
               return Container(
                 decoration: BoxDecoration(
@@ -88,9 +88,8 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                     onTap: () =>
                         BlocProvider.of<FourCardBloc>(context).add(
                             ClickOnWordQuestion.initVoice(
-                                task.question, task.answerLaguage)),
-
-                    child: Text(task.question,
+                                task.question!, task.answerLaguage)),
+                    child: Text(task.question!,
                         textAlign: TextAlign.center,
                         style: LamaTextTheme.getStyle(fontSize: 30)
                     ),

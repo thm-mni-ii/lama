@@ -33,12 +33,12 @@ class ClockTaskState extends State<ClockTaskScreen> {
   final TextEditingController controller = TextEditingController();
   final BoxConstraints constraints;
   final ClockTest task;
-  ClockPainter bloc;
-  final List<String> answers = [];
+  late ClockPainter bloc;
+  final List<String?> answers = [];
   int i = 1;
   int timer = 15;
-  String showtimer;
-  String sonneMond;
+  late String showtimer;
+  String? sonneMond;
   var randStunde;
   var randMinute;
   var halbeMinute;
@@ -55,7 +55,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
   var wrgMinute6;
   var vierMinute;
   var allMinuten;
-  List<String> wrongAnswer;
+  List<String>? wrongAnswer;
 
   final FlutterTts flutterTts = FlutterTts();
   String selectedAnswer = "leer";
@@ -309,7 +309,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                       nip: BubbleNip.leftCenter,
                       child: Center(
                         child: Text(
-                          task.lamaText,
+                          task.lamaText!,
                           style: LamaTextTheme.getStyle(
                               color: LamaColors.black, fontSize: 15),
                         ),
@@ -489,19 +489,18 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     child: Center(
                       child: InkWell(
                         onTap: () {
-                          readText(task.lamaText);
+                          readText(task.lamaText!);
                           setState(() {
-                            selectedQuestion = task.lamaText;
+                            selectedQuestion = task.lamaText!;
                           });
                         },
-                        child: Text(
-                          // doing
-                          task.lamaText,
-                          style: LamaTextTheme.getStyle(
-                              color: selectedQuestion == task.lamaText ? LamaColors.purpleAccent: LamaColors.black , fontSize: 15),
-                        ),
+                      child: Text(
+                        task.lamaText!,
+                        style: LamaTextTheme.getStyle(
+                            color: LamaColors.black, fontSize: 15),
                       ),
 
+                      ),
                     ),
                   ),
                 ),
@@ -581,15 +580,15 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 child: InkWell(
 
                   onTap: () {
-                    confirmAnswer(answers[0], 0);
+                    confirmAnswer(answers[0]!, 0);
                     setState(() {
-                      selectedAnswer = answers[0];
+                      selectedAnswer = answers[0]!;
                       selectedQuestion = "";
                     });
                   },
                   child: Center(
                     child: Text(
-                      answers[0],
+                      answers[0]!,
                       style: LamaTextTheme.getStyle(
                         color: LamaColors.white,
                         fontSize: 30,
@@ -613,15 +612,15 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     ]),
                 child: InkWell(
                   onTap: () {
-                    confirmAnswer(answers[1], 1);
+                    confirmAnswer(answers[1]!, 1);
                     setState(() {
-                      selectedAnswer = answers[1];
+                      selectedAnswer = answers[1]!;
                       selectedQuestion = "";
                     });
                   },
                   child: Center(
                     child: Text(
-                      answers[1],
+                      answers[1]!,
                       style: LamaTextTheme.getStyle(
                         color:  LamaColors.white,
                         fontSize: 30,
@@ -645,15 +644,15 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     ]),
                 child: InkWell(
                 onTap: () {
-                  confirmAnswer(answers[2], 2);
+                  confirmAnswer(answers[2]!, 2);
                   setState(() {
-                  selectedAnswer = answers[2];
+                  selectedAnswer = answers[2]!;
                   selectedQuestion = "";
                   });
                   },
                   child: Center(
                     child: Text(
-                      answers[2],
+                      answers[2]!,
                       style: LamaTextTheme.getStyle(
                         color: LamaColors.white,
                         fontSize: 30,
@@ -785,7 +784,7 @@ class ClockPainter extends CustomPainter {
 
     var minClock = Paint()
       ..shader =
-          RadialGradient(colors: [Colors.lightBlue, Colors.blueAccent[700]])
+          RadialGradient(colors: [Colors.lightBlue, Colors.blueAccent[700]!])
               .createShader(Rect.fromCircle(center: center, radius: rad))
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
@@ -799,7 +798,7 @@ class ClockPainter extends CustomPainter {
       ..strokeWidth = 16;
     var minClock1 = Paint()
       ..shader =
-          RadialGradient(colors: [Colors.indigo[600], Colors.blueAccent[700]])
+          RadialGradient(colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
               .createShader(Rect.fromCircle(center: center, radius: rad))
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
@@ -807,7 +806,7 @@ class ClockPainter extends CustomPainter {
 
     var hourClock1 = Paint()
       ..shader =
-          RadialGradient(colors: [Colors.indigo[600], Colors.blueAccent[700]])
+          RadialGradient(colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
               .createShader(Rect.fromCircle(center: center, radius: rad))
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round

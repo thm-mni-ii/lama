@@ -29,7 +29,7 @@ class GridSelectTaskScreen extends StatelessWidget {
   //some letter appear more often (loosely based on letter frequency) so they have a higher chance of being chosen
   final String letters = "AAABCDDEEEEFFGGHHIIIJKKLLMMNNNOOPPQRRSSSTTTUUVWXYZ";
 
-  String actualLamaText;
+  String? actualLamaText;
 
   final Map<Pair, String> gridLayout = Map();
 
@@ -77,7 +77,7 @@ class GridSelectTaskScreen extends StatelessWidget {
                     nip: BubbleNip.leftCenter,
                     child: Center(
                       child: Text(
-                        actualLamaText,
+                        actualLamaText!,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
                       ),
@@ -146,12 +146,12 @@ class GridSelectTaskScreen extends StatelessWidget {
   List<Widget> _getRow(int rowNumber, BoxConstraints constraints) {
     return List.generate(9, (columnNumber) {
       Pair cord = Pair(columnNumber, rowNumber);
-      String char = "";
+      String? char = "";
       if (characterPositions.containsKey(cord)) {
         char = characterPositions[cord];
       } else
         char = getTableItemLetter(cord);
-      return TableItem(cord, constraints, char);
+      return TableItem(cord, constraints, char!);
     });
   }
 
@@ -240,7 +240,7 @@ class GridSelectTaskScreen extends StatelessWidget {
       } while (!wordAdded && wordTimeout < 20);
     });
     actualLamaText =
-        actualLamaText.replaceAll(" X ", " " + wordsPlaced.toString() + " ");
+        actualLamaText!.replaceAll(" X ", " " + wordsPlaced.toString() + " ");
   }
 
   ///Returns the character that will be placed at the [position] in the table.
@@ -269,7 +269,7 @@ class GridSelectTaskScreen extends StatelessWidget {
     int triesTillTimeout = 10;
     int curTries = 0;
 
-    String leftValue, upValue, rightValue, downValue;
+    String? leftValue, upValue, rightValue, downValue;
     leftValue = gridLayout[left];
     upValue = gridLayout[up];
     rightValue = gridLayout[right];
