@@ -19,14 +19,13 @@ class FourCardBloc extends Bloc<FourCardEvent,FourCardState> {
     } else {
       await flutterTts.setLanguage("de-De");
     }
-
     await flutterTts.setVolume(1.0);
     await flutterTts.speak(text);
   }
 
   FourCardBloc() : super(EmptyFCardState()){
     on<AnswerOnInitEvent>((event, emit) async {
-       readText(event.answer, event.answerLanguage);
+       readText(event.answer, event.questionLanguage);
        //log('data: $AnswerOnInitEvent');
        //log('event.answer: ${event.answer}');
        //readText("sample", "aaa");

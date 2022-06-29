@@ -69,7 +69,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           child: BlocBuilder<FourCardBloc, FourCardState>(
             builder: (context, FourCardState state) {
               if (state is EmptyFCardState) {
-                context.read<FourCardBloc>().add(AnswerOnInitEvent(task.question!));
+                context.read<FourCardBloc>().add(AnswerOnInitEvent(task.question!,task.questionLanguage!));
               }
               return Container(
                 decoration: BoxDecoration(

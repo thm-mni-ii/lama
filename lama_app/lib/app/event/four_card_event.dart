@@ -4,9 +4,9 @@ abstract class FourCardEvent {}
 
 class AnswerOnInitEvent extends FourCardEvent {
   String answer;
-  String answerLanguage = "";
+  String questionLanguage = "";
 
-  AnswerOnInitEvent(this.answer);
+  AnswerOnInitEvent(this.answer,this.questionLanguage);
 }
 
 class ClickOnWordQuestion extends FourCardEvent {
