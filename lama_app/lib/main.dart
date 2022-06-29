@@ -1,13 +1,20 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hive/hive.dart';
 import 'package:lama_app/app/app.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 
 ///Main method that launches the app.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //initialize hive database
+  if (kIsWeb) {
+    await Hive.openBox('database');
+    print("WEB Enabled: => Hive initiated");
+  }
   TasksetRepository tasksetRepository = TasksetRepository();
   tasksetRepository.initialize();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -22,8 +29,8 @@ void main() async {
 ///
 ///Especially important for the "MoneyTask" since the svgs would need
 ///a second to load otherwise which looks cheap and unprofessional.
-Future<Future<List<void>>> precacheSvgs() async {
-  return Future.wait([
+Future<List<void>> precacheSvgs() async {
+  return await Future.wait([
     precachePicture(
       ExactAssetPicture(SvgPicture.svgStringDecoder,
           'assets/images/svg/EuroCoins/1_Cent.svg'),

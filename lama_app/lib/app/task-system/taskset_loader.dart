@@ -49,8 +49,8 @@ class TasksetLoader {
         prefs.getBool(AdminUtils.enableDefaultTasksetsPref);
     if (enableDefaultTasksetPref == null || enableDefaultTasksetPref) {
       //load all standardtasks
-
-      try {
+      //TO-DO commented out for webversion
+      /*  try {
         final result = await InternetAddress.lookup('example.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           print('connected');
@@ -73,39 +73,37 @@ class TasksetLoader {
             await loadTasksFromUrls(standardTaskUrls);
           }
         }
-      } on SocketException catch (_) {
-        print('not connected');
-        for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-          //load all standardtasks from local assets folder. needed in case
-          //the app user has no internet connection
-          String tasksetMathe = await rootBundle
-              .loadString('assets/standardTasksets/mathe/mathe' +
-                  i.toString() +
-                  '.json')
-              .catchError((err) => Future.value(""));
-          if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
+      } on SocketException catch (_) { */
+      print('not connected');
+      for (int i = 1; i <= GRADES_SUPPORTED; i++) {
+        //load all standardtasks from local assets folder. needed in case
+        //the app user has no internet connection
+        String tasksetMathe = await rootBundle
+            .loadString(
+                'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
 
-          String tasksetDeutsch = await rootBundle
-              .loadString('assets/standardTasksets/deutsch/deutsch' +
-                  i.toString() +
-                  '.json')
-              .catchError((err) => Future.value(""));
-          if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
-          String tasksetEnglisch = await rootBundle
-              .loadString('assets/standardTasksets/englisch/englisch' +
-                  i.toString() +
-                  '.json')
-              .catchError((err) => Future.value(""));
-          if (tasksetEnglisch != "")
-            await buildTasksetFromJson(tasksetEnglisch);
-          String tasksetSachkunde = await rootBundle
-              .loadString('assets/standardTasksets/sachkunde/sachkunde' +
-                  i.toString() +
-                  '.json')
-              .catchError((err) => Future.value(""));
-          if (tasksetSachkunde != "")
-            await buildTasksetFromJson(tasksetSachkunde);
-        }
+        String tasksetDeutsch = await rootBundle
+            .loadString('assets/standardTasksets/deutsch/deutsch' +
+                i.toString() +
+                '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+        String tasksetEnglisch = await rootBundle
+            .loadString('assets/standardTasksets/englisch/englisch' +
+                i.toString() +
+                '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
+        String tasksetSachkunde = await rootBundle
+            .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+                i.toString() +
+                '.json')
+            .catchError((err) => Future.value(""));
+        if (tasksetSachkunde != "")
+          await buildTasksetFromJson(tasksetSachkunde);
+        /* } */ ////TO-DO commented out for webversion
       }
 
       // for (int i = 1; i <= GRADES_SUPPORTED; i++) {
@@ -219,7 +217,8 @@ class TasksetLoader {
   }
 
   ///Gets all Tasksets that match a specific subject-grade combination (e.g. math and second grade)
-  List<Taskset>? getLoadedTasksetsForSubjectAndGrade(String subject, int? grade) {
+  List<Taskset>? getLoadedTasksetsForSubjectAndGrade(
+      String subject, int? grade) {
     SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
     if (loadedTasksets.containsKey(sgr))
       return loadedTasksets[sgr];

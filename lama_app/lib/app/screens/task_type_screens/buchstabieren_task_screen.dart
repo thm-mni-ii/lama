@@ -529,7 +529,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     }
     return null;
   }
-
+  //TO-DO commented out for webversion
+/* 
   Future<bool?> hasInternet() async {
     try {
       final result = await InternetAddress.lookup('example.com');
@@ -542,5 +543,5 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
       return false;
     }
     return null;
-  }
+  } */
 }

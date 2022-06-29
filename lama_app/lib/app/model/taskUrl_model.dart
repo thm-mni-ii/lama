@@ -4,7 +4,7 @@ final String tableTaskUrl = "task_url";
 ///Set the column names
 ///
 /// Author: F.Brecher
-class TaskUrlFields{
+class TaskUrlFields {
   static final String columnId = "id";
   static final String columnTaskUrl = "url";
 }
@@ -22,9 +22,7 @@ class TaskUrl {
   ///
   ///{@return} Map<String, dynamic>
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
-      TaskUrlFields.columnTaskUrl: url
-    };
+    var map = <String, dynamic>{TaskUrlFields.columnTaskUrl: url};
     return map;
   }
 
@@ -34,5 +32,27 @@ class TaskUrl {
   TaskUrl.fromMap(Map<String, dynamic> map) {
     id = map[TaskUrlFields.columnId];
     url = map[TaskUrlFields.columnTaskUrl];
+  }
+}
+
+class TaskUrlList {
+  List<TaskUrl>? taskUrlList;
+  TaskUrlList(this.taskUrlList);
+
+  TaskUrlList.fromJson(Map<String, dynamic> json) {
+    if (json['taskUrlList'] != null) {
+      taskUrlList = <TaskUrl>[];
+      json['taskUrlList'].forEach((v) {
+        taskUrlList!.add(new TaskUrl.fromMap(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.taskUrlList != null) {
+      data['taskUrlList'] = this.taskUrlList!.map((e) => e.toMap()).toList();
+    }
+    return data;
   }
 }

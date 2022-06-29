@@ -136,3 +136,25 @@ class User {
     return null;
   }
 }
+
+class UserList {
+  List<User>? userList;
+  UserList(this.userList);
+
+  UserList.fromJson(Map<String, dynamic> json) {
+    if (json['userList'] != null) {
+      userList = <User>[];
+      json['userList'].forEach((v) {
+        userList!.add(new User.fromMap(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.userList != null) {
+      data['userList'] = this.userList!.map((e) => e.toMap()).toList();
+    }
+    return data;
+  }
+}

@@ -4,7 +4,7 @@ final String tableLeftToSolve = "left_to_solve";
 ///Set the column names
 ///
 /// Author: F.Brecher
-class LeftToSolveFields{
+class LeftToSolveFields {
   static const String columnLeftToSolveID = "id";
   static const String columnTaskString = "task_string";
   static const String columnUserLTSId = "user_id";
@@ -22,7 +22,8 @@ class LeftToSolve {
   int? leftToSolve;
   int? doesStillExist;
 
-  LeftToSolve({this.taskString, this.userLTSId, this.leftToSolve, this.doesStillExist});
+  LeftToSolve(
+      {this.taskString, this.userLTSId, this.leftToSolve, this.doesStillExist});
 
   ///Map the variables
   ///
@@ -33,7 +34,7 @@ class LeftToSolve {
       LeftToSolveFields.columnUserLTSId: userLTSId,
       LeftToSolveFields.columnLeftToSolve: leftToSolve,
       LeftToSolveFields.columnDoesStillExist: doesStillExist
-      };
+    };
     return map;
   }
 
@@ -46,5 +47,28 @@ class LeftToSolve {
     userLTSId = map[LeftToSolveFields.columnUserLTSId];
     leftToSolve = map[LeftToSolveFields.columnLeftToSolve];
     doesStillExist = map[LeftToSolveFields.columnDoesStillExist];
+  }
+}
+
+class LeftToSolveList {
+  List<LeftToSolve>? leftToSolveList;
+  LeftToSolveList(this.leftToSolveList);
+
+  LeftToSolveList.fromJson(Map<String, dynamic> json) {
+    if (json['leftToSolveList'] != null) {
+      leftToSolveList = <LeftToSolve>[];
+      json['leftToSolveList'].forEach((v) {
+        leftToSolveList!.add(new LeftToSolve.fromMap(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.leftToSolveList != null) {
+      data['leftToSolveList'] =
+          this.leftToSolveList!.map((e) => e.toMap()).toList();
+    }
+    return data;
   }
 }

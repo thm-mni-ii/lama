@@ -5,7 +5,7 @@ import 'package:lama_app/app/model/user_model.dart';
 /// Author: F.Brecher
 class Password {
   int? id;
- String? password;
+  String? password;
 
   Password({this.id, this.password});
 
@@ -25,5 +25,27 @@ class Password {
   Password.fromMap(Map<String, dynamic> map) {
     id = map[UserFields.columnId];
     password = map[UserFields.columnPassword];
+  }
+}
+
+class PasswordList {
+  List<Password>? passwordList;
+  PasswordList(this.passwordList);
+
+  PasswordList.fromJson(Map<String, dynamic> json) {
+    if (json['passwordList'] != null) {
+      passwordList = <Password>[];
+      json['passwordList'].forEach((v) {
+        passwordList!.add(new Password.fromMap(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.passwordList != null) {
+      data['passwordList'] = this.passwordList!.map((e) => e.toMap()).toList();
+    }
+    return data;
   }
 }
