@@ -76,7 +76,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
     }
     var text = task.lamaText;
     await flutterTts.setLanguage("de-De");
-    await flutterTts.speak(text);
+    await flutterTts.speak(text!);
   }
 
 

@@ -37,7 +37,7 @@ class FourCardTaskScreen extends StatelessWidget {
       var text = task.question;
       await flutterTts.setLanguage("de-De");
       await flutterTts.setVolume(1.0);
-      await flutterTts.speak(text);
+      await flutterTts.speak(text!);
     }
     readquestion();
     return Column(children: [

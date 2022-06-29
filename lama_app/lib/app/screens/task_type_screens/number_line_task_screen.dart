@@ -47,7 +47,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
     if(!home_screen_state.isTTs()) {
       return;
     }
-    String text = task.ontap ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
+    String text = task.ontap! ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
     : "Gib den im Zahlenstrahl rot markierten Wert an!";
     await flutterTts.setLanguage("de-De");
     await flutterTts.setVolume(1.0);

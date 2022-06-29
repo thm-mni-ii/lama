@@ -47,7 +47,7 @@ class ClozeTestTaskScreen extends StatefulWidget {
         await flutterTts.setLanguage("de-De");
       }
       await flutterTts.setVolume(1.0);
-      await flutterTts.speak(text);
+      await flutterTts.speak(text!);
     }
 
 

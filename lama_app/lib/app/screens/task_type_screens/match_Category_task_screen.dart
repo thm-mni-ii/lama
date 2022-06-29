@@ -9,8 +9,6 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
-import 'package:lama_app/app/state/home_screen_state.dart';
-
 
 /// This file creates the Match Category task Screen
 /// The Match Category task is a task where you have to sort 8 given
@@ -21,7 +19,6 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 ///
 /// Author: T.Rentsch
 /// latest Changes: 22.07.2021
-
 /// Global Variables
 // Flag to check if the screen is build for the first time
 bool firstStart = true;
@@ -35,8 +32,6 @@ class MatchCategoryTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
   MatchCategoryTaskScreen(this.task, this.constraints);
 
-  // todo readquestion
-
   @override
   State<StatefulWidget> createState() {
     return MatchCategoryState(task, constraints);
@@ -48,7 +43,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
   final FlutterTts flutterTts = FlutterTts();
   String selectedAnswer = "";
   String selectedQuestion = "";
-
 
   // task infos and constraints handed over by tasktypeScreen
   final BoxConstraints constraints;
@@ -125,16 +119,16 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                           }
                           );
                         },
-                      child: Text(
-                        task.lamaText!,
-                        style: LamaTextTheme.getStyle(
-                            color: LamaColors.black, fontSize: 15),
 
+                        child: Text(
+                          task.lamaText!,
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -211,13 +205,13 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                                 alignment: Alignment.bottomCenter,
                                 child: Center(
                                     child: FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: Text(
-                                    "Kein Item zum zurücksetzen gefunden",
-                                    style: LamaTextTheme.getStyle(),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ))),
+                                      fit: BoxFit.fitWidth,
+                                      child: Text(
+                                        "Kein Item zum zurücksetzen gefunden",
+                                        style: LamaTextTheme.getStyle(),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ))),
                             backgroundColor: LamaColors.mainPink,
                           ),
                         );
@@ -293,7 +287,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                   height: (constraints.maxHeight / 100) * 8,
                   width: (constraints.maxWidth / 100) * 38,
                   decoration: BoxDecoration(
-                    // doing
                       color: selectedAnswer == items[i].item ? LamaColors.purpleAccent : LamaColors.greenAccent,
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       boxShadow: [
@@ -304,7 +297,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             offset: Offset(0, 3)),
                       ]),
                   child: InkWell(
-                    // die Antwoerte
                     onTap: () {
                       readText( items[i].item! );
                       //confirmAnswer(answers[index], index);
@@ -314,8 +306,9 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                       }
                       );
                     },
-                  child: Center(
-                    child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
+                    child: Center(
+                      child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
+                    ),
                   )),
               feedback: Material(
                   child: Container(
@@ -334,9 +327,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                       child: Center(
                         child: Text(items[i].item!,
                             style: LamaTextTheme.getStyle()),
-                      )
-                  )
-              ),
+                      ))),
               childWhenDragging: Container(
                   height: 50,
                   width: 150,
@@ -351,16 +342,14 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             offset: Offset(0, 3)),
                       ]),
                   child: InkWell(
-                    // 2 Varianten fur einordnung
                     onTap: () {
                       readText( items[i].item! );
                     },
-                  child: Center(
-                    child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
+                    child: Center(
+                      child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
+                    ),
                   )),
             )),
-          )
-        )
       );
     }
     return output;
@@ -395,16 +384,17 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
               padding: EdgeInsets.all(10),
               child: FittedBox(
                 fit: BoxFit.fitWidth,
-                child: Center(
-                  child: InkWell(
-                    onTap: () {
-                      readText( taskCategory! );
-                    },
-                  child: Text(
-                    taskCategory!,
-                    style: LamaTextTheme.getStyle(
-                      color: LamaColors.white,
-                      fontSize: 30,
+                child: InkWell(
+                  onTap: () {
+                    readText( taskCategory! );
+                  },
+                  child: Center(
+                    child: Text(
+                      taskCategory!,
+                      style: LamaTextTheme.getStyle(
+                        color: LamaColors.white,
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                 ),
@@ -431,7 +421,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
           }
         });
       },
-      )
     );
   }
 }

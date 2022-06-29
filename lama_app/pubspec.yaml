@@ -46,6 +46,7 @@ dependencies:
   dbcrypt: ^2.0.0 
   decimal: ^2.1.0
   smooth_page_indicator: any
+  flutter_tts: ^3.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

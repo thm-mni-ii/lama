@@ -21,7 +21,7 @@ class FourCardTaskScreenStateful extends StatefulWidget {
 
   FourCardTaskScreenStateful(this.task, this.constraints) {
     answers.addAll(task.wrongAnswers);
-    answers.add(task.rightAnswer);
+    answers.add(task.rightAnswer!);
     print(answers.length);
     answers.shuffle();
 
