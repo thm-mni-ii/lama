@@ -41,7 +41,9 @@
         "lese-n",
         "les-en",
         "lesen"
-      ]
+      ],
+      "question_language": "Deutsch",
+      "answer_language": "Deutsch"
     },
     {
       "task_type": "ClozeTest",
