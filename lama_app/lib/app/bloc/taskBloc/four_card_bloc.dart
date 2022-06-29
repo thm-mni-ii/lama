@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -25,14 +26,20 @@ class FourCardBloc extends Bloc<FourCardEvent,FourCardState> {
 
   FourCardBloc() : super(EmptyFCardState()){
     on<AnswerOnInitEvent>((event, emit) async {
-      await readText(event.answer, event.answerLanguage);
+       readText(event.answer, event.answerLanguage);
+       //log('data: $AnswerOnInitEvent');
+       //log('event.answer: ${event.answer}');
+       //readText("sample", "aaa");
     });
-    on<ClickOnWordQuestion>((event, emit) async* {
-      await readText(event.texttoPlay, event.answerLanguage);
+    on<ClickOnWordQuestion>((event, emit) async {
+       readText(event.texttoPlay, event.answerLanguage);
+       //log('data: $ClickOnWordQuestion');
       emit(VoiceTtsState());
     });
-    on<ClickOnAnswer>((event, emit) async* {
-      await readText(event.answer,event.answerLanguage);
+    on<ClickOnAnswer>((event, emit) async {
+       readText(event.answer,event.answerLanguage);
+       //log('data: $ClickOnAnswer');
+       //log('event.answer: ${event.answer}');
       emit(VoiceAnswerTtsState(event.answer));
     });
   }

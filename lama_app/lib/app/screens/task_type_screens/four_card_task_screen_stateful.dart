@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -184,6 +186,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           child: InkWell(
             onTap: () {
               if (selectedAnswer != answers[index]) {
+                //log('data: $selectedAnswer');
                 BlocProvider.of<FourCardBloc>(context).
                 add(ClickOnAnswer(answers[index], index));
                 selectedAnswer = answers[index];
