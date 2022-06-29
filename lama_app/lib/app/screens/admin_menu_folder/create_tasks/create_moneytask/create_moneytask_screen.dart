@@ -25,18 +25,6 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
 
   bool newTask = true;
 
-/*   @override
-  void initState() {
-    if (widget.task != null) {
-      _vonController.text = widget.task!.von.toString();
-      _bisController.text = widget.task!.bis.toString();
-      _rewardController.text = widget.task!.reward.toString();
-    
-      newTask = false;
-    }
-    super.initState();
-  } */
-
   @override
   Widget build(BuildContext context) {
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
@@ -98,7 +86,8 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                                   validator: (text) {
                                     if (text == null || text.isEmpty) {
                                       return "Beitrag fehlt!";
-                                    } else if (double.parse(_bisController.text) <=
+                                    } else if (double.parse(
+                                            _bisController.text) <=
                                         double.parse(text)) {
                                       return "Zu groß";
                                     }
@@ -217,7 +206,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                 )
               ],
             ),
-          )
+          ),
         ],
       ),
     );

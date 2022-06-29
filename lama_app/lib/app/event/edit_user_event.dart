@@ -28,10 +28,9 @@ class EditUserChangeUsername extends EditUserEvent {
 ///used to change [User] password in Bloc
 ///
 ///{@param}[String] password that should be set
-//TODO should be password not passwort
-class EditUserChangePasswort extends EditUserEvent {
+class EditUserChangePassword extends EditUserEvent {
   String passwort;
-  EditUserChangePasswort(this.passwort);
+  EditUserChangePassword(this.passwort);
 }
 
 ///used to change [User] grade in Bloc
@@ -54,10 +53,9 @@ class EditUserAbort extends EditUserEvent {
 class EditUserDeleteUserCheck extends EditUserEvent {}
 
 ///approves the wish to delete an user and finish the delete [User] process
-//TODO Change name to ...Approve from ...Abrove
-class EditUserDeleteUserAbrove extends EditUserEvent {
+class EditUserDeleteUserApprove extends EditUserEvent {
   BuildContext context;
-  EditUserDeleteUserAbrove(this.context);
+  EditUserDeleteUserApprove(this.context);
 }
 
 ///abort the wish to delete an specific user

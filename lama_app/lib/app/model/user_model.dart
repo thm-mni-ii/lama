@@ -114,7 +114,7 @@ class User {
             (json['highscorePermission'] != 'nein')))
       return 'Optionales Feld ("highscorePermission":...) muss die Werte "ja" oder "nein" enthalten';
 
-    String? error = InputValidation.inputPasswortValidation(json['password']);
+    String? error = InputValidation.inputPasswordValidation(json['password']);
     if (error != null) return error;
 
     error = InputValidation.inputUsernameValidation(json['name']);

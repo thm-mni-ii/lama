@@ -14,12 +14,10 @@ import '../state/create_taskset_state.dart';
 ///
 /// Author: N. Soethe
 /// latest Changes: 01.06.2022
-class TasksetCreationCartBloc extends Bloc<TasksetCreationListEvent, CreateTasksetState?> {
-
-  TasksetCreationCartBloc({CreateTasksetState? initialState}) : super(initialState);
-
-  @override
-  Stream<CreateTasksetState> mapEventToState(TasksetCreationListEvent event) async* {
-
+class TasksetCreationCartBloc
+    extends Bloc<TasksetCreationListEvent, CreateTasksetState?> {
+  TasksetCreationCartBloc({CreateTasksetState? initialState})
+      : super(initialState) {
+    on<createTaskset>((event, emit) {});
   }
 }

@@ -86,7 +86,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Passwort'),
                   validator: (String? value) {
-                    return InputValidation.inputPasswortValidation(value);
+                    return InputValidation.inputPasswordValidation(value);
                   },
 
                   ///this input value isn't used to change the value via [CreateAdminBloc]
@@ -102,7 +102,7 @@ class _CreateAdminScreenState extends State<CreateAdminScreen> {
                     ///this value and the [_secondPass] is used to validat the password input
                     ///in generell. If both values aren't equal an error message returns.
                     ///Else the validation returns with null.
-                    return InputValidation.inputPasswortValidation(value,
+                    return InputValidation.inputPasswordValidation(value,
                         secondPass: _secondPass);
                   },
                   onChanged: (value) => context

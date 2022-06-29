@@ -17,8 +17,7 @@ abstract class InputValidation {
   //MAX_LENGTH for Usernamens
   static int allowedNameLength = 12;
   //MAX_LENGTH for Password
-  //TODO should be password... not passwort...
-  static int passwortMaxLength = 16;
+  static int passwordMaxLength = 16;
   //MAX_VALUE for coins per User
   static int maxNumber = 99999;
   //allowed symbols for Username and Password as inverted whitelist
@@ -50,13 +49,12 @@ abstract class InputValidation {
   ///{@params}
   ///String as password
   ///(Optional) secondPass to use the function for two password verfication
-  //TODO should be Password not Passwort
-  static String? inputPasswortValidation(String? passwort, {String? secondPass}) {
+  static String? inputPasswordValidation(String? passwort, {String? secondPass}) {
     if (isEmpty(passwort)) return 'Das Passwort darf nicht leer sein!';
     if (_regExpInvalide(passwort!))
       return 'Bitte keine Sonderzeichen im Passwort!';
-    if (passwort.length > passwortMaxLength)
-      return 'Das Passwort darf maximal $passwortMaxLength Zeichen haben!';
+    if (passwort.length > passwordMaxLength)
+      return 'Das Passwort darf maximal $passwordMaxLength Zeichen haben!';
     if (secondPass != null && (passwort != secondPass)) {
       return 'Die Passwörter stimmen nicht überein';
     }

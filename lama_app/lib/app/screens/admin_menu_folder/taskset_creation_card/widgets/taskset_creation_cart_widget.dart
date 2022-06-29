@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_moneytask/create_moneytask_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_task_number_line/create_task_number_line.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/four_cards/create_four_cards_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 
@@ -31,6 +32,8 @@ class TasksetCreationCartWidget extends StatelessWidget {
         return MoneyEinstellenScreen(task: task as TaskMoney);
       case TaskType.fourCards:
         return CreateFourCardsScreen();
+      case TaskType.numberLine:
+        return CreateTaskNumberLine(task: task as TaskNumberLine);
       default:
         return Placeholder();
     }

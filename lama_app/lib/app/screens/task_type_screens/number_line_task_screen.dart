@@ -17,9 +17,7 @@ class NumberLineTaskScreen extends StatefulWidget {
   NumberLineTaskScreen(this.task, this.constraints);
 
   @override
-  State<StatefulWidget> createState() {
-    return NumberLineState(task, constraints);
-  }
+  State<StatefulWidget> createState() => NumberLineState(task, constraints);
 }
 
 class NumberLineState extends State<NumberLineTaskScreen> {

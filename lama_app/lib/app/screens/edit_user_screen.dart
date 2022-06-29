@@ -185,7 +185,7 @@ class EditUserScreenState extends State<EditUserScreen> {
       validator: (value) {
         return InputValidation.isEmpty(value)
             ? null
-            : InputValidation.inputPasswortValidation(value);
+            : InputValidation.inputPasswordValidation(value);
       },
       onChanged: (value) => {_pass = value},
       obscureText: true,
@@ -195,7 +195,7 @@ class EditUserScreenState extends State<EditUserScreen> {
   ///(private)
   ///provides [TextFormField] that changes the user password
   ///
-  ///All changes are made onChange through the [EditUserBloc] via [EditUserChangePasswort]
+  ///All changes are made onChange through the [EditUserBloc] via [EditUserChangePassword]
   ///Uses [_pass] for the double verification of the password
   ///labelText: 'Password wiederholen'
   ///
@@ -216,10 +216,10 @@ class EditUserScreenState extends State<EditUserScreen> {
       validator: (value) {
         return InputValidation.isEmpty(_pass) && InputValidation.isEmpty(value)
             ? null
-            : InputValidation.inputPasswortValidation(value, secondPass: _pass);
+            : InputValidation.inputPasswordValidation(value, secondPass: _pass);
       },
       onChanged: (value) =>
-          {context.read<EditUserBloc>().add(EditUserChangePasswort(value))},
+          {context.read<EditUserBloc>().add(EditUserChangePassword(value))},
       obscureText: true,
     );
   }
@@ -680,7 +680,7 @@ class EditUserScreenState extends State<EditUserScreen> {
                   onPressed: () => {
                     context
                         .read<EditUserBloc>()
-                        .add(EditUserDeleteUserAbrove(context))
+                        .add(EditUserDeleteUserApprove(context))
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(150, 45),

@@ -34,7 +34,6 @@ class Task {
   ///subclass of [Task] based on the [taskType].
   factory Task.fromJson(Map<String, dynamic> json) {
     String taskType = json['task_type'];
-    print("Das ist ein fucking test");
     switch (taskType) {
       case "TaskType.fourCards":
         return Task4Cards(
