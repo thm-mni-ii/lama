@@ -1,9 +1,6 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -45,7 +42,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var lifeBarWidth;
   var lifeBarHeight;
   late LifeBar lifeBar;
-  late RectangleComponent lifebarRedRectangle;
+  late RectangleComponent lifeBarRedRectangle;
   late MissedHeadAnimator missedHeadAnimator;
 
   //#endregion
@@ -125,7 +122,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var lifeDecreaserRedLamaHit = 20.0;
   var lamaHeadAppearingProbability = 0.3;
   var lamaHeadIsAngryProbability = 0.1;
-  var lamaHeadFirstColumExisting = false;
+  var lamaHeadFirstColumnExisting = false;
   var lamaHeadThirdColumnExisting = false;
   var scoreThresholdDifferentVelocity = 150;
   var scoreThresholdIncreaseVelocity = 300;
@@ -158,7 +155,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   Future<void> onLoad() async {
     super.onLoad();
     loadHighScores();
-    initScoreCounterAndLifebar();
+    initScoreCounterAndLifeBar();
     initLamaButtonsWithEffects();
     initLamaHeadColumns();
   }
@@ -271,14 +268,14 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   void animateGameOverButtons() {
     lamaButtonTurkis.angle-=0.1;
     lamaButtonBlue.angle-=0.1;
-    lamaButtonPurple.angle-=0.1;
-    lamaButtonPink.angle-=0.1;
+    lamaButtonPurple.angle+=0.1;
+    lamaButtonPink.angle+=0.1;
   }
   //# endregion
 
   //#region Initialise Score Counter, Life Bar, Lama Buttons and Button Animators
 
-  void initScoreCounterAndLifebar() {
+  void initScoreCounterAndLifeBar() {
     //initialising screen size
     screenWidth = size[0];
     screenHeight = size[1];
@@ -297,7 +294,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     upperInGameDisplay.paint = upperInGameDisplayColor;
     add(upperInGameDisplay);
 
-    //initialise score and lifebar
+    //initialise score and lifeBar
     lifeBarHorizontalPosition = screenWidth / 2;
     lifeBarVerticalPosition = screenHeight * 0.03;
     lifeBarWidth = screenWidth;
@@ -313,13 +310,13 @@ class TapTheLamaGame extends FlameGame with HasTappables {
             fontSize: textSize,
             fontWeight: FontWeight.bold,
             color: Colors.black));
-    lifebarRedRectangle = RectangleComponent(
+    lifeBarRedRectangle = RectangleComponent(
         position: Vector2(lifeBarHorizontalPosition, lifeBarVerticalPosition),
         anchor: Anchor.center,
         size: Vector2(lifeBarWidth, lifeBarHeight),
         paint: lifeBarRedColor,
         priority: 4);
-    add(lifebarRedRectangle);
+    add(lifeBarRedRectangle);
     lifeBar = LifeBar(lifeBarWidth, lifeBarHeight, lifeBarHorizontalPosition,
         lifeBarVerticalPosition);
     lifeBar.paint = lifeBarGreenColor;
@@ -429,13 +426,13 @@ class TapTheLamaGame extends FlameGame with HasTappables {
             lamaHeadList.elementAt(i).isExisting =
                 generateRandomBoolean(lamaHeadAppearingProbability);
             if (lamaHeadList.elementAt(i).isExisting) {
-              lamaHeadFirstColumExisting = true;
+              lamaHeadFirstColumnExisting = true;
             } else {
-              lamaHeadFirstColumExisting = false;
+              lamaHeadFirstColumnExisting = false;
             }
             break;
           case 2:
-            if (lamaHeadFirstColumExisting) {
+            if (lamaHeadFirstColumnExisting) {
               lamaHeadList.elementAt(i).isExisting = false;
             } else {
               lamaHeadList.elementAt(i).isExisting =
@@ -601,7 +598,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   Future<void> openGameOverMenu() async {
     remove(lifeBar);
     remove(upperInGameDisplay);
-    remove(lifebarRedRectangle);
+    remove(lifeBarRedRectangle);
     RectangleComponent gameOverBackground = RectangleComponent(
         position: Vector2(0, 0),
         anchor: Anchor.topLeft,
@@ -616,6 +613,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   }
 
   Future<void> createGameOverTextAndGameOverButtons() async {
+    var relation=screenHeight/screenWidth;
     gameOverText = TextPaint(
         style: TextStyle(
             fontSize: screenWidth*0.15,
@@ -641,7 +639,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     gameOverAdditionalScoreText= TextPaint(
         style: TextStyle(
             fontSize: screenWidth*0.04,
-            color: LamaColors.blueAccent)
+            color: LamaColors.bluePrimary)
     );
 
 
@@ -676,19 +674,23 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   }
 
   void showGameOverText(Canvas canvas) {
-
     gameOverText.render(canvas, "Game Over!",
         Vector2(screenWidth * 0.5, screenHeight * 1/10), anchor: Anchor.center);
 
     gameOverSuccessText.render(canvas,tempSuccessText,
         Vector2(screenWidth*0.5, screenHeight*2/10), anchor: Anchor.center);
 
-    gameOverAdditionalScoreText.render(canvas," Regulärer Score:\t\t\t\t\t\t\t$score\n\t\t\t+\n Streak-Score:  \t\t\t\t\t\t\t\t$streakScore\n\t\t\t=",
-        Vector2(screenWidth*0.5, screenHeight*3/10), anchor: Anchor.center);
 
-    gameOverScoreText.render(canvas,"Dein Score:\t\t$scoreSum\n\nDein Rekord: \t$tempUserHighScore\n\nHigh Score:\t\t$tempAllTimeHighScore",
-        Vector2(screenWidth*0.5, screenHeight*5/10), anchor: Anchor.center);
+    var yPosAdditionalText;
+    screenHeight / screenWidth >= (16 / 9)
+        ? yPosAdditionalText = screenHeight* 0.345
+        : yPosAdditionalText = screenHeight* 0.325;
 
+    gameOverAdditionalScoreText.render(canvas,"(Score: $score + Streak-Score: $streakScore)",
+        Vector2(screenWidth*0.15, yPosAdditionalText), anchor: Anchor.centerLeft);
+
+    gameOverScoreText.render(canvas,"Dein Score:     $scoreSum\n\nDein Rekord:  $tempUserHighScore\n\nHigh-Score:    $tempAllTimeHighScore",
+        Vector2(screenWidth*0.15, screenHeight*4/10), anchor: Anchor.centerLeft);
   }
   //#endregion
 }
