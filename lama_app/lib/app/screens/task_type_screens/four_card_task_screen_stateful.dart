@@ -88,7 +88,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                     onTap: () =>
                         BlocProvider.of<FourCardBloc>(context).add(
                             ClickOnWordQuestion.initVoice(
-                                task.question!, task.answerLaguage)),
+                                task.question!, task.answerLaguage!)),
                     child: Text(task.question!,
                         textAlign: TextAlign.center,
                         style: LamaTextTheme.getStyle(fontSize: 30)

@@ -211,8 +211,8 @@ class Task4Cards extends Task {
   String? question;
   String? rightAnswer;
   List<String> wrongAnswers;
-  String questionLanguage;
-  String answerLaguage;
+  String? questionLanguage;
+  String? answerLaguage;
 
 
   Task4Cards(String? taskType, int? reward, String? lamaText, int? leftToSolve,
@@ -238,8 +238,8 @@ class TaskClozeTest extends Task {
   String? question;
   String? rightAnswer;
   List<String> wrongAnswers;
-  String questionLanguage;
-  String answerLanguage;
+  String? questionLanguage;
+  String? answerLanguage;
 
   TaskClozeTest(String? taskType, int? reward, String? lamaText, int? leftToSolve,
       this.question, this.rightAnswer, this.questionLanguage, this.answerLanguage, this.wrongAnswers)
