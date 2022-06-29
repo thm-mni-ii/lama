@@ -12,10 +12,7 @@ import 'package:lama_app/tapTheLama/components/lamaButton.dart';
 import 'package:lama_app/tapTheLama/components/lamaHead.dart';
 import 'package:lama_app/tapTheLama/components/missedHeadAnimator.dart';
 import 'dart:math';
-
 import 'package:lama_app/tapTheLama/components/upperInGameDisplay.dart';
-import 'package:lama_app/tetris/tetrisHelper.dart';
-
 import '../util/LamaColors.dart';
 
 class TapTheLamaGame extends FlameGame with HasTappables {
@@ -34,7 +31,6 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   //screen size variables for responsiveness
   var screenWidth;
   var screenHeight;
-  var changer = 30.0;
 
   //upper in game display variables
   late double upperInGameDisplayHeight;
@@ -74,7 +70,6 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   LamaButton lamaButtonBlue = LamaButton();
   LamaButton lamaButtonPurple = LamaButton();
   LamaButton lamaButtonPink = LamaButton();
-  LamaButton gameOverLamaButton=LamaButton();
 
   //initialise button animators
   late CircleComponent animatorButtonTurkis;
@@ -153,7 +148,6 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   late TextPaint gameOverSuccessText;
   late TextPaint gameOverScoreText;
   late TextPaint gameOverAdditionalScoreText;
-  late TextPaint leaveApplicationText;
   var tempUserHighScore;
   var tempAllTimeHighScore;
   var tempSuccessText="";
@@ -182,8 +176,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
       updateSpeedParameters();
       checkIfGameOver();
     }else{
-      animateGameOverButton();
-      checkIfGameOverButtonIsTapped();
+      animateGameOverButtons();
     }
   }
 
@@ -275,8 +268,11 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     lifeBar.x = lifePercent * lifeBarWidth / 100;
   }
 
-  void animateGameOverButton() {
-    gameOverLamaButton.angle-=0.1;
+  void animateGameOverButtons() {
+    lamaButtonTurkis.angle-=0.1;
+    lamaButtonBlue.angle-=0.1;
+    lamaButtonPurple.angle-=0.1;
+    lamaButtonPink.angle-=0.1;
   }
   //# endregion
 
@@ -513,7 +509,6 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     if (lifePercent <= 0) {
       saveHighScore();
       openGameOverMenu();
-      createGameOverText();
       gameOver = true;
     }
   }
@@ -535,9 +530,6 @@ class TapTheLamaGame extends FlameGame with HasTappables {
         scoreOver2500=true;
       }
     }
-
-
-
 
     if (score >= scoreThresholdDifferentVelocity - scoreIncrementerGoodHit &&
         score <= scoreThresholdDifferentVelocity + scoreIncrementerGoodHit) {
@@ -619,24 +611,16 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     );
     add(gameOverBackground);
 
-
-    gameOverLamaButton.sprite= await loadSprite(lamaButtonImagePurple);
-    gameOverLamaButton.size=Vector2(lamaButtonSize*1.5, lamaButtonSize*1.5);
-    gameOverLamaButton.x=screenWidth/2;
-    gameOverLamaButton.y=yPosButtons;
-    gameOverLamaButton.anchor=Anchor.center;
-    gameOverLamaButton.priority=6;
-    add(gameOverLamaButton);
+    createGameOverTextAndGameOverButtons();
 
   }
 
-  void createGameOverText() {
+  Future<void> createGameOverTextAndGameOverButtons() async {
     gameOverText = TextPaint(
         style: TextStyle(
             fontSize: screenWidth*0.15,
             fontWeight: FontWeight.bold,
-            color: LamaColors.purplePrimary)
-
+            color: scoreSum>=userHighScore! &&scoreSum!=0?  LamaColors.greenAccent: LamaColors.redAccent)
     );
 
 
@@ -644,7 +628,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
         style: TextStyle(
             fontSize: screenWidth*0.06,
             fontWeight: FontWeight.bold,
-            color: LamaColors.purplePrimary)
+            color: scoreSum>=userHighScore! &&scoreSum!=0?  LamaColors.greenAccent: LamaColors.redAccent)
     );
 
     gameOverScoreText = TextPaint(
@@ -660,12 +644,9 @@ class TapTheLamaGame extends FlameGame with HasTappables {
             color: LamaColors.blueAccent)
     );
 
-    leaveApplicationText = TextPaint(
-        style: TextStyle(
-            fontSize: screenWidth*0.06,
-            fontWeight: FontWeight.bold,
-            color: LamaColors.purpleAccent)
-    );
+
+    List<LamaButton> lamaButtons=[lamaButtonTurkis,lamaButtonBlue,lamaButtonPurple,lamaButtonPink];
+    lamaButtons.forEach((element) {element.priority=6; element.size=Vector2(lamaButtonSize*1.2, lamaButtonSize*1.2);});
 
     tempUserHighScore=userHighScore;
     tempAllTimeHighScore=allTimeHighScore;
@@ -683,54 +664,31 @@ class TapTheLamaGame extends FlameGame with HasTappables {
       }
     }else if(scoreSum==0){
       tempSuccessText="Das war wohl nichts :(";
+      lamaButtons.forEach((element) async {element.sprite=await loadSprite(lamaHeadImageRed);});
     }
     else if(scoreSum==userHighScore){
       tempSuccessText="Fast!";
     }
     else{
       tempSuccessText="Das war wohl nichts :(";
+      lamaButtons.forEach((element) async {element.sprite=await loadSprite(lamaHeadImageRed);});
     }
   }
 
   void showGameOverText(Canvas canvas) {
-    var horizontalResponsivenessSpacer;
-    var verticalResponsivenessSpacer;
-    if(screenHeight / screenWidth >= (16 / 9)){
-      horizontalResponsivenessSpacer=0.1;
-      verticalResponsivenessSpacer=0.45;
-    }else{
-      horizontalResponsivenessSpacer=0.15;
-      verticalResponsivenessSpacer=0.5;
-    }
-
-
-
 
     gameOverText.render(canvas, "Game Over!",
-        Vector2(screenWidth * 0.5, screenHeight * 0.075), anchor: Anchor.center);
+        Vector2(screenWidth * 0.5, screenHeight * 1/10), anchor: Anchor.center);
 
     gameOverSuccessText.render(canvas,tempSuccessText,
-        Vector2(screenWidth*0.5, screenHeight*0.175), anchor: Anchor.center);
+        Vector2(screenWidth*0.5, screenHeight*2/10), anchor: Anchor.center);
 
     gameOverAdditionalScoreText.render(canvas," Regulärer Score:\t\t\t\t\t\t\t$score\n\t\t\t+\n Streak-Score:  \t\t\t\t\t\t\t\t$streakScore\n\t\t\t=",
-        Vector2(screenWidth*horizontalResponsivenessSpacer, screenHeight*0.275), anchor: Anchor.centerLeft);
+        Vector2(screenWidth*0.5, screenHeight*3/10), anchor: Anchor.center);
 
     gameOverScoreText.render(canvas,"Dein Score:\t\t$scoreSum\n\nDein Rekord: \t$tempUserHighScore\n\nHigh Score:\t\t$tempAllTimeHighScore",
-        Vector2(screenWidth*0.5, screenHeight*verticalResponsivenessSpacer), anchor: Anchor.center);
-
-    leaveApplicationText.render(canvas,"Zum Verlassen das Lama drücken",
-        Vector2(screenWidth*0.5, screenHeight*0.7), anchor: Anchor.center);
+        Vector2(screenWidth*0.5, screenHeight*5/10), anchor: Anchor.center);
 
   }
-
-
-
-  void checkIfGameOverButtonIsTapped() {
-    if(gameOverLamaButton.buttonPressed){
-      //Navigator.pop(context);
-    }
-  }
-
-
   //#endregion
 }
