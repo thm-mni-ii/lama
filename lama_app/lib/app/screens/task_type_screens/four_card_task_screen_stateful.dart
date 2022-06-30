@@ -12,9 +12,9 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-import '../../bloc/taskBloc/four_card_bloc.dart';
-import '../../event/four_card_event.dart';
-import '../../state/four_card_task_screen_state.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+import 'package:lama_app/app/event/tts_event.dart';
+import 'package:lama_app/app/state/tts_state.dart';
 
 class FourCardTaskScreenStateful extends StatefulWidget {
   final Task4Cards task;
@@ -60,16 +60,16 @@ class FourCards extends State<FourCardTaskScreenStateful> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => FourCardBloc(),
+      create: (context) => TTSBloc(),
       child: Column(children: [
         Container(
           height: (constraints.maxHeight / 100) * 40,
           width: (constraints.maxWidth),
           padding: EdgeInsets.all(25),
-          child: BlocBuilder<FourCardBloc, FourCardState>(
-            builder: (context, FourCardState state) {
-              if (state is EmptyFCardState) {
-                context.read<FourCardBloc>().add(AnswerOnInitEvent(task.question!,task.questionLanguage!));
+          child: BlocBuilder<TTSBloc, TTSState>(
+            builder: (context, TTSState state) {
+              if (state is EmptyTTSState) {
+                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,task.questionLanguage!));
               }
               return Container(
                 decoration: BoxDecoration(
@@ -88,7 +88,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                 child: Align(
                   child: InkWell(
                     onTap: () =>
-                        BlocProvider.of<FourCardBloc>(context).add(
+                        BlocProvider.of<TTSBloc>(context).add(
                             ClickOnWordQuestion.initVoice(
                                 task.question!, task.answerLaguage!)),
                     child: Text(task.question!,
@@ -167,7 +167,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
       color = LamaColors.purpleAccent;
     }
     //Color color = LamaColors.greenAccent;
-    return BlocBuilder<FourCardBloc, FourCardState>(
+    return BlocBuilder<TTSBloc, TTSState>(
       builder: (context, state) {
         return Container(
           height: 50,
@@ -187,7 +187,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
             onTap: () {
               if (selectedAnswer != answers[index]) {
                 //log('data: $selectedAnswer');
-                BlocProvider.of<FourCardBloc>(context).
+                BlocProvider.of<TTSBloc>(context).
                 add(ClickOnAnswer(answers[index], index));
                 selectedAnswer = answers[index];
               } else {

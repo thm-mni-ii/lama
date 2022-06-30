@@ -1,15 +1,15 @@
-import 'package:lama_app/app/bloc/taskBloc/four_card_bloc.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 
-abstract class FourCardEvent {}
+abstract class TTSEvent {}
 
-class AnswerOnInitEvent extends FourCardEvent {
+class AnswerOnInitEvent extends TTSEvent {
   String answer;
   String questionLanguage = "";
 
   AnswerOnInitEvent(this.answer,this.questionLanguage);
 }
 
-class ClickOnWordQuestion extends FourCardEvent {
+class ClickOnWordQuestion extends TTSEvent {
   String answerLanguage;
   String texttoPlay;
   //
@@ -20,7 +20,7 @@ class ClickOnWordQuestion extends FourCardEvent {
 //ClickOnWordEvent(this.selectedAnswer);
 }
 
-class ClickOnAnswer extends FourCardEvent {
+class ClickOnAnswer extends TTSEvent {
   String answerLanguage = "";
   int index;
   String answer;

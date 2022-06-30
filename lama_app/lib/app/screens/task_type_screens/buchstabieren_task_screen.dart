@@ -15,6 +15,11 @@ import '../../task-system/task.dart';
 import 'dart:io';
 import 'buchstabieren_task_helper.dart';
 
+import 'package:lama_app/app/event/tts_event.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+
+
 late List<String> buchstabenListe;
 late List<int> buchstabenIndexListe;
 late List<bool> _canShowButton;
@@ -105,7 +110,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return BlocProvider(
+      create: (context) => TTSBloc(),
       child: Column(
         children: [
           // Lama Speechbubble
@@ -113,36 +119,48 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             height: (constraints.maxHeight / 100) * 15,
             padding: EdgeInsets.only(left: 15, right: 15, top: 15),
             // create space between each childs
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 75),
-                    height: 60,
-                    width: MediaQuery.of(context).size.width,
-                    child: Bubble(
-                      nip: BubbleNip.leftCenter,
-                      child: Center(
-                        child: Text(
-                          setTaskMessageAccordingToTaskModus(),
-                          style: LamaTextTheme.getStyle(
-                              color: LamaColors.black, fontSize: 15),
+            child: BlocBuilder<TTSBloc, TTSState>(
+                builder:
+                    (context, TTSState state) {
+                  if (state is EmptyTTSState) {
+                    context.read<TTSBloc>().add(
+                        AnswerOnInitEvent(setTaskMessageAccordingToTaskModus(), "Deutsch"));
+                  }
+                  return Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 75),
+                          height: 60,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          child: Bubble(
+                            nip: BubbleNip.leftCenter,
+                            child: Center(
+                              child: Text(
+                                setTaskMessageAccordingToTaskModus(),
+                                style: LamaTextTheme.getStyle(
+                                    color: LamaColors.black, fontSize: 15),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SvgPicture.asset(
-                    "assets/images/svg/lama_head.svg",
-                    semanticsLabel: "Lama Anna",
-                    width: 75,
-                  ),
-                ),
-              ],
-            ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: SvgPicture.asset(
+                          "assets/images/svg/lama_head.svg",
+                          semanticsLabel: "Lama Anna",
+                          width: 75,
+                        ),
+                      ),
+                    ],
+                  );
+              }
+),
           ),
 
           Container(
