@@ -63,7 +63,7 @@ class User {
   ///get the data from the map
   ///
   ///{@param} Map<String, dynamic> map
-  User.fromMap(Map<String, dynamic> map) {
+  User.fromMap(Map<dynamic, dynamic> map) {
     id = map[UserFields.columnId];
     name = map[UserFields.columnName];
     grade = map[UserFields.columnGrade];

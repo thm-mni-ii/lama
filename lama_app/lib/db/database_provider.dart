@@ -35,25 +35,23 @@ class DatabaseProvider {
   DatabaseProvider._();
   static final DatabaseProvider db = DatabaseProvider._();
 
-  Database? _database;
+  /* Database? _database;  */
+  BoxCollection? _database;
 
   ///Return the Database
   ///
-  /// If the Database doesn't exist or is not on the current version
+  /// If the Database doesn't exist
   /// createDatabase() is called
   ///
   /// {@return} Database
-  Future<Database?> get database async {
-    /* 
+  Future<BoxCollection?> get database async {
     if (_database != null) {
-      if (await _database!.getVersion() == currentVersion) {
-        return _database;
-      }
+      return _database;
     }
 
     _database = await createDatabase();
 
-    return _database; */
+    return _database;
   }
 
   ///Create or Update the Database
@@ -66,7 +64,7 @@ class DatabaseProvider {
   /// newer version will be called and the code will be execute
   ///
   /// {@return} Database
-  Future<Database> createDatabase() async {
+  Future<BoxCollection> createDatabase() async {
     /* 
     //get the Database Path for the current device
     String dbPath = await getDatabasesPath();
@@ -116,8 +114,7 @@ class DatabaseProvider {
       },
     ); */
     //TO-DO: Delete code below
-    var database;
-    return database;
+    return _database!;
   }
 
   ///get all entry's from table User
@@ -126,18 +123,20 @@ class DatabaseProvider {
   /// TO-DO: User List richtig erstellen
   Future<List<User>> getUser() async {
     List<User> userList = [];
-    /* if (kIsWeb) {
-      var box = Hive.box('database');
-      String data = await box.get('userList');
+    if (kIsWeb) {
+      var userBox = await Hive.openBox('users');
 
-      if (data != null) {
-        var data1 = jsonDecode(data);
-        print("my data test " + data);
-        data1["userList"].forEach((e) {
-          userList.add(User.fromJson(e));
-        });
+      if (userBox.isNotEmpty) {
+        for (int i = 0; i < userBox.length; i++) {
+          print('${await userBox.getAt(i)}');
+
+          var userMap = await userBox.getAt(i);
+
+          User user = User.fromMap(userMap);
+          userList.add(user);
+        }
       }
-    } */
+    }
     return userList;
     /* else {
       final db = await (database);
@@ -381,12 +380,29 @@ class DatabaseProvider {
     return taskUrlList;
   }
 
+  getMapWithId(Map<String, dynamic> oldMap) {
+    Map<String, dynamic> newMap;
+  }
+
   /// insert an new User in the table User
   ///
   /// {@param} User user
   ///
   /// {@return} <User> with the autoincremented id
   Future<User> insertUser(User user) async {
+    var userBox = await Hive.openBox('users');
+    if (userBox.isEmpty) {
+      user.id = 0;
+    } else {
+      user.id = userBox.keyAt(userBox.length) + 1;
+    }
+    userBox.put(user.id, user.toMap());
+    return user;
+    user.id = await userBox.add(user.toMap());
+    Map<String, dynamic> newUser = {UserFields.columnId: user.id};
+    newUser.addAll(user.toMap());
+    await userBox.put(user.id, newUser);
+    print('put a user in the usersbox');
     /* final db = await (database);
     user.id = await db?.insert(tableUser, user.toMap()); */
     return user;
@@ -473,6 +489,11 @@ class DatabaseProvider {
   ///
   /// {@return} <int> which shows the number of deleted rows
   Future<int?> deleteUser(int? id) async {
+    var userBox = await Hive.openBox('users');
+    if (userBox.get(id) != null) {
+      await userBox.delete(id);
+    }
+
     /* final db = await (database);
     return await db?.delete(tableUser,
         where: "${UserFields.columnId} = ?", whereArgs: [id]); */
@@ -573,6 +594,19 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUser(User user) async {
+    var userBox = await Hive.openBox('users');
+    Password? pswd = await _getPassword(user);
+    User newUser = User(
+        name: user.name,
+        password: pswd?.password,
+        grade: user.grade,
+        coins: user.coins,
+        isAdmin: user.isAdmin,
+        avatar: user.avatar,
+        isGuest: user.isGuest);
+    newUser.id = user.id;
+    userBox.put(user.id, newUser.toMap());
+    return await _getUser(user.id);
     /* final db = await (database);
 
     Password pswd = await (_getPassword(user) as FutureOr<Password>);
@@ -600,6 +634,8 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserName(User user, String? name) async {
+    user.name = name;
+    return await updateUser(user);
     /*   final db = await (database);
 
     int? updated = await db?.update(
@@ -618,6 +654,8 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserGrade(User user, int? grade) async {
+    user.grade = grade;
+    return await updateUser(user);
     /*    final db = await (database);
 
     int? updated = await db?.update(
@@ -636,6 +674,8 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserCoins(User user, int? coins) async {
+    user.coins = coins;
+    return await updateUser(user);
     /*   final db = await (database);
 
     int? updated = await db?.update(
@@ -654,6 +694,8 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserIsAdmin(User user, bool isAdmin) async {
+    user.isAdmin = isAdmin;
+    return await updateUser(user);
     /*  final db = await (database);
 
     int? updated = await db?.update(
@@ -672,6 +714,8 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserIsGuest(User user, bool isGuest) async {
+    user.isGuest = isGuest;
+    return await updateUser(user);
     /* final db = await (database);
 
     int? updated = await db?.update(
@@ -823,10 +867,10 @@ class DatabaseProvider {
   /// {@return} <int> true == 1, false == 0
   //check if the transferred password is the password from the user
   Future<int> checkPassword(String password, User user) async {
-    /*  Password? pswd = await (_getPassword(user));
+    Password? pswd = await (_getPassword(user));
     if (pswd != null) {
       return (password.compareTo(pswd.password!) == 0 ? 1 : 0);
-    } */
+    }
     return 0;
   }
 
@@ -836,6 +880,8 @@ class DatabaseProvider {
   ///
   /// {@return} <int> which shows the number of updated rows
   Future<int?> updatePassword(String? newPassword, User user) async {
+    Password password = Password(password: newPassword);
+    user.password = password.password;
 /*     final db = await (database);
     Password password = Password(password: newPassword);
     return await db?.update(tableUser, password.toMap(),
@@ -903,6 +949,15 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> _getUser(int? id) async {
+    var userBox = await Hive.openBox('users');
+    //returns null if no user with id found
+    var userMap = await userBox.get(id);
+    if (userMap != null) {
+      User user = User.fromMap(userMap);
+      user.id = id;
+      return user;
+    }
+    return null;
     /* final db = await (database);
 
     var users = await db?.query(tableUser,
@@ -935,6 +990,13 @@ class DatabaseProvider {
   ///
   /// {@return} <Password>
   Future<Password?> _getPassword(User user) async {
+    var userBox = await Hive.openBox('users');
+    Map<String, dynamic>? userMap = await userBox.get(user.id);
+    if (userMap != null) {
+      Password pswd = userMap[UserFields.columnPassword];
+      return pswd;
+    }
+    return null;
     /*  final db = await (database);
     var passwords = await db?.query(tableUser,
         columns: [UserFields.columnPassword],

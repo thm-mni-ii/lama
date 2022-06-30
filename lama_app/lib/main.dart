@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lama_app/app/app.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 
@@ -12,7 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //initialize hive database
   if (kIsWeb) {
-    await Hive.openBox('database');
+    await Hive.initFlutter();
     print("WEB Enabled: => Hive initiated");
   }
   TasksetRepository tasksetRepository = TasksetRepository();
