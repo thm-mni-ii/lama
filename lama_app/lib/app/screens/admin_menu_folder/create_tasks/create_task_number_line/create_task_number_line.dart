@@ -20,6 +20,7 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
   TextEditingController _startController = TextEditingController();
   TextEditingController _endController = TextEditingController();
   TextEditingController _rewardController = TextEditingController();
+  TextEditingController _stepSizeController = TextEditingController();
 
   bool newTask = true;
 
@@ -28,7 +29,8 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
 
   @override
   Widget build(BuildContext context) {
-    Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
+    CreateTasksetBloc bloc = BlocProvider.of<CreateTasksetBloc>(context);
+    Taskset blocTaskset = bloc.taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
     if (widget.task != null && newTask) {
@@ -36,6 +38,7 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
       _endController.text = widget.task!.range.last.toString();
       _rewardController.text = widget.task!.reward.toString();
       _changeSettings = widget.task!.ontap;
+      _stepSizeController.text = widget.task!.steps.toString();
 
       newTask = false;
     }
@@ -48,141 +51,144 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
       ),
       body: Form(
         key: _formKey,
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.all(5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Determin Position"),
-                  Switch.adaptive(
-                    value: _changeSettings,
-                    onChanged: (bool value) => setState(() {
-                      _changeSettings = value;
-                    }),
-                  ),
-                  Text("Genererate Position"),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: screenSize.width * 0.4,
-                  margin: EdgeInsets.all(10),
-                  child: TextFormField(
-                    controller: _startController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Von',
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.all(5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Determin Position"),
+                    Switch.adaptive(
+                      value: _changeSettings,
+                      onChanged: (bool value) {
+                        setState(() => _changeSettings = value);
+                      },
                     ),
-                    validator: (text) {
-                      if (text == null || text.isEmpty) {
-                        return "Beitrag fehlt!";
-                      } else if (double.parse(_endController.text) <=
-                          double.parse(text)) {
-                        return "Zu groß";
-                      }
-                      return null;
-                    },
-                    onSaved: (text) => _startController.text = text!,
-                  ),
+                    Text("Genererate Position"),
+                  ],
                 ),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  width: screenSize.width * 0.4,
-                  child: TextFormField(
-                    controller: _endController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Bis',
-                    ),
-                    validator: (text) {
-                      if (text == null || text.isEmpty) {
-                        return "Beitrag fehlt!";
-                      } else if (double.parse(text) <=
-                          double.parse(_startController.text)) {
-                        return "Zu klein";
-                      }
-                      return null;
-                    },
-                    onSaved: (text) => _endController.text = text!,
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.only(bottom: 10),
-              child: TextFormField(
-                controller: _rewardController,
-                decoration: InputDecoration(hintText: "Step size"),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.only(bottom: 10),
-              child: TextFormField(
-                controller: _rewardController,
-                decoration: InputDecoration(hintText: "Rewards"),
-              ),
-            ),
-            Spacer(),
-            Container(
-              margin: EdgeInsets.only(bottom: 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextButton(
-                    onPressed: () {},
-                    /* onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => BlocProvider.value(
-                          value: BlocProvider.of<CreateTasksetBloc>(context),
-                          child: TasksetChooseTaskScreen(),
-                        ),
-                      ),
-                    ), */
-                    child: const Text("Preview"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        TaskNumberLine numberLineTask = TaskNumberLine(
-                          widget.task?.id ??
-                              KeyGenerator.generateRandomUniqueKey(
-                                  blocTaskset.tasks!),
-                          TaskType.numberLine,
-                          int.parse(_rewardController.text),
-                          "Gib den im Zahlenstrahl rot markierten Wert an!",
-                          3,
-                          [
-                            int.parse(_startController.text),
-                            int.parse(_endController.text)
-                          ],
-                          false, // a random range or (start - end)
-                          1,
-                          _changeSettings,
-                        );
-                        if (newTask) {
-                          // add Task
-                          BlocProvider.of<CreateTasksetBloc>(context)
-                              .add(AddTask(numberLineTask));
-                          Navigator.pop(context);
-                        } else {
-                          // edit Task
-                          BlocProvider.of<CreateTasksetBloc>(context)
-                              .add(EditTask(numberLineTask));
+                  Container(
+                    width: screenSize.width * 0.4,
+                    margin: EdgeInsets.all(10),
+                    child: TextFormField(
+                      controller: _startController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(labelText: 'Von'),
+                      validator: (text) {
+                        if (text == null || text.isEmpty) {
+                          return "Beitrag fehlt!";
+                        } else if (int.parse(_endController.text) <=
+                            int.parse(text)) {
+                          return "Zu groß";
                         }
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-                  )
+                        return null;
+                      },
+                      onSaved: (text) => _startController.text = text!,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    width: screenSize.width * 0.4,
+                    child: TextFormField(
+                      controller: _endController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(labelText: 'Bis'),
+                      validator: (text) {
+                        if (text == null || text.isEmpty) {
+                          return "Beitrag fehlt!";
+                        } else if (int.parse(text) <=
+                            int.parse(_startController.text)) {
+                          return "Zu klein";
+                        }
+                        return null;
+                      },
+                      onSaved: (text) => _endController.text = text!,
+                    ),
+                  ),
                 ],
               ),
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: _stepSizeController,
+                  decoration: InputDecoration(hintText: "Step size"),
+                  validator: (text) {
+                    if (text == null || text.isEmpty) {
+                      return "Beitrag fehlt!";
+                    } else if (int.parse(text) <= 0) return "Zu klein";
+                    return null;
+                  },
+                  onSaved: (text) => _stepSizeController.text = text!,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: _rewardController,
+                  decoration: InputDecoration(hintText: "Rewards"),
+                  validator: (text) {
+                    if (text == null || text.isEmpty) {
+                      return "Beitrag fehlt!";
+                    } else if (int.parse(text) <= 0) return "Zu klein";
+                    return null;
+                  },
+                  onSaved: (text) => _rewardController.text = text!,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        margin: EdgeInsets.only(bottom: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            TextButton(
+              onPressed: () {},
+              child: const Text("Preview"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  TaskNumberLine numberLineTask = TaskNumberLine(
+                    widget.task?.id ??
+                        KeyGenerator.generateRandomUniqueKey(
+                          blocTaskset.tasks!,
+                        ),
+                    TaskType.numberLine,
+                    int.parse(_rewardController.text),
+                    "Gib den im Zahlenstrahl rot markierten Wert an!",
+                    3,
+                    [
+                      int.parse(_startController.text),
+                      int.parse(_endController.text)
+                    ],
+                    false, // a random range or (start - end)
+                    1,
+                    _changeSettings,
+                  );
+                  if (newTask) {
+                    // add Task
+                    bloc.add(AddTask(numberLineTask));
+                    Navigator.pop(context);
+                  } else {
+                    // edit Task
+                    bloc.add(EditTask(numberLineTask));
+                  }
+                  Navigator.pop(context);
+                }
+              },
+              child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
             )
           ],
         ),
