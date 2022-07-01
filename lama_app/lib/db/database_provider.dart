@@ -133,6 +133,7 @@ class DatabaseProvider {
           var userMap = await userBox.getAt(i);
 
           User user = User.fromMap(userMap);
+          user.id = userBox.keyAt(i);
           userList.add(user);
         }
       }
@@ -394,7 +395,7 @@ class DatabaseProvider {
     if (userBox.isEmpty) {
       user.id = 0;
     } else {
-      user.id = userBox.keyAt(userBox.length) + 1;
+      user.id = userBox.keyAt(userBox.length - 1) + 1;
     }
     userBox.put(user.id, user.toMap());
     return user;
@@ -634,8 +635,11 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserName(User user, String? name) async {
-    user.name = name;
-    return await updateUser(user);
+    var userBox = await Hive.openBox('users');
+    User newUser = user;
+    newUser.name = name;
+    userBox.put(user.id, newUser.toMap());
+    return await _getUser(user.id);
     /*   final db = await (database);
 
     int? updated = await db?.update(
@@ -991,9 +995,10 @@ class DatabaseProvider {
   /// {@return} <Password>
   Future<Password?> _getPassword(User user) async {
     var userBox = await Hive.openBox('users');
-    Map<String, dynamic>? userMap = await userBox.get(user.id);
+    Map<dynamic, dynamic>? userMap = await userBox.get(user.id);
+
     if (userMap != null) {
-      Password pswd = userMap[UserFields.columnPassword];
+      Password pswd = Password.fromMap(userMap);
       return pswd;
     }
     return null;

@@ -21,8 +21,8 @@ class Password {
 
   ///get the data from the map
   ///
-  ///{@param} Map<String, dynamic> map
-  Password.fromMap(Map<String, dynamic> map) {
+  ///{@param} Map<dynamic, dynamic> map
+  Password.fromMap(Map<dynamic, dynamic> map) {
     id = map[UserFields.columnId];
     password = map[UserFields.columnPassword];
   }
