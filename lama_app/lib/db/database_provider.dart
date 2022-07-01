@@ -128,8 +128,6 @@ class DatabaseProvider {
 
       if (userBox.isNotEmpty) {
         for (int i = 0; i < userBox.length; i++) {
-          print('${await userBox.getAt(i)}');
-
           var userMap = await userBox.getAt(i);
 
           User user = User.fromMap(userMap);
@@ -317,6 +315,16 @@ class DatabaseProvider {
   ///
   /// {@return} <List<Subject>>
   Future<List<Subject>> getSubjects() async {
+    var subjectBox = await Hive.openBox('subjects');
+    List<Subject> subjectList = <Subject>[];
+    for (int i = 0; i < subjectBox.length; i++) {
+      var currentSubject = await subjectBox.getAt(i);
+
+      Subject subject = Subject.fromMap(currentSubject);
+      subject.id = await subjectBox.keyAt(i);
+      subjectList.add(subject);
+    }
+
     /*   final db = await (database);
 
     var subjects = await db?.query(tableSubjects, columns: [
@@ -324,7 +332,7 @@ class DatabaseProvider {
       SubjectsFields.columnSubjectsName
     ]);
  */
-    List<Subject> subjectList = <Subject>[];
+
 /* 
     subjects?.forEach((currentSubject) {
       Subject subject = Subject.fromMap(currentSubject);
@@ -397,7 +405,7 @@ class DatabaseProvider {
     } else {
       user.id = userBox.keyAt(userBox.length - 1) + 1;
     }
-    userBox.put(user.id, user.toMap());
+    await userBox.put(user.id, user.toMap());
     return user;
     user.id = await userBox.add(user.toMap());
     Map<String, dynamic> newUser = {UserFields.columnId: user.id};
@@ -458,6 +466,13 @@ class DatabaseProvider {
   ///
   /// {@return} <Subject> with the autoincremented id
   Future<Subject> insertSubject(Subject subject) async {
+    var subjectBox = await Hive.openBox('subjects');
+    if (subjectBox.isEmpty) {
+      subject.id = 0;
+    } else {
+      subject.id = subjectBox.keyAt(subjectBox.length - 1) + 1;
+    }
+    await subjectBox.put(subject.id, subject.toMap());
     /* final db = await (database);
     subject.id = await db?.insert(tableSubjects, subject.toMap()); */
     return subject;
@@ -606,7 +621,7 @@ class DatabaseProvider {
         avatar: user.avatar,
         isGuest: user.isGuest);
     newUser.id = user.id;
-    userBox.put(user.id, newUser.toMap());
+    await userBox.put(user.id, newUser.toMap());
     return await _getUser(user.id);
     /* final db = await (database);
 
@@ -636,9 +651,9 @@ class DatabaseProvider {
   /// {@return} <User>
   Future<User?> updateUserName(User user, String? name) async {
     var userBox = await Hive.openBox('users');
-    User newUser = user;
-    newUser.name = name;
-    userBox.put(user.id, newUser.toMap());
+    Map dbUser = await userBox.get(user.id);
+    dbUser.update(UserFields.columnName, (value) => name);
+    await userBox.put(user.id, dbUser);
     return await _getUser(user.id);
     /*   final db = await (database);
 
@@ -658,8 +673,10 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserGrade(User user, int? grade) async {
+    var userBox = await Hive.openBox('users');
     user.grade = grade;
-    return await updateUser(user);
+    await userBox.put(user.id, user.toMap());
+    return await _getUser(user.id);
     /*    final db = await (database);
 
     int? updated = await db?.update(
@@ -678,8 +695,10 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserCoins(User user, int? coins) async {
+    var userBox = await Hive.openBox('users');
     user.coins = coins;
-    return await updateUser(user);
+    await userBox.put(user.id, user.toMap());
+    return await _getUser(user.id);
     /*   final db = await (database);
 
     int? updated = await db?.update(
@@ -698,8 +717,10 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserIsAdmin(User user, bool isAdmin) async {
+    var userBox = await Hive.openBox('users');
     user.isAdmin = isAdmin;
-    return await updateUser(user);
+    await userBox.put(user.id, user.toMap());
+    return await _getUser(user.id);
     /*  final db = await (database);
 
     int? updated = await db?.update(
@@ -718,8 +739,10 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserIsGuest(User user, bool isGuest) async {
+    var userBox = await Hive.openBox('users');
     user.isGuest = isGuest;
-    return await updateUser(user);
+    await userBox.put(user.id, user.toMap());
+    return await _getUser(user.id);
     /* final db = await (database);
 
     int? updated = await db?.update(
@@ -872,20 +895,24 @@ class DatabaseProvider {
   //check if the transferred password is the password from the user
   Future<int> checkPassword(String password, User user) async {
     Password? pswd = await (_getPassword(user));
-    if (pswd != null) {
+    if (pswd != null && pswd.password != null) {
       return (password.compareTo(pswd.password!) == 0 ? 1 : 0);
     }
     return 0;
   }
 
-  /// update the password field in table User
+  /// gets user from db, updates password in its map and then puts it back in db
   ///
   /// {@param} String newPassword, User user
   ///
   /// {@return} <int> which shows the number of updated rows
-  Future<int?> updatePassword(String? newPassword, User user) async {
+  Future<void> updatePassword(String? newPassword, User user) async {
     Password password = Password(password: newPassword);
-    user.password = password.password;
+
+    var userBox = await Hive.openBox('users');
+    Map dbUser = userBox.get(user.id);
+    dbUser.update(UserFields.columnPassword, (value) => password.password);
+    userBox.put(user.id, dbUser);
 /*     final db = await (database);
     Password password = Password(password: newPassword);
     return await db?.update(tableUser, password.toMap(),
@@ -943,7 +970,7 @@ class DatabaseProvider {
 
   ///refreshes current user (used for userRepository)
   Future<User?> refreshUser(User user) async {
-    /*  return await _getUser(user.id); */
+    return await _getUser(user.id);
   }
 
   ///(private)
@@ -998,7 +1025,7 @@ class DatabaseProvider {
     Map<dynamic, dynamic>? userMap = await userBox.get(user.id);
 
     if (userMap != null) {
-      Password pswd = Password.fromMap(userMap);
+      Password? pswd = Password.fromMap(userMap);
       return pswd;
     }
     return null;
@@ -1040,13 +1067,20 @@ class DatabaseProvider {
   /// {@return} <int> which represent the id
   Future<int?> insertLeftToSolve(
       String taskString, int? leftToSolve, User user) async {
-    /*  final db = await (database);
     LeftToSolve lts = LeftToSolve(
         taskString: taskString,
         leftToSolve: leftToSolve,
         userLTSId: user.id,
         doesStillExist: 0);
-    return await db?.insert(tableLeftToSolve, lts.toMap()); */
+    var ltsBox = await Hive.openBox('leftToSolves');
+    await Hive.openBox('users');
+    if (ltsBox.isEmpty) {
+      lts.id = 0;
+    } else {
+      lts.id = ltsBox.keyAt(ltsBox.length - 1) + 1;
+    }
+    await ltsBox.put(lts.id, lts.toMap());
+    return lts.id;
   }
 
   /// get the leftToSolve value from a task with an specific user
@@ -1055,7 +1089,25 @@ class DatabaseProvider {
   ///
   /// {@return} <int>
   Future<int?> getLeftToSolve(String taskString, User user) async {
-    /* final db = await (database);
+    var ltsBox = await Hive.openBox('leftToSolves');
+    List? ltsList = ltsBox.values.toList();
+    var lts;
+    try {
+      lts = ltsList
+          .where((element) =>
+              element[LeftToSolveFields.columnTaskString] == taskString)
+          .where((element) =>
+              element[LeftToSolveFields.columnUserLTSId] == user.id)
+          .single;
+      //if there is no result, a StateError is thrown
+    } on StateError catch (e) {
+      return Future.value(-3);
+    }
+    if (lts != null) {
+      return lts[LeftToSolveFields.columnLeftToSolve] as FutureOr<int?>;
+    }
+    /* 
+    final db = await (database);
     print("looking up task with: " + taskString);
     var leftToSolve = await db?.query(tableLeftToSolve,
         columns: [LeftToSolveFields.columnLeftToSolve],
@@ -1066,9 +1118,9 @@ class DatabaseProvider {
       if (leftToSolve.length > 0)
         return leftToSolve.first[LeftToSolveFields.columnLeftToSolve]
             as FutureOr<int?>;
-    }
+    } */
 
-    return Future.value(-3); */
+    return Future.value(-3);
   }
 
   Future<void> removeUnusedLeftToSolveEntries(
