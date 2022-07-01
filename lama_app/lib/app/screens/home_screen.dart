@@ -37,178 +37,128 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime? backButtonPressedTime;
 
   final snackBar = SnackBar(
-      backgroundColor: LamaColors.mainPink,
-      content: Text(
-        'Zweimal drücken zum verlassen!',
-        textAlign: TextAlign.center,
-        style: LamaTextTheme.getStyle(fontSize: 15, color: LamaColors.white),
-      ),
-      duration: Duration(seconds: 1));
+    backgroundColor: LamaColors.mainPink,
+    content: Text(
+      'Zweimal drücken zum verlassen!',
+      textAlign: TextAlign.center,
+      style: LamaTextTheme.getStyle(fontSize: 15, color: LamaColors.white),
+    ),
+    duration: Duration(seconds: 1),
+  );
 
   @override
   Widget build(BuildContext context) {
     userRepository = RepositoryProvider.of<UserRepository>(context);
-    return Scaffold(
-      body: WillPopScope(
-        onWillPop: onWillPop,
-        child: Container(
-          color: LamaColors.mainPink,
-          child: SafeArea(
-            child: Container(
-              color: Colors.white,
-              child: LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                return Column(
-                  children: [
-                    Container(
-                      height: (constraints.maxHeight / 100) * 17.5,
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: (constraints.maxHeight / 100) * 10,
-                            decoration: BoxDecoration(
-                              color: LamaColors.mainPink,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(25),
-                                bottomRight: Radius.circular(25),
-                              ),
-                            ),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left:
-                                          ((constraints.maxWidth / 100) * 2.5)),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: IconButton(
-                                      padding: EdgeInsets.all(0),
-                                      icon: Icon(
-                                        Icons.logout,
-                                        size: 30,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () =>
-                                          Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => BlocProvider(
-                                            create: (BuildContext context) =>
-                                                UserSelectionBloc(),
-                                            child: UserSelectionScreen(),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Text("Lerne alles mit Anna",
-                                    style: LamaTextTheme.getStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500)),
-                              ],
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: (constraints.maxHeight / 100) * 10,
-                              width: (constraints.maxWidth / 100) * 60,
-                              decoration: BoxDecoration(
-                                color: LamaColors.mainPink,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                              ),
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    child: SvgPicture.asset(
-                                      'assets/images/svg/avatars/${userRepository!.getAvatar()}.svg',
-                                      semanticsLabel: 'LAMA',
-                                    ),
-                                    radius: 25,
-                                    backgroundColor: LamaColors.mainPink,
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    userRepository!.getUserName()!,
-                                    style: LamaTextTheme.getStyle(
-                                        fontSize: 22.5,
-                                        fontWeight: FontWeight.w600,
-                                        monospace: true),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
+    final screenSize = MediaQuery.of(context).size;
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: LamaColors.mainPink,
+          leading: IconButton(
+            icon: Icon(Icons.logout, size: 30),
+            onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (BuildContext context) => UserSelectionBloc(),
+                  child: UserSelectionScreen(),
+                ),
+              ),
+            ),
+          ),
+          title: Text(
+            "Lerne alles mit Anna",
+            style: LamaTextTheme.getStyle(fontSize: 18),
+          ),
+          toolbarHeight: screenSize.width / 5,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(30),
+            ),
+          ),
+        ),
+        body: GridView(
+          children: [
+            for (var element in HomeScreenItems.listOfElements)
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: ElevatedButton(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        child: SvgPicture.asset(
+                          element.imageUrl,
+                          semanticsLabel: element.semanticsLabel,
+                        ),
+                        backgroundColor: element.backgroundColor,
+                      ),
+                      Text(element.itemText, style: LamaTextTheme.getStyle()),
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: element.accentColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                    ),
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) => ChooseTasksetBloc(
+                            context.read<TasksetRepository>()),
+                        child: ChooseTasksetScreen(
+                          element.itemText,
+                          userRepository!.getGrade(),
+                          userRepository,
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: LayoutBuilder(builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        return Stack(
-                          children: [
-                            Center(
-                              child: Container(
-                                  width: (constraints.maxWidth / 100) * 75,
-                                  height: (constraints.maxHeight / 100) * 75,
-                                  child: _buildMenuButtonColumn(constraints)),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 15, bottom: 15),
-                                child: SvgPicture.asset(
-                                  "assets/images/svg/lama_head.svg",
-                                  semanticsLabel: "Lama Anna",
-                                  width: (constraints.maxWidth / 100) * 15,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: 20,
-                                    right: (constraints.maxWidth / 100) * 15),
-                                child: Container(
-                                  height: (constraints.maxHeight / 100) * 10,
-                                  width: (constraints.maxWidth / 100) * 80,
-                                  child: Bubble(
-                                    nip: BubbleNip.rightCenter,
-                                    color: LamaColors.mainPink,
-                                    borderColor: LamaColors.mainPink,
-                                    shadowColor: LamaColors.black,
-                                    child: Center(
-                                      child: Text(
-                                        RepositoryProvider.of<
-                                                LamaFactsRepository>(context)
-                                            .getRandomLamaFact(),
-                                        style: LamaTextTheme.getStyle(
-                                            fontSize: 15),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      }),
+                  ).then((value) => setState(() {})),
+                ),
+              ),
+          ],
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+          ),
+        ),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.all(5),
+          height: screenSize.height * 0.1,
+          child: Row(
+            children: [
+              SizedBox(
+                width: screenSize.width * 0.75,
+                child: Bubble(
+                  nip: BubbleNip.rightCenter,
+                  color: LamaColors.mainPink,
+                  borderColor: LamaColors.mainPink,
+                  shadowColor: LamaColors.black,
+                  child: Center(
+                    child: Text(
+                      RepositoryProvider.of<LamaFactsRepository>(context)
+                          .getRandomLamaFact(),
+                      style: LamaTextTheme.getStyle(fontSize: 15),
                     ),
-                  ],
-                );
-              }),
-            ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: screenSize.width * 0.2,
+                child: SvgPicture.asset(
+                  "assets/images/svg/lama_head.svg",
+                  semanticsLabel: "Lama Anna",
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
-
+/* 
   ///Return a Widget that contains the complete center column with
   ///all subjects and the game button.
   ///
@@ -269,10 +219,12 @@ class _HomeScreenState extends State<HomeScreen> {
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
     }
     if (tasksetRepository
-            .getTasksetsForSubjectAndGrade("Deutsch", userRepository!.getGrade())!
+            .getTasksetsForSubjectAndGrade(
+                "Deutsch", userRepository!.getGrade())!
             .length >
         0) {
-      children.add(ElevatedButton(
+      children.add(
+        ElevatedButton(
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -295,13 +247,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           style: ElevatedButton.styleFrom(
-              primary: LamaColors.redAccent,
-              minimumSize: Size(
-                (constraints.maxWidth / 100) * 80,
-                ((constraints.maxHeight / 100) * 10),
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+            primary: LamaColors.redAccent,
+            minimumSize: Size(
+              (constraints.maxWidth / 100) * 80,
+              (constraints.maxHeight / 100) * 10,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+            ),
+          ),
           onPressed: () async {
             Navigator.push(
               context,
@@ -310,10 +264,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   create: (BuildContext context) =>
                       ChooseTasksetBloc(context.read<TasksetRepository>()),
                   child: ChooseTasksetScreen(
-                      "Deutsch", userRepository!.getGrade(), userRepository),
+                    "Deutsch",
+                    userRepository!.getGrade(),
+                    userRepository,
+                  ),
                 ),
               ),
-            ).then((value) => (setState(() {})));
+            ).then((value) => setState(() {}));
 
             ///preloads the png urls in every buchstabieren task
             ///TO-DO: write method
@@ -336,7 +293,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 await preloadPngs(context, buchTask.woerter);
               }
             }
-          }));
+          },
+        ),
+      );
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
     }
     if (tasksetRepository
@@ -344,48 +303,57 @@ class _HomeScreenState extends State<HomeScreen> {
                 "Englisch", userRepository!.getGrade())!
             .length >
         0) {
-      children.add(ElevatedButton(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Center(
-              child: Text(
-                "Englisch",
-                style: LamaTextTheme.getStyle(),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: CircleAvatar(
-                child: SvgPicture.asset(
-                  'assets/images/svg/MainMenu_Icons/englisch_icon.svg',
-                  semanticsLabel: 'EnglischIcon',
+      children.add(
+        ElevatedButton(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Englisch",
+                  style: LamaTextTheme.getStyle(),
                 ),
-                backgroundColor: LamaColors.orangePrimary,
               ),
-            )
-          ],
-        ),
-        style: ElevatedButton.styleFrom(
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  child: SvgPicture.asset(
+                    'assets/images/svg/MainMenu_Icons/englisch_icon.svg',
+                    semanticsLabel: 'EnglischIcon',
+                  ),
+                  backgroundColor: LamaColors.orangePrimary,
+                ),
+              )
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
             primary: LamaColors.orangeAccent,
             minimumSize: Size(
               (constraints.maxWidth / 100) * 80,
-              ((constraints.maxHeight / 100) * 10),
+              (constraints.maxHeight / 100) * 10,
             ),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50)))),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (BuildContext context) =>
-                  ChooseTasksetBloc(context.read<TasksetRepository>()),
-              child: ChooseTasksetScreen(
-                  "Englisch", userRepository!.getGrade(), userRepository),
+              borderRadius: BorderRadius.all(
+                Radius.circular(50),
+              ),
             ),
           ),
-        ).then((value) => (setState(() {}))),
-      ));
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (BuildContext context) =>
+                    ChooseTasksetBloc(context.read<TasksetRepository>()),
+                child: ChooseTasksetScreen(
+                  "Englisch",
+                  userRepository!.getGrade(),
+                  userRepository,
+                ),
+              ),
+            ),
+          ).then((value) => setState(() {})),
+        ),
+      );
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
     }
     if (tasksetRepository
@@ -393,130 +361,145 @@ class _HomeScreenState extends State<HomeScreen> {
                 "Sachkunde", userRepository!.getGrade())!
             .length >
         0) {
-      children.add(ElevatedButton(
+      children.add(
+        ElevatedButton(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Sachkunde",
+                  style: LamaTextTheme.getStyle(),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  child: SvgPicture.asset(
+                    'assets/images/svg/MainMenu_Icons/sachkunde_icon.svg',
+                    semanticsLabel: 'SachkundeIcon',
+                  ),
+                  backgroundColor: LamaColors.purplePrimary,
+                ),
+              )
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: LamaColors.purpleAccent,
+            minimumSize: Size(
+              (constraints.maxWidth / 100) * 80,
+              (constraints.maxHeight / 100) * 10,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+            ),
+          ),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (BuildContext context) =>
+                    ChooseTasksetBloc(context.read<TasksetRepository>()),
+                child: ChooseTasksetScreen(
+                  "Sachkunde",
+                  userRepository!.getGrade(),
+                  userRepository,
+                ),
+              ),
+            ),
+          ).then((value) => (setState(() {}))),
+        ),
+      );
+      children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
+    }
+    children.add(
+      Container(
+        height: (constraints.maxHeight / 100) * 16,
+        width: (constraints.maxWidth / 100) * 80,
         child: Stack(
-          alignment: Alignment.center,
           children: [
-            Center(
-              child: Text(
-                "Sachkunde",
-                style: LamaTextTheme.getStyle(),
+            Container(
+              height: (constraints.maxHeight / 100) * 10,
+              width: (constraints.maxWidth / 100) * 80,
+              child: ElevatedButton(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Center(
+                      child: Text(
+                        "Spiele",
+                        style: LamaTextTheme.getStyle(),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: CircleAvatar(
+                        child: SvgPicture.asset(
+                          'assets/images/svg/MainMenu_Icons/spiel_icon.svg',
+                          semanticsLabel: 'SpielIcon',
+                        ),
+                        backgroundColor: LamaColors.greenPrimary,
+                      ),
+                    )
+                  ],
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: LamaColors.greenAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                  ),
+                ),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (BuildContext context) =>
+                          GameListScreenBloc(userRepository),
+                      child: GameListScreen(),
+                    ),
+                  ),
+                ).then((value) => setState(() {})),
               ),
             ),
             Align(
-              alignment: Alignment.centerLeft,
-              child: CircleAvatar(
-                child: SvgPicture.asset(
-                  'assets/images/svg/MainMenu_Icons/sachkunde_icon.svg',
-                  semanticsLabel: 'SachkundeIcon',
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: (constraints.maxHeight / 100) * 7.5,
+                width: (constraints.maxWidth / 100) * 40,
+                decoration: BoxDecoration(
+                  color: LamaColors.greenPrimary,
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
                 ),
-                backgroundColor: LamaColors.purplePrimary,
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          width: 25,
+                          child: SvgPicture.asset(
+                            'assets/images/svg/lama_coin.svg',
+                            semanticsLabel: 'LAMA',
+                          ),
+                        ),
+                      ),
+                      Text(
+                        userRepository!.getLamaCoins().toString(),
+                        style: LamaTextTheme.getStyle(fontSize: 22.5),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             )
           ],
         ),
-        style: ElevatedButton.styleFrom(
-            primary: LamaColors.purpleAccent,
-            minimumSize: Size(
-              (constraints.maxWidth / 100) * 80,
-              ((constraints.maxHeight / 100) * 10),
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(50)))),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (BuildContext context) =>
-                  ChooseTasksetBloc(context.read<TasksetRepository>()),
-              child: ChooseTasksetScreen(
-                  "Sachkunde", userRepository!.getGrade(), userRepository),
-            ),
-          ),
-        ).then((value) => (setState(() {}))),
-      ));
-      children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
-    }
-    children.add(Container(
-      height: ((constraints.maxHeight / 100) * 16),
-      width: (constraints.maxWidth / 100) * 80,
-      child: Stack(
-        children: [
-          Container(
-            height: ((constraints.maxHeight / 100) * 10),
-            width: (constraints.maxWidth / 100) * 80,
-            child: ElevatedButton(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Center(
-                    child: Text(
-                      "Spiele",
-                      style: LamaTextTheme.getStyle(),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: CircleAvatar(
-                      child: SvgPicture.asset(
-                        'assets/images/svg/MainMenu_Icons/spiel_icon.svg',
-                        semanticsLabel: 'SpielIcon',
-                      ),
-                      backgroundColor: LamaColors.greenPrimary,
-                    ),
-                  )
-                ],
-              ),
-              style: ElevatedButton.styleFrom(
-                  primary: LamaColors.greenAccent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(50)))),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) =>
-                        GameListScreenBloc(userRepository),
-                    child: GameListScreen(),
-                  ),
-                ),
-              ).then((value) => (setState(() {}))),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: ((constraints.maxHeight / 100) * 7.5),
-              width: (constraints.maxWidth / 100) * 40,
-              decoration: BoxDecoration(
-                  color: LamaColors.greenPrimary,
-                  borderRadius: BorderRadius.all(Radius.circular(50))),
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        width: 25,
-                        child: SvgPicture.asset(
-                            'assets/images/svg/lama_coin.svg',
-                            semanticsLabel: 'LAMA'),
-                      ),
-                    ),
-                    Text(userRepository!.getLamaCoins().toString(),
-                        style: LamaTextTheme.getStyle(fontSize: 22.5)),
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
       ),
-    ));
+    );
     return Column(children: children);
-  }
+  } */
 
   ///Prevents leaving the app with a single press on the back button.
   ///
@@ -535,4 +518,73 @@ class _HomeScreenState extends State<HomeScreen> {
       return Future.value(true);
     }
   }
+}
+
+class HomeScreenItems {
+  final String itemText;
+  final String semanticsLabel;
+  final String imageUrl;
+  final Color backgroundColor;
+  final Color accentColor;
+
+  HomeScreenItems({
+    required this.itemText,
+    required this.semanticsLabel,
+    required this.imageUrl,
+    required this.backgroundColor,
+    required this.accentColor,
+  });
+
+  static List<HomeScreenItems> listOfElements = [
+    HomeScreenItems(
+      itemText: "Mathe",
+      imageUrl: 'assets/images/svg/MainMenu_Icons/mathe_icon.svg',
+      semanticsLabel: 'MatheIcon',
+      backgroundColor: LamaColors.bluePrimary,
+      accentColor: LamaColors.blueAccent,
+    ),
+    HomeScreenItems(
+      itemText: "Deutsch",
+      imageUrl: 'assets/images/svg/MainMenu_Icons/deutsch_icon.svg',
+      semanticsLabel: 'DeutschIcon',
+      backgroundColor: LamaColors.redPrimary,
+      accentColor: LamaColors.redAccent,
+    ),
+    HomeScreenItems(
+      itemText: "Englisch",
+      imageUrl: 'assets/images/svg/MainMenu_Icons/englisch_icon.svg',
+      semanticsLabel: 'EnglischIcon',
+      backgroundColor: LamaColors.orangePrimary,
+      accentColor: LamaColors.orangeAccent,
+    ),
+    HomeScreenItems(
+      itemText: "Sachkunde",
+      imageUrl: 'assets/images/svg/MainMenu_Icons/sachkunde_icon.svg',
+      semanticsLabel: 'SachkundeIcon',
+      backgroundColor: LamaColors.purplePrimary,
+      accentColor: LamaColors.purpleAccent,
+    ),
+    HomeScreenItems( // als trailing in appbar
+      itemText: "Profile",
+      imageUrl: 'assets/images/svg/MainMenu_Icons/mathe_icon.svg',
+      semanticsLabel: 'MatheIcon',
+      backgroundColor: LamaColors.bluePrimary,
+      accentColor: LamaColors.blueAccent,
+    ),
+    HomeScreenItems(
+      itemText: "Spiele",
+      imageUrl: 'assets/images/svg/MainMenu_Icons/spiel_icon.svg',
+      semanticsLabel: 'SpieleIcon',
+      backgroundColor: LamaColors.greenPrimary,
+      accentColor: LamaColors.greenAccent,
+    ),
+    HomeScreenItems(
+      itemText: "Shop",
+      imageUrl: 'assets/images/svg/lama_coin.svg',
+      semanticsLabel: 'LAMA',
+      backgroundColor: LamaColors.greenPrimary,
+      accentColor: LamaColors.greenAccent,
+    ),
+    
+  ];
 }

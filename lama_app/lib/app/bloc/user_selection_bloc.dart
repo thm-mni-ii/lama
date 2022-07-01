@@ -82,14 +82,21 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState?> {
       LamaFactsRepository lamaFactsRepository = LamaFactsRepository();
       await lamaFactsRepository.loadFacts();
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MultiRepositoryProvider(providers: [
-                    RepositoryProvider<UserRepository>(
-                        create: (context) => repository),
-                    RepositoryProvider<LamaFactsRepository>(
-                        create: (context) => lamaFactsRepository)
-                  ], child: HomeScreen())));
+        context,
+        MaterialPageRoute(
+          builder: (context) => MultiRepositoryProvider(
+            providers: [
+              RepositoryProvider<UserRepository>(
+                create: (context) => repository,
+              ),
+              RepositoryProvider<LamaFactsRepository>(
+                create: (context) => lamaFactsRepository,
+              )
+            ],
+            child: HomeScreen(),
+          ),
+        ),
+      );
     }
   }
 }

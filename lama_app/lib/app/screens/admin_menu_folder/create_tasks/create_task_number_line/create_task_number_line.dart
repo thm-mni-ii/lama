@@ -20,6 +20,7 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
   TextEditingController _startController = TextEditingController();
   TextEditingController _endController = TextEditingController();
   TextEditingController _rewardController = TextEditingController();
+  TextEditingController _stepSizeController = TextEditingController();
 
   bool newTask = true;
 
@@ -35,6 +36,7 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
       _startController.text = widget.task!.range.first.toString();
       _endController.text = widget.task!.range.last.toString();
       _rewardController.text = widget.task!.reward.toString();
+      _stepSizeController.text = widget.task!.steps.toString();
       _changeSettings = widget.task!.ontap;
 
       newTask = false;
@@ -48,7 +50,7 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
       ),
       body: Form(
         key: _formKey,
-        child: Column(
+        child: ListView(
           children: [
             Container(
               margin: EdgeInsets.all(5),
@@ -76,14 +78,12 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
                   child: TextFormField(
                     controller: _startController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Von',
-                    ),
+                    decoration: const InputDecoration(labelText: 'Von'),
                     validator: (text) {
                       if (text == null || text.isEmpty) {
                         return "Beitrag fehlt!";
-                      } else if (double.parse(_endController.text) <=
-                          double.parse(text)) {
+                      } else if (int.parse(_endController.text) <=
+                          int.parse(text)) {
                         return "Zu groß";
                       }
                       return null;
@@ -97,14 +97,12 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
                   child: TextFormField(
                     controller: _endController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Bis',
-                    ),
+                    decoration: const InputDecoration(labelText: 'Bis'),
                     validator: (text) {
                       if (text == null || text.isEmpty) {
                         return "Beitrag fehlt!";
-                      } else if (double.parse(text) <=
-                          double.parse(_startController.text)) {
+                      } else if (int.parse(text) <=
+                          int.parse(_startController.text)) {
                         return "Zu klein";
                       }
                       return null;
@@ -115,74 +113,83 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(bottom: 10),
+              margin: EdgeInsets.all(10),
               child: TextFormField(
-                controller: _rewardController,
-                decoration: InputDecoration(hintText: "Step size"),
+                controller: _stepSizeController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Step Size'),
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return "Beitrag fehlt!";
+                  } else if (int.parse(text) <= 0) {
+                    return "Zu klein";
+                  }
+                  return null;
+                },
               ),
             ),
             Container(
-              margin: EdgeInsets.only(bottom: 10),
+              margin: EdgeInsets.all(10),
               child: TextFormField(
                 controller: _rewardController,
-                decoration: InputDecoration(hintText: "Rewards"),
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Rewards'),
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return "Beitrag fehlt!";
+                  } else if (int.parse(text) <= 0) {
+                    return "Zu klein";
+                  }
+                  return null;
+                },
               ),
             ),
-            Spacer(),
-            Container(
-              margin: EdgeInsets.only(bottom: 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    /* onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => BlocProvider.value(
-                          value: BlocProvider.of<CreateTasksetBloc>(context),
-                          child: TasksetChooseTaskScreen(),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        margin: EdgeInsets.only(bottom: 25),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            TextButton(
+              onPressed: () {},
+              child: const Text("Preview"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  TaskNumberLine numberLineTask = TaskNumberLine(
+                    widget.task?.id ??
+                        KeyGenerator.generateRandomUniqueKey(
+                          blocTaskset.tasks!,
                         ),
-                      ),
-                    ), */
-                    child: const Text("Preview"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        TaskNumberLine numberLineTask = TaskNumberLine(
-                          widget.task?.id ??
-                              KeyGenerator.generateRandomUniqueKey(
-                                  blocTaskset.tasks!),
-                          TaskType.numberLine,
-                          int.parse(_rewardController.text),
-                          "Gib den im Zahlenstrahl rot markierten Wert an!",
-                          3,
-                          [
-                            int.parse(_startController.text),
-                            int.parse(_endController.text)
-                          ],
-                          false, // a random range or (start - end)
-                          1,
-                          _changeSettings,
-                        );
-                        if (newTask) {
-                          // add Task
-                          BlocProvider.of<CreateTasksetBloc>(context)
-                              .add(AddTask(numberLineTask));
-                          Navigator.pop(context);
-                        } else {
-                          // edit Task
-                          BlocProvider.of<CreateTasksetBloc>(context)
-                              .add(EditTask(numberLineTask));
-                        }
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-                  )
-                ],
-              ),
+                    TaskType.numberLine,
+                    int.parse(_rewardController.text),
+                    "Gib den im Zahlenstrahl rot markierten Wert an!",
+                    3,
+                    [
+                      int.parse(_startController.text),
+                      int.parse(_endController.text)
+                    ],
+                    false, // a random range or (start - end)
+                    1,
+                    _changeSettings,
+                  );
+                  if (newTask) {
+                    // add Task
+                    BlocProvider.of<CreateTasksetBloc>(context)
+                        .add(AddTask(numberLineTask));
+                    Navigator.pop(context);
+                  } else {
+                    // edit Task
+                    BlocProvider.of<CreateTasksetBloc>(context)
+                        .add(EditTask(numberLineTask));
+                  }
+                  Navigator.pop(context);
+                }
+              },
+              child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
             )
           ],
         ),
