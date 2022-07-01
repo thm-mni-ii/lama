@@ -84,28 +84,29 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
       create: (context) => TTSBloc(),
       child: Column(children: [
       // Task Question
-      Container(
-          height: (constraints.maxHeight / 100) * 30,
-          child: BlocListener<TTSBloc, TTSState>(
-        listener: (context, state) {
-          if (state is EmptyTTSState) {
-            context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,task.questionLanguage!));
-          }
-        },
-        child: Align(
-            child: Text(
-                task.question!,
-                textAlign: TextAlign.center,
-                style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,)),
-            //alignment: Alignment.centerLeft,
+         BlocBuilder<TTSBloc, TTSState>(
+           builder: (context, state) {
+             if (state is EmptyTTSState) {
+               context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,"de"));
+             }
+            return Container(
+                  height: (constraints.maxHeight / 100) * 30,
+                child: Align(
+                    child: Text(
+                        task.question!,
+                        textAlign: TextAlign.center,
+                        style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,)),
+                    //alignment: Alignment.centerLeft,
+                  ),
+               );
+             },
           ),
-)),
       // Lama Speechbubble
-      Container(
+        Container(
         height: (constraints.maxHeight / 100) * 15,
         padding: EdgeInsets.only(left: 15, right: 15),
         // create space between each childs
-        child: Stack(
+          child: Stack(
           children: [
             Align(
               alignment: Alignment.centerLeft,
