@@ -163,9 +163,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
     //debugPrint(index);
     Color color =
     index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;
-    if (answers[index] == selectedAnswer) {
-      color = LamaColors.purpleAccent;
-    }
+
     //Color color = LamaColors.greenAccent;
     return BlocBuilder<TTSBloc, TTSState>(
       builder: (context, state) {

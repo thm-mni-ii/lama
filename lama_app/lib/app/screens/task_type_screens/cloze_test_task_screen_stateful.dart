@@ -3,16 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+import 'package:lama_app/app/state/tts_state.dart';
 
 
 
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
+import '../../event/tts_event.dart';
 import '../../task-system/task.dart';
 
 /// This file creates the Cloze Test task Screen
@@ -28,7 +31,6 @@ class ClozeTestTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
   // List of all possible Answers
   final List<String> answers = [];
-  final FlutterTts flutterTts = FlutterTts();
 
 
   ClozeTestTaskScreen(this.task, this.constraints) {
@@ -36,19 +38,7 @@ class ClozeTestTaskScreen extends StatefulWidget {
     answers.addAll(task.wrongAnswers); // add the wrong answers
     answers.shuffle(); // randomize in list
 
-    readquestion() async {
-      if(!home_screen_state.isTTs()) {
-        return;
-      }
-      var text = task.question;
-      if(task.answerLanguage == "Englisch") {
-        await flutterTts.setLanguage("en-En");
-      } else {
-        await flutterTts.setLanguage("de-De");
-      }
-      await flutterTts.setVolume(1.0);
-      await flutterTts.speak(text!);
-    }
+
 
 
   }
@@ -64,8 +54,8 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
   final TaskClozeTest task;
   final List<String> answers = [];
   final BoxConstraints constraints;
-  final FlutterTts flutterTts = FlutterTts();
-  String selectedAnswer = "";
+  String selectedAnswer = '';
+
 
   ClozeTest(this.task, this.constraints, answers) {
     this.answers.add(answers[0]);
@@ -74,44 +64,42 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
 
   }
 
-  readText(String text) async {
-    if(!home_screen_state.isTTs()) {
-      return;
-    }
-    if(task.answerLanguage == "Englisch") {
-      await flutterTts.setLanguage("en-En");
-    } else {
-      await flutterTts.setLanguage("de-De");
-    }
-    await flutterTts.setVolume(1.0);
-    await flutterTts.speak(text);
-  }
 
 
-  confirmAnswer(String answer, index) {
-    if(answer != selectedAnswer) {
-      readText(answer);
-    } else {
-      BlocProvider.of<TaskBloc>(context)
-          .add(AnswerTaskEvent(answers[index]));
-    }
-  }
+  // confirmAnswer(String answer, index) {
+  //   if(answer != selectedAnswer) {
+  //     readText(answer);
+  //   } else {
+  //     BlocProvider.of<TaskBloc>(context)
+  //         .add(AnswerTaskEvent(answers[index]));
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
-    Color color0 = selectedAnswer == answers[0] ? LamaColors.purpleAccent : LamaColors.greenAccent;
-    Color color1 = selectedAnswer == answers[1] ? LamaColors.purpleAccent : LamaColors.blueAccent;
-    Color color2 = selectedAnswer == answers[2] ? LamaColors.purpleAccent : LamaColors.greenAccent;
-    return Column(children: [
+    Color color0 = LamaColors.greenAccent;
+    Color color1 = LamaColors.blueAccent;
+    Color color2 = LamaColors.greenAccent;
+    return BlocProvider(
+      create: (context) => TTSBloc(),
+      child: Column(children: [
       // Task Question
       Container(
           height: (constraints.maxHeight / 100) * 30,
-          child: Align(
+          child: BlocListener<TTSBloc, TTSState>(
+        listener: (context, state) {
+          if (state is EmptyTTSState) {
+            context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,task.questionLanguage!));
+          }
+        },
+        child: Align(
             child: Text(
                 task.question!,
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,)),
             //alignment: Alignment.centerLeft,
-          )),
+          ),
+)),
       // Lama Speechbubble
       Container(
         height: (constraints.maxHeight / 100) * 15,
@@ -170,11 +158,18 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                           offset: Offset(0, 3)),
                     ]),
                 child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      confirmAnswer(answers[0],0);
-                      selectedAnswer = answers[0];
-                    });
+                  onTap: () => {
+                    if (selectedAnswer != answers[0] ) {
+                      BlocProvider.of<TTSBloc>(context).add(
+                          ClickOnWordQuestion.initVoice(
+                              answers[0], "De")),
+                      selectedAnswer = answers[0]
+                    } else {
+                      BlocProvider.of<TaskBloc>(context)
+                          .add(AnswerTaskEvent(answers[0])),
+                      BlocProvider.of<TTSBloc>(context).
+                      add(SetDefaultEvent())
+                    }
                   },
                   child: Center(
                     child: Text(
@@ -198,11 +193,18 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                           offset: Offset(0, 3))
                     ]),
                 child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      confirmAnswer(answers[1],1);
-                      selectedAnswer = answers[1];
-                    });
+                  onTap: () => {
+                    if (selectedAnswer != answers[1] ) {
+                      BlocProvider.of<TTSBloc>(context).add(
+                          ClickOnWordQuestion.initVoice(
+                              answers[1], "De")),
+                      selectedAnswer = answers[1]
+                    } else {
+                      BlocProvider.of<TaskBloc>(context)
+                          .add(AnswerTaskEvent(answers[1])),
+                      BlocProvider.of<TTSBloc>(context).
+                      add(SetDefaultEvent())
+                    }
                   },
                   child: Center(
                     child: Text(
@@ -226,11 +228,18 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                           offset: Offset(0, 3))
                     ]),
                 child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      confirmAnswer(answers[2],2);
-                      selectedAnswer = answers[2];
-                    });
+                  onTap: () => {
+                    if (selectedAnswer != answers[2] ) {
+                      BlocProvider.of<TTSBloc>(context).add(
+                          ClickOnWordQuestion.initVoice(
+                              answers[1], "De")),
+                      selectedAnswer = answers[2]
+                    } else {
+                      BlocProvider.of<TaskBloc>(context)
+                          .add(AnswerTaskEvent(answers[2])),
+                      BlocProvider.of<TTSBloc>(context).
+                      add(SetDefaultEvent())
+                    }
                   },
                   child: Center(
                     child: Text(
@@ -242,6 +251,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
               )
             ],
           ))
-    ]);
+    ]),
+);
   }
 }
