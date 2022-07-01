@@ -41,6 +41,10 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
        //log('event.answer: ${event.answer}');
       emit(VoiceAnswerTtsState(event.answer));
     });
+    on<SetDefaultEvent>((event, emit) async {
+
+      emit(EmptyTTSState());
+    });
   }
 
   // @override

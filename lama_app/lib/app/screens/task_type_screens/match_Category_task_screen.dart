@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,10 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+
+import '../../bloc/taskBloc/tts_bloc.dart';
+import '../../state/tts_state.dart';
+import '../../event/tts_event.dart';
 
 /// This file creates the Match Category task Screen
 /// The Match Category task is a task where you have to sort 8 given
@@ -91,14 +97,24 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return BlocProvider(
+      create: (context) => TTSBloc(),
+      child: Column(
       children: [
         // Lama Speechbubble
         Container(
           height: (constraints.maxHeight / 100) * 15,
           padding: EdgeInsets.only(left: 15, right: 15, top: 15),
           // create space between each childs
-          child: Stack(
+          child: BlocListener<TTSBloc, TTSState>(
+            listener: (context, TTSState state) {
+              if (state is EmptyTTSState) {
+                log('data: ${task.lamaText!}');
+                context.read<TTSBloc>().add(
+                    AnswerOnInitEvent(task.lamaText!, "Deutsch"));
+              }
+            },
+            child: Stack(
             children: [
               Align(
                 alignment: Alignment.centerLeft,
@@ -140,6 +156,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
               )
             ],
           ),
+),
         ),
         //Items
         Padding(
@@ -222,7 +239,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
               ),
             ))
       ],
-    );
+    ),
+);
   }
 
   /// generateItems is Used to create every draggable Item displayed on the Screen.
