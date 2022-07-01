@@ -65,9 +65,9 @@ class GenerateTaskset extends CreateTasksetEvent{}
 /// used to add a [Task] to the [Taskset] in Bloc
 ///
 /// {@param}[Task] task that should be added to the list
-class AddTask extends CreateTasksetEvent {
-  Task task;
-  AddTask(this.task);
+class AddTaskListToTaskset extends CreateTasksetEvent {
+  List<Task> taskList;
+  AddTaskListToTaskset(this.taskList);
 }
 
 /// used to remove a [Task] from the [Taskset] in Bloc

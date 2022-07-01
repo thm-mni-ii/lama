@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
+import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
+import 'package:lama_app/app/screens/task_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/number_line_task_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
 
 class CreateTaskNumberLine extends StatefulWidget {
+  final int index;
   final TaskNumberLine? task;
-  const CreateTaskNumberLine({Key? key, required this.task}) : super(key: key);
+  const CreateTaskNumberLine(
+      {Key? key, required this.index, required this.task})
+      : super(key: key);
 
   @override
   State<CreateTaskNumberLine> createState() => _CreateTaskNumberLineState();
@@ -29,6 +36,8 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
 
   @override
   Widget build(BuildContext context) {
+    TasksetCreateTasklistBloc blocTaskList =
+        BlocProvider.of<TasksetCreateTasklistBloc>(context);
     CreateTasksetBloc bloc = BlocProvider.of<CreateTasksetBloc>(context);
     Taskset blocTaskset = bloc.taskset!;
     Size screenSize = MediaQuery.of(context).size;
@@ -123,7 +132,14 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
                   validator: (text) {
                     if (text == null || text.isEmpty) {
                       return "Beitrag fehlt!";
-                    } else if (int.parse(text) <= 0) return "Zu klein";
+                    } else if (int.parse(text) <= 0) {
+                      return "Zu klein";
+                    } else if ((int.parse(_endController.text) -
+                                int.parse(_startController.text)) %
+                            int.parse(text) !=
+                        0) {
+                      return "Step size sollte ein Teiler vom ende - start sein";
+                    }
                     return null;
                   },
                   onSaved: (text) => _stepSizeController.text = text!,
@@ -154,7 +170,37 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+/*                 if (_formKey.currentState!.validate()) {
+                  TaskNumberLine numberLineTask = TaskNumberLine(
+                    widget.task?.id ??
+                        KeyGenerator.generateRandomUniqueKey(
+                          blocTaskset.tasks!,
+                        ),
+                    TaskType.numberLine,
+                    int.parse(_rewardController.text),
+                    "Gib den im Zahlenstrahl rot markierten Wert an!",
+                    3,
+                    [
+                      int.parse(_startController.text),
+                      int.parse(_endController.text)
+                    ],
+                    false, // a random range or (start - end)
+                    1,
+                    _changeSettings,
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LayoutBuilder(
+                          builder: (context, constraints) => Scaffold(
+                                body: NumberLineTaskScreen(
+                                    numberLineTask, constraints),
+                              )),
+                    ),
+                  );
+                } */
+              },
               child: const Text("Preview"),
             ),
             ElevatedButton(
@@ -179,11 +225,13 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
                   );
                   if (newTask) {
                     // add Task
-                    bloc.add(AddTask(numberLineTask));
+                    blocTaskList.add(AddToTaskList(numberLineTask));
                     Navigator.pop(context);
                   } else {
                     // edit Task
-                    bloc.add(EditTask(numberLineTask));
+                    blocTaskList.add(
+                      EditTaskInTaskList(widget.index, numberLineTask),
+                    );
                   }
                   Navigator.pop(context);
                 }

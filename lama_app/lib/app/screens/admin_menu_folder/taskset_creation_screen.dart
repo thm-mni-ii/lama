@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/screens/taskset_creation_cart_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -41,6 +43,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
       int.parse(_currentSelectedGrade!),
     );
     taskset.tasks = blocTaskset != null ? blocTaskset.tasks : [];
+    taskset.taskurl = TaskUrl(url: "");
     return taskset;
   }
 
@@ -68,7 +71,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CustomAppbar(
-        size: screenSize.width/5,
+        size: screenSize.width / 5,
         titel: "Taskset erstellen",
         color: LamaColors.findSubjectColor(_currentSelectedSubject ?? "normal"),
       ),
@@ -159,10 +162,18 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetCreationCartScreen(),
-                        )
+                        builder: (_) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider.value(
+                              value:
+                                  BlocProvider.of<CreateTasksetBloc>(context),
+                            ),
+                            BlocProvider(
+                              create: (context) => TasksetCreateTasklistBloc(),
+                            ),
+                          ],
+                          child: TasksetCreationCartScreen(),
+                        ),
                       ),
                     );
                   } else {

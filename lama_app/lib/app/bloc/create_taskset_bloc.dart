@@ -21,14 +21,11 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   CreateTasksetBloc({this.taskset}) : super(InitialState()) {
     on<CreateTasksetAbort>((event, emit) => _abort(event.context));
     on<EditTaskset>((event, emit) => taskset = event.taskset);
-    on<AddTask>(
-      (event, emit) {
-        taskset!.tasks!.add(event.task);
-        emit(ChangedTasksListState());
-      },
-    );
+    on<AddTaskListToTaskset>((event, emit) {
+      taskset!.tasks!.addAll(event.taskList);
+    });
     on<CreateTasksetGenerate>((event, emit) => taskset!.toJson());
-    on<EditTask>((event, emit) {
+    /* on<EditTask>((event, emit) {
       int pos = taskset!.tasks!.indexWhere(
         (element) => element.id == event.task.id,
       );
@@ -38,7 +35,7 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
     on<RemoveTask>((event, emit) {
       taskset!.tasks!.removeWhere((element) => element.id == event.id);
       emit(ChangedTasksListState());
-    });
+    }); */
   }
 
   /// private method to abort the current creation process
