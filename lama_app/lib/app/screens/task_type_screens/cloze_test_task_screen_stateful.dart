@@ -137,7 +137,9 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
         ),
       ),
       // Task Answers
-      Container(
+      BlocBuilder<TTSBloc, TTSState>(
+  builder: (context, state) {
+    return Container(
           height: (constraints.maxHeight / 100) * 50,
           alignment: Alignment.bottomCenter,
           padding: EdgeInsets.only(top: 20),
@@ -214,7 +216,9 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                   ),
                 ),
               ),
-              Container(
+              BlocProvider(
+  create: (context) => TTSBloc(),
+  child: Container(
                 height: 55,
                 width: 250,
                 decoration: BoxDecoration(
@@ -232,7 +236,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                     if (selectedAnswer != answers[2] ) {
                       BlocProvider.of<TTSBloc>(context).add(
                           ClickOnWordQuestion.initVoice(
-                              answers[1], "De")),
+                              answers[2], "De")),
                       selectedAnswer = answers[2]
                     } else {
                       BlocProvider.of<TaskBloc>(context)
@@ -248,9 +252,12 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                     ),
                   ),
                 ),
-              )
+              ),
+)
             ],
-          ))
+          ));
+  },
+)
     ]),
 );
   }
