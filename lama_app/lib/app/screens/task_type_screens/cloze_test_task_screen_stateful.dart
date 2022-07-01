@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -138,106 +140,107 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
         ),
       ),
       // Task Answers
-      BlocBuilder<TTSBloc, TTSState>(
-  builder: (context, state) {
-    return Container(
-          height: (constraints.maxHeight / 100) * 50,
-          alignment: Alignment.bottomCenter,
-          padding: EdgeInsets.only(top: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                height: 55,
-                width: 250,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: color0,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3)),
-                    ]),
-                child: InkWell(
-                  onTap: () => {
-                    if (selectedAnswer != answers[0] ) {
-                      BlocProvider.of<TTSBloc>(context).add(
-                          ClickOnWordQuestion.initVoice(
-                              answers[0], "De")),
-                      selectedAnswer = answers[0]
-                    } else {
-                      BlocProvider.of<TaskBloc>(context)
-                          .add(AnswerTaskEvent(answers[0])),
-                      BlocProvider.of<TTSBloc>(context).
-                      add(SetDefaultEvent())
-                    }
-                  },
-                  child: Center(
-                    child: Text(
-                      answers[0],
-                      style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
+        BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, state) {
+           return Container(
+              height: (constraints.maxHeight / 100) * 50,
+              alignment: Alignment.bottomCenter,
+              padding: EdgeInsets.only(top: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    height: 55,
+                    width: 250,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: state is VoiceAnswerTtsState && selectedAnswer == answers[0] ? LamaColors.purpleAccent : color0,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 7,
+                              offset: Offset(0, 3)),
+                        ]),
+                    child: InkWell(
+                      onTap: () => {
+                        if (selectedAnswer != answers[0] ) {
+                          BlocProvider.of<TTSBloc>(context).add(
+                              ClickOnAnswer(
+                                  answers[0],0)),
+                          selectedAnswer = answers[0]
+                        } else {
+                          BlocProvider.of<TaskBloc>(context)
+                              .add(AnswerTaskEvent(answers[0])),
+                          BlocProvider.of<TTSBloc>(context).
+                          add(SetDefaultEvent())
+                        }
+                      },
+                      child: Center(
+                        child: Text(
+                          answers[0],
+                          style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Container(
-                height: 55,
-                width: 250,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: color1,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3))
-                    ]),
-                child: InkWell(
-                  onTap: () => {
-                    if (selectedAnswer != answers[1] ) {
-                      BlocProvider.of<TTSBloc>(context).add(
-                          ClickOnWordQuestion.initVoice(
-                              answers[1], "De")),
-                      selectedAnswer = answers[1]
-                    } else {
-                      BlocProvider.of<TaskBloc>(context)
-                          .add(AnswerTaskEvent(answers[1])),
-                      BlocProvider.of<TTSBloc>(context).
-                      add(SetDefaultEvent())
-                    }
-                  },
-                  child: Center(
-                    child: Text(
-                      answers[1],
-                      style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
+                  Container(
+                    height: 55,
+                    width: 250,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: state is VoiceAnswerTtsState && selectedAnswer == answers[1] ? LamaColors.purpleAccent : color1,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 7,
+                              offset: Offset(0, 3))
+                        ]),
+                    child: InkWell(
+                      onTap: () => {
+                        log('state: $state'),
+                        if (selectedAnswer != answers[1] ) {
+                          BlocProvider.of<TTSBloc>(context).add(
+                              ClickOnAnswer(
+                                  answers[1],0)),
+                          selectedAnswer = answers[1]
+                        } else {
+                          BlocProvider.of<TaskBloc>(context)
+                              .add(AnswerTaskEvent(answers[1])),
+                          BlocProvider.of<TTSBloc>(context).
+                          add(SetDefaultEvent())
+                        }
+                      },
+                      child: Center(
+                        child: Text(
+                          answers[1],
+                          style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              BlocProvider(
-  create: (context) => TTSBloc(),
-  child: Container(
-                height: 55,
-                width: 250,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: color2,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3))
-                    ]),
-                child: InkWell(
-                  onTap: () => {
+                 BlocProvider(
+                    create: (context) => TTSBloc(),
+                    child: Container(
+                      height: 55,
+                      width: 250,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: state is VoiceAnswerTtsState && selectedAnswer == answers[2] ? LamaColors.purpleAccent : color2,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 7,
+                                offset: Offset(0, 3))
+                          ]),
+                      child: InkWell(
+                       onTap: () => {
                     if (selectedAnswer != answers[2] ) {
                       BlocProvider.of<TTSBloc>(context).add(
-                          ClickOnWordQuestion.initVoice(
-                              answers[2], "De")),
+                          ClickOnAnswer(
+                              answers[2],0)),
                       selectedAnswer = answers[2]
                     } else {
                       BlocProvider.of<TaskBloc>(context)
@@ -246,8 +249,8 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                       add(SetDefaultEvent())
                     }
                   },
-                  child: Center(
-                    child: Text(
+                          child: Center(
+                            child: Text(
                       answers[2],
                       style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
                     ),
