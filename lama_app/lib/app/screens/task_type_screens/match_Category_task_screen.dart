@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -97,8 +98,9 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
         // Lama Speechbubble
         BlocBuilder<TTSBloc, TTSState>(
             builder: (context, state) {
-              if (state is EmptyTTSState) {
+              if (state is EmptyTTSState && !alreadySaid) {
                 context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
+                alreadySaid = true;
               }
             return Container(
               height: (constraints.maxHeight / 100) * 15,
