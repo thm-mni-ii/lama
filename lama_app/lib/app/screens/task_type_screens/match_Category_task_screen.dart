@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -46,7 +45,7 @@ class MatchCategoryTaskScreen extends StatefulWidget {
 
 class MatchCategoryState extends State<MatchCategoryTaskScreen> {
 
-  final FlutterTts flutterTts = FlutterTts();
+
   String selectedAnswer = "";
   String selectedQuestion = "";
 
@@ -76,12 +75,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
     }*/
   }
 
-  readText(String text) async {
-
-    await flutterTts.setLanguage("de-De");
-    await flutterTts.setVolume(1.0);
-    await flutterTts.speak(text);
-  }
 
   @override
   void initState() {
@@ -102,62 +95,69 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
       child: Column(
       children: [
         // Lama Speechbubble
-        Container(
-          height: (constraints.maxHeight / 100) * 15,
-          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-          // create space between each childs
-          child: BlocListener<TTSBloc, TTSState>(
-            listener: (context, TTSState state) {
+        BlocBuilder<TTSBloc, TTSState>(
+            builder: (context, state) {
               if (state is EmptyTTSState) {
-                log('data: ${task.lamaText!}');
-                context.read<TTSBloc>().add(
-                    AnswerOnInitEvent(task.lamaText!, "Deutsch"));
+                context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
+              }
+            return Container(
+              height: (constraints.maxHeight / 100) * 15,
+              padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+              // create space between each childs
+              child: BlocListener<TTSBloc, TTSState>(
+                  listener: (context, TTSState state) {
+                    if (state is EmptyTTSState) {
+                     log('data: ${task.lamaText!}');
+                      context.read<TTSBloc>().add(
+                      AnswerOnInitEvent(task.lamaText!, "Deutsch"));
               }
             },
-            child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.only(left: 75),
-                  height: 50,
-                  width: MediaQuery.of(context).size.width,
-                  child: Bubble(
-                    nip: BubbleNip.leftCenter,
-                    child: Center(
-                      child: InkWell(
-                        onTap: () {
-                          readText( task.lamaText! );
-                          //confirmAnswer(answers[index], index);
-                          setState(() {
-                            selectedQuestion = task.lamaText!;
-                            selectedAnswer = "";
-                          }
-                          );
-                        },
+                child: Stack(
+                  children: [
+                   Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 75),
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                          child: Bubble(
+                            nip: BubbleNip.leftCenter,
+                            child: Center(
+                               child: InkWell(
+                                onTap: () => {
+                                log('lamaText: ${task.lamaText!}'),
+                                  BlocProvider.of<TTSBloc>(context).add(
+                                  ClickOnWordQuestion.initVoice(
+                                  task.lamaText!, "de")),
+                                  //selectedQuestion = task.lamaText!;
+                                 },
 
-                        child: Text(
-                          task.lamaText!,
-                          style: LamaTextTheme.getStyle(
-                              color: LamaColors.black, fontSize: 15),
+
+
+                                  child: Text(
+                                  task.lamaText!,
+                                  style: LamaTextTheme.getStyle(
+                                  color: LamaColors.black, fontSize: 15),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SvgPicture.asset(
-                  "assets/images/svg/lama_head.svg",
-                  semanticsLabel: "Lama Anna",
-                  width: 75,
+                   Align(
+                      alignment: Alignment.centerLeft,
+                      child: SvgPicture.asset(
+                      "assets/images/svg/lama_head.svg",
+                      semanticsLabel: "Lama Anna",
+                      width: 75,
                 ),
               )
             ],
           ),
+          ),
+        );
+  },
 ),
-        ),
         //Items
         Padding(
             padding: EdgeInsets.all(5),
@@ -301,7 +301,9 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
             left: items[i].left,
             child: Draggable<Item>(
               data: items[i],
-              child: Container(
+              child: BlocBuilder<TTSBloc, TTSState>(
+              builder: (context, state) {
+                return Container(
                   height: (constraints.maxHeight / 100) * 8,
                   width: (constraints.maxWidth / 100) * 38,
                   decoration: BoxDecoration(
@@ -316,18 +318,23 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                       ]),
                   child: InkWell(
                     onTap: () {
-                      readText( items[i].item! );
+                      BlocProvider.of<TTSBloc>(context).
+                      add(ClickOnAnswer(items[i].item!, 0));
+                      selectedAnswer = items[i].item!;
+                      //readText( items[i].item! );
                       //confirmAnswer(answers[index], index);
-                      setState(() {
-                        selectedAnswer =  items[i].item!;
-                        selectedQuestion = "";
-                      }
-                      );
+                      // setState(() {
+                      //   selectedAnswer =  items[i].item!;
+                      //   selectedQuestion = "";
+                      // }
+                      // );
                     },
                     child: Center(
                       child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
                     ),
-                  )),
+                  ));
+  },
+),
               feedback: Material(
                   child: Container(
                       height: 50,
@@ -359,14 +366,11 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             blurRadius: 7,
                             offset: Offset(0, 3)),
                       ]),
-                  child: InkWell(
-                    onTap: () {
-                      readText( items[i].item! );
-                    },
+
                     child: Center(
                       child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
                     ),
-                  )),
+                  ),
             )),
       );
     }
@@ -404,7 +408,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                 fit: BoxFit.fitWidth,
                 child: InkWell(
                   onTap: () {
-                    readText( taskCategory! );
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswer(taskCategory!, 0));
                   },
                   child: Center(
                     child: Text(
