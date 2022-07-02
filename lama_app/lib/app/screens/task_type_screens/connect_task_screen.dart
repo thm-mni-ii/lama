@@ -115,8 +115,8 @@ class ConnectState extends State<ConnectTaskScreen> {
                     ),
                   ),
                 );
-  },
-),
+                },
+              ),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -134,7 +134,9 @@ class ConnectState extends State<ConnectTaskScreen> {
           child: Row(
             children: [
               //left words
-              Container(
+              BlocBuilder<TTSBloc, TTSState>(
+  builder: (context, state) {
+    return Container(
                   padding: EdgeInsets.only(top: 20, left: 10),
                   width: (constraints.maxWidth / 100) * 37.5,
                   height: (constraints.maxHeight / 100) * 60,
@@ -147,7 +149,9 @@ class ConnectState extends State<ConnectTaskScreen> {
                     itemCount: leftWords.length,
                     itemBuilder: (context, index) =>
                         _buildPair(index, leftWords),
-                  )),
+                  ));
+  },
+),
               //Space between both containers
               Container(
                 width: (constraints.maxWidth / 100) * 25,
@@ -205,17 +209,18 @@ class ConnectState extends State<ConnectTaskScreen> {
                       alignment: Alignment.bottomCenter,
                       child: Center(
                           child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text(
-                          "Verbinde mindestens ein Wort!",
-                          style: LamaTextTheme.getStyle(),
-                          textAlign: TextAlign.center,
-                        ),
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              "Verbinde mindestens ein Wort!",
+                              style: LamaTextTheme.getStyle(),
+                              textAlign: TextAlign.center,
+                            ),
                       ))),
                   backgroundColor: LamaColors.mainPink,
                 ));
               } else {
                 bool answer = checkAnswer();
+                //log('data: $selectedAnswer');
                 print(answer);
                 BlocProvider.of<TaskBloc>(context)
                     .add(AnswerTaskEvent.initConnect(answer));
@@ -243,24 +248,31 @@ class ConnectState extends State<ConnectTaskScreen> {
   /// int [index]           = Used to locate which item is used from the List
   /// List<Item> [itemList] = Is the list filled with either left or right Items
   Widget _buildPair(index, List<Item> itemList) {
-    return InkWell(
-      child: Container(
+    return BlocBuilder<TTSBloc, TTSState>(
+      builder: (context, state) {
+      return InkWell(
+        child: Container(
           height: 7,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               color: itemList[index].shownColor,
               border: Border.all(color: LamaColors.black)),
           child: Center(
+            //todo
             child: Text(itemList[index].content,
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(
                     fontSize: 15, color: LamaColors.black)),
           )),
       // Used to call the touch method. Needs to be set for every single widget
-      onTap: () {
-        touch(index, itemList);
+        onTap: () {
+          BlocProvider.of<TTSBloc>(context).
+          add(ClickOnAnswer(itemList[index].content, 0));
+          touch(index, itemList);
       },
     );
+  },
+);
   }
 
   /// touch is called when one of the Items gets pressed on.
