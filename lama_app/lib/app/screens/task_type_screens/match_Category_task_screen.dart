@@ -96,6 +96,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
       child: Column(
       children: [
         // Lama Speechbubble
+        // Aufgabestellung vorlesen jedes mal wenn screen neu geladen wird
         BlocBuilder<TTSBloc, TTSState>(
             builder: (context, state) {
               if (state is EmptyTTSState ) {
@@ -133,9 +134,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                                   task.lamaText!, "de")),
                                   //selectedQuestion = task.lamaText!;
                                  },
-
-
-
                                   child: Text(
                                   task.lamaText!,
                                   style: LamaTextTheme.getStyle(
@@ -323,13 +321,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                       BlocProvider.of<TTSBloc>(context).
                       add(ClickOnAnswer(items[i].item!, 0));
                       selectedAnswer = items[i].item!;
-                      //readText( items[i].item! );
-                      //confirmAnswer(answers[index], index);
-                      // setState(() {
-                      //   selectedAnswer =  items[i].item!;
-                      //   selectedQuestion = "";
-                      // }
-                      // );
                     },
                     child: Center(
                       child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
@@ -389,8 +380,10 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
   /// {@return} [Widget] Targetwidget to be displayed on the screen
   Widget buildTargets(BuildContext context, List<String> categoryList,
       String? taskCategory, Color color) {
-    return DragTarget<Item>(
-      builder: (context, candidate, rejectedData) => Container(
+      return BlocBuilder<TTSBloc, TTSState>(
+        builder: (context, state) {
+        return DragTarget<Item>(
+         builder: (context, candidate, rejectedData) => Container(
           height: (constraints.maxHeight / 100) * 45,
           width: (constraints.maxWidth / 100) * 45,
           decoration: BoxDecoration(
@@ -424,29 +417,34 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                   ),
                 ),
               ))),
-      onWillAccept: (data) => true,
-      onAccept: (data) {
-        // Check if draged Item is contained in the Items for this Category
-        categoryList.contains(data.item)
-            ? results.add(true)
-            : results.add(false);
-        // reload screen
-        setState(() {
-          // After Draging the Item needs to be removed from the Screen
-          deletinons.add(data);
-          items.removeWhere((element) {
-            return element.item == data.item;
-          });
-          // If the draged Item was the Last one on the Screen
-          // reset all Variables and send the resluts to check
-          if (items.isEmpty) {
-            firstStart = true;
-            BlocProvider.of<TaskBloc>(context)
-                .add(AnswerTaskEvent.initMatchCategory(results));
-          }
+           onWillAccept: (data) => true,
+           onAccept: (data) {
+          // Check if draged Item is contained in the Items for this Category
+          categoryList.contains(data.item)
+              ? results.add(true)
+              : results.add(false);
+          // reload screen
+          setState(() {
+            // After Draging the Item needs to be removed from the Screen
+            deletinons.add(data);
+            items.removeWhere((element) {
+              return element.item == data.item;
+            });
+            // If the draged Item was the Last one on the Screen
+            // reset all Variables and send the resluts to check
+            if (items.isNotEmpty) {
+              BlocProvider.of<TTSBloc>(context).add(IsNotEmptyStateEvent());
+            }
+            if (items.isEmpty) {
+              firstStart = true;
+              BlocProvider.of<TaskBloc>(context)
+                  .add(AnswerTaskEvent.initMatchCategory(results));
+            }
         });
       },
     );
+  },
+);
   }
 }
 

@@ -135,8 +135,8 @@ class ConnectState extends State<ConnectTaskScreen> {
             children: [
               //left words
               BlocBuilder<TTSBloc, TTSState>(
-  builder: (context, state) {
-    return Container(
+              builder: (context, state) {
+                return Container(
                   padding: EdgeInsets.only(top: 20, left: 10),
                   width: (constraints.maxWidth / 100) * 37.5,
                   height: (constraints.maxHeight / 100) * 60,

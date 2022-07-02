@@ -46,8 +46,10 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
       emit(VoiceAnswerTtsState(event.answer));
     });
     on<SetDefaultEvent>((event, emit) async {
-
       emit(EmptyTTSState());
+    });
+    on<IsNotEmptyStateEvent>((event, emit) async {
+      emit(IsNotEmptyState());
     });
   }
 

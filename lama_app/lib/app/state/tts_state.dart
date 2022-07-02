@@ -21,3 +21,5 @@ class VoiceAnswerTtsState extends TTSState {
 }
 
 class SetDefaultState extends TTSState {}
+
+class IsNotEmptyState extends TTSState {}
