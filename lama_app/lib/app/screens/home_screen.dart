@@ -102,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     userRepository = RepositoryProvider.of<UserRepository>(context);
     String tooltipptext = RepositoryProvider.of<LamaFactsRepository>(context).getRandomLamaFact();
     if(finaltooltipp == "") {
@@ -168,6 +169,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: LamaTextTheme.getStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500)),
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                      right: ((constraints.maxWidth / 100) * 2.5)),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: InkWell(
+                                      child: CircleAvatar(
+                                          maxRadius: 21,
+                                          child: SvgPicture.asset(
+                                              path,
+                                              semanticsLabel: 'TonIcon',
+                                              color: LamaColors.purpleAccent
+                                          ),
+                                          backgroundColor: LamaColors.white,
+                                      ),
+                                        onTap: () => {
+                                          home_screen_state.toggle(),
+                                          setState(() {})
+                                        }
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -356,7 +379,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ///from the column.
   Widget _buildMenuButtonColumn(BoxConstraints constraints) {
     List<Widget> children = [];
-    String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     TasksetRepository tasksetRepository =
         RepositoryProvider.of<TasksetRepository>(context);
     if (tasksetRepository
@@ -364,32 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
             .length >
         0) {
       //children.add(ToggleTextToSpeech());
-      children.add(SizedBox(
 
-          child: Stack(
-            alignment: Alignment.topRight,
-              children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: InkWell(
-                      child: CircleAvatar(
-                        maxRadius: 29,
-                        child: SvgPicture.asset(
-                          path,
-                          semanticsLabel: 'TonIcon',
-                        ),
-                        backgroundColor: LamaColors.white,
-                      ),
-                    onTap: () {
-                      home_screen_state.toggle();
-                      setState(() {});
-                    },
-                  ),
-                ),
-
-              ]
-          ))
-      );
       children.add(ElevatedButton(
         child: Stack(
           alignment: Alignment.center,
