@@ -42,8 +42,8 @@ int flagForCorrectingModus = 0; //  1->represent left   /   2->represents right
 int antwortZaehler = 0;
 int counterForCorrektPushedButtons =
     0; //increments if the correct button was pressed
-bool isCorrect =
-    true; //tracks if all answers were correct in multiple_points mode
+bool isCorrect = true; //tracks if all answers were correct in multiple_points mode
+bool alreadySaid = false;
 //Der Buchstabieren Task kann auf zwei verschiedene Arten erzeugt werden, welche Art es sein soll wird in der JSON beim CorrectionModus abgefragt
 //ist der CorrectionModus auf fals(bzw. 0), so wir ein Bild aufgerufen, und zu dem Begriff auf dem Bild unsortiere Buchstaben erstellt, welche es anzuklicken gilt, um das Wort zu buchstabieren.
 //ist der CorrectionModus aktiv, wird vom User verlang lediglich einen Buchstaben für eine Lücke auszuwählen, sodass das Wort komplett wird-- zur Auswahl stehen dann natürlich auch falsche Buchstaben
@@ -122,9 +122,10 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             child: BlocBuilder<TTSBloc, TTSState>(
                 builder:
                     (context, TTSState state) {
-                  if (state is EmptyTTSState) {
+                  if (state is EmptyTTSState && !alreadySaid ) {
                     context.read<TTSBloc>().add(
                         AnswerOnInitEvent(setTaskMessageAccordingToTaskModus(), "Deutsch"));
+                    alreadySaid = true;
                   }
                   return Stack(
                     children: [
