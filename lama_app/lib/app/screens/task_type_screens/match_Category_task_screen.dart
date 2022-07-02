@@ -98,9 +98,9 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
         // Lama Speechbubble
         BlocBuilder<TTSBloc, TTSState>(
             builder: (context, state) {
-              if (state is EmptyTTSState && !alreadySaid) {
+              if (state is EmptyTTSState ) {
                 context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
-                alreadySaid = true;
+                //alreadySaid = true;
               }
             return Container(
               height: (constraints.maxHeight / 100) * 15,
