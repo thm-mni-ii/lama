@@ -8,12 +8,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
 
 class TTSBloc extends Bloc<TTSEvent,TTSState> {
   final FlutterTts flutterTts = FlutterTts();
   //
   //
   readText(String text,String lang) async {
+    if(!home_screen_state.isTTs()) {
+      return;
+    }
     if (lang == "Englisch") {
       await flutterTts.setLanguage("en-EN");
     } else {
