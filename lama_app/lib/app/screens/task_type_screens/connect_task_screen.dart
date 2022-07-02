@@ -3,13 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/GlobalKeyExtension.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+
+import '../../event/tts_event.dart';
 
 
 ///This file creates the Connect task Screen
@@ -36,6 +40,7 @@ class ConnectTaskScreen extends StatefulWidget {
 
 /// ConnectState class creates the Conect task Screen
 class ConnectState extends State<ConnectTaskScreen> {
+  bool alreadyUpdated = false;
   // task infos and constraints handed over by tasktypeScreen
   final TaskConnect task;
   final BoxConstraints constraints;
@@ -60,6 +65,7 @@ class ConnectState extends State<ConnectTaskScreen> {
     task.pair2.shuffle();
     colors.shuffle();
     int i = 0;
+
     // fill the left and right word lists with Item types
     task.pair1.forEach((element) {
       leftWords.add(Item(false, element.toString(), true, colors[i], task));
@@ -73,7 +79,10 @@ class ConnectState extends State<ConnectTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    
+    return BlocProvider(
+      create: (context) => TTSBloc(),
+      child: Column(
       children: [
         //Creating lama + lamaspeechbubble
         Container(
@@ -84,7 +93,13 @@ class ConnectState extends State<ConnectTaskScreen> {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: Container(
+                child: BlocBuilder<TTSBloc, TTSState>(
+                 builder: (context, state) {
+                   if (state is EmptyTTSState && !alreadyUpdated) {
+                     context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
+                     this.alreadyUpdated = true;
+                   }
+                 return Container(
                   padding: EdgeInsets.only(left: 75),
                   height: 50,
                   width: MediaQuery.of(context).size.width,
@@ -92,13 +107,16 @@ class ConnectState extends State<ConnectTaskScreen> {
                     nip: BubbleNip.leftCenter,
                     child: Center(
                       child: Text(
+                        // todo
                         task.lamaText!,
                         style: LamaTextTheme.getStyle(
                             color: LamaColors.black, fontSize: 15),
                       ),
                     ),
                   ),
-                ),
+                );
+  },
+),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -216,7 +234,8 @@ class ConnectState extends State<ConnectTaskScreen> {
           height: (constraints.maxHeight / 100) * 5,
         )
       ],
-    );
+    ),
+);
   }
 
   /// _buildPair is used by the Gridview Builder to build the Widgets shown left and right on the screen.
@@ -298,11 +317,11 @@ class ConnectState extends State<ConnectTaskScreen> {
               child: Center(
                   child: FittedBox(
                 fit: BoxFit.fitWidth,
-                child: Text(
-                  "Wähle zuerst ein Wort von der linken Seite aus !",
-                  style: LamaTextTheme.getStyle(),
-                  textAlign: TextAlign.center,
-                ),
+                    child: Text(
+                      "Wähle zuerst ein Wort von der linken Seite aus !",
+                      style: LamaTextTheme.getStyle(),
+                      textAlign: TextAlign.center,
+                    ),
               ))),
           backgroundColor: LamaColors.mainPink,
         ));
