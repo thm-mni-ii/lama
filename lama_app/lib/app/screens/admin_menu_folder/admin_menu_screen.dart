@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
+import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
@@ -55,10 +57,35 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: CustomAppbar(
-        size: screensize.width / 5,
-        titel: 'Adminmenü',
-        color: LamaColors.bluePrimary,
+      appBar: AppBar(
+        leading: IconButton(
+          padding: EdgeInsets.all(0),
+          icon: Icon(
+            Icons.logout,
+            size: 30,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (BuildContext context) => UserSelectionBloc(),
+                child: UserSelectionScreen(),
+              ),
+            ),
+          ),
+        ),
+        title: Text(
+          'Adminmenü',
+          style: LamaTextTheme.getStyle(fontSize: 18),
+        ),
+        toolbarHeight: screensize.width / 5,
+        backgroundColor: LamaColors.bluePrimary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
+          ),
+        ),
       ),
       body: BlocListener(
         bloc: BlocProvider.of<AdminMenuBloc>(context),
