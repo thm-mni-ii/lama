@@ -3,10 +3,13 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/state/tts_state.dart';
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
+import '../../event/tts_event.dart';
 import '../../task-system/task.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
@@ -41,19 +44,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
   bool firstTry = true;
   bool tappedCorrectly = false;
   bool tappedIncorrectly = false;
-  final FlutterTts flutterTts = FlutterTts();
 
-  readquestion() async {
-    if(!home_screen_state.isTTs()) {
-      return;
-    }
-    String text = task.ontap! ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
-    : "Gib den im Zahlenstrahl rot markierten Wert an!";
-    await flutterTts.setLanguage("de-De");
-    await flutterTts.setVolume(1.0);
-    await flutterTts.speak(text);
-  }
-  //double rating = 40; for Slider
   NumberLineState(this.task, this.constraints) {
     this.rngStart = task.range[0];
     this.rngEnd = task.range[1];
@@ -88,7 +79,6 @@ class NumberLineState extends State<NumberLineTaskScreen> {
     }
     this.dgesuchteZahl = gesuchteZahl!.toDouble();
     this.firstTry = true;
-    readquestion();
   }
 
   @override
@@ -104,9 +94,20 @@ class NumberLineState extends State<NumberLineTaskScreen> {
     int diff = rngEnd! - rngStart!;
     // If user has to enter the number in a text field
     if (!task.ontap!) {
-      return Column(children: [
+      return BlocProvider(
+      create: (context) => TTSBloc(),
+      child: Column(children: [
         SizedBox(height: 20),
-        lamaHead(context, task, constraints, task.ontap!),
+        BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, state) {
+            if (state is EmptyTTSState) {
+              context.read<TTSBloc>().add(AnswerOnInitEvent(
+                  "Gib den im Zahlenstrahl rot markierten Wert an!"
+              ,"de"));
+            }
+        return lamaHead(context, task, constraints, task.ontap!);
+  },
+),
         SizedBox(height: 50),
 
         // Shows correct answer on screen
@@ -133,9 +134,19 @@ class NumberLineState extends State<NumberLineTaskScreen> {
         keyboard(context, controller, dgesuchteZahl!.toInt()),
         SizedBox(height: 50),
         fertigButton(context, constraints, controller, dgesuchteZahl, diff),
-      ]);
+      ]),
+);
       // If user has to tap the correct area
     } else {
+      return BlocProvider(
+        create: (context) => TTSBloc(),
+        child: BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, state) {
+            if (state is EmptyTTSState) {
+              context.read<TTSBloc>().add(AnswerOnInitEvent(
+                  "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
+                  ,"de"));
+            }
       return Column(children: [
         SizedBox(height: 20),
         lamaHead(context, task, constraints, task.ontap!),
@@ -272,6 +283,9 @@ class NumberLineState extends State<NumberLineTaskScreen> {
         fertigButtonTap(context, constraints, controller, tappedCorrectly,
             tappedIncorrectly),
       ]);
+  },
+),
+);
     }
   }
 }
