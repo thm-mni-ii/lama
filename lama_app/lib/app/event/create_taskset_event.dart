@@ -47,17 +47,17 @@ class EditTaskset extends CreateTasksetEvent {
 class FlushTaskset extends CreateTasksetEvent {}
 
 /// removes a task from a taskset while editing 
-class RemoveTask extends CreateTasksetEvent {
+/* class RemoveTask extends CreateTasksetEvent {
   final String id;
 
   RemoveTask(this.id);
-}
+} */
 
-class EditTask extends CreateTasksetEvent {
+/* class EditTask extends CreateTasksetEvent {
   final Task task;
 
   EditTask(this.task);
-}
+} */
 
 /// writes a Taskset to the db and a json to the server with a specific url
 class GenerateTaskset extends CreateTasksetEvent{}

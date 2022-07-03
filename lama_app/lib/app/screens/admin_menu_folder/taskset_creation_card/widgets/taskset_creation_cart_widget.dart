@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clock_task/create_clock_task.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_moneytask/create_moneytask_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_task_number_line/create_task_number_line.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/four_cards/create_four_cards_screen.dart';
@@ -37,6 +38,8 @@ class TasksetCreationCartWidget extends StatelessWidget {
         return CreateFourCardsScreen();
       case TaskType.numberLine:
         return CreateTaskNumberLine(index: index, task: task as TaskNumberLine);
+      case TaskType.clock:
+        return CreateClockTask(index: index, task: task as ClockTest);
       default:
         return Placeholder();
     }
@@ -58,7 +61,8 @@ class TasksetCreationCartWidget extends StatelessWidget {
         ),
         direction: DismissDirection.endToStart,
         onDismissed: (DismissDirection dismissDirection) {
-          BlocProvider.of<CreateTasksetBloc>(context).add(RemoveTask(task.id));
+          BlocProvider.of<TasksetCreateTasklistBloc>(context)
+              .add(RemoveFromTaskList(task.id));
         },
         child: ListTile(
           title: Text(
@@ -91,8 +95,9 @@ class TasksetCreationCartWidget extends StatelessWidget {
                   color: Colors.black,
                 ),
                 IconButton(
-                  onPressed: () => BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(RemoveTask(task.id)),
+                  onPressed: () =>
+                      BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                          .add(RemoveFromTaskList(task.id)),
                   icon: Icon(Icons.delete),
                   color: Colors.black,
                 ),
