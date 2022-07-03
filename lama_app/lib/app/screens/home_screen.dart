@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
+import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
+import 'package:lama_app/app/screens/game_list_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -45,6 +47,36 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     userRepository = RepositoryProvider.of<UserRepository>(context);
     final screenSize = MediaQuery.of(context).size;
+
+    Widget screenDependingOnButtomItem(String elementText) {
+      switch (elementText) {
+        case "Spiele":
+          return BlocProvider(
+            create: (BuildContext context) =>
+                GameListScreenBloc(userRepository),
+            child: GameListScreen(),
+          );
+        case "Mathe":
+        case "Deutsch":
+        case "Englisch":
+        case "Sachkunde":
+          return BlocProvider(
+            create: (BuildContext context) => ChooseTasksetBloc(
+              context.read<TasksetRepository>(),
+            ),
+            child: ChooseTasksetScreen(
+              elementText,
+              userRepository!.getGrade(),
+              userRepository,
+            ),
+          );
+        case "Shop":
+        // screen muss erst noch implementiert werden
+        default:
+          return Placeholder();
+      }
+    }
+
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
@@ -75,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
           title: Text(
             "Lerne alles mit Anna",
-            style: LamaTextTheme.getStyle(fontSize: 18),
+            style: LamaTextTheme.getStyle(fontSize: 25),
           ),
           toolbarHeight: screenSize.width / 5,
           shape: const RoundedRectangleBorder(
@@ -113,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(50)),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {},// zu implementieren
                   ),
                 ),
                 for (var element in HomeScreenItems.listOfElements)
@@ -145,16 +177,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (BuildContext context) => ChooseTasksetBloc(
-                              context.read<TasksetRepository>(),
-                            ),
-                            child: ChooseTasksetScreen(
-                              element.itemText,
-                              userRepository!.getGrade(),
-                              userRepository,
-                            ),
-                          ),
+                          builder: (context) =>
+                              screenDependingOnButtomItem(element.itemText),
                         ),
                       ).then((value) => setState(() {})),
                     ),
