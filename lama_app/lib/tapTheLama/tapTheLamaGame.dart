@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/tapTheLama/components/LifeBar.dart';
@@ -54,9 +55,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var xPosPurple;
   var xPosPink;
   var yPosButtons;
-
   var lamaButtonSize;
-
   var lamaButtonImageTurkis = 'png/lama_button_turkis.png';
   var lamaButtonImageBlue = 'png/lama_button_blue.png';
   var lamaButtonImagePurple = 'png/lama_button_purple.png';
@@ -105,7 +104,6 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   //#endregion
 
   //#region Global Variables Game Logic
-
   final gameId=5;
   var score = 0;
   var streakScore=0;
@@ -115,7 +113,6 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var referenceVelocity;
   var lifePercent = 100.0;
   var streakCounter = 0;
-
   var scoreIncrementerGoodHit = 10;
   var scoreIncrementerOkayHit = 5;
   var lifeDecreaserStandard = 5.0;
@@ -134,9 +131,10 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   var velocity2;
   var velocityIncreaseFactor1 = 1.2;
   var velocityIncreaseFactor2 = 1.5;
-  var recoveryModuloDivider = 10;
+  var recoveryModuloDivider = 20;
   var recoverRate=5;
   var streakThreshold = 20;
+  bool showMultiplyText=false;
 
   //# endregion
 
@@ -185,8 +183,8 @@ class TapTheLamaGame extends FlameGame with HasTappables {
           Vector2(screenWidth * 0.05, screenHeight * 0.05));
       streakText.render(canvas, "Streak: " + streakCounter.toString(),
           Vector2(screenWidth * 0.6, screenHeight * 0.05));
-    }else{
 
+    }else{
       showGameOverText(canvas);
     }
   }
@@ -213,6 +211,7 @@ class TapTheLamaGame extends FlameGame with HasTappables {
       if (lamaHeadCopy.isAngry) {
         lifePercent -= lifeDecreaserRedLamaHit;
         streakCounter = 0;
+        //showToast(LamaColors.redAccent, "Aua :(");
       } else {
         if (lamaHeadCopy.y >= yPosButtons - lamaButtonSize * 0.2 &&
             lamaHeadCopy.y <= yPosButtons + lamaButtonSize * 0.2) {
@@ -243,6 +242,9 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     lamaHeads.firstWhere((element) => element.isHittable).sprite =
         await loadSprite('png/BLANK_ICON.png');
     lamaHeads.firstWhere((element) => element.isHittable).isExisting = false;
+    if(streakCounter==streakThreshold){
+      showToast(LamaColors.greenAccent, "x2 Punkte!");
+    }
   }
   //#endregion
 
@@ -271,6 +273,14 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     lamaButtonPurple.angle+=0.1;
     lamaButtonPink.angle+=0.1;
   }
+
+  void showToast(Color color, String text) => Fluttertoast.showToast(
+    msg: text,
+    fontSize: screenWidth*0.08,
+    gravity: ToastGravity.CENTER,
+    textColor: color,
+    backgroundColor: Colors.white.withOpacity(0.0),
+  );
   //# endregion
 
   //#region Initialise Score Counter, Life Bar, Lama Buttons and Button Animators
@@ -564,10 +574,12 @@ class TapTheLamaGame extends FlameGame with HasTappables {
   }
 
   void recoverLifeBarCheck() {
-    if (streak && streakCounter != 0 && streakCounter % recoveryModuloDivider == 0) {
+    if (streak && streakCounter >20 && streakCounter % recoveryModuloDivider == 0) {
       lifePercent = lifePercent + recoverRate;
       if (lifePercent >= 100) {
         lifePercent = 100;
+      }else{
+        showToast(LamaColors.greenAccent, "+ $recoverRate LP!");
       }
     }
   }
@@ -609,11 +621,9 @@ class TapTheLamaGame extends FlameGame with HasTappables {
     add(gameOverBackground);
 
     createGameOverTextAndGameOverButtons();
-
   }
 
   Future<void> createGameOverTextAndGameOverButtons() async {
-    var relation=screenHeight/screenWidth;
     gameOverText = TextPaint(
         style: TextStyle(
             fontSize: screenWidth*0.15,
