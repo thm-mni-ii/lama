@@ -69,7 +69,8 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           child: BlocBuilder<TTSBloc, TTSState>(
             builder: (context, TTSState state) {
               if (state is EmptyTTSState) {
-                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,task.questionLanguage!));
+                // todo klasse 2 - Null check operator used on a null value : task.questionLanguage!
+                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,"de"));
               }
               return Container(
                 decoration: BoxDecoration(

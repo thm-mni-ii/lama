@@ -33,6 +33,7 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
        //log('data: $AnswerOnInitEvent');
        //log('event.answer: ${event.answer}');
        //readText("sample", "aaa");
+       emit(IsNotEmptyState());
     });
     on<ClickOnWordQuestion>((event, emit) async {
        readText(event.texttoPlay, event.answerLanguage);

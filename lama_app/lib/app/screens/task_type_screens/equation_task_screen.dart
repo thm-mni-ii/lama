@@ -5,14 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/equation_bloc.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/OperatorWidget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+
+import '../../event/tts_event.dart';
 
 
 /// [StatefulWidget] that contains the screen for the Equation TaskType
@@ -23,23 +27,11 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 class EquationTaskScreen extends StatefulWidget {
   final BoxConstraints constraints;
   final TaskEquation task;
-  final FlutterTts flutterTts = FlutterTts();
 
   EquationTaskScreen(this.task, this.constraints);
 
   @override
   State<StatefulWidget> createState() {
-
-    readquestion() async {
-      if(!home_screen_state.isTTs()) {
-        return;
-      }
-      var text = "Löse die Gleichung";
-      await flutterTts.setLanguage("de-De");
-      await flutterTts.setVolume(1.0);
-      await flutterTts.speak(text);
-    }
-    readquestion();
     return EquationTaskState(task, constraints);
   }
 }
@@ -129,7 +121,9 @@ class EquationTaskState extends State<EquationTaskScreen> {
 
   ///Returns the anna saying the lama_text in a speechbubble
   Widget _buildLamaText() {
-    return Container(
+    return BlocProvider(
+    create: (context) => TTSBloc(),
+      child: Container(
       padding: EdgeInsets.only(left: 15, right: 15),
       height: (constraints.maxHeight / 100) * 30,
       width: (constraints.maxWidth),
@@ -137,7 +131,12 @@ class EquationTaskState extends State<EquationTaskScreen> {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Container(
+            child: BlocBuilder<TTSBloc, TTSState>(
+              builder: (context, state) {
+                if (state is EmptyTTSState) {
+                  context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
+                }
+            return Container(
               padding: EdgeInsets.only(left: 75),
               height: 50,
               width: MediaQuery.of(context).size.width,
@@ -151,7 +150,9 @@ class EquationTaskState extends State<EquationTaskScreen> {
                   ),
                 ),
               ),
-            ),
+            );
+  },
+),
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -163,7 +164,8 @@ class EquationTaskState extends State<EquationTaskScreen> {
           )
         ],
       ),
-    );
+    ),
+);
   }
 
   Widget _buildResetButton() {
@@ -196,6 +198,10 @@ class EquationTaskState extends State<EquationTaskScreen> {
   }
 
   Widget _buildSubmitButton() {
+    return BlocProvider(
+  create: (context) => TTSBloc(),
+  child: BlocBuilder<TTSBloc, TTSState>(
+  builder: (context, state) {
     return Container(
       width: (constraints.maxWidth / 100) * 35,
       height: (constraints.maxHeight / 100) * 10,
@@ -213,6 +219,8 @@ class EquationTaskState extends State<EquationTaskScreen> {
         onTap: () {
           BlocProvider.of<TaskBloc>(context)
               .add(AnswerTaskEvent.initEquationNew(bloc.currentEquation));
+          BlocProvider.of<TTSBloc>(context).
+            add(SetDefaultEvent());
         },
         child: Center(
           child: Text(
@@ -223,6 +231,9 @@ class EquationTaskState extends State<EquationTaskScreen> {
         ),
       ),
     );
+  },
+),
+);
   }
 
   /// Return possible answers for equation in [GridView] as [Widget]
