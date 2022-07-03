@@ -70,7 +70,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
             builder: (context, TTSState state) {
               if (state is EmptyTTSState) {
                 // todo klasse 2 - Null check operator used on a null value : task.questionLanguage!
-                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,"de"));
+                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,task.questionLanguage!));
               }
               return Container(
                 decoration: BoxDecoration(

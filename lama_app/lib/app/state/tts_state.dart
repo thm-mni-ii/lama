@@ -9,6 +9,10 @@ class AnswerOnInitState extends TTSState {
 
 }
 
+class ReadTaskState extends TTSState {
+
+}
+
 class VoiceTtsState extends TTSState {
   //
   //

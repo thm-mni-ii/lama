@@ -9,8 +9,11 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+import 'package:lama_app/app/event/tts_event.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+
 
 
 
@@ -20,25 +23,8 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 class VocableTestTaskScreen extends StatefulWidget {
   final TaskVocableTest task;
   final BoxConstraints constraints;
-  final FlutterTts flutterTts = FlutterTts();
 
-  readquestion() async {
-    if(!home_screen_state.isTTs()) {
-      return;
-    }
-    var text = "Translate the shown word";
-    if(task.questionLanguage == "Englisch") {
-      await flutterTts.setLanguage("en-EN");
-      await flutterTts.setSpeechRate(0.4);
-    } else {
-      await flutterTts.setLanguage("de-De");
-    }
-    await flutterTts.setVolume(1.0);
-    await flutterTts.speak(text);
-  }
-  VocableTestTaskScreen(this.task, this.constraints) {
-    readquestion();
-  }
+  VocableTestTaskScreen(this.task, this.constraints);
 
   @override
   State<StatefulWidget> createState() {
@@ -53,7 +39,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
   final TaskVocableTest task;
   final BoxConstraints constraints;
   final TextEditingController controller = TextEditingController();
-
+  bool alreadySaid = false;
   late VocableTestTaskBloc bloc;
   VocableTestTaskScreenState(this.task, this.constraints) {
     bloc = VocableTestTaskBloc(task);
@@ -69,9 +55,11 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
   }
 
   Widget build(BuildContext context) {
-    return BlocProvider<VocableTestTaskBloc>(
-      create: (context) => bloc,
-      child: BlocListener<VocableTestTaskBloc, VocableTestTaskState>(
+    return BlocProvider(
+      create: (context) => TTSBloc(),
+      child: BlocProvider<VocableTestTaskBloc>(
+        create: (context) => bloc,
+        child: BlocListener<VocableTestTaskBloc, VocableTestTaskState>(
         listener: (BuildContext context, state) {
           if (state is VocableTestFinishedTaskState)
             Future.microtask(() => BlocProvider.of<TaskBloc>(context)
@@ -86,30 +74,43 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                   horizontal: (constraints.maxWidth / 100) * 10,
                   vertical: (constraints.maxHeight / 100) * 5,
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
-                      gradient: LinearGradient(colors: [
-                        LamaColors.orangePrimary,
-                        LamaColors.orangeAccent
-                      ])),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Center(
-                      child: BlocBuilder<VocableTestTaskBloc,
-                          VocableTestTaskState>(builder: (context, state) {
-                        if (state is VocableTestTaskTranslationState)
-                          return Text(
-                            state.wordToTranslate!,
-                            textAlign: TextAlign.center,
-                            style: LamaTextTheme.getStyle(fontSize: 35),
-                          );
-                        else
-                          return Text("Error!");
-                      }),
-                    ),
-                  ),
-                ),
+                child: BlocBuilder<TTSBloc, TTSState>(
+                  builder:
+                    (context, TTSState state) {
+                      if (state is EmptyTTSState && !alreadySaid) {
+                        context.read<TTSBloc>().add(
+                            AnswerOnInitEvent("Translate the shown word",
+                                task.questionLanguage));
+                        alreadySaid = true;
+                      }
+                      return Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            gradient: LinearGradient(colors: [
+                              LamaColors.orangePrimary,
+                              LamaColors.orangeAccent
+                            ])),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Center(
+                            child: BlocBuilder<VocableTestTaskBloc,
+                                VocableTestTaskState>(
+                                builder: (context, state) {
+                                  if (state is VocableTestTaskTranslationState)
+                                    return Text(
+                                      state.wordToTranslate!,
+                                      textAlign: TextAlign.center,
+                                      style: LamaTextTheme.getStyle(
+                                          fontSize: 35),
+                                    );
+                                  else
+                                    return Text("Error!");
+                                }),
+                          ),
+                        ),
+                      );
+                    }
+                  )
               ),
             ),
             Container(
@@ -253,6 +254,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
           ],
         ),
       ),
-    );
+    ),
+);
   }
 }
