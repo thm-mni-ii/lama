@@ -22,6 +22,10 @@ class LamaColors {
   static Color greenPrimary = Color.fromARGB(255, 18, 194, 32);
   static Color greenAccent = Color.fromARGB(255, 50, 225, 83);
 
+  static Color profileColor = Color.fromARGB(255, 253, 237, 6);
+
+  static Color shopColor = Color.fromARGB(255, 31, 6, 253);
+
   static Color mainPink = Color.fromARGB(255, 253, 74, 111);
 
   static Color errorColor = Color.fromARGB(255, 255, 0, 0);
