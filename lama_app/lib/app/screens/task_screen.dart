@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/gridselecttask_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/clock_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen_stateful.dart';
@@ -21,6 +22,9 @@ import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/bloc/taskbloc/tts_bloc.dart';
+
 
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
 
@@ -61,7 +65,7 @@ class TaskScreenState extends State<TaskScreen> {
         //State that signals a Task should be displayed
         if (state is DisplayTaskState) {
           SvgPicture coinImg = SvgPicture.asset(
-              'assets/images/svg/lama_coin.svg',
+              'assets/images/svg/Ton.svg',
               semanticsLabel: 'lama_coin');
           if (state.task != null && state.task.leftToSolve! <= 0)
             coinImg = SvgPicture.asset('assets/images/svg/lama_coin_grey.svg',
@@ -124,15 +128,30 @@ class TaskScreenState extends State<TaskScreen> {
                                       color: LamaColors.white,
                                       fontSize: 30,
                                       fontWeight: FontWeight.w500)),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 15),
-                                  child: Container(
-                                    height: (constraints.maxHeight / 100) * 5,
-                                    width: (constraints.maxHeight / 100) * 5,
-                                    child: coinImg,
-                                  ),
+                              BlocProvider(
+                                create: (context) => TTSBloc(),
+                                child: BlocBuilder<TTSBloc, TTSState>(
+                                builder: (context, state) {
+                                  return Align(
+                                    alignment: Alignment.centerRight,
+                                    child: InkWell(
+                                        child: CircleAvatar(
+                                          maxRadius: 21,
+                                          child: SvgPicture.asset(
+                                              'assets/images/svg/Ton.svg',
+                                              semanticsLabel: 'TonIcon',
+                                              color: LamaColors.purpleAccent
+                                          ),
+                                          backgroundColor: LamaColors.white,
+                                        ),
+                                        onTap: () =>
+                                        {
+                                          //BlocProvider.of<TTSBloc>(context).
+                                          //add(AnswerOnInitEvent(task.lamaText!, "de"))
+                                        }
+                                    ),
+                                  );
+                                }
                                 ),
                               ),
                             ],
@@ -514,7 +533,7 @@ class TaskScreenState extends State<TaskScreen> {
                     coinText,
                     Container(
                       width: (constraints.maxWidth / 100) * 10,
-                      child: SvgPicture.asset('assets/images/svg/lama_coin.svg',
+                      child: SvgPicture.asset('assets/images/svg/Ton.svg',
                           semanticsLabel: 'lama_coins'),
                     ),
                   ],
