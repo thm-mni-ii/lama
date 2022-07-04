@@ -45,13 +45,13 @@ class DatabaseProvider {
   ///
   /// {@return} Database
   Future<BoxCollection?> get database async {
-    if (_database != null) {
+    /*  if (_database != null) {
       return _database;
     }
 
     _database = await createDatabase();
 
-    return _database;
+    return _database; */
   }
 
   ///Create or Update the Database
@@ -167,13 +167,28 @@ class DatabaseProvider {
   ///
   /// {@return} <List<Achievement>>
   Future<List<Achievement>> getAchievements() async {
-    /*    final db = await (database);
+    List<Achievement> achievementList = <Achievement>[];
+    if (kIsWeb) {
+      var achievementBox = await Hive.openBox('achievements');
+      if (achievementBox.isNotEmpty) {
+        for (int i = 0; i < achievementBox.length; i++) {
+          var achievementMap = await achievementBox.getAt(i);
+
+          Achievement achievement = Achievement.fromMap(achievementMap);
+          achievement.id = achievementBox.keyAt(i);
+          achievementBox.add(achievement);
+        }
+      }
+    }
+    return achievementList;
+
+    /* final db = await (database);
 
     var achievements = await db?.query(tableAchievements, columns: [
       AchievementsFields.columnAchievementsId,
       AchievementsFields.columnAchievementsName
     ]);
- */
+
     List<Achievement> achievementList = <Achievement>[];
 /* 
     achievements?.forEach((currentAchievement) {
@@ -182,58 +197,90 @@ class DatabaseProvider {
       achievementList.add(achievement);
     });
  */
-    return achievementList;
+    return achievementList; */
   }
 
   ///get all entry's from table UserHasAchievement
   ///
   /// {@return} <List<UserHasAchievement>>
   Future<List<UserHasAchievement>> getUserHasAchievements() async {
-/*     final db = await (database);
+    List<UserHasAchievement> userHasAchievementList = <UserHasAchievement>[];
+    if (kIsWeb) {
+      var userHasAchievementBox = await Hive.openBox('userHasAchievements');
+      if (userHasAchievementBox.isNotEmpty) {
+        for (int i = 0; i < userHasAchievementBox.length; i++) {
+          var achievementMap = await userHasAchievementBox.getAt(i);
+
+          UserHasAchievement userHasAchievement =
+              UserHasAchievement.fromMap(achievementMap);
+
+          userHasAchievementBox.add(userHasAchievement);
+        }
+      }
+    }
+    return userHasAchievementList;
+    /* final db = await (database);
 
     var userHasAchievements =
         await db?.query(tableUserHasAchievements, columns: [
       UserHasAchievementsFields.columnUserId,
       UserHasAchievementsFields.columnAchievementId
     ]);
- */
+ 
     List<UserHasAchievement> userHasAchievementList = <UserHasAchievement>[];
 
-/*     userHasAchievements?.forEach((currentAchievement) {
+     userHasAchievements?.forEach((currentAchievement) {
       UserHasAchievement userHasAchievement =
           UserHasAchievement.fromMap(currentAchievement);
 
       userHasAchievementList.add(userHasAchievement);
     });
- */
-    return userHasAchievementList;
+ 
+    return userHasAchievementList; */
   }
 
   ///get all entry's from table Game
   ///
   /// {@return} <List<Game>>
   Future<List<Game>> getGames() async {
-/*     final db = await (database);
+    var gameBox = await Hive.openBox('games');
+    List<Game> gameList = <Game>[];
+    gameBox.toMap().forEach((key, value) {
+      Game game = Game.fromMap(value);
+      game.id = key;
+      gameList.add(game);
+    });
+    return gameList;
+    /* final db = await (database);
 
     var games = await db?.query(tableGames,
         columns: [GamesFields.columnGamesId, GamesFields.columnGamesName]);
- */
+ 
     List<Game> gameList = <Game>[];
 
-/*     games?.forEach((currentGame) {
+     games?.forEach((currentGame) {
       Game game = Game.fromMap(currentGame);
 
       gameList.add(game);
     });
- */
-    return gameList;
+ 
+    return gameList; 
+    */
   }
 
   ///get all entry's from table Highscores
   ///
   /// {@return} <List<Highscores>>
   Future<List<Highscore>> getHighscores() async {
-/*     final db = await (database);
+    var highscoreBox = await Hive.openBox('highscores');
+    List<Highscore> highscoreList = <Highscore>[];
+    highscoreBox.toMap().forEach((key, value) {
+      Highscore highscore = Highscore.fromMap(value);
+      highscore.id = key;
+      highscoreList.add(highscore);
+    });
+    return highscoreList;
+    /* final db = await (database);
 
     var highscores = await db?.query(tableHighscore, columns: [
       HighscoresFields.columnId,
@@ -241,16 +288,16 @@ class DatabaseProvider {
       HighscoresFields.columnScore,
       HighscoresFields.columnUserId
     ]);
- */
+ 
     List<Highscore> highscoreList = <Highscore>[];
-/* 
+ 
     highscores?.forEach((currentHighscore) {
       Highscore highscore = Highscore.fromMap(currentHighscore);
 
       highscoreList.add(highscore);
     });
- */
-    return highscoreList;
+ 
+    return highscoreList; */
   }
 
   ///get the highscore from an user in a specific game from table highscore
@@ -259,6 +306,21 @@ class DatabaseProvider {
   ///
   /// {@return} <int>
   Future<int?> getHighscoreOfUserInGame(User user, int gameID) async {
+    var highscoreBox = await Hive.openBox('highscores');
+    var highscoreEntry;
+    try {
+      highscoreEntry = highscoreBox
+          .toMap()
+          .values
+          .where((element) => element[HighscoresFields.columnUserId] == user.id)
+          .where((element) => element[HighscoresFields.columnGameId] == gameID)
+          .single;
+    } on StateError catch (e) {
+      print('$e : Could not get valid highscore entry for user ${user.name}');
+      return 0;
+    }
+    return highscoreEntry[HighscoresFields.columnScore];
+
 /*     final db = await (database);
 
     var highscore = await db?.query(tableHighscore,
@@ -278,8 +340,8 @@ class DatabaseProvider {
         return Highscore.fromMap(highscore.first).score;
       }
     }
- */
-    return 0;
+ 
+    return 0; */
   }
 
   /// get the highscore from a game from table highscore
@@ -288,7 +350,23 @@ class DatabaseProvider {
   ///
   /// {@return} <int>
   Future<int?> getHighscoreOfGame(int gameID) async {
-/*     final db = await (database);
+    var highscoreBox = await Hive.openBox('highscores');
+    int highscore = 0;
+    try {
+      highscoreBox
+          .toMap()
+          .values
+          .where((element) => element[HighscoresFields.columnGameId] == gameID)
+          .forEach((element) {
+        if (element[HighscoresFields.columnScore] > highscore)
+          highscore = element[HighscoresFields.columnScore];
+      });
+    } on StateError catch (e) {
+      print('$e : Could not get valid highscore entry for the game');
+      return 0;
+    }
+    return highscore;
+    /*   final db = await (database);
 
     var highscore = await db?.query(tableHighscore,
         columns: [
@@ -306,8 +384,8 @@ class DatabaseProvider {
         return Highscore.fromMap(highscore.first).score;
       }
     }
- */
-    return 0;
+ 
+    return 0; */
   }
 
 //get a list from typ Subject from the database.
@@ -324,29 +402,37 @@ class DatabaseProvider {
       subject.id = await subjectBox.keyAt(i);
       subjectList.add(subject);
     }
-
+    return subjectList;
     /*   final db = await (database);
 
     var subjects = await db?.query(tableSubjects, columns: [
       SubjectsFields.columnSubjectsId,
       SubjectsFields.columnSubjectsName
     ]);
- */
+ 
 
-/* 
+    List<Subject> subjectList = <Subject>[];
     subjects?.forEach((currentSubject) {
       Subject subject = Subject.fromMap(currentSubject);
 
       subjectList.add(subject);
     });
- */
-    return subjectList;
+ 
+    return subjectList; */
   }
 
   ///get all entry's from table UserSolvedTaskAmount
   ///
   /// {@return} <List<UserSolvedTaskAmount>>
   Future<List<UserSolvedTaskAmount>> getUserSolvedTaskAmount() async {
+    List<UserSolvedTaskAmount> userSolvedTaskAmountList =
+        <UserSolvedTaskAmount>[];
+    var userSolvedTaskAmountBox = await Hive.openBox('userSolvedTaskAmounts');
+    userSolvedTaskAmountBox.values.forEach((element) {
+      userSolvedTaskAmountList.add(UserSolvedTaskAmount.fromMap(element));
+    });
+    return userSolvedTaskAmountList;
+
     /*    final db = await (database);
 
     var userSolvedTaskAmounts =
@@ -355,42 +441,44 @@ class DatabaseProvider {
       UserSolvedTaskAmountFields.columnSubjectId,
       UserSolvedTaskAmountFields.columnAmount
     ]);
- */
+ 
     List<UserSolvedTaskAmount> userSolvedTaskAmountList =
         <UserSolvedTaskAmount>[];
 
-    /*   userSolvedTaskAmounts?.forEach((currentUserSolvedTaskAmount) {
+       userSolvedTaskAmounts?.forEach((currentUserSolvedTaskAmount) {
       UserSolvedTaskAmount userSolvedTaskAmount =
           UserSolvedTaskAmount.fromMap(currentUserSolvedTaskAmount);
 
       userSolvedTaskAmountList.add(userSolvedTaskAmount);
-    }); */
+    }); 
 
-    return userSolvedTaskAmountList;
+    return userSolvedTaskAmountList; */
   }
 
   ///get all entry's from table TaskUrl
   ///
   /// {@return} <List<TaskUrl>>
   Future<List<TaskUrl>> getTaskUrl() async {
+    var taskUrlBox = await Hive.openBox('taskUrls');
+    List<TaskUrl> taskUrlList = <TaskUrl>[];
+    taskUrlBox.values.forEach((element) {
+      taskUrlList.add(TaskUrl.fromMap(element));
+    });
+    return taskUrlList;
     /*    final db = await (database);
 
     var taskUrl = await db?.query(tableTaskUrl,
         columns: [TaskUrlFields.columnId, TaskUrlFields.columnTaskUrl]);
- */
+ 
     List<TaskUrl> taskUrlList = <TaskUrl>[];
-/* 
+
     taskUrl?.forEach((currentTaskUrl) {
       TaskUrl taskUrl = TaskUrl.fromMap(currentTaskUrl);
 
       taskUrlList.add(taskUrl);
-    }); */
+    }); 
 
-    return taskUrlList;
-  }
-
-  getMapWithId(Map<String, dynamic> oldMap) {
-    Map<String, dynamic> newMap;
+    return taskUrlList; */
   }
 
   /// insert an new User in the table User
@@ -400,21 +488,12 @@ class DatabaseProvider {
   /// {@return} <User> with the autoincremented id
   Future<User> insertUser(User user) async {
     var userBox = await Hive.openBox('users');
-    if (userBox.isEmpty) {
-      user.id = 0;
-    } else {
-      user.id = userBox.keyAt(userBox.length - 1) + 1;
-    }
+    user.id = createId(userBox);
     await userBox.put(user.id, user.toMap());
     return user;
-    user.id = await userBox.add(user.toMap());
-    Map<String, dynamic> newUser = {UserFields.columnId: user.id};
-    newUser.addAll(user.toMap());
-    await userBox.put(user.id, newUser);
-    print('put a user in the usersbox');
     /* final db = await (database);
-    user.id = await db?.insert(tableUser, user.toMap()); */
-    return user;
+    user.id = await db?.insert(tableUser, user.toMap()); 
+    return user; */
   }
 
   /// insert an new Achievement in the table Achievement
@@ -423,15 +502,24 @@ class DatabaseProvider {
   ///
   /// {@return} <Achievement> with the autoincremented id
   Future<Achievement> insertAchievement(Achievement achievement) async {
-    /*  final db = await (database);
-    achievement.id = await db?.insert(tableAchievements, achievement.toMap()); */
+    var achievementBox = await Hive.openBox('achievements');
+    achievement.id = createId(achievementBox);
+    await achievementBox.put(achievement.id, achievement.toMap());
     return achievement;
+    /*  final db = await (database);
+    achievement.id = await db?.insert(tableAchievements, achievement.toMap()); 
+    return achievement; */
   }
 
   /// insert an new userId and an achievementId in the table UserHAsAchievement
   ///
   /// {@param} User user, Achievement achievement
   insertUserHasAchievement(User user, Achievement achievement) async {
+    var userHasAchievementBox = await Hive.openBox('userHasAchievements');
+    UserHasAchievement userHasAchievement =
+        UserHasAchievement(userID: user.id, achievementID: achievement.id);
+    userHasAchievementBox.put(
+        createId(userHasAchievementBox), userHasAchievement.toMap());
     /* final db = await (database);
     UserHasAchievement userHasAchievement =
         UserHasAchievement(userID: user.id, achievementID: achievement.id);
@@ -444,9 +532,13 @@ class DatabaseProvider {
   ///
   /// {@return} <Game> with the autoincremented id
   Future<Game> insertGame(Game game) async {
-    /*  final db = await (database);
-    game.id = await db?.insert(tableGames, game.toMap()); */
+    var gameBox = await Hive.openBox('games');
+    game.id = createId(gameBox);
+    gameBox.put(game.id, game.toMap());
     return game;
+    /*  final db = await (database);
+    game.id = await db?.insert(tableGames, game.toMap()); 
+    return game; */
   }
 
   /// insert an new Highscore in the table Highscore
@@ -455,9 +547,13 @@ class DatabaseProvider {
   ///
   /// {@return} <Highscore> with the autoincremented id
   Future<Highscore> insertHighscore(Highscore highscore) async {
-    /* final db = await (database);
-    highscore.id = await db?.insert(tableHighscore, highscore.toMap()); */
+    var highscoreBox = await Hive.openBox('highscores');
+    highscore.id = createId(highscoreBox);
+    highscoreBox.put(highscore.id, highscore.toMap());
     return highscore;
+    /* final db = await (database);
+    highscore.id = await db?.insert(tableHighscore, highscore.toMap()); 
+    return highscore; */
   }
 
   /// insert an new Subject in the table Subject
@@ -467,21 +563,23 @@ class DatabaseProvider {
   /// {@return} <Subject> with the autoincremented id
   Future<Subject> insertSubject(Subject subject) async {
     var subjectBox = await Hive.openBox('subjects');
-    if (subjectBox.isEmpty) {
-      subject.id = 0;
-    } else {
-      subject.id = subjectBox.keyAt(subjectBox.length - 1) + 1;
-    }
+    subject.id = createId(subjectBox);
     await subjectBox.put(subject.id, subject.toMap());
-    /* final db = await (database);
-    subject.id = await db?.insert(tableSubjects, subject.toMap()); */
     return subject;
+    /* final db = await (database);
+    subject.id = await db?.insert(tableSubjects, subject.toMap()); 
+    return subject; */
   }
 
   /// insert an UserId, a subjectId and an amount in the table UserSolvedTaskAmount
   ///
   /// {@param} User user, Subject subject, int amount
   insertUserSolvedTaskAmount(User user, Subject subject, int amount) async {
+    var userSolvedTaskAmountBox = await Hive.openBox('userSolvedTaskAmounts');
+    UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount(
+        userId: user.id, subjectId: subject.id, amount: amount);
+    userSolvedTaskAmountBox.put(
+        createId(userSolvedTaskAmountBox), userSolvedTaskAmount.toMap());
     /*  final db = await (database);
     UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount(
         userId: user.id, subjectId: subject.id, amount: amount);
@@ -494,16 +592,36 @@ class DatabaseProvider {
   ///
   /// {@return} <TaskUrl> with the autoincremented id
   Future<TaskUrl> insertTaskUrl(TaskUrl taskUrl) async {
-    /*  final db = await (database);
-    taskUrl.id = await db?.insert(tableTaskUrl, taskUrl.toMap()); */
+    var taskUrlBox = await Hive.openBox('taskUrls');
+    taskUrl.id = createId(taskUrlBox);
+    taskUrlBox.put(taskUrl.id, taskUrl.toMap());
     return taskUrl;
+    /*  final db = await (database);
+    taskUrl.id = await db?.insert(tableTaskUrl, taskUrl.toMap()); 
+    return taskUrl; */
+  }
+
+  ///creates an id when inserting data in the database
+  ///
+  ///{@param} Box<dynamic> box
+  ///
+  ///{@return} id
+  int createId(Box<dynamic> box) {
+    int id;
+    if (box.isEmpty) {
+      id = 0;
+    } else {
+      id = box.keyAt(box.length - 1) + 1;
+    }
+    return id;
   }
 
   /// delete an user in table User
   ///
   /// {@param} int id
   ///
-  /// {@return} <int> which shows the number of deleted rows
+  /// {@return} <int> which shows the number of deleted rows /
+  /// TO-DO: return doesnt work, fix or delete
   Future<int?> deleteUser(int? id) async {
     var userBox = await Hive.openBox('users');
     if (userBox.get(id) != null) {
@@ -520,7 +638,12 @@ class DatabaseProvider {
   /// {@param} int id
   ///
   /// {@return} <int> which shows the number of deleted rows
+  /// TO-DO: return doesnt work, fix or delete
   Future<int?> deleteAchievement(int? id) async {
+    var achievementBox = await Hive.openBox('achievements');
+    if (achievementBox.get(id) != null) {
+      await achievementBox.delete(id);
+    }
     /* final db = await (database);
 
     return await db?.delete(tableAchievements,
@@ -533,8 +656,25 @@ class DatabaseProvider {
   /// {@param} User user, Achievement achievement
   ///
   /// {@return} <int> which shows the number of deleted rows
+  /// TO-DO: return doesnt work, fix or delete
   Future<int?> deleteUserHasAchievement(
       User user, Achievement achievement) async {
+    var userHasAchievementBox = await Hive.openBox('userHasAchievements');
+    MapEntry<dynamic, dynamic> uhaEntry;
+    try {
+      uhaEntry = userHasAchievementBox
+          .toMap()
+          .entries
+          .where((element) =>
+              element.value[UserHasAchievementsFields.columnUserId] == user.id)
+          .where((element) =>
+              element.value[UserHasAchievementsFields.columnAchievementId] ==
+              achievement.id)
+          .single;
+      await userHasAchievementBox.delete(uhaEntry.key);
+    } on StateError catch (e) {
+      print('$e : No valid userHasAchievement entry to delete found');
+    }
     /* final db = await (database);
     return await db?.delete(tableUserHasAchievements,
         where:
@@ -547,7 +687,10 @@ class DatabaseProvider {
   /// {@param} int id
   ///
   /// {@return} <int> which shows the number of deleted rows
+  /// TO-DO: return doesnt work, fix or delete
   Future<int?> deleteGame(int? id) async {
+    var gameBox = await Hive.openBox('games');
+    await gameBox.delete(id);
     /*   final db = await (database);
 
     return await db?.delete(tableGames,
@@ -559,7 +702,10 @@ class DatabaseProvider {
   /// {@param} int id
   ///
   /// {@return} <int> which shows the number of deleted rows
+  /// TO-DO: return doesnt work, fix or delete
   Future<int?> deleteHighscore(int? id) async {
+    var highscoreBox = await Hive.openBox('highscores');
+    await highscoreBox.delete(id);
     /*  final db = await (database);
 
     return await db?.delete(tableHighscore,
@@ -571,7 +717,10 @@ class DatabaseProvider {
   /// {@param} int id
   ///
   /// {@return} <int> which shows the number of deleted rows
+  /// TO-DO: return doesnt work, fix or delete
   Future<int?> deleteSubject(int? id) async {
+    var subjectBox = await Hive.openBox('subjects');
+    await subjectBox.delete(id);
     /*  final db = await (database);
 
     return await db?.delete(tableSubjects,
@@ -583,7 +732,24 @@ class DatabaseProvider {
   /// {@param} User user, Subject subject
   ///
   /// {@return} <int> which shows the number of deleted rows
+  /// TO-DO: return doesnt work, fix or delete
   Future<int?> deleteUserSolvedTaskAmount(User user, Subject subject) async {
+    var userSolvedTaskAmountBox = await Hive.openBox('userSolvedTaskAmounts');
+    MapEntry<dynamic, dynamic> ustaEntry;
+    try {
+      ustaEntry = userSolvedTaskAmountBox
+          .toMap()
+          .entries
+          .where((element) =>
+              element.value[UserHasAchievementsFields.columnUserId] == user.id)
+          .where((element) =>
+              element.value[UserSolvedTaskAmountFields.columnSubjectId] ==
+              subject.id)
+          .single;
+      await userSolvedTaskAmountBox.delete(ustaEntry.key);
+    } on StateError catch (e) {
+      print('$e : No valid userSolvedTaskAmounts entry to delete found');
+    }
     /*  final db = await (database);
 
     return await db?.delete(tableUserSolvedTaskAmount,
@@ -597,7 +763,10 @@ class DatabaseProvider {
   /// {@param} int id
   ///
   /// {@return} <int> which shows the number of deleted rows
+  /// TO-DO: return doesnt work, fix or delete
   Future<int?> deleteTaskUrl(int? id) async {
+    var taskUrlBox = await Hive.openBox('taskUrls');
+    await taskUrlBox.delete(id);
     /* final db = await (database);
 
     return await db?.delete(tableTaskUrl,
@@ -762,6 +931,10 @@ class DatabaseProvider {
   /// {@return} <User>
   Future<User?> updateUserHighscorePermission(
       User user, bool highscorePermission) async {
+    var userBox = await Hive.openBox('users');
+    user.highscorePermission = highscorePermission;
+    await userBox.put(user.id, user.toMap());
+    return await _getUser(user.id);
     /*  final db = await (database);
 
     int? updated = await db?.update(
@@ -784,9 +957,9 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<void> updateAllUserHighscorePermission(List<User> userList) async {
-    /*    userList.forEach((user) async {
+    userList.forEach((user) async {
       await updateUserHighscorePermission(user, user.highscorePermission!);
-    }); */
+    });
   }
 
   /// update the avatar from an user in table User
@@ -795,6 +968,10 @@ class DatabaseProvider {
   ///
   /// {@return} <User>
   Future<User?> updateUserAvatar(User user, String avatar) async {
+    var userBox = await Hive.openBox('users');
+    user.avatar = avatar;
+    await userBox.put(user.id, user.toMap());
+    return await _getUser(user.id);
     /*   final db = await (database);
 
     int? updated = await db?.update(
@@ -812,7 +989,12 @@ class DatabaseProvider {
   /// {@param} Achievement achievement
   ///
   /// {@return} <int> which shows the number of updated rows
+  /// TO-DO return doesnt work, implement or delete
   Future<int?> updateAchievement(Achievement achievement) async {
+    var achievementBox = await Hive.openBox('achievements');
+
+    await achievementBox.put(achievement.id, achievement.toMap());
+
     /*   final db = await (database);
 
     return await db?.update(tableAchievements, achievement.toMap(),
@@ -826,6 +1008,8 @@ class DatabaseProvider {
   ///
   /// {@return} <int> which shows the number of updated rows
   Future<int?> updateGame(Game game) async {
+    var gameBox = await Hive.openBox('games');
+    await gameBox.put(game.id, game.toMap());
     /*    final db = await (database);
 
     return await db?.update(tableGames, game.toMap(),
@@ -838,6 +1022,8 @@ class DatabaseProvider {
   ///
   /// {@return} <int> which shows the number of updated rows
   Future<int?> updateHighscore(Highscore highscore) async {
+    var highscoreBox = await Hive.openBox('highscores');
+    await highscoreBox.put(highscore.id, highscore.toMap());
     /*   final db = await (database);
 
     return await db?.update(tableHighscore, highscore.toMap(),
@@ -850,6 +1036,8 @@ class DatabaseProvider {
   ///
   /// {@return} <int> which shows the number of updated rows
   Future<int?> updateSubject(Subject subject) async {
+    var subjectBox = await Hive.openBox('subjects');
+    await subjectBox.put(subject.id, subject.toMap());
     /*    final db = await (database);
 
     return await db?.update(tableSubjects, subject.toMap(),
@@ -864,6 +1052,25 @@ class DatabaseProvider {
   /// {@return} <int> which shows the number of updated rows
   Future<int?> updateUserSolvedTaskAmount(
       User user, Subject subject, int amount) async {
+    var userSolvedTaskAmountBox = await Hive.openBox('userSolvedTaskAmounts');
+    UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount(
+        userId: user.id, subjectId: subject.id, amount: amount);
+    MapEntry<dynamic, dynamic> ustaEntry;
+    try {
+      ustaEntry = userSolvedTaskAmountBox
+          .toMap()
+          .entries
+          .where((element) =>
+              element.value[UserHasAchievementsFields.columnUserId] == user.id)
+          .where((element) =>
+              element.value[UserSolvedTaskAmountFields.columnSubjectId] ==
+              subject.id)
+          .single;
+      await userSolvedTaskAmountBox.put(
+          ustaEntry.key, userSolvedTaskAmount.toMap());
+    } on StateError catch (e) {
+      print('$e : No valid userSolvedTaskAmounts entry found');
+    }
     /* final db = await (database);
     UserSolvedTaskAmount userSolvedTaskAmount = UserSolvedTaskAmount(
         userId: user.id, subjectId: subject.id, amount: amount);
@@ -881,6 +1088,8 @@ class DatabaseProvider {
   ///
   /// {@return} <int> which shows the number of updated rows
   Future<int?> updateTaskUrl(TaskUrl taskUrl) async {
+    var taskUrlBox = await Hive.openBox('taskUrls');
+    await taskUrlBox.put(taskUrl.id, taskUrl.toMap());
     /*   final db = await (database);
 
     return await db?.update(tableTaskUrl, taskUrl.toMap(),
@@ -921,13 +1130,20 @@ class DatabaseProvider {
 
   Future<SaftyQuestion> _insertSaftyQuestion(
       SaftyQuestion saftyQuestion) async {
+    var saftyQuestionBox = await Hive.openBox('saftyQuestions');
+    saftyQuestion.id = createId(saftyQuestionBox);
+    saftyQuestionBox.put(saftyQuestion.id, saftyQuestion.toMap());
+    return saftyQuestion;
     /*    final db = await (database);
     saftyQuestion.id =
-        await db?.insert(tableSaftyQuestion, saftyQuestion.toMap()); */
-    return saftyQuestion;
+        await db?.insert(tableSaftyQuestion, saftyQuestion.toMap()); 
+    return saftyQuestion; */
   }
 
   Future<SaftyQuestion> updateSaftyQuestion(SaftyQuestion saftyQuestion) async {
+    var saftyQuestionBox = await Hive.openBox('saftyQuestions');
+    saftyQuestionBox.put(saftyQuestion.id, saftyQuestion.toMap());
+    return saftyQuestion;
     /*    final db = await database;
     SaftyQuestion? allreadyExist =
         await getSaftyQuestion(saftyQuestion.adminID);
@@ -937,11 +1153,18 @@ class DatabaseProvider {
           whereArgs: [saftyQuestion.adminID]);
     } else {
       return _insertSaftyQuestion(saftyQuestion);
-    } */
-    return saftyQuestion;
+    } 
+    return saftyQuestion; */
   }
 
   Future<SaftyQuestion?> getSaftyQuestion(int? adminId) async {
+    var saftyQuestionBox = await Hive.openBox('saftyQuestions');
+    saftyQuestionBox.toMap().forEach((key, value) {
+      if (value[SaftyQuestionFields.columnSaftyQuestionAdminId] == adminId) {
+        return saftyQuestionBox.get(key);
+      }
+    });
+    return null;
 /*     final db = await (database);
     var saftyQuestionMap = await db?.query(tableSaftyQuestion,
         columns: [
@@ -962,6 +1185,13 @@ class DatabaseProvider {
   }
 
   Future<int?> deleteSaftyQuestion(int adminId) async {
+    var saftyQuestionBox = await Hive.openBox('saftyQuestions');
+    saftyQuestionBox.toMap().forEach((key, value) {
+      if (value[SaftyQuestionFields.columnSaftyQuestionAdminId] == adminId) {
+        saftyQuestionBox.delete(key);
+      }
+    });
+    return null;
     /*  final db = await (database);
     return await db?.delete(tableSaftyQuestion,
         where: "${SaftyQuestionFields.columnSaftyQuestionAdminId} = ?",
@@ -1046,6 +1276,7 @@ class DatabaseProvider {
 
   ///delete all entrys in all databases
   Future deleteDatabase() async {
+    await Hive.deleteFromDisk();
     /*   final db = await (database);
     await db?.delete(tableUser);
     await db?.delete(tableSaftyQuestion);
@@ -1072,14 +1303,14 @@ class DatabaseProvider {
         leftToSolve: leftToSolve,
         userLTSId: user.id,
         doesStillExist: 0);
-    var ltsBox = await Hive.openBox('leftToSolves');
+    var leftToSolveBox = await Hive.openBox('leftToSolves');
     await Hive.openBox('users');
-    if (ltsBox.isEmpty) {
+    if (leftToSolveBox.isEmpty) {
       lts.id = 0;
     } else {
-      lts.id = ltsBox.keyAt(ltsBox.length - 1) + 1;
+      lts.id = leftToSolveBox.keyAt(leftToSolveBox.length - 1) + 1;
     }
-    await ltsBox.put(lts.id, lts.toMap());
+    await leftToSolveBox.put(lts.id, lts.toMap());
     return lts.id;
   }
 
@@ -1089,8 +1320,8 @@ class DatabaseProvider {
   ///
   /// {@return} <int>
   Future<int?> getLeftToSolve(String taskString, User user) async {
-    var ltsBox = await Hive.openBox('leftToSolves');
-    List? ltsList = ltsBox.values.toList();
+    var leftToSolveBox = await Hive.openBox('leftToSolves');
+    List? ltsList = leftToSolveBox.values.toList();
     var lts;
     try {
       lts = ltsList
@@ -1099,7 +1330,7 @@ class DatabaseProvider {
           .where((element) =>
               element[LeftToSolveFields.columnUserLTSId] == user.id)
           .single;
-      //if there is no result, a StateError is thrown
+      //if there is no result or multiple results, a StateError is thrown
     } on StateError catch (e) {
       return Future.value(-3);
     }
@@ -1125,13 +1356,29 @@ class DatabaseProvider {
 
   Future<void> removeUnusedLeftToSolveEntries(
       List<Task> loadedTasks, User user) async {
-    /* final db = await (database);
+    var leftToSolveBox = await Hive.openBox('leftToSolves');
+    MapEntry<dynamic, dynamic> unusedEntry;
+    try {
+      unusedEntry = leftToSolveBox
+          .toMap()
+          .entries
+          .where((entry) =>
+              entry.value[LeftToSolveFields.columnUserLTSId] == user.id)
+          .single;
+      leftToSolveBox.delete(unusedEntry.key);
+    } on StateError catch (e) {
+      print('$e : Did not find unused leftToSolve entry');
+    }
+    loadedTasks.forEach((task) {
+      insertLeftToSolve(task.toString(), task.leftToSolve, user);
+    });
+    /*   final db = await (database);
     db?.delete(tableLeftToSolve,
         where: "${LeftToSolveFields.columnUserLTSId} = ?",
         whereArgs: [user.id]);
     loadedTasks.forEach((task) {
       insertLeftToSolve(task.toString(), task.leftToSolve, user);
-    }); */
+    });  */
   }
 
   /// decrement the leftToSolve value from a task with an specific user
@@ -1139,12 +1386,30 @@ class DatabaseProvider {
   /// {@param} Task t,  User user
   ///
   /// {@return} <int> which shows the number of updated rows
+  /// TO-DO: return doesnt work, fix or delete
   Future<int?> decrementLeftToSolve(Task t, User user) async {
-    /*  final db = await (database);
+    var leftToSolveBox = await Hive.openBox('leftToSolves');
+
+    final db = await (database);
     print("curVal: " + t.leftToSolve.toString());
     int newVal = max(t.leftToSolve! - 1, -2);
     print("setting to: " + newVal.toString());
-    return await db?.update(tableLeftToSolve,
+    MapEntry<dynamic, dynamic> decrementEntry;
+    try {
+      decrementEntry = leftToSolveBox
+          .toMap()
+          .entries
+          .where((entry) =>
+              entry.value[LeftToSolveFields.columnLeftToSolve] == t.toString())
+          .where((entry) =>
+              entry.value[LeftToSolveFields.columnUserLTSId] == user.id)
+          .single;
+      leftToSolveBox.put(decrementEntry.key, newVal);
+    } on StateError catch (e) {
+      print('$e : Could not find entry to decrement');
+      return 0;
+    }
+    /*  return await db?.update(tableLeftToSolve,
         <String, dynamic>{LeftToSolveFields.columnLeftToSolve: newVal},
         where:
             "${LeftToSolveFields.columnTaskString} = ? and ${LeftToSolveFields.columnUserLTSId} = ?",
@@ -1157,9 +1422,22 @@ class DatabaseProvider {
   ///
   /// {@return} <int> which shows the number of updated rows
   Future<int?> setDoesStillExist(Task t) async {
-    /*  final db = await (database);
+    var leftToSolveBox = await Hive.openBox('leftToSolves');
+    leftToSolveBox
+        .toMap()
+        .entries
+        .where((entry) =>
+            entry.value[LeftToSolveFields.columnTaskString] == t.toString())
+        .forEach((entry) {
+      Map<dynamic, dynamic> entryToUpdate = entry.value;
+      entryToUpdate.update(entry.key,
+          (value) => value[LeftToSolveFields.columnDoesStillExist] = 1);
+      leftToSolveBox.put(entry.key, entryToUpdate);
+    });
     print("Set flag for " + t.toString());
-    return await db?.update(tableLeftToSolve,
+    /*final db = await (database);
+    print("Set flag for " + t.toString());
+     return await db?.update(tableLeftToSolve,
         <String, dynamic>{LeftToSolveFields.columnDoesStillExist: 1},
         where: "${LeftToSolveFields.columnTaskString} = ?",
         whereArgs: [t.toString()]); */
@@ -1169,6 +1447,16 @@ class DatabaseProvider {
   ///
   /// {@return} <int> which shows the number of deleted rows
   Future<int?> removeAllNonExistent() async {
+    var leftToSolveBox = await Hive.openBox('leftToSolves');
+    int val = 0;
+    leftToSolveBox
+        .toMap()
+        .entries
+        .where((entry) =>
+            entry.value[LeftToSolveFields.columnDoesStillExist] == val)
+        .forEach((entry) {
+      leftToSolveBox.delete(entry.key);
+    });
     /*  final db = await (database);
     int val = 0;
     return await db?.delete(tableLeftToSolve,
@@ -1180,6 +1468,13 @@ class DatabaseProvider {
   ///
   /// {@return} <int> which shows the number of updated rows
   Future<int?> resetAllStillExistFlags() async {
+    var leftToSolveBox = await Hive.openBox('leftToSolves');
+    leftToSolveBox.toMap().forEach((key, value) {
+      Map<dynamic, dynamic> newValue = value;
+      newValue.update(
+          LeftToSolveFields.columnDoesStillExist, (value) => newValue);
+      leftToSolveBox.put(key, newValue);
+    });
     /*  final db = await (database);
     return await db?.update(tableLeftToSolve,
         <String, dynamic>{LeftToSolveFields.columnDoesStillExist: 0}); */
