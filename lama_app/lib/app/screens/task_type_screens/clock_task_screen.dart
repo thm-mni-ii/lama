@@ -13,6 +13,11 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+import 'package:lama_app/app/event/tts_event.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+
+
 
 
 /// Author: H.Bismo
@@ -56,6 +61,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
   var vierMinute;
   var allMinuten;
   List<String>? wrongAnswer;
+  bool alreadySaid = false;
 
   final FlutterTts flutterTts = FlutterTts();
   String selectedAnswer = "leer";
@@ -70,24 +76,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
     await flutterTts.speak(text);
   }
 
-  readQuestion() async {
-    if(!home_screen_state.isTTs()) {
-      return;
-    }
-    var text = task.lamaText;
-    await flutterTts.setLanguage("de-De");
-    await flutterTts.speak(text!);
-  }
 
-
-  confirmAnswer(String answer, index) {
-    if(answer != selectedAnswer) {
-      readText(answer);
-    } else {
-      BlocProvider.of<TaskBloc>(context)
-          .add(AnswerTaskEvent(answers[index]));
-    }
-  }
 
   String setImage() {
     if (this.randStunde < 5 || this.randStunde > 17) {
@@ -130,8 +119,6 @@ class ClockTaskState extends State<ClockTaskScreen> {
     answers.add(wrgAnswer2()); // add the wrong answers
     answers.shuffle();
     print(answers);
-
-    readQuestion();
   }
 
   @override
@@ -287,10 +274,29 @@ class ClockTaskState extends State<ClockTaskScreen> {
         return wrgAnswer2();
   }
 
+  void _showAlertDialog(String txt) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(txt),
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     if (task.uhr == "allStunden") {
-      return Column(
+      return BlocProvider(
+        create: (context) => TTSBloc(),
+        child: BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, TTSState state) {
+            if (state is EmptyTTSState && !alreadySaid) {
+              context.read<TTSBloc>().add(
+                  AnswerOnInitEvent("Wie viel Uhr ist es", "Deutsch"));
+              alreadySaid = true;
+            }
+            return Column(
         children: [
           // Lama Speechbubble
           Container(
@@ -469,14 +475,29 @@ class ClockTaskState extends State<ClockTaskScreen> {
           ),
         ],
       );
+  },
+),
+);
     } else{
-      return Column(children: [
+      return BlocProvider(
+  create: (context) => TTSBloc(),
+  child: Column(children: [
         // Lama Speechbubble
         Container(
           height: (constraints.maxHeight / 100) * 15,
           padding: EdgeInsets.only(left: 15, right: 15, top: 15),
           // create space between each childs
-          child: Stack(
+          
+          child: BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, state) {
+          if (state is EmptyTTSState && !alreadySaid) {
+            context.read<TTSBloc>().add(
+            AnswerOnInitEvent("Wie viel Uhr ist es", "Deutsch"));
+            alreadySaid = true;
+            BlocProvider.of<TTSBloc>(context).
+            add(SetDefaultEvent());
+          }
+          return Stack(
             children: [
               Align(
                 alignment: Alignment.centerLeft,
@@ -523,7 +544,9 @@ class ClockTaskState extends State<ClockTaskScreen> {
                         height: 30,
                       ))),
             ],
-          ),
+          );
+  },
+),
         ),
         //Items
         Padding(
@@ -578,13 +601,20 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3)),
                     ]),
                 child: InkWell(
-
                   onTap: () {
-                    confirmAnswer(answers[0]!, 0);
-                    setState(() {
-                      selectedAnswer = answers[0]!;
-                      selectedQuestion = "";
-                    });
+                    if (selectedAnswer != answers[0]) {
+                      //log('data: $selectedAnswer');
+                      BlocProvider.of<TTSBloc>(context).
+                      add(ClickOnAnswer(answers[0]!, 0));
+                      setState(() {
+                        selectedAnswer = answers[0]!;
+                      });
+                    } else {
+                      BlocProvider.of<TaskBloc>(context)
+                          .add(AnswerTaskEvent(answers[0]));
+                      BlocProvider.of<TTSBloc>(context).
+                      add(SetDefaultEvent());
+                    }
                   },
                   child: Center(
                     child: Text(
@@ -612,11 +642,19 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     ]),
                 child: InkWell(
                   onTap: () {
-                    confirmAnswer(answers[1]!, 1);
-                    setState(() {
-                      selectedAnswer = answers[1]!;
-                      selectedQuestion = "";
-                    });
+                    if (selectedAnswer != answers[1]) {
+                      //log('data: $selectedAnswer');
+                      BlocProvider.of<TTSBloc>(context).
+                      add(ClickOnAnswer(answers[1]!, 1));
+                      setState(() {
+                        selectedAnswer = answers[1]!;
+                      });
+                    } else {
+                      BlocProvider.of<TaskBloc>(context)
+                          .add(AnswerTaskEvent(answers[1]));
+                      BlocProvider.of<TTSBloc>(context).
+                      add(SetDefaultEvent());
+                    }
                   },
                   child: Center(
                     child: Text(
@@ -643,28 +681,37 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3))
                     ]),
                 child: InkWell(
-                onTap: () {
-                  confirmAnswer(answers[2]!, 2);
-                  setState(() {
-                  selectedAnswer = answers[2]!;
-                  selectedQuestion = "";
-                  });
-                  },
-                  child: Center(
-                    child: Text(
-                      answers[2]!,
-                      style: LamaTextTheme.getStyle(
-                        color: LamaColors.white,
-                        fontSize: 30,
+                  onTap: () {
+                    if (selectedAnswer != answers[2]) {
+                      //log('data: $selectedAnswer');
+                      BlocProvider.of<TTSBloc>(context).
+                      add(ClickOnAnswer(answers[2]!, 2));
+                      setState(() {
+                        selectedAnswer = answers[2]!;
+                      });
+                    } else {
+                      BlocProvider.of<TaskBloc>(context)
+                          .add(AnswerTaskEvent(answers[2]));
+                      BlocProvider.of<TTSBloc>(context).
+                      add(SetDefaultEvent());
+                    }
+                    },
+                    child: Center(
+                      child: Text(
+                        answers[2]!,
+                        style: LamaTextTheme.getStyle(
+                          color: LamaColors.white,
+                          fontSize: 30,
+                        ),
                       ),
                     ),
                   ),
-                ),
               ),
             ],
           ),
         )
-      ]);
+      ]),
+);
     }
   }
     }
