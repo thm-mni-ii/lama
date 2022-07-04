@@ -5,6 +5,7 @@ import 'package:lama_app/util/LamaColors.dart';
 class GameOverMode extends StatelessWidget {
   /// Score to display on game over menu.
   final int score;
+
   /// lifes to display and check if retry is possible
   final int lifes;
 
@@ -19,9 +20,7 @@ class GameOverMode extends StatelessWidget {
     required this.lifes,
     required this.onQuitPressed,
     required this.onRetryPressed,
-  })  : assert(score != null),
-        assert(onQuitPressed != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,12 +55,9 @@ class GameOverMode extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       primary: LamaColors.redAccent,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0)
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5
-                      ),
+                          borderRadius: BorderRadius.circular(30.0)),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     ),
                     child: Text(
                       'Beenden',

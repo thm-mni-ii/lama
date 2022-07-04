@@ -11,8 +11,6 @@ import 'block_objects/Tblock.dart';
 import 'block_objects/Zblock.dart';
 import 'tetrisGame.dart';
 
-import 'package:lama_app/util/LamaColors.dart';
-
 Block getRamdomBlock() {
   int randomNumber = Random().nextInt(7);
   switch (randomNumber) {
@@ -55,25 +53,22 @@ Widget getTetrisPoint(Color color) {
   );
 }
 
-Widget getGameOverButton(context) {
-  return ButtonTheme(
-    child: Padding(
-      padding: const EdgeInsets.all(25),
-      child: ElevatedButton(
-        onPressed: () {
-          timer.cancel();
-          Navigator.pop(context);
-          Navigator.pop(context);
-        },
-        style: ElevatedButton.styleFrom(
-          // primary: Colors.lightGreen,
-          textStyle: const TextStyle(fontSize: 20),
+Widget getGameOverButton(context) => ButtonTheme(
+      child: Padding(
+        padding: const EdgeInsets.all(25),
+        child: ElevatedButton(
+          onPressed: () {
+            timer.cancel();
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          style: ElevatedButton.styleFrom(
+            textStyle: const TextStyle(fontSize: 20),
+          ),
+          child: const Text('Spiel verlassen'),
         ),
-        child: const Text('Spiel verlassen'),
       ),
-    ),
-  );
-}
+    );
 
 Widget getGameOverText(int score, int? userHighscore, int allTimeHighScore) {
   if (score > allTimeHighScore) {
@@ -81,16 +76,17 @@ Widget getGameOverText(int score, int? userHighscore, int allTimeHighScore) {
       child: Text(
         'WOW, du hast einen neuen Highscore\n Punkte: $score',
         style: const TextStyle(
-            fontSize: 30.0,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 76, 175, 157),
-            shadows: [
-              Shadow(
-                color: Colors.black,
-                blurRadius: 3.0,
-                offset: Offset(2.0, 2.0),
-              )
-            ]),
+          fontSize: 30.0,
+          fontWeight: FontWeight.bold,
+          color: Color.fromARGB(255, 76, 175, 157),
+          shadows: [
+            Shadow(
+              color: Colors.black,
+              blurRadius: 3.0,
+              offset: Offset(2.0, 2.0),
+            )
+          ],
+        ),
       ),
     );
   } else if (score > userHighscore!) {
@@ -98,16 +94,17 @@ Widget getGameOverText(int score, int? userHighscore, int allTimeHighScore) {
       child: Text(
         'Klasse, du hast einen neuen persöhnlichen Highscore\n Punkte: $score',
         style: const TextStyle(
-            fontSize: 30.0,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 76, 175, 157),
-            shadows: [
-              Shadow(
-                color: Colors.black,
-                blurRadius: 3.0,
-                offset: Offset(2.0, 2.0),
-              )
-            ]),
+          fontSize: 30.0,
+          fontWeight: FontWeight.bold,
+          color: Color.fromARGB(255, 76, 175, 157),
+          shadows: [
+            Shadow(
+              color: Colors.black,
+              blurRadius: 3.0,
+              offset: Offset(2.0, 2.0),
+            )
+          ],
+        ),
       ),
     );
   } else {
@@ -115,16 +112,17 @@ Widget getGameOverText(int score, int? userHighscore, int allTimeHighScore) {
       child: Text(
         'Game Over\n Punkte: $score',
         style: const TextStyle(
-            fontSize: 35.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue,
-            shadows: [
-              Shadow(
-                color: Colors.black,
-                blurRadius: 3.0,
-                offset: Offset(2.0, 2.0),
-              )
-            ]),
+          fontSize: 35.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.blue,
+          shadows: [
+            Shadow(
+              color: Colors.black,
+              blurRadius: 3.0,
+              offset: Offset(2.0, 2.0),
+            )
+          ],
+        ),
       ),
     );
   }

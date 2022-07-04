@@ -10,9 +10,6 @@ import 'package:lama_app/app/task-system/taskset_validator.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
-import 'dart:convert' show utf8;
-
-import 'dart:convert';
 import 'dart:io';
 
 ///Class responsible for loading the standard tasks and tasks from a provided url.

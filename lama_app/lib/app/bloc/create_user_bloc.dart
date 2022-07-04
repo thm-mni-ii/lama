@@ -44,7 +44,7 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateUserState?> {
     on<UsernameChange>((event, emit) async {
       user.name = event.name;
     });
-    on<UserPasswortChange>((event, emit) async {
+    on<UserPasswordChange>((event, emit) async {
       user.password = event.passwort;
     });
     on<UserGradeChange>((event, emit) async {

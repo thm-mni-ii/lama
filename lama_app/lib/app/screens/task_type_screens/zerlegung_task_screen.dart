@@ -98,7 +98,6 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
  
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _answerParts = List.filled(4, 0);
   }

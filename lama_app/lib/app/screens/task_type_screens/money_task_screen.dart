@@ -197,11 +197,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                   height: (constraints.maxHeight / 100) * 20,
                   child: Stack(alignment: Alignment.centerRight, children: [
                     SvgPicture.asset(
-                      (false)
-                          ? "assets/images/svg/EuroCoins/2_Euro.svg"
-                          : (false)
-                              ? "assets/images/svg/EuroCoins/2_Euro.svg"
-                              : "assets/images/svg/EuroCoins/2_Euro.svg",
+                      "assets/images/svg/EuroCoins/2_Euro.svg",
                       semanticsLabel: "Zwei Euro",
                       width: (constraints.maxWidth / 100) * 25,
                     ),

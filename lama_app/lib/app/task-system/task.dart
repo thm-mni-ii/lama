@@ -27,7 +27,6 @@ enum TaskType {
   buchstabieren
 }
 
-// TODO subclasses toJson funuctions
 
 class Task {
   ///factory constructor that creates the corresponding

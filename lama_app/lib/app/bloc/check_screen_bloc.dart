@@ -95,15 +95,13 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   ///via [Navigator].pushReplacement
   ///
   ///{@param} [BuildContext] as context
-  void _navigateAdminExist(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (BuildContext context) => UserSelectionBloc(),
-          child: UserSelectionScreen(),
+  void _navigateAdminExist(BuildContext context) => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (BuildContext context) => UserSelectionBloc(),
+            child: UserSelectionScreen(),
+          ),
         ),
-      ),
-    );
-  }
+      );
 }

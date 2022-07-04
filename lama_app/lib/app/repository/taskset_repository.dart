@@ -45,6 +45,7 @@ class TasksetRepository {
     await tasksetLoader.loadAllTasksets();
   }
 
+ // TODO
   Future<void> writeToServer(Taskset taskset) async {
     String url = "";
     var response = await http.post(
@@ -52,6 +53,9 @@ class TasksetRepository {
       body: taskset.toJson(),
     );
     // response abfangen (error)
+    if (response.statusCode >= 400) {
+      throw Error();
+    }
   }
 
   /// gives a List of TaskType depending on a specific subject

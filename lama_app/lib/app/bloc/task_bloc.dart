@@ -359,15 +359,11 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   /// Checks if two String lists ([list1] and [list2]) contain exactly the same elements.
   bool equals(List<String> list1, List<String>? list2) {
     if (!(list1 is List<String> && list2 is List<String>) ||
-        list1.length != list2.length) {
-      return false;
-    }
+        list1.length != list2.length) return false;
     list1.sort();
     list2.sort();
     for (int i = 0; i < list1.length; i++) {
-      if (list1[i] != list2[i]) {
-        return false;
-      }
+      if (list1[i] != list2[i]) return false;
     }
     return true;
   }

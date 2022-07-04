@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/bloc/admin_menu_bloc.dart';
@@ -25,9 +24,7 @@ import 'package:lama_app/db/database_provider.dart';
 /// latest Changes: 15.06.2021
 class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState?> {
   UserSelectionBloc({UserSelectionState? initialState}) : super(initialState) {
-    on<LoadUsers>((event, emit) async {
-      emit(await loadUsers());
-    });
+    on<LoadUsers>((event, emit) async => emit(await loadUsers()));
     on<SelectUser>((event, emit) async {
       await _userSelected(event.user, event.context!);
       emit(UserSelected(event.user));
@@ -82,14 +79,21 @@ class UserSelectionBloc extends Bloc<UserSelectionEvent, UserSelectionState?> {
       LamaFactsRepository lamaFactsRepository = LamaFactsRepository();
       await lamaFactsRepository.loadFacts();
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MultiRepositoryProvider(providers: [
-                    RepositoryProvider<UserRepository>(
-                        create: (context) => repository),
-                    RepositoryProvider<LamaFactsRepository>(
-                        create: (context) => lamaFactsRepository)
-                  ], child: HomeScreen())));
+        context,
+        MaterialPageRoute(
+          builder: (context) => MultiRepositoryProvider(
+            providers: [
+              RepositoryProvider<UserRepository>(
+                create: (context) => repository,
+              ),
+              RepositoryProvider<LamaFactsRepository>(
+                create: (context) => lamaFactsRepository,
+              )
+            ],
+            child: HomeScreen(),
+          ),
+        ),
+      );
     }
   }
 }

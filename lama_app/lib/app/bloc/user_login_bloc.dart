@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/safty_question_bloc.dart';
@@ -26,18 +25,10 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState?> {
   User? user;
   UserLoginBloc({UserLoginState? initialState, this.user})
       : super(initialState) {
-    on<UserLoginPullUser>((event, emit) async {
-      emit(UserLoginPulled(user));
-    });
-    on<UserLogin>((event, emit) async {
-      emit(await validateUserLogin(event));
-    });
-    on<UserLoginAbort>((event, emit) async {
-      _abortLogin(event.context);
-    });
-    on<UserLoginChangePass>((event, emit) async {
-      _pass = event.pass;
-    });
+    on<UserLoginPullUser>((event, emit) async => emit(UserLoginPulled(user)));
+    on<UserLogin>((event, emit) async => emit(await validateUserLogin(event)));
+    on<UserLoginAbort>((event, emit) async => _abortLogin(event.context));
+    on<UserLoginChangePass>((event, emit) async => _pass = event.pass);
     on<UserLoginForgotPassword>((event, emit) async {
       emit(await validateSaftyQuestion(event));
     });
@@ -55,8 +46,10 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState?> {
       Navigator.pop(event.context, user);
       return UserLoginSuccessful();
     }
-    return UserLoginFailed(event.user,
-        error: 'Das Passwort passt nicht zu diesem Nutzer!');
+    return UserLoginFailed(
+      event.user,
+      error: 'Das Passwort passt nicht zu diesem Nutzer!',
+    );
   }
 
   Future<UserLoginState> validateSaftyQuestion(
@@ -81,7 +74,5 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState?> {
   ///pops the Screen with null return
   ///
   ///{@param}[BuildContext] as context
-  void _abortLogin(BuildContext context) {
-    Navigator.pop(context, null);
-  }
+  void _abortLogin(BuildContext context) => Navigator.pop(context, null);
 }

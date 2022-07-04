@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
-import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
 /// This class creates the Flappy Lama game screen
 class FlappyGameScreen extends StatelessWidget {

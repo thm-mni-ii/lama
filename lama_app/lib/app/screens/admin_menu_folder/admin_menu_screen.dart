@@ -5,7 +5,6 @@ import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 //Lama default
@@ -104,9 +103,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               context.read<AdminMenuBloc>().add(AdminMenuLoadDefaultEvent());
               return Center(child: CircularProgressIndicator());
             }
-            if (state is AdminMenuDefaultState) {
-              return _buttonColumne(context);
-            }
+            if (state is AdminMenuDefaultState) return _buttonColumne(context);
 
             ///Force the [AdminMenuLoadPrefsEvent] to get the current value of the [SharedPreferences]
             context.read<AdminMenuBloc>().add(AdminMenuLoadPrefsEvent());
