@@ -7,6 +7,9 @@ import 'package:lama_app/app/screens/tap_the_lama_game_screen.dart';
 import '../buttons/menu_button.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
+
+///a menu that pops up before playing the tap the lama game
+///also this class has the purpose to pass specific user high score and all time high score to the game
 class Menu extends StatefulWidget {
 
   var context;

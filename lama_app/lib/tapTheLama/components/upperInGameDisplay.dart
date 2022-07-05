@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
-import 'package:flame/palette.dart';
 
+///this class represents the background for the upper in game display that shows score, streak counter and life bar in the tap the lama game
 class UpperInGameDisplay extends RectangleComponent{
   double widthCustom;
   double heightCustom;

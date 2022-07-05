@@ -1,5 +1,7 @@
 import 'package:flame/components.dart';
 
+
+///represents the visual life bar that changes when life points get lost in the tap the lama game
 class LifeBar extends RectangleComponent{
   double widthCustom;
   double heightCustom;

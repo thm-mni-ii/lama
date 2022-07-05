@@ -6,7 +6,7 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import '../../tapTheLama/screens/tapTheLamaMenu.dart';
 import '../../tapTheLama/tapTheLamaGame.dart';
 
-
+///class that is a screen to open the tap the lama game and initialise a Navigator for the tap the lama gama so that the player can return in the game
 class TapTheLamaScreen extends StatelessWidget {
   final UserRepository? userRepository;
   final int? userHighScore;

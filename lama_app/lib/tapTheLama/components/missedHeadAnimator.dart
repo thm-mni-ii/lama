@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 
+///this class represents an animated area on the lower display end in the tap the lama game to indicate if a lama head reaches the end of the display untapped
 class MissedHeadAnimator extends RectangleComponent{
   double widthCustom;
   double heightCustom;
