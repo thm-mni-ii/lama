@@ -4,11 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/markwords_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
+import 'package:lama_app/app/bloc/taskbloc/tts_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+
+import '../../event/tts_event.dart';
 
 
 /// [StatelessWidget] that contains the screen for the MarkWords TaskType.
@@ -35,9 +39,16 @@ class MarkWordsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     neededBloc = MarkWordsBloc();
-    return BlocProvider(
-        create: (context) => neededBloc,
-        child: Column(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+            create: (context) => neededBloc,
+            ),
+        BlocProvider(
+          create: (context) => TTSBloc(),
+        ),
+      ],
+  child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
@@ -48,7 +59,12 @@ class MarkWordsScreen extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Container(
+                    child: BlocBuilder<TTSBloc, TTSState>(
+                    builder: (context, state) {
+                      if (state is EmptyTTSState) {
+                        context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
+                      }
+                      return Container(
                       padding: EdgeInsets.only(left: 75),
                       height: 50,
                       width: MediaQuery.of(context).size.width,
@@ -62,7 +78,9 @@ class MarkWordsScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
+                    );
+  },
+),
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -108,7 +126,8 @@ class MarkWordsScreen extends StatelessWidget {
               height: (constraints.maxHeight / 100) * 5,
             )
           ],
-        ));
+        ),
+);
   }
 
   /// Returns sentence as [ListView] where each word is stored as [InkWell].
@@ -126,8 +145,12 @@ class MarkWordsScreen extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.all(5),
             child: InkWell(
-              onTap: () => BlocProvider.of<MarkWordsBloc>(context)
-                  .add(AddAnswerToListEvent(sentence[index])),
+              onTap: () => {
+                BlocProvider.of<MarkWordsBloc>(context)
+                    .add(AddAnswerToListEvent(sentence[index])),
+              BlocProvider.of<TTSBloc>(context).
+              add(ClickOnAnswer(sentence[index], index))
+              },
               child: Container(
                 width: constraints.maxWidth,
                 height: (constraints.maxHeight / 100) * 5,
