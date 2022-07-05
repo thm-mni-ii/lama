@@ -12,6 +12,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
 import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 
 
@@ -90,6 +91,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
            builder: (context, state) {
              if (state is EmptyTTSState) {
                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,"de"));
+               QuestionText.setText(task.question!, "Deutsch");
              }
             return Container(
                   height: (constraints.maxHeight / 100) * 30,

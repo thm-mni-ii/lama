@@ -16,6 +16,7 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 
 
@@ -484,6 +485,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
               if (state is EmptyTTSState ) {
                 context.read<TTSBloc>().add(
                 AnswerOnInitEvent(task.lamaText!, "Deutsch"));
+                QuestionText.setText(task.lamaText!, "Deutsch");
               }
               return Stack(
                  children: [

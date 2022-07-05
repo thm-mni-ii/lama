@@ -17,6 +17,7 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 
 import '../../event/tts_event.dart';
 import '../../state/tts_state.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 
 /// [StatelessWidget] that contains the screen for the GridSelect TaskType.
@@ -91,6 +92,7 @@ class GridSelectTaskScreen extends StatelessWidget {
                       builder: (context, state) {
                         if (state is EmptyTTSState) {
                           context.read<TTSBloc>().add(AnswerOnInitEvent(actualLamaText!,"de"));
+                          QuestionText.setText(actualLamaText!, "Deutsch");
                         }
 
                         return Text(

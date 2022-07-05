@@ -11,6 +11,7 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 import '../../event/tts_event.dart';
 
@@ -63,6 +64,7 @@ class MarkWordsScreen extends StatelessWidget {
                     builder: (context, state) {
                       if (state is EmptyTTSState) {
                         context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
+                        QuestionText.setText(task.lamaText!, "Deutsch");
                       }
                       return Container(
                       padding: EdgeInsets.only(left: 75),

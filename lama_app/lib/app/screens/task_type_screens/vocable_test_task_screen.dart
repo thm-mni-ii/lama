@@ -13,6 +13,7 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 
 
@@ -81,6 +82,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                         context.read<TTSBloc>().add(
                             AnswerOnInitEvent("Translate the shown word",
                                 task.questionLanguage));
+                        QuestionText.setText("Translate the shown word", task.questionLanguage);
                         alreadySaid = true;
                       }
                       return Container(

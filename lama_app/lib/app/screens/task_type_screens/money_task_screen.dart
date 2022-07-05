@@ -15,6 +15,7 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 
 
@@ -176,6 +177,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                   if (state is EmptyTTSState && !alreadySaid) {
                     context.read<TTSBloc>().add(
                     AnswerOnInitEvent(text,"Deutsch"));
+                    QuestionText.setText(text, "Deutsch");
                     alreadySaid = true;
                   }
                   return Container(

@@ -15,6 +15,7 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/OperatorWidget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 import '../../event/tts_event.dart';
 
@@ -135,6 +136,7 @@ class EquationTaskState extends State<EquationTaskScreen> {
               builder: (context, state) {
                 if (state is EmptyTTSState) {
                   context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
+                  QuestionText.setText(task.lamaText!, "Deutsch");
                 }
             return Container(
               padding: EdgeInsets.only(left: 75),

@@ -12,6 +12,8 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 
 class TTSBloc extends Bloc<TTSEvent,TTSState> {
   final FlutterTts flutterTts = FlutterTts();
+  String text = "";
+  String lang = "";
   //
   //
   readText(String text,String lang) async {

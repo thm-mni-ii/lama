@@ -19,6 +19,8 @@ import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 
+import 'package:lama_app/app/state/QuestionText.dart';
+
 
 late List<String> buchstabenListe;
 late List<int> buchstabenIndexListe;
@@ -126,6 +128,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                     context.read<TTSBloc>().add(
                         AnswerOnInitEvent(setTaskMessageAccordingToTaskModus(), "Deutsch"));
                     alreadySaid = true;
+                    QuestionText.setText(setTaskMessageAccordingToTaskModus(), "Deutsch");
                   }
                   return Stack(
                     children: [

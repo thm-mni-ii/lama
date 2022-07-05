@@ -12,6 +12,7 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/GlobalKeyExtension.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 import '../../event/tts_event.dart';
 
@@ -97,6 +98,7 @@ class ConnectState extends State<ConnectTaskScreen> {
                  builder: (context, state) {
                    if (state is EmptyTTSState && !alreadyUpdated) {
                      context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
+                     QuestionText.setText(task.lamaText!, "Deutsch");
                      this.alreadyUpdated = true;
                    }
                  return Container(

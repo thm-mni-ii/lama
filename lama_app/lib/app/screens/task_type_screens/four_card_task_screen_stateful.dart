@@ -15,6 +15,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 class FourCardTaskScreenStateful extends StatefulWidget {
   final Task4Cards task;
@@ -71,6 +72,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
               if (state is EmptyTTSState) {
                 // todo klasse 2 - Null check operator used on a null value : task.questionLanguage!
                 context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,task.questionLanguage!));
+                QuestionText.setText(task.question!, task.questionLanguage!);
               }
               return Container(
                 decoration: BoxDecoration(

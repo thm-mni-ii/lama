@@ -10,7 +10,10 @@ class AnswerOnInitState extends TTSState {
 }
 
 class ReadTaskState extends TTSState {
+  String questionForTask = "";
+  String questionLanguage = "";
 
+  ReadTaskState(this.questionForTask,this.questionLanguage);
 }
 
 class VoiceTtsState extends TTSState {

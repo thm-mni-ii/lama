@@ -15,6 +15,7 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 import '../../bloc/taskBloc/tts_bloc.dart';
 import '../../state/tts_state.dart';
 import '../../event/tts_event.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 /// This file creates the Match Category task Screen
 /// The Match Category task is a task where you have to sort 8 given
@@ -101,6 +102,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
             builder: (context, state) {
               if (state is EmptyTTSState ) {
                 context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
+                QuestionText.setText(task.lamaText!, "Deutsch");
                 //alreadySaid = true;
               }
             return Container(

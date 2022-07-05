@@ -9,6 +9,7 @@ import 'package:lama_app/app/event/task_events.dart';
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
 import '../../task-system/task.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 /// This file creates the Cloze Test task Screen
 /// The Cloze Test Task provides a short sentence where some part of the

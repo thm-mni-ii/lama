@@ -23,6 +23,11 @@ class ClickOnAnswer extends TTSEvent {
   ClickOnAnswer(this.answer,this.index);
 }
 
+class ReadQuestion extends TTSEvent {
+  String question = "";
+  String answerLanguage = "";
+  ReadQuestion(this.question, this.answerLanguage);
+}
 
 class SetDefaultEvent extends TTSEvent {}
 

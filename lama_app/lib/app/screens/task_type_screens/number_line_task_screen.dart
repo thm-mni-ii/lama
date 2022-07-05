@@ -13,6 +13,7 @@ import '../../event/tts_event.dart';
 import '../../task-system/task.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+import 'package:lama_app/app/state/QuestionText.dart';
 
 
 
@@ -104,6 +105,8 @@ class NumberLineState extends State<NumberLineTaskScreen> {
               context.read<TTSBloc>().add(AnswerOnInitEvent(
                   "Gib den im Zahlenstrahl rot markierten Wert an!"
               ,"de"));
+
+              QuestionText.setText("Gib den im Zahlenstrahl rot markierten Wert an!", "Deutsch");
             }
         return lamaHead(context, task, constraints, task.ontap!);
   },
