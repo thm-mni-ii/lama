@@ -63,18 +63,9 @@ class ClockTaskState extends State<ClockTaskScreen> {
   List<String>? wrongAnswer;
   bool alreadySaid = false;
 
-  final FlutterTts flutterTts = FlutterTts();
   String selectedAnswer = "leer";
   String selectedQuestion = "";
 
-  readText(String text) async {
-    if(!home_screen_state.isTTs()) {
-      return;
-    }
-    await flutterTts.setLanguage("de-De");
-    await flutterTts.setVolume(1.0);
-    await flutterTts.speak(text);
-  }
 
 
 
@@ -291,10 +282,10 @@ class ClockTaskState extends State<ClockTaskScreen> {
         create: (context) => TTSBloc(),
         child: BlocBuilder<TTSBloc, TTSState>(
           builder: (context, TTSState state) {
-            if (state is EmptyTTSState && !alreadySaid) {
+            if (state is EmptyTTSState ) {
               context.read<TTSBloc>().add(
-                  AnswerOnInitEvent("Wie viel Uhr ist es", "Deutsch"));
-              alreadySaid = true;
+                  AnswerOnInitEvent(task.lamaText!, "Deutsch"));
+              //alreadySaid = true;
             }
             return Column(
         children: [
@@ -456,11 +447,11 @@ class ClockTaskState extends State<ClockTaskScreen> {
                             child: Center(
                                 child: FittedBox(
                               fit: BoxFit.fitWidth,
-                              child: Text(
-                                "Gib eine Zahl ein!",
-                                style: LamaTextTheme.getStyle(),
-                                textAlign: TextAlign.center,
-                              ),
+                                  child: Text(
+                                    "Gib eine Zahl ein!",
+                                    style: LamaTextTheme.getStyle(),
+                                    textAlign: TextAlign.center,
+                                  ),
                             ))),
                         backgroundColor: LamaColors.mainPink,
                       ));
@@ -480,25 +471,22 @@ class ClockTaskState extends State<ClockTaskScreen> {
 );
     } else{
       return BlocProvider(
-  create: (context) => TTSBloc(),
-  child: Column(children: [
+        create: (context) => TTSBloc(),
+        child: Column(children: [
         // Lama Speechbubble
-        Container(
+          Container(
           height: (constraints.maxHeight / 100) * 15,
           padding: EdgeInsets.only(left: 15, right: 15, top: 15),
           // create space between each childs
           
-          child: BlocBuilder<TTSBloc, TTSState>(
-          builder: (context, state) {
-          if (state is EmptyTTSState && !alreadySaid) {
-            context.read<TTSBloc>().add(
-            AnswerOnInitEvent("Wie viel Uhr ist es", "Deutsch"));
-            alreadySaid = true;
-            BlocProvider.of<TTSBloc>(context).
-            add(SetDefaultEvent());
-          }
-          return Stack(
-            children: [
+           child: BlocBuilder<TTSBloc, TTSState>(
+             builder: (context, state) {
+              if (state is EmptyTTSState ) {
+                context.read<TTSBloc>().add(
+                AnswerOnInitEvent(task.lamaText!, "Deutsch"));
+              }
+              return Stack(
+                 children: [
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -508,19 +496,10 @@ class ClockTaskState extends State<ClockTaskScreen> {
                   child: Bubble(
                     nip: BubbleNip.leftCenter,
                     child: Center(
-                      child: InkWell(
-                        onTap: () {
-                          readText(task.lamaText!);
-                          setState(() {
-                            selectedQuestion = task.lamaText!;
-                          });
-                        },
                       child: Text(
                         task.lamaText!,
                         style: LamaTextTheme.getStyle(
                             color: LamaColors.black, fontSize: 15),
-                      ),
-
                       ),
                     ),
                   ),
@@ -545,8 +524,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
                       ))),
             ],
           );
-  },
-),
+        },
+        ),
         ),
         //Items
         Padding(
@@ -567,7 +546,9 @@ class ClockTaskState extends State<ClockTaskScreen> {
                         halbeMinute)),
               )),
         ),
-        Container(
+        BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, state) {
+        return Container(
           height: (constraints.maxHeight / 100) * 35,
           alignment: Alignment.bottomCenter,
           padding: EdgeInsets.only(top: 20),
@@ -576,11 +557,11 @@ class ClockTaskState extends State<ClockTaskScreen> {
             children: [
               Container(
                   child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Center(
-                  child: Text(
-                    showtimer,
-                    style: TextStyle(
+                    alignment: Alignment.bottomLeft,
+                    child: Center(
+                      child: Text(
+                      showtimer,
+                      style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.w700,
                     ),
@@ -606,9 +587,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                       //log('data: $selectedAnswer');
                       BlocProvider.of<TTSBloc>(context).
                       add(ClickOnAnswer(answers[0]!, 0));
-                      setState(() {
-                        selectedAnswer = answers[0]!;
-                      });
+                      selectedAnswer = answers[0]!;
                     } else {
                       BlocProvider.of<TaskBloc>(context)
                           .add(AnswerTaskEvent(answers[0]));
@@ -643,12 +622,9 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 child: InkWell(
                   onTap: () {
                     if (selectedAnswer != answers[1]) {
-                      //log('data: $selectedAnswer');
                       BlocProvider.of<TTSBloc>(context).
                       add(ClickOnAnswer(answers[1]!, 1));
-                      setState(() {
-                        selectedAnswer = answers[1]!;
-                      });
+                      selectedAnswer = answers[1]!;
                     } else {
                       BlocProvider.of<TaskBloc>(context)
                           .add(AnswerTaskEvent(answers[1]));
@@ -667,6 +643,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                   ),
                 ),
               ),
+
               Container(
                 height: 55,
                 width: 150,
@@ -683,12 +660,9 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 child: InkWell(
                   onTap: () {
                     if (selectedAnswer != answers[2]) {
-                      //log('data: $selectedAnswer');
                       BlocProvider.of<TTSBloc>(context).
                       add(ClickOnAnswer(answers[2]!, 2));
-                      setState(() {
-                        selectedAnswer = answers[2]!;
-                      });
+                      selectedAnswer = answers[2]!;
                     } else {
                       BlocProvider.of<TaskBloc>(context)
                           .add(AnswerTaskEvent(answers[2]));
@@ -709,9 +683,11 @@ class ClockTaskState extends State<ClockTaskScreen> {
               ),
             ],
           ),
-        )
+        );
+        },
+      )
       ]),
-);
+    );
     }
   }
     }
