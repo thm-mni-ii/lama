@@ -533,7 +533,7 @@ class TaskScreenState extends State<TaskScreen> {
                     coinText,
                     Container(
                       width: (constraints.maxWidth / 100) * 10,
-                      child: SvgPicture.asset('assets/images/svg/Ton.svg',
+                      child: SvgPicture.asset('assets/images/svg/lama_coin.svg',
                           semanticsLabel: 'lama_coins'),
                     ),
                   ],
