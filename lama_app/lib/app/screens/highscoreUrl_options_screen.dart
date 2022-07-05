@@ -71,8 +71,8 @@ class HighscoreUrlOptionScreenState extends State<HighscoreUrlOptionScreen> {
       body: WillPopScope(
         onWillPop: () async {
           Navigator.pop(context, _changedUserList);
-          return null;
-        } as Future<bool> Function()?,
+          return true;
+        },
         child: BlocBuilder<HighscoreUrlScreenBloc, HighscoreUrlScreenState?>(
             builder: (context, state) {
           if (state is HighscoreUrlPullState) {

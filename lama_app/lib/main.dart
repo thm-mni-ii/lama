@@ -12,8 +12,8 @@ import 'package:lama_app/app/repository/taskset_repository.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //initialize hive database
+  await Hive.initFlutter();
   if (kIsWeb) {
-    await Hive.initFlutter();
     print("WEB Enabled: => Hive initiated");
   }
   TasksetRepository tasksetRepository = TasksetRepository();

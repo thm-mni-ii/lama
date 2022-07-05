@@ -45,7 +45,7 @@ class User {
   ///Map the variables
   ///
   ///{@return} Map<String, dynamic>
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     var map = <String, dynamic>{
       UserFields.columnName: name,
       UserFields.columnPassword: password,

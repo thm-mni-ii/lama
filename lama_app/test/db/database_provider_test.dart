@@ -8,10 +8,12 @@ import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/userSolvedTaskAmount_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/db/database_provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 //@Skip("sqflite cannot run on the machine")
 Future<void> main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
   User user = User(
       name: "Thorsten",
       password: "456",

@@ -123,19 +123,14 @@ class DatabaseProvider {
   /// TO-DO: User List richtig erstellen
   Future<List<User>> getUser() async {
     List<User> userList = [];
-    if (kIsWeb) {
-      var userBox = await Hive.openBox('users');
 
-      if (userBox.isNotEmpty) {
-        for (int i = 0; i < userBox.length; i++) {
-          var userMap = await userBox.getAt(i);
-
-          User user = User.fromMap(userMap);
-          user.id = userBox.keyAt(i);
-          userList.add(user);
-        }
-      }
-    }
+    var userBox = await Hive.openBox('users');
+    userBox.toMap().entries.forEach((entry) {
+      var value = entry.value;
+      User userEntry = User.fromMap(value);
+      userEntry.id = entry.key;
+      userList.add(userEntry);
+    });
     return userList;
     /* else {
       final db = await (database);
@@ -168,18 +163,12 @@ class DatabaseProvider {
   /// {@return} <List<Achievement>>
   Future<List<Achievement>> getAchievements() async {
     List<Achievement> achievementList = <Achievement>[];
-    if (kIsWeb) {
-      var achievementBox = await Hive.openBox('achievements');
-      if (achievementBox.isNotEmpty) {
-        for (int i = 0; i < achievementBox.length; i++) {
-          var achievementMap = await achievementBox.getAt(i);
-
-          Achievement achievement = Achievement.fromMap(achievementMap);
-          achievement.id = achievementBox.keyAt(i);
-          achievementBox.add(achievement);
-        }
-      }
-    }
+    var achievementBox = await Hive.openBox('achievements');
+    achievementBox.toMap().entries.forEach((entry) {
+      Achievement achievement = Achievement.fromMap(entry.value);
+      achievement.id = entry.key;
+      achievementList.add(achievement);
+    });
     return achievementList;
 
     /* final db = await (database);
@@ -205,19 +194,19 @@ class DatabaseProvider {
   /// {@return} <List<UserHasAchievement>>
   Future<List<UserHasAchievement>> getUserHasAchievements() async {
     List<UserHasAchievement> userHasAchievementList = <UserHasAchievement>[];
-    if (kIsWeb) {
-      var userHasAchievementBox = await Hive.openBox('userHasAchievements');
-      if (userHasAchievementBox.isNotEmpty) {
-        for (int i = 0; i < userHasAchievementBox.length; i++) {
-          var achievementMap = await userHasAchievementBox.getAt(i);
 
-          UserHasAchievement userHasAchievement =
-              UserHasAchievement.fromMap(achievementMap);
+    var userHasAchievementBox = await Hive.openBox('userHasAchievements');
+    if (userHasAchievementBox.isNotEmpty) {
+      for (int i = 0; i < userHasAchievementBox.length; i++) {
+        var achievementMap = await userHasAchievementBox.getAt(i);
 
-          userHasAchievementBox.add(userHasAchievement);
-        }
+        UserHasAchievement userHasAchievement =
+            UserHasAchievement.fromMap(achievementMap);
+
+        userHasAchievementList.add(userHasAchievement);
       }
     }
+
     return userHasAchievementList;
     /* final db = await (database);
 
@@ -461,8 +450,12 @@ class DatabaseProvider {
   Future<List<TaskUrl>> getTaskUrl() async {
     var taskUrlBox = await Hive.openBox('taskUrls');
     List<TaskUrl> taskUrlList = <TaskUrl>[];
-    taskUrlBox.values.forEach((element) {
-      taskUrlList.add(TaskUrl.fromMap(element));
+
+    taskUrlBox.toMap().entries.forEach((entry) {
+      Map<String, dynamic> value = entry.value;
+      TaskUrl taskUrlEntry = TaskUrl.fromMap(value);
+      taskUrlEntry.id = entry.key;
+      taskUrlList.add(taskUrlEntry);
     });
     return taskUrlList;
     /*    final db = await (database);
@@ -843,8 +836,9 @@ class DatabaseProvider {
   /// {@return} <User>
   Future<User?> updateUserGrade(User user, int? grade) async {
     var userBox = await Hive.openBox('users');
-    user.grade = grade;
-    await userBox.put(user.id, user.toMap());
+    Map dbUser = await userBox.get(user.id);
+    dbUser.update(UserFields.columnGrade, (value) => grade);
+    await userBox.put(user.id, dbUser);
     return await _getUser(user.id);
     /*    final db = await (database);
 
@@ -865,8 +859,9 @@ class DatabaseProvider {
   /// {@return} <User>
   Future<User?> updateUserCoins(User user, int? coins) async {
     var userBox = await Hive.openBox('users');
-    user.coins = coins;
-    await userBox.put(user.id, user.toMap());
+    Map dbUser = await userBox.get(user.id);
+    dbUser.update(UserFields.columnCoins, (value) => coins);
+    await userBox.put(user.id, dbUser);
     return await _getUser(user.id);
     /*   final db = await (database);
 
@@ -887,8 +882,9 @@ class DatabaseProvider {
   /// {@return} <User>
   Future<User?> updateUserIsAdmin(User user, bool isAdmin) async {
     var userBox = await Hive.openBox('users');
-    user.isAdmin = isAdmin;
-    await userBox.put(user.id, user.toMap());
+    Map dbUser = await userBox.get(user.id);
+    dbUser.update(UserFields.columnIsAdmin, (value) => isAdmin);
+    await userBox.put(user.id, dbUser);
     return await _getUser(user.id);
     /*  final db = await (database);
 
@@ -909,8 +905,9 @@ class DatabaseProvider {
   /// {@return} <User>
   Future<User?> updateUserIsGuest(User user, bool isGuest) async {
     var userBox = await Hive.openBox('users');
-    user.isGuest = isGuest;
-    await userBox.put(user.id, user.toMap());
+    Map dbUser = await userBox.get(user.id);
+    dbUser.update(UserFields.columnIsGuest, (value) => isGuest);
+    await userBox.put(user.id, dbUser);
     return await _getUser(user.id);
     /* final db = await (database);
 
@@ -932,8 +929,10 @@ class DatabaseProvider {
   Future<User?> updateUserHighscorePermission(
       User user, bool highscorePermission) async {
     var userBox = await Hive.openBox('users');
-    user.highscorePermission = highscorePermission;
-    await userBox.put(user.id, user.toMap());
+    Map dbUser = await userBox.get(user.id);
+    dbUser.update(
+        UserFields.columnHighscorePermission, (value) => highscorePermission);
+    await userBox.put(user.id, dbUser);
     return await _getUser(user.id);
     /*  final db = await (database);
 
@@ -1304,12 +1303,7 @@ class DatabaseProvider {
         userLTSId: user.id,
         doesStillExist: 0);
     var leftToSolveBox = await Hive.openBox('leftToSolves');
-    await Hive.openBox('users');
-    if (leftToSolveBox.isEmpty) {
-      lts.id = 0;
-    } else {
-      lts.id = leftToSolveBox.keyAt(leftToSolveBox.length - 1) + 1;
-    }
+    lts.id = createId(leftToSolveBox);
     await leftToSolveBox.put(lts.id, lts.toMap());
     return lts.id;
   }
@@ -1372,6 +1366,7 @@ class DatabaseProvider {
     loadedTasks.forEach((task) {
       insertLeftToSolve(task.toString(), task.leftToSolve, user);
     });
+
     /*   final db = await (database);
     db?.delete(tableLeftToSolve,
         where: "${LeftToSolveFields.columnUserLTSId} = ?",
@@ -1390,7 +1385,6 @@ class DatabaseProvider {
   Future<int?> decrementLeftToSolve(Task t, User user) async {
     var leftToSolveBox = await Hive.openBox('leftToSolves');
 
-    final db = await (database);
     print("curVal: " + t.leftToSolve.toString());
     int newVal = max(t.leftToSolve! - 1, -2);
     print("setting to: " + newVal.toString());
@@ -1400,16 +1394,19 @@ class DatabaseProvider {
           .toMap()
           .entries
           .where((entry) =>
-              entry.value[LeftToSolveFields.columnLeftToSolve] == t.toString())
+              entry.value[LeftToSolveFields.columnTaskString] == t.toString())
           .where((entry) =>
               entry.value[LeftToSolveFields.columnUserLTSId] == user.id)
           .single;
-      leftToSolveBox.put(decrementEntry.key, newVal);
+      LeftToSolve ltsUpdated = LeftToSolve.fromMap(decrementEntry.value);
+      ltsUpdated.leftToSolve = newVal;
+      leftToSolveBox.put(decrementEntry.key, ltsUpdated.toMap());
     } on StateError catch (e) {
-      print('$e : Could not find entry to decrement');
+      print('${e.toString()} : Could not find entry to decrement');
       return 0;
     }
-    /*  return await db?.update(tableLeftToSolve,
+    /*  final db = await (database);
+        return await db?.update(tableLeftToSolve,
         <String, dynamic>{LeftToSolveFields.columnLeftToSolve: newVal},
         where:
             "${LeftToSolveFields.columnTaskString} = ? and ${LeftToSolveFields.columnUserLTSId} = ?",
@@ -1430,8 +1427,8 @@ class DatabaseProvider {
             entry.value[LeftToSolveFields.columnTaskString] == t.toString())
         .forEach((entry) {
       Map<dynamic, dynamic> entryToUpdate = entry.value;
-      entryToUpdate.update(entry.key,
-          (value) => value[LeftToSolveFields.columnDoesStillExist] = 1);
+      entryToUpdate.update(
+          LeftToSolveFields.columnDoesStillExist, (value) => 1);
       leftToSolveBox.put(entry.key, entryToUpdate);
     });
     print("Set flag for " + t.toString());
