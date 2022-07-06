@@ -55,7 +55,9 @@
       "wrong_answers": [
         "Die",
         "Das"
-      ]
+      ],
+      "question_language":"Deutsch",
+      "answer_language":"Deutsch"
     },
     {
       "task_type": "MatchCategory",

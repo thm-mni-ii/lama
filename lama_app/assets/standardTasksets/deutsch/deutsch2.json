@@ -36,7 +36,9 @@
            "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
            "right_answer":"hinter",
-           "wrong_answers":["bis", "aus"]
+           "wrong_answers":["bis", "aus"],
+           "question_language":"Deutsch",
+           "answer_language":"Deutsch"
          },
          {
            "task_type":"MarkWords",
