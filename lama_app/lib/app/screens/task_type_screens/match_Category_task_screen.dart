@@ -326,8 +326,14 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                       ]),
                   child: InkWell(
                     onTap: () {
+                      String lang;
+                      task.answerLanguage == null || task.answerLanguage == "" ? lang = "Deutsch" :  lang = "Englisch";
+                      log('task.answerLanguage: ${task.answerLanguage}');
+
+                      log('task.questionLanguage: ${task.questionLanguage}');
+
                       BlocProvider.of<TTSBloc>(context).
-                      add(ClickOnAnswer(items[i].item!, 0));
+                      add(ClickOnAnswer(items[i].item!, 0, lang));
                       selectedAnswer = items[i].item!;
                     },
                     child: Center(
@@ -412,7 +418,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                 child: InkWell(
                   onTap: () {
                     BlocProvider.of<TTSBloc>(context).
-                    add(ClickOnAnswer(taskCategory!, 0));
+                    add(ClickOnAnswer(taskCategory!, 0, "de"));
                   },
                   child: Center(
                     child: Text(

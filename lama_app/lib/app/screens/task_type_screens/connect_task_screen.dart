@@ -269,7 +269,7 @@ class ConnectState extends State<ConnectTaskScreen> {
       // Used to call the touch method. Needs to be set for every single widget
         onTap: () {
           BlocProvider.of<TTSBloc>(context).
-          add(ClickOnAnswer(itemList[index].content, 0));
+          add(ClickOnAnswer(itemList[index].content, 0,"de"));
           touch(index, itemList);
       },
     );

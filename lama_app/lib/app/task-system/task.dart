@@ -86,7 +86,7 @@ class Task {
             json['left_to_solve'],
             json['nameCatOne'],
             json['nameCatTwo'],
-            json['question_langauge'],
+            json['question_language'],
             json['answer_language'],
             List<String>.from(json['categoryOne']),
             List<String>.from(json['categoryTwo']));

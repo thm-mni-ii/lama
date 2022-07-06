@@ -90,6 +90,8 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
          BlocBuilder<TTSBloc, TTSState>(
            builder: (context, state) {
              if (state is EmptyTTSState) {
+               log('task.questionLanguage: ${task.questionLanguage}');
+               log('task.answerLanguage: ${task.answerLanguage}');
                String lang;
                if(task.questionLanguage == null) {
                  lang = "Deutsch";
@@ -175,7 +177,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         if (selectedAnswer != answers[0] ) {
                           BlocProvider.of<TTSBloc>(context).add(
                               ClickOnAnswer(
-                                  answers[0],0)),
+                                  answers[0],0,"de")),
                           selectedAnswer = answers[0]
                         } else {
                           BlocProvider.of<TaskBloc>(context)
@@ -211,7 +213,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         if (selectedAnswer != answers[1] ) {
                           BlocProvider.of<TTSBloc>(context).add(
                               ClickOnAnswer(
-                                  answers[1],0)),
+                                  answers[1],0,"de")),
                           selectedAnswer = answers[1]
                         } else {
                           BlocProvider.of<TaskBloc>(context)
@@ -248,7 +250,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                     if (selectedAnswer != answers[2] ) {
                       BlocProvider.of<TTSBloc>(context).add(
                           ClickOnAnswer(
-                              answers[2],0)),
+                              answers[2],0,"de")),
                       selectedAnswer = answers[2]
                     } else {
                       BlocProvider.of<TaskBloc>(context)

@@ -20,7 +20,7 @@ class ClickOnAnswer extends TTSEvent {
   String answerLanguage = "";
   int index;
   String answer;
-  ClickOnAnswer(this.answer,this.index);
+  ClickOnAnswer(this.answer,this.index,this.answerLanguage);
 }
 
 class ReadQuestion extends TTSEvent {

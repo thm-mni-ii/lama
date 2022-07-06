@@ -21,8 +21,9 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
       return;
     }
     if (lang == "Englisch") {
-      await flutterTts.setLanguage("en-EN");
+      await flutterTts.setLanguage("en-US");
       await flutterTts.setSpeechRate(0.4);
+      await flutterTts.setPitch(1.1);
     } else {
       await flutterTts.setLanguage("de-De");
     }
