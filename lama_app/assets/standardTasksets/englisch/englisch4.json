@@ -36,7 +36,7 @@
     {
       "task_type": "ClozeTest",
       "task_reward": 2,
-      "question": "I am __ to school",
+      "question": "I am .. to school",
       "lama_text": "Tap the right Answer!",
       "left_to_solve": 3,
       "right_answer": "going",
@@ -50,7 +50,7 @@
     {
       "task_type":"ClozeTest",
       "task_reward":2,
-      "question":"I __ learning english",
+      "question":"I .. learning english",
       "lama_text":"Tap the right Answer!",
       "left_to_solve": 3,
       "right_answer":"am",

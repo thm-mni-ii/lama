@@ -15,7 +15,7 @@
          {
            "task_type":"ClozeTest",
            "task_reward":2,
-           "question":"Alle eroberten Gebiete außerhalb Italiens nannten die Römer __",
+           "question":"Alle eroberten Gebiete außerhalb Italiens nannten die Römer ..",
            "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
            "right_answer":"Provinz",
