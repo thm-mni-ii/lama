@@ -25,7 +25,7 @@ class ClimberGameScreen extends StatelessWidget {
               Expanded(
                   child: Container(
                 color: Colors.green,
-                //child: GameWidget(game: TRexGame()),
+                //     child: ClimberGame(context, userRepository).widget,
               ))
             ])));
   }

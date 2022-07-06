@@ -41,7 +41,7 @@ class TaskScreen extends StatefulWidget {
 class TaskScreenState extends State<TaskScreen> {
   int? randomNummer;
   Image? image;
-  TaskBuchstabieren? task;
+  late TaskBuchstabieren task;
   int? userGrade;
 
   TaskScreenState([this.userGrade]);
@@ -304,7 +304,8 @@ class TaskScreenState extends State<TaskScreen> {
       case "4Cards":
         return FourCardTaskScreen(task as Task4Cards, constraints);
       case "Zerlegung":
-        return ZerlegungTaskScreen(task: task as TaskZerlegung?, constraints: constraints);
+        return ZerlegungTaskScreen(
+            task: task as TaskZerlegung?, constraints: constraints);
       case "NumberLine":
         return NumberLineTaskScreen(task as TaskNumberLine, constraints);
       case "ClozeTest":
@@ -316,7 +317,8 @@ class TaskScreenState extends State<TaskScreen> {
       case "MatchCategory":
         return MatchCategoryTaskScreen(task as TaskMatchCategory, constraints);
       case "GridSelect":
-        return GridSelectTaskScreen(task as TaskGridSelect, constraints, GridSelectTaskBloc());
+        return GridSelectTaskScreen(
+            task as TaskGridSelect, constraints, GridSelectTaskBloc());
       case "MoneyTask":
         return MoneyTaskScreen(task as TaskMoney, constraints);
       case "VocableTest":

@@ -25,15 +25,27 @@ class HighscoreUrlScreenBloc
   late SharedPreferences _prefs;
   List<User> _userList = [];
   HighscoreUrlScreenBloc({HighscoreUrlScreenState? initialState})
-      : super(initialState);
-
-  @override
-  Stream<HighscoreUrlScreenState> mapEventToState(
-      HighscoreUrlScreenEvent event) async* {
-    if (event is HighscoreUrlPullEvent) yield await _pull();
-    if (event is HighscoreUrlPushEvent) await _push();
-    if (event is HighscoreUrlChangeEvent) _urlChanged = event.url;
-    if (event is HighscoreUrlReloadEvent) yield HighscoreUrlReloadState();
+      : super(initialState) {
+    on<HighscoreUrlPullEvent>(
+      (event, emit) async {
+        emit(await _pull());
+      },
+    );
+    on<HighscoreUrlPushEvent>(
+      (event, emit) async {
+        await _push();
+      },
+    );
+    on<HighscoreUrlChangeEvent>(
+      (event, emit) async {
+        _urlChanged = event.url;
+      },
+    );
+    on<HighscoreUrlReloadEvent>(
+      (event, emit) {
+        emit(HighscoreUrlReloadState());
+      },
+    );
   }
 
   Future<HighscoreUrlPullState> _pull() async {

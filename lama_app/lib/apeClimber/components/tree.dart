@@ -1,6 +1,6 @@
-import 'dart:collection';
+/* import 'dart:collection';
 import 'dart:ui';
-/*
+
 import 'package:flame/components/component.dart';
 import 'package:lama_app/apeClimber/components/treeSprite.dart';
 
@@ -113,7 +113,4 @@ class Tree extends PositionComponent {
     super.resize(size);
   }
 
-}
-
-
- */
+} */

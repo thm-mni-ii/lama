@@ -24,16 +24,23 @@ class UserLoginBloc extends Bloc<UserLoginEvent, UserLoginState?> {
   String? _pass;
   //user that wants to try the login
   User? user;
-  UserLoginBloc({UserLoginState? initialState, this.user}) : super(initialState);
-
-  @override
-  Stream<UserLoginState> mapEventToState(UserLoginEvent event) async* {
-    if (event is UserLoginPullUser) yield UserLoginPulled(user);
-    if (event is UserLogin) yield await validateUserLogin(event);
-    if (event is UserLoginAbort) _abortLogin(event.context);
-    if (event is UserLoginChangePass) _pass = event.pass;
-    if (event is UserLoginForgotPassword)
-      yield await validateSaftyQuestion(event);
+  UserLoginBloc({UserLoginState? initialState, this.user})
+      : super(initialState) {
+    on<UserLoginPullUser>((event, emit) async {
+      emit(UserLoginPulled(user));
+    });
+    on<UserLogin>((event, emit) async {
+      emit(await validateUserLogin(event));
+    });
+    on<UserLoginAbort>((event, emit) async {
+      _abortLogin(event.context);
+    });
+    on<UserLoginChangePass>((event, emit) async {
+      _pass = event.pass;
+    });
+    on<UserLoginForgotPassword>((event, emit) async {
+      emit(await validateSaftyQuestion(event));
+    });
   }
 
   ///validating the user login using [DatabaseProvider.db.checkPassword]

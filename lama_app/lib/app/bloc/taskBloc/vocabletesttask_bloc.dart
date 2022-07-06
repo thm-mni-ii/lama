@@ -24,29 +24,25 @@ class VocableTestTaskBloc
   VocableTestTaskBloc(this.task) : super(VocableTestTaskInitState()) {
     resultList =
         List.generate(task.vocablePairs.length, (_) => null, growable: false);
-  }
-
-  @override
-  Stream<VocableTestTaskState> mapEventToState(
-      VocableTestTaskEvent event) async* {
-    if (event is VocableTestTaskGetWordEvent) {
+    on<VocableTestTaskGetWordEvent>((event, emit) async {
       if (task.randomizeSide!) {
         var rng = Random();
         int side = rng.nextInt(2);
         if (side == 0) {
-          yield VocableTestTaskTranslationState(
-              task.vocablePairs[curWordPair].a, resultList);
+          emit(VocableTestTaskTranslationState(
+              task.vocablePairs[curWordPair].a, resultList));
           sideUsed = 0;
         } else {
-          yield VocableTestTaskTranslationState(
-              task.vocablePairs[curWordPair].b, resultList);
+          emit(VocableTestTaskTranslationState(
+              task.vocablePairs[curWordPair].b, resultList));
           sideUsed = 1;
         }
       } else {
-        yield VocableTestTaskTranslationState(
-            task.vocablePairs[curWordPair].a, resultList);
+        emit(VocableTestTaskTranslationState(
+            task.vocablePairs[curWordPair].a, resultList));
       }
-    } else if (event is VocableTestTaskAnswerEvent) {
+    });
+    on<VocableTestTaskAnswerEvent>((event, emit) async {
       if (task.randomizeSide!) {
         if (sideUsed == 0) {
           if (event.answer == task.vocablePairs[curWordPair].b) {
@@ -74,21 +70,21 @@ class VocableTestTaskBloc
           var rng = Random();
           int side = rng.nextInt(2);
           if (side == 0) {
-            yield VocableTestTaskTranslationState(
-                task.vocablePairs[curWordPair].a, resultList);
+            emit(VocableTestTaskTranslationState(
+                task.vocablePairs[curWordPair].a, resultList));
             sideUsed = 0;
           } else {
-            yield VocableTestTaskTranslationState(
-                task.vocablePairs[curWordPair].b, resultList);
+            emit(VocableTestTaskTranslationState(
+                task.vocablePairs[curWordPair].b, resultList));
             sideUsed = 1;
           }
         } else {
-          yield VocableTestTaskTranslationState(
-              task.vocablePairs[curWordPair].a, resultList);
+          emit(VocableTestTaskTranslationState(
+              task.vocablePairs[curWordPair].a, resultList));
         }
       } else
-        yield VocableTestFinishedTaskState(resultList);
-    }
+        emit(VocableTestFinishedTaskState(resultList));
+    });
   }
 }
 

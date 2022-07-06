@@ -23,19 +23,15 @@ class GameListScreenBloc
     extends Bloc<GameListScreenEvent, GameListScreenState> {
   UserRepository? userRepository;
 
-  GameListScreenBloc(this.userRepository) : super(GameListScreenState());
-
-  @override
-  Stream<GameListScreenState> mapEventToState(
-      GameListScreenEvent event) async* {
-    if (event is TryStartGameEvent) {
+  GameListScreenBloc(this.userRepository) : super(GameListScreenState()) {
+    on<TryStartGameEvent>((event, emit) async {
       /*if (userRepository.getLamaCoins() >= event.gameCost) {
         userRepository.removeLamaCoins(event.gameCost);*/
       _navigateToGame(event.gameToStart, event.context, userRepository);
       /*} else {
         yield NotEnoughCoinsState();
       }*/
-    }
+    });
   }
 }
 
