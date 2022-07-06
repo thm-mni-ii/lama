@@ -883,7 +883,7 @@ class DatabaseProvider {
   Future<User?> updateUserIsAdmin(User user, bool isAdmin) async {
     var userBox = await Hive.openBox('users');
     Map dbUser = await userBox.get(user.id);
-    dbUser.update(UserFields.columnIsAdmin, (value) => isAdmin);
+    dbUser.update(UserFields.columnIsAdmin, (value) => isAdmin ? 1 : 0);
     await userBox.put(user.id, dbUser);
     return await _getUser(user.id);
     /*  final db = await (database);
@@ -906,7 +906,7 @@ class DatabaseProvider {
   Future<User?> updateUserIsGuest(User user, bool isGuest) async {
     var userBox = await Hive.openBox('users');
     Map dbUser = await userBox.get(user.id);
-    dbUser.update(UserFields.columnIsGuest, (value) => isGuest);
+    dbUser.update(UserFields.columnIsGuest, (value) => isGuest ? 1 : 0);
     await userBox.put(user.id, dbUser);
     return await _getUser(user.id);
     /* final db = await (database);
