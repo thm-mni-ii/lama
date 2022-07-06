@@ -70,11 +70,11 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           child: BlocBuilder<TTSBloc, TTSState>(
             builder: (context, TTSState state) {
               if (state is EmptyTTSState) {
-                // todo klasse 2 - Null check operator used on a null value : task.questionLanguage!
                 log('task.questionLanguage: ${task.questionLanguage}');
                 log('task.answerLaguage: ${task.answerLaguage}');
                 String lang;
-                if(task.questionLanguage == null || task.questionLanguage == "") {
+                // todo einigen
+                if(task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch") {
                   lang = "Deutsch";
                 } else {
                   lang = "Englisch";

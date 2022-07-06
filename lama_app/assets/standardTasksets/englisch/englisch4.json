@@ -42,7 +42,7 @@
       "right_answer": "going",
       "wrong_answers": [
         "go",
-        "horse"
+        "went"
       ],
       "question_language":"Englisch",
       "answer_language":"Englisch"
@@ -54,7 +54,7 @@
       "lama_text":"Tap the right Answer!",
       "left_to_solve": 3,
       "right_answer":"am",
-      "wrong_answers":["be", "horse"],
+      "wrong_answers":["be", "do"],
       "question_language":"Englisch",
       "answer_language":"Englisch"
     },
