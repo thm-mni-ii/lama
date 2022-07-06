@@ -1426,10 +1426,12 @@ class DatabaseProvider {
         .where((entry) =>
             entry.value[LeftToSolveFields.columnTaskString] == t.toString())
         .forEach((entry) {
-      Map<dynamic, dynamic> entryToUpdate = entry.value;
-      entryToUpdate.update(
-          LeftToSolveFields.columnDoesStillExist, (value) => 1);
-      leftToSolveBox.put(entry.key, entryToUpdate);
+      if (entry.value[LeftToSolveFields.columnDoesStillExist] != 1) {
+        Map<dynamic, dynamic> entryToUpdate = entry.value;
+        entryToUpdate.update(
+            LeftToSolveFields.columnDoesStillExist, (value) => 1);
+        leftToSolveBox.put(entry.key, entryToUpdate);
+      }
     });
     print("Set flag for " + t.toString());
     /*final db = await (database);
@@ -1445,12 +1447,11 @@ class DatabaseProvider {
   /// {@return} <int> which shows the number of deleted rows
   Future<int?> removeAllNonExistent() async {
     var leftToSolveBox = await Hive.openBox('leftToSolves');
-    int val = 0;
     leftToSolveBox
         .toMap()
         .entries
-        .where((entry) =>
-            entry.value[LeftToSolveFields.columnDoesStillExist] == val)
+        .where(
+            (entry) => entry.value[LeftToSolveFields.columnDoesStillExist] == 0)
         .forEach((entry) {
       leftToSolveBox.delete(entry.key);
     });
@@ -1468,8 +1469,7 @@ class DatabaseProvider {
     var leftToSolveBox = await Hive.openBox('leftToSolves');
     leftToSolveBox.toMap().forEach((key, value) {
       Map<dynamic, dynamic> newValue = value;
-      newValue.update(
-          LeftToSolveFields.columnDoesStillExist, (value) => newValue);
+      newValue.update(LeftToSolveFields.columnDoesStillExist, (value) => 0);
       leftToSolveBox.put(key, newValue);
     });
     /*  final db = await (database);
