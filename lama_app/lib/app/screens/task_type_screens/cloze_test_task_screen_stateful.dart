@@ -175,9 +175,11 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                     child: InkWell(
                       onTap: () => {
                         if (selectedAnswer != answers[0] ) {
+                        log('task.questionLanguage: ${task.questionLanguage}'),
+                        log('task.answerLanguage: ${task.answerLanguage}'),
                           BlocProvider.of<TTSBloc>(context).add(
                               ClickOnAnswer(
-                                  answers[0],0,"de")),
+                                  answers[0],0,task.answerLanguage!)),
                           selectedAnswer = answers[0]
                         } else {
                           BlocProvider.of<TaskBloc>(context)
@@ -213,7 +215,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         if (selectedAnswer != answers[1] ) {
                           BlocProvider.of<TTSBloc>(context).add(
                               ClickOnAnswer(
-                                  answers[1],0,"de")),
+                                  answers[1],0,task.answerLanguage!)),
                           selectedAnswer = answers[1]
                         } else {
                           BlocProvider.of<TaskBloc>(context)
@@ -250,7 +252,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                     if (selectedAnswer != answers[2] ) {
                       BlocProvider.of<TTSBloc>(context).add(
                           ClickOnAnswer(
-                              answers[2],0,"de")),
+                              answers[2],0,task.answerLanguage!)),
                       selectedAnswer = answers[2]
                     } else {
                       BlocProvider.of<TaskBloc>(context)

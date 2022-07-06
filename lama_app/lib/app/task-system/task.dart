@@ -35,7 +35,7 @@ class Task {
             json['question'],
             json['right_answer'],
             json['answer_language'],
-            json['task_language'],
+            json['question_language'],
             List<String>.from(json['wrong_answers']));
       case "Zerlegung":
         return TaskZerlegung(
@@ -244,7 +244,7 @@ class TaskClozeTest extends Task {
   String? answerLanguage;
 
   TaskClozeTest(String? taskType, int? reward, String? lamaText, int? leftToSolve,
-      this.question, this.rightAnswer, this.questionLanguage, this.answerLanguage, this.wrongAnswers)
+      this.question,this.rightAnswer,this.answerLanguage, this.questionLanguage , this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
