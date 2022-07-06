@@ -79,10 +79,16 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                   builder:
                     (context, TTSState state) {
                       if (state is EmptyTTSState && !alreadySaid) {
+                        String lang;
+                        if(task.questionLanguage == null) {
+                          lang = "Deutsch";
+                        } else {
+                          lang = "Englisch";
+                        }
                         context.read<TTSBloc>().add(
                             AnswerOnInitEvent("Translate the shown word",
-                                task.questionLanguage));
-                        QuestionText.setText("Translate the shown word", task.questionLanguage);
+                                lang));
+                        QuestionText.setText("Translate the shown word", lang);
                         alreadySaid = true;
                       }
                       return Container(

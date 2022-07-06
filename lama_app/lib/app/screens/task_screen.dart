@@ -148,7 +148,7 @@ class TaskScreenState extends State<TaskScreen> {
                                         onTap: () =>
                                         {
                                           BlocProvider.of<TTSBloc>(context).
-                                          add(AnswerOnInitEvent(QuestionText.getText(), QuestionText.getLang()))
+                                          add(ReadQuestion(QuestionText.getText(), QuestionText.getLang()))
                                         }
                                     ),
                                   );

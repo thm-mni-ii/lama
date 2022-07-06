@@ -71,8 +71,14 @@ class FourCards extends State<FourCardTaskScreenStateful> {
             builder: (context, TTSState state) {
               if (state is EmptyTTSState) {
                 // todo klasse 2 - Null check operator used on a null value : task.questionLanguage!
-                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,task.questionLanguage!));
-                QuestionText.setText(task.question!, task.questionLanguage!);
+                String lang;
+                if(task.questionLanguage == null || task.questionLanguage == "") {
+                  lang = "Deutsch";
+                } else {
+                  lang = "Englisch";
+                }
+                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,lang));
+                QuestionText.setText(task.question!, lang);
               }
               return Container(
                 decoration: BoxDecoration(
@@ -90,10 +96,6 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                     ]),
                 child: Align(
                   child: InkWell(
-                    onTap: () =>
-                        BlocProvider.of<TTSBloc>(context).add(
-                            ClickOnWordQuestion.initVoice(
-                                task.question!, task.answerLaguage!)),
                     child: Text(task.question!,
                         textAlign: TextAlign.center,
                         style: LamaTextTheme.getStyle(fontSize: 30)

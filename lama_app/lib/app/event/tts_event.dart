@@ -25,8 +25,8 @@ class ClickOnAnswer extends TTSEvent {
 
 class ReadQuestion extends TTSEvent {
   String question = "";
-  String answerLanguage = "";
-  ReadQuestion(this.question, this.answerLanguage);
+  String questionLanguage = "";
+  ReadQuestion(this.question, this.questionLanguage);
 }
 
 class SetDefaultEvent extends TTSEvent {}

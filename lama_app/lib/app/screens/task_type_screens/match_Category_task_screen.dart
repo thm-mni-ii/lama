@@ -101,8 +101,14 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
         BlocBuilder<TTSBloc, TTSState>(
             builder: (context, state) {
               if (state is EmptyTTSState ) {
-                context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
-                QuestionText.setText(task.lamaText!, "Deutsch");
+                String lang;
+                if(task.questionLanguage == null) {
+                  lang = "Deutsch";
+                } else {
+                  lang = "Englisch";
+                }
+                context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,lang));
+                QuestionText.setText(task.lamaText!, lang);
                 //alreadySaid = true;
               }
             return Container(

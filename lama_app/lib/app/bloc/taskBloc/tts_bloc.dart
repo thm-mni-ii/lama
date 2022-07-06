@@ -22,6 +22,7 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
     }
     if (lang == "Englisch") {
       await flutterTts.setLanguage("en-EN");
+      await flutterTts.setSpeechRate(0.4);
     } else {
       await flutterTts.setLanguage("de-De");
     }
@@ -53,6 +54,9 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
     });
     on<IsNotEmptyStateEvent>((event, emit) async {
       emit(IsNotEmptyState());
+    });
+    on<ReadQuestion>((event, emit) async {
+    readText(event.question, event.questionLanguage);
     });
   }
 

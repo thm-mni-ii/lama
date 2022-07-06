@@ -90,8 +90,14 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
          BlocBuilder<TTSBloc, TTSState>(
            builder: (context, state) {
              if (state is EmptyTTSState) {
-               context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,"de"));
-               QuestionText.setText(task.question!, "Deutsch");
+               String lang;
+               if(task.questionLanguage == null) {
+                 lang = "Deutsch";
+               } else {
+                 lang = task.questionLanguage!;
+               }
+               context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,lang));
+               QuestionText.setText(task.question!, lang);
              }
             return Container(
                   height: (constraints.maxHeight / 100) * 30,

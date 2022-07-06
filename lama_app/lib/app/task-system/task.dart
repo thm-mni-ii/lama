@@ -86,6 +86,8 @@ class Task {
             json['left_to_solve'],
             json['nameCatOne'],
             json['nameCatTwo'],
+            json['question_langauge'],
+            json['answer_language'],
             List<String>.from(json['categoryOne']),
             List<String>.from(json['categoryTwo']));
       case "GridSelect":
@@ -287,6 +289,8 @@ class TaskMatchCategory extends Task {
   List<String> categoryTwo;
   String? nameCatOne;
   String? nameCatTwo;
+  String? questionLanguage;
+  String? answerLanguage;
 
   TaskMatchCategory(
       String? taskType,
@@ -295,6 +299,8 @@ class TaskMatchCategory extends Task {
       int? leftToSolve,
       this.nameCatOne,
       this.nameCatTwo,
+      this.questionLanguage,
+      this.answerLanguage,
       this.categoryOne,
       this.categoryTwo)
       : super(taskType, reward, lamaText, leftToSolve);
