@@ -25,6 +25,7 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/bloc/taskbloc/tts_bloc.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
 
 
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
@@ -60,6 +61,7 @@ class TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     LinearGradient? lg;
     return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
@@ -139,7 +141,8 @@ class TaskScreenState extends State<TaskScreen> {
                                         child: CircleAvatar(
                                           maxRadius: 21,
                                           child: SvgPicture.asset(
-                                              'assets/images/svg/Ton.svg',
+                                            // todo
+                                              path,
                                               semanticsLabel: 'TonIcon',
                                               color: LamaColors.purpleAccent
                                           ),
@@ -149,6 +152,12 @@ class TaskScreenState extends State<TaskScreen> {
                                         {
                                           BlocProvider.of<TTSBloc>(context).
                                           add(ReadQuestion(QuestionText.getText(), QuestionText.getLang()))
+                                        },
+                                        onDoubleTap: () => {
+                                        home_screen_state.toggle(),
+                                        setState(() {
+                                        path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
+                                        }),
                                         }
                                     ),
                                   );
