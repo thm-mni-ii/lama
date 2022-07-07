@@ -259,7 +259,7 @@ class CheckScreenPage extends State<CheckScreen> {
           child: Text("Zur Gastseite",
               style: LamaTextTheme.getStyle(fontSize: 15)),
         ),
-        button2: ElevatedButton(
+        widget: ElevatedButton(
           onPressed: () {
             controller.jumpToPage(3);
           },
@@ -298,6 +298,27 @@ class CheckScreenPage extends State<CheckScreen> {
                 style: LamaTextTheme.getStyle(fontSize: 15)),
           )),
       PageViewerModel(
+          title: "Dein Lehrer hat dir einen Link gegeben?",
+          description:
+              "Kopiere den Link und füge ihn einfach hier ein, es wird "
+              "alles für dich eingestellt und du kannst loslegen.",
+          image: Image.asset('assets/images/png/features.png'),
+          widget: TextFormField(
+            initialValue: null,
+            textInputAction: TextInputAction.done,
+            decoration: InputDecoration(
+              labelText: 'Setup URL',
+              hintText: 'https://beispiel.de/setup.json',
+            ),
+            onChanged: (value) =>
+                {context.read<CheckScreenBloc>().add(SetupChangeUrl(value))},
+            /* validator: (value) => InputValidation.inputURLValidation(value), */
+            onFieldSubmitted: (value) => {
+              /* if (_formKey.currentState!.validate()) */
+              context.read<CheckScreenBloc>().add(InsertSetupEvent(context))
+            },
+          )),
+      PageViewerModel(
         title: "Alles Verstanden? Los geht's!",
         description:
             "Wende dich bei Fragen an unser github und lese dir die dort "
@@ -313,7 +334,7 @@ class CheckScreenPage extends State<CheckScreen> {
       String? description,
       var image,
       ElevatedButton? button,
-      ElevatedButton? button2}) {
+      Widget? widget}) {
     return Column(
       children: [
         Flexible(
@@ -347,12 +368,12 @@ class CheckScreenPage extends State<CheckScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 5),
+                padding: EdgeInsets.only(left: 20, right: 20, bottom: 5),
                 child: button,
               ),
               Padding(
-                padding: EdgeInsets.only(top: 5),
-                child: button2,
+                padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                child: widget,
               ),
             ])),
       ],

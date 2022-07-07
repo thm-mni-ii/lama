@@ -33,6 +33,9 @@ class CreateAdminEvent extends CheckScreenEvent {
   CreateAdminEvent(this.context);
 }
 
+///used to create guest
+///
+///{@param}[BuildContext] to navigate
 class CreateGuestEvent extends CheckScreenEvent {
   BuildContext context;
   CreateGuestEvent(this.context);
@@ -41,6 +44,9 @@ class CreateGuestEvent extends CheckScreenEvent {
 ///used to denie the DSGVO
 class DSGVODenied extends CheckScreenEvent {}
 
+///used to load a guest and navigate to [HomeScreen]
+///
+///{@param}[BuildContext] to navigate and [User] for the guest
 class LoadGuest extends CheckScreenEvent {
   BuildContext context;
   User user;
@@ -49,4 +55,22 @@ class LoadGuest extends CheckScreenEvent {
     this.context,
     this.user,
   );
+}
+
+///used to load setup URL and navigate to [UserSelectionScreen] on success
+///
+///{@param}[BuildContext] to navigate
+class InsertSetupEvent extends CheckScreenEvent {
+  BuildContext context;
+
+  InsertSetupEvent(this.context);
+}
+
+///used to update the setup URL
+///
+///{@param}[String] to pass the URL
+class SetupChangeUrl extends CheckScreenEvent {
+  String? setupUrl;
+
+  SetupChangeUrl(this.setupUrl);
 }

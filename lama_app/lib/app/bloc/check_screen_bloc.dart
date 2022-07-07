@@ -1,10 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_admin_bloc.dart';
 import 'package:lama_app/app/bloc/create_user_bloc.dart';
+import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
+import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/event/check_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
@@ -14,7 +19,9 @@ import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
 import 'package:lama_app/db/database_provider.dart';
+import 'package:lama_app/util/input_validation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 ///[Bloc] for the [CheckScreen]
 ///
@@ -46,7 +53,15 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
       await Future.delayed(Duration(milliseconds: 2000));
       await _loadGuest(event.context, event.user);
     });
+    on<InsertSetupEvent>((event, emit) async {
+      await _insertSetup(event.context);
+    });
+    on<SetupChangeUrl>((event, emit) async {
+      _setupUrl = event.setupUrl;
+    });
   }
+  //used to update the setup url when needed
+  String? _setupUrl;
 
   ///(private)
   ///check if an admin is stored in the Database
@@ -88,8 +103,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   }
 
   Future<CheckScreenState> _createGuest(BuildContext context) async {
-    //loda lama facts
-
+    //load lama facts
     //create and push guest user into database
     User user = User(
       grade: 1,
@@ -163,5 +177,48 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
         ),
       ),
     );
+  }
+
+  ///(private)
+  ///used to read the setup JSON and navigateto [UserSelectionScreen]
+  ///
+  ///{@param} [BuildContext] to navigate
+  Future<void> _insertSetup(BuildContext context) async {
+    //check if JSON file is valid
+    String? error = await InputValidation.inputUrlWithJsonValidation(_setupUrl);
+    Map<String, String>? urls;
+    /* if (error != null) return UserlistUrlParsingFailed(error: error); */
+    //get the two URLs from the JSON file
+    try {
+      final response = await http.get(Uri.parse(_setupUrl!));
+      urls = _parseUrls(jsonDecode(response.body));
+    } on SocketException {
+      /* return UserlistUrlParsingFailed(
+        error: 'Kritischer Fehler beim erreichen der URL!',
+      ); */
+    }
+    //load userlist through URL
+    if (urls != null) {
+      await InputValidation.inputUrlWithJsonValidation(urls['userlistUrl']);
+      await InputValidation.inputUrlWithJsonValidation(urls['tasksetUrl']);
+    }
+    //load taskset through URL
+
+    //if everything works, navigate to UserSelectionScreen
+    _navigateAdminExist(context);
+  }
+
+  ///parses URLS from the json filem checks if the urls are strings
+  Map<String, String>? _parseUrls(Map<String, String> json) {
+    if (!(json.containsKey('userlistUrl') && json['userlistUrl'] is String)) {
+      print("Es wurde keine userlist url gefunden");
+      return null;
+    }
+    if (!(json.containsKey('tasksetUrl') && json['tasksetUrl'] is String)) {
+      print("Es wurde keine taskset url gefunden");
+      return null;
+    }
+
+    return json;
   }
 }
