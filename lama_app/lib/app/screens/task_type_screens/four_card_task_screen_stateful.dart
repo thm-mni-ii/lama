@@ -74,7 +74,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                 log('task.answerLaguage: ${task.answerLaguage}');
                 String lang;
                 // todo einigen
-                if(task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch") {
+                if(task.questionLanguage == null || task.questionLanguage == "") {
                   lang = "Deutsch";
                 } else {
                   lang = "Englisch";

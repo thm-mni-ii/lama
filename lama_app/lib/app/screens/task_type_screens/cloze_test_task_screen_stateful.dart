@@ -80,6 +80,12 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String lang;
+    if (task.answerLanguage == null) {
+      lang = "de";
+    } else {
+      lang = task.answerLanguage!;
+    }
     Color color0 = LamaColors.greenAccent;
     Color color1 = LamaColors.blueAccent;
     Color color2 = LamaColors.greenAccent;
@@ -177,9 +183,10 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         if (selectedAnswer != answers[0] ) {
                         log('task.questionLanguage: ${task.questionLanguage}'),
                         log('task.answerLanguage: ${task.answerLanguage}'),
+
                           BlocProvider.of<TTSBloc>(context).add(
                               ClickOnAnswer(
-                                  answers[0],0,task.answerLanguage!)),
+                                  answers[0],0,lang)),
                           selectedAnswer = answers[0]
                         } else {
                           BlocProvider.of<TaskBloc>(context)
@@ -215,7 +222,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         if (selectedAnswer != answers[1] ) {
                           BlocProvider.of<TTSBloc>(context).add(
                               ClickOnAnswer(
-                                  answers[1],0,task.answerLanguage!)),
+                                  answers[1],0,lang)),
                           selectedAnswer = answers[1]
                         } else {
                           BlocProvider.of<TaskBloc>(context)

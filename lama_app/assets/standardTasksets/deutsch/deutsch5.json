@@ -19,9 +19,7 @@
            "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
            "right_answer":"dass",
-           "wrong_answers":["dieses", "das"],
-           "question_language":"Deutsch",
-           "answer_language":"Deutsch"
+           "wrong_answers":["dieses", "das"]
          },
          {
            "task_type": "Connect",

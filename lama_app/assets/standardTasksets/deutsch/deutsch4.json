@@ -28,9 +28,7 @@
            "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
            "right_answer":"dass",
-           "wrong_answers":["Das", "das"],
-           "question_language":"Deutsch",
-           "answer_language":"Deutsch"
+           "wrong_answers":["Das", "das"]
          },
          {
            "task_type":"GridSelect",
