@@ -80,12 +80,12 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String lang;
-    if (task.answerLanguage == null) {
-      lang = "de";
-    } else {
-      lang = task.answerLanguage!;
-    }
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" ? qlang = "Deutsch" : qlang = task.questionLanguage!;
+
+    String alang;
+    task.answerLanguage == null || task.answerLanguage == "" ? alang = "Deutsch" : alang = task.answerLanguage!;
+
     Color color0 = LamaColors.greenAccent;
     Color color1 = LamaColors.blueAccent;
     Color color2 = LamaColors.greenAccent;
@@ -96,16 +96,11 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
          BlocBuilder<TTSBloc, TTSState>(
            builder: (context, state) {
              if (state is EmptyTTSState) {
-               log('task.questionLanguage: ${task.questionLanguage}');
-               log('task.answerLanguage: ${task.answerLanguage}');
-               String lang;
-               if(task.questionLanguage == null) {
-                 lang = "Deutsch";
-               } else {
-                 lang = task.questionLanguage!;
-               }
-               context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,lang));
-               QuestionText.setText(task.question!, lang);
+               //log('task.questionLanguage: ${task.questionLanguage}');
+               //log('task.answerLanguage: ${task.answerLanguage}');
+
+               context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,qlang));
+               QuestionText.setText(task.question!, qlang);
              }
             return Container(
                   height: (constraints.maxHeight / 100) * 30,
@@ -186,7 +181,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
 
                           BlocProvider.of<TTSBloc>(context).add(
                               ClickOnAnswer(
-                                  answers[0],0,lang)),
+                                  answers[0],0,alang)),
                           selectedAnswer = answers[0]
                         } else {
                           BlocProvider.of<TaskBloc>(context)
@@ -222,7 +217,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         if (selectedAnswer != answers[1] ) {
                           BlocProvider.of<TTSBloc>(context).add(
                               ClickOnAnswer(
-                                  answers[1],0,lang)),
+                                  answers[1],0,alang)),
                           selectedAnswer = answers[1]
                         } else {
                           BlocProvider.of<TaskBloc>(context)
@@ -259,7 +254,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                     if (selectedAnswer != answers[2] ) {
                       BlocProvider.of<TTSBloc>(context).add(
                           ClickOnAnswer(
-                              answers[2],0,task.answerLanguage!)),
+                              answers[2],0,alang)),
                       selectedAnswer = answers[2]
                     } else {
                       BlocProvider.of<TaskBloc>(context)

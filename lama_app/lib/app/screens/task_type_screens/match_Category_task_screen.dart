@@ -329,7 +329,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                       String lang;
                       task.answerLanguage == null || task.answerLanguage == "" ? lang = "Deutsch" :  lang = "Englisch";
                       log('task.answerLanguage: ${task.answerLanguage}');
-
                       log('task.questionLanguage: ${task.questionLanguage}');
 
                       BlocProvider.of<TTSBloc>(context).

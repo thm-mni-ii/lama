@@ -60,6 +60,9 @@ class FourCards extends State<FourCardTaskScreenStateful> {
 
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" ? qlang = "Deutsch" : qlang = "Englisch";
+
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: Column(children: [
@@ -70,17 +73,10 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           child: BlocBuilder<TTSBloc, TTSState>(
             builder: (context, TTSState state) {
               if (state is EmptyTTSState) {
-                log('task.questionLanguage: ${task.questionLanguage}');
-                log('task.answerLaguage: ${task.answerLaguage}');
-                String lang;
-                // todo einigen
-                if(task.questionLanguage == null || task.questionLanguage == "") {
-                  lang = "Deutsch";
-                } else {
-                  lang = "Englisch";
-                }
-                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,lang));
-                QuestionText.setText(task.question!, lang);
+                //log('task.questionLanguage: ${task.questionLanguage}');
+                //log('task.answerLaguage: ${task.answerLaguage}');
+                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,qlang));
+                QuestionText.setText(task.question!, qlang);
               }
               return Container(
                 decoration: BoxDecoration(
@@ -167,11 +163,12 @@ class FourCards extends State<FourCardTaskScreenStateful> {
   }
 
   Widget _buildCards(context, index) {
+    String alang;
+    task.answerLanguage == null || task.answerLanguage == "" ? alang = "Deutsch" : alang = task.answerLanguage!;
     //debugPrint(index);
     Color color =
     index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;
 
-    //Color color = LamaColors.greenAccent;
     return BlocBuilder<TTSBloc, TTSState>(
       builder: (context, state) {
         return Container(
@@ -190,10 +187,10 @@ class FourCards extends State<FourCardTaskScreenStateful> {
               ]),
           child: InkWell(
             onTap: () {
-              if (selectedAnswer != answers[index]) {
+              if ( selectedAnswer != answers[index]) {
                 //log('data: $selectedAnswer');
-                BlocProvider.of<TTSBloc>(context).
-                add(ClickOnAnswer(answers[index], index, "de"));
+                BlocProvider.of<TTSBloc>(context)
+                .add(ClickOnAnswer(answers[index], index, alang));
                 selectedAnswer = answers[index];
               } else {
                 BlocProvider.of<TaskBloc>(context)

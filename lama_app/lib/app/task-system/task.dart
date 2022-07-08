@@ -214,11 +214,11 @@ class Task4Cards extends Task {
   String? rightAnswer;
   List<String> wrongAnswers;
   String? questionLanguage;
-  String? answerLaguage;
+  String? answerLanguage;
 
 
   Task4Cards(String? taskType, int? reward, String? lamaText, int? leftToSolve,
-      this.question, this.rightAnswer, this.questionLanguage, this.answerLaguage,
+      this.question, this.rightAnswer, this.questionLanguage, this.answerLanguage,
       this.wrongAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 

@@ -109,7 +109,6 @@ class ConnectState extends State<ConnectTaskScreen> {
                     nip: BubbleNip.leftCenter,
                     child: Center(
                       child: Text(
-                        // todo
                         task.lamaText!,
                         style: LamaTextTheme.getStyle(
                             color: LamaColors.black, fontSize: 15),
