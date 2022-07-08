@@ -1,17 +1,22 @@
 import 'dart:math';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/bloc/add_vocab_bloc.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/choose_taskset_events.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
+import 'package:lama_app/app/screens/add_vocab_screen.dart';
 import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/state/choose_taskset_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 
 /// [StatefulWidget] that contains the screen that shows all Tasksets.
 ///
@@ -37,6 +42,10 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
   int? userGrade;
   UserRepository? userRepository;
 
+  late bool textScanning;
+  late String scannedText;
+  XFile? imageFile;
+
   ChooseTasksetScreenState(
       this.chosenSubject, this.userGrade, this.userRepository);
 
@@ -49,6 +58,8 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
     super.initState();
     BlocProvider.of<ChooseTasksetBloc>(context)
         .add(LoadAllTasksetsEvent(chosenSubject, userGrade));
+    textScanning = false;
+    scannedText = '';
   }
 
   @override
@@ -118,6 +129,23 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                 ),
               ),
             ),
+            if (chosenSubject == 'Englisch') ...[
+              Positioned(
+                bottom: 20,
+                right: 20,
+                child: FloatingActionButton(onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) => AddVocabBloc(),
+                        child: AddVocabScreen(),
+                      ),
+                    ),
+                  ).then((value) => (setState(() {})));
+                }),
+              ),
+            ]
           ],
         ),
       ),

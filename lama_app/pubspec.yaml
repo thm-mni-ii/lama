@@ -37,7 +37,9 @@ dependencies:
   flame: ^1.2.0
   bubble: ^1.2.1
   google_fonts: ^2.1.0
+  google_ml_kit: ^0.7.3
   flutter_markdown: ^0.6.2
+  image_picker: 0.8.4+9
   audioplayers: ^0.18.3
   http: ^0.13.3
   flutter_speed_dial: ^3.0.5
@@ -46,6 +48,7 @@ dependencies:
   dbcrypt: ^2.0.0 
   decimal: ^2.1.0
   smooth_page_indicator: any
+  translator: ^0.1.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
