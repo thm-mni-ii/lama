@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,6 +39,7 @@ class TaskScreen extends StatefulWidget {
   final int? userGrade;
   TaskScreen([this.userGrade]);
 
+
   @override
   State<StatefulWidget> createState() => TaskScreenState(userGrade);
 }
@@ -50,6 +53,9 @@ class TaskScreenState extends State<TaskScreen> {
   late TaskBuchstabieren task;
   int? userGrade;
 
+  String questionForTtsBloc = "";
+  String langOfQuestion = "";
+
   TaskScreenState([this.userGrade]);
 
   ///Loads the first Task of the list that was passed by
@@ -61,6 +67,8 @@ class TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    String text = "";
     String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     LinearGradient? lg;
     return BlocBuilder<TaskBloc, TaskState>(
@@ -150,8 +158,10 @@ class TaskScreenState extends State<TaskScreen> {
                                         ),
                                         onTap: () =>
                                         {
+                                        log('myQuestion: ${questionForTtsBloc}'),
+
                                           BlocProvider.of<TTSBloc>(context).
-                                          add(ReadQuestion(QuestionText.getText(), QuestionText.getLang()))
+                                          add(ReadQuestion(questionForTtsBloc, langOfQuestion))
                                         },
                                         onDoubleTap: () => {
                                         home_screen_state.toggle(),
@@ -331,28 +341,65 @@ class TaskScreenState extends State<TaskScreen> {
       Task task, BoxConstraints constraints) {
     switch (task.type) {
       case "4Cards":
+        Task4Cards myTask = (task as Task4Cards);
+        questionForTtsBloc = myTask.question!;
+        if (myTask.questionLanguage == null) {
+          langOfQuestion = "de";
+        }
+
+
         return FourCardTaskScreenStateful(task as Task4Cards, constraints);
       case "Zerlegung":
+        TaskZerlegung myTask = (task as TaskZerlegung);
+        questionForTtsBloc = myTask.lamaText!;
+        langOfQuestion = "de";
+
         return ZerlegungTaskScreen(
             task: task as TaskZerlegung?, constraints: constraints);
       case "NumberLine":
         return NumberLineTaskScreen(task as TaskNumberLine, constraints);
       case "ClozeTest":
+        TaskClozeTest myTask = (task as TaskClozeTest);
+        questionForTtsBloc = myTask.question!;
+        if (myTask.questionLanguage == null) {
+          langOfQuestion = "de";
+        } else langOfQuestion = myTask.questionLanguage!;
+
         return ClozeTestTaskScreen(task as TaskClozeTest, constraints);
       case "Clock":
         return ClockTaskScreen(task as ClockTest, constraints);
       case "MarkWords":
         return MarkWordsScreen(task as TaskMarkWords, constraints);
       case "MatchCategory":
+        TaskMatchCategory myTask = (task as TaskMatchCategory);
+        questionForTtsBloc = myTask.lamaText!;
+        if (myTask.questionLanguage == null) {
+          langOfQuestion = "de";
+        } else langOfQuestion = myTask.questionLanguage!;
+
         return MatchCategoryTaskScreen(task as TaskMatchCategory, constraints);
       case "GridSelect":
+        // todo net generisch: Markiere X Länder
+        TaskGridSelect myTask = (task as TaskGridSelect);
+        questionForTtsBloc = myTask.lamaText!;
+        langOfQuestion = "de";
+
         return GridSelectTaskScreen(
             task as TaskGridSelect, constraints, GridSelectTaskBloc());
       case "MoneyTask":
         return MoneyTaskScreen(task as TaskMoney, constraints);
       case "VocableTest":
+        TaskVocableTest myTask = (task as TaskVocableTest);
+        questionForTtsBloc = myTask.lamaText!;
+        // todo null with !
+        langOfQuestion = myTask.questionLanguage;
+
         return VocableTestTaskScreen(task as TaskVocableTest, constraints);
       case "Connect":
+        TaskConnect myTask = (task as TaskConnect);
+        questionForTtsBloc = myTask.lamaText!;
+        langOfQuestion = "de";
+
         return ConnectTaskScreen(task as TaskConnect, constraints);
       case "Equation":
         return EquationTaskScreen(task as TaskEquation, constraints);
