@@ -4,6 +4,7 @@ import 'package:lama_app/app/event/game_list_screen_event.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/climber_game_screen.dart';
 import 'package:lama_app/app/screens/flappy_game_screen.dart';
+import 'package:lama_app/app/screens/tap_the_lama_game_screen.dart';
 import 'package:lama_app/app/screens/tetris_game_screen.dart';
 import 'package:lama_app/app/screens/snake_screen.dart';
 import 'package:lama_app/app/state/game_list_screen_state.dart';
@@ -57,6 +58,12 @@ void _navigateToGame(String gameName, BuildContext context,
       int? allTimeHighScore = await userRepository.getHighscore(4);
       gameToLaunch =
           TetrisScreen(userRepository, userHighScore, allTimeHighScore);
+      break;
+    case "Tap The Lama":
+      int? userHighScore = await userRepository!.getMyHighscore(5);
+      int? allTimeHighScore = await userRepository.getHighscore(5);
+      gameToLaunch =
+          TapTheLamaScreen(userRepository,userHighScore, allTimeHighScore);
       break;
     default:
       throw Exception("Trying to launch game that does not exist");

@@ -1,6 +1,9 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/snake/snakeGame.dart';
+
+import 'package:lama_app/game_snake_aus_iNet/snake_game.dart';
 
 /// This class creates the Snake game screen
 class SnakeScreen extends StatelessWidget {
@@ -21,8 +24,9 @@ class SnakeScreen extends StatelessWidget {
                 children: <Widget>[
               Expanded(
                   child: SafeArea(
-                // child: SnakeGame(context, userRepository).widget,
-                child: Text(""),
+                child: GameWidget(
+                  game: SnakeGame(),
+                ),
                 bottom: true,
               ))
             ])));
