@@ -268,6 +268,15 @@ class CheckScreenPage extends State<CheckScreen> {
             style: LamaTextTheme.getStyle(fontSize: 15),
           ),
         ),
+        widget2: ElevatedButton(
+          onPressed: () {
+            controller.jumpToPage(4);
+          },
+          child: Text(
+            "Zur Setupseite",
+            style: LamaTextTheme.getStyle(fontSize: 15),
+          ),
+        ),
       ),
       PageViewerModel(
           title: "Spring einfach rein!",
@@ -302,7 +311,7 @@ class CheckScreenPage extends State<CheckScreen> {
           description:
               "Kopiere den Link und füge ihn einfach hier ein, es wird "
               "alles für dich eingestellt und du kannst loslegen.",
-          image: Image.asset('assets/images/png/features.png'),
+          image: Image.asset('assets/images/png/setup_login.png'),
           widget: TextFormField(
             initialValue: null,
             textInputAction: TextInputAction.done,
@@ -334,7 +343,8 @@ class CheckScreenPage extends State<CheckScreen> {
       String? description,
       var image,
       ElevatedButton? button,
-      Widget? widget}) {
+      Widget? widget,
+      Widget? widget2}) {
     return Column(
       children: [
         Flexible(
@@ -374,6 +384,10 @@ class CheckScreenPage extends State<CheckScreen> {
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20, top: 5),
                 child: widget,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                child: widget2,
               ),
             ])),
       ],
