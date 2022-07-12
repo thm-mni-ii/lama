@@ -4,15 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/add_vocab_bloc.dart';
-import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
-import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/add_vocab_events.dart';
-import 'package:lama_app/app/event/choose_taskset_events.dart';
-import 'package:lama_app/app/repository/user_repository.dart';
-import 'package:lama_app/app/screens/task_screen.dart';
-import 'package:lama_app/app/state/choose_taskset_state.dart';
-import 'package:lama_app/app/task-system/task.dart';
-import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,6 +24,8 @@ class AddVocabScreenState extends State<AddVocabScreen> {
   late bool textScanning = false;
   late String scannedText = ' ';
   XFile? imageFile;
+
+  final vocabList = <String>[];
 
   @override
   void initState() {
@@ -63,33 +57,35 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        padding: const EdgeInsets.only(top: 10),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            getImage(ImageSource.gallery);
-                          },
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.image,
-                                  size: 30,
-                                ),
-                                Text(
-                                  "Gallery",
-                                  style: TextStyle(
-                                      fontSize: 13, color: Colors.grey[600]),
-                                )
-                              ],
-                            ),
-                          ),
-                        )),
-                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.only(top: 10),
                       child: ElevatedButton(
                         onPressed: () {
-                          getLanguage();
-                         // getImage(ImageSource.camera);
+                          getImage(ImageSource.gallery);
+                        },
+                        child: Container(
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.image,
+                                size: 30,
+                              ),
+                              Text(
+                                "Gallery",
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey[600]),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.only(top: 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          getImage(ImageSource.camera);
                         },
                         child: Container(
                           child: Column(
@@ -153,19 +149,32 @@ class AddVocabScreenState extends State<AddVocabScreen> {
     await textDetector.close();
     scannedText = "";
     for (TextBlock block in recognisedText.blocks) {
+      int i = 0;
       for (TextLine line in block.lines) {
         scannedText = scannedText + line.text + "\n";
-        recognisedText;
+
+        debugPrint(line.text);
+        debugPrint(line.rect.toString());
+        debugPrint(line.cornerPoints.toString());
+        //vocabList[i] = line.text;
+       // if(line.rect. > block.rect.center);
+        vocabList.add(line.text);
+        i++;
+
+        //print(vocabList.toString());
+        // List<String> regLan = block.recognizedLanguages;
+        // print('reglang:  ' + regLan.toString());
+
+        //for (TextElement element in line.elements) {debugPrint(element.text);}
+
       }
     }
+    debugPrint(vocabList.toString());
+
+    // debugPrint(recognisedText.text);
+    // debugPrint('Scanned Text: ');
+    // debugPrint(scannedText);
     textScanning = false;
     setState(() {});
-  }
-
-  Stream<String> getLanguage() async* {
-    final translator = GoogleTranslator();
-    var lanCode = translator.translate("This is an example text");
-    print(lanCode.toString());
-    yield lanCode.toString();
   }
 }
