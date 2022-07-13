@@ -25,8 +25,6 @@ class AddVocabScreenState extends State<AddVocabScreen> {
   late String scannedText = ' ';
   XFile? imageFile;
 
-  final vocabList = <String>[];
-
   @override
   void initState() {
     super.initState();
@@ -52,7 +50,10 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                   Container(
                     child: Text('Noch kein Bild ausgewaehlt'),
                   ),
-                if (imageFile != null) Image.file(File(imageFile!.path)),
+                if (imageFile != null)
+                  Image.file(
+                    File(imageFile!.path),
+                  ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -115,7 +116,6 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
-                Container(child: Text('')),
               ],
             ),
           ),
@@ -148,33 +148,67 @@ class AddVocabScreenState extends State<AddVocabScreen> {
     RecognisedText recognisedText = await textDetector.processImage(inputImage);
     await textDetector.close();
     scannedText = "";
+    final vocabList1 = <String>[];
+    final vocabList2 = <String>[];
+    final centerPointList = <int>[];
+    int centerPointSum = 0;
+    int centerPoint = 0;
+    int i = 0;
+    int x = 0;
+
     for (TextBlock block in recognisedText.blocks) {
-      int i = 0;
-      for (TextLine line in block.lines) {
-        scannedText = scannedText + line.text + "\n";
+      int? singleCenterPoint = 0;
+      final singleCenterPointList = <String>[];
+      List<String> cornerPoints = block.rect.center.toString().split('');
 
-        debugPrint(line.text);
-        debugPrint(line.rect.toString());
-        debugPrint(line.cornerPoints.toString());
-        //vocabList[i] = line.text;
-       // if(line.rect. > block.rect.center);
-        vocabList.add(line.text);
-        i++;
-
-        //print(vocabList.toString());
-        // List<String> regLan = block.recognizedLanguages;
-        // print('reglang:  ' + regLan.toString());
-
-        //for (TextElement element in line.elements) {debugPrint(element.text);}
-
+      for (int k = 0; k < cornerPoints.length; k++) {
+        if (cornerPoints[k] == '.') break;
+        if (isNumeric(cornerPoints[k].toString())) {
+          singleCenterPointList.add(cornerPoints[k]);
+        }
       }
-    }
-    debugPrint(vocabList.toString());
 
-    // debugPrint(recognisedText.text);
-    // debugPrint('Scanned Text: ');
-    // debugPrint(scannedText);
+      singleCenterPoint = int.tryParse(singleCenterPointList.join());
+      centerPointList.add(singleCenterPoint!);
+      centerPointSum = centerPointSum + singleCenterPoint;
+      i++;
+      centerPoint = centerPointSum ~/ i;
+    }
+
+// adds vocabs to respective lists by dividing table at the average top left word corner point
+    for (TextBlock block in recognisedText.blocks) {
+      print(block.text);
+      if (isWord(block.text)) {
+        if (centerPointList[x] < centerPoint) {
+          vocabList1.add(block.text);
+        } else {
+          vocabList2.add(block.text);
+        }
+      }
+      x++;
+    }
+
+    debugPrint(vocabList1.toString());
+    debugPrint(vocabList2.toString());
+    debugPrint(centerPoint.toString());
+    debugPrint(centerPointList.toString());
+
     textScanning = false;
     setState(() {});
+  }
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
+
+  bool isWord(String s) {
+    if ('${s[0]}'.contains(new RegExp(r'[A-Z]')) ||
+        '${s[0]}'.contains(new RegExp(r'[1-9]'))) {
+      return true;
+    }
+    return false;
   }
 }
