@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  lama:
+    build: ./lama_app
+    restart: always
+    ports:
+      - 5000:8080
