@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 import 'package:bubble/bubble.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,6 +9,7 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 /// Author: H.Bismo
 
@@ -29,29 +28,35 @@ class ClockTaskState extends State<ClockTaskScreen> {
   final TextEditingController controller = TextEditingController();
   final BoxConstraints constraints;
   final ClockTest task;
-  late ClockPainter bloc;
+  ClockPainter? bloc;
+  ClockPainter2? bloc2;
   final List<String?> answers = [];
   int i = 1;
   int timer = 15;
-  late String showtimer;
+  String? showtimer;
   String? sonneMond;
   var randStunde;
   var randMinute;
-  var halbeMinute;
+  var randStunde2;
+  var randMinute2;
   var rnd = Random();
+  var rnd2 = Random();
   var wrgStunde;
   var wrgMinute;
   var wrgStunde2;
   var wrgMinute2;
-  var wrgStunde3;
-  var wrgMinute3;
-  var wrgStunde4;
-  var wrgMinute4;
-  var wrgMinute5;
-  var wrgMinute6;
   var vierMinute;
+  var vierMinute2;
   var allMinuten;
-  List<String>? wrongAnswer;
+  var allMinuten2;
+  List<String> wrongAnswer = [];
+  int currentValue = 0;
+  int currentValue2 = 0;
+  int diffHour = 0;
+  int diffMinute = 0;
+  bool correct = true;
+  bool incorrect = false;
+  int midStunde = 0;
 
   String setImage() {
     if (this.randStunde < 5 || this.randStunde > 17) {
@@ -69,31 +74,63 @@ class ClockTaskState extends State<ClockTaskScreen> {
     }
   }
 
+  String setAM() {
+    if (this.randStunde > 12) {
+      return "PM";
+    } else {
+      return "AM";
+    }
+  }
+
+  String setAM2() {
+    if (this.randStunde2 > 12) {
+      return "PM";
+    } else {
+      return "AM";
+    }
+  }
+
   ClockTaskState(this.task, this.constraints) {
     this.allMinuten = rnd.nextInt(60);
+    this.allMinuten2 = rnd2.nextInt(60);
     this.wrgStunde2 = rnd.nextInt(24);
-    this.wrgMinute2 = rnd.nextInt(2) * 30;
+    this.wrgMinute2 = rnd.nextInt(60);
     this.wrgStunde = rnd.nextInt(24);
-    this.wrgMinute = 0;
-    this.wrgStunde3 = rnd.nextInt(24);
-    this.wrgMinute3 = rnd.nextInt(4) * 15;
-    this.wrgStunde4 = rnd.nextInt(24);
-    this.wrgMinute4 = 0;
-    this.wrgMinute5 = rnd.nextInt(2) * 30;
-    this.wrgMinute6 = rnd.nextInt(4) * 15;
+    this.wrgMinute = rnd.nextInt(60);
     this.randStunde = rnd.nextInt(24);
-    this.randMinute = 0;
-    this.halbeMinute = rnd.nextInt(2) * 30;
+    this.randMinute = rnd.nextInt(2) * 30;
+    this.randStunde2 = rnd2.nextInt(24);
+    this.randMinute2 = rnd2.nextInt(2) * 30;
     this.vierMinute = rnd.nextInt(4) * 15;
+    this.vierMinute2 = rnd2.nextInt(4) * 15;
 
     bloc = ClockPainter(task, constraints, this.randStunde, this.randMinute,
-        this.vierMinute, this.allMinuten, this.halbeMinute);
-    task.rightAnswer = bloc.strAnswer();
+        this.vierMinute, this.allMinuten);
+    task.rightAnswer = bloc?.strAnswer();
     answers.add(task.rightAnswer); //get the right answer
     answers.add(wrgAnswer());
     answers.add(wrgAnswer2()); // add the wrong answers
     answers.shuffle();
     print(answers);
+
+    if (this.randStunde2 < this.randStunde) {
+      this.midStunde = this.randStunde2 + 24;
+      print(this.midStunde);
+      this.diffHour = (this.midStunde - this.randStunde - 1).toInt();
+    } else if (this.randStunde2 == this.randStunde &&
+        this.allMinuten2 < this.allMinuten) {
+      this.midStunde = this.randStunde2 + 24;
+      print(this.midStunde);
+      this.diffHour = (this.midStunde - this.randStunde - 1).toInt();
+    } else {
+      this.diffHour = (this.randStunde2 - this.randStunde - 1).toInt();
+    }
+    this.diffMinute =
+        (this.allMinuten2 % 100 + (60 - this.allMinuten % 100)).toInt();
+    if (this.diffMinute >= 60) {
+      this.diffHour++;
+      this.diffMinute = this.diffMinute - 60;
+    }
   }
 
   @override
@@ -124,133 +161,210 @@ class ClockTaskState extends State<ClockTaskScreen> {
     });
   }
 
+  int diffHourAnswer() {
+    if (this.randStunde2 < this.randStunde) {
+      int midStunde = this.randStunde2 + 24;
+      print(midStunde);
+      this.diffHour = (midStunde - this.randStunde - 1).toInt();
+    } else if (this.randStunde2 == this.randStunde &&
+        this.allMinuten2 < this.allMinuten) {
+      int midStunde = this.randStunde2 + 24;
+      print(midStunde);
+      this.diffHour = (midStunde - this.randStunde - 1).toInt();
+    } else {
+      this.diffHour = (this.randStunde2 - this.randStunde - 1).toInt();
+    }
+    this.diffMinute =
+        (this.allMinuten2 % 100 + (60 - this.allMinuten % 100)).toInt();
+    if (this.diffMinute >= 60) {
+      this.diffHour++;
+      this.diffMinute = this.diffMinute - 60;
+    }
+
+    int resHour = this.diffHour;
+    print(resHour);
+    return resHour;
+  }
+
+  int diffMinuteAnswer() {
+    if (this.randStunde2 < this.randStunde) {
+      int midStunde = this.randStunde2 + 24;
+      print(midStunde);
+      this.diffHour = (midStunde - this.randStunde - 1).toInt();
+    } else if (this.randStunde2 == this.randStunde &&
+        this.allMinuten2 < this.allMinuten) {
+      int midStunde = this.randStunde2 + 24;
+      print(midStunde);
+      this.diffHour = (midStunde - this.randStunde - 1).toInt();
+    } else {
+      this.diffHour = (this.randStunde2 - this.randStunde - 1).toInt();
+    }
+    this.diffMinute =
+        (this.allMinuten2 % 100 + (60 - this.allMinuten % 100)).toInt();
+    if (this.diffMinute >= 60) {
+      this.diffHour++;
+      this.diffMinute = this.diffMinute - 60;
+    }
+
+    int resMinute = this.diffMinute;
+    print(resMinute);
+    return resMinute;
+  }
 
   String wrgAnswer() {
-    while (this.wrgStunde == this.randStunde && (this.wrgMinute == this.randMinute || this.wrgMinute2 == this.halbeMinute || this.wrgMinute3 == this.vierMinute)){
-      this.wrgStunde = rnd.nextInt(24);
-      this.wrgMinute2 = rnd.nextInt(2) * 30;
-      this.wrgMinute3 = rnd.nextInt(4) * 15;
-    }
+    if (this.wrgStunde != this.randStunde ||
+        this.wrgMinute != this.randMinute) {
       if (task.uhr == "halbeStunde") {
-           if (this.wrgMinute2 == 0){
-             if(this.wrgStunde < 10){
-               return "0" + this.wrgStunde.toString() + ":" + "00";
-             } else {
-               return this.wrgStunde.toString() + ":" + "00";
-             }
-            } else{
-              if (this.wrgMinute2 < 10){
-                if(this.wrgStunde < 10){
-                  return "0" + this.wrgStunde.toString() + ":" + "0" + this.wrgMinute2.toString();
-                } else{
-                  return this.wrgStunde.toString() + ":" + "0" + this.wrgMinute2.toString();
-                }
-              } else {
-                if(this.wrgStunde < 10){
-                  return "0" + this.wrgStunde.toString() + ":" + this.wrgMinute2.toString();
-                } else {
-                  return this.wrgStunde.toString() + ":" + this.wrgMinute2.toString();
-                }
-              }
-            }
-        } else if (task.uhr == "vollStunde") {
+        if (this.wrgMinute == 0) {
+          if (this.wrgStunde < 10) {
+            return "0" + this.wrgStunde.toString() + ":" + "00";
+          } else {
+            return this.wrgStunde.toString() + ":" + "00";
+          }
+        } else {
+          if (this.wrgStunde < 10) {
+            return "0" +
+                this.wrgStunde.toString() +
+                ":" +
+                this.wrgStunde.toString();
+          }
+          return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
+        }
+      } else if (task.uhr == "vollStunde") {
         if (this.wrgStunde < 10) {
           return "0" + this.wrgStunde.toString() + ":" + "00";
         } else {
-          return this.wrgStunde.toString() + ":" + "0" + this.wrgMinute.toString();
+          return this.wrgStunde.toString() + ":" + "00";
         }
       } else if (task.uhr == "viertelStunde") {
-          if (this.wrgMinute3 == 0){
-             if(this.wrgStunde < 10){
-               return "0" + this.wrgStunde.toString() + ":" + "00";
-             } else {
-               return this.wrgStunde.toString() + ":" + "00";
-             }
-            } else{
-              if (this.wrgMinute3 < 10){
-                if(this.wrgStunde < 10){
-                  return "0" + this.wrgStunde.toString() + ":" + "0" + this.wrgMinute3.toString();
-                } else{
-                  return this.wrgStunde.toString() + ":" + "0" + this.wrgMinute3.toString();
-                }
-              } else {
-                if(this.wrgStunde < 10){
-                  return "0" + this.wrgStunde.toString() + ":" + this.wrgMinute3.toString();
-                } else {
-                  return this.wrgStunde.toString() + ":" + this.wrgMinute3.toString();
-                }
-              }
-            }
-        } else if (task.uhr == "allStunden"){
-          return this.wrgStunde.toString() + this.wrgMinute3.toString();
-        } 
-        return wrgAnswer();
+        if (this.wrgMinute == 0) {
+          if (this.randStunde < 10) {
+            return "0" + this.wrgStunde.toString() + ":" + "00";
+          } else {
+            return this.wrgStunde.toString() + ":" + "00";
+          }
+        } else {
+          if (this.wrgStunde < 10) {
+            return "0" +
+                this.wrgStunde.toString() +
+                ":" +
+                this.wrgMinute.toString();
+          } else {
+            return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
+          }
+        }
+      } else if (task.uhr == "allStunden") {
+        if (this.wrgMinute < 10) {
+          if (this.wrgStunde < 10) {
+            return "0" +
+                this.wrgStunde.toString() +
+                ":" +
+                "0" +
+                this.wrgMinute.toString();
+          } else {
+            return this.wrgStunde.toString() +
+                ":" +
+                "0" +
+                this.wrgMinute.toString();
+          }
+        } else if (this.allMinuten >= 10) {
+          if (this.wrgStunde < 10) {
+            return "0" +
+                this.wrgStunde.toString() +
+                ":" +
+                this.wrgMinute.toString();
+          } else {
+            return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
+          }
+        } else {
+          return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
+        }
+      }
+    }
+    return this.wrgStunde.toString() + ":" + this.wrgMinute.toString();
   }
 
   String wrgAnswer2() {
-    while (this.wrgStunde3 == this.randStunde && (this.wrgMinute4 == this.randMinute || this.wrgMinute5 == this.halbeMinute || this.wrgMinute6 == this.vierMinute)){
-      this.wrgStunde3 = rnd.nextInt(24);
-      this.wrgMinute5 = rnd.nextInt(2) * 30;
-      this.wrgMinute6 = rnd.nextInt(4) * 15;
-    }
+    if (this.wrgStunde2 != this.randStunde ||
+        this.wrgMinute2 != this.randMinute) {
       if (task.uhr == "halbeStunde") {
-           if (this.wrgMinute5 == 0){
-             if(this.wrgStunde3 < 10){
-               return "0" + this.wrgStunde3.toString() + ":" + "00";
-             } else {
-               return this.wrgStunde3.toString() + ":" + "00";
-             }
-            } else{
-              if (this.wrgMinute5 < 10){
-                if(this.wrgStunde3 < 10){
-                  return "0" + this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute5.toString();
-                } else{
-                  return this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute5.toString();
-                }
-              } else {
-                if(this.wrgStunde3 < 10){
-                  return "0" + this.wrgStunde3.toString() + ":" + this.wrgMinute5.toString();
-                } else {
-                  return this.wrgStunde3.toString() + ":" + this.wrgMinute5.toString();
-                }
-              }
-            }
-        } else if (task.uhr == "vollStunde") {
-        if (this.wrgStunde3 < 10) {
-          return "0" + this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute4.toString();
+        if (this.wrgMinute2 == 0) {
+          if (this.wrgStunde2 < 10) {
+            return "0" + this.wrgStunde2.toString() + ":" + "00";
+          } else {
+            return this.wrgStunde2.toString() + ":" + "00";
+          }
         } else {
-          return this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute4.toString();
+          if (this.wrgStunde2 < 10) {
+            return "0" +
+                this.wrgStunde2.toString() +
+                ":" +
+                this.wrgMinute2.toString();
+          }
+          return this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
+        }
+      } else if (task.uhr == "vollStunde") {
+        if (this.wrgStunde2 < 10) {
+          return "0" + this.wrgStunde2.toString() + ":" + "00";
+        } else {
+          return this.wrgStunde2.toString() + ":" + "00";
         }
       } else if (task.uhr == "viertelStunde") {
-          if (this.wrgMinute6 == 0){
-             if(this.wrgStunde3 < 10){
-               return "0" + this.wrgStunde3.toString() + ":" + "00";
-             } else {
-               return this.wrgStunde3.toString() + ":" + "00";
-             }
-            } else{
-              if (this.wrgMinute6 < 10){
-                if(this.wrgStunde3 < 10){
-                  return "0" + this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute6.toString();
-                } else{
-                  return this.wrgStunde3.toString() + ":" + "0" + this.wrgMinute6.toString();
-                }
-              } else {
-                if(this.wrgStunde3 < 10){
-                  return "0" + this.wrgStunde3.toString() + ":" + this.wrgMinute6.toString();
-                } else {
-                  return this.wrgStunde3.toString() + ":" + this.wrgMinute6.toString();
-                }
-              }
-            }
-        } else if (task.uhr == "allStunden"){
-          return this.wrgStunde.toString() + this.wrgMinute3.toString();
+        if (this.wrgMinute2 == 0) {
+          if (this.wrgStunde2 < 10) {
+            return "0" + this.wrgStunde2.toString() + ":" + "00";
+          } else {
+            return this.wrgStunde2.toString() + ":" + "00";
+          }
+        } else {
+          if (this.wrgStunde2 < 10) {
+            return "0" +
+                this.wrgStunde2.toString() +
+                ":" +
+                this.wrgMinute2.toString();
+          } else {
+            return this.wrgStunde2.toString() +
+                ":" +
+                this.wrgMinute2.toString();
+          }
         }
-        return wrgAnswer2();
+      } else if (task.uhr == "allStunden") {
+        if (this.wrgMinute2 < 10) {
+          if (this.wrgStunde2 < 10) {
+            return "0" +
+                this.wrgStunde2.toString() +
+                ":" +
+                "0" +
+                this.wrgMinute2.toString();
+          } else {
+            return this.wrgStunde.toString() +
+                ":" +
+                "0" +
+                this.wrgMinute.toString();
+          }
+        } else if (this.wrgMinute2 >= 10) {
+          if (this.wrgStunde2 < 10) {
+            return "0" +
+                this.wrgStunde2.toString() +
+                ":" +
+                this.wrgMinute2.toString();
+          } else {
+            return this.wrgStunde2.toString() +
+                ":" +
+                this.wrgMinute2.toString();
+          }
+        } else {
+          return this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
+        }
+      }
+    }
+    return this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(this.diffHour);
+    print(this.diffMinute);
     if (task.uhr == "allStunden") {
       return Column(
         children: [
@@ -271,7 +385,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                       nip: BubbleNip.leftCenter,
                       child: Center(
                         child: Text(
-                          task.lamaText!,
+                          "Wie viel Uhr ist es?",
                           style: LamaTextTheme.getStyle(
                               color: LamaColors.black, fontSize: 15),
                         ),
@@ -309,7 +423,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                   height: 270,
                   child: CustomPaint(
                       painter: ClockPainter(task, constraints, randStunde,
-                          randMinute, vierMinute, allMinuten,halbeMinute)),
+                          randMinute, vierMinute, allMinuten)),
                 )),
           ),
           Container(
@@ -323,7 +437,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     alignment: Alignment.bottomLeft,
                     child: Center(
                       child: Text(
-                        showtimer,
+                        showtimer!,
                         style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.w700,
@@ -431,7 +545,161 @@ class ClockTaskState extends State<ClockTaskScreen> {
           ),
         ],
       );
-    } else{
+    } else if (task.uhr == "differentStunden") {
+      return Column(
+        children: [
+          // Lama Speechbubble
+          Container(
+            height: (constraints.maxHeight / 100) * 15,
+            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+            // create space between each childs
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 75),
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    child: Bubble(
+                      nip: BubbleNip.leftCenter,
+                      child: Center(
+                        child: Text(
+                          "Wie viel Zeitunterschied gibt es?",
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 15),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SvgPicture.asset(
+                    "assets/images/svg/lama_head.svg",
+                    semanticsLabel: "Lama Anna",
+                    width: 75,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(this.randStunde.toString() +
+                  ":" +
+                  this.allMinuten.toString() +
+                  setAM()),
+              Text(this.randStunde2.toString() +
+                  ":" +
+                  this.allMinuten2.toString() +
+                  setAM2()),
+              Text(currentValue.toString() + " " + currentValue2.toString()),
+              Text(this.diffHour.toString() + " " + this.diffMinute.toString())
+            ],
+          ),
+          //Items
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 50),
+                child: Container(
+                    height: (constraints.maxHeight / 100) * 20,
+                    child: Container(
+                      width: 160,
+                      height: 160,
+                      child: CustomPaint(
+                          painter: ClockPainter(task, constraints, randStunde,
+                              randMinute, vierMinute, allMinuten)),
+                    )),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 50),
+                child: Container(
+                    height: (constraints.maxHeight / 100) * 20,
+                    child: Container(
+                      width: 160,
+                      height: 160,
+                      child: CustomPaint(
+                          painter: ClockPainter2(task, constraints, randStunde2,
+                              randMinute2, vierMinute2, allMinuten2)),
+                    )),
+              )
+            ],
+          ),
+          Container(
+              height: (constraints.maxHeight / 100) * 27.5,
+              alignment: Alignment.topCenter,
+              child: Container(
+                  margin: EdgeInsets.only(top: 55, left: 85),
+                  padding: EdgeInsets.all(0),
+                  alignment: Alignment.center,
+                  child: Row(
+                    children: [
+                      NumberPicker(
+                        itemCount: 1,
+                        value: currentValue,
+                        maxValue: 23,
+                        minValue: 0,
+                        onChanged: (value) =>
+                            setState(() => currentValue = value),
+                      ),
+                      NumberPicker(
+                        itemCount: 1,
+                        value: currentValue2,
+                        maxValue: 59,
+                        minValue: 0,
+                        onChanged: (value) =>
+                            setState(() => currentValue2 = value),
+                      ),
+                    ],
+                  ))),
+          Container(
+            height: (constraints.maxHeight / 100) * 9,
+            child: Center(
+              child: InkWell(
+                  child: Container(
+                    height: (constraints.maxHeight / 100) * 15,
+                    width: (constraints.maxWidth / 100) * 70,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(25),
+                      ),
+                      color: LamaColors.greenAccent,
+                      boxShadow: [
+                        BoxShadow(
+                            offset: Offset(0, 2),
+                            color: LamaColors.black.withOpacity(0.5))
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Fertig!",
+                        style: LamaTextTheme.getStyle(
+                          fontSize: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    if (this.currentValue == this.diffHour &&
+                        this.currentValue2 == this.diffMinute) {
+                      BlocProvider.of<TaskBloc>(context)
+                          .add(AnswerTaskEvent.initClockTask(correct));
+                    } else {
+                      BlocProvider.of<TaskBloc>(context)
+                          .add(AnswerTaskEvent.initClockTask(incorrect));
+                    }
+                  }),
+            ),
+          ),
+        ],
+      );
+    } else {
       return Column(children: [
         // Lama Speechbubble
         Container(
@@ -450,7 +718,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     nip: BubbleNip.leftCenter,
                     child: Center(
                       child: Text(
-                        task.lamaText!,
+                        "Wie viel Uhr ist es?",
                         style: LamaTextTheme.getStyle(
                             color: LamaColors.black, fontSize: 15),
                       ),
@@ -487,14 +755,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 width: 270,
                 height: 270,
                 child: CustomPaint(
-                    painter: ClockPainter(
-                        task,
-                        constraints,
-                        randStunde,
-                        randMinute,
-                        vierMinute,
-                        allMinuten,
-                        halbeMinute)),
+                    painter: ClockPainter(task, constraints, randStunde,
+                        randMinute, vierMinute, allMinuten)),
               )),
         ),
         Container(
@@ -509,7 +771,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 alignment: Alignment.bottomLeft,
                 child: Center(
                   child: Text(
-                    showtimer,
+                    showtimer!,
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.w700,
@@ -604,27 +866,25 @@ class ClockTaskState extends State<ClockTaskScreen> {
       ]);
     }
   }
-    }
-      
-
+}
 
 class ClockPainter extends CustomPainter {
   final ClockTest task;
   var allMinuten;
+  var wrgStunde;
+  var wrgMinute;
   var rnd = Random();
   var randStunde;
   var randMinute;
   var vierMinute;
-  var halbeMinute;
   final BoxConstraints constraints;
 
   ClockPainter(this.task, this.constraints, randStunde, randMinute, vierMinute,
-      allMinuten, halbeMinute) {
+      allMinuten) {
     this.randStunde = randStunde;
     this.randMinute = randMinute;
     this.vierMinute = vierMinute;
     this.allMinuten = allMinuten;
-    this.halbeMinute = halbeMinute;
   }
 
   @override
@@ -633,35 +893,39 @@ class ClockPainter extends CustomPainter {
     return true;
   }
 
+  int intAnswer() {
+    return randStunde + ":" + allMinuten;
+  }
+
   String strAnswer() {
     if (task.uhr == "halbeStunde") {
-      if (this.halbeMinute == 0) {
+      if (this.randMinute == 0) {
         if (this.randStunde < 10) {
-          return "0" + this.randStunde.toString() + ":" + "0" + this.halbeMinute.toString();
+          return "0" + this.randStunde.toString() + ":" + "00";
         } else {
-          return this.randStunde.toString() + ":" + "0" + this.halbeMinute.toString();
+          return this.randStunde.toString() + ":" + "00";
         }
       } else {
         if (this.randStunde < 10) {
           return "0" +
-              this.randStunde.toString() + ":" + this.halbeMinute.toString();
-        } else{
-            return this.randStunde.toString() + ":" + this.halbeMinute.toString();
+              this.randStunde.toString() +
+              ":" +
+              this.randMinute.toString();
         }
-        
+        return this.randStunde.toString() + ":" + this.randMinute.toString();
       }
     } else if (task.uhr == "vollStunde") {
       if (this.randStunde < 10) {
-        return "0" + this.randStunde.toString() + ":" + "0" + this.randMinute.toString();
+        return "0" + this.randStunde.toString() + ":" + "00";
       } else {
-        return this.randStunde.toString() + ":" + "0" + this.randMinute.toString();
+        return this.randStunde.toString() + ":" + "00";
       }
     } else if (task.uhr == "viertelStunde") {
       if (this.vierMinute == 0) {
         if (this.randStunde < 10) {
-          return "0" + this.randStunde.toString() + ":" + "0" + this.vierMinute.toString();
+          return "0" + this.randStunde.toString() + ":" + "00";
         } else {
-          return this.randStunde.toString() + ":" + "0" + this.vierMinute.toString();
+          return this.randStunde.toString() + ":" + "00";
         }
       } else {
         if (this.randStunde < 10) {
@@ -699,202 +963,718 @@ class ClockPainter extends CustomPainter {
       } else {
         return this.randStunde.toString() + ":" + this.allMinuten.toString();
       }
-    } return strAnswer();
+    }
+    return this.randStunde.toString() + ":" + this.randMinute.toString();
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     // TODO: implement paint
-    var X = size.width / 2;
-    var Y = size.width / 2;
-    var center = Offset(X, Y);
-    var rad = min(X, Y);
+    if (task.uhr == "differentStunden") {
+      var X = size.width / 2;
+      var Y = size.width / 2;
+      var center = Offset(X, Y);
+      var rad = min(X, Y);
 
-    var clockDraw = Paint()..color = LamaColors.white;
+      var clockDraw = Paint()..color = LamaColors.white;
 
-    var clockOutline = Paint()
-      ..color = Colors.black26
-      ..strokeWidth = 16
-      ..style = PaintingStyle.stroke;
+      var clockOutline = Paint()
+        ..color = Colors.black26
+        ..strokeWidth = 16
+        ..style = PaintingStyle.stroke;
 
-    var clockCenter = Paint()..color = Color(0xFFEAECFF);
+      var clockCenter = Paint()..color = Color(0xFFEAECFF);
 
-    var minClock = Paint()
-      ..shader =
-          RadialGradient(colors: [Colors.lightBlue, Colors.blueAccent[700]!])
-              .createShader(Rect.fromCircle(center: center, radius: rad))
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 10;
+      var minClock = Paint()
+        ..shader =
+            RadialGradient(colors: [Colors.lightBlue, Colors.blueAccent[700]!])
+                .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 4;
 
-    var hourClock = Paint()
-      ..shader = RadialGradient(colors: [Color(0xFFEA74AB), Color(0xFFC279FB)])
-          .createShader(Rect.fromCircle(center: center, radius: rad))
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 16;
-    var minClock1 = Paint()
-      ..shader =
-          RadialGradient(colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
-              .createShader(Rect.fromCircle(center: center, radius: rad))
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 10;
+      var hourClock = Paint()
+        ..shader =
+            RadialGradient(colors: [Color(0xFFEA74AB), Color(0xFFC279FB)])
+                .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 6;
+      var minClock1 = Paint()
+        ..shader = RadialGradient(
+                colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
+            .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 4;
 
-    var hourClock1 = Paint()
-      ..shader =
-          RadialGradient(colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
-              .createShader(Rect.fromCircle(center: center, radius: rad))
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 16;
+      var hourClock1 = Paint()
+        ..shader = RadialGradient(
+                colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
+            .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 6;
 
-    var dashNum = Paint()
-      ..color = Colors.black
-      ..strokeWidth = 5;
+      var dashNum = Paint()
+        ..color = Colors.black
+        ..strokeWidth = 5;
 
-    var dashMin = Paint()
-      ..color = Colors.black
-      ..strokeWidth = 1;
+      var dashMin = Paint()
+        ..color = Colors.black
+        ..strokeWidth = 1;
 
-    canvas.drawCircle(center, rad - 40, clockDraw);
-    canvas.drawCircle(center, rad - 40, clockOutline);
+      canvas.drawCircle(center, rad - 40, clockDraw);
+      canvas.drawCircle(center, rad - 40, clockOutline);
 
-    if (task.uhr == "vollStunde") {
-      for (int i = 0; i < 24; i++) {
-        if (i == randStunde) {
-          var minClockX = X + 80 * cos(270 * pi / 180);
-          var minClockY = Y + 80 * sin(270 * pi / 180);
-          var hourClockX = X + 60 * cos((i * 30 + 270) * pi / 180);
-          var hourClockY = Y + 60 * sin((i * 30 + 270) * pi / 180);
-          canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
-          canvas.drawLine(center, Offset(hourClockX, hourClockY), hourClock);
-          print(randStunde.toString() + ":" + randMinute.toString());
-        }
-      }
-    } else if (task.uhr == "halbeStunde") {
-      for (int i = 0; i < 24; i++) {
-        if (halbeMinute == 30) {
-          if (i == randStunde) {
-            var minClockX = X + 80 * cos(90 * pi / 180);
-            var minClockY = Y + 80 * sin(90 * pi / 180);
-            var hourClockX = X + 60 * cos((i * 30 + 285) * pi / 180);
-            var hourClockY = Y + 60 * sin((i * 30 + 285) * pi / 180);
-            canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
-            canvas.drawLine(center, Offset(hourClockX, hourClockY), hourClock);
-            print(randStunde.toString() + ":" + halbeMinute.toString());
-          }
-        } else if (halbeMinute == 0) {
-          for (int i = 0; i < 24; i++) {
-            if (i == randStunde) {
-              var minClockX = X + 80 * cos(270 * pi / 180);
-              var minClockY = Y + 80 * sin(270 * pi / 180);
-              var hourClockX = X + 60 * cos((i * 30 + 270) * pi / 180);
-              var hourClockY = Y + 60 * sin((i * 30 + 270) * pi / 180);
-              canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
-              canvas.drawLine(
-                  center, Offset(hourClockX, hourClockY), hourClock);
-              print(randStunde.toString() + ":" + halbeMinute.toString());
-            }
-          }
-        }
-      }
-    } else if (task.uhr == "viertelStunde") {
-      for (int i = 0; i < 24; i++) {
-        if (vierMinute == 30) {
-          if (i == randStunde) {
-            var minClockX = X + 80 * cos(90 * pi / 180);
-            var minClockY = Y + 80 * sin(90 * pi / 180);
-            var hourClockX = X + 60 * cos((i * 30 + 285) * pi / 180);
-            var hourClockY = Y + 60 * sin((i * 30 + 285) * pi / 180);
-            canvas.drawLine(center, Offset(minClockX, minClockY), minClock1);
-            canvas.drawLine(center, Offset(hourClockX, hourClockY), hourClock1);
-            print(randStunde.toString() + ":" + randMinute.toString());
-          }
-        } else if (vierMinute == 15) {
-          for (int i = 0; i < 24; i++) {
-            if (i == randStunde) {
-              var minClockX = X + 80 * cos(360 * pi / 180);
-              var minClockY = Y + 80 * sin(360 * pi / 180);
-              var hourClockX = X + 60 * cos((i * 30 + 278) * pi / 180);
-              var hourClockY = Y + 60 * sin((i * 30 + 278) * pi / 180);
-              canvas.drawLine(center, Offset(minClockX, minClockY), minClock1);
-              canvas.drawLine(
-                  center, Offset(hourClockX, hourClockY), hourClock1);
-              print(randStunde.toString() + ":" + randMinute.toString());
-            }
-          }
-        } else if (vierMinute == 45) {
-          for (int i = 0; i < 24; i++) {
-            if (i == randStunde) {
-              var minClockX = X + 80 * cos(180 * pi / 180);
-              var minClockY = Y + 80 * sin(180 * pi / 180);
-              var hourClockX = X + 60 * cos((i * 30 + 293) * pi / 180);
-              var hourClockY = Y + 60 * sin((i * 30 + 293) * pi / 180);
-              canvas.drawLine(center, Offset(minClockX, minClockY), minClock1);
-              canvas.drawLine(
-                  center, Offset(hourClockX, hourClockY), hourClock1);
-              print(randStunde.toString() + ":" + randMinute.toString());
-            }
-          }
-        } else if (vierMinute == 0) {
-          for (int i = 0; i < 24; i++) {
-            if (i == randStunde) {
-              var minClockX = X + 80 * cos(270 * pi / 180);
-              var minClockY = Y + 80 * sin(270 * pi / 180);
-              var hourClockX = X + 60 * cos((i * 30 + 270) * pi / 180);
-              var hourClockY = Y + 60 * sin((i * 30 + 270) * pi / 180);
-              canvas.drawLine(center, Offset(minClockX, minClockY), minClock1);
-              canvas.drawLine(
-                  center, Offset(hourClockX, hourClockY), hourClock1);
-              print(randStunde.toString() + ":" + randMinute.toString());
-            }
-          }
-        }
-      }
-    } else if (task.uhr == "allStunden") {
       for (int j = 0; j < 60; j++) {
         if (j == allMinuten) {
           for (int i = 0; i < 24; i++) {
             if (i == randStunde) {
-              var minClockX = X + 80 * cos((270 + j * 6) * pi / 180);
-              var minClockY = Y + 80 * sin((270 + j * 6) * pi / 180);
+              var minClockX = X + 60 * cos((270 + j * 6) * pi / 180);
+              var minClockY = Y + 60 * sin((270 + j * 6) * pi / 180);
               var hourClockX =
-                  X + 60 * cos((i * 30 + 270 + j * 0.5) * pi / 180);
+                  X + 40 * cos((i * 30 + 270 + j * 0.5) * pi / 180);
               var hourClockY =
-                  Y + 60 * sin((i * 30 + 270 + j * 0.5) * pi / 180);
+                  Y + 40 * sin((i * 30 + 270 + j * 0.5) * pi / 180);
               canvas.drawLine(center, Offset(minClockX, minClockY), minClock1);
               canvas.drawLine(
                   center, Offset(hourClockX, hourClockY), hourClock1);
-              print(randStunde.toString() + ":" + allMinuten.toString());
             }
           }
         }
       }
-    }
-    canvas.drawCircle(center, 16, clockCenter);
+      canvas.drawCircle(center, 10, clockCenter);
 
-    var outerClock = rad;
-    var innerClock = rad - 20;
+      var outerClock = rad;
+      var innerClock = rad - 20;
 
-    var outerMinute = rad;
-    var innerMinute = rad - 14;
+      var outerMinute = rad;
+      var innerMinute = rad - 14;
 
-    for (double i = 0; i < 360; i += 30) {
-      for (double i = 0; i < 360; i += 6) {
-        var x1 = X - outerMinute * cos(i * pi / 180);
-        var y1 = X - outerMinute * sin(i * pi / 180);
+      for (double i = 0; i < 360; i += 30) {
+        for (double i = 0; i < 360; i += 6) {
+          var x1 = X - outerMinute * cos(i * pi / 180);
+          var y1 = X - outerMinute * sin(i * pi / 180);
 
-        var x2 = X - innerMinute * cos(i * pi / 180);
-        var y2 = X - innerMinute * sin(i * pi / 180);
-        canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashMin);
+          var x2 = X - innerMinute * cos(i * pi / 180);
+          var y2 = X - innerMinute * sin(i * pi / 180);
+          canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashMin);
+        }
+        var x1 = X - outerClock * cos(i * pi / 180);
+        var y1 = X - outerClock * sin(i * pi / 180);
+
+        var x2 = X - innerClock * cos(i * pi / 180);
+        var y2 = X - innerClock * sin(i * pi / 180);
+        canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashNum);
       }
-      var x1 = X - outerClock * cos(i * pi / 180);
-      var y1 = X - outerClock * sin(i * pi / 180);
+    } else {
+      var X = size.width / 2;
+      var Y = size.width / 2;
+      var center = Offset(X, Y);
+      var rad = min(X, Y);
 
-      var x2 = X - innerClock * cos(i * pi / 180);
-      var y2 = X - innerClock * sin(i * pi / 180);
-      canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashNum);
+      var clockDraw = Paint()..color = LamaColors.white;
+
+      var clockOutline = Paint()
+        ..color = Colors.black26
+        ..strokeWidth = 16
+        ..style = PaintingStyle.stroke;
+
+      var clockCenter = Paint()..color = Color(0xFFEAECFF);
+
+      var minClock = Paint()
+        ..shader =
+            RadialGradient(colors: [Colors.lightBlue, Colors.blueAccent[700]!])
+                .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 10;
+
+      var hourClock = Paint()
+        ..shader =
+            RadialGradient(colors: [Color(0xFFEA74AB), Color(0xFFC279FB)])
+                .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 16;
+      var minClock1 = Paint()
+        ..shader = RadialGradient(
+                colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
+            .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 10;
+
+      var hourClock1 = Paint()
+        ..shader = RadialGradient(
+                colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
+            .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 16;
+
+      var dashNum = Paint()
+        ..color = Colors.black
+        ..strokeWidth = 5;
+
+      var dashMin = Paint()
+        ..color = Colors.black
+        ..strokeWidth = 1;
+
+      canvas.drawCircle(center, rad - 40, clockDraw);
+      canvas.drawCircle(center, rad - 40, clockOutline);
+
+      if (task.uhr == "vollStunde") {
+        for (int i = 0; i < 24; i++) {
+          if (i == randStunde) {
+            var minClockX = X + 80 * cos(270 * pi / 180);
+            var minClockY = Y + 80 * sin(270 * pi / 180);
+            var hourClockX = X + 60 * cos((i * 30 + 270) * pi / 180);
+            var hourClockY = Y + 60 * sin((i * 30 + 270) * pi / 180);
+            canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
+            canvas.drawLine(center, Offset(hourClockX, hourClockY), hourClock);
+            print(randStunde.toString() + ":" + randMinute.toString());
+          }
+        }
+      } else if (task.uhr == "halbeStunde") {
+        for (int i = 0; i < 24; i++) {
+          if (randMinute == 30) {
+            if (i == randStunde) {
+              var minClockX = X + 80 * cos(90 * pi / 180);
+              var minClockY = Y + 80 * sin(90 * pi / 180);
+              var hourClockX = X + 60 * cos((i * 30 + 285) * pi / 180);
+              var hourClockY = Y + 60 * sin((i * 30 + 285) * pi / 180);
+              canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
+              canvas.drawLine(
+                  center, Offset(hourClockX, hourClockY), hourClock);
+              print(randStunde.toString() + ":" + randMinute.toString());
+            }
+          } else if (randMinute == 0) {
+            for (int i = 0; i < 24; i++) {
+              if (i == randStunde) {
+                var minClockX = X + 80 * cos(270 * pi / 180);
+                var minClockY = Y + 80 * sin(270 * pi / 180);
+                var hourClockX = X + 60 * cos((i * 30 + 270) * pi / 180);
+                var hourClockY = Y + 60 * sin((i * 30 + 270) * pi / 180);
+                canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
+                canvas.drawLine(
+                    center, Offset(hourClockX, hourClockY), hourClock);
+                print(randStunde.toString() + ":" + randMinute.toString());
+              }
+            }
+          }
+        }
+      } else if (task.uhr == "viertelStunde") {
+        for (int i = 0; i < 24; i++) {
+          if (vierMinute == 30) {
+            if (i == randStunde) {
+              var minClockX = X + 80 * cos(90 * pi / 180);
+              var minClockY = Y + 80 * sin(90 * pi / 180);
+              var hourClockX = X + 60 * cos((i * 30 + 285) * pi / 180);
+              var hourClockY = Y + 60 * sin((i * 30 + 285) * pi / 180);
+              canvas.drawLine(center, Offset(minClockX, minClockY), minClock1);
+              canvas.drawLine(
+                  center, Offset(hourClockX, hourClockY), hourClock1);
+              print(randStunde.toString() + ":" + randMinute.toString());
+            }
+          } else if (vierMinute == 15) {
+            for (int i = 0; i < 24; i++) {
+              if (i == randStunde) {
+                var minClockX = X + 80 * cos(360 * pi / 180);
+                var minClockY = Y + 80 * sin(360 * pi / 180);
+                var hourClockX = X + 60 * cos((i * 30 + 278) * pi / 180);
+                var hourClockY = Y + 60 * sin((i * 30 + 278) * pi / 180);
+                canvas.drawLine(
+                    center, Offset(minClockX, minClockY), minClock1);
+                canvas.drawLine(
+                    center, Offset(hourClockX, hourClockY), hourClock1);
+                print(randStunde.toString() + ":" + randMinute.toString());
+              }
+            }
+          } else if (vierMinute == 45) {
+            for (int i = 0; i < 24; i++) {
+              if (i == randStunde) {
+                var minClockX = X + 80 * cos(180 * pi / 180);
+                var minClockY = Y + 80 * sin(180 * pi / 180);
+                var hourClockX = X + 60 * cos((i * 30 + 293) * pi / 180);
+                var hourClockY = Y + 60 * sin((i * 30 + 293) * pi / 180);
+                canvas.drawLine(
+                    center, Offset(minClockX, minClockY), minClock1);
+                canvas.drawLine(
+                    center, Offset(hourClockX, hourClockY), hourClock1);
+                print(randStunde.toString() + ":" + randMinute.toString());
+              }
+            }
+          } else if (vierMinute == 0) {
+            for (int i = 0; i < 24; i++) {
+              if (i == randStunde) {
+                var minClockX = X + 80 * cos(270 * pi / 180);
+                var minClockY = Y + 80 * sin(270 * pi / 180);
+                var hourClockX = X + 60 * cos((i * 30 + 270) * pi / 180);
+                var hourClockY = Y + 60 * sin((i * 30 + 270) * pi / 180);
+                canvas.drawLine(
+                    center, Offset(minClockX, minClockY), minClock1);
+                canvas.drawLine(
+                    center, Offset(hourClockX, hourClockY), hourClock1);
+                print(randStunde.toString() + ":" + randMinute.toString());
+              }
+            }
+          }
+        }
+      } else if (task.uhr == "allStunden") {
+        for (int j = 0; j < 60; j++) {
+          if (j == allMinuten) {
+            for (int i = 0; i < 24; i++) {
+              if (i == randStunde) {
+                var minClockX = X + 80 * cos((270 + j * 6) * pi / 180);
+                var minClockY = Y + 80 * sin((270 + j * 6) * pi / 180);
+                var hourClockX =
+                    X + 60 * cos((i * 30 + 270 + j * 0.5) * pi / 180);
+                var hourClockY =
+                    Y + 60 * sin((i * 30 + 270 + j * 0.5) * pi / 180);
+                canvas.drawLine(
+                    center, Offset(minClockX, minClockY), minClock1);
+                canvas.drawLine(
+                    center, Offset(hourClockX, hourClockY), hourClock1);
+                print(randStunde.toString() + ":" + allMinuten.toString());
+              }
+            }
+          }
+        }
+      }
+      canvas.drawCircle(center, 16, clockCenter);
+
+      var outerClock = rad;
+      var innerClock = rad - 20;
+
+      var outerMinute = rad;
+      var innerMinute = rad - 14;
+
+      for (double i = 0; i < 360; i += 30) {
+        for (double i = 0; i < 360; i += 6) {
+          var x1 = X - outerMinute * cos(i * pi / 180);
+          var y1 = X - outerMinute * sin(i * pi / 180);
+
+          var x2 = X - innerMinute * cos(i * pi / 180);
+          var y2 = X - innerMinute * sin(i * pi / 180);
+          canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashMin);
+        }
+        var x1 = X - outerClock * cos(i * pi / 180);
+        var y1 = X - outerClock * sin(i * pi / 180);
+
+        var x2 = X - innerClock * cos(i * pi / 180);
+        var y2 = X - innerClock * sin(i * pi / 180);
+        canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashNum);
+      }
+    }
+  }
+}
+
+class ClockPainter2 extends CustomPainter {
+  final ClockTest task;
+  var allMinuten2;
+  var wrgStunde;
+  var wrgMinute;
+  var rnd2 = Random();
+  var randStunde2;
+  var randMinute2;
+  var vierMinute2;
+  final BoxConstraints constraints;
+
+  ClockPainter2(this.task, this.constraints, randStunde2, randMinute2,
+      vierMinute2, allMinuten2) {
+    this.randStunde2 = randStunde2;
+    this.randMinute2 = randMinute2;
+    this.vierMinute2 = vierMinute2;
+    this.allMinuten2 = allMinuten2;
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    // TODO: implement shouldRepaint
+    return true;
+  }
+
+  int intAnswer() {
+    return randStunde2 + ":" + allMinuten2;
+  }
+
+  String strAnswer() {
+    if (task.uhr == "halbeStunde") {
+      if (this.randMinute2 == 0) {
+        if (this.randStunde2 < 10) {
+          return "0" + this.randStunde2.toString() + ":" + "00";
+        } else {
+          return this.randStunde2.toString() + ":" + "00";
+        }
+      } else {
+        if (this.randStunde2 < 10) {
+          return "0" +
+              this.randStunde2.toString() +
+              ":" +
+              this.randMinute2.toString();
+        }
+        return this.randStunde2.toString() + ":" + this.randMinute2.toString();
+      }
+    } else if (task.uhr == "vollStunde") {
+      if (this.randStunde2 < 10) {
+        return "0" + this.randStunde2.toString() + ":" + "00";
+      } else {
+        return this.randStunde2.toString() + ":" + "00";
+      }
+    } else if (task.uhr == "viertelStunde") {
+      if (this.vierMinute2 == 0) {
+        if (this.randStunde2 < 10) {
+          return "0" + this.randStunde2.toString() + ":" + "00";
+        } else {
+          return this.randStunde2.toString() + ":" + "00";
+        }
+      } else {
+        if (this.randStunde2 < 10) {
+          return "0" +
+              this.randStunde2.toString() +
+              ":" +
+              this.vierMinute2.toString();
+        } else {
+          return this.randStunde2.toString() +
+              ":" +
+              this.vierMinute2.toString();
+        }
+      }
+    } else if (task.uhr == "allStunden") {
+      if (this.allMinuten2 < 10) {
+        if (this.randStunde2 < 10) {
+          return "0" +
+              this.randStunde2.toString() +
+              ":" +
+              "0" +
+              this.allMinuten2.toString();
+        } else {
+          return this.randStunde2.toString() +
+              ":" +
+              "0" +
+              this.allMinuten2.toString();
+        }
+      } else if (this.allMinuten2 >= 10) {
+        if (this.randStunde2 < 10) {
+          return "0" +
+              this.randStunde2.toString() +
+              ":" +
+              this.allMinuten2.toString();
+        } else {
+          return this.randStunde2.toString() +
+              ":" +
+              this.allMinuten2.toString();
+        }
+      } else {
+        return this.randStunde2.toString() + ":" + this.allMinuten2.toString();
+      }
+    }
+    return this.randStunde2.toString() + ":" + this.randMinute2.toString();
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // TODO: implement paint
+
+    if (task.uhr == "differentStunden") {
+      var X = size.width / 2;
+      var Y = size.width / 2;
+      var center = Offset(X, Y);
+      var rad = min(X, Y);
+
+      var clockDraw = Paint()..color = LamaColors.white;
+
+      var clockOutline = Paint()
+        ..color = Colors.black26
+        ..strokeWidth = 16
+        ..style = PaintingStyle.stroke;
+
+      var clockCenter = Paint()..color = Color(0xFFEAECFF);
+
+      var minClock = Paint()
+        ..shader =
+            RadialGradient(colors: [Colors.lightBlue, Colors.blueAccent[700]!])
+                .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 10;
+
+      var hourClock = Paint()
+        ..shader =
+            RadialGradient(colors: [Color(0xFFEA74AB), Color(0xFFC279FB)])
+                .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 16;
+      var minClock1 = Paint()
+        ..shader = RadialGradient(
+                colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
+            .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 4;
+
+      var hourClock1 = Paint()
+        ..shader = RadialGradient(
+                colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
+            .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 6;
+
+      var dashNum = Paint()
+        ..color = Colors.black
+        ..strokeWidth = 5;
+
+      var dashMin = Paint()
+        ..color = Colors.black
+        ..strokeWidth = 1;
+
+      canvas.drawCircle(center, rad - 40, clockDraw);
+      canvas.drawCircle(center, rad - 40, clockOutline);
+
+      for (int j = 0; j < 60; j++) {
+        if (j == allMinuten2) {
+          for (int i = 0; i < 24; i++) {
+            if (i == randStunde2) {
+              var minClockX = X + 60 * cos((270 + j * 6) * pi / 180);
+              var minClockY = Y + 60 * sin((270 + j * 6) * pi / 180);
+              var hourClockX =
+                  X + 40 * cos((i * 30 + 270 + j * 0.5) * pi / 180);
+              var hourClockY =
+                  Y + 40 * sin((i * 30 + 270 + j * 0.5) * pi / 180);
+              canvas.drawLine(center, Offset(minClockX, minClockY), minClock1);
+              canvas.drawLine(
+                  center, Offset(hourClockX, hourClockY), hourClock1);
+            }
+          }
+        }
+      }
+      canvas.drawCircle(center, 10, clockCenter);
+
+      var outerClock = rad;
+      var innerClock = rad - 20;
+
+      var outerMinute = rad;
+      var innerMinute = rad - 14;
+
+      for (double i = 0; i < 360; i += 30) {
+        for (double i = 0; i < 360; i += 6) {
+          var x1 = X - outerMinute * cos(i * pi / 180);
+          var y1 = X - outerMinute * sin(i * pi / 180);
+
+          var x2 = X - innerMinute * cos(i * pi / 180);
+          var y2 = X - innerMinute * sin(i * pi / 180);
+          canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashMin);
+        }
+        var x1 = X - outerClock * cos(i * pi / 180);
+        var y1 = X - outerClock * sin(i * pi / 180);
+
+        var x2 = X - innerClock * cos(i * pi / 180);
+        var y2 = X - innerClock * sin(i * pi / 180);
+        canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashNum);
+      }
+    } else {
+      var X = size.width / 2;
+      var Y = size.width / 2;
+      var center = Offset(X, Y);
+      var rad = min(X, Y);
+
+      var clockDraw = Paint()..color = LamaColors.white;
+
+      var clockOutline = Paint()
+        ..color = Colors.black26
+        ..strokeWidth = 16
+        ..style = PaintingStyle.stroke;
+
+      var clockCenter = Paint()..color = Color(0xFFEAECFF);
+
+      var minClock = Paint()
+        ..shader =
+            RadialGradient(colors: [Colors.lightBlue, Colors.blueAccent[700]!])
+                .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 10;
+
+      var hourClock = Paint()
+        ..shader =
+            RadialGradient(colors: [Color(0xFFEA74AB), Color(0xFFC279FB)])
+                .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 16;
+      var minClock1 = Paint()
+        ..shader = RadialGradient(
+                colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
+            .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 10;
+
+      var hourClock1 = Paint()
+        ..shader = RadialGradient(
+                colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
+            .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 16;
+
+      var dashNum = Paint()
+        ..color = Colors.black
+        ..strokeWidth = 5;
+
+      var dashMin = Paint()
+        ..color = Colors.black
+        ..strokeWidth = 1;
+
+      canvas.drawCircle(center, rad - 40, clockDraw);
+      canvas.drawCircle(center, rad - 40, clockOutline);
+
+      if (task.uhr == "vollStunde") {
+        for (int i = 0; i < 24; i++) {
+          if (i == randStunde2) {
+            var minClockX = X + 80 * cos(270 * pi / 180);
+            var minClockY = Y + 80 * sin(270 * pi / 180);
+            var hourClockX = X + 60 * cos((i * 30 + 270) * pi / 180);
+            var hourClockY = Y + 60 * sin((i * 30 + 270) * pi / 180);
+            canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
+            canvas.drawLine(center, Offset(hourClockX, hourClockY), hourClock);
+            print(randStunde2.toString() + ":" + randMinute2.toString());
+          }
+        }
+      } else if (task.uhr == "halbeStunde") {
+        for (int i = 0; i < 24; i++) {
+          if (randMinute2 == 30) {
+            if (i == randStunde2) {
+              var minClockX = X + 80 * cos(90 * pi / 180);
+              var minClockY = Y + 80 * sin(90 * pi / 180);
+              var hourClockX = X + 60 * cos((i * 30 + 285) * pi / 180);
+              var hourClockY = Y + 60 * sin((i * 30 + 285) * pi / 180);
+              canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
+              canvas.drawLine(
+                  center, Offset(hourClockX, hourClockY), hourClock);
+              print(randStunde2.toString() + ":" + randMinute2.toString());
+            }
+          } else if (randMinute2 == 0) {
+            for (int i = 0; i < 24; i++) {
+              if (i == randStunde2) {
+                var minClockX = X + 80 * cos(270 * pi / 180);
+                var minClockY = Y + 80 * sin(270 * pi / 180);
+                var hourClockX = X + 60 * cos((i * 30 + 270) * pi / 180);
+                var hourClockY = Y + 60 * sin((i * 30 + 270) * pi / 180);
+                canvas.drawLine(center, Offset(minClockX, minClockY), minClock);
+                canvas.drawLine(
+                    center, Offset(hourClockX, hourClockY), hourClock);
+                print(randStunde2.toString() + ":" + randMinute2.toString());
+              }
+            }
+          }
+        }
+      } else if (task.uhr == "viertelStunde") {
+        for (int i = 0; i < 24; i++) {
+          if (vierMinute2 == 30) {
+            if (i == randStunde2) {
+              var minClockX = X + 80 * cos(90 * pi / 180);
+              var minClockY = Y + 80 * sin(90 * pi / 180);
+              var hourClockX = X + 60 * cos((i * 30 + 285) * pi / 180);
+              var hourClockY = Y + 60 * sin((i * 30 + 285) * pi / 180);
+              canvas.drawLine(center, Offset(minClockX, minClockY), minClock1);
+              canvas.drawLine(
+                  center, Offset(hourClockX, hourClockY), hourClock1);
+              print(randStunde2.toString() + ":" + randMinute2.toString());
+            }
+          } else if (vierMinute2 == 15) {
+            for (int i = 0; i < 24; i++) {
+              if (i == randStunde2) {
+                var minClockX = X + 80 * cos(360 * pi / 180);
+                var minClockY = Y + 80 * sin(360 * pi / 180);
+                var hourClockX = X + 60 * cos((i * 30 + 278) * pi / 180);
+                var hourClockY = Y + 60 * sin((i * 30 + 278) * pi / 180);
+                canvas.drawLine(
+                    center, Offset(minClockX, minClockY), minClock1);
+                canvas.drawLine(
+                    center, Offset(hourClockX, hourClockY), hourClock1);
+                print(randStunde2.toString() + ":" + randMinute2.toString());
+              }
+            }
+          } else if (vierMinute2 == 45) {
+            for (int i = 0; i < 24; i++) {
+              if (i == randStunde2) {
+                var minClockX = X + 80 * cos(180 * pi / 180);
+                var minClockY = Y + 80 * sin(180 * pi / 180);
+                var hourClockX = X + 60 * cos((i * 30 + 293) * pi / 180);
+                var hourClockY = Y + 60 * sin((i * 30 + 293) * pi / 180);
+                canvas.drawLine(
+                    center, Offset(minClockX, minClockY), minClock1);
+                canvas.drawLine(
+                    center, Offset(hourClockX, hourClockY), hourClock1);
+                print(randStunde2.toString() + ":" + randMinute2.toString());
+              }
+            }
+          } else if (vierMinute2 == 0) {
+            for (int i = 0; i < 24; i++) {
+              if (i == randStunde2) {
+                var minClockX = X + 80 * cos(270 * pi / 180);
+                var minClockY = Y + 80 * sin(270 * pi / 180);
+                var hourClockX = X + 60 * cos((i * 30 + 270) * pi / 180);
+                var hourClockY = Y + 60 * sin((i * 30 + 270) * pi / 180);
+                canvas.drawLine(
+                    center, Offset(minClockX, minClockY), minClock1);
+                canvas.drawLine(
+                    center, Offset(hourClockX, hourClockY), hourClock1);
+                print(randStunde2.toString() + ":" + randMinute2.toString());
+              }
+            }
+          }
+        }
+      } else if (task.uhr == "allStunden2") {
+        for (int j = 0; j < 60; j++) {
+          if (j == allMinuten2) {
+            for (int i = 0; i < 24; i++) {
+              if (i == randStunde2) {
+                var minClockX = X + 80 * cos((270 + j * 6) * pi / 180);
+                var minClockY = Y + 80 * sin((270 + j * 6) * pi / 180);
+                var hourClockX =
+                    X + 60 * cos((i * 30 + 270 + j * 0.5) * pi / 180);
+                var hourClockY =
+                    Y + 60 * sin((i * 30 + 270 + j * 0.5) * pi / 180);
+                canvas.drawLine(
+                    center, Offset(minClockX, minClockY), minClock1);
+                canvas.drawLine(
+                    center, Offset(hourClockX, hourClockY), hourClock1);
+                print(randStunde2.toString() + ":" + allMinuten2.toString());
+              }
+            }
+          }
+        }
+      }
+      canvas.drawCircle(center, 16, clockCenter);
+
+      var outerClock = rad;
+      var innerClock = rad - 20;
+
+      var outerMinute = rad;
+      var innerMinute = rad - 14;
+
+      for (double i = 0; i < 360; i += 30) {
+        for (double i = 0; i < 360; i += 6) {
+          var x1 = X - outerMinute * cos(i * pi / 180);
+          var y1 = X - outerMinute * sin(i * pi / 180);
+
+          var x2 = X - innerMinute * cos(i * pi / 180);
+          var y2 = X - innerMinute * sin(i * pi / 180);
+          canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashMin);
+        }
+        var x1 = X - outerClock * cos(i * pi / 180);
+        var y1 = X - outerClock * sin(i * pi / 180);
+
+        var x2 = X - innerClock * cos(i * pi / 180);
+        var y2 = X - innerClock * sin(i * pi / 180);
+        canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashNum);
+      }
     }
   }
 }
