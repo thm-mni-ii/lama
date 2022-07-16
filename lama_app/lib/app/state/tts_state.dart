@@ -29,4 +29,7 @@ class VoiceAnswerTtsState extends TTSState {
 
 class SetDefaultState extends TTSState {}
 
-class IsNotEmptyState extends TTSState {}
+class IsNotEmptyState extends TTSState {
+  String question;
+  IsNotEmptyState(this.question);
+}

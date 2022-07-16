@@ -14,6 +14,19 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
   final FlutterTts flutterTts = FlutterTts();
   String text = "";
   String lang = "";
+
+  @override
+  void onChange(Change<TTSState> change) {
+    super.onChange(change);
+    print(change);
+  }
+
+  @override
+  void onTransition(Transition<TTSEvent, TTSState> transition) {
+    super.onTransition(transition);
+    print(transition);
+  }
+
   //
   //
   readText(String text,String lang) async {
@@ -32,12 +45,14 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
   }
 
   TTSBloc() : super(EmptyTTSState()){
+    log(' AnswerOnInitEvent in bloc: ${state}');
     on<AnswerOnInitEvent>((event, emit) async {
        readText(event.answer, event.questionLanguage);
+       log("AnswerOnInitEvent");
        //log('data: $AnswerOnInitEvent');
        //log('event.answer: ${event.answer}');
        //readText("sample", "aaa");
-       emit(IsNotEmptyState());
+       emit(IsNotEmptyState(event.answer));
     });
     on<ClickOnWordQuestion>((event, emit) async {
        readText(event.texttoPlay, event.answerLanguage);
@@ -54,10 +69,12 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
       emit(EmptyTTSState());
     });
     on<IsNotEmptyStateEvent>((event, emit) async {
-      emit(IsNotEmptyState());
+      log("IsNotEmptyStateEvent");
+      emit(IsNotEmptyState(""));
     });
     on<ReadQuestion>((event, emit) async {
     readText(event.question, event.questionLanguage);
+    emit(IsNotEmptyState(event.question));
     });
   }
 

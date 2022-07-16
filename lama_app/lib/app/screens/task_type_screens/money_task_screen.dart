@@ -174,7 +174,9 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
               alignment: Alignment.centerLeft,
               child: BlocBuilder<TTSBloc, TTSState>(
                 builder: (context, state) {
+
                   if (state is EmptyTTSState && !alreadySaid) {
+
                     context.read<TTSBloc>().add(
                     AnswerOnInitEvent(text,"Deutsch"));
                     QuestionText.setText(text, "Deutsch");

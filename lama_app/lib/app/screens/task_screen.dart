@@ -32,6 +32,8 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
 
+import '../bloc/Observer.dart';
+
 ///[StatefulWidget] for the screen framework containing the current Task Widget.
 ///
 ///Author: K.Binder
@@ -141,9 +143,20 @@ class TaskScreenState extends State<TaskScreen> {
                                       fontWeight: FontWeight.w500)),
                               BlocProvider(
                                 create: (context) => TTSBloc(),
-                                child: BlocBuilder<TTSBloc, TTSState>(
-                                builder: (context, state) {
-                                  return Align(
+
+                                  child: BlocBuilder<TTSBloc, TTSState>(
+                                  builder: (context, state) {
+                                    blocObserver: Observer();
+
+                                  log('state bloc provider: $state');
+                                  log('questionForTtsBloc: $questionForTtsBloc');
+                                  if (state is IsNotEmptyState) {
+                                    questionForTtsBloc = state.question;
+                                    log('state if IsNotEmptyState: ${state}');
+                                    log('state.question: ${state.question}');
+                                  }
+
+                                    return Align(
                                     alignment: Alignment.centerRight,
                                     child: InkWell(
                                         child: CircleAvatar(
@@ -159,6 +172,7 @@ class TaskScreenState extends State<TaskScreen> {
                                         onTap: () =>
                                         {
                                         log('myQuestion: ${questionForTtsBloc}'),
+                                          log('state on tap: ${state}'),
 
                                           BlocProvider.of<TTSBloc>(context).
                                           add(ReadQuestion(questionForTtsBloc, langOfQuestion))
@@ -171,8 +185,10 @@ class TaskScreenState extends State<TaskScreen> {
                                         }
                                     ),
                                   );
-                                }
-                                ),
+  },
+),
+
+
                               ),
                             ],
                           ),
@@ -341,68 +357,95 @@ class TaskScreenState extends State<TaskScreen> {
       Task task, BoxConstraints constraints) {
     switch (task.type) {
       case "4Cards":
-        Task4Cards myTask = (task as Task4Cards);
-        questionForTtsBloc = myTask.question!;
-        if (myTask.questionLanguage == null) {
-          langOfQuestion = "de";
-        }
-
+        // Task4Cards myTask = (task as Task4Cards);
+        // questionForTtsBloc = myTask.question!;
+        // if (myTask.questionLanguage == null) {
+        //   langOfQuestion = "de";
+        // }
 
         return FourCardTaskScreenStateful(task as Task4Cards, constraints);
+
+
       case "Zerlegung":
-        TaskZerlegung myTask = (task as TaskZerlegung);
-        questionForTtsBloc = myTask.lamaText!;
-        langOfQuestion = "de";
+        // TaskZerlegung myTask = (task as TaskZerlegung);
+        // questionForTtsBloc = myTask.lamaText!;
+        // langOfQuestion = "de";
 
         return ZerlegungTaskScreen(
             task: task as TaskZerlegung?, constraints: constraints);
+
       case "NumberLine":
         return NumberLineTaskScreen(task as TaskNumberLine, constraints);
+
+
       case "ClozeTest":
-        TaskClozeTest myTask = (task as TaskClozeTest);
-        questionForTtsBloc = myTask.question!;
-        if (myTask.questionLanguage == null) {
-          langOfQuestion = "de";
-        } else langOfQuestion = myTask.questionLanguage!;
+        // TaskClozeTest myTask = (task as TaskClozeTest);
+        // questionForTtsBloc = myTask.question!;
+        // if (myTask.questionLanguage == null) {
+        //   langOfQuestion = "de";
+        // } else langOfQuestion = myTask.questionLanguage!;
 
         return ClozeTestTaskScreen(task as TaskClozeTest, constraints);
+
+
       case "Clock":
         return ClockTaskScreen(task as ClockTest, constraints);
+
+
       case "MarkWords":
         return MarkWordsScreen(task as TaskMarkWords, constraints);
+
+
       case "MatchCategory":
-        TaskMatchCategory myTask = (task as TaskMatchCategory);
-        questionForTtsBloc = myTask.lamaText!;
-        if (myTask.questionLanguage == null) {
-          langOfQuestion = "de";
-        } else langOfQuestion = myTask.questionLanguage!;
+        // TaskMatchCategory myTask = (task as TaskMatchCategory);
+        // questionForTtsBloc = myTask.lamaText!;
+        // if (myTask.questionLanguage == null) {
+        //   langOfQuestion = "de";
+        // } else langOfQuestion = myTask.questionLanguage!;
 
         return MatchCategoryTaskScreen(task as TaskMatchCategory, constraints);
+
+
       case "GridSelect":
         // todo net generisch: Markiere X Länder
-        TaskGridSelect myTask = (task as TaskGridSelect);
-        questionForTtsBloc = myTask.lamaText!;
-        langOfQuestion = "de";
+        // TaskGridSelect myTask = (task as TaskGridSelect);
+        // questionForTtsBloc = myTask.lamaText!;
+        // langOfQuestion = "de";
 
         return GridSelectTaskScreen(
             task as TaskGridSelect, constraints, GridSelectTaskBloc());
+
+
       case "MoneyTask":
+        // // todo from screen das Question zu holen
+        // TaskMoney myTask = (task as TaskMoney);
+        // questionForTtsBloc = myTask.lamaText!;
+        // langOfQuestion = "de";
+
         return MoneyTaskScreen(task as TaskMoney, constraints);
+
+
       case "VocableTest":
-        TaskVocableTest myTask = (task as TaskVocableTest);
-        questionForTtsBloc = myTask.lamaText!;
-        // todo null with !
-        langOfQuestion = myTask.questionLanguage;
+        // TaskVocableTest myTask = (task as TaskVocableTest);
+        // questionForTtsBloc = myTask.lamaText!;
+        // // todo null with !
+        // langOfQuestion = myTask.questionLanguage;
 
         return VocableTestTaskScreen(task as TaskVocableTest, constraints);
+
+
       case "Connect":
-        TaskConnect myTask = (task as TaskConnect);
-        questionForTtsBloc = myTask.lamaText!;
-        langOfQuestion = "de";
+        // TaskConnect myTask = (task as TaskConnect);
+        // questionForTtsBloc = myTask.lamaText!;
+        // langOfQuestion = "de";
 
         return ConnectTaskScreen(task as TaskConnect, constraints);
+
+
       case "Equation":
         return EquationTaskScreen(task as TaskEquation, constraints);
+
+
       case "Buchstabieren":
         // precacheAllImagesForTask(task, context);
         randomNummer = erstelleEineRandomNummer(task);
