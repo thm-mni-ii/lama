@@ -584,22 +584,22 @@ class ClockTaskState extends State<ClockTaskScreen> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(this.randStunde.toString() +
-                  ":" +
-                  this.allMinuten.toString() +
-                  setAM()),
-              Text(this.randStunde2.toString() +
-                  ":" +
-                  this.allMinuten2.toString() +
-                  setAM2()),
-              Text(currentValue.toString() + " " + currentValue2.toString()),
-              Text(this.diffHour.toString() + " " + this.diffMinute.toString())
-            ],
+          Container(
+            padding: EdgeInsets.only(left: 55, right: 50),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(setAM(),
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Icon(Icons.arrow_right),
+                Text(setAM2(),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
+              ],
+            ),
           ),
+
           //Items
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -632,32 +632,54 @@ class ClockTaskState extends State<ClockTaskScreen> {
             ],
           ),
           Container(
-              height: (constraints.maxHeight / 100) * 27.5,
+              margin: EdgeInsets.only(top: 70),
               alignment: Alignment.topCenter,
-              child: Container(
-                  margin: EdgeInsets.only(top: 55, left: 85),
-                  padding: EdgeInsets.all(0),
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: [
-                      NumberPicker(
-                        itemCount: 1,
-                        value: currentValue,
-                        maxValue: 23,
-                        minValue: 0,
-                        onChanged: (value) =>
-                            setState(() => currentValue = value),
-                      ),
-                      NumberPicker(
-                        itemCount: 1,
-                        value: currentValue2,
-                        maxValue: 59,
-                        minValue: 0,
-                        onChanged: (value) =>
-                            setState(() => currentValue2 = value),
-                      ),
-                    ],
-                  ))),
+              padding: EdgeInsets.only(right: 40, left: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "HH",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    "MM",
+                    style: TextStyle(fontSize: 18),
+                  )
+                ],
+              )),
+          Container(
+            margin: EdgeInsets.only(top: 50, bottom: 50),
+            alignment: Alignment.topCenter,
+            padding: EdgeInsets.only(left: 80, right: 80),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                    child: NumberPicker(
+                  itemCount: 1,
+                  value: currentValue,
+                  maxValue: 23,
+                  minValue: 0,
+                  onChanged: (value) => setState(() => currentValue = value),
+                )),
+                Text(":",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                Container(
+                  child: NumberPicker(
+                    itemCount: 1,
+                    value: currentValue2,
+                    maxValue: 59,
+                    minValue: 0,
+                    onChanged: (value) => setState(() => currentValue2 = value),
+                  ),
+                )
+              ],
+            ),
+          ),
           Container(
             height: (constraints.maxHeight / 100) * 9,
             child: Center(
@@ -1409,17 +1431,19 @@ class ClockPainter2 extends CustomPainter {
         ..strokeCap = StrokeCap.round
         ..strokeWidth = 16;
       var minClock1 = Paint()
-        ..shader = RadialGradient(
-                colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
-            .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..shader = RadialGradient(colors: [
+          Color.fromARGB(255, 245, 205, 63),
+          Color.fromARGB(255, 233, 84, 20)
+        ]).createShader(Rect.fromCircle(center: center, radius: rad))
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round
         ..strokeWidth = 4;
 
       var hourClock1 = Paint()
-        ..shader = RadialGradient(
-                colors: [Colors.indigo[600]!, Colors.blueAccent[700]!])
-            .createShader(Rect.fromCircle(center: center, radius: rad))
+        ..shader = RadialGradient(colors: [
+          Color.fromARGB(255, 245, 205, 63),
+          Color.fromARGB(255, 233, 84, 20)
+        ]).createShader(Rect.fromCircle(center: center, radius: rad))
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round
         ..strokeWidth = 6;
