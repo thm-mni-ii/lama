@@ -24,6 +24,10 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
   TextEditingController _rewardController = TextEditingController();
 
   bool newTask = true;
+  bool? plusAllowed = true;
+  bool? minusAllowed = true;
+  bool? multiplyAllowed = true;
+  bool? divisionAllowed = true;
 
 /*   @override
   void initState() {
@@ -42,15 +46,16 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
-    if (widget.task != null && newTask) {
+/*     if (widget.task != null && newTask) {
       _vonController.text = widget.task!.operandRange[0].toString();
       _bisController.text = widget.task!.operandRange[1].toString();
       _rewardController.text = widget.task!.reward.toString();
 
       newTask = false;
-    }
+    } */
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: CustomAppbar(
         size: screenSize.width / 5,
         titel: "Equation",
@@ -67,7 +72,8 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: 25),
-                      child: Align(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 5, bottom: 15, right: 5),
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "Operand Range",
@@ -148,7 +154,42 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 30),
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 30, left: 5, right: 5),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Erlaubte Operationen",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          CheckboxListTile(
+                            title: Text("Plus"),
+                            value: plusAllowed,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                plusAllowed = value;
+                              });
+                            },
+                          ),
+                          CheckboxListTile(
+                            title: Text("Minus"),
+                            value: minusAllowed,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                minusAllowed = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 30, left: 5, right: 5),
                       child: TextFormField(
                         controller: _rewardController,
                         keyboardType: TextInputType.number,
@@ -224,26 +265,4 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
       ),
     );
   }
-}
-
-class Item {
-  Item({
-    required this.id,
-    required this.expandedValue,
-    required this.headerValue,
-  });
-
-  int id;
-  String expandedValue;
-  String headerValue;
-}
-
-List<Item> generateItems(int numberOfItems) {
-  return List<Item>.generate(numberOfItems, (int index) {
-    return Item(
-      id: index,
-      headerValue: 'Erweiterte Optionen',
-      expandedValue: "Nur volle Euro",
-    );
-  });
 }
