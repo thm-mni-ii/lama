@@ -19,11 +19,12 @@ class MoneyEinstellenScreen extends StatefulWidget {
 
 class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _vonController = TextEditingController();
-  TextEditingController _bisController = TextEditingController();
+  TextEditingController _difController = TextEditingController();
   TextEditingController _rewardController = TextEditingController();
+  TextEditingController _leftToSolveController = TextEditingController();
 
   bool newTask = true;
+  bool? optimumAllowed = false;
 
 /*   @override
   void initState() {
@@ -43,8 +44,9 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
     Size screenSize = MediaQuery.of(context).size;
 
     if (widget.task != null && newTask) {
-      _vonController.text = widget.task!.difficulty.toString();
+      _difController.text = widget.task!.difficulty.toString();
       _rewardController.text = widget.task!.reward.toString();
+      _leftToSolveController.text = widget.task!.optimum.toString();
 
       newTask = false;
     }
@@ -65,11 +67,11 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                 child: Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 25),
+                      margin: EdgeInsets.only(top: 30, left: 5, right: 5),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Schwierigkeit",
+                          "Schwierigkeitsgrad",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -87,12 +89,12 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                           children: <Widget>[
                             Expanded(
                               child: Container(
-                                margin: EdgeInsets.only(right: 30),
+                                margin: EdgeInsets.only(top: 10, left: 5, right: 5),
                                 child: TextFormField(
-                                  controller: _vonController,
+                                  controller: _difController,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
-                                    labelText: 'Schwierigkeit',
+                                    labelText: 'Schwierigkeit von 1 bis 5',
                                   ),
                                   validator: (text) {
                                     if (text == null || text.isEmpty) {
@@ -101,7 +103,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                                     return null;
                                   },
                                   onSaved: (text) =>
-                                      _vonController.text = text!,
+                                  _difController.text = text!,
                                 ),
                               ),
                             ),
@@ -110,7 +112,20 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 30),
+                      margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Erreichbare Lamacoins",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 15, bottom: 15, right: 30),
                       child: TextFormField(
                         controller: _rewardController,
                         keyboardType: TextInputType.number,
@@ -125,6 +140,83 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         },
                         onSaved: (String? text) =>
                             _rewardController.text = text!,
+                      ),
+                    ),
+                    Container(
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Optimum",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          CheckboxListTile(
+                            title: Text("Optimum allowed"),
+                            value: optimumAllowed,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                optimumAllowed = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 10, left: 0, right: 5),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Bleibt zu lösen ",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10, left: 0, right: 5),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Wie oft die Aufgabe richtig gelöst werden kann bevor es keine Münzen als Belohnung mehr gibt, Ganzzahl > 0",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 0, bottom: 15, right: 30),
+                            child: TextFormField(
+                              controller: _leftToSolveController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                labelText: 'Bleibt zu lösen: von 1 bis 3',
+                              ),
+                              validator: (text) {
+                                if (text == null || text.isEmpty) {
+                                  return "Beitrag fehlt!";
+                                }
+                                return null;
+                              },
+                              onSaved: (String? text) =>
+                              _leftToSolveController.text = text!,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -160,8 +252,8 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         int.parse(_rewardController.text),
                         "",
                         3,
-                        int.parse(_vonController.text),
-                        true
+                        int.parse(_difController.text),
+                        optimumAllowed
                       );
                       if (newTask) {
                         // add Task
