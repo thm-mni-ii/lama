@@ -4,6 +4,7 @@ import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
+import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -138,7 +139,25 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
-                  onPressed: () => Navigator.push(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      TaskMoney moneytask = TaskMoney(
+                          widget.task?.id ??
+                              KeyGenerator.generateRandomUniqueKey(
+                                  blocTaskset.tasks!),
+                          TaskType.moneyTask,
+                          int.parse(_rewardController.text),
+                          "",
+                          3,
+                          int.parse(_vonController.text),
+                          true);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => TaskScreen(blocTaskset.grade)));
+                    }
+                  },
+/*                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => BlocProvider.value(
@@ -146,23 +165,22 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         child: TasksetChooseTaskScreen(),
                       ),
                     ),
-                  ),
+                  ), */
                   child: const Text("Preview"),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       TaskMoney moneyTask = TaskMoney(
-                        widget.task?.id ??
-                            KeyGenerator.generateRandomUniqueKey(
-                                blocTaskset.tasks!),
-                        TaskType.moneyTask,
-                        int.parse(_rewardController.text),
-                        "",
-                        3,
-                        int.parse(_vonController.text),
-                        true
-                      );
+                          widget.task?.id ??
+                              KeyGenerator.generateRandomUniqueKey(
+                                  blocTaskset.tasks!),
+                          TaskType.moneyTask,
+                          int.parse(_rewardController.text),
+                          "",
+                          3,
+                          int.parse(_vonController.text),
+                          true);
                       if (newTask) {
                         // add Task
                         BlocProvider.of<CreateTasksetBloc>(context)

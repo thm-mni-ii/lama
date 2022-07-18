@@ -58,17 +58,17 @@ class TaskCardWidget extends StatelessWidget {
     return Card(
       child: ListTile(
         title: Text(taskType.toString().substring(9).toUpperCase()),
-        trailing: IconButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => BlocProvider.value(
-                value: BlocProvider.of<CreateTasksetBloc>(context),
-                child: screenDependingOnTaskType(taskType),
-              ),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => BlocProvider.value(
+              value: BlocProvider.of<CreateTasksetBloc>(context),
+              child: screenDependingOnTaskType(taskType),
             ),
           ),
-          icon: const Icon(Icons.keyboard_arrow_right),
+        ),
+        trailing: Icon(
+          (Icons.keyboard_arrow_right),
         ),
       ),
     );
