@@ -60,25 +60,22 @@ class FourCards extends State<FourCardTaskScreenStateful> {
 
   @override
   Widget build(BuildContext context) {
+
+    // todo here
+    BlocProvider.of<TTSBloc>(context).add(AnswerOnInitEvent("hullo","de"));
+
+
+
     String qlang;
     task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
 
-    return BlocProvider(
-      create: (context) => TTSBloc(),
-      child: Column(children: [
+      return Column(children: [
         Container(
           height: (constraints.maxHeight / 100) * 40,
           width: (constraints.maxWidth),
           padding: EdgeInsets.all(25),
-          child: BlocBuilder<TTSBloc, TTSState>(
-            builder: (context, TTSState state) {
-              if (state is EmptyTTSState) {
-                //log('task.questionLanguage: ${task.questionLanguage}');
-                //log('task.answerLaguage: ${task.answerLaguage}');
-                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,qlang));
-                QuestionText.setText(task.question!, qlang);
-              }
-              return Container(
+
+              child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                     gradient: LinearGradient(colors: [
@@ -100,9 +97,8 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                     ),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+
         ),
         Container(
           height: (constraints.maxHeight / 100) * 15,
@@ -158,8 +154,8 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                     itemBuilder: (context, index) =>
                         _buildCards(context, index)))),
 
-      ]),
-    );
+      ]);
+
   }
 
   Widget _buildCards(context, index) {
@@ -168,16 +164,14 @@ class FourCards extends State<FourCardTaskScreenStateful> {
     //debugPrint(index);
     Color color =
     index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;
+    // BlocProvider.of<TTSBloc>(context)
+    //     .add(ClickOnAnswer(answers[index], index, alang));
 
-    return BlocBuilder<TTSBloc, TTSState>(
-      builder: (context, state) {
         return Container(
           height: 50,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: state is VoiceAnswerTtsState &&
-                  state.selectedAnswer == answers[index] ? LamaColors
-                  .purpleAccent : color,
+              color: color,
               boxShadow: [
                 BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -195,8 +189,8 @@ class FourCards extends State<FourCardTaskScreenStateful> {
               } else {
                 BlocProvider.of<TaskBloc>(context)
                     .add(AnswerTaskEvent(answers[index]));
-                BlocProvider.of<TTSBloc>(context).
-                add(SetDefaultEvent());
+                // BlocProvider.of<TTSBloc>(context).
+                // add(SetDefaultEvent());
               }
             },
             child: Padding(
@@ -211,7 +205,6 @@ class FourCards extends State<FourCardTaskScreenStateful> {
             ),
           ),
         );
-      },
-    );
+
   }
 }

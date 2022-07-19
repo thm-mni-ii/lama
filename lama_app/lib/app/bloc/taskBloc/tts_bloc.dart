@@ -34,10 +34,14 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
   TTSBloc() : super(EmptyTTSState()){
     on<AnswerOnInitEvent>((event, emit) async {
        readText(event.answer, event.questionLanguage);
+       this.text = event.answer;
+
+
+
        //log('data: $AnswerOnInitEvent');
        //log('event.answer: ${event.answer}');
        //readText("sample", "aaa");
-       emit(IsNotEmptyState());
+       emit(IsNotEmptyState(event.answer));
     });
     on<ClickOnWordQuestion>((event, emit) async {
        readText(event.texttoPlay, event.answerLanguage);
@@ -54,10 +58,12 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
       emit(EmptyTTSState());
     });
     on<IsNotEmptyStateEvent>((event, emit) async {
-      emit(IsNotEmptyState());
+      emit(IsNotEmptyState(""));
     });
+
     on<ReadQuestion>((event, emit) async {
-    readText(event.question, event.questionLanguage);
+
+    readText(this.text, "");
     });
   }
 

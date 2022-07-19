@@ -57,6 +57,8 @@ class TaskScreenState extends State<TaskScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<TaskBloc>(context).add(ShowNextTaskEvent());
+
+
   }
 
   @override
@@ -131,27 +133,25 @@ class TaskScreenState extends State<TaskScreen> {
                                       color: LamaColors.white,
                                       fontSize: 30,
                                       fontWeight: FontWeight.w500)),
-                              BlocProvider(
-                                create: (context) => TTSBloc(),
-                                child: BlocBuilder<TTSBloc, TTSState>(
-                                builder: (context, state) {
-                                  return Align(
+
+
+                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: InkWell(
                                         child: CircleAvatar(
                                           maxRadius: 21,
                                           child: SvgPicture.asset(
-                                            // todo
                                               path,
                                               semanticsLabel: 'TonIcon',
                                               color: LamaColors.purpleAccent
                                           ),
                                           backgroundColor: LamaColors.white,
                                         ),
+                                        // todo doing
                                         onTap: () =>
                                         {
                                           BlocProvider.of<TTSBloc>(context).
-                                          add(ReadQuestion(QuestionText.getText(), QuestionText.getLang()))
+                                          add(ReadQuestion())
                                         },
                                         onDoubleTap: () => {
                                         home_screen_state.toggle(),
@@ -160,10 +160,7 @@ class TaskScreenState extends State<TaskScreen> {
                                         }),
                                         }
                                     ),
-                                  );
-                                }
-                                ),
-                              ),
+                                  ),
                             ],
                           ),
                         ),
@@ -173,8 +170,12 @@ class TaskScreenState extends State<TaskScreen> {
                             //the TaskType of the current Task
                             child: LayoutBuilder(builder: (BuildContext context,
                                 BoxConstraints constraints) {
-                              return getScreenForTaskWithConstraints(
-                                  state.task, constraints);
+
+
+                              return BlocProvider.value(value: BlocProvider.of<TTSBloc>(context),
+                              child: getScreenForTaskWithConstraints(
+                                  state.task, constraints),
+);
                             }))
                       ]);
                     },
@@ -321,6 +322,7 @@ class TaskScreenState extends State<TaskScreen> {
         );
       },
     );
+
   }
 
   ///Returns the Widget that corresponds to the TaskType of [task].
@@ -331,7 +333,13 @@ class TaskScreenState extends State<TaskScreen> {
       Task task, BoxConstraints constraints) {
     switch (task.type) {
       case "4Cards":
-        return FourCardTaskScreenStateful(task as Task4Cards, constraints);
+        return BlocBuilder<TTSBloc, TTSState>(
+  builder: (context, state) {
+    return FourCardTaskScreenStateful(task as Task4Cards, constraints );
+  },
+);
+
+
       case "Zerlegung":
         return ZerlegungTaskScreen(
             task: task as TaskZerlegung?, constraints: constraints);

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
+import 'package:lama_app/app/bloc/taskbloc/tts_bloc.dart';
 import 'package:lama_app/app/event/choose_taskset_events.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/task_screen.dart';
@@ -163,9 +164,18 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BlocProvider<TaskBloc>(
-                    create: (context) => TaskBloc(taskset.subject,
-                        generateTaskList(taskset), userRepository),
+                  // todo doing
+                  builder: (context) => MultiBlocProvider(
+                    providers: [
+
+                      BlocProvider<TaskBloc>(
+                                      create: (context) => TaskBloc(taskset.subject,
+                                          generateTaskList(taskset), userRepository),
+                  ),
+                      BlocProvider<TTSBloc>(
+                        create: (context) => TTSBloc(),
+                      ),
+                    ],
                     child: TaskScreen(userGrade),
                   ),
                 ),
