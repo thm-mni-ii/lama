@@ -1,44 +1,64 @@
-/*  import 'dart:math';
+import 'dart:math';
 import 'dart:ui';
 
-import 'package:flame/components/component.dart';
+import 'package:flame/components.dart';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
+import 'package:lama_app/newFlappyLamaGame/baseFlappy.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
 /// This class extends [Component] and describes a the score display.
 /// It will have a fixed position on the screen and will use the [score] field of the
 /// [FlappyLamaGame] class which is needed to create this class.
 class FlappyScoreDisplay extends Component {
+  @override
+  // TODO: implement priority
+  int get priority => super.priority;
+  @override
+  set priority(int newPriority) {
+    // TODO: implement priority
+    super.priority = newPriority;
+  }
+
   // SETTINGS
   // --------
   /// Paint for the rectangle fill
   final Paint _fillPaint = Paint()
     ..color = LamaColors.bluePrimary.withOpacity(0.6);
+
   /// Text color of the score
   final Color _textColor = Color(0xffffffff);
+
   /// Width relative to the screen
   final double _widthPercent = 0.25;
+
   /// size of the font relative to the screensize {relativeSize * _sizePercent * _relativeFontSize}
   final double _relativeFontSize = 0.2;
+
   /// padding : [top, bottom]
   final _padding = [0.83, 0.1];
   // --------
   // SETTINGS
 
-  final FlappyLamaGame _game;
+  final FlappyLamaGame2 _game;
+
   /// [Rect] of the score field
-  RRect _fillRRect;
+  late RRect _fillRRect;
+
   /// [TextPainter] of the score text
-  TextPainter _painter;
+  late TextPainter _painter;
+
   /// [TextStyle] of the text
-  TextStyle _textStyle;
+  late TextStyle _textStyle;
+
   /// Position [Offset] of the text
-  Offset _position;
+  late Offset _position;
 
   FlappyScoreDisplay(this._game) {
+    priority = 10;
     // relative length related to the screensize
-    var relativeSize = sqrt(this._game.screenSize.width * this._game.screenSize.height);
+    var relativeSize =
+        sqrt(this._game.screenSize.width * this._game.screenSize.height);
 
     // Paint for the text
     _painter = TextPainter(
@@ -77,20 +97,15 @@ class FlappyScoreDisplay extends Component {
 
       // set new offset depending on the text width
       _position = Offset(
-        (_fillRRect.left) + (_fillRRect.width / 2) - _painter.width / 2,
-        (_fillRRect.top) + (_fillRRect.height / 2) - _painter.height / 2
-      );
+          (_fillRRect.left) + (_fillRRect.width / 2) - _painter.width / 2,
+          (_fillRRect.top) + (_fillRRect.height / 2) - _painter.height / 2);
     }
   }
 
   void render(Canvas c) {
     // draw background
-    c.drawRRect(_fillRRect,_fillPaint);
+    c.drawRRect(_fillRRect, _fillPaint);
     // draw text
     _painter.paint(c, _position);
   }
 }
-
-
- 
- */ 
