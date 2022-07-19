@@ -81,7 +81,7 @@
             "operator_amount": 1
         },
         {
-            "id": "t5",
+            "id": "t6",
             "task_type": "TaskType.moneyTask",
             "task_reward": 2,
             "lama_text": "",
@@ -91,7 +91,7 @@
             "optimum": true
         },
         {
-            "id": "t6",
+            "id": "t7",
             "task_type": "TaskType.moneyTask",
             "task_reward": 2,
             "lama_text": "",

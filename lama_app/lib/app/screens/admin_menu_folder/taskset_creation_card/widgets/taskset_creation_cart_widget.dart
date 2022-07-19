@@ -46,6 +46,8 @@ class TasksetCreationCartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final createTasklistBloc =
+        BlocProvider.of<TasksetCreateTasklistBloc>(context);
     return Card(
       elevation: 5,
       child: Dismissible(
@@ -60,8 +62,7 @@ class TasksetCreationCartWidget extends StatelessWidget {
         ),
         direction: DismissDirection.endToStart,
         onDismissed: (DismissDirection dismissDirection) {
-          BlocProvider.of<TasksetCreateTasklistBloc>(context)
-              .add(RemoveFromTaskList(task.id));
+          createTasklistBloc.add(RemoveFromTaskList(task.id));
         },
         child: ListTile(
           title: Text(
@@ -82,8 +83,7 @@ class TasksetCreationCartWidget extends StatelessWidget {
                             value: BlocProvider.of<CreateTasksetBloc>(context),
                           ),
                           BlocProvider.value(
-                            value: BlocProvider.of<TasksetCreateTasklistBloc>(
-                                context),
+                            value: createTasklistBloc,
                           ),
                         ],
                         child: screenDependingOnTaskType(task.type),
@@ -94,9 +94,9 @@ class TasksetCreationCartWidget extends StatelessWidget {
                   color: Colors.black,
                 ),
                 IconButton(
-                  onPressed: () =>
-                      BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                          .add(RemoveFromTaskList(task.id)),
+                  onPressed: () {
+                    createTasklistBloc.add(RemoveFromTaskList(task.id));
+                  },
                   icon: Icon(Icons.delete),
                   color: Colors.black,
                 ),

@@ -25,17 +25,7 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
       taskset!.tasks!.addAll(event.taskList);
     });
     on<CreateTasksetGenerate>((event, emit) => taskset!.toJson());
-    /* on<EditTask>((event, emit) {
-      int pos = taskset!.tasks!.indexWhere(
-        (element) => element.id == event.task.id,
-      );
-      taskset!.tasks!.removeWhere((element) => element.id == event.task.id);
-      taskset!.tasks!.insert(pos, event.task);
-    });
-    on<RemoveTask>((event, emit) {
-      taskset!.tasks!.removeWhere((element) => element.id == event.id);
-      emit(ChangedTasksListState());
-    }); */
+    on<AddUrlToTaskset>((event, emit) => taskset!.taskurl = event.taskUrl);
   }
 
   /// private method to abort the current creation process

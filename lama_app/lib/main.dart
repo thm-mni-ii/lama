@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/app.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
+import 'package:lama_app/app/task-system/subject_grade_relation.dart';
+import 'package:lama_app/app/task-system/taskset_model.dart';
 
 ///Main method that launches the app.
 void main() async {
@@ -14,8 +17,22 @@ void main() async {
   await precacheSvgs();
   runApp(RepositoryProvider(
     create: (context) => tasksetRepository,
-    child: LamaApp(),
+    child: BlocProvider(
+      create: (context) => TasksetManageBloc(
+        allTaskset: taskset(tasksetRepository.tasksetLoader.loadedTasksets),
+        tasksetPool: taskset(tasksetRepository.tasksetLoader.tasksetPool),
+      ),
+      child: LamaApp(),
+    ),
   ));
+}
+
+List<Taskset> taskset(
+    Map<SubjectGradeRelation, List<Taskset>> tasksetGradeKorrelation) {
+  List<Taskset> list = [];
+  tasksetGradeKorrelation.forEach((key, value) => list.addAll(value));
+  print(list);
+  return list;
 }
 
 ///Precaches the svgs files.

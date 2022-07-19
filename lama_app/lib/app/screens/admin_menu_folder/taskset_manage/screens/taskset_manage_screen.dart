@@ -45,6 +45,7 @@ class _TasksetManageScreenState extends State<TasksetManageScreen> {
     return BlocProvider(
       create: (context) => TasksetOptionsBloc(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,//oder scrollable
         appBar: CustomAppbar(
           size: screenSize.width / 5,
           titel: "Meine erstellten Tasks",

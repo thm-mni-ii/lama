@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/model/taskUrl_model.dart';
+import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/widgets/taskset_creation_cart_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
+import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
@@ -89,16 +92,39 @@ class TasksetCreationCartScreen extends StatelessWidget {
                   child: const Text("Task hinzufügen"),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    // erstmal neu nachdenken was passieren muss
+                    // taskurl muss gesetzt werden
+                    /* String createdTaskUrl = "$url/${taskset.name}";
+                    DatabaseProvider.db
+                        .insertTaskUrl(TaskUrl(url: createdTaskUrl));
+                    List<TaskUrl> taskUrl =
+                        await DatabaseProvider.db.getTaskUrl();
                     BlocProvider.of<CreateTasksetBloc>(context).add(
-                      AddTaskListToTaskset(
-                        BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                            .taskList,
+                      AddUrlToTaskset(
+                        taskUrl.firstWhere(
+                            (element) => element.url == createdTaskUrl),
                       ),
+                    ); */
+
+                    
+                    // tasklist muss gesetzt werden
+                    // taskset muss auf server gepushed und in lokale liste geschrieben werden
+
+                    // taskurl anlegen -> benutzen
+                    /* DatabaseProvider.db.insertTaskUrl(TaskUrl(url: ""));
+                    List<TaskUrl> taskUrl =
+                        await DatabaseProvider.db.getTaskUrl();
+                    //
+                    BlocProvider.of<CreateTasksetBloc>(context).add(
+                      AddTaskListToTaskset(tasksetList),
+                    );
+                    BlocProvider.of<CreateTasksetBloc>(context).add(
+                      AddUrlToTaskset(
+                          taskUrl.firstWhere((element) => element.url = "")),
                     );
                     // ??
                     print(taskset.toJson());
-                    /* DatabaseProvider.db.insertTaskUrl(TaskUrl(url: ""));
                     RepositoryProvider.of<TasksetRepository>(context)
                         .writeToServer(taskset); */
                     /* Navigator.popUntil(
@@ -107,7 +133,6 @@ class TasksetCreationCartScreen extends StatelessWidget {
                         TasksetManageScreen.routeName,
                       ),
                     ); */
-                    Navigator.pop(context);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },

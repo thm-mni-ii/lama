@@ -15,19 +15,36 @@ import 'package:lama_app/app/task-system/taskset_model.dart';
 /// Author: N. Soethe
 /// latest Changes: 28.05.2022
 class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
-  List<Taskset> tasksetPool = [];
-  List<Taskset> allTaskset = [];
+  List<Taskset> tasksetPool;
+  List<Taskset> allTaskset;
 
-  TasksetManageBloc() : super(TasksetManageInitial()) {
+  TasksetManageBloc({required this.tasksetPool, required this.allTaskset})
+      : super(TasksetManageInitial()) {
     on<AddTasksetPool>((event, emit) {
       tasksetPool.add(event.taskset);
-      allTaskset
-          .removeWhere((element) => element.taskurl == event.taskset.taskurl);
+      event.taskset.isInPool = true;
+      emit(ChangeTasksetStatus());
     });
     on<RemoveTasksetPool>((event, emit) {
-      allTaskset.add(event.taskset);
-      tasksetPool
-          .removeWhere((element) => element.taskurl == event.taskset.taskurl);
+      tasksetPool.remove(event.taskset); // remove where
+      event.taskset.isInPool = false;
+      emit(ChangeTasksetStatus());
+    });
+    on<AddListOfTasksetsPool>((event, emit) {
+      event.tasksetList.forEach((element) {
+        if (!tasksetPool.contains(element)) {
+          tasksetPool.add(element);
+          element.isInPool = true;
+        }
+      });
+      emit(ChangeTasksetStatus());
+    });
+    on<RemoveListOfTasksetsPool>((event, emit) {
+      event.tasksetList.forEach((element) {
+        element.isInPool = false;
+        tasksetPool.remove(element); // remove where
+      });
+      emit(ChangeTasksetStatus());
     });
   }
 }

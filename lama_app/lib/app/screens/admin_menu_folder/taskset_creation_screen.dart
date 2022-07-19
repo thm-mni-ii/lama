@@ -76,6 +76,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
         color: LamaColors.findSubjectColor(_currentSelectedSubject ?? "normal"),
       ),
       body: Column(
+        // body kann auch setupTasksetBody sein aber dann farb probleme
         children: [
           Expanded(
             child: Container(
@@ -151,7 +152,6 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
               margin: EdgeInsets.all(25),
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO state comit wenn erfolgreich in nächsten screen wenn nicht snackbar anzeigen
                   if (_nameController.text.isNotEmpty &&
                       _currentSelectedGrade != null &&
                       _currentSelectedSubject != null) {

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
+import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 
@@ -43,10 +44,15 @@ class EditTaskset extends CreateTasksetEvent {
   EditTaskset(this.taskset);
 }
 
+class AddUrlToTaskset extends CreateTasksetEvent {
+  final TaskUrl taskUrl;
+  AddUrlToTaskset(this.taskUrl);
+}
+
 /// When hitting the back button the bloc provided taskset should be flushed
 class FlushTaskset extends CreateTasksetEvent {}
 
-/// removes a task from a taskset while editing 
+/// removes a task from a taskset while editing
 /* class RemoveTask extends CreateTasksetEvent {
   final String id;
 
@@ -60,7 +66,7 @@ class FlushTaskset extends CreateTasksetEvent {}
 } */
 
 /// writes a Taskset to the db and a json to the server with a specific url
-class GenerateTaskset extends CreateTasksetEvent{}
+class GenerateTaskset extends CreateTasksetEvent {}
 
 /// used to add a [Task] to the [Taskset] in Bloc
 ///

@@ -9,7 +9,6 @@ import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/app/task-system/taskset_validator.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:http/http.dart' as http;
 import 'dart:io';
 
 ///Class responsible for loading the standard tasks and tasks from a provided url.
@@ -249,6 +248,8 @@ class TasksetLoader {
     for (int i = 0; i < taskUrls.length; i++) {
       String? result =
           await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
+
+      print("counter: $i");
 
       String temp = await rootBundle.loadString(taskUrls[i].url!);
       await buildTasksetFromJson(temp);

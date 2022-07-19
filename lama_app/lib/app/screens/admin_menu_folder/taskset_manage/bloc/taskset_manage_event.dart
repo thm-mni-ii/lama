@@ -21,3 +21,15 @@ class RemoveTasksetPool extends TasksetManageEvent {
 
   RemoveTasksetPool(this.taskset);
 }
+
+class AddListOfTasksetsPool extends TasksetManageEvent {
+  final List<Taskset> tasksetList;
+
+  AddListOfTasksetsPool(this.tasksetList);
+}
+
+class RemoveListOfTasksetsPool extends TasksetManageEvent {
+  final List<Taskset> tasksetList;
+
+  RemoveListOfTasksetsPool(this.tasksetList);
+}

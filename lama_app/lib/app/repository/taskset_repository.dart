@@ -70,6 +70,15 @@ class TasksetRepository {
     }
   }
 
+  //TODO
+  /// updates the taskset(s) on the server
+  Future<void> updateTasksetOnServer() async {
+    String url = "";
+    var response = await http.put(
+      Uri.parse(url),
+    );
+  }
+
   /// gives a List of TaskType depending on a specific subject
   static List<TaskType> giveEnumBySubject(String subject) {
     switch (subject) {
