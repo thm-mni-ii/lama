@@ -28,6 +28,7 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
   bool? minusAllowed = true;
   bool? multiplyAllowed = true;
   bool? divisionAllowed = true;
+  bool? allowOperationReplace = true;
 
   String plus = '+';
   String minus = '-';
@@ -245,6 +246,34 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                         ),
                       ),
                       Container(
+                        child: Column(
+                          children: [
+                            Container(
+                              margin:
+                                  EdgeInsets.only(top: 30, left: 5, right: 5),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Weitere Optionen",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            CheckboxListTile(
+                              title: Text("Erlaube Suche nach Rechenzeichen"),
+                              value: allowOperationReplace,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  allowOperationReplace = value;
+                                });
+                                print(allowedOperations);
+                              },
+                            ),
+                          ]
+                        )
+                      ),
+                      Container(
                         margin: EdgeInsets.only(top: 30, left: 5, right: 5),
                         child: TextFormField(
                           controller: _rewardController,
@@ -288,7 +317,7 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      List<int> l = [
+                      List<int> listVonBis = [
                         int.parse(_vonController.text),
                         int.parse(_bisController.text)
                       ];
@@ -303,10 +332,10 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                           [],
                           [],
                           allowedOperations,
-                          true,
-                          l,
-                          1,
-                          1);
+                          allowOperationReplace,
+                          listVonBis,
+                          null,
+                          -1);
                       if (newTask) {
                         // add Task
                         BlocProvider.of<CreateTasksetBloc>(context)
