@@ -1,9 +1,9 @@
-import 'package:lama_app/snake/snakeGame.dart';
+/* import 'package:lama_app/snake/snakeGame.dart';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 
 import '../snakeGame.dart';
-/*
+
 /// This class will render an arrow button and handle if its tapped.
 class ArrowButton {
   final SnakeGame game;
@@ -192,5 +192,4 @@ class ArrowButton {
       }
     }
   }
-}
-*/
+} */

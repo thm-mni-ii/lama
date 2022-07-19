@@ -16,19 +16,15 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
 
   List<String> answerList = [];
 
-  EquationBloc(this.task) : super(EmptyEquationState());
-
-  @override
-  Stream<EquationState> mapEventToState(EquationEvent event) async* {
-    //NonRandom and Random only called at the beginning
-    if (event is NonRandomEquationEvent) {
+  EquationBloc(this.task) : super(EmptyEquationState()) {
+    on<NonRandomEquationEvent>((event, emit) async {
       initialEquation.addAll(task.equation);
       currentEquation.addAll(task.equation);
       answerList.addAll(task.options);
       answerList.shuffle();
-      yield BuiltEquationState(currentEquation, answerList);
-    }
-    if (event is RandomEquationEvent) {
+      emit(BuiltEquationState(currentEquation, answerList));
+    });
+    on<RandomEquationEvent>((event, emit) async {
       var rnd = Random();
       List<String> randomEquation = _buildRandomEquation();
       List<int> numbersInEquation = [];
@@ -85,17 +81,17 @@ class EquationBloc extends Bloc<EquationEvent, EquationState> {
       }
       answerList.addAll(answers);
       answerList.shuffle();
-      yield BuiltEquationState(currentEquation, answerList);
-    }
-    if (event is UpdateEquationEvent) {
+      emit(BuiltEquationState(currentEquation, answerList));
+    });
+    on<UpdateEquationEvent>((event, emit) async {
       currentEquation[event.index] = event.item;
-      yield BuiltEquationState(currentEquation, answerList);
-    }
-    if (event is EquationResetEvent) {
+      emit(BuiltEquationState(currentEquation, answerList));
+    });
+    on<EquationResetEvent>((event, emit) async {
       currentEquation.clear();
       currentEquation.addAll(initialEquation);
-      yield BuiltEquationState(currentEquation, answerList);
-    }
+      emit(BuiltEquationState(currentEquation, answerList));
+    });
   }
 
   ///This method builds a random Equation with the specific parameters passed

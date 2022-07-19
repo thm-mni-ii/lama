@@ -1,6 +1,6 @@
-import 'dart:math';
+/* import 'dart:math';
 import 'dart:ui';
-/*
+
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lama_app/snake/snakeGame.dart';
@@ -57,7 +57,4 @@ class Apple {
   }
 
   void update(double timeDelta) {}
-}
-
-
- */
+} */

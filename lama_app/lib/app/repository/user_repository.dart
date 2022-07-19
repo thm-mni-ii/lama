@@ -36,6 +36,11 @@ class UserRepository {
     return authenticatedUser!.avatar;
   }
 
+  Future<void> updateUser() async {
+    authenticatedUser =
+        await DatabaseProvider.db.refreshUser(authenticatedUser!);
+  }
+
   ///Adds lama coins to the user thats currently logged in.
   void addLamaCoins(int coinsToAdd) async {
     if (authenticatedUser!.coins != null) {
@@ -43,7 +48,7 @@ class UserRepository {
     } else {
       authenticatedUser!.coins = coinsToAdd;
     }
-    authenticatedUser!.coins = authenticatedUser!.coins! + coinsToAdd;
+    // authenticatedUser!.coins = authenticatedUser!.coins! + coinsToAdd;
     authenticatedUser = await DatabaseProvider.db
         .updateUserCoins(authenticatedUser!, authenticatedUser!.coins);
   }
@@ -102,5 +107,10 @@ class UserRepository {
   ///Returns wether or not a highscore may be posted online
   bool? getHighscorePermission() {
     return authenticatedUser!.highscorePermission;
+  }
+
+  ///Returns weather or not the current user is a guest
+  bool? getGuestStatus() {
+    return authenticatedUser!.isGuest;
   }
 }

@@ -26,24 +26,40 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState?> {
   ///{@param}[User] as user that should be updated or deleted in the database
   EditUserBloc(User user, {EditUserState? initialState}) : super(initialState) {
     this._user = user;
-  }
-
-  @override
-  Stream<EditUserState> mapEventToState(event) async* {
-    if (event is EditUserAbort) _editUserReturn(event.context);
-    if (event is EditUserDeleteUserCheck) yield await _deleteUserCheck();
-    if (event is EditUserDeleteUserAbrove) _deleteUser(event.context);
-    if (event is EditUserDeleteUserAbort) yield EditUserDefault(_user);
-    if (event is EditUserPush) yield await _pushUserChanges();
-    if (event is EditUserReturn) _editUserReturn(event.context);
-
-    //Change Bloc User
-    if (event is EditUserChangeUsername) _changedUser.name = event.name;
-    if (event is EditUserChangePasswort) _changedUser.password = event.passwort;
-    if (event is EditUserChangeCoins) {
+    on<EditUserAbort>((event, emit) async {
+      _editUserReturn(event.context);
+    });
+    on<EditUserDeleteUserCheck>((event, emit) async {
+      emit(await _deleteUserCheck());
+    });
+    on<EditUserDeleteUserAbrove>((event, emit) async {
+      _deleteUser(event.context);
+    });
+    on<EditUserDeleteUserAbort>((event, emit) async {
+      emit(EditUserDefault(_user));
+    });
+    on<EditUserPush>((event, emit) async {
+      emit(await _pushUserChanges());
+    });
+    on<EditUserReturn>((event, emit) async {
+      _editUserReturn(event.context);
+    });
+    //Change bloc User
+    on<EditUserChangeUsername>((event, emit) async {
+      _changedUser.name = event.name;
+    });
+    on<EditUserChangePasswort>((event, emit) async {
+      _changedUser.password = event.passwort;
+    });
+    on<EditUserChangeCoins>((event, emit) async {
       _changedUser.coins = (int.parse(event.coins));
-    }
-    if (event is EditUserChangeGrade) _changedUser.grade = event.grade;
+    });
+    on<EditUserChangeGrade>((event, emit) async {
+      _changedUser.grade = event.grade;
+    });
+    on<EditUserChangeGuest>(((event, emit) async {
+      await DatabaseProvider.db.updateUserIsGuest(_user!, false);
+    }));
   }
 
   ///(private)

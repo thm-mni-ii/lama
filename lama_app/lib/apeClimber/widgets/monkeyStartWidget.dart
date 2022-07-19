@@ -1,4 +1,4 @@
-/* import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
 /// This class is a [StatelessWidget] for displaying the start screen of Flappy lama
@@ -119,4 +119,4 @@ class MonkeyStartWidget extends StatelessWidget {
       ),
     );
   }
-} */
+}

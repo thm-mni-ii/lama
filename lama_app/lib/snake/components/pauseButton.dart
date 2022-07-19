@@ -1,7 +1,7 @@
-import 'package:lama_app/snake/snakeGame.dart';
+/* import 'package:lama_app/snake/snakeGame.dart';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-/*
+
 /// This class represents a Pause and Play button.
 class PauseButton{
   final SnakeGame game;
@@ -158,7 +158,4 @@ class PauseButton{
       _signPath = _tapped ? getPlayPath() : getPausePath();
     }
   }
-}
-
-
- */
+} */

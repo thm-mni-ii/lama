@@ -14,16 +14,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MarkWordsBloc extends Bloc<AddAnswerToListEvent, MarkWordState> {
   List<String> givenAnswers = [];
 
-  MarkWordsBloc() : super(MarkWordState([]));
-
-  ///
-  @override
-  Stream<MarkWordState> mapEventToState(AddAnswerToListEvent event) async* {
-    if(givenAnswers.contains(event.answerToAdd)) {
-      givenAnswers.remove(event.answerToAdd);
-    } else
-    givenAnswers.add(event.answerToAdd);
-    yield MarkWordState(givenAnswers);
+  MarkWordsBloc() : super(MarkWordState([])) {
+    on<AddAnswerToListEvent>((event, emit) async {
+      if (givenAnswers.contains(event.answerToAdd)) {
+        givenAnswers.remove(event.answerToAdd);
+      } else
+        givenAnswers.add(event.answerToAdd);
+      emit(MarkWordState(givenAnswers));
+    });
   }
 }
 
