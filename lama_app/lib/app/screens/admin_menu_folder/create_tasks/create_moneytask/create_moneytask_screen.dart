@@ -26,6 +26,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
 
   bool newTask = true;
   bool? optimumAllowed = false;
+  String? _currentSelectedDifficulty;
 
 /*   @override
   void initState() {
@@ -53,6 +54,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: CustomAppbar(
         size: screenSize.width / 5,
         titel: "MoneyTask",
@@ -61,166 +63,103 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
       body: Column(
         children: [
           Expanded(
-            child: Container(
-              margin: EdgeInsets.all(5),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Schwierigkeitsgrad",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 15, bottom: 15, right: 30),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-                                child: TextFormField(
-                                  controller: _difController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Schwierigkeit von 1 bis 5',
-                                  ),
-                                  validator: (text) {
-                                    if (text == null || text.isEmpty) {
-                                      return "Schwierigkeit fehlt!";
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (text) =>
-                                  _difController.text = text!,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Erreichbare Lamacoins",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 15, bottom: 15, right: 30),
-                      child: TextFormField(
-                        controller: _rewardController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Erreichbare Lamacoins',
-                        ),
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return "Beitrag fehlt!";
-                          }
-                          return null;
-                        },
-                        onSaved: (String? text) =>
-                            _rewardController.text = text!,
-                      ),
-                    ),
-                    Container(
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Optimum",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+            child: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.all(5),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 30, left: 5, right: 5),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Schwierigkeitsgrad",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          CheckboxListTile(
-                            title: Text("Optimum allowed"),
-                            value: optimumAllowed,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                optimumAllowed = value;
-                              });
-                            },
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 10, left: 0, right: 5),
-                            child: Align(
+                      Container(
+                        margin: EdgeInsets.all(5),
+                        child: DropdownButtonFormField<String>(
+                          hint: Text("Schwierigkeitsstufe auswählen"),
+                          value: _currentSelectedDifficulty,
+                          isDense: true,
+                          onChanged: (String? newValue) {
+                            setState(() => _currentSelectedDifficulty = newValue);
+                          },
+                          items: <String>['1', '2', '3'].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Erreichbare Lamacoins",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 15, bottom: 15, right: 30),
+                        child: TextFormField(
+                          controller: _rewardController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Erreichbare Lamacoins',
+                          ),
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return "Beitrag fehlt!";
+                            }
+                            return null;
+                          },
+                          onSaved: (String? text) =>
+                              _rewardController.text = text!,
+                        ),
+                      ),
+                      Container(
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 10, left: 5, right: 5),
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "Bleibt zu lösen ",
+                                "Weitere Optionen",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 10, left: 0, right: 5),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Wie oft die Aufgabe richtig gelöst werden kann bevor es keine Münzen als Belohnung mehr gibt, Ganzzahl > 0",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 0, bottom: 15, right: 30),
-                            child: TextFormField(
-                              controller: _leftToSolveController,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Bleibt zu lösen: von 1 bis 3',
-                              ),
-                              validator: (text) {
-                                if (text == null || text.isEmpty) {
-                                  return "Beitrag fehlt!";
-                                }
-                                return null;
+                            CheckboxListTile(
+                              title: Text("Nur die optimale Lösung zulassen"),
+                              value: optimumAllowed,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  optimumAllowed = value;
+                                });
                               },
-                              onSaved: (String? text) =>
-                              _leftToSolveController.text = text!,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -241,8 +180,8 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                           int.parse(_rewardController.text),
                           "",
                           3,
-                          int.parse(_difController.text),
-                          true);
+                          int.parse(_currentSelectedDifficulty.toString()),
+                          optimumAllowed);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -271,7 +210,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         int.parse(_rewardController.text),
                         "",
                         3,
-                        int.parse(_difController.text),
+                        int.parse(_currentSelectedDifficulty.toString()),
                         optimumAllowed
                       );
                       if (newTask) {
@@ -284,6 +223,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         BlocProvider.of<CreateTasksetBloc>(context)
                             .add(EditTask(moneyTask));
                       }
+                      print(moneyTask.difficulty);
                       Navigator.pop(context);
                     }
                   },
