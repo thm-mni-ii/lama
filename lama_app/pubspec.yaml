@@ -82,9 +82,9 @@ flutter:
     - assets/images/png/
     - assets/sounds/
     - assets/standardTasksets/mathe/
-    - assets/standardTasksets/deutsch/
-    - assets/standardTasksets/englisch/
-    - assets/standardTasksets/sachkunde/
+   # - assets/standardTasksets/deutsch/
+   # - assets/standardTasksets/englisch/
+   # - assets/standardTasksets/sachkunde/
     - assets/md/
     - assets/lama_facts.txt
     - assets/images/

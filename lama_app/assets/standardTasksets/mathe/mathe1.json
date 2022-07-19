@@ -5,15 +5,17 @@
     "taskset_randomize_order": true,
     "tasks": [
         {
-            "task_type": "Clock",
+            "id": "1",
+            "task_type": "TaskType.clock",
             "task_reward": 2,
             "lama_text": "Wie viel Uhr ist es?",
             "left_to_solve": 3,
             "uhr": "vollStunde",
             "timer": false
           },
-        {
-            "task_type": "NumberLine",
+          {
+            "id": "2",
+            "task_type": "TaskType.numberLine",
             "task_reward": 2,
             "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
@@ -26,7 +28,8 @@
             "ontap": true
         },
         {
-            "task_type": "NumberLine",
+            "id": "3",
+            "task_type": "TaskType.numberLine",
             "task_reward": 2,
             "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
@@ -39,7 +42,8 @@
             "ontap": false
         },
         {
-            "task_type": "Equation",
+            "id": "4",
+            "task_type": "TaskType.equation",
             "task_reward": 2,
             "lama_text": "Löse die Gleichung!",
             "left_to_solve": 4,
@@ -55,7 +59,8 @@
             "operator_amount": 1
         },
         {
-            "task_type": "Equation",
+            "id": "5",
+            "task_type": "TaskType.equation",
             "task_reward": 2,
             "lama_text": "Löse die Gleichung!",
             "left_to_solve": 4,
@@ -69,9 +74,10 @@
             "fields_to_replace": 1,
             "allow_replacing_operators": false,
             "operator_amount": 1
-        },
+        },        
         {
-            "task_type": "MoneyTask",
+            "id": "6",
+            "task_type": "TaskType.moneyTask",
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
@@ -79,7 +85,8 @@
             "optimum": false
         },
         {
-            "task_type": "MoneyTask",
+            "id": "7",
+            "task_type": "TaskType.moneyTask",
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
