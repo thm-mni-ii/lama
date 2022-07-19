@@ -29,6 +29,12 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
   bool? multiplyAllowed = true;
   bool? divisionAllowed = true;
 
+  String plus = '+';
+  String minus = '-';
+  String mal = '*';
+  String division = '/';
+  List<String> allowedOperations = ['+', '-', '*', '/'];
+
 /*   @override
   void initState() {
     if (widget.task != null) {
@@ -64,149 +70,200 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
       body: Column(
         children: [
           Expanded(
-            child: Container(
-              margin: EdgeInsets.all(5),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 25),
-                      child: Container(
-                        margin: EdgeInsets.only(left: 5, bottom: 15, right: 5),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Operand Range",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+            child: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.all(5),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 25),
+                        child: Container(
+                          margin:
+                              EdgeInsets.only(left: 5, bottom: 15, right: 5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Zahlenbereich",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 15, bottom: 15, right: 30),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(right: 30),
-                                child: TextFormField(
-                                  controller: _vonController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Von',
+                      Container(
+                        margin:
+                            EdgeInsets.only(left: 15, bottom: 15, right: 30),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 30),
+                                  child: TextFormField(
+                                    controller: _vonController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Von',
+                                    ),
+                                    validator: (text) {
+                                      if (text == null || text.isEmpty) {
+                                        return "Beitrag fehlt!";
+                                      } else if (double.parse(
+                                              _bisController.text) <=
+                                          double.parse(text)) {
+                                        return "Zu groß";
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (text) =>
+                                        _vonController.text = text!,
                                   ),
-                                  validator: (text) {
-                                    if (text == null || text.isEmpty) {
-                                      return "Beitrag fehlt!";
-                                    } else if (double.parse(
-                                            _vonController.text) <=
-                                        double.parse(text)) {
-                                      return "Zu groß";
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (text) =>
-                                      _vonController.text = text!,
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 30),
+                                  child: Text(
+                                    "bis",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 30),
+                                  child: TextFormField(
+                                    controller: _bisController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Bis',
+                                    ),
+                                    validator: (text) {
+                                      if (text == null || text.isEmpty) {
+                                        return "Beitrag fehlt!";
+                                      } else if (double.parse(text) <=
+                                          double.parse(_vonController.text)) {
+                                        return "Zu klein";
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (text) {
+                                      _bisController.text = text!;
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: Column(
+                          children: [
+                            Container(
+                              margin:
+                                  EdgeInsets.only(top: 30, left: 5, right: 5),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Erlaubte Operationen",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(left: 30),
-                                child: Text(
-                                  "bis",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
+                            CheckboxListTile(
+                              title: Text("Addition"),
+                              value: plusAllowed,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  plusAllowed = value;
+                                });
+                                if (value == true) {
+                                  allowedOperations.add(plus);
+                                } else {
+                                  allowedOperations.removeWhere(
+                                      (element) => element == plus);
+                                }
+                                print(allowedOperations);
+                              },
                             ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(left: 30),
-                                child: TextFormField(
-                                  controller: _bisController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Bis',
-                                  ),
-                                  validator: (text) {
-                                    if (text == null || text.isEmpty) {
-                                      return "Beitrag fehlt!";
-                                    } else if (double.parse(text) <=
-                                        double.parse(_bisController.text)) {
-                                      return "Zu klein";
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (text) {
-                                    _bisController.text = text!;
-                                  },
-                                ),
-                              ),
+                            CheckboxListTile(
+                              title: Text("Subraktion"),
+                              value: minusAllowed,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  minusAllowed = value;
+                                });
+                                if (value == true) {
+                                  allowedOperations.add(minus);
+                                } else {
+                                  allowedOperations.removeWhere(
+                                      (element) => element == minus);
+                                }
+                                print(allowedOperations);
+                              },
+                            ),
+                            CheckboxListTile(
+                              title: Text("Multiplikation"),
+                              value: multiplyAllowed,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  multiplyAllowed = value;
+                                });
+                                if (value == true) {
+                                  allowedOperations.add(mal);
+                                } else {
+                                  allowedOperations
+                                      .removeWhere((element) => element == mal);
+                                }
+                                print(allowedOperations);
+                              },
+                            ),
+                            CheckboxListTile(
+                              title: Text("Division"),
+                              value: divisionAllowed,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  divisionAllowed = value;
+                                });
+                                if (value == true) {
+                                  allowedOperations.add(division);
+                                } else {
+                                  allowedOperations.removeWhere(
+                                      (element) => element == division);
+                                }
+                                print(allowedOperations);
+                              },
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    Container(
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Erlaubte Operationen",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                      Container(
+                        margin: EdgeInsets.only(top: 30, left: 5, right: 5),
+                        child: TextFormField(
+                          controller: _rewardController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Erreichbare Lamacoins',
                           ),
-                          CheckboxListTile(
-                            title: Text("Plus"),
-                            value: plusAllowed,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                plusAllowed = value;
-                              });
-                            },
-                          ),
-                          CheckboxListTile(
-                            title: Text("Minus"),
-                            value: minusAllowed,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                minusAllowed = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                      child: TextFormField(
-                        controller: _rewardController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Erreichbare Lamacoins',
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return "Beitrag fehlt!";
+                            }
+                            return null;
+                          },
+                          onSaved: (String? text) =>
+                              _rewardController.text = text!,
                         ),
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return "Beitrag fehlt!";
-                          }
-                          return null;
-                        },
-                        onSaved: (String? text) =>
-                            _rewardController.text = text!,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -231,18 +288,25 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-/*                       List<int> l = [int.parse(_vonController.text), int.parse(_bisController.text)];
-                       TaskEquation equationTask = TaskEquation(
-                        widget.task?.id ??
-                            KeyGenerator.generateRandomUniqueKey(
-                                blocTaskset.tasks!),
-                        TaskType.equation,
-                        int.parse(_rewardController.text),
-                        "Löse die Gleichung!",
-                        3,
-                        l,
-
-                      ); 
+                      List<int> l = [
+                        int.parse(_vonController.text),
+                        int.parse(_bisController.text)
+                      ];
+                      TaskEquation equationTask = TaskEquation(
+                          widget.task?.id ??
+                              KeyGenerator.generateRandomUniqueKey(
+                                  blocTaskset.tasks!),
+                          TaskType.equation,
+                          int.parse(_rewardController.text),
+                          "Löse die Gleichung!",
+                          3,
+                          [],
+                          [],
+                          allowedOperations,
+                          true,
+                          l,
+                          1,
+                          1);
                       if (newTask) {
                         // add Task
                         BlocProvider.of<CreateTasksetBloc>(context)
@@ -252,7 +316,7 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                         // edit Task
                         BlocProvider.of<CreateTasksetBloc>(context)
                             .add(EditTask(equationTask));
-                      } */
+                      }
                       Navigator.pop(context);
                     }
                   },
