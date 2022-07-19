@@ -80,7 +80,8 @@ class ConnectState extends State<ConnectTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: Column(
@@ -97,8 +98,8 @@ class ConnectState extends State<ConnectTaskScreen> {
                 child: BlocBuilder<TTSBloc, TTSState>(
                  builder: (context, state) {
                    if (state is EmptyTTSState && !alreadyUpdated) {
-                     context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
-                     QuestionText.setText(task.lamaText!, "Deutsch");
+                     context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,qlang));
+                     QuestionText.setText(task.lamaText!, qlang);
                      this.alreadyUpdated = true;
                    }
                  return Container(

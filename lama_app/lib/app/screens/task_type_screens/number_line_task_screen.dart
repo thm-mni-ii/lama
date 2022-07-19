@@ -84,6 +84,8 @@ class NumberLineState extends State<NumberLineTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     bool paintRed = !task.ontap!;
     double screenwidth = MediaQuery.of(context).size.width;
     double screenheight = MediaQuery.of(context).size.height;
@@ -148,7 +150,9 @@ class NumberLineState extends State<NumberLineTaskScreen> {
             if (state is EmptyTTSState) {
               context.read<TTSBloc>().add(AnswerOnInitEvent(
                   "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
-                  ,"de"));
+                  ,qlang));
+                  QuestionText.setText("Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
+                      ,qlang);
             }
       return Column(children: [
         SizedBox(height: 20),

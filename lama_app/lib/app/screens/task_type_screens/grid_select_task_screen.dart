@@ -47,6 +47,8 @@ class GridSelectTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     return MultiBlocProvider(
       providers: [
         BlocProvider<GridSelectTaskBloc>(
@@ -91,8 +93,8 @@ class GridSelectTaskScreen extends StatelessWidget {
                       child: BlocBuilder<TTSBloc, TTSState>(
                       builder: (context, state) {
                         if (state is EmptyTTSState) {
-                          context.read<TTSBloc>().add(AnswerOnInitEvent(actualLamaText!,"de"));
-                          QuestionText.setText(actualLamaText!, "Deutsch");
+                          context.read<TTSBloc>().add(AnswerOnInitEvent(actualLamaText!,qlang));
+                          QuestionText.setText(actualLamaText!, qlang);
                         }
 
                         return Text(

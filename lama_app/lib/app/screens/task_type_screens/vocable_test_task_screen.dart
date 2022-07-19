@@ -56,6 +56,8 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
   }
 
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: BlocProvider<VocableTestTaskBloc>(
@@ -79,16 +81,10 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                   builder:
                     (context, TTSState state) {
                       if (state is EmptyTTSState && !alreadySaid) {
-                        String lang;
-                        if(task.questionLanguage == null) {
-                          lang = "Deutsch";
-                        } else {
-                          lang = "Englisch";
-                        }
                         context.read<TTSBloc>().add(
                             AnswerOnInitEvent("Translate the shown word",
-                                lang));
-                        QuestionText.setText("Translate the shown word", lang);
+                                qlang));
+                        QuestionText.setText("Translate the shown word", qlang);
                         alreadySaid = true;
                       }
                       return Container(

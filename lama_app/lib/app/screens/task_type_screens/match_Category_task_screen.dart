@@ -92,6 +92,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: Column(
@@ -101,14 +103,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
         BlocBuilder<TTSBloc, TTSState>(
             builder: (context, state) {
               if (state is EmptyTTSState ) {
-                String lang;
-                if(task.questionLanguage == null) {
-                  lang = "Deutsch";
-                } else {
-                  lang = "Englisch";
-                }
-                context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,lang));
-                QuestionText.setText(task.lamaText!, lang);
+                context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,qlang));
+                QuestionText.setText(task.lamaText!, qlang);
                 //alreadySaid = true;
               }
             return Container(

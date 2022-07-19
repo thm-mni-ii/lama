@@ -122,6 +122,8 @@ class EquationTaskState extends State<EquationTaskScreen> {
 
   ///Returns the anna saying the lama_text in a speechbubble
   Widget _buildLamaText() {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     return BlocProvider(
     create: (context) => TTSBloc(),
       child: Container(
@@ -135,8 +137,8 @@ class EquationTaskState extends State<EquationTaskScreen> {
             child: BlocBuilder<TTSBloc, TTSState>(
               builder: (context, state) {
                 if (state is EmptyTTSState) {
-                  context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
-                  QuestionText.setText(task.lamaText!, "Deutsch");
+                  context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,qlang));
+                  QuestionText.setText(task.lamaText!, qlang);
                 }
             return Container(
               padding: EdgeInsets.only(left: 75),

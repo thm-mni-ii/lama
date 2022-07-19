@@ -154,6 +154,8 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     final sum = amounts.sum;
     tempAmount = 0;
     String text = task.optimum!  ?
@@ -176,8 +178,8 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 builder: (context, state) {
                   if (state is EmptyTTSState && !alreadySaid) {
                     context.read<TTSBloc>().add(
-                    AnswerOnInitEvent(text,"Deutsch"));
-                    QuestionText.setText(text, "Deutsch");
+                    AnswerOnInitEvent(text,qlang));
+                    QuestionText.setText(text, qlang);
                     alreadySaid = true;
                   }
                   return Container(

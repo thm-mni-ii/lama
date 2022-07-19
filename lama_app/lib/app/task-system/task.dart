@@ -45,7 +45,10 @@ class Task {
             json['left_to_solve'],
             json['reverse'],
             json['zeros'],
-            json['boolThousands']);
+            json['boolThousands'],
+            json['question_language'],
+            json['answer_language']
+        );
       case "Clock":
         return ClockTest(
             taskType,
@@ -55,10 +58,18 @@ class Task {
             json['uhr'],
             json['timer'],
             json['right_answer'],
-            json['wrong_answers']);
+            json['wrong_answers'],
+            json['question_language'],
+            json['answer_language']);
       case "MoneyTask":
-        return TaskMoney(taskType, json['task_reward'], json['lama_text'],
-            json['left_to_solve'], json['difficulty'], json['optimum']);
+        return TaskMoney(taskType,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['difficulty'],
+            json['optimum'],
+            json['question_language'],
+            json['answer_language']);
       case "MarkWords":
         return TaskMarkWords(
             taskType,
@@ -66,6 +77,8 @@ class Task {
             json['lama_text'],
             json['left_to_solve'],
             json['sentence'],
+            json['question_language'],
+            json['answer_language'],
             List<String>.from(json['right_words']));
       case "NumberLine":
         return TaskNumberLine(
@@ -77,6 +90,8 @@ class Task {
           json["randomRange"],
           json['steps'],
           json['ontap'],
+          json['question_language'],
+          json['answer_language']
         );
       case "MatchCategory":
         return TaskMatchCategory(
@@ -92,7 +107,8 @@ class Task {
             List<String>.from(json['categoryTwo']));
       case "GridSelect":
         return TaskGridSelect(taskType, json['task_reward'], json['lama_text'],
-            json['left_to_solve'], List<String>.from(json['wordsToFind']));
+            json['left_to_solve'],json['question_language'],
+            json['answer_language'], List<String>.from(json['wordsToFind']));
       case "VocableTest":
         var wordPairs = json['wordPairs'] as List;
         List<Pair<String?, String?>> wordPairList =
@@ -112,6 +128,8 @@ class Task {
             json['task_reward'],
             json['lama_text'],
             json['left_to_solve'],
+            json['question_language'],
+            json['answer_language'],
             List<String>.from(json['pair1']),
             List<String>.from(json['pair2']),
             List<String>.from(json['rightAnswers']));
@@ -157,7 +175,9 @@ class Task {
             allowReplacingOperators,
             resultRange,
             operatorAmount,
-            fieldsToReplace);
+            fieldsToReplace,
+            json['question_language'],
+            json['answer_language']);
       case "Buchstabieren":
         Map<String, String>? woerter;
         if (json['woerter'] != null) {
@@ -184,7 +204,9 @@ class Task {
             woerter!,
             firstLetterBig,
             correctingModus,
-            multiplePoints);
+            multiplePoints,
+            json['question_language'],
+            json['answer_language']);
       default:
         return TaskEmpty("", 0, "", 0);
     }
@@ -264,9 +286,11 @@ class TaskClozeTest extends Task {
 class TaskMarkWords extends Task {
   List<String> rightWords;
   String? sentence;
+  String? questionLanguage;
+  String? answerLanguage;
 
   TaskMarkWords(String? taskType, int? reward, String? lamaText,
-      int? leftToSolve, this.sentence, this.rightWords)
+      int? leftToSolve, this.sentence, this.questionLanguage, this.answerLanguage, this.rightWords)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -327,9 +351,11 @@ class TaskMatchCategory extends Task {
 ///Author: K.Binder
 class TaskGridSelect extends Task {
   List<String> wordsToFind;
+  String? questionLanguage;
+  String? answerLanguage;
 
   TaskGridSelect(String? taskType, int? reward, String? lamaText,
-      int? leftToSolve, this.wordsToFind)
+      int? leftToSolve, this.questionLanguage, this.answerLanguage, this.wordsToFind)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -349,9 +375,11 @@ class ClockTest extends Task {
   bool? timer;
   String? rightAnswer;
   String? wrongAnswers;
+  String? questionLanguage;
+  String? answerLanguage;
 
   ClockTest(String? taskType, int? reward, String? lamaText, int? leftToSolve,
-      this.uhr, this.timer, this.rightAnswer, this.wrongAnswers)
+      this.uhr, this.timer, this.rightAnswer, this.wrongAnswers, this.questionLanguage, this.answerLanguage)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -367,9 +395,11 @@ class ClockTest extends Task {
 class TaskMoney extends Task {
   int? difficulty;
   bool? optimum;
+  String? questionLanguage;
+  String? answerLanguage;
 
   TaskMoney(String? taskType, int? reward, String? lamaText, int? leftToSolve,
-      this.difficulty, this.optimum)
+      this.difficulty, this.optimum, this.questionLanguage, this.answerLanguage)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -383,8 +413,10 @@ class TaskMoney extends Task {
 ///Author: K.Binder
 class TaskVocableTest extends Task {
   List<Pair<String?, String?>> vocablePairs;
-  bool? randomizeSide;  String answerLanguage;
+  bool? randomizeSide;
+  String answerLanguage;
   String questionLanguage;
+
 
   TaskVocableTest(String? taskType, int? reward, String? lamaText, int? leftToSolve,
       this.vocablePairs, this.randomizeSide, this.answerLanguage, this.questionLanguage)
@@ -408,9 +440,11 @@ class TaskConnect extends Task {
   List<String> pair1;
   List<String> pair2;
   List<String> rightAnswers;
+  String? questionLanguage;
+  String? answerLanguage;
 
-  TaskConnect(String? taskType, int? reward, String? lamaText, int? leftToSolve,
-      this.pair1, this.pair2, this.rightAnswers)
+  TaskConnect(String? taskType, int? reward, String? lamaText, int? leftToSolve, this.questionLanguage,
+  this.answerLanguage, this.pair1, this.pair2, this.rightAnswers)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -448,6 +482,9 @@ class TaskEquation extends Task {
   bool? allowReplacingOperators;
   bool isRandom = false;
 
+  String? questionLanguage;
+  String? answerLanguage;
+
   TaskEquation(
       String? taskType,
       int? reward,
@@ -459,7 +496,9 @@ class TaskEquation extends Task {
       this.allowReplacingOperators,
       this.operandRange,
       this.operatorAmount,
-      this.fieldsToReplace)
+      this.fieldsToReplace,
+      this.questionLanguage,
+      this.answerLanguage)
       : super(taskType, reward, lamaText, leftToSolve) {
     print("meep");
     print(this.randomAllowedOperators);
@@ -489,9 +528,11 @@ class TaskZerlegung extends Task {
   bool? zeros;
   bool? boolThousands;
   bool? reverse;
+  String? questionLanguage;
+  String? answerLanguage;
 
   TaskZerlegung(String? taskType, int? reward, String? lamaText,
-      int? leftToSolve, this.reverse, this.zeros, this.boolThousands)
+      int? leftToSolve, this.reverse, this.zeros, this.boolThousands, this.questionLanguage, this.answerLanguage)
       : super(taskType, reward, lamaText, leftToSolve);
 
   // do toString Method
@@ -506,8 +547,10 @@ class TaskNumberLine extends Task {
   bool? randomrange;
   int? steps;
   bool? ontap;
+  String? questionLanguage;
+  String? answerLanguage;
   TaskNumberLine(String? taskType, int? reward, String? lamaText,
-      int? leftToSolve, this.range, this.randomrange, this.steps, this.ontap)
+      int? leftToSolve, this.range, this.randomrange, this.steps, this.ontap, this.questionLanguage, this.answerLanguage)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override
@@ -523,6 +566,8 @@ class TaskBuchstabieren extends Task {
   int? first_Letter_Caps;
   int? correctingModus;
   int? multiplePoints;
+  String? questionLanguage;
+  String? answerLanguage;
 
   TaskBuchstabieren(
       String? taskType,
@@ -532,7 +577,9 @@ class TaskBuchstabieren extends Task {
       this.woerter,
       this.first_Letter_Caps,
       this.correctingModus,
-      this.multiplePoints)
+      this.multiplePoints,
+      this.questionLanguage,
+      this.answerLanguage)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override

@@ -278,6 +278,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     if (task.uhr == "allStunden") {
       return BlocProvider(
         create: (context) => TTSBloc(),
@@ -285,8 +287,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
           builder: (context, TTSState state) {
             if (state is EmptyTTSState ) {
               context.read<TTSBloc>().add(
-                  AnswerOnInitEvent(task.lamaText!, "Deutsch"));
-              //alreadySaid = true;
+                  AnswerOnInitEvent(task.lamaText!, "qlang"));
             }
             return Column(
         children: [
@@ -484,8 +485,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
              builder: (context, state) {
               if (state is EmptyTTSState ) {
                 context.read<TTSBloc>().add(
-                AnswerOnInitEvent(task.lamaText!, "Deutsch"));
-                QuestionText.setText(task.lamaText!, "Deutsch");
+                AnswerOnInitEvent(task.lamaText!, qlang));
+                QuestionText.setText(task.lamaText!, qlang);
               }
               return Stack(
                  children: [

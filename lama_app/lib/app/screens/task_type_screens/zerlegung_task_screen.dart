@@ -120,6 +120,8 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
  
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -134,10 +136,10 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
                   context.read<TTSBloc>().add(AnswerOnInitEvent(
                       task.boolThousands!
                           ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
-                          : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!","de"));
+                          : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!",qlang));
                   QuestionText.setText(task.boolThousands!
                       ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
-                      : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!", "Deutsch");
+                      : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!", qlang);
                 }
                 return Container(
                 margin: EdgeInsets.all(35),

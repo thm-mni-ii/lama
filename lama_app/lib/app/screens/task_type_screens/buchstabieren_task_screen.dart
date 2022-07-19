@@ -112,6 +112,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: Column(
@@ -126,9 +128,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                     (context, TTSState state) {
                   if (state is EmptyTTSState && !alreadySaid ) {
                     context.read<TTSBloc>().add(
-                        AnswerOnInitEvent(setTaskMessageAccordingToTaskModus(), "Deutsch"));
+                        AnswerOnInitEvent(setTaskMessageAccordingToTaskModus(), qlang));
                     alreadySaid = true;
-                    QuestionText.setText(setTaskMessageAccordingToTaskModus(), "Deutsch");
+                    QuestionText.setText(setTaskMessageAccordingToTaskModus(), qlang);
                   }
                   return Stack(
                     children: [
@@ -409,6 +411,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   ///fills bubble at the bottom of the screen with color after answering
   void fillBubble(Color answerFarbe) {
     antwortFarben[antwortZaehler] = answerFarbe;
+    if(antwortZaehler == 3) {
+      alreadySaid = false;
+    }
   }
 
 //ein Container, welcher einen klickbaren Button mit einem Buchstaben beinhaltet

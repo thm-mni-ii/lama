@@ -39,6 +39,8 @@ class MarkWordsScreen extends StatelessWidget {
   /// {@return} a [Widget] that contains the sentence in separate containers
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
     neededBloc = MarkWordsBloc();
     return MultiBlocProvider(
       providers: [
@@ -63,8 +65,8 @@ class MarkWordsScreen extends StatelessWidget {
                     child: BlocBuilder<TTSBloc, TTSState>(
                     builder: (context, state) {
                       if (state is EmptyTTSState) {
-                        context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,"de"));
-                        QuestionText.setText(task.lamaText!, "Deutsch");
+                        context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!, qlang));
+                        QuestionText.setText(task.lamaText!, qlang);
                       }
                       return Container(
                       padding: EdgeInsets.only(left: 75),
