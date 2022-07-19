@@ -62,6 +62,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   }
   //used to update the setup url when needed
   String? _setupUrl;
+  //list of [User] parsed from the [_url]
+  List<User>? _userList = [];
 
   ///(private)
   ///check if an admin is stored in the Database
@@ -180,35 +182,51 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   }
 
   ///(private)
-  ///used to read the setup JSON and navigateto [UserSelectionScreen]
+  ///used to read the setup JSON and navigate to [UserSelectionScreen]
   ///
   ///{@param} [BuildContext] to navigate
   Future<void> _insertSetup(BuildContext context) async {
     //check if JSON file is valid
     String? error = await InputValidation.inputUrlWithJsonValidation(_setupUrl);
+    String? errorUserList;
+    String? errorTaskset;
     Map<String, String>? urls;
-    /* if (error != null) return UserlistUrlParsingFailed(error: error); */
+
+    //TO-DO: errorhandling
+    if (error != null) return print(error);
     //get the two URLs from the JSON file
     try {
       final response = await http.get(Uri.parse(_setupUrl!));
       urls = _parseUrls(jsonDecode(response.body));
     } on SocketException {
+      print('Kritischer Fehler beim erreichen der URL!');
+    }
+    //load userlist through URL
+    if (urls != null) {
+      errorUserList =
+          await InputValidation.inputUrlWithJsonValidation(urls['userlistUrl']);
+      errorTaskset =
+          await InputValidation.inputUrlWithJsonValidation(urls['tasksetUrl']);
+    }
+    //load taskset through URL
+    /* errorUserList != null ?  print(errorUserList) :  */
+    if (errorTaskset != null) return print(errorTaskset);
+    try {
+      final response = await http.get(Uri.parse(urls!['userlistUrl']!));
+      _userList = _parseUserList(jsonDecode(response.body));
+    } on SocketException {
       /* return UserlistUrlParsingFailed(
         error: 'Kritischer Fehler beim erreichen der URL!',
       ); */
     }
-    //load userlist through URL
-    if (urls != null) {
-      await InputValidation.inputUrlWithJsonValidation(urls['userlistUrl']);
-      await InputValidation.inputUrlWithJsonValidation(urls['tasksetUrl']);
-    }
-    //load taskset through URL
-
+    _userList!.forEach((user) async {
+      await DatabaseProvider.db.insertUser(user);
+    });
     //if everything works, navigate to UserSelectionScreen
     _navigateAdminExist(context);
   }
 
-  ///parses URLS from the json filem checks if the urls are strings
+  ///parses URLS from the json file and checks if the urls are strings
   Map<String, String>? _parseUrls(Map<String, String> json) {
     if (!(json.containsKey('userlistUrl') && json['userlistUrl'] is String)) {
       print("Es wurde keine userlist url gefunden");
@@ -220,5 +238,32 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     }
 
     return json;
+  }
+
+  List<User>? _parseUserList(Map<String, String> userJson) {
+    //Check if UserList "users" exist in the json file
+    if (!(userJson.containsKey('users') && userJson['users'] is List)) {
+      print(
+          'Feld ("users": [...]) fehlt oder ist fehlerhaft! \n Hinweis: ("users": [NUTZER])');
+      return null;
+    }
+    var userList = userJson['users'] as List?;
+    if (userList == null || userList.length == 0) {
+      print(
+          'Feld ("users": [...]) darf nicht leer sein! \n Hinweis: ("users": [NUTZER])');
+      return null;
+    }
+    for (int i = 0; i < userList.length; i++) {
+      //Check if user is valid
+      String? error = User.isValidUser(userList[i]);
+      if (error != null) {
+        print('\n Nutzer: (${i + 1})');
+        return null;
+      }
+      //Add valid User to _userList
+      _userList!.add(User.fromJson(userList[i]));
+    }
+    //return valid _userList to UI
+    return _userList;
   }
 }
