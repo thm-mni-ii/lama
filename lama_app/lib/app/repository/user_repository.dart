@@ -17,24 +17,16 @@ class UserRepository {
   UserRepository(this.authenticatedUser);
 
   ///Returns the username of the user thats currently logged in.
-  String? getUserName() {
-    return authenticatedUser!.name;
-  }
+  String? getUserName() => authenticatedUser!.name;
 
   ///Returns the amount of lama coins of the user thats currently logged in.
-  int? getLamaCoins() {
-    return authenticatedUser!.coins;
-  }
+  int? getLamaCoins() => authenticatedUser!.coins;
 
   ///Returns the grade of the user thats currently logged in.
-  int? getGrade() {
-    return authenticatedUser!.grade;
-  }
+  int? getGrade() => authenticatedUser!.grade;
 
   ///Returns the avatar of the user thats currently logged in.
-  String? getAvatar() {
-    return authenticatedUser!.avatar;
-  }
+  String? getAvatar() => authenticatedUser!.avatar;
 
   ///Adds lama coins to the user thats currently logged in.
   void addLamaCoins(int coinsToAdd) async {
@@ -89,10 +81,8 @@ class UserRepository {
   }
 
   ///Returns the highscore for [gameId] for the user thats currently logged in.
-  Future<int?> getMyHighscore(int gameId) async {
-    return await DatabaseProvider.db
-        .getHighscoreOfUserInGame(authenticatedUser!, gameId);
-  }
+  Future<int?> getMyHighscore(int gameId) async => await DatabaseProvider.db
+      .getHighscoreOfUserInGame(authenticatedUser!, gameId);
 
   ///Returns the highscore for [gameId] among ALL users.
   Future<int?> getHighscore(int gameId) async {
@@ -100,7 +90,5 @@ class UserRepository {
   }
 
   ///Returns wether or not a highscore may be posted online
-  bool? getHighscorePermission() {
-    return authenticatedUser!.highscorePermission;
-  }
+  bool? getHighscorePermission() => authenticatedUser!.highscorePermission;
 }

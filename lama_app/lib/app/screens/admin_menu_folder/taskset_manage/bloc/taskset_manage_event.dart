@@ -1,5 +1,5 @@
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
-
+import 'package:lama_app/app/task-system/taskset_model.dart';
 
 /// Events used by [TasksetManageScreen] and [TasksetManageBloc]
 ///
@@ -7,12 +7,17 @@ import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/ta
 /// latest Changes: 28.05.2022
 abstract class TasksetManageEvent {}
 
-class CreateTaskset extends TasksetManageEvent {
+class CreateTaskset extends TasksetManageEvent {}
 
+/// adds a taskset to the pool of used tasksets
+class AddTasksetPool extends TasksetManageEvent {
+  final Taskset taskset;
+
+  AddTasksetPool(this.taskset);
 }
-/// Event to Class is expanded
-class TasksetManageExpansion extends TasksetManageEvent{
-  final int grade;
+/// removes a taskset from the pool of used tasksets
+class RemoveTasksetPool extends TasksetManageEvent {
+  final Taskset taskset;
 
-  TasksetManageExpansion(this.grade);
+  RemoveTasksetPool(this.taskset);
 }

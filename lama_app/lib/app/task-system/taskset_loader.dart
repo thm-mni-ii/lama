@@ -17,6 +17,19 @@ import 'dart:io';
 ///Author: K.Binder
 class TasksetLoader {
   Map<SubjectGradeRelation, List<Taskset>> loadedTasksets = {};
+  Map<SubjectGradeRelation, List<Taskset>> tasksetPool = {};
+
+  void _loadTasksetPool() {
+    loadedTasksets.forEach((key, value) {
+      value.forEach((element) {
+        if (element.isInPool) {
+          tasksetPool.addAll({
+            key: [element]
+          });
+        }
+      });
+    });
+  }
 
   //Change this constant if you want to support more grades than 1-6.
   //Keep in mind youll have to add standard taskset for each subject for the new grade otherwise the app will crash on startup.
@@ -68,6 +81,7 @@ class TasksetLoader {
             ];
             await loadTasksFromUrls(standardTaskUrls);
           }
+          _loadTasksetPool();
         }
       } on SocketException catch (_) {
         print('not connected');
@@ -215,12 +229,18 @@ class TasksetLoader {
   }
 
   ///Gets all Tasksets that match a specific subject-grade combination (e.g. math and second grade)
-  List<Taskset>? getLoadedTasksetsForSubjectAndGrade(String subject, int? grade) {
+  List<Taskset>? getLoadedTasksetsForSubjectAndGrade(
+      String subject, int? grade) {
     SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
-    if (loadedTasksets.containsKey(sgr))
-      return loadedTasksets[sgr];
-    else
-      return <Taskset>[];
+    if (loadedTasksets.containsKey(sgr)) return loadedTasksets[sgr];
+    return [];
+  }
+
+  ///Gets all Tasksets that match a specific subject-grade combination (e.g. math and second grade)
+  List<Taskset>? getTasksetPoolForSubjectAndGrade(String subject, int? grade) {
+    SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
+    if (tasksetPool.containsKey(sgr)) return tasksetPool[sgr];
+    return [];
   }
 
   ///Loads tasks from a list of [TaskUrl]'s and builds them, making them useable
@@ -230,11 +250,17 @@ class TasksetLoader {
       String? result =
           await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
 
-      var response = await http.get(Uri.parse(taskUrls[i].url!),
-          headers: {'Content-type': 'application/json'});
+      String temp = await rootBundle.loadString(taskUrls[i].url!);
+      await buildTasksetFromJson(temp);
+
+/*       var response = await http.get(
+        Uri.parse(taskUrls[i].url!),
+        headers: {'Content-type': 'application/json'},
+      );
       if (result == null) {
         await buildTasksetFromJson(utf8.decode(response.bodyBytes));
       }
+ */
     }
   }
 }

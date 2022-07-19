@@ -63,7 +63,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
       _currentSelectedGrade = blocTaskset.grade.toString();
       _currentSelectedSubject = blocTaskset.subject;
       _nameController.text = blocTaskset.name!;
-      _descriptionController.text = blocTaskset.description!;
+      _descriptionController.text = blocTaskset.description ?? "";
 
       first = false;
     }

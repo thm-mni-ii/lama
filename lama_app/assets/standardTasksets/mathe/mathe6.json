@@ -7,8 +7,10 @@
    "taskset_subject": "Mathe",
    "taskset_grade": 6,
    "taskset_randomize_order": true,
+   "is_in_Pool": false,
    "tasks": [
       {
+         "id": "t1",
          "task_type": "TaskType.numberLine",
          "task_reward": 1,
          "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
@@ -22,6 +24,7 @@
          "ontap": true
       },
       {
+         "id": "t2",
          "task_type": "TaskType.numberLine",
          "task_reward": 1,
          "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
@@ -35,6 +38,7 @@
          "ontap": false
       },
       {
+         "id": "t3",
          "task_type": "TaskType.equation",
          "task_reward": 2,
          "lama_text": "Löse die Gleichung!",
@@ -52,6 +56,7 @@
          "operator_amount": 2
       },
       {
+         "id": "t4",
          "task_type": "TaskType.equation",
          "task_reward": 2,
          "lama_text": "Löse die Gleichung!",
@@ -68,6 +73,7 @@
          "operator_amount": 2
       },
       {
+         "id": "t5",
          "task_type": "TaskType.equation",
          "task_reward": 2,
          "lama_text": "Löse die Gleichung!",
@@ -80,6 +86,7 @@
          "allow_replacing_operators": true
       },
       {
+         "id": "t6",
          "task_type": "TaskType.equation",
          "task_reward": 2,
          "lama_text": "Löse die Gleichung!",
@@ -92,6 +99,7 @@
          "allow_replacing_operators": true
       },
       {
+         "id": "t7",
          "task_type": "TaskType.equation",
          "task_reward": 2,
          "lama_text": "Löse die Gleichung!",

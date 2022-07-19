@@ -18,11 +18,14 @@ class Taskset {
   bool? randomizeOrder;
   int? randomTaskAmount;
   List<Task>? tasks;
+  bool isInPool = false;
 
-  Taskset(this.name, this.subject, this.description, this.grade, {this.randomizeOrder = true});
+  Taskset(this.name, this.subject, this.description, this.grade,
+      {this.randomizeOrder = true});
 
   Taskset.fromJson(Map<String, dynamic> json) {
     name = json['taskset_name'];
+    isInPool = json["is_in_Pool"];
     subject = json['taskset_subject'];
     description = json['taskset_description'];
     grade = json['taskset_grade'];
@@ -37,8 +40,9 @@ class Taskset {
       randomTaskAmount = tasks!.length;
       if (json.containsKey('taskset_randomize_order')) {
         randomizeOrder = json["taskset_randomize_order"];
-      } else
+      } else {
         randomizeOrder = false;
+      }
     } else {
       randomTaskAmount = min(tasks!.length, json['taskset_choose_amount']);
     }
@@ -47,6 +51,7 @@ class Taskset {
   Map<String, dynamic> toJson() => {
         "taskset_url": taskurl!.toJson(),
         "taskset_name": name,
+        "is_in_Pool": isInPool,
         "taskset_subject": subject,
         "taskset_description": description,
         "taskset_grade": grade,

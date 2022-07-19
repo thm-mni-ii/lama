@@ -4,6 +4,8 @@ import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_event.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
@@ -44,14 +46,14 @@ class TasksetExpansionTileCardWidget extends StatelessWidget {
             Spacer(),
             IconButton(
               onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (context) => CreateTasksetBloc(taskset: taskset),
-                      child: TasksetCreationScreen(),
-                    ),
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => CreateTasksetBloc(taskset: taskset),
+                    child: TasksetCreationScreen(),
                   ),
                 ),
+              ),
               icon: Icon(Icons.edit),
               color: Colors.white,
             ),
@@ -60,6 +62,19 @@ class TasksetExpansionTileCardWidget extends StatelessWidget {
                 TasksetOptionsDelete(taskset.taskurl!),
               ),
               icon: Icon(Icons.delete),
+              color: Colors.white,
+            ),
+            IconButton(
+              onPressed: () => taskset.isInPool
+                  ? BlocProvider.of<TasksetManageBloc>(context).add(
+                      AddTasksetPool(taskset),
+                    )
+                  : BlocProvider.of<TasksetManageBloc>(context).add(
+                      RemoveTasksetPool(taskset),
+                    ),
+              icon: taskset.isInPool
+                  ? Icon(Icons.check_box_outlined, color: Colors.green)
+                  : Icon(Icons.add),
               color: Colors.white,
             ),
           ],

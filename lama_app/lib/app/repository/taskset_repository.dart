@@ -35,6 +35,17 @@ class TasksetRepository {
     return classTaskset;
   }
 
+  ///Returns a List of all [Taskset] that belong to [subject] and are aimed at [grade] which are used by the children
+  List<Taskset> getTasksetsForGradeWhichAreInUse(int grade) {
+    List<Taskset> classTaskset = [];
+    for (var subject in subjectList) {
+      classTaskset.addAll(
+          tasksetLoader.getTasksetPoolForSubjectAndGrade(subject, grade)!);
+    }
+
+    return classTaskset;
+  }
+
   ///Reloads the [TasksetLoader] and loads all tasksets.
   ///
   ///Under the hood this method is identical to [initialize()] except it doesnt return a Future.
@@ -45,7 +56,8 @@ class TasksetRepository {
     await tasksetLoader.loadAllTasksets();
   }
 
- // TODO
+  // TODO
+  /// adds a Taskset to the server
   Future<void> writeToServer(Taskset taskset) async {
     String url = "";
     var response = await http.post(

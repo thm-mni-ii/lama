@@ -49,7 +49,8 @@ abstract class InputValidation {
   ///{@params}
   ///String as password
   ///(Optional) secondPass to use the function for two password verfication
-  static String? inputPasswordValidation(String? passwort, {String? secondPass}) {
+  static String? inputPasswordValidation(String? passwort,
+      {String? secondPass}) {
     if (isEmpty(passwort)) return 'Das Passwort darf nicht leer sein!';
     if (_regExpInvalide(passwort!))
       return 'Bitte keine Sonderzeichen im Passwort!';
@@ -109,12 +110,8 @@ abstract class InputValidation {
             .get(Uri.parse(url!))
             .timeout(Duration(seconds: 10))
             .whenComplete(() {})
-            .catchError((e) {
-          return null;
-        })
-      ]).catchError((e) {
-        return null;
-      });
+            .catchError((e) => null)
+      ]).catchError((e) => null);
 
       //Check if URL is reachable
       if (response[0].statusCode == 200) {
