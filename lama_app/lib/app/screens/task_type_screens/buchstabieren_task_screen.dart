@@ -59,7 +59,9 @@ class BuchstabierenTaskScreen extends StatefulWidget {
 
   BuchstabierenTaskScreen(
       this.task, this.constraints, this.pictureFromNetwork, this.randomNummer,
-      [this.userGrade]);
+      [this.userGrade]) {
+   alreadySaid = false;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -411,9 +413,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   ///fills bubble at the bottom of the screen with color after answering
   void fillBubble(Color answerFarbe) {
     antwortFarben[antwortZaehler] = answerFarbe;
-    if(antwortZaehler == 3) {
-      alreadySaid = false;
-    }
   }
 
 //ein Container, welcher einen klickbaren Button mit einem Buchstaben beinhaltet
