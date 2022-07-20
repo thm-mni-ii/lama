@@ -133,17 +133,20 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
               Positioned(
                 bottom: 20,
                 right: 20,
-                child: FloatingActionButton(onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (BuildContext context) => AddVocabBloc(),
-                        child: AddVocabScreen(),
-                      ),
-                    ),
-                  ).then((value) => (setState(() {})));
-                }),
+                child: FloatingActionButton.extended(
+                    icon: Icon(Icons.post_add),
+                    label: Text('Neue Vokabeln hinzufügen'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (BuildContext context) => AddVocabBloc(),
+                            child: AddVocabScreen(),
+                          ),
+                        ),
+                      ).then((value) => (setState(() {})));
+                    }),
               ),
             ]
           ],

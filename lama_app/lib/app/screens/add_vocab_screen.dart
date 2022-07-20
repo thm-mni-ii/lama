@@ -23,6 +23,8 @@ class AddVocabScreen extends StatefulWidget {
 class AddVocabScreenState extends State<AddVocabScreen> {
   late bool textScanning = false;
   late String scannedText = ' ';
+  final vocabList1 = <String>[];
+  final vocabList2 = <String>[];
   XFile? imageFile;
 
   @override
@@ -109,12 +111,23 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                 ),
                 const SizedBox(
                   height: 20,
-                ),
+                ),  
                 Container(
                   child: Text(
                     scannedText,
                     style: TextStyle(fontSize: 20),
                   ),
+                ),
+                Container(
+                  child: vocabList1.isEmpty
+                      ? Text('')
+                      : Text(vocabList1.toString()),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  child: vocabList2.isEmpty
+                      ? Text('')
+                      : Text(vocabList2.toString()),
                 ),
               ],
             ),
@@ -143,13 +156,14 @@ class AddVocabScreenState extends State<AddVocabScreen> {
   }
 
   void getRecognisedText(XFile image) async {
+    vocabList1.clear();
+    vocabList2.clear();
     final inputImage = InputImage.fromFilePath(image.path);
     final textDetector = GoogleMlKit.vision.textDetector();
     RecognisedText recognisedText = await textDetector.processImage(inputImage);
     await textDetector.close();
     scannedText = "";
-    final vocabList1 = <String>[];
-    final vocabList2 = <String>[];
+
     final centerPointList = <int>[];
     int centerPointSum = 0;
     int centerPoint = 0;
@@ -206,6 +220,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
 
   bool isWord(String s) {
     if ('${s[0]}'.contains(new RegExp(r'[A-Z]')) ||
+        '${s[0]}'.contains(new RegExp(r'[a-z]')) ||
         '${s[0]}'.contains(new RegExp(r'[1-9]'))) {
       return true;
     }
