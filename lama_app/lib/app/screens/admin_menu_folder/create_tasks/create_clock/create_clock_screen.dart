@@ -93,7 +93,33 @@ class CreateClockScreenState extends State<CreateClockScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 5),
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Timer",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        CheckboxListTile(
+                          title: Text("Timer allowed"),
+                          value: timerAllowed,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              timerAllowed = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 30),
                     child: Container(
                       margin: EdgeInsets.only(left: 5, bottom: 15, right: 5),
                       alignment: Alignment.centerLeft,
@@ -124,32 +150,6 @@ class CreateClockScreenState extends State<CreateClockScreen> {
                       _rewardController.text = text!,
                     ),
                   ),
-                  Container(
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Timer",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        CheckboxListTile(
-                          title: Text("Timer allowed"),
-                          value: timerAllowed,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              timerAllowed = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -160,18 +160,6 @@ class CreateClockScreenState extends State<CreateClockScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetChooseTaskScreen(),
-                      ),
-                    ),
-                  ),
-                  child: const Text("Preview"),
-                ),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {

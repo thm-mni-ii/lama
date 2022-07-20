@@ -25,8 +25,8 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
 
   bool newTask = true;
   bool? reverseAllowed = false;
-  bool? boolThousandsAllowed = true;
-  bool? zerosAllowed = true;
+  bool? boolThousandsAllowed = false;
+  bool? zerosAllowed = false;
 
 
 
@@ -58,6 +58,50 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
               child: Column(
                 children: [
                   Container(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Optionen",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        CheckboxListTile(
+                          title: Text("Reihenfolge umkehren"),
+                          subtitle: Text("Aktiviert: E-Z-H-T\nDeaktiviert: T-H-Z-E"),
+                          value: reverseAllowed,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              reverseAllowed = value;
+                            });
+                          },
+                        ),
+                        CheckboxListTile(
+                          title: Text("Nullen in Zahl erlauben"),
+                          subtitle: Text("Aktiviert: Es sind Nullen als Ziffern erlaubt\nDeaktiviert: Es sind keine Nullen erlaubt"),
+                          value: zerosAllowed,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              zerosAllowed = value;
+                            });
+                          },
+                        ),
+                        CheckboxListTile(
+                          title: Text("Tausender erlauben"),
+                          subtitle: Text("Aktiviert: Zahlen gehen bis 9999\nDeaktiviert: Zahlen gehen bis 999"),
+                          value: boolThousandsAllowed,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              boolThousandsAllowed = value;
+                            });
+                          },
+                        ),
+                  Container(
                     margin: EdgeInsets.only(top: 30, left: 5, right: 5),
                     child: Align(
                       alignment: Alignment.centerLeft,
@@ -88,81 +132,6 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
                       _rewardController.text = text!,
                     ),
                   ),
-                  Container(
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Reverse",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        CheckboxListTile(
-                          title: Text("Reverse allowed"),
-                          value: reverseAllowed,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              reverseAllowed = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Zeros ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        CheckboxListTile(
-                          title: Text("Zeros allowed"),
-                          value: zerosAllowed,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              zerosAllowed = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "boolThousands",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        CheckboxListTile(
-                          title: Text("boolThousands allowed"),
-                          value: boolThousandsAllowed,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              boolThousandsAllowed = value;
-                            });
-                          },
-                        ),
                       ],
                     ),
                   ),
@@ -176,18 +145,6 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetChooseTaskScreen(),
-                      ),
-                    ),
-                  ),
-                  child: const Text("Preview"),
-                ),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {

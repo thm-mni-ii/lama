@@ -147,10 +147,10 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            " RandomRange und Ontap allowed",
+                            "Weitere Optionen",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -158,7 +158,7 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                           ),
                         ),
                         CheckboxListTile(
-                          title: Text("randomRange"),
+                          title: Text("Zufällige Range"),
                           value: randomRangeAllowed,
                           onChanged: (bool? value) {
                             setState(() {
@@ -167,7 +167,7 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                           },
                         ),
                         CheckboxListTile(
-                          title: Text("ontap"),
+                          title: Text("On Tap"),
                           value: ontapAllowed,
                           onChanged: (bool? value) {
                             setState(() {
@@ -179,11 +179,11 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+                    margin: EdgeInsets.only(top: 30, left: 5, right: 5),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Steps",
+                        "Schritte",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -192,12 +192,12 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 5, left: 5, right: 5),
+                    margin: EdgeInsets.only(left: 5, right: 5),
                     child: TextFormField(
                       controller: _stepsController,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                        labelText: 'Steps',
+                        labelText: 'Gebe die Schritte an',
                       ),
                       validator: (text) {
                         if (text == null || text.isEmpty) {
@@ -210,7 +210,7 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 20, left: 5, right: 5),
+                    margin: EdgeInsets.only(top: 30, left: 5, right: 5),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -223,7 +223,7 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+                    margin: EdgeInsets.only(left: 5, right: 5),
                     child: TextFormField(
                       controller: _rewardController,
                       keyboardType: TextInputType.number,
@@ -252,18 +252,6 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetChooseTaskScreen(),
-                      ),
-                    ),
-                  ),
-                  child: const Text("Preview"),
-                ),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {

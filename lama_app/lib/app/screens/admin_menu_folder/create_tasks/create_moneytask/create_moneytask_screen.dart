@@ -101,7 +101,33 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 30, left: 5, right: 5),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Weitere Optionen",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            CheckboxListTile(
+                              title: Text("Nur die optimale Lösung zulassen"),
+                              value: optimumAllowed,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  optimumAllowed = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 30, left: 5, right: 5),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -131,33 +157,6 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                               _rewardController.text = text!,
                         ),
                       ),
-                      Container(
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Weitere Optionen",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            CheckboxListTile(
-                              title: Text("Nur die optimale Lösung zulassen"),
-                              value: optimumAllowed,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  optimumAllowed = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-
                     ],
                   ),
                 ),
@@ -169,36 +168,6 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                TextButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      TaskMoney moneytask = TaskMoney(
-                          widget.task?.id ??
-                              KeyGenerator.generateRandomUniqueKey(
-                                  blocTaskset.tasks!),
-                          TaskType.moneyTask,
-                          int.parse(_rewardController.text),
-                          "",
-                          3,
-                          int.parse(_currentSelectedDifficulty.toString()),
-                          optimumAllowed);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => TaskScreen(blocTaskset.grade)));
-                    }
-                  },
-/*                   onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetChooseTaskScreen(),
-                      ),
-                    ),
-                  ), */
-                  child: const Text("Preview"),
-                ),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {

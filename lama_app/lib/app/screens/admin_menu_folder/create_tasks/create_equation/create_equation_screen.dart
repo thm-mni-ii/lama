@@ -275,6 +275,19 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                       ),
                       Container(
                         margin: EdgeInsets.only(top: 30, left: 5, right: 5),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Erreichbare Lamacoins",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 5, right: 5),
                         child: TextFormField(
                           controller: _rewardController,
                           keyboardType: TextInputType.number,
@@ -302,18 +315,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetChooseTaskScreen(),
-                      ),
-                    ),
-                  ),
-                  child: const Text("Preview"),
-                ),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
