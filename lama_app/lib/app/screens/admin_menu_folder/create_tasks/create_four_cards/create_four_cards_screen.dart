@@ -18,6 +18,9 @@ class CreateFourCardsScreen extends StatefulWidget {
 }
 
 class CreateFourCardsScreenState extends State<CreateFourCardsScreen> {
+  TextEditingController _rewardController = TextEditingController();
+  TextEditingController _questionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
@@ -29,6 +32,83 @@ class CreateFourCardsScreenState extends State<CreateFourCardsScreen> {
         titel: "Four Cards",
         color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
       ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.all(5),
+                child: Column(
+                  children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Frage",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 5, right: 5),
+                          child: TextFormField(
+                            controller: _questionController,
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                              labelText: 'Gib die Frage an',
+                            ),
+                            validator: (text) {
+                              if (text == null || text.isEmpty) {
+                                return "Die Frage fehlt!";
+                              }
+                              return null;
+                            },
+                            onSaved: (String? text) =>
+                                _questionController.text = text!,
+                          ),
+                        ),  
+                        Container(
+                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Erreichbare Lamacoins",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 5, right: 5),
+                          child: TextFormField(
+                            controller: _rewardController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Erreichbare Lamacoins',
+                            ),
+                            validator: (text) {
+                              if (text == null || text.isEmpty) {
+                                return "Beitrag fehlt!";
+                              }
+                              return null;
+                            },
+                            onSaved: (String? text) =>
+                                _rewardController.text = text!,
+                          ),
+                        ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      )
     );
   }
 }
