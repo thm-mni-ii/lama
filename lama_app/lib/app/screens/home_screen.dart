@@ -86,7 +86,8 @@ class ToggleTextToSpeechWidget extends State<ToggleTextToSpeech> {
 /// Author: K.Binder
 class _HomeScreenState extends State<HomeScreen> {
   UserRepository? userRepository;
-
+  String tooltipptext ="";
+  bool changedSound = false;
   DateTime? backButtonPressedTime;
 
   static String finaltooltipp = "";
@@ -104,12 +105,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     userRepository = RepositoryProvider.of<UserRepository>(context);
-    String tooltipptext = RepositoryProvider.of<LamaFactsRepository>(context).getRandomLamaFact();
-    if(finaltooltipp == "") {
-      finaltooltipp = tooltipptext;
-    } else {
-      tooltipptext = finaltooltipp;
+
+    if(!changedSound) {
+      tooltipptext = RepositoryProvider.of<LamaFactsRepository>(context).getRandomLamaFact();
     }
+    changedSound = false;
     return Scaffold(
       body: WillPopScope(
         onWillPop: onWillPop,
@@ -186,7 +186,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                         onTap: () => {
                                           home_screen_state.toggle(),
-                                          setState(() {})
+                                          setState(() {
+                                            tooltipptext = tooltipptext!;
+                                            changedSound = true;
+                                          })
                                         }
                                     ),
                                   ),
