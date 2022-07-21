@@ -32,7 +32,6 @@ class _SetupTasksetBodyState extends State<SetupTasksetBody> {
       int.parse(_currentSelectedGrade!),
     );
     taskset.tasks = blocTaskset != null ? blocTaskset.tasks : [];
-    taskset.taskurl = TaskUrl(url: "");
     return taskset;
   }
 

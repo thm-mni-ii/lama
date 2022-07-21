@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/widgets/new_tasksets.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/widgets/taskset_expansion_tile_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
+import 'package:lama_app/app/screens/taskset_option_screen.dart';
 // blocs
 
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
+import 'package:lama_app/util/LamaTextTheme.dart';
 
 import '../../../../bloc/taskset_options_bloc.dart';
 
@@ -36,6 +38,19 @@ class _TasksetManageScreenState extends State<TasksetManageScreen> {
     }
   }
 
+  String getNameOfScreen() {
+    switch (_currentPageIndex) {
+      case 0:
+        return "Alle Tasksets";
+      case 1:
+        return "Freigegebene Tasksets";
+      case 2:
+        return "Create new Taskset";
+      default:
+        return "Upsi";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -45,11 +60,32 @@ class _TasksetManageScreenState extends State<TasksetManageScreen> {
     return BlocProvider(
       create: (context) => TasksetOptionsBloc(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,//oder scrollable
-        appBar: CustomAppbar(
-          size: screenSize.width / 5,
-          titel: "Meine erstellten Tasks",
-          color: LamaColors.bluePrimary,
+        resizeToAvoidBottomInset: false, //oder scrollable
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) => TasksetOptionsBloc(),
+                    child: OptionTaskScreen(),
+                  ),
+                ),
+              ),icon: Icon(Icons.import_export_rounded),
+            ),
+          ],
+          title: Text(
+            getNameOfScreen(),
+            style: LamaTextTheme.getStyle(fontSize: 18),
+          ),
+          toolbarHeight: screenSize.width / 5,
+          backgroundColor: LamaColors.bluePrimary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(30),
+            ),
+          ),
         ),
         body: screenOfNavigator(_currentPageIndex),
         bottomNavigationBar: BottomNavigationBar(
