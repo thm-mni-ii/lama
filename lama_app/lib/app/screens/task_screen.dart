@@ -63,8 +63,12 @@ class TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    BuildContext Mycontext = this.context;
+
     String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     LinearGradient? lg;
+
     return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
         //State that signals a Task should be displayed
@@ -135,32 +139,33 @@ class TaskScreenState extends State<TaskScreen> {
                                       fontWeight: FontWeight.w500)),
 
 
-                                   Align(
-                                    alignment: Alignment.centerRight,
-                                    child: InkWell(
-                                        child: CircleAvatar(
-                                          maxRadius: 21,
-                                          child: SvgPicture.asset(
-                                              path,
-                                              semanticsLabel: 'TonIcon',
-                                              color: LamaColors.purpleAccent
-                                          ),
-                                          backgroundColor: LamaColors.white,
-                                        ),
-                                        // todo doing
-                                        onTap: () =>
-                                        {
-                                          BlocProvider.of<TTSBloc>(context).
-                                          add(ReadQuestion())
-                                        },
-                                        onDoubleTap: () => {
-                                        home_screen_state.toggle(),
-                                        setState(() {
-                                        path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
-                                        }),
-                                        }
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: InkWell(
+                                    child: CircleAvatar(
+                                      maxRadius: 21,
+                                      child: SvgPicture.asset(
+                                          path,
+                                          semanticsLabel: 'TonIcon',
+                                          color: LamaColors.purpleAccent
+                                      ),
+                                      backgroundColor: LamaColors.white,
                                     ),
-                                  ),
+                                    // todo doing
+                                    onTap: () =>
+                                    {
+                                      BlocProvider.of<TTSBloc>(context).add(AnswerOnInitEvent("hullo","de"))
+                                      // BlocProvider.of<TTSBloc>(context).
+                                      // add(ReadQuestion())
+                                    },
+                                    onDoubleTap: () => {
+                                      home_screen_state.toggle(),
+                                      setState(() {
+                                        path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
+                                      }),
+                                    }
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -172,10 +177,13 @@ class TaskScreenState extends State<TaskScreen> {
                                 BoxConstraints constraints) {
 
 
-                              return BlocProvider.value(value: BlocProvider.of<TTSBloc>(context),
-                              child: getScreenForTaskWithConstraints(
-                                  state.task, constraints),
-);
+                              return BlocProvider.value(value: BlocProvider.of<TTSBloc>(Mycontext),
+                                child: BlocProvider.value(
+                                  value: BlocProvider.of<TTSBloc>(Mycontext),
+                                  child: getScreenForTaskWithConstraints(state.task, constraints),
+                                )
+
+                              );
                             }))
                       ]);
                     },
@@ -321,23 +329,23 @@ class TaskScreenState extends State<TaskScreen> {
           color: LamaColors.white,
         );
       },
-    );
+
+);
+
 
   }
+
 
   ///Returns the Widget that corresponds to the TaskType of [task].
   ///
   ///Also passes the constraints of the "TaskBox" (see [build()])
   ///to allow the task screens to scale accordingly.
-  Widget getScreenForTaskWithConstraints(
-      Task task, BoxConstraints constraints) {
+  Widget getScreenForTaskWithConstraints( Task task, BoxConstraints constraints) {
     switch (task.type) {
-      case "4Cards":
-        return BlocBuilder<TTSBloc, TTSState>(
-  builder: (context, state) {
-    return FourCardTaskScreenStateful(task as Task4Cards, constraints );
-  },
-);
+      case "4Cards": return FourCardTaskScreenStateful(task as Task4Cards, constraints );
+      //TwoBlocs(task, constraints);
+    //return FourCardTaskScreenStateful(task as Task4Cards, constraints );
+
 
 
       case "Zerlegung":
@@ -365,7 +373,7 @@ class TaskScreenState extends State<TaskScreen> {
       case "Equation":
         return EquationTaskScreen(task as TaskEquation, constraints);
       case "Buchstabieren":
-        // precacheAllImagesForTask(task, context);
+      // precacheAllImagesForTask(task, context);
         randomNummer = erstelleEineRandomNummer(task);
         return BuchstabierenTaskScreen(
             task as TaskBuchstabieren,
@@ -562,3 +570,37 @@ class TaskScreenState extends State<TaskScreen> {
     );
   }
 }
+
+// class TwoBlocs extends StatelessWidget {
+//
+//   final Task task;
+//   final BoxConstraints constraints;
+//
+//   TwoBlocs(this.task, this.constraints) {}
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//     return BlocProvider(
+//   create: (context) => TTSBloc(),
+//   child: Scaffold(
+//       body: Builder(
+//
+//           builder: (_) => BlocProvider.value(
+//             value: BlocProvider.of<TTSBloc>(context),
+//             child: FourCardTaskScreenStateful(task as Task4Cards, constraints ),
+//           )
+//
+//         // value: BlocProvider.of<TTSBloc>(context),
+//         // child: BlocProvider<TTSBloc>.value(value: BlocProvider.of<TTSBloc>(context),
+//         //     child: FourCardTaskScreenStateful(task as Task4Cards, constraints ));
+//
+//       ),
+//     ),
+// );
+//
+//     throw UnimplementedError();
+//   }
+//
+// }
+
