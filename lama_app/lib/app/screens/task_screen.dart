@@ -64,8 +64,6 @@ class TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
 
-    BuildContext Mycontext = this.context;
-
     String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     LinearGradient? lg;
 
@@ -173,18 +171,14 @@ class TaskScreenState extends State<TaskScreen> {
                             height: (constraints.maxHeight / 100) * 92.5,
                             //"TaskBox" that will be filled depending on
                             //the TaskType of the current Task
-                            child: LayoutBuilder(builder: (BuildContext context,
+                                child: LayoutBuilder(builder: (BuildContext context,
                                 BoxConstraints constraints) {
+                                return getScreenForTaskWithConstraints(
+                                state.task, constraints);
+                                }))
 
 
-                              return BlocProvider.value(value: BlocProvider.of<TTSBloc>(Mycontext),
-                                child: BlocProvider.value(
-                                  value: BlocProvider.of<TTSBloc>(Mycontext),
-                                  child: getScreenForTaskWithConstraints(state.task, constraints),
-                                )
 
-                              );
-                            }))
                       ]);
                     },
                   ),
@@ -342,7 +336,14 @@ class TaskScreenState extends State<TaskScreen> {
   ///to allow the task screens to scale accordingly.
   Widget getScreenForTaskWithConstraints( Task task, BoxConstraints constraints) {
     switch (task.type) {
-      case "4Cards": return FourCardTaskScreenStateful(task as Task4Cards, constraints );
+      case "4Cards": return Builder(
+        builder: (_) =>
+           BlocProvider.value(
+                value: BlocProvider.of<TTSBloc>(context),
+                child: FourCardTaskScreenStateful(task as Task4Cards, constraints ),
+              )
+
+      );
       //TwoBlocs(task, constraints);
     //return FourCardTaskScreenStateful(task as Task4Cards, constraints );
 
