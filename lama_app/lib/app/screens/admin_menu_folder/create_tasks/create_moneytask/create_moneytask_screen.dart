@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
-import 'package:lama_app/app/screens/task_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -54,177 +52,154 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: CustomAppbar(
-        size: screenSize.width / 5,
-        titel: "MoneyTask",
-        color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.all(5),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Schwierigkeitsgrad",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(5),
-                        child: DropdownButtonFormField<String>(
-                          hint: Text("Schwierigkeitsstufe auswählen"),
-                          value: _currentSelectedDifficulty,
-                          isDense: true,
-                          onChanged: (String? newValue) {
-                            setState(() => _currentSelectedDifficulty = newValue);
-                          },
-                          items: <String>['1', '2', '3'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      Container(
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Weitere Optionen",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+        resizeToAvoidBottomInset: false,
+        appBar: CustomAppbar(
+          size: screenSize.width / 5,
+          titel: "MoneyTask",
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  margin: EdgeInsets.all(5),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Schwierigkeitsgrad",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            CheckboxListTile(
-                              title: Text("Nur die optimale Lösung zulassen"),
-                              value: optimumAllowed,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  optimumAllowed = value;
-                                });
-                              },
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Erreichbare Lamacoins",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                        Container(
+                          margin: EdgeInsets.all(5),
+                          child: DropdownButtonFormField<String>(
+                            hint: Text("Schwierigkeitsstufe auswählen"),
+                            value: _currentSelectedDifficulty,
+                            isDense: true,
+                            onChanged: (String? newValue) {
+                              setState(
+                                  () => _currentSelectedDifficulty = newValue);
+                            },
+                            items: <String>['1', '2', '3'].map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        Container(
+                          child: Column(
+                            children: [
+                              Container(
+                                margin:
+                                    EdgeInsets.only(top: 30, left: 5, right: 5),
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Weitere Optionen",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              CheckboxListTile(
+                                title: Text("Nur die optimale Lösung zulassen"),
+                                value: optimumAllowed,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    optimumAllowed = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Erreichbare Lamacoins",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 15, bottom: 15, right: 30),
-                        child: TextFormField(
-                          controller: _rewardController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Erreichbare Lamacoins',
+                        Container(
+                          margin:
+                              EdgeInsets.only(left: 15, bottom: 15, right: 30),
+                          child: TextFormField(
+                            controller: _rewardController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Erreichbare Lamacoins',
+                            ),
+                            validator: (text) {
+                              if (text == null || text.isEmpty) {
+                                return "Beitrag fehlt!";
+                              }
+                              return null;
+                            },
+                            onSaved: (String? text) =>
+                                _rewardController.text = text!,
                           ),
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return "Beitrag fehlt!";
-                            }
-                            return null;
-                          },
-                          onSaved: (String? text) =>
-                              _rewardController.text = text!,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
+          ],
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                primary: LamaColors.findSubjectColor(
+                    blocTaskset.subject ?? "normal")),
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                TaskMoney moneyTask = TaskMoney(
+                    widget.task?.id ??
+                        KeyGenerator.generateRandomUniqueKey(
+                            blocTaskset.tasks!),
+                    TaskType.moneyTask,
+                    int.parse(_rewardController.text),
+                    "",
+                    3,
+                    int.parse(_currentSelectedDifficulty.toString()),
+                    optimumAllowed);
+                if (newTask) {
+                  // add Task
+                  BlocProvider.of<CreateTasksetBloc>(context)
+                      .add(AddTask(moneyTask));
+                  Navigator.pop(context);
+                } else {
+                  // edit Task
+                  BlocProvider.of<CreateTasksetBloc>(context)
+                      .add(EditTask(moneyTask));
+                }
+                print(moneyTask.difficulty);
+                Navigator.pop(context);
+              }
+            },
+            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
           ),
-          Container(
-            margin: EdgeInsets.only(bottom: 25),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      TaskMoney moneyTask = TaskMoney(
-                        widget.task?.id ??
-                            KeyGenerator.generateRandomUniqueKey(
-                                blocTaskset.tasks!),
-                        TaskType.moneyTask,
-                        int.parse(_rewardController.text),
-                        "",
-                        3,
-                        int.parse(_currentSelectedDifficulty.toString()),
-                        optimumAllowed
-                      );
-                      if (newTask) {
-                        // add Task
-                        BlocProvider.of<CreateTasksetBloc>(context)
-                            .add(AddTask(moneyTask));
-                        Navigator.pop(context);
-                      } else {
-                        // edit Task
-                        BlocProvider.of<CreateTasksetBloc>(context)
-                            .add(EditTask(moneyTask));
-                      }
-                      print(moneyTask.difficulty);
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+        ));
   }
-}
-
-class Item {
-  Item({
-    required this.id,
-    required this.expandedValue,
-    required this.headerValue,
-  });
-
-  int id;
-  String expandedValue;
-  String headerValue;
-}
-
-List<Item> generateItems(int numberOfItems) {
-  return List<Item>.generate(numberOfItems, (int index) {
-    return Item(
-      id: index,
-      headerValue: 'Erweiterte Optionen',
-      expandedValue: "Nur volle Euro",
-    );
-  });
 }

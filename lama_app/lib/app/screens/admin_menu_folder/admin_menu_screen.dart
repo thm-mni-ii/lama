@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
@@ -157,6 +159,25 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           _menuButton(
             context,
             Icon(Icons.add_link),
+            'Aufgabenverwaltung',
+            () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (BuildContext context) => TasksetOptionsBloc(),
+                    child: OptionTaskScreen(),
+                  ),
+                ),
+              ).then((_) {
+                AdminUtils.reloadTasksets(context);
+              })
+            },
+          ),
+/*           //Navigation Button to 'Aufgabenverwaltung' [OptionTaskScreen]
+          _menuButton(
+            context,
+            Icon(Icons.add_link),
             'Tasksetverwaltung',
             () => Navigator.push(
               context,
@@ -169,7 +190,21 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
             ).then((_) {
               AdminUtils.reloadTasksets(context);
             }),
-          ),
+          ), */
+          //Navigation Button to 'Aufgabenerstellen' [TasksetCreationScreen]
+          _menuButton(
+              context,
+              Icon(Icons.task),
+              'Tasksererstellung',
+              () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) => CreateTasksetBloc(),
+                        child: TasksetCreationScreen(),
+                      ),
+                    ),
+                  )),
           _menuButton(
             context,
             Icon(Icons.settings),
