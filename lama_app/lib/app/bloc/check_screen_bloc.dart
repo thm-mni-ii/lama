@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -18,6 +19,7 @@ import 'package:lama_app/app/screens/create_admin_screen.dart';
 import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
+import 'package:lama_app/app/task-system/taskset_validator.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -190,7 +192,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     String? error = await InputValidation.inputUrlWithJsonValidation(_setupUrl);
     String? errorUserList;
     String? errorTaskset;
-    Map<String, String>? urls;
+    Map<String, dynamic>? urls;
 
     //TO-DO: errorhandling
     if (error != null) return print(error);
@@ -204,7 +206,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     //load userlist through URL
     if (urls != null) {
       errorUserList =
-          await InputValidation.inputUrlWithJsonValidation(urls['userlistUrl']);
+          await InputValidation.inputUrlWithJsonValidation(urls['userListUrl']);
       errorTaskset =
           await InputValidation.inputUrlWithJsonValidation(urls['tasksetUrl']);
     }
@@ -212,23 +214,32 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     /* errorUserList != null ?  print(errorUserList) :  */
     if (errorTaskset != null) return print(errorTaskset);
     try {
-      final response = await http.get(Uri.parse(urls!['userlistUrl']!));
+      final response = await http.get(Uri.parse(urls!['userListUrl']!));
       _userList = _parseUserList(jsonDecode(response.body));
     } on SocketException {
-      /* return UserlistUrlParsingFailed(
-        error: 'Kritischer Fehler beim erreichen der URL!',
-      ); */
+      print('Kritischer Fehler beim erreichen der URL!');
     }
     _userList!.forEach((user) async {
       await DatabaseProvider.db.insertUser(user);
     });
+    /* final response = await http.get(Uri.parse(urls!['tasksetUrl']!));
+    //Check if URL is reachable
+    if (response.statusCode == 200) {
+      //Taskset validtion
+      String? tasksetError =
+          TasksetValidator.isValidTaskset(jsonDecode(response.body));
+      if (tasksetError != null) {
+        print(tasksetError);
+      }
+    }
+    await DatabaseProvider.db.insertTaskUrl(urls['tasksetUrl']!); */
     //if everything works, navigate to UserSelectionScreen
     _navigateAdminExist(context);
   }
 
   ///parses URLS from the json file and checks if the urls are strings
-  Map<String, String>? _parseUrls(Map<String, String> json) {
-    if (!(json.containsKey('userlistUrl') && json['userlistUrl'] is String)) {
+  Map<String, dynamic>? _parseUrls(Map<String, dynamic> json) {
+    if (!(json.containsKey('userListUrl') && json['userListUrl'] is String)) {
       print("Es wurde keine userlist url gefunden");
       return null;
     }
@@ -240,7 +251,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     return json;
   }
 
-  List<User>? _parseUserList(Map<String, String> userJson) {
+  List<User>? _parseUserList(Map<String, dynamic> userJson) {
     //Check if UserList "users" exist in the json file
     if (!(userJson.containsKey('users') && userJson['users'] is List)) {
       print(
@@ -265,5 +276,9 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     }
     //return valid _userList to UI
     return _userList;
+  }
+
+  void _parseTaskset() {
+    //Insert URL to Database
   }
 }
