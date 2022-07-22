@@ -53,16 +53,13 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
     Navigator.pop(context, null);
   }
 
- Future<void> _generate() async {
-    var path = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
-    File file = File(path + '/' + taskset!.name! + '.json');
-    print(file.path);
-    print(taskset!.tasks![0].toJson());
+  Future<void> _generate() async {
+    var path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOCUMENTS);
+    File file = File(path + '/LAMA/' + taskset!.name! + '.json');
     String json = jsonEncode(taskset);
-    print(json);
     String json1 = jsonEncode(taskset!.tasks![0]);
-    print(json1);
-    file.createSync();
+    file.createSync(recursive: true);
     file.writeAsStringSync(json);
   }
 }
