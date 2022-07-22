@@ -163,6 +163,17 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
             onTap: () => {
               Navigator.push(
                 context,
+
+
+                // MaterialPageRoute(
+                //   builder: (context) => BlocProvider<TaskBloc>(
+                //     create: (context) => TaskBloc(taskset.subject,
+                //         generateTaskList(taskset), userRepository),
+                //     child: TaskScreen(userGrade),
+                //   ),
+                // ),
+                //
+
                 MaterialPageRoute(
                   // todo doing
                   builder: (context) => MultiBlocProvider(
@@ -179,6 +190,9 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                     child: TaskScreen(userGrade),
                   ),
                 ),
+
+
+
               ),
             },
             child: Column(

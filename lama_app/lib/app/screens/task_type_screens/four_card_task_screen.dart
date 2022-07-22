@@ -27,7 +27,6 @@ class FourCardTaskScreenStateful extends StatefulWidget {
     answers.add(task.rightAnswer!);
     print(answers.length);
     answers.shuffle();
-
   }
 
 
@@ -57,116 +56,122 @@ class FourCards extends State<FourCardTaskScreenStateful> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
-
     // todo here
-    BlocProvider.of<TTSBloc>(context).add(AnswerOnInitEvent("hullo","de"));
-
+    //BlocProvider.of<TTSBloc>(context).add(AnswerOnInitEvent("hullo","de"));
 
 
     String qlang;
-    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    task.questionLanguage == null || task.questionLanguage == "" ||
+        task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang =
+    "Englisch";
 
-      return Column(children: [
-        Container(
-          height: (constraints.maxHeight / 100) * 40,
-          width: (constraints.maxWidth),
-          padding: EdgeInsets.all(25),
+        return Column(children: [
+          Container(
+            height: (constraints.maxHeight / 100) * 40,
+            width: (constraints.maxWidth),
+            padding: EdgeInsets.all(25),
 
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
-                    gradient: LinearGradient(colors: [
-                      LamaColors.orangeAccent,
-                      LamaColors.orangePrimary
-                    ]),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 3))
-                    ]),
-                child: Align(
-                  child: InkWell(
-                    child: Text(task.question!,
-                        textAlign: TextAlign.center,
-                        style: LamaTextTheme.getStyle(fontSize: 30)
-                    ),
-                  ),
-                ),
-              ),
-
-        ),
-        Container(
-          height: (constraints.maxHeight / 100) * 15,
-          padding: EdgeInsets.only(left: 15, right: 15),
-          child: Stack(children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                padding: EdgeInsets.only(left: 75),
-                height: 50,
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
-                child: Bubble(
-                  nip: BubbleNip.leftCenter,
-                  child: Center(
-                    child: Text(
-                      "Tippe einmal, um die Antwort oder Frage anzuhören.",
-                      style: TextStyle(fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  gradient: LinearGradient(colors: [
+                    LamaColors.orangeAccent,
+                    LamaColors.orangePrimary
+                  ]),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3))
+                  ]),
+              child: Align(
+                child: InkWell(
+                  child: Text(task.question!,
+                      textAlign: TextAlign.center,
+                      style: LamaTextTheme.getStyle(fontSize: 30)
                   ),
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: SvgPicture.asset(
-                "assets/images/svg/lama_head.svg",
-                semanticsLabel: "Lama Anna",
-                width: 75,
-              ),
-            ),
-          ]),
-        ),
-        Container(
-            height: (constraints.maxHeight / 100) * 45,
-            child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 10,
-                  left: 5,
-                  right: 5,
-                ),
-                child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1.6 / 1,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                    ),
-                    itemCount: 4,
-                    itemBuilder: (context, index) =>
-                        _buildCards(context, index)))),
 
-      ]);
+          ),
+          Container(
+            height: (constraints.maxHeight / 100) * 15,
+            padding: EdgeInsets.only(left: 15, right: 15),
+            child: Stack(children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: EdgeInsets.only(left: 75),
+                  height: 50,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  child: Bubble(
+                    nip: BubbleNip.leftCenter,
+                    child: Center(
+                      child: Text(
+                        "Tippe einmal, um die Antwort oder Frage anzuhören.",
+                        style: TextStyle(fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SvgPicture.asset(
+                  "assets/images/svg/lama_head.svg",
+                  semanticsLabel: "Lama Anna",
+                  width: 75,
+                ),
+              ),
+            ]),
+          ),
+          Container(
+              height: (constraints.maxHeight / 100) * 45,
+              child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10,
+                    left: 5,
+                    right: 5,
+                  ),
+                  child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.6 / 1,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                      ),
+                      itemCount: 4,
+                      itemBuilder: (context, index) =>
+                          BlocProvider.value(
+                            value: BlocProvider.of<TTSBloc>(context),
+                            child: _buildCards(context, index),
+                          )))),
+
+        ]);
 
   }
 
   Widget _buildCards(context, index) {
     String alang;
-    task.answerLanguage == null || task.answerLanguage == "" ? alang = "Deutsch" : alang = task.answerLanguage!;
+    task.answerLanguage == null || task.answerLanguage == ""
+        ? alang = "Deutsch"
+        : alang = task.answerLanguage!;
     //debugPrint(index);
     Color color =
     index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;
     // BlocProvider.of<TTSBloc>(context)
     //     .add(ClickOnAnswer(answers[index], index, alang));
 
+    return BlocBuilder<TTSBloc, TTSState>(
+      builder: (context, state) {
         return Container(
           height: 50,
           decoration: BoxDecoration(
@@ -181,10 +186,10 @@ class FourCards extends State<FourCardTaskScreenStateful> {
               ]),
           child: InkWell(
             onTap: () {
-              if ( selectedAnswer != answers[index]) {
+              if (selectedAnswer != answers[index]) {
                 //log('data: $selectedAnswer');
                 BlocProvider.of<TTSBloc>(context)
-                .add(ClickOnAnswer(answers[index], index, alang));
+                    .add(ClickOnAnswer(answers[index], index, alang));
                 selectedAnswer = answers[index];
               } else {
                 BlocProvider.of<TaskBloc>(context)
@@ -205,6 +210,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
             ),
           ),
         );
-
+      },
+    );
   }
 }

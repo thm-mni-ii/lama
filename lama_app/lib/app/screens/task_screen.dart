@@ -64,10 +64,14 @@ class TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
 
+    // todo test
+    BlocProvider.of<TTSBloc>(context).add(AnswerOnInitEvent("hullo","de"));
+
     String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     LinearGradient? lg;
 
-    return BlocBuilder<TaskBloc, TaskState>(
+
+  return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
         //State that signals a Task should be displayed
         if (state is DisplayTaskState) {
@@ -173,8 +177,14 @@ class TaskScreenState extends State<TaskScreen> {
                             //the TaskType of the current Task
                                 child: LayoutBuilder(builder: (BuildContext context,
                                 BoxConstraints constraints) {
-                                return getScreenForTaskWithConstraints(
-                                state.task, constraints);
+                                  return Builder(
+                                    builder: (_) {
+                                      return BlocProvider.value(
+                                        value: BlocProvider.of<TTSBloc>(context),
+                                        child: getScreenForTaskWithConstraints(state.task, constraints),
+                                      );
+                                    }
+                                  );
                                 }))
 
 
@@ -327,6 +337,7 @@ class TaskScreenState extends State<TaskScreen> {
 );
 
 
+
   }
 
 
@@ -339,7 +350,7 @@ class TaskScreenState extends State<TaskScreen> {
       case "4Cards": return Builder(
         builder: (_) =>
            BlocProvider.value(
-                value: BlocProvider.of<TTSBloc>(context),
+             value: BlocProvider.of<TTSBloc>(context),
                 child: FourCardTaskScreenStateful(task as Task4Cards, constraints ),
               )
 
