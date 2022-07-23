@@ -104,15 +104,15 @@ class NumberLineState extends State<NumberLineTaskScreen> {
         BlocBuilder<TTSBloc, TTSState>(
           builder: (context, state) {
             if (state is EmptyTTSState) {
-              context.read<TTSBloc>().add(AnswerOnInitEvent(
+              context.read<TTSBloc>().add(QuestionOnInitEvent(
                   "Gib den im Zahlenstrahl rot markierten Wert an!"
               ,"de"));
 
               QuestionText.setText("Gib den im Zahlenstrahl rot markierten Wert an!", "Deutsch");
             }
         return lamaHead(context, task, constraints, task.ontap!);
-  },
-),
+          },
+        ),
         SizedBox(height: 50),
 
         // Shows correct answer on screen
@@ -140,7 +140,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
         SizedBox(height: 50),
         fertigButton(context, constraints, controller, dgesuchteZahl, diff),
       ]),
-);
+      );
       // If user has to tap the correct area
     } else {
       return BlocProvider(
@@ -148,7 +148,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
         child: BlocBuilder<TTSBloc, TTSState>(
           builder: (context, state) {
             if (state is EmptyTTSState) {
-              context.read<TTSBloc>().add(AnswerOnInitEvent(
+              context.read<TTSBloc>().add(QuestionOnInitEvent(
                   "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
                   ,qlang));
                   QuestionText.setText("Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"

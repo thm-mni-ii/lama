@@ -73,9 +73,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           child: BlocBuilder<TTSBloc, TTSState>(
             builder: (context, TTSState state) {
               if (state is EmptyTTSState) {
-                //log('task.questionLanguage: ${task.questionLanguage}');
-                //log('task.answerLaguage: ${task.answerLaguage}');
-                context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,qlang));
+                context.read<TTSBloc>().add(QuestionOnInitEvent(task.question!,qlang));
                 QuestionText.setText(task.question!, qlang);
               }
               return Container(

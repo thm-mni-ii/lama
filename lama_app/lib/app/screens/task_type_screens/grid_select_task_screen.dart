@@ -93,7 +93,7 @@ class GridSelectTaskScreen extends StatelessWidget {
                       child: BlocBuilder<TTSBloc, TTSState>(
                       builder: (context, state) {
                         if (state is EmptyTTSState) {
-                          context.read<TTSBloc>().add(AnswerOnInitEvent(actualLamaText!,qlang));
+                          context.read<TTSBloc>().add(QuestionOnInitEvent(actualLamaText!,qlang));
                           QuestionText.setText(actualLamaText!, qlang);
                         }
 
@@ -102,8 +102,8 @@ class GridSelectTaskScreen extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
                       );
-  },
-),
+                      },
+                    ),
                     ),
                   ),
                 ),

@@ -32,22 +32,16 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
   }
 
   TTSBloc() : super(EmptyTTSState()){
-    on<AnswerOnInitEvent>((event, emit) async {
+    on<QuestionOnInitEvent>((event, emit) async {
        readText(event.answer, event.questionLanguage);
-       //log('data: $AnswerOnInitEvent');
-       //log('event.answer: ${event.answer}');
-       //readText("sample", "aaa");
        emit(IsNotEmptyState());
     });
     on<ClickOnWordQuestion>((event, emit) async {
        readText(event.texttoPlay, event.answerLanguage);
-       //log('data: $ClickOnWordQuestion');
       emit(VoiceTtsState());
     });
     on<ClickOnAnswer>((event, emit) async {
        readText(event.answer,event.answerLanguage);
-       //log('data: $ClickOnAnswer');
-       //log('event.answer: ${event.answer}');
       emit(VoiceAnswerTtsState(event.answer));
     });
     on<SetDefaultEvent>((event, emit) async {

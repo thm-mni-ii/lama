@@ -130,7 +130,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                     (context, TTSState state) {
                   if (state is EmptyTTSState && !alreadySaid ) {
                     context.read<TTSBloc>().add(
-                        AnswerOnInitEvent(setTaskMessageAccordingToTaskModus(), qlang));
+                        QuestionOnInitEvent(setTaskMessageAccordingToTaskModus(), qlang));
                     alreadySaid = true;
                     QuestionText.setText(setTaskMessageAccordingToTaskModus(), qlang);
                   }

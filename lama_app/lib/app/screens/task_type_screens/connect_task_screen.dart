@@ -98,7 +98,7 @@ class ConnectState extends State<ConnectTaskScreen> {
                 child: BlocBuilder<TTSBloc, TTSState>(
                  builder: (context, state) {
                    if (state is EmptyTTSState && !alreadyUpdated) {
-                     context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,qlang));
+                     context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
                      QuestionText.setText(task.lamaText!, qlang);
                      this.alreadyUpdated = true;
                    }

@@ -163,8 +163,8 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
         : "Sammle $moneyAmountText€ mit den Münzen zusammen!";
 
     return BlocProvider(
-  create: (context) => TTSBloc(),
-  child: Column(children: [
+    create: (context) => TTSBloc(),
+    child: Column(children: [
       // Lama Speechbubble
       Container(
         height: (constraints.maxHeight / 100) * 20,
@@ -178,7 +178,7 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 builder: (context, state) {
                   if (state is EmptyTTSState && !alreadySaid) {
                     context.read<TTSBloc>().add(
-                    AnswerOnInitEvent(text,qlang));
+                    QuestionOnInitEvent(text,qlang));
                     QuestionText.setText(text, qlang);
                     alreadySaid = true;
                   }
@@ -199,8 +199,8 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                   ),
                 ),
               );
-  },
-),
+        },
+      ),
             ),
             Align(
               alignment: Alignment.centerLeft,

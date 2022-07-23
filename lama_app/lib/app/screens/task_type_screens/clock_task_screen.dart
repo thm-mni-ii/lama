@@ -287,7 +287,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
           builder: (context, TTSState state) {
             if (state is EmptyTTSState ) {
               context.read<TTSBloc>().add(
-                  AnswerOnInitEvent(task.lamaText!, "qlang"));
+                  QuestionOnInitEvent(task.lamaText!, "qlang"));
             }
             return Column(
         children: [
@@ -485,7 +485,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
              builder: (context, state) {
               if (state is EmptyTTSState ) {
                 context.read<TTSBloc>().add(
-                AnswerOnInitEvent(task.lamaText!, qlang));
+                QuestionOnInitEvent(task.lamaText!, qlang));
                 QuestionText.setText(task.lamaText!, qlang);
               }
               return Stack(

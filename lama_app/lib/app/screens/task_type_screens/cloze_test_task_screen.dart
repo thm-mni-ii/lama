@@ -99,7 +99,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                //log('task.questionLanguage: ${task.questionLanguage}');
                //log('task.answerLanguage: ${task.answerLanguage}');
 
-               context.read<TTSBloc>().add(AnswerOnInitEvent(task.question!,qlang));
+               context.read<TTSBloc>().add(QuestionOnInitEvent(task.question!,qlang));
                QuestionText.setText(task.question!, qlang);
              }
             return Container(
@@ -270,12 +270,11 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                     ),
                   ),
                 ),
-              ),
-)
+              ),)
             ],
           ));
-  },
-)
+      },
+    )
     ]),
 );
   }

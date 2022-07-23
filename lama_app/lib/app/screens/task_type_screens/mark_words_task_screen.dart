@@ -65,7 +65,7 @@ class MarkWordsScreen extends StatelessWidget {
                     child: BlocBuilder<TTSBloc, TTSState>(
                     builder: (context, state) {
                       if (state is EmptyTTSState) {
-                        context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!, qlang));
+                        context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!, qlang));
                         QuestionText.setText(task.lamaText!, qlang);
                       }
                       return Container(
@@ -83,8 +83,8 @@ class MarkWordsScreen extends StatelessWidget {
                         ),
                       ),
                     );
-  },
-),
+            },
+          ),
                   ),
                   Align(
                     alignment: Alignment.centerLeft,

@@ -133,7 +133,7 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
               child: BlocBuilder<TTSBloc, TTSState>(
               builder: (context, state) {
                 if (state is EmptyTTSState ) {
-                  context.read<TTSBloc>().add(AnswerOnInitEvent(
+                  context.read<TTSBloc>().add(QuestionOnInitEvent(
                       task.boolThousands!
                           ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
                           : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!",qlang));

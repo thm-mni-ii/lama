@@ -103,7 +103,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
         BlocBuilder<TTSBloc, TTSState>(
             builder: (context, state) {
               if (state is EmptyTTSState ) {
-                context.read<TTSBloc>().add(AnswerOnInitEvent(task.lamaText!,qlang));
+                context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
                 QuestionText.setText(task.lamaText!, qlang);
                 //alreadySaid = true;
               }
@@ -116,7 +116,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                     if (state is EmptyTTSState) {
                      log('data: ${task.lamaText!}');
                       context.read<TTSBloc>().add(
-                      AnswerOnInitEvent(task.lamaText!, "Deutsch"));
+                      QuestionOnInitEvent(task.lamaText!, "Deutsch"));
               }
             },
                 child: Stack(
@@ -335,8 +335,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                       child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
                     ),
                   ));
-  },
-),
+              },
+            ),
               feedback: Material(
                   child: Container(
                       height: 50,

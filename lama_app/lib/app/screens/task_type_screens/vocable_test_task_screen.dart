@@ -82,7 +82,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                     (context, TTSState state) {
                       if (state is EmptyTTSState && !alreadySaid) {
                         context.read<TTSBloc>().add(
-                            AnswerOnInitEvent("Translate the shown word",
+                            QuestionOnInitEvent("Translate the shown word",
                                 qlang));
                         QuestionText.setText("Translate the shown word", qlang);
                         alreadySaid = true;
