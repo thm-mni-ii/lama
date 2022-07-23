@@ -172,7 +172,7 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
                     widget.task?.id ??
                         KeyGenerator.generateRandomUniqueKey(
                             blocTaskset.tasks!),
-                    TaskType.fourCards,
+                    TaskType.matchCategory,
                     int.parse(_rewardController.text),
                     "Tippe die richtige Antwort an!",
                     3,
@@ -197,7 +197,8 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
             },
             child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
           ),
-        ));
+        )
+    );
   }
 
   Widget _addTile1() {
