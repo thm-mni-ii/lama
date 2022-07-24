@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +60,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
   Widget build(BuildContext context) {
     String qlang;
     task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    log('task.questionLanguage: ${task.questionLanguage}');
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: BlocProvider<VocableTestTaskBloc>(

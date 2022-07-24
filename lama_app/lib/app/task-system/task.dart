@@ -419,7 +419,7 @@ class TaskVocableTest extends Task {
 
 
   TaskVocableTest(String? taskType, int? reward, String? lamaText, int? leftToSolve,
-      this.vocablePairs, this.randomizeSide, this.answerLanguage, this.questionLanguage)
+      this.vocablePairs, this.randomizeSide, this.questionLanguage, this.answerLanguage)
       : super(taskType, reward, lamaText, leftToSolve);
 
   @override

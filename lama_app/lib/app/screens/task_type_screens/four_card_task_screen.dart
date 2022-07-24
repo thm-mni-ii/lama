@@ -186,7 +186,6 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           child: InkWell(
             onTap: () {
               if ( selectedAnswer != answers[index]) {
-                //log('data: $selectedAnswer');
                 BlocProvider.of<TTSBloc>(context)
                 .add(ClickOnAnswer(answers[index], index, alang));
                 selectedAnswer = answers[index];
