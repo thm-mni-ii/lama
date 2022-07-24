@@ -21,8 +21,7 @@
             "left_to_solve": 3,
             "right_answer":"Apfel",
              "wrong_answers":["Auto", "Buch", "Kran"],
-             "question_language":"Englisch",
-             "answer_language":"Deutsch"
+             "question_language":"Englisch"
              }
         ]
 }
