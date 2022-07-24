@@ -61,7 +61,8 @@ class FourCards extends State<FourCardTaskScreenStateful> {
   @override
   Widget build(BuildContext context) {
     String qlang;
-    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    task.questionLanguage == null || task.questionLanguage == "" ||
+        task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
 
     return BlocProvider(
       create: (context) => TTSBloc(),

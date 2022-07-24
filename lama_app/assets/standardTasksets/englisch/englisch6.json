@@ -37,8 +37,7 @@
            "nameCatTwo": "Simple Past",
            "categoryOne": ["work", "go", "see", "sell"],
            "categoryTwo": ["worked", "went", "saw", "sold"],
-           "question_language":"Englisch",
-           "answer_language":"Deutsch"
+           "question_language":"Englisch"
          },
          {
           "task_type":"VocableTest",
