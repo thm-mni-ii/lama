@@ -452,7 +452,7 @@ class DatabaseProvider {
     List<TaskUrl> taskUrlList = <TaskUrl>[];
 
     taskUrlBox.toMap().entries.forEach((entry) {
-      Map<String, dynamic> value = entry.value;
+      var value = entry.value;
       TaskUrl taskUrlEntry = TaskUrl.fromMap(value);
       taskUrlEntry.id = entry.key;
       taskUrlList.add(taskUrlEntry);

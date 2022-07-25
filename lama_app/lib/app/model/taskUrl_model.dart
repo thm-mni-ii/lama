@@ -29,7 +29,7 @@ class TaskUrl {
   ///get the data from the map
   ///
   ///{@param} Map<String, dynamic> map
-  TaskUrl.fromMap(Map<String, dynamic> map) {
+  TaskUrl.fromMap(Map<dynamic, dynamic> map) {
     id = map[TaskUrlFields.columnId];
     url = map[TaskUrlFields.columnTaskUrl];
   }

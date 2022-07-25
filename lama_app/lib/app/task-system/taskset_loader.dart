@@ -233,8 +233,7 @@ class TasksetLoader {
       String? result =
           await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
 
-      var response = await http.get(Uri.parse(taskUrls[i].url!),
-          headers: {'Content-type': 'application/json'});
+      final response = await http.get(Uri.parse(taskUrls[i].url!));
       if (result == null) {
         await buildTasksetFromJson(utf8.decode(response.bodyBytes));
       }
