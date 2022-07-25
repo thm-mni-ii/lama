@@ -11,6 +11,7 @@ import 'package:lama_app/app/bloc/create_user_bloc.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
+
 import 'package:lama_app/app/event/check_screen_event.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
@@ -19,6 +20,7 @@ import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/create_admin_screen.dart';
 import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
+import 'package:lama_app/app/screens/welcome_screen.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
 import 'package:lama_app/app/task-system/taskset_validator.dart';
 import 'package:lama_app/db/database_provider.dart';
@@ -43,7 +45,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
       emit(await _hasAdmin(event.context));
     });
     on<DSGVOAccepted>((event, emit) async {
-      emit(await _loadWelcome(event.context));
+      await _loadWelcome(event.context);
     });
     on<CreateAdminEvent>((event, emit) async {
       emit(await _navigator(event.context));
@@ -56,15 +58,22 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
       await Future.delayed(Duration(milliseconds: 2000));
       await _loadGuest(event.context, event.user);
     });
+    on<LoadWelcomeScreen>((event, emit) async {
+      await _loadWelcome(event.context);
+    });
     on<InsertSetupEvent>((event, emit) async {
       await _insertSetup(event.context);
+      emit(LoadSetup(_userlistUrl, _tasksetUrl));
     });
     on<SetupChangeUrl>((event, emit) async {
       _setupUrl = event.setupUrl;
+      emit(ChangeUrl());
     });
   }
   //used to update the setup url when needed
   String? _setupUrl;
+  String? _userlistUrl;
+  String? _tasksetUrl;
   //list of [User] parsed from the [_url]
   List<User>? _userList = [];
 
@@ -85,6 +94,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
         return AdminExist();
       } else if (user.isGuest!) {
         return HasGuest(context, user);
+      } else {
+        return ShowWelcome();
       }
     }
 
@@ -94,8 +105,26 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     return ShowDSGVO(await _loadDSGVO());
   }
 
-  Future<CheckScreenState> _loadWelcome(BuildContext context) async {
-    return ShowWelcome();
+  Future<void> _loadWelcome(BuildContext context) async {
+    await Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => CheckScreenBloc(),
+            ),
+            BlocProvider(
+              create: (context) => TasksetOptionsBloc(),
+            ),
+            BlocProvider(
+              create: (context) => UserlistUrlBloc(),
+            ),
+          ],
+          child: WelcomeScreen(),
+        ),
+      ),
+    );
   }
 
   ///(private)
@@ -213,8 +242,13 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     }
     //load taskset through URL
     /* errorUserList != null ?  print(errorUserList) :  */
-    if (errorTaskset != null) return print(errorTaskset);
-    try {
+    if (errorTaskset != null && errorUserList != null) {
+      return print(errorTaskset + errorUserList);
+    } else {
+      _userlistUrl = urls!['userListUrl'];
+      _tasksetUrl = urls['tasksetUrl'];
+    }
+    /*  try {
       final response = await http.get(Uri.parse(urls!['userListUrl']!));
       _userList = _parseUserList(jsonDecode(response.body));
     } on SocketException {
@@ -233,9 +267,9 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
         print(tasksetError);
       }
     }
-    await DatabaseProvider.db.insertTaskUrl(TaskUrl(url: urls['tasksetUrl']));
+    await DatabaseProvider.db.insertTaskUrl(TaskUrl(url: urls['tasksetUrl'])); */
     //if everything works, navigate to UserSelectionScreen
-    _navigateAdminExist(context);
+    /* _navigateAdminExist(context); */
   }
 
   ///parses URLS from the json file and checks if the urls are strings

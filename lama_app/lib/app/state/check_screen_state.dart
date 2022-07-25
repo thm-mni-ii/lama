@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
+import 'package:lama_app/app/screens/check_Screen.dart';
 
 /// States used by [CheckScreen] and [CheckScreenBloc]
 ///
@@ -38,3 +39,14 @@ class HasGuest extends CheckScreenState {
     this.user,
   );
 }
+
+//state thats used when setupurl got entered
+class LoadSetup extends CheckScreenState {
+  String? userlistUrl;
+  String? tasksetUrl;
+
+  LoadSetup(this.userlistUrl, this.tasksetUrl);
+}
+
+//state thats used when setupurl got changed
+class ChangeUrl extends CheckScreenState {}

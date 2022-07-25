@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
+import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
+import 'package:lama_app/app/event/taskset_options_event.dart';
+import 'package:lama_app/app/event/userlist_url_event.dart';
 
 //Lama defaults
 import 'package:lama_app/util/LamaColors.dart';
@@ -154,7 +158,8 @@ class CheckScreenPage extends State<CheckScreen> {
           ///if there are no users a welcomescreen gets drawn
           ///from there one can create an admin or a guest
           if (state is ShowWelcome) {
-            final controller = PageController();
+            context.read<CheckScreenBloc>().add(LoadWelcomeScreen(context));
+            /*        final controller = PageController();
             final pages = getPages(controller);
             return Scaffold(
               body: Column(
@@ -213,13 +218,32 @@ class CheckScreenPage extends State<CheckScreen> {
                   ),
                 ],
               ),
-            );
+            ); */
           }
           if (state is HasGuest) {
             context
                 .read<CheckScreenBloc>()
                 .add(LoadGuest(state.context, state.user));
           }
+          /*  if (state is ChangeUrl) {
+            BlocProvider(
+              create: (context) => UserlistUrlBloc(),
+            );
+            BlocProvider(
+              create: (context) => TasksetOptionsBloc(),
+            );
+            BlocProvider.of<TasksetOptionsBloc>(context)
+                .add(TasksetOptionsChangeURL("test"));
+            BlocProvider.of<UserlistUrlBloc>(context)
+                .add(UserlistUrlChangeUrl("test"));
+          }
+          if (state is LoadSetup) {
+            //do something
+
+            BlocProvider.of<TasksetOptionsBloc>(context)
+                .add(TasksetOptionsPush());
+            BlocProvider.of<UserlistUrlBloc>(context).add(UserlistParseUrl());
+          } */
 
           ///default waiting screen with app icon
           return Container(

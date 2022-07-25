@@ -57,6 +57,12 @@ class LoadGuest extends CheckScreenEvent {
   );
 }
 
+class LoadWelcomeScreen extends CheckScreenEvent {
+  BuildContext context;
+
+  LoadWelcomeScreen(this.context);
+}
+
 ///used to load setup URL and navigate to [UserSelectionScreen] on success
 ///
 ///{@param}[BuildContext] to navigate
