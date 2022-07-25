@@ -32,6 +32,7 @@ class GameListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [LamaColors.greenAccent, LamaColors.greenPrimary],
@@ -44,7 +45,6 @@ class GameListScreen extends StatelessWidget {
                 builder: (BuildContext context, BoxConstraints constraints) {
               return Column(children: [
                 Container(
-                  height: (constraints.maxHeight / 100) * 7.5,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [LamaColors.greenAccent, LamaColors.greenPrimary],
@@ -91,8 +91,7 @@ class GameListScreen extends StatelessWidget {
                           return buildGameListItem(context, index, constraints);
                         },
                         separatorBuilder: (context, index) => SizedBox(
-                          height: (constraints.maxHeight / 100) * 5,
-                        ),
+                            height: MediaQuery.of(context).size.height / 35),
                       );
                     }),
                   ),
@@ -112,7 +111,6 @@ class GameListScreen extends StatelessWidget {
     Color color = LamaColors.orangeAccent;
     if (index % 2 == 0) color = LamaColors.blueAccent;
     return Container(
-      height: (constraints.maxHeight / 100) * 25,
       decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(25),
@@ -129,34 +127,29 @@ class GameListScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    games[index].name,
-                    style: LamaTextTheme.getStyle(fontSize: 30),
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          games[index].cost.toString(),
-                          style: LamaTextTheme.getStyle(),
-                        ),
-                        SizedBox(width: 5),
-                        SvgPicture.asset(
-                          "assets/images/svg/lama_coin.svg",
-                          semanticsLabel: "Lama Coin",
-                          width: 25,
-                        ),
-                      ],
+                  Expanded(
+                    child: Text(
+                      games[index].name,
+                      style: LamaTextTheme.getStyle(fontSize: 30),
                     ),
-                  )
+                  ),
+                  Text(
+                    games[index].cost.toString(),
+                    style: LamaTextTheme.getStyle(),
+                  ),
+                  SizedBox(width: 5),
+                  SvgPicture.asset(
+                    "assets/images/svg/lama_coin.svg",
+                    semanticsLabel: "Lama Coin",
+                    width: 25,
+                  ),
                 ],
               ),
               Text(
                 games[index].desc,
                 style: LamaTextTheme.getStyle(fontSize: 15),
-              )
+              ),
             ],
           ),
         ),
