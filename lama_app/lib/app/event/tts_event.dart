@@ -16,17 +16,16 @@ class ClickOnWordQuestion extends TTSEvent {
   ClickOnWordQuestion.initVoice(this.texttoPlay, this.answerLanguage);
 }
 
-class ClickOnAnswer extends TTSEvent {
+class ClickOnAnswerEvent extends TTSEvent {
   String answerLanguage = "";
-  int index;
   String answer;
-  ClickOnAnswer(this.answer,this.index,this.answerLanguage);
+  ClickOnAnswerEvent(this.answer,this.answerLanguage);
 }
 
-class ReadQuestion extends TTSEvent {
+class ReadQuestionEvent extends TTSEvent {
   String question = "";
   String questionLanguage = "";
-  ReadQuestion(this.question, this.questionLanguage);
+  ReadQuestionEvent(this.question, this.questionLanguage);
 }
 
 class SetDefaultEvent extends TTSEvent {}

@@ -587,9 +587,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 child: InkWell(
                   onTap: () {
                     if (selectedAnswer != answers[0]) {
-                      //log('data: $selectedAnswer');
                       BlocProvider.of<TTSBloc>(context).
-                      add(ClickOnAnswer(answers[0]!, 0,"de"));
+                      add(ClickOnAnswerEvent(answers[0]!,"de"));
                       selectedAnswer = answers[0]!;
                     } else {
                       BlocProvider.of<TaskBloc>(context)
@@ -626,7 +625,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                   onTap: () {
                     if (selectedAnswer != answers[1]) {
                       BlocProvider.of<TTSBloc>(context).
-                      add(ClickOnAnswer(answers[1]!, 1,"de"));
+                      add(ClickOnAnswerEvent(answers[1]!,"de"));
                       selectedAnswer = answers[1]!;
                     } else {
                       BlocProvider.of<TaskBloc>(context)
@@ -664,7 +663,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                   onTap: () {
                     if (selectedAnswer != answers[2]) {
                       BlocProvider.of<TTSBloc>(context).
-                      add(ClickOnAnswer(answers[2]!, 2,"de"));
+                      add(ClickOnAnswerEvent(answers[2]!,"de"));
                       selectedAnswer = answers[2]!;
                     } else {
                       BlocProvider.of<TaskBloc>(context)

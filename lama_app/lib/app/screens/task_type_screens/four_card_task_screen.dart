@@ -187,7 +187,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
             onTap: () {
               if ( selectedAnswer != answers[index]) {
                 BlocProvider.of<TTSBloc>(context)
-                .add(ClickOnAnswer(answers[index], index, alang));
+                .add(ClickOnAnswerEvent(answers[index], alang));
                 selectedAnswer = answers[index];
               } else {
                 BlocProvider.of<TaskBloc>(context)

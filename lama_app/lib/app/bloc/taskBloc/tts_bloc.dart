@@ -40,7 +40,7 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
        readText(event.texttoPlay, event.answerLanguage);
       emit(VoiceTtsState());
     });
-    on<ClickOnAnswer>((event, emit) async {
+    on<ClickOnAnswerEvent>((event, emit) async {
        readText(event.answer,event.answerLanguage);
       emit(VoiceAnswerTtsState(event.answer));
     });
@@ -50,8 +50,8 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
     on<IsNotEmptyStateEvent>((event, emit) async {
       emit(IsNotEmptyState());
     });
-    on<ReadQuestion>((event, emit) async {
-    readText(event.question, event.questionLanguage);
+    on<ReadQuestionEvent>((event, emit) async {
+      readText(event.question, event.questionLanguage);
     });
   }
 

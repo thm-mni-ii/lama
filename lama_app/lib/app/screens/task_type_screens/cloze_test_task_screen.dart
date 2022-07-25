@@ -180,8 +180,8 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         log('task.answerLanguage: ${task.answerLanguage}'),
 
                           BlocProvider.of<TTSBloc>(context).add(
-                              ClickOnAnswer(
-                                  answers[0],0,alang)),
+                              ClickOnAnswerEvent(
+                                  answers[0],alang)),
                           selectedAnswer = answers[0]
                         } else {
                           BlocProvider.of<TaskBloc>(context)
@@ -216,8 +216,8 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         log('state: $state'),
                         if (selectedAnswer != answers[1] ) {
                           BlocProvider.of<TTSBloc>(context).add(
-                              ClickOnAnswer(
-                                  answers[1],0,alang)),
+                              ClickOnAnswerEvent(
+                                  answers[1],alang)),
                           selectedAnswer = answers[1]
                         } else {
                           BlocProvider.of<TaskBloc>(context)
@@ -253,8 +253,8 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                        onTap: () => {
                     if (selectedAnswer != answers[2] ) {
                       BlocProvider.of<TTSBloc>(context).add(
-                          ClickOnAnswer(
-                              answers[2],0,alang)),
+                          ClickOnAnswerEvent(
+                              answers[2],alang)),
                       selectedAnswer = answers[2]
                     } else {
                       BlocProvider.of<TaskBloc>(context)

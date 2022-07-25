@@ -153,7 +153,7 @@ class MarkWordsScreen extends StatelessWidget {
                 BlocProvider.of<MarkWordsBloc>(context)
                     .add(AddAnswerToListEvent(sentence[index])),
               BlocProvider.of<TTSBloc>(context).
-              add(ClickOnAnswer(sentence[index], index,"de"))
+              add(ClickOnAnswerEvent(sentence[index], "de"))
               },
               child: Container(
                 width: constraints.maxWidth,

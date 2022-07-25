@@ -151,7 +151,7 @@ class TaskScreenState extends State<TaskScreen> {
                                         onTap: () =>
                                         {
                                           BlocProvider.of<TTSBloc>(context).
-                                          add(ReadQuestion(QuestionText.getText(), QuestionText.getLang()))
+                                          add(ReadQuestionEvent(QuestionText.getText(), QuestionText.getLang()))
                                         },
                                         onDoubleTap: () => {
                                         home_screen_state.toggle(),
