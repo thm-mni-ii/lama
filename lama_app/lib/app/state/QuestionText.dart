@@ -1,6 +1,7 @@
 class QuestionText {
   static String _text = "";
   static String _lang = "";
+
   static String getText() {
     return _text;
   }
