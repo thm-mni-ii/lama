@@ -12,6 +12,7 @@ import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/event/check_screen_event.dart';
+import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
@@ -222,7 +223,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     _userList!.forEach((user) async {
       await DatabaseProvider.db.insertUser(user);
     });
-    /* final response = await http.get(Uri.parse(urls!['tasksetUrl']!));
+    final response = await http.get(Uri.parse(urls!['tasksetUrl']!));
     //Check if URL is reachable
     if (response.statusCode == 200) {
       //Taskset validtion
@@ -232,7 +233,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
         print(tasksetError);
       }
     }
-    await DatabaseProvider.db.insertTaskUrl(urls['tasksetUrl']!); */
+    await DatabaseProvider.db.insertTaskUrl(TaskUrl(url: urls['tasksetUrl']));
     //if everything works, navigate to UserSelectionScreen
     _navigateAdminExist(context);
   }
