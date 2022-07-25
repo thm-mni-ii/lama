@@ -3,17 +3,17 @@ import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 abstract class TTSEvent {}
 
 class QuestionOnInitEvent extends TTSEvent {
-  String answer;
+  String question;
   String questionLanguage = "";
 
-  QuestionOnInitEvent(this.answer,this.questionLanguage);
+  QuestionOnInitEvent(this.question,this.questionLanguage);
 }
 
-class ClickOnWordQuestion extends TTSEvent {
+class ClickOnWordQuestionEvent extends TTSEvent {
   String answerLanguage;
   String texttoPlay;
 
-  ClickOnWordQuestion.initVoice(this.texttoPlay, this.answerLanguage);
+  ClickOnWordQuestionEvent.initVoice(this.texttoPlay, this.answerLanguage);
 }
 
 class ClickOnAnswerEvent extends TTSEvent {

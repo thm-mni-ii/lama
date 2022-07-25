@@ -134,7 +134,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                                 onTap: () => {
                                 log('lamaText: ${task.lamaText!}'),
                                   BlocProvider.of<TTSBloc>(context).add(
-                                  ClickOnWordQuestion.initVoice(
+                                  ClickOnWordQuestionEvent.initVoice(
                                   task.lamaText!, "de")),
                                   //selectedQuestion = task.lamaText!;
                                  },

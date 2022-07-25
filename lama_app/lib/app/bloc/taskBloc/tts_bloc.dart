@@ -33,10 +33,10 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
 
   TTSBloc() : super(EmptyTTSState()){
     on<QuestionOnInitEvent>((event, emit) async {
-       readText(event.answer, event.questionLanguage);
+       readText(event.question, event.questionLanguage);
        emit(IsNotEmptyState());
     });
-    on<ClickOnWordQuestion>((event, emit) async {
+    on<ClickOnWordQuestionEvent>((event, emit) async {
        readText(event.texttoPlay, event.answerLanguage);
       emit(VoiceTtsState());
     });
