@@ -91,10 +91,16 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                           blurRadius: 7,
                           offset: Offset(0, 3))
                     ]),
-                    child: Center(
-                      child: Text(task.question!,
-                          textAlign: TextAlign.center,
-                          style: LamaTextTheme.getStyle(fontSize: 30)
+                    child: InkWell(
+                      onTap: () {
+                        BlocProvider.of<TTSBloc>(context)
+                            .add(ClickOnQuestionEvent.initVoice(task.question!, qlang));
+                      },
+                      child: Center(
+                        child: Text(task.question!,
+                            textAlign: TextAlign.center,
+                            style: LamaTextTheme.getStyle(fontSize: 30)
+                        ),
                       ),
                     ),
               );
