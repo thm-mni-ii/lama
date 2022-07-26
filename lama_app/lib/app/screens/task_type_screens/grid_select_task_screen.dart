@@ -97,11 +97,17 @@ class GridSelectTaskScreen extends StatelessWidget {
                           QuestionText.setText(actualLamaText!, qlang);
                         }
 
-                        return Text(
-                        actualLamaText!,
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      );
+                        return InkWell(
+                          onTap: () {
+                            BlocProvider.of<TTSBloc>(context)
+                                .add(ClickOnWordQuestionEvent.initVoice(actualLamaText!, qlang));
+                          },
+                          child: Text(
+                          actualLamaText!,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                        );
                       },
                     ),
                     ),

@@ -48,8 +48,6 @@ class MatchCategoryTaskScreen extends StatefulWidget {
 class MatchCategoryState extends State<MatchCategoryTaskScreen> {
 
 
-  String selectedAnswer = "";
-  String selectedQuestion = "";
 
   // task infos and constraints handed over by tasktypeScreen
   final BoxConstraints constraints;
@@ -132,11 +130,11 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             child: Center(
                                child: InkWell(
                                 onTap: () => {
-                                log('lamaText: ${task.lamaText!}'),
+
                                   BlocProvider.of<TTSBloc>(context).add(
                                   ClickOnWordQuestionEvent.initVoice(
                                   task.lamaText!, "de")),
-                                  //selectedQuestion = task.lamaText!;
+
                                  },
                                   child: Text(
                                   task.lamaText!,
@@ -212,8 +210,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                   color: LamaColors.black,
                   onPressed: () {
                     setState(() {
-                      selectedAnswer = "";
-                      selectedQuestion = "";
                       if (deletinons.isNotEmpty) {
                         results.removeLast();
                         items.add(deletinons.last);
@@ -311,7 +307,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                   height: (constraints.maxHeight / 100) * 8,
                   width: (constraints.maxWidth / 100) * 38,
                   decoration: BoxDecoration(
-                      color: selectedAnswer == items[i].item ? LamaColors.purpleAccent : LamaColors.greenAccent,
+                      color: LamaColors.greenAccent,
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       boxShadow: [
                         BoxShadow(
@@ -321,15 +317,12 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             offset: Offset(0, 3)),
                       ]),
                   child: InkWell(
-                    onTap: () {
+                    onDoubleTap: () {
                       String lang;
                       task.answerLanguage == null || task.answerLanguage == "" ? lang = "Deutsch" :  lang = "Englisch";
-                      log('task.answerLanguage: ${task.answerLanguage}');
-                      log('task.questionLanguage: ${task.questionLanguage}');
 
                       BlocProvider.of<TTSBloc>(context).
                       add(ClickOnAnswerEvent(items[i].item!, lang));
-                      selectedAnswer = items[i].item!;
                     },
                     child: Center(
                       child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
@@ -411,7 +404,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
               child: FittedBox(
                 fit: BoxFit.fitWidth,
                 child: InkWell(
-                  onTap: () {
+                  onDoubleTap: () {
                     BlocProvider.of<TTSBloc>(context).
                     add(ClickOnAnswerEvent(taskCategory!, "de"));
                   },

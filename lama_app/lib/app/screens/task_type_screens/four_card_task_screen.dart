@@ -46,7 +46,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
   final List<String> answers = [];
   final BoxConstraints constraints;
 
-  String selectedAnswer = "";
+  //String selectedAnswer = "";
 
 
   FourCards(this.task, this.constraints, answers) {
@@ -93,6 +93,10 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                     ]),
                 child: Align(
                   child: InkWell(
+                    onTap: () {
+                      BlocProvider.of<TTSBloc>(context)
+                          .add(ClickOnWordQuestionEvent.initVoice(task.question!, qlang));
+                    },
                     child: Text(task.question!,
                         textAlign: TextAlign.center,
                         style: LamaTextTheme.getStyle(fontSize: 30)
@@ -174,9 +178,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           height: 50,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: state is VoiceAnswerTtsState &&
-                  state.selectedAnswer == answers[index] ? LamaColors
-                  .purpleAccent : color,
+              color: color,
               boxShadow: [
                 BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -186,16 +188,15 @@ class FourCards extends State<FourCardTaskScreenStateful> {
               ]),
           child: InkWell(
             onTap: () {
-              if ( selectedAnswer != answers[index]) {
-                BlocProvider.of<TTSBloc>(context)
-                .add(ClickOnAnswerEvent(answers[index], alang));
-                selectedAnswer = answers[index];
-              } else {
                 BlocProvider.of<TaskBloc>(context)
                     .add(AnswerTaskEvent(answers[index]));
                 BlocProvider.of<TTSBloc>(context).
                 add(SetDefaultEvent());
-              }
+            },
+            onDoubleTap: () {
+              BlocProvider.of<TTSBloc>(context)
+                  .add(ClickOnAnswerEvent(answers[index], alang));
+              //selectedAnswer = answers[index];
             },
             child: Padding(
               padding: EdgeInsets.all(5),

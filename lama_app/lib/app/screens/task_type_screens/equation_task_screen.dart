@@ -140,17 +140,23 @@ class EquationTaskState extends State<EquationTaskScreen> {
                   context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
                   QuestionText.setText(task.lamaText!, qlang);
                 }
-            return Container(
-              padding: EdgeInsets.only(left: 75),
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              child: Bubble(
-                nip: BubbleNip.leftCenter,
-                child: Center(
-                  child: Text(
-                    task.lamaText!,
-                    style: LamaTextTheme.getStyle(
-                        fontSize: 15, color: LamaColors.black),
+            return InkWell(
+              onTap: () {
+                BlocProvider.of<TTSBloc>(context)
+                    .add(ClickOnWordQuestionEvent.initVoice(task.lamaText!, qlang));
+              },
+              child: Container(
+                padding: EdgeInsets.only(left: 75),
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                child: Bubble(
+                  nip: BubbleNip.leftCenter,
+                  child: Center(
+                    child: Text(
+                      task.lamaText!,
+                      style: LamaTextTheme.getStyle(
+                          fontSize: 15, color: LamaColors.black),
+                    ),
                   ),
                 ),
               ),

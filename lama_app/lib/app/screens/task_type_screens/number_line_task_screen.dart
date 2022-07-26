@@ -430,12 +430,18 @@ Widget lamaHead(
           width: MediaQuery.of(context).size.width,
           child: Bubble(
             nip: BubbleNip.leftCenter,
-            child: Center(
-              child: Text(
-                onTap
-                    ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
-                    : "Gib den im Zahlenstrahl rot markierten Wert an!",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            child: InkWell(
+              onTap: () {
+                  BlocProvider.of<TTSBloc>(context)
+                      .add(ClickOnWordQuestionEvent.initVoice(onTap ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?" : "Gib den im Zahlenstrahl rot markierten Wert an!", ""));
+              },
+              child: Center(
+                child: Text(
+                  onTap
+                      ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
+                      : "Gib den im Zahlenstrahl rot markierten Wert an!",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),

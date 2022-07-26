@@ -188,13 +188,20 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                 width: MediaQuery.of(context).size.width,
                 child: Bubble(
                   nip: BubbleNip.leftCenter,
-                  child: Center(
-                    child: Text(
-                      task.optimum!
-                          ? "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!"
-                          : "Sammle $moneyAmountText€ mit den Münzen zusammen!",
-                      style: LamaTextTheme.getStyle(
-                          color: LamaColors.black, fontSize: 15),
+                  child: InkWell(
+                    onTap: () {
+
+                      BlocProvider.of<TTSBloc>(context)
+                          .add(ClickOnWordQuestionEvent.initVoice(task.optimum! ? "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!": "Sammle $moneyAmountText€ mit den Münzen zusammen!", qlang));
+                    },
+                    child: Center(
+                      child: Text(
+                        task.optimum!
+                            ? "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!"
+                            : "Sammle $moneyAmountText€ mit den Münzen zusammen!",
+                        style: LamaTextTheme.getStyle(
+                            color: LamaColors.black, fontSize: 15),
+                      ),
                     ),
                   ),
                 ),

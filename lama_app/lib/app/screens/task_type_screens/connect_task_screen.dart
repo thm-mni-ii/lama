@@ -108,11 +108,17 @@ class ConnectState extends State<ConnectTaskScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: Bubble(
                     nip: BubbleNip.leftCenter,
-                    child: Center(
-                      child: Text(
-                        task.lamaText!,
-                        style: LamaTextTheme.getStyle(
-                            color: LamaColors.black, fontSize: 15),
+                    child: InkWell(
+                      onTap: () {
+                        BlocProvider.of<TTSBloc>(context)
+                            .add(ClickOnWordQuestionEvent.initVoice(task.lamaText!, qlang));
+                      },
+                      child: Center(
+                        child: Text(
+                          task.lamaText!,
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),
@@ -268,10 +274,12 @@ class ConnectState extends State<ConnectTaskScreen> {
           )),
       // Used to call the touch method. Needs to be set for every single widget
         onTap: () {
-          BlocProvider.of<TTSBloc>(context).
-          add(ClickOnAnswerEvent(itemList[index].content,"de"));
           touch(index, itemList);
       },
+        onDoubleTap: () {
+          BlocProvider.of<TTSBloc>(context).
+          add(ClickOnAnswerEvent(itemList[index].content,"de"));
+        },
     );
   },
 );

@@ -27,7 +27,6 @@ class ClockTaskScreen extends StatefulWidget {
   final ClockTest task;
   final BoxConstraints constraints;
   ClockTaskScreen(this.task, this.constraints);
-  //final FlutterTts flutterTts = FlutterTts();
 
   @override
   State<StatefulWidget> createState() {
@@ -306,11 +305,18 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     width: MediaQuery.of(context).size.width,
                     child: Bubble(
                       nip: BubbleNip.leftCenter,
-                      child: Center(
-                        child: Text(
-                          task.lamaText!,
-                          style: LamaTextTheme.getStyle(
-                              color: LamaColors.black, fontSize: 15),
+                      child: InkWell(
+                        // todo
+                        onTap: () {
+                          BlocProvider.of<TTSBloc>(context)
+                              .add(ClickOnWordQuestionEvent.initVoice(task.lamaText!, qlang));
+                        },
+                        child: Center(
+                          child: Text(
+                            task.lamaText!,
+                            style: LamaTextTheme.getStyle(
+                                color: LamaColors.black, fontSize: 15),
+                          ),
                         ),
                       ),
                     ),
@@ -576,7 +582,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 width: 150,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: answers[0] == selectedAnswer ? LamaColors.purpleAccent: LamaColors.greenAccent,
+                    color: LamaColors.greenAccent,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -585,17 +591,15 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3)),
                     ]),
                 child: InkWell(
+                  onDoubleTap: () {
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswerEvent(answers[0]!,"de"));
+                  },
                   onTap: () {
-                    if (selectedAnswer != answers[0]) {
-                      BlocProvider.of<TTSBloc>(context).
-                      add(ClickOnAnswerEvent(answers[0]!,"de"));
-                      selectedAnswer = answers[0]!;
-                    } else {
                       BlocProvider.of<TaskBloc>(context)
                           .add(AnswerTaskEvent(answers[0]));
                       BlocProvider.of<TTSBloc>(context).
                       add(SetDefaultEvent());
-                    }
                   },
                   child: Center(
                     child: Text(
@@ -613,7 +617,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 width: 150,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: answers[1] == selectedAnswer ? LamaColors.purpleAccent: LamaColors.greenAccent,
+                    color: LamaColors.greenAccent,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -622,17 +626,16 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3))
                     ]),
                 child: InkWell(
+                  onDoubleTap: () {
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswerEvent(answers[1]!,"de"));
+                    //selectedAnswer = answers[1]!;
+                  },
                   onTap: () {
-                    if (selectedAnswer != answers[1]) {
-                      BlocProvider.of<TTSBloc>(context).
-                      add(ClickOnAnswerEvent(answers[1]!,"de"));
-                      selectedAnswer = answers[1]!;
-                    } else {
                       BlocProvider.of<TaskBloc>(context)
                           .add(AnswerTaskEvent(answers[1]));
                       BlocProvider.of<TTSBloc>(context).
                       add(SetDefaultEvent());
-                    }
                   },
                   child: Center(
                     child: Text(
@@ -651,7 +654,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
                 width: 150,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: answers[2] == selectedAnswer ? LamaColors.purpleAccent: LamaColors.greenAccent,
+                    color: LamaColors.greenAccent,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -660,17 +663,18 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3))
                     ]),
                 child: InkWell(
+                  onDoubleTap: () {
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswerEvent(answers[2]!,"de"));
+                    //selectedAnswer = answers[2]!;
+                  },
                   onTap: () {
-                    if (selectedAnswer != answers[2]) {
-                      BlocProvider.of<TTSBloc>(context).
-                      add(ClickOnAnswerEvent(answers[2]!,"de"));
-                      selectedAnswer = answers[2]!;
-                    } else {
+
                       BlocProvider.of<TaskBloc>(context)
                           .add(AnswerTaskEvent(answers[2]));
                       BlocProvider.of<TTSBloc>(context).
                       add(SetDefaultEvent());
-                    }
+
                     },
                     child: Center(
                       child: Text(

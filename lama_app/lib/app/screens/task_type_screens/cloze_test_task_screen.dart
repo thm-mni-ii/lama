@@ -98,19 +98,28 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
              if (state is EmptyTTSState) {
                //log('task.questionLanguage: ${task.questionLanguage}');
                //log('task.answerLanguage: ${task.answerLanguage}');
+               //log('task.question!: ${task.question!}');
 
                context.read<TTSBloc>().add(QuestionOnInitEvent(task.question!,qlang));
                QuestionText.setText(task.question!, qlang);
              }
             return Container(
                   height: (constraints.maxHeight / 100) * 30,
-                child: Align(
-                    child: Text(
-                        task.question!,
-                        textAlign: TextAlign.center,
-                        style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,)),
-                    //alignment: Alignment.centerLeft,
-                  ),
+                child: InkWell(
+                  onTap: () {
+                    BlocProvider.of<TTSBloc>(context)
+                        .add(ClickOnWordQuestionEvent.initVoice(task.question!, qlang));
+                  },
+                  child: Align(
+
+                      child: Text(
+
+                          task.question!,
+                          textAlign: TextAlign.center,
+                          style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,)),
+                      //alignment: Alignment.centerLeft,
+                    ),
+                ),
                );
              },
           ),
@@ -165,7 +174,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                     width: 250,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: state is VoiceAnswerTtsState && selectedAnswer == answers[0] ? LamaColors.purpleAccent : color0,
+                        color: color0,
                         boxShadow: [
                           BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
@@ -175,20 +184,17 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         ]),
                     child: InkWell(
                       onTap: () => {
-                        if (selectedAnswer != answers[0] ) {
-                        log('task.questionLanguage: ${task.questionLanguage}'),
-                        log('task.answerLanguage: ${task.answerLanguage}'),
 
-                          BlocProvider.of<TTSBloc>(context).add(
-                              ClickOnAnswerEvent(
-                                  answers[0],alang)),
-                          selectedAnswer = answers[0]
-                        } else {
                           BlocProvider.of<TaskBloc>(context)
                               .add(AnswerTaskEvent(answers[0])),
                           BlocProvider.of<TTSBloc>(context).
                           add(SetDefaultEvent())
-                        }
+
+                      },
+                      onDoubleTap: () {
+                        BlocProvider.of<TTSBloc>(context).add(
+                            ClickOnAnswerEvent(
+                                answers[0],alang));
                       },
                       child: Center(
                         child: Text(
@@ -203,7 +209,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                     width: 250,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: state is VoiceAnswerTtsState && selectedAnswer == answers[1] ? LamaColors.purpleAccent : color1,
+                        color: color1,
                         boxShadow: [
                           BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
@@ -213,18 +219,17 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         ]),
                     child: InkWell(
                       onTap: () => {
-                        log('state: $state'),
-                        if (selectedAnswer != answers[1] ) {
-                          BlocProvider.of<TTSBloc>(context).add(
-                              ClickOnAnswerEvent(
-                                  answers[1],alang)),
-                          selectedAnswer = answers[1]
-                        } else {
+
                           BlocProvider.of<TaskBloc>(context)
                               .add(AnswerTaskEvent(answers[1])),
                           BlocProvider.of<TTSBloc>(context).
                           add(SetDefaultEvent())
-                        }
+
+                      },
+                      onDoubleTap: () {
+                        BlocProvider.of<TTSBloc>(context).add(
+                            ClickOnAnswerEvent(
+                                answers[1],alang));
                       },
                       child: Center(
                         child: Text(
@@ -241,7 +246,7 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                       width: 250,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: state is VoiceAnswerTtsState && selectedAnswer == answers[2] ? LamaColors.purpleAccent : color2,
+                          color: color2,
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
@@ -251,18 +256,18 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                           ]),
                       child: InkWell(
                        onTap: () => {
-                    if (selectedAnswer != answers[2] ) {
-                      BlocProvider.of<TTSBloc>(context).add(
-                          ClickOnAnswerEvent(
-                              answers[2],alang)),
-                      selectedAnswer = answers[2]
-                    } else {
+
                       BlocProvider.of<TaskBloc>(context)
                           .add(AnswerTaskEvent(answers[2])),
                       BlocProvider.of<TTSBloc>(context).
                       add(SetDefaultEvent())
-                    }
+
                   },
+                        onDoubleTap: () {
+                          BlocProvider.of<TTSBloc>(context).add(
+                              ClickOnAnswerEvent(
+                                  answers[2],alang));
+                        },
                           child: Center(
                             child: Text(
                       answers[2],
