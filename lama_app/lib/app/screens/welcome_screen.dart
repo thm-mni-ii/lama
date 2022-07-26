@@ -12,6 +12,7 @@ import 'package:lama_app/app/event/check_screen_event.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/event/userlist_url_event.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
+import 'package:lama_app/app/state/taskset_options_state.dart';
 import 'package:lama_app/app/state/userlist_url_state.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -29,18 +30,49 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final controller = PageController();
     final pages = getPages(controller);
 
-    return BlocListener<CheckScreenBloc, CheckScreenState?>(
-      listener: (context, state) {
-        if (state is LoadSetup) {
-          BlocProvider.of<TasksetOptionsBloc>(context)
-            ..add(TasksetOptionsChangeURL(state.tasksetUrl!))
-            ..add(TasksetOptionsPush());
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CheckScreenBloc, CheckScreenState?>(
+          listener: (context, state) {
+            if (state is LoadSetup) {
+              BlocProvider.of<TasksetOptionsBloc>(context)
+                ..add(TasksetOptionsChangeURL(state.tasksetUrl!))
+                ..add(TasksetOptionsPush())
+                ..add(TasksetOptionsReload());
 
-          BlocProvider.of<UserlistUrlBloc>(context)
-            ..add(UserlistUrlChangeUrl(state.userlistUrl!))
-            ..add(UserlistParseUrl());
-        }
-      },
+              BlocProvider.of<UserlistUrlBloc>(context)
+                ..add(UserlistUrlChangeUrl(state.userlistUrl!))
+                ..add(UserlistParseUrl());
+              context.read<CheckScreenBloc>().add(SetupLoadedEvent());
+            }
+            if (state is HasGuest) {
+              context
+                  .read<CheckScreenBloc>()
+                  .add(LoadGuest(context, state.user));
+            }
+          },
+        ),
+        BlocListener<UserlistUrlBloc, UserlistUrlState?>(
+          listener: (context, state) {
+            if (state is UserlistUrlParsingSuccessfull) {
+              BlocProvider.of<UserlistUrlBloc>(context)
+                  .add(UserlistInsertList());
+              BlocProvider.of<CheckScreenBloc>(context)
+                  .add(CheckForAdmin(context));
+            }
+          },
+        ),
+        BlocListener<TasksetOptionsBloc, TasksetOptionsState?>(
+          listener: (context, state) {
+            if (state is TasksetOptionsPushSuccess) {
+              BlocProvider.of<TasksetOptionsBloc>(context)
+                  .add(TasksetOptionsReload());
+              BlocProvider.of<CheckScreenBloc>(context)
+                  .add(CheckForAdmin(context));
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         body: Column(
           children: [
@@ -79,9 +111,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (controller.page == pages.length - 1) {
-                          context
-                              .read<CheckScreenBloc>()
-                              .add(CreateAdminEvent(context));
+                          BlocProvider.of<CheckScreenBloc>(context)
+                            ..add(CreateAdminEvent(context));
                         } else {
                           controller.nextPage(
                               duration: Duration(milliseconds: 200),

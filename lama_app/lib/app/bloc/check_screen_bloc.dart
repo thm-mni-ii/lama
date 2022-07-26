@@ -61,6 +61,9 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     on<LoadWelcomeScreen>((event, emit) async {
       await _loadWelcome(event.context);
     });
+    on<SetupLoadedEvent>((event, emit) async {
+      emit(SetupLoaded());
+    });
     on<InsertSetupEvent>((event, emit) async {
       await _insertSetup(event.context);
       emit(LoadSetup(_userlistUrl, _tasksetUrl));
@@ -94,11 +97,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
         return AdminExist();
       } else if (user.isGuest!) {
         return HasGuest(context, user);
-      } else {
-        return ShowWelcome();
       }
     }
-
     //set [SharedPreferences]
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('enableDefaultTaskset', true);
@@ -248,8 +248,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
       _userlistUrl = urls!['userListUrl'];
       _tasksetUrl = urls['tasksetUrl'];
     }
-    /*  try {
-      final response = await http.get(Uri.parse(urls!['userListUrl']!));
+    /* try {
+      final response = await http.get(Uri.parse(urls['userListUrl']!));
       _userList = _parseUserList(jsonDecode(response.body));
     } on SocketException {
       print('Kritischer Fehler beim erreichen der URL!');
@@ -267,9 +267,9 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
         print(tasksetError);
       }
     }
-    await DatabaseProvider.db.insertTaskUrl(TaskUrl(url: urls['tasksetUrl'])); */
+    await DatabaseProvider.db.insertTaskUrl(TaskUrl(url: urls['tasksetUrl']));
     //if everything works, navigate to UserSelectionScreen
-    /* _navigateAdminExist(context); */
+    _navigateAdminExist(context); */
   }
 
   ///parses URLS from the json file and checks if the urls are strings

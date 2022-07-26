@@ -48,5 +48,8 @@ class LoadSetup extends CheckScreenState {
   LoadSetup(this.userlistUrl, this.tasksetUrl);
 }
 
+//state after setup was loaded
+class SetupLoaded extends CheckScreenState {}
+
 //state thats used when setupurl got changed
 class ChangeUrl extends CheckScreenState {}

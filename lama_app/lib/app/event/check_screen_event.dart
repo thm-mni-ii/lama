@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
+import 'package:lama_app/app/screens/check_Screen.dart';
 
 /// Events used by [CheckScreen] and [CheckScreenBloc]
 ///
@@ -80,3 +81,5 @@ class SetupChangeUrl extends CheckScreenEvent {
 
   SetupChangeUrl(this.setupUrl);
 }
+
+class SetupLoadedEvent extends CheckScreenEvent {}
