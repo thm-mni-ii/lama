@@ -306,10 +306,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     child: Bubble(
                       nip: BubbleNip.leftCenter,
                       child: InkWell(
-                        // todo
                         onTap: () {
                           //log('task.lamaText!: ${task.lamaText!}');
-
                           BlocProvider.of<TTSBloc>(context)
                               .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
                         },
@@ -506,11 +504,17 @@ class ClockTaskState extends State<ClockTaskScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: Bubble(
                     nip: BubbleNip.leftCenter,
-                    child: Center(
-                      child: Text(
-                        task.lamaText!,
-                        style: LamaTextTheme.getStyle(
-                            color: LamaColors.black, fontSize: 15),
+                    child: InkWell(
+                      onTap: () {
+                        BlocProvider.of<TTSBloc>(context)
+                            .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                      },
+                      child: Center(
+                        child: Text(
+                          task.lamaText!,
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),

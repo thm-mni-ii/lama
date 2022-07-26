@@ -192,7 +192,8 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
                     onTap: () {
 
                       BlocProvider.of<TTSBloc>(context)
-                          .add(ClickOnQuestionEvent.initVoice(task.optimum! ? "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!": "Sammle $moneyAmountText€ mit den Münzen zusammen!", qlang));
+                          .add(ClickOnQuestionEvent.initVoice(task.optimum! ? "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!":
+                            "Sammle $moneyAmountText€ mit den Münzen zusammen!", qlang));
                     },
                     child: Center(
                       child: Text(

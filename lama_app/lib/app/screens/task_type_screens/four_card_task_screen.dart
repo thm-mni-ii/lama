@@ -91,23 +91,19 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                           blurRadius: 7,
                           offset: Offset(0, 3))
                     ]),
-                child: Align(
-                  child: InkWell(
-                    onTap: () {
-                      BlocProvider.of<TTSBloc>(context)
-                          .add(ClickOnQuestionEvent.initVoice(task.question!, qlang));
-                    },
-                    child: Text(task.question!,
-                        textAlign: TextAlign.center,
-                        style: LamaTextTheme.getStyle(fontSize: 30)
+                    child: Center(
+                      child: Text(task.question!,
+                          textAlign: TextAlign.center,
+                          style: LamaTextTheme.getStyle(fontSize: 30)
+                      ),
                     ),
-                  ),
-                ),
               );
             },
           ),
         ),
-        Container(
+        BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, state) {
+        return Container(
           height: (constraints.maxHeight / 100) * 15,
           padding: EdgeInsets.only(left: 15, right: 15),
           child: Stack(children: [
@@ -122,11 +118,17 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                     .width,
                 child: Bubble(
                   nip: BubbleNip.leftCenter,
-                  child: Center(
-                    child: Text(
-                      "Tippe einmal, um die Antwort oder Frage anzuhören.",
-                      style: TextStyle(fontSize: 15,
-                          fontWeight: FontWeight.bold),
+                  child: InkWell(
+                    onTap: () {
+                      BlocProvider.of<TTSBloc>(context)
+                          .add(ClickOnQuestionEvent.initVoice("Tippe einmal, um die Antwort oder Frage anzuhören.", ""));
+                    },
+                    child: Center(
+                      child: Text(
+                        "Tippe einmal, um die Antwort oder Frage anzuhören.",
+                        style: TextStyle(fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),
@@ -141,7 +143,9 @@ class FourCards extends State<FourCardTaskScreenStateful> {
               ),
             ),
           ]),
-        ),
+        );
+  },
+),
         Container(
             height: (constraints.maxHeight / 100) * 45,
             child: Padding(
