@@ -147,11 +147,17 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                               .width,
                           child: Bubble(
                             nip: BubbleNip.leftCenter,
-                            child: Center(
-                              child: Text(
-                                setTaskMessageAccordingToTaskModus(),
-                                style: LamaTextTheme.getStyle(
-                                    color: LamaColors.black, fontSize: 15),
+                            child: InkWell(
+                              onTap: () {
+                                BlocProvider.of<TTSBloc>(context)
+                                    .add(ClickOnQuestionEvent.initVoice(setTaskMessageAccordingToTaskModus(), qlang));
+                              },
+                              child: Center(
+                                child: Text(
+                                  setTaskMessageAccordingToTaskModus(),
+                                  style: LamaTextTheme.getStyle(
+                                      color: LamaColors.black, fontSize: 15),
+                                ),
                               ),
                             ),
                           ),

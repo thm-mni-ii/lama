@@ -433,7 +433,7 @@ Widget lamaHead(
             child: InkWell(
               onTap: () {
                   BlocProvider.of<TTSBloc>(context)
-                      .add(ClickOnWordQuestionEvent.initVoice(onTap ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?" : "Gib den im Zahlenstrahl rot markierten Wert an!", ""));
+                      .add(ClickOnQuestionEvent.initVoice(onTap ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?" : "Gib den im Zahlenstrahl rot markierten Wert an!", ""));
               },
               child: Center(
                 child: Text(

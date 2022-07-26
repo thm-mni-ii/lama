@@ -112,7 +112,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
               child: BlocListener<TTSBloc, TTSState>(
                   listener: (context, TTSState state) {
                     if (state is EmptyTTSState) {
-                     log('data: ${task.lamaText!}');
+                     //log('data: ${task.lamaText!}');
                       context.read<TTSBloc>().add(
                       QuestionOnInitEvent(task.lamaText!, "Deutsch"));
               }
@@ -132,8 +132,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                                 onTap: () => {
 
                                   BlocProvider.of<TTSBloc>(context).add(
-                                  ClickOnWordQuestionEvent.initVoice(
-                                  task.lamaText!, "de")),
+                                  ClickOnQuestionEvent.initVoice(
+                                  task.lamaText!, qlang)),
 
                                  },
                                   child: Text(
@@ -404,6 +404,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
               child: FittedBox(
                 fit: BoxFit.fitWidth,
                 child: InkWell(
+                  // todo ist stil
                   onDoubleTap: () {
                     BlocProvider.of<TTSBloc>(context).
                     add(ClickOnAnswerEvent(taskCategory!, "de"));

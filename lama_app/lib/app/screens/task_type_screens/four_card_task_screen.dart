@@ -95,7 +95,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                   child: InkWell(
                     onTap: () {
                       BlocProvider.of<TTSBloc>(context)
-                          .add(ClickOnWordQuestionEvent.initVoice(task.question!, qlang));
+                          .add(ClickOnQuestionEvent.initVoice(task.question!, qlang));
                     },
                     child: Text(task.question!,
                         textAlign: TextAlign.center,

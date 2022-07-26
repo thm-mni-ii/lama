@@ -147,13 +147,21 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
                 width: MediaQuery.of(context).size.width,
                 child: Bubble(
                   nip: BubbleNip.leftCenter,
-                  child: Center(
-                    child: Text(
-                      task.boolThousands!
+                  child: InkWell(
+                    onTap: () {
+                      BlocProvider.of<TTSBloc>(context)
+                          .add(ClickOnQuestionEvent.initVoice(task.boolThousands!
                           ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
-                          : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!",
-                      style: LamaTextTheme.getStyle(
-                          color: LamaColors.black, fontSize: 15),
+                          : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!", qlang));
+                    },
+                    child: Center(
+                      child: Text(
+                        task.boolThousands!
+                            ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
+                            : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!",
+                        style: LamaTextTheme.getStyle(
+                            color: LamaColors.black, fontSize: 15),
+                      ),
                     ),
                   ),
                 ),
@@ -176,12 +184,23 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
           ]),
         ),
         SizedBox(height: 50),
-        Center(
-          child: Text(
-            rightAnswer.toString(),
-            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 30),
+        BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, state) {
+    return Center(
+          child: InkWell(
+            onTap: () {
+              // todo language
+              BlocProvider.of<TTSBloc>(context)
+                  .add(ClickOnQuestionEvent.initVoice(rightAnswer.toString(), qlang));
+            },
+            child: Text(
+              rightAnswer.toString(),
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 30),
+            ),
           ),
-        ),
+        );
+  },
+),
         SizedBox(height: 50),
         if (task.boolThousands!) ...[
           Container(

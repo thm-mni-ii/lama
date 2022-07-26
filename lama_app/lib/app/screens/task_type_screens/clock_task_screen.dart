@@ -308,8 +308,10 @@ class ClockTaskState extends State<ClockTaskScreen> {
                       child: InkWell(
                         // todo
                         onTap: () {
+                          //log('task.lamaText!: ${task.lamaText!}');
+
                           BlocProvider.of<TTSBloc>(context)
-                              .add(ClickOnWordQuestionEvent.initVoice(task.lamaText!, qlang));
+                              .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
                         },
                         child: Center(
                           child: Text(

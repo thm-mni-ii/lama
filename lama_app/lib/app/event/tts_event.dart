@@ -9,11 +9,11 @@ class QuestionOnInitEvent extends TTSEvent {
   QuestionOnInitEvent(this.question,this.questionLanguage);
 }
 
-class ClickOnWordQuestionEvent extends TTSEvent {
+class ClickOnQuestionEvent extends TTSEvent {
   String answerLanguage;
   String texttoPlay;
 
-  ClickOnWordQuestionEvent.initVoice(this.texttoPlay, this.answerLanguage);
+  ClickOnQuestionEvent.initVoice(this.texttoPlay, this.answerLanguage);
 }
 
 class ClickOnAnswerEvent extends TTSEvent {

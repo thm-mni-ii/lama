@@ -108,10 +108,9 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                 child: InkWell(
                   onTap: () {
                     BlocProvider.of<TTSBloc>(context)
-                        .add(ClickOnWordQuestionEvent.initVoice(task.question!, qlang));
+                        .add(ClickOnQuestionEvent.initVoice(task.question!, qlang));
                   },
                   child: Align(
-
                       child: Text(
 
                           task.question!,
@@ -124,7 +123,9 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
              },
           ),
       // Lama Speechbubble
-        Container(
+        BlocBuilder<TTSBloc, TTSState>(
+  builder: (context, state) {
+    return Container(
         height: (constraints.maxHeight / 100) * 15,
         padding: EdgeInsets.only(left: 15, right: 15),
         // create space between each childs
@@ -138,11 +139,17 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                 width: MediaQuery.of(context).size.width,
                 child: Bubble(
                   nip: BubbleNip.leftCenter,
-                  child: Center(
-                    child: Text(
-                      task.lamaText!,
-                      style:
-                      LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 15),
+                  child: InkWell(
+                    onTap: () {
+                      BlocProvider.of<TTSBloc>(context)
+                          .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                    },
+                    child: Center(
+                      child: Text(
+                        task.lamaText!,
+                        style:
+                        LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 15),
+                      ),
                     ),
                   ),
                 ),
@@ -158,7 +165,9 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
             )
           ],
         ),
-      ),
+      );
+  },
+),
       // Task Answers
         BlocBuilder<TTSBloc, TTSState>(
           builder: (context, state) {

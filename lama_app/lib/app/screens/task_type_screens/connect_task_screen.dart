@@ -111,7 +111,7 @@ class ConnectState extends State<ConnectTaskScreen> {
                     child: InkWell(
                       onTap: () {
                         BlocProvider.of<TTSBloc>(context)
-                            .add(ClickOnWordQuestionEvent.initVoice(task.lamaText!, qlang));
+                            .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
                       },
                       child: Center(
                         child: Text(

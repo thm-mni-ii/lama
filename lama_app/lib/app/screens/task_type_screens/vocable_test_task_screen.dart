@@ -59,7 +59,13 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
 
   Widget build(BuildContext context) {
     String qlang;
+    String qWordLang;
+    // todo z.b. Wort Papier ist auf de
+
+
     task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    qlang == "Deutsch" ? qWordLang = "Deutsch" : qWordLang = "Englisch";
+
     log('task.questionLanguage: ${task.questionLanguage}');
     return BlocProvider(
       create: (context) => TTSBloc(),
@@ -104,11 +110,18 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                                 VocableTestTaskState>(
                                 builder: (context, state) {
                                   if (state is VocableTestTaskTranslationState)
-                                    return Text(
-                                      state.wordToTranslate!,
-                                      textAlign: TextAlign.center,
-                                      style: LamaTextTheme.getStyle(
-                                          fontSize: 35),
+                                    return InkWell(
+                                      onTap: () {
+                                        // todo language
+                                        BlocProvider.of<TTSBloc>(context)
+                                            .add(ClickOnQuestionEvent.initVoice(state.wordToTranslate!, qWordLang!));
+                                      },
+                                      child: Text(
+                                        state.wordToTranslate!,
+                                        textAlign: TextAlign.center,
+                                        style: LamaTextTheme.getStyle(
+                                            fontSize: 35),
+                                      ),
                                     );
                                   else
                                     return Text("Error!");
@@ -158,7 +171,9 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                     ),
                   ),
                 )),
-            Container(
+            BlocBuilder<TTSBloc, TTSState>(
+               builder: (context, state) {
+    return Container(
               height: (constraints.maxHeight / 100) * 15,
               padding: EdgeInsets.only(left: 15, right: 15),
               child: Stack(children: [
@@ -170,11 +185,17 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                     width: MediaQuery.of(context).size.width,
                     child: Bubble(
                       nip: BubbleNip.leftCenter,
-                      child: Center(
-                        child: Text(
-                          task.lamaText!,
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                      child: InkWell(
+                        onTap: () {
+                          BlocProvider.of<TTSBloc>(context)
+                              .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                        },
+                        child: Center(
+                          child: Text(
+                            task.lamaText!,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
@@ -189,7 +210,9 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                   ),
                 ),
               ]),
-            ),
+            );
+  },
+),
             Container(
               height: (constraints.maxHeight / 100) * 25,
               child: Center(

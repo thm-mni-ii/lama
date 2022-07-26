@@ -100,7 +100,7 @@ class GridSelectTaskScreen extends StatelessWidget {
                         return InkWell(
                           onTap: () {
                             BlocProvider.of<TTSBloc>(context)
-                                .add(ClickOnWordQuestionEvent.initVoice(actualLamaText!, qlang));
+                                .add(ClickOnQuestionEvent.initVoice(actualLamaText!, qlang));
                           },
                           child: Text(
                           actualLamaText!,

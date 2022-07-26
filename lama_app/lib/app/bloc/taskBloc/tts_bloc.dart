@@ -16,6 +16,7 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
   String lang = "";
   //
   //
+  //log('task.answerLanguage: ${task.answerLanguage}');
   readText(String text,String lang) async {
     if(!home_screen_state.isTTs()) {
       return;
@@ -36,7 +37,7 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
        readText(event.question, event.questionLanguage);
        emit(IsNotEmptyState());
     });
-    on<ClickOnWordQuestionEvent>((event, emit) async {
+    on<ClickOnQuestionEvent>((event, emit) async {
        readText(event.texttoPlay, event.answerLanguage);
       emit(VoiceTtsState());
     });

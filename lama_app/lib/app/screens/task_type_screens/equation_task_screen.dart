@@ -143,7 +143,7 @@ class EquationTaskState extends State<EquationTaskScreen> {
             return InkWell(
               onTap: () {
                 BlocProvider.of<TTSBloc>(context)
-                    .add(ClickOnWordQuestionEvent.initVoice(task.lamaText!, qlang));
+                    .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
               },
               child: Container(
                 padding: EdgeInsets.only(left: 75),
