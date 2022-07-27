@@ -193,17 +193,14 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         ]),
                     child: InkWell(
                       onTap: () => {
-
-                          BlocProvider.of<TaskBloc>(context)
-                              .add(AnswerTaskEvent(answers[0])),
-                          BlocProvider.of<TTSBloc>(context).
-                          add(SetDefaultEvent())
+                      BlocProvider.of<TTSBloc>(context).add(
+                      ClickOnAnswerEvent(
+                      answers[0],alang))
 
                       },
                       onDoubleTap: () {
-                        BlocProvider.of<TTSBloc>(context).add(
-                            ClickOnAnswerEvent(
-                                answers[0],alang));
+                        BlocProvider.of<TaskBloc>(context)
+                            .add(AnswerTaskEvent(answers[0]));
                       },
                       child: Center(
                         child: Text(
@@ -228,17 +225,13 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                         ]),
                     child: InkWell(
                       onTap: () => {
-
-                          BlocProvider.of<TaskBloc>(context)
-                              .add(AnswerTaskEvent(answers[1])),
-                          BlocProvider.of<TTSBloc>(context).
-                          add(SetDefaultEvent())
-
-                      },
-                      onDoubleTap: () {
                         BlocProvider.of<TTSBloc>(context).add(
                             ClickOnAnswerEvent(
-                                answers[1],alang));
+                                answers[1],alang))
+                      },
+                      onDoubleTap: () {
+                        BlocProvider.of<TaskBloc>(context)
+                            .add(AnswerTaskEvent(answers[1]));
                       },
                       child: Center(
                         child: Text(
@@ -264,18 +257,15 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                                 offset: Offset(0, 3))
                           ]),
                       child: InkWell(
-                       onTap: () => {
-
-                      BlocProvider.of<TaskBloc>(context)
-                          .add(AnswerTaskEvent(answers[2])),
-                      BlocProvider.of<TTSBloc>(context).
-                      add(SetDefaultEvent())
-
-                  },
-                        onDoubleTap: () {
+                        onTap: () => {
                           BlocProvider.of<TTSBloc>(context).add(
                               ClickOnAnswerEvent(
-                                  answers[2],alang));
+                                  answers[2],alang))
+
+                        },
+                        onDoubleTap: () {
+                          BlocProvider.of<TaskBloc>(context)
+                              .add(AnswerTaskEvent(answers[2]));
                         },
                           child: Center(
                             child: Text(
