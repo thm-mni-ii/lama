@@ -54,9 +54,6 @@ class _TasksetManageScreenState extends State<TasksetManageScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-
-    // ?? manage block auf höchste ebene überall relevant! wenn tasksets geloaded werden wird wrid der block initial befüllt
-
     return BlocProvider(
       create: (context) => TasksetOptionsBloc(),
       child: Scaffold(

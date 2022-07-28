@@ -7,8 +7,8 @@ part 'taskset_create_tasklist_state.dart';
 
 class TasksetCreateTasklistBloc
     extends Bloc<TasksetCreateTasklistEvent, TasksetCreateTasklistState> {
-  List<Task> taskList = [];
-  TasksetCreateTasklistBloc() : super(TasksetCreateTasklistInitial()) {
+  List<Task> taskList;
+  TasksetCreateTasklistBloc(this.taskList) : super(TasksetCreateTasklistInitial()) {
     on<AddToTaskList>((event, emit) {
       taskList.add(event.task);
       emit(UpdateTaskList());

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/app.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
@@ -13,10 +14,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   TasksetRepository tasksetRepository = TasksetRepository();
   tasksetRepository.initialize();
+  ServerRepository serverRepository = ServerRepository();
+  serverRepository.initialize();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await precacheSvgs();
-  runApp(RepositoryProvider(
-    create: (context) => tasksetRepository,
+  runApp(MultiRepositoryProvider(
+    providers: [
+      RepositoryProvider(
+        create: (context) => tasksetRepository,
+      ),
+      RepositoryProvider(
+        create: (context) => serverRepository,
+      ),
+    ],
     child: BlocProvider(
       create: (context) => TasksetManageBloc(
         allTaskset: taskset(tasksetRepository.tasksetLoader.loadedTasksets),

@@ -143,7 +143,7 @@ class _SetupTasksetBodyState extends State<SetupTasksetBody> {
                                 BlocProvider.of<CreateTasksetBloc>(context),
                           ),
                           BlocProvider(
-                            create: (context) => TasksetCreateTasklistBloc(),
+                            create: (context) => TasksetCreateTasklistBloc(blocTaskset == null ? [] : blocTaskset.tasks!),
                           ),
                         ],
                         child: TasksetCreationCartScreen(),

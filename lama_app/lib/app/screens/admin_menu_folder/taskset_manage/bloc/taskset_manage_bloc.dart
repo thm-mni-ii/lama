@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_state.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
+import 'package:lama_app/db/database_provider.dart';
 
 ///[Bloc] for the [TasksetManageScreen]
 ///
@@ -44,6 +46,13 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
         element.isInPool = false;
         tasksetPool.remove(element); // remove where
       });
+      emit(ChangeTasksetStatus());
+    });
+    on<DeleteTaskset>((event, emit) {// benutzen
+      DatabaseProvider.db.deleteTaskUrl(event.taskUrl.id);
+      allTaskset.removeWhere((element) => element.taskurl == event.taskUrl);
+      // vom Server löschen 
+      //ServerRepository().deleteFile();
       emit(ChangeTasksetStatus());
     });
   }

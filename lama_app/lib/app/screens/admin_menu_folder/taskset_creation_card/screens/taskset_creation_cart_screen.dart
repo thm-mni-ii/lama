@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
@@ -40,6 +41,7 @@ class TasksetCreationCartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ServerRepository serverRepo = RepositoryProvider.of<ServerRepository>(context);
     Size screenSize = MediaQuery.of(context).size;
     Taskset taskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     TasksetCreateTasklistBloc tasksetListBloc =
@@ -106,7 +108,8 @@ class TasksetCreationCartScreen extends StatelessWidget {
                     } else {
                       // erstmal neu nachdenken was passieren muss
                       // taskurl muss gesetzt werden
-                      /* String createdTaskUrl = "$url/${taskset.subject}/${taskset.name}";
+                      // darf nicht null sein!!
+                      /* String createdTaskUrl = "${serverRepo.getUrl ?? ""}/${taskset.subject}/${taskset.name}";
                       DatabaseProvider.db
                           .insertTaskUrl(TaskUrl(url: createdTaskUrl));
                       List<TaskUrl> taskUrl =
@@ -125,8 +128,8 @@ class TasksetCreationCartScreen extends StatelessWidget {
                       );
                       // taskset muss auf server gepushed und in lokale liste geschrieben werden
                       print(taskset.toJson());
-                      RepositoryProvider.of<TasksetRepository>(context)
-                          .writeToServer(taskset);
+                      //RepositoryProvider.of<TasksetRepository>(context)
+                        //  .writeToServer(taskset);
                       // lokale liste hinzufügen
                       /* RepositoryProvider.of<TasksetRepository>(context)
                           .tasksetLoader

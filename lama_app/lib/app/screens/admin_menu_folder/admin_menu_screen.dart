@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/server_ui/screens/server_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
@@ -181,6 +182,19 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) => TasksetManageScreen(),
+              ),
+            ).then((_) {
+              AdminUtils.reloadTasksets(context);
+            }),
+          ),
+          _menuButton(
+            context,
+            Icon(Icons.add_link),
+            'Server Einstellungen',
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ServerSettingsScreen(),
               ),
             ).then((_) {
               AdminUtils.reloadTasksets(context);

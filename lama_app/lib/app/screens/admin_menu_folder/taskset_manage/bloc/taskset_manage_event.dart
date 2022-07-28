@@ -1,3 +1,4 @@
+import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 
@@ -32,4 +33,10 @@ class RemoveListOfTasksetsPool extends TasksetManageEvent {
   final List<Taskset> tasksetList;
 
   RemoveListOfTasksetsPool(this.tasksetList);
+}
+
+class DeleteTaskset extends TasksetManageEvent {
+  final TaskUrl taskUrl;
+
+  DeleteTaskset(this.taskUrl);
 }

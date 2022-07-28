@@ -12,6 +12,7 @@ import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/subject_model.dart';
 import 'package:lama_app/app/model/userSolvedTaskAmount_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/db/database_migrator.dart';
 import 'package:path/path.dart';
@@ -109,6 +110,38 @@ class DatabaseProvider {
           });
       },
     );
+  }
+
+  // returns the Server settings that are specified in the table
+  Future<ServerSettings?> getServerSettings() async {
+    final db = await (database);
+    ServerSettings? serverS;
+
+    var serverSettings = await db?.query(tableServer, columns: [
+      ServerFields.columnId,
+      ServerFields.columnUrl,
+      ServerFields.columnUserName,
+      ServerFields.columnPassword,
+    ]);
+
+    if (serverSettings != null) {
+      serverS = ServerSettings.fromJson(serverSettings.last);
+    }
+
+    return serverS;
+  }
+
+  Future<int?> get dbSize async {
+    final db = await (database);
+
+    var serverSettings = await db?.query(tableServer, columns: [
+      ServerFields.columnId,
+      ServerFields.columnUrl,
+      ServerFields.columnUserName,
+      ServerFields.columnPassword,
+    ]);
+
+    return serverSettings?.length;
   }
 
   ///get all entry's from table User
@@ -352,6 +385,23 @@ class DatabaseProvider {
     });
 
     return taskUrlList;
+  }
+
+  Future<ServerSettings> insertServerSettings(
+      ServerSettings serverSettings) async {
+    final db = await (database);
+    final size = await dbSize;
+    if (size == null || size == 0) {
+      print("insert");
+      serverSettings.id =
+          await db?.insert(tableServer, serverSettings.toJson());
+    } else {
+      print("update");
+      db?.update(tableServer, serverSettings.toJson(),
+          where: '${ServerFields.columnId} = ?',
+          whereArgs: [serverSettings.id]);
+    }
+    return serverSettings;
   }
 
   /// insert an new User in the table User
