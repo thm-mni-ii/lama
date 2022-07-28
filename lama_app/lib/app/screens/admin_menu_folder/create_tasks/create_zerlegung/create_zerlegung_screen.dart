@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/screens/task_type_screens/zerlegung_task_screen.dart';
@@ -9,6 +10,9 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
+
+import '../widgets/lamacoin_input_widget.dart';
+import '../widgets/numbers_input_widget.dart';
 
 class CreateZerlegungScreen extends StatefulWidget {
   final TaskZerlegung? task;
@@ -56,21 +60,9 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
                     Container(
                       child: Column(
                         children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Optionen",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                          HeadLineWidget("Optionen"),
                           CheckboxListTile(
                             title: Text("Reihenfolge umkehren"),
-                            subtitle: Text(
-                                "Aktiviert: E-Z-H-T\nDeaktiviert: T-H-Z-E"),
                             value: reverseAllowed,
                             onChanged: (bool? value) {
                               setState(() {
@@ -80,8 +72,6 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
                           ),
                           CheckboxListTile(
                             title: Text("Nullen in Zahl erlauben"),
-                            subtitle: Text(
-                                "Aktiviert: Es sind Nullen als Ziffern erlaubt\nDeaktiviert: Es sind keine Nullen erlaubt"),
                             value: zerosAllowed,
                             onChanged: (bool? value) {
                               setState(() {
@@ -91,8 +81,6 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
                           ),
                           CheckboxListTile(
                             title: Text("Tausender erlauben"),
-                            subtitle: Text(
-                                "Aktiviert: Zahlen gehen bis 9999\nDeaktiviert: Zahlen gehen bis 999"),
                             value: boolThousandsAllowed,
                             onChanged: (bool? value) {
                               setState(() {
@@ -100,38 +88,10 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
                               });
                             },
                           ),
-                          Container(
-                            margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Task Belohnung",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 15, bottom: 15, right: 30),
-                            child: TextFormField(
-                              controller: _rewardController,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Erreichbare Lamacoins',
-                              ),
-                              validator: (text) {
-                                if (text == null || text.isEmpty) {
-                                  return "Beitrag fehlt!";
-                                }
-                                return null;
-                              },
-                              onSaved: (String? text) =>
-                                  _rewardController.text = text!,
-                            ),
-                          ),
+                          HeadLineWidget("Erreichbare Lamacoins"),
+                          LamacoinInputWidget(
+                            numberController: _rewardController,
+                          )
                         ],
                       ),
                     ),

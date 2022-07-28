@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dropdown_widget_String.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/numbers_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
+
+import '../widgets/lamacoin_input_widget.dart';
 
 class MoneyEinstellenScreen extends StatefulWidget {
   final TaskMoney? task;
@@ -68,96 +73,35 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Schwierigkeitsgrad",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.all(5),
-                          child: DropdownButtonFormField<String>(
-                            hint: Text("Schwierigkeitsstufe auswählen"),
-                            value: _currentSelectedDifficulty,
-                            isDense: true,
-                            onChanged: (String? newValue) {
-                              setState(
-                                  () => _currentSelectedDifficulty = newValue);
-                            },
-                            items: <String>['1', '2', '3'].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
+                        HeadLineWidget("Schwierigkeitsgrad"),
+                        DropdownWidgetString(
+                          hintText: "Auswählen",
+                          itemsList: ['1', '2', '3'],
+                          onChanged: (value) {
+                            _currentSelectedDifficulty = value;
+                          },
                         ),
                         Container(
                           child: Column(
                             children: [
-                              Container(
-                                margin:
-                                    EdgeInsets.only(top: 30, left: 5, right: 5),
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Weitere Optionen",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                              HeadLineWidget("Weitere Optionen"),
                               CheckboxListTile(
                                 title: Text("Nur die optimale Lösung zulassen"),
                                 value: optimumAllowed,
                                 onChanged: (bool? value) {
                                   setState(() {
                                     optimumAllowed = value;
+                                    print(_currentSelectedDifficulty);
                                   });
                                 },
                               ),
                             ],
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Erreichbare Lamacoins",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin:
-                              EdgeInsets.only(left: 15, bottom: 15, right: 30),
-                          child: TextFormField(
-                            controller: _rewardController,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Erreichbare Lamacoins',
-                            ),
-                            validator: (text) {
-                              if (text == null || text.isEmpty) {
-                                return "Beitrag fehlt!";
-                              }
-                              return null;
-                            },
-                            onSaved: (String? text) =>
-                                _rewardController.text = text!,
-                          ),
-                        ),
+                        HeadLineWidget("Erreichbare Lamacoins"),
+                        LamacoinInputWidget(
+                          numberController: _rewardController,
+                        )
                       ],
                     ),
                   ),

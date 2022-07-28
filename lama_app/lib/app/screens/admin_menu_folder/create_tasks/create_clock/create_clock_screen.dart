@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/text_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/screens/task_type_screens/clock_task_screen.dart';
@@ -9,6 +11,9 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
+
+import '../widgets/lamacoin_input_widget.dart';
+import '../widgets/numbers_input_widget.dart';
 
 class CreateClockScreen extends StatefulWidget {
   final ClockTest? task;
@@ -54,106 +59,38 @@ class CreateClockScreenState extends State<CreateClockScreen> {
             Expanded(
               child: Container(
                 margin: EdgeInsets.all(5),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 25),
-                        child: Container(
-                          margin:
-                              EdgeInsets.only(left: 5, bottom: 15, right: 5),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Uhr",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin:
-                            EdgeInsets.only(left: 15, bottom: 15, right: 30),
-                        child: TextFormField(
-                          controller: _uhrController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Uhr wortwörtlich',
-                          ),
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return "Beitrag fehlt!";
-                            }
-                            return null;
-                          },
-                          onSaved: (String? text) =>
-                              _uhrController.text = text!,
-                        ),
-                      ),
-                      Container(
-                        child: Column(
-                          children: [
-                            Container(
-                              margin:
-                                  EdgeInsets.only(top: 30, left: 5, right: 5),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Timer",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        HeadLineWidget("Uhr"),
+                        TextInputWidget(
+                            textController: _uhrController,
+                            missingInput: "Angabe fehlt",
+                            labelText: "Uhr angeben"),
+                        Container(
+                          child: Column(
+                            children: [
+                              HeadLineWidget("Weitere Optionen"),
+                              CheckboxListTile(
+                                title: Text("Timer allowed"),
+                                value: timerAllowed,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    timerAllowed = value;
+                                  });
+                                },
                               ),
-                            ),
-                            CheckboxListTile(
-                              title: Text("Timer allowed"),
-                              value: timerAllowed,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  timerAllowed = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 30),
-                        child: Container(
-                          margin:
-                              EdgeInsets.only(left: 5, bottom: 15, right: 5),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Reward",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            ],
                           ),
                         ),
-                      ),
-                      Container(
-                        margin:
-                            EdgeInsets.only(left: 15, bottom: 15, right: 30),
-                        child: TextFormField(
-                          controller: _rewardController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'erreichbares Reward',
-                          ),
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return "Beitrag fehlt!";
-                            }
-                            return null;
-                          },
-                          onSaved: (String? text) =>
-                              _rewardController.text = text!,
-                        ),
-                      ),
-                    ],
+                        HeadLineWidget("Erreichbare Lamacoins"),
+                        LamacoinInputWidget(
+                          numberController: _rewardController,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -196,7 +133,6 @@ class CreateClockScreenState extends State<CreateClockScreen> {
             },
             child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
           ),
-        )
-    );
+        ));
   }
 }

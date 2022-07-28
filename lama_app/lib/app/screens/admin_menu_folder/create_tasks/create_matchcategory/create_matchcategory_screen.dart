@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_textFormFields_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/text_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -22,10 +26,8 @@ class CreateMatchCategoryScreen extends StatefulWidget {
 class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _rewardController = TextEditingController();
-  TextEditingController _questionController = TextEditingController();
-  TextEditingController _rightAnswer = TextEditingController();
-  TextEditingController _wrongAnswer1 = TextEditingController();
-  TextEditingController _wrongAnswer2 = TextEditingController();
+  TextEditingController _category1Controller = TextEditingController();
+  TextEditingController _category2Controller = TextEditingController();
 
   List<TextEditingController> _controllers1 = [];
   List<TextFormField> _fields1 = [];
@@ -55,102 +57,29 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "1. Kategorie",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                        HeadLineWidget("1. Kategorie"),
+                        TextInputWidget(
+                          textController: _category1Controller,
+                          missingInput: "Angabe fehlt",
+                          labelText: "Gib die 1. Kategorie ein",
                         ),
-                        Container(
-                          margin: EdgeInsets.only(left: 5, right: 5),
-                          child: TextFormField(
-                            controller: _questionController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                              labelText: 'Gib die 1. Kategorie ein',
-                            ),
-                            validator: (text) {
-                              if (text == null || text.isEmpty) {
-                                return "Die Kategorie fehlt!";
-                              }
-                              return null;
-                            },
-                            onSaved: (String? text) =>
-                                _questionController.text = text!,
-                          ),
+                        DynamicTextFormFields(
+                          controllers: _controllers1,
+                          fields: _fields1,
                         ),
-                        _addTile1(),
-                        _listView1(),
-                        Container(
-                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "2. Kategorie",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                        HeadLineWidget("2. Kategorie"),
+                        TextInputWidget(
+                          textController: _category2Controller,
+                          missingInput: "Angabe fehlt",
+                          labelText: "Gib die 2. Kategorie ein",
                         ),
-                        Container(
-                          margin: EdgeInsets.only(left: 5, right: 5),
-                          child: TextFormField(
-                            controller: _questionController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                              labelText: 'Gib die 2. Kategorie ein',
-                            ),
-                            validator: (text) {
-                              if (text == null || text.isEmpty) {
-                                return "Die Kategorie fehlt!";
-                              }
-                              return null;
-                            },
-                            onSaved: (String? text) =>
-                                _questionController.text = text!,
-                          ),
+                        DynamicTextFormFields(
+                          controllers: _controllers2,
+                          fields: _fields2,
                         ),
-                        _addTile2(),
-                        _listView2(),
-                        Container(
-                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Erreichbare Lamacoins",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 5, right: 5),
-                          child: TextFormField(
-                            controller: _rewardController,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Erreichbare Lamacoins',
-                            ),
-                            validator: (text) {
-                              if (text == null || text.isEmpty) {
-                                return "Betrag fehlt!";
-                              }
-                              return null;
-                            },
-                            onSaved: (String? text) =>
-                                _rewardController.text = text!,
-                          ),
+                        HeadLineWidget("Erreichbare Lamacoins"),
+                        LamacoinInputWidget(
+                          numberController: _rewardController,
                         ),
                       ],
                     ),
@@ -168,29 +97,28 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
                     blocTaskset.subject ?? "normal")),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                TaskClozeTest task4Cards = TaskClozeTest(
-                    widget.task?.id ??
-                        KeyGenerator.generateRandomUniqueKey(
-                            blocTaskset.tasks!),
-                    TaskType.fourCards,
-                    int.parse(_rewardController.text),
-                    "Tippe die richtige Antwort an!",
-                    3,
-                    _questionController.text,
-                    _rightAnswer.text,
-                    [
-                      _wrongAnswer1.text,
-                      _wrongAnswer2.text,
-                    ]);
+                TaskMatchCategory taskMatchCategory = TaskMatchCategory(
+                  widget.task?.id ??
+                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                  TaskType.matchCategory,
+                  int.parse(_rewardController.text),
+                  "Schiebe jedes Wort in die Richtige Kategorie",
+                  3,
+                  _category1Controller.text,
+                  _category2Controller.text,
+                  //TODO: Klappt das wirklich?
+                  _controllers1.map((e) => e.text).toList(),
+                  _controllers2.map((e) => e.text).toList(),
+                );
                 if (newTask) {
                   // add Task
                   BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(AddTask(task4Cards));
+                      .add(AddTask(taskMatchCategory));
                   Navigator.pop(context);
                 } else {
                   // edit Task
                   BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(EditTask(task4Cards));
+                      .add(EditTask(taskMatchCategory));
                 }
                 Navigator.pop(context);
               }
@@ -198,85 +126,5 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
             child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
           ),
         ));
-  }
-
-  Widget _addTile1() {
-    return ListTile(
-      title: Text("Füge einen Begriff hinzu"),
-      trailing: Icon(Icons.add),
-      onTap: () {
-        final TextEditingController controller = TextEditingController();
-        final TextFormField textFormField = TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-            border: OutlineInputBorder(),
-            labelText: "${_fields1.length + 1}. Begriff",
-          ),
-        );
-        setState(() {
-          _controllers1.add(controller);
-          _fields1.add(textFormField);
-        });
-      },
-    );
-  }
-
-  Widget _listView1() {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: _fields1.length,
-      itemBuilder: (context, index) {
-        print(_fields1.length);
-        return Container(margin: EdgeInsets.all(5), child: _fields1[index]);
-      },
-    );
-  }
-
-  Widget _addTile2() {
-    return ListTile(
-      title: Text("Füge einen Begriff hinzu"),
-      trailing: Icon(Icons.add),
-      onTap: () {
-        final TextEditingController controller = TextEditingController();
-        final TextFormField textFormField = TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-            border: OutlineInputBorder(),
-            labelText: "${_fields2.length + 1}. Begriff",
-          ),
-        );
-        setState(() {
-          _controllers2.add(controller);
-          _fields2.add(textFormField);
-        });
-      },
-    );
-  }
-
-  Widget _listView2() {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: _fields2.length,
-      itemBuilder: (context, index) {
-        print(_fields2.length);
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-                width: MediaQuery.of(context).size.width / 2,
-                margin: EdgeInsets.only(top: 20),
-                child: _fields2[index]),
-            Container(
-                margin: EdgeInsets.only(top: 20),
-                width: MediaQuery.of(context).size.width / 5,
-                child: IconButton(onPressed: () {}, icon: Icon(Icons.delete)))
-          ],
-        );
-      },
-    );
-  }
+  } 
 }

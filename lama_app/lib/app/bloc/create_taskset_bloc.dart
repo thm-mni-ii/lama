@@ -58,7 +58,6 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
         ExternalPath.DIRECTORY_DOCUMENTS);
     File file = File(path + '/LAMA/' + taskset!.name! + '.json');
     String json = jsonEncode(taskset);
-    String json1 = jsonEncode(taskset!.tasks![0]);
     file.createSync(recursive: true);
     file.writeAsStringSync(json);
   }

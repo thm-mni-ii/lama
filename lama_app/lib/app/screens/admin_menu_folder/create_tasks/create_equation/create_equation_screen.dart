@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
+
+import '../widgets/lamacoin_input_widget.dart';
+import '../widgets/numbers_input_widget.dart';
 
 class CreateEquationScreen extends StatefulWidget {
   final TaskEquation? task;
@@ -78,21 +82,7 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 25),
-                          child: Container(
-                            margin:
-                                EdgeInsets.only(left: 5, bottom: 15, right: 5),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Zahlenbereich",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
+                        HeadLineWidget("Zahlenbereich"),
                         Container(
                           margin:
                               EdgeInsets.only(left: 15, bottom: 15, right: 30),
@@ -166,18 +156,7 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                         Container(
                           child: Column(
                             children: [
-                              Container(
-                                margin:
-                                    EdgeInsets.only(top: 30, left: 5, right: 5),
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Erlaubte Operationen",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                              HeadLineWidget("Erlaubte Operationen"),
                               CheckboxListTile(
                                 title: Text("Addition"),
                                 value: plusAllowed,
@@ -247,17 +226,7 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                         ),
                         Container(
                             child: Column(children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Weitere Optionen",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                          HeadLineWidget("Weitere Optionen"),
                           CheckboxListTile(
                             title: Text("Erlaube Suche nach Rechenzeichen"),
                             value: allowOperationReplace,
@@ -269,37 +238,10 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                             },
                           ),
                         ])),
-                        Container(
-                          margin: EdgeInsets.only(top: 30, left: 5, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Erreichbare Lamacoins",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 5, right: 5),
-                          child: TextFormField(
-                            controller: _rewardController,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Erreichbare Lamacoins',
-                            ),
-                            validator: (text) {
-                              if (text == null || text.isEmpty) {
-                                return "Beitrag fehlt!";
-                              }
-                              return null;
-                            },
-                            onSaved: (String? text) =>
-                                _rewardController.text = text!,
-                          ),
-                        ),
+                        HeadLineWidget("Erreichbare Lamacoins"),
+                        LamacoinInputWidget(
+                          numberController: _rewardController,
+                        )
                       ],
                     ),
                   ),

@@ -31,6 +31,8 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
 
+  String? _oldSubject;
+
   //bool first = true;
 
   Taskset buildWholeTaskset(Taskset? blocTaskset) {
@@ -68,7 +70,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CustomAppbar(
-        size: screenSize.width/5,
+        size: screenSize.width / 5,
         titel: "Taskset erstellen",
         color: LamaColors.findSubjectColor(_currentSelectedSubject ?? "normal"),
       ),
@@ -156,14 +158,17 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     BlocProvider.of<CreateTasksetBloc>(context).add(
                       EditTaskset(buildWholeTaskset(blocTaskset)),
                     );
+
+                    //TODO: Wenn Subject gewechselt wird, soll Taskliste geleert werden
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
-                        child: TasksetCreationCartScreen(),
-                        )
-                      ),
+                          builder: (_) => BlocProvider.value(
+                                value:
+                                    BlocProvider.of<CreateTasksetBloc>(context),
+                                child: TasksetCreationCartScreen(),
+                              )),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

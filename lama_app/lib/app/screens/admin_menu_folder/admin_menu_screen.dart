@@ -195,7 +195,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           _menuButton(
               context,
               Icon(Icons.task),
-              'Tasksererstellung',
+              'Taskseterstellung',
               () => Navigator.push(
                     context,
                     MaterialPageRoute(
