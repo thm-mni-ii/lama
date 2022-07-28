@@ -598,14 +598,15 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     ]),
                 child: InkWell(
                   onDoubleTap: () {
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(AnswerTaskEvent(answers[0]));
                     BlocProvider.of<TTSBloc>(context).
-                    add(ClickOnAnswerEvent(answers[0]!,"de"));
+                    add(SetDefaultEvent());
                   },
                   onTap: () {
-                      BlocProvider.of<TaskBloc>(context)
-                          .add(AnswerTaskEvent(answers[0]));
-                      BlocProvider.of<TTSBloc>(context).
-                      add(SetDefaultEvent());
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswerEvent(answers[0]!,"de"));
+
                   },
                   child: Center(
                     child: Text(
@@ -633,15 +634,16 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     ]),
                 child: InkWell(
                   onDoubleTap: () {
-                    BlocProvider.of<TTSBloc>(context).
-                    add(ClickOnAnswerEvent(answers[1]!,"de"));
                     //selectedAnswer = answers[1]!;
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(AnswerTaskEvent(answers[1]));
+                    BlocProvider.of<TTSBloc>(context).
+                    add(SetDefaultEvent());
                   },
                   onTap: () {
-                      BlocProvider.of<TaskBloc>(context)
-                          .add(AnswerTaskEvent(answers[1]));
-                      BlocProvider.of<TTSBloc>(context).
-                      add(SetDefaultEvent());
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswerEvent(answers[1]!,"de"));
+
                   },
                   child: Center(
                     child: Text(
@@ -670,17 +672,16 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     ]),
                 child: InkWell(
                   onDoubleTap: () {
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(AnswerTaskEvent(answers[2]));
                     BlocProvider.of<TTSBloc>(context).
-                    add(ClickOnAnswerEvent(answers[2]!,"de"));
+                    add(SetDefaultEvent());
                     //selectedAnswer = answers[2]!;
                   },
                   onTap: () {
 
-                      BlocProvider.of<TaskBloc>(context)
-                          .add(AnswerTaskEvent(answers[2]));
-                      BlocProvider.of<TTSBloc>(context).
-                      add(SetDefaultEvent());
-
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswerEvent(answers[2]!,"de"));
                     },
                     child: Center(
                       child: Text(
