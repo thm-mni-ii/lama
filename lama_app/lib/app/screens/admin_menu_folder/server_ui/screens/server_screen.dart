@@ -37,7 +37,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Server Settings",
+          "Server Einstellung",
           style: LamaTextTheme.getStyle(fontSize: 18),
         ),
         toolbarHeight: screenSize / 5,
@@ -57,8 +57,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                   userName: _userName.text,
                   password: _password.text,
                 );
-                serverRepo.serverSettings =
-                    await DatabaseProvider.db.insertServerSettings(s);
+                serverRepo.setOrUpdate(s);
                 print(serverRepo.serverSettings.toString());
                 Navigator.pop(context);
               }

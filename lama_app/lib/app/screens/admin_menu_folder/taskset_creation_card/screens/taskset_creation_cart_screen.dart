@@ -10,7 +10,6 @@ import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/wid
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
-import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -41,11 +40,17 @@ class TasksetCreationCartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ServerRepository serverRepo = RepositoryProvider.of<ServerRepository>(context);
+    ServerRepository serverRepo =
+        RepositoryProvider.of<ServerRepository>(context);
     Size screenSize = MediaQuery.of(context).size;
-    Taskset taskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
+    final createTasksetBloc = BlocProvider.of<CreateTasksetBloc>(context);
+    Taskset taskset = createTasksetBloc.taskset!;
     TasksetCreateTasklistBloc tasksetListBloc =
         BlocProvider.of<TasksetCreateTasklistBloc>(context);
+    TasksetManageBloc tasksetManageBloc =
+        BlocProvider.of<TasksetManageBloc>(context);
+    TasksetRepository tasksetRepository =
+        RepositoryProvider.of<TasksetRepository>(context);
     return Scaffold(
       appBar: CustomAppbar(
         titel: taskset.name!,
@@ -81,9 +86,7 @@ class TasksetCreationCartScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (_) => MultiBlocProvider(
                         providers: [
-                          BlocProvider.value(
-                            value: BlocProvider.of<CreateTasksetBloc>(context),
-                          ),
+                          BlocProvider.value(value: createTasksetBloc),
                           BlocProvider.value(value: tasksetListBloc),
                         ],
                         child: TasksetChooseTaskScreen(),
@@ -95,6 +98,8 @@ class TasksetCreationCartScreen extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     // editieren und neu hinzufügen
+                    String createdTaskUrl =
+                        "${serverRepo.serverSettings!.url ?? ""}/${taskset.subject}/${taskset.name}";
                     if (taskset.taskurl != null) {
                       // name gleich also bleibt die url gleich ?
                       //ja -> inhalte vergleichen wenn alles gleich nichts machen ansonsten anpassen
@@ -105,51 +110,60 @@ class TasksetCreationCartScreen extends StatelessWidget {
 
                       // is in pool muss verändert werden zu irgend einem Zeitpunkt!!
 
-                    } else {
-                      // erstmal neu nachdenken was passieren muss
-                      // taskurl muss gesetzt werden
-                      // darf nicht null sein!!
-                      /* String createdTaskUrl = "${serverRepo.getUrl ?? ""}/${taskset.subject}/${taskset.name}";
-                      DatabaseProvider.db
-                          .insertTaskUrl(TaskUrl(url: createdTaskUrl));
-                      List<TaskUrl> taskUrl =
-                          await DatabaseProvider.db.getTaskUrl();
-                      BlocProvider.of<CreateTasksetBloc>(context).add(
-                        AddUrlToTaskset(
-                          taskUrl.firstWhere(
-                            (element) => element.url == createdTaskUrl,
-                          ),
-                        ),
-                      ); */
+                      // überall löschen
 
-                      // tasklist muss gesetzt werden
-                      BlocProvider.of<CreateTasksetBloc>(context).add(
-                        AddTaskListToTaskset(tasksetListBloc.taskList),
+                      DatabaseProvider.db.deleteTaskUrl(taskset.taskurl!.id);
+                      tasksetRepository.deleteTasksetFromServer(createdTaskUrl);
+                      Taskset t = tasksetManageBloc.allTaskset.firstWhere(
+                        (element) => element.taskurl == taskset.taskurl,
                       );
-                      // taskset muss auf server gepushed und in lokale liste geschrieben werden
-                      print(taskset.toJson());
-                      //RepositoryProvider.of<TasksetRepository>(context)
-                        //  .writeToServer(taskset);
-                      // lokale liste hinzufügen
-                      /* RepositoryProvider.of<TasksetRepository>(context)
-                          .tasksetLoader
-                          .loadedTasksets
-                          .addAll({
-                        SubjectGradeRelation(taskset.subject, taskset.grade): [
-                          taskset
-                        ],
-                      }); */
-                      BlocProvider.of<TasksetManageBloc>(context)
-                          .allTaskset
-                          .add(taskset);
 
-                      /* Navigator.popUntil(
-                      context,
-                      ModalRoute.withName(
-                        TasksetManageScreen.routeName,
-                      ),
-                    );*/
+                      tasksetRepository.tasksetLoader.loadedTasksets
+                          .forEach((key, value) {
+                        if (key == SubjectGradeRelation(t.subject, t.grade)) {
+                          value.removeWhere(
+                            (element) => element.taskurl == t.taskurl,
+                          );
+                        }
+                      });
+
+                      tasksetManageBloc.allTaskset.removeWhere(
+                        (element) => element.taskurl == taskset.taskurl,
+                      );
+                      if (taskset.isInPool) {
+                        tasksetManageBloc.tasksetPool.removeWhere(
+                          (element) => element.taskurl == taskset.taskurl,
+                        );
+                      }
                     }
+                    // taskurl muss gesetzt werden darf nicht null sein!!
+                    DatabaseProvider.db // oder über tasket id lösen
+                        .insertTaskUrl(TaskUrl(url: createdTaskUrl));
+                    List<TaskUrl> taskUrl =
+                        await DatabaseProvider.db.getTaskUrl();
+                    createTasksetBloc.add(
+                      AddUrlToTaskset(
+                        taskUrl.firstWhere(
+                          (element) => element.url == createdTaskUrl,
+                        ),
+                      ),
+                    );
+
+                    // tasklist muss gesetzt werden
+                    createTasksetBloc.add(
+                      AddTaskListToTaskset(tasksetListBloc.taskList),
+                    );
+                    // taskset muss auf server gepushed und in lokale liste geschrieben werden
+                    print(taskset.toJson());
+                    //tasksetRepository.fileUpload(taskset, createdTaskUrl);// locales file
+                    // lokale liste hinzufügen
+                    tasksetRepository.tasksetLoader.loadedTasksets.addAll({
+                      SubjectGradeRelation(taskset.subject, taskset.grade): [
+                        taskset
+                      ],
+                    });
+                    tasksetManageBloc.allTaskset.add(taskset);
+
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },

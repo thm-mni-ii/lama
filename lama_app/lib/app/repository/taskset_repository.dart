@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_loader.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -58,8 +61,7 @@ class TasksetRepository {
 
   // TODO
   /// adds a Taskset to the server
-  Future<void> writeToServer(Taskset taskset) async {
-    String url = "";
+  Future<void> writeToServer(Taskset taskset, String url) async {
     var response = await http.post(
       Uri.parse(url),
       body: taskset.toJson(),
@@ -70,13 +72,28 @@ class TasksetRepository {
     }
   }
 
+  Future<String> fileUpload(/* String text,  */ File file, String url) async {
+    //create multipart request for POST or PATCH method
+    var request = http.MultipartRequest("POST", Uri.parse(url));
+    //add text fields
+    //request.fields["text_field"] = text;
+    //create multipart using filepath, string or bytes
+    var pic = await http.MultipartFile.fromPath("file_field", file.path);
+    //add multipart to request
+    request.files.add(pic);
+    var response = await request.send();
+
+    //Get the response from the server
+    var responseData = await response.stream.toBytes();
+    var responseString = String.fromCharCodes(responseData);
+    print(responseString);
+    return responseString;
+  }
+
   //TODO
   /// updates the taskset(s) on the server
-  Future<void> updateTasksetOnServer() async {
-    String url = "";
-    var response = await http.put(
-      Uri.parse(url),
-    );
+  Future<void> deleteTasksetFromServer(String url) async {
+    var response = await http.delete(Uri.parse(url));
   }
 
   /// gives a List of TaskType depending on a specific subject

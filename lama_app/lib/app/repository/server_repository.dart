@@ -37,7 +37,13 @@ class ServerSettings {
 
   @override
   String toString() {
-    return (id ?? 0).toString() + " " + (url ?? "url") + " " + (userName ?? "user name") +  " " + (password ?? 0).toString();
+    return (id ?? 0).toString() +
+        " " +
+        (url ?? "url") +
+        " " +
+        (userName ?? "user name") +
+        " " +
+        (password ?? 0).toString();
   }
 }
 
@@ -61,5 +67,10 @@ class ServerRepository {
   /// loads db values in url, username, password
   void initialize() async {
     serverSettings = await DatabaseProvider.db.getServerSettings();
+  }
+
+  void setOrUpdate(ServerSettings serverSettings) async {
+    serverSettings =
+        await DatabaseProvider.db.insertServerSettings(serverSettings);
   }
 }
