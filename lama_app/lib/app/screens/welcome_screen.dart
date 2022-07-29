@@ -11,9 +11,11 @@ import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/event/check_screen_event.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/event/userlist_url_event.dart';
+import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
 import 'package:lama_app/app/state/taskset_options_state.dart';
 import 'package:lama_app/app/state/userlist_url_state.dart';
+import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -30,6 +32,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final controller = PageController();
     final pages = getPages(controller);
 
+    ///listens to [CheckSCreenBloc], [UserlistUrlBloc] and
+    ///[TasksetOptionsBloc] to add the right events when inserting the SetupUrl
     return MultiBlocListener(
       listeners: [
         BlocListener<CheckScreenBloc, CheckScreenState?>(
@@ -37,18 +41,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             if (state is LoadSetup) {
               BlocProvider.of<TasksetOptionsBloc>(context)
                 ..add(TasksetOptionsChangeURL(state.tasksetUrl!))
-                ..add(TasksetOptionsPush())
-                ..add(TasksetOptionsReload());
+                ..add(TasksetOptionsPush());
 
               BlocProvider.of<UserlistUrlBloc>(context)
                 ..add(UserlistUrlChangeUrl(state.userlistUrl!))
                 ..add(UserlistParseUrl());
-              context.read<CheckScreenBloc>().add(SetupLoadedEvent());
             }
             if (state is HasGuest) {
               context
                   .read<CheckScreenBloc>()
-                  .add(LoadGuest(context, state.user));
+                  .add(LoadGuest(context, state.user, false));
+            }
+            if (state is SetupError) {
+              _insertErrorPopUp(state.errorMessage);
             }
           },
         ),
@@ -65,10 +70,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         BlocListener<TasksetOptionsBloc, TasksetOptionsState?>(
           listener: (context, state) {
             if (state is TasksetOptionsPushSuccess) {
-              BlocProvider.of<TasksetOptionsBloc>(context)
-                  .add(TasksetOptionsReload());
+              RepositoryProvider.of<TasksetRepository>(context)
+                  .reloadTasksetLoader();
               BlocProvider.of<CheckScreenBloc>(context)
                   .add(CheckForAdmin(context));
+            }
+            if (state is TasksetOptionsPushFailed) {
+              showDialog(
+                  context: context,
+                  builder: (_) => _insertErrorPopUp(state.error));
             }
           },
         ),
@@ -133,6 +143,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
+  ///uses [PageViewerModel] to model each page in the welcome_screen
   List<Widget> getPages(PageController controller) {
     return [
       PageViewerModel(
@@ -237,6 +248,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     ];
   }
 
+  ///provides skeleton vor a page in the welcome screen
   Widget PageViewerModel(
       {String? title,
       String? description,
@@ -289,6 +301,43 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: widget2,
               ),
             ])),
+      ],
+    );
+  }
+
+  ///(private)
+  ///provides [AlertDialog] to show error message
+  ///
+  ///{@param} error message as String
+  Widget _insertErrorPopUp(String error) {
+    return AlertDialog(
+      title: Text(
+        'Fehler beim laden der Aufgaben',
+        style: LamaTextTheme.getStyle(
+          color: LamaColors.black,
+          fontSize: 16,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      content: SingleChildScrollView(
+        child: Text(
+          error,
+          style: LamaTextTheme.getStyle(
+            color: LamaColors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            monospace: true,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      actions: [
+        TextButton(
+          child: Text('Schließen'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ],
     );
   }

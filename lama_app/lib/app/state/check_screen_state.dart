@@ -53,3 +53,10 @@ class SetupLoaded extends CheckScreenState {}
 
 //state thats used when setupurl got changed
 class ChangeUrl extends CheckScreenState {}
+
+//state thats used to indicate that the setup-url threw an error
+class SetupError extends CheckScreenState {
+  String errorMessage;
+
+  SetupError(this.errorMessage);
+}

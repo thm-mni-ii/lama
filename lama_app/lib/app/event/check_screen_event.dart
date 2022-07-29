@@ -46,16 +46,15 @@ class CreateGuestEvent extends CheckScreenEvent {
 class DSGVODenied extends CheckScreenEvent {}
 
 ///used to load a guest and navigate to [HomeScreen]
+///uses doWait to give loading time on launch of the app
 ///
 ///{@param}[BuildContext] to navigate and [User] for the guest
 class LoadGuest extends CheckScreenEvent {
   BuildContext context;
   User user;
+  bool doWait;
 
-  LoadGuest(
-    this.context,
-    this.user,
-  );
+  LoadGuest(this.context, this.user, this.doWait);
 }
 
 class LoadWelcomeScreen extends CheckScreenEvent {
@@ -82,4 +81,5 @@ class SetupChangeUrl extends CheckScreenEvent {
   SetupChangeUrl(this.setupUrl);
 }
 
-class SetupLoadedEvent extends CheckScreenEvent {}
+///used to display a error-message when the Url is wrong
+class SetupErrorMessage extends CheckScreenEvent {}

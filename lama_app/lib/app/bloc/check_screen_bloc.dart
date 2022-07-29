@@ -55,23 +55,21 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     });
     on<LoadGuest>((event, emit) async {
       ///wait for tasks to load
-      await Future.delayed(Duration(milliseconds: 2000));
+      if (event.doWait) await Future.delayed(Duration(milliseconds: 2000));
       await _loadGuest(event.context, event.user);
     });
     on<LoadWelcomeScreen>((event, emit) async {
       await _loadWelcome(event.context);
     });
-    on<SetupLoadedEvent>((event, emit) async {
-      emit(SetupLoaded());
-    });
     on<InsertSetupEvent>((event, emit) async {
-      await _insertSetup(event.context);
-      emit(LoadSetup(_userlistUrl, _tasksetUrl));
+      emit(await _insertSetup(event.context));
+      //emit(LoadSetup(_userlistUrl, _tasksetUrl));
     });
     on<SetupChangeUrl>((event, emit) async {
       _setupUrl = event.setupUrl;
       emit(ChangeUrl());
     });
+    on<SetupErrorMessage>((event, emit) async {});
   }
   //used to update the setup url when needed
   String? _setupUrl;
@@ -214,10 +212,11 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   }
 
   ///(private)
-  ///used to read the setup JSON and navigate to [UserSelectionScreen]
+  ///used to read the setup JSON and navigate to [UserSelectionScreen] or show
+  ///an Error-Message if reaching the Url fails
   ///
   ///{@param} [BuildContext] to navigate
-  Future<void> _insertSetup(BuildContext context) async {
+  Future<CheckScreenState> _insertSetup(BuildContext context) async {
     //check if JSON file is valid
     String? error = await InputValidation.inputUrlWithJsonValidation(_setupUrl);
     String? errorUserList;
@@ -225,13 +224,17 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     Map<String, dynamic>? urls;
 
     //TO-DO: errorhandling
-    if (error != null) return print(error);
+    if (error != null) {
+      print(error);
+      return SetupError(error);
+    }
     //get the two URLs from the JSON file
     try {
       final response = await http.get(Uri.parse(_setupUrl!));
       urls = _parseUrls(jsonDecode(response.body));
     } on SocketException {
       print('Kritischer Fehler beim erreichen der URL!');
+      return SetupError('Kritischer Fehler beim erreichen der URL!');
     }
     //load userlist through URL
     if (urls != null) {
@@ -243,11 +246,14 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     //load taskset through URL
     /* errorUserList != null ?  print(errorUserList) :  */
     if (errorTaskset != null && errorUserList != null) {
-      return print(errorTaskset + errorUserList);
+      print('Taskset error: $errorTaskset Userlist error: $errorUserList');
+      return SetupError(
+          'Taskset error: $errorTaskset Userlist error: $errorUserList');
     } else {
       _userlistUrl = urls!['userListUrl'];
       _tasksetUrl = urls['tasksetUrl'];
     }
+    return LoadSetup(_userlistUrl, _tasksetUrl);
     /* try {
       final response = await http.get(Uri.parse(urls['userListUrl']!));
       _userList = _parseUserList(jsonDecode(response.body));
