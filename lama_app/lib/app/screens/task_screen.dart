@@ -68,7 +68,7 @@ class TaskScreenState extends State<TaskScreen> {
         //State that signals a Task should be displayed
         if (state is DisplayTaskState) {
           SvgPicture coinImg = SvgPicture.asset(
-              'assets/images/svg/Ton.svg',
+              'assets/images/svg/lama_coin.svg',
               semanticsLabel: 'lama_coin');
           if (state.task != null && state.task.leftToSolve! <= 0)
             coinImg = SvgPicture.asset('assets/images/svg/lama_coin_grey.svg',
@@ -131,6 +131,17 @@ class TaskScreenState extends State<TaskScreen> {
                                       color: LamaColors.white,
                                       fontSize: 30,
                                       fontWeight: FontWeight.w500)),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 47),
+                                  child: Container(
+                                    height: (constraints.maxHeight / 100) * 7,
+                                    width: (constraints.maxHeight / 100) * 7,
+                                    child: coinImg,
+                                  ),
+                                ),
+                              ),
                               BlocProvider(
                                 create: (context) => TTSBloc(),
                                 child: BlocBuilder<TTSBloc, TTSState>(
@@ -150,14 +161,10 @@ class TaskScreenState extends State<TaskScreen> {
                                         ),
                                         onTap: () =>
                                         {
-                                          BlocProvider.of<TTSBloc>(context).
-                                          add(ReadQuestionEvent(QuestionText.getText(), QuestionText.getLang()))
-                                        },
-                                        onDoubleTap: () => {
-                                        home_screen_state.toggle(),
-                                        setState(() {
-                                        path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
-                                        }),
+                                          home_screen_state.toggle(),
+                                          setState(() {
+                                            path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
+                                          })
                                         }
                                     ),
                                   );

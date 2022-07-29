@@ -114,7 +114,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                                       onTap: () {
                                         // todo language
                                         BlocProvider.of<TTSBloc>(context)
-                                            .add(ClickOnQuestionEvent.initVoice(state.wordToTranslate!, qWordLang!));
+                                            .add(ReadQuestionEvent(state.wordToTranslate!, qWordLang!));
                                       },
                                       child: Text(
                                         state.wordToTranslate!,
