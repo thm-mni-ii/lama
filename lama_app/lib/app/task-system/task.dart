@@ -27,7 +27,6 @@ enum TaskType {
   buchstabieren
 }
 
-
 class Task {
   String id;
   TaskType type;
@@ -40,6 +39,7 @@ class Task {
       this.originalLeftToSolve) {
     leftToSolve = originalLeftToSolve;
   }
+
   ///factory constructor that creates the corresponding
   ///subclass of [Task] based on the [taskType].
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -92,14 +92,13 @@ class Task {
         );
       case "TaskType.moneyTask":
         return TaskMoney(
-          json['id'],
-          TaskType.moneyTask,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          json['von'],
-          json['bis'],
-        );
+            json['id'],
+            TaskType.moneyTask,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['difficulty'],
+            json['optimum']);
       case "TaskType.markWords":
         return TaskMarkWords(
           json['id'],
@@ -278,7 +277,6 @@ class Task {
         return {};
     }
   }
-
 
   @override
   String toString() {
@@ -504,27 +502,25 @@ class ClockTest extends Task {
 ///
 ///Author: T.Rentsch
 class TaskMoney extends Task {
-  double von;
-  double bis;
+  int? difficulty;
   bool? optimum;
 
   TaskMoney(String id, TaskType taskType, int reward, String lamaText,
-      int leftToSolve, this.von, this.bis)
+      int leftToSolve, this.difficulty, this.optimum)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        "task_type": type,
-        'task_reward': reward,
-        'lama_text': lamaText,
-        'left_to_solve': leftToSolve,
-        'von': von,
-        'bis': bis,
-        'optimum': optimum,
+        "id": id,
+        "task_type": type.toString(),
+        "task_reward": reward,
+        "lama_text": lamaText,
+        "left_to_solve": leftToSolve,
+        "difficulty": difficulty,
+        "optimum": optimum,
       };
 
   @override
-  String toString() => super.toString() + von.toString() + bis.toString();
+  String toString() => super.toString() + difficulty.toString();
 }
 
 ///Subclass of [Task] for the Tasktype "VocableTest"

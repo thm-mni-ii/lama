@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clock_task/create_clock_task.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_buchstabieren/create_buchstabieren_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clock/create_clock_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clozetest/create_clozeTest_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_equation/create_equation_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_gridselect/create_gridselect_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_markwords/create_markwords_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_matchcategory/create_matchcategory_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_moneytask/create_moneytask_screen.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_task_number_line/create_task_number_line.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/four_cards/create_four_cards_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_four_cards/create_four_cards_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_numberline/create_numberline_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_vocabletest/create_vocabletest_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 
 ///This file creates the Taskset Creation Cart Widget
@@ -34,11 +41,30 @@ class TasksetCreationCartWidget extends StatelessWidget {
       case TaskType.moneyTask:
         return MoneyEinstellenScreen(index: index, task: task as TaskMoney);
       case TaskType.fourCards:
-        return CreateFourCardsScreen();
+        return CreateFourCardsScreen(index: index, task: task as Task4Cards);
+      case TaskType.equation:
+        return CreateEquationScreen(index: index, task: task as TaskEquation);
+      case TaskType.vocableTest:
+        return CreateVocabletestScreen(
+            index: index, task: task as TaskVocableTest);
       case TaskType.numberLine:
-        return CreateTaskNumberLine(index: index, task: task as TaskNumberLine);
+        return CreateNumberlineScreen(
+            index: index, task: task as TaskNumberLine);
+      case TaskType.matchCategory:
+        return CreateMatchCategoryScreen(
+            index: index, task: task as TaskMatchCategory);
+      case TaskType.markWords:
+        return CreateMarkWordsScreen(index: index, task: task as TaskMarkWords);
+      case TaskType.gridSelect:
+        return CreateGridSelectScreen(
+            index: index, task: task as TaskGridSelect);
+      case TaskType.clozeTest:
+        return CreateClozeTestScreen(index: index, task: task as TaskClozeTest);
       case TaskType.clock:
-        return CreateClockTask(index: index, task: task as ClockTest);
+        return CreateClockScreen(index: index, task: task as ClockTest);
+      case TaskType.buchstabieren:
+        return CreateBuchstabierenScreen(
+            index: index, task: task as TaskBuchstabieren);
       default:
         return Placeholder();
     }

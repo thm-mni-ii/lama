@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/widgets/new_tasksets.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/widgets/taskset_expansion_tile_widget.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/screens/taskset_option_screen.dart';
 // blocs
 
@@ -69,7 +68,8 @@ class _TasksetManageScreenState extends State<TasksetManageScreen> {
                     child: OptionTaskScreen(),
                   ),
                 ),
-              ),icon: Icon(Icons.import_export_rounded),
+              ),
+              icon: Icon(Icons.import_export_rounded),
             ),
           ],
           title: Text(
@@ -77,7 +77,8 @@ class _TasksetManageScreenState extends State<TasksetManageScreen> {
             style: LamaTextTheme.getStyle(fontSize: 18),
           ),
           toolbarHeight: screenSize.width / 5,
-          backgroundColor: LamaColors.bluePrimary,
+          backgroundColor: // LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),),
+              LamaColors.bluePrimary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(30),

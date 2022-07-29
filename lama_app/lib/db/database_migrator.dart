@@ -27,6 +27,7 @@ class DBMigrator {
     1: migrationsV1,
     2: migrationsV2,
     3: migrationsV3,
+    4: migrationsV4,
   };
 
   ///map the code to create the tables for Version 1
@@ -106,5 +107,13 @@ class DBMigrator {
   static final Map<int, String> migrationsV3 = {
     1: "ALTER TABLE $tableUser "
         "ADD COLUMN ${UserFields.columnHighscorePermission} INTEGER DEFAULT 0;"
+  };
+
+  ///map the code to create the tables for Version 4
+  ///
+  /// {@return} Map<int, Map>
+  static final Map<int, String> migrationsV4 = {
+    1: "ALTER TABLE $tableUser "
+        "ADD COLUMN ${UserFields.columnIsGuest} INTEGER;"
   };
 }

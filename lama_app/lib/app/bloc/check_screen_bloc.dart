@@ -5,7 +5,10 @@ import 'package:lama_app/app/bloc/create_admin_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/event/check_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/repository/lamafacts_repository.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/create_admin_screen.dart';
+import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
 import 'package:lama_app/db/database_provider.dart';
@@ -21,16 +24,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// Author: L.Kammerer
 /// latest Changes: 14.07.2021
+
 class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   CheckScreenBloc({CheckScreenState? initialState}) : super(initialState) {
     on<CheckForAdmin>((event, emit) async {
       emit(await _hasAdmin(event.context));
     });
     on<DSGVOAccepted>((event, emit) async {
-      emit(await _navigator(event.context));
+      emit(await _loadWelcome(event.context));
     });
     on<CreateAdminEvent>((event, emit) async {
       emit(await _navigator(event.context));
+    });
+    on<CreateGuestEvent>((event, emit) async {
+      emit(await _createGuest(event.context));
+    });
+    on<LoadGuest>((event, emit) async {
+      ///wait for tasks to load
+      await Future.delayed(Duration(milliseconds: 2000));
+      await _loadGuest(event.context, event.user);
     });
   }
 
@@ -44,16 +56,24 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   Future<CheckScreenState> _hasAdmin(BuildContext context) async {
     List<User> userList = await DatabaseProvider.db.getUser();
     if (userList == null) return ShowDSGVO(await _loadDSGVO());
+    //gets first user if its a guest
     for (User user in userList) {
       if (user.isAdmin!) {
         _navigateAdminExist(context);
         return AdminExist();
+      } else if (user.isGuest!) {
+        return HasGuest(context, user);
       }
     }
+
     //set [SharedPreferences]
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('enableDefaultTaskset', true);
     return ShowDSGVO(await _loadDSGVO());
+  }
+
+  Future<CheckScreenState> _loadWelcome(BuildContext context) async {
+    return ShowWelcome();
   }
 
   ///(private)
@@ -62,7 +82,43 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   ///{@param} [BuildContext] as context
   Future<CheckScreenState> _navigator(BuildContext context) async {
     await _navigateNoAdmin(context);
-    return CreateAdmin();
+    return ShowWelcome();
+  }
+
+  Future<CheckScreenState> _createGuest(BuildContext context) async {
+    //loda lama facts
+
+    //create and push guest user into database
+    User user = User(
+      grade: 1,
+      coins: 0,
+      isAdmin: false,
+      avatar: 'lama',
+      name: "Gast",
+      isGuest: true,
+      password: "0",
+    );
+    await DatabaseProvider.db.insertUser(user);
+    //load guest user
+
+    //go to home screen with guest user
+    //_loadGuest(context, user);
+    return HasGuest(context, user);
+  }
+
+  Future<void> _loadGuest(BuildContext context, User user) async {
+    UserRepository repository = UserRepository(user);
+    LamaFactsRepository lamaFactsRepository = LamaFactsRepository();
+    await lamaFactsRepository.loadFacts();
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MultiRepositoryProvider(providers: [
+                  RepositoryProvider<UserRepository>(
+                      create: (context) => repository),
+                  RepositoryProvider<LamaFactsRepository>(
+                      create: (context) => lamaFactsRepository)
+                ], child: HomeScreen())));
   }
 
   ///(private)

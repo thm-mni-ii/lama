@@ -23,6 +23,7 @@ class GameListScreen extends StatelessWidget {
         "Tippe die entsprechende Richtung an, um auf die andere Seite des Baumes zu springen und so den Ästen auszuweichen!"),
     GameListItem("Tetris", 20,
         "Setze die Blöcke zusammen und schaffe möglichst keine Lücke!"),
+    GameListItem("Tap The Lama",20,"Erwische die Lamaköpfe,  indem du im richtigen Moment auf die unteren Lamabuttons drückst!")
   ];
 
   @override

@@ -15,6 +15,7 @@ class UserFields {
   static final String columnIsAdmin = "isAdmin";
   static final String columnAvatar = "avatar";
   static final String columnHighscorePermission = "highscorePermission";
+  static final String columnIsGuest = "isGuest";
 }
 
 ///This class help to work with the data's from the user table
@@ -29,6 +30,7 @@ class User {
   bool? isAdmin;
   String? avatar;
   bool? highscorePermission;
+  bool? isGuest;
 
   User(
       {this.name,
@@ -37,7 +39,8 @@ class User {
       this.coins,
       this.isAdmin,
       this.avatar,
-      this.highscorePermission});
+      this.highscorePermission,
+      this.isGuest});
 
   ///Map the variables
   ///
@@ -51,7 +54,8 @@ class User {
       UserFields.columnIsAdmin: (isAdmin == null || !isAdmin!) ? 0 : 1,
       UserFields.columnAvatar: avatar,
       UserFields.columnHighscorePermission:
-          (highscorePermission == null || !highscorePermission!) ? 0 : 1
+          (highscorePermission == null || !highscorePermission!) ? 0 : 1,
+      UserFields.columnIsGuest: (isGuest == null || !isGuest!) ? 0 : 1,
     };
     return map;
   }
@@ -67,6 +71,7 @@ class User {
     isAdmin = map[UserFields.columnIsAdmin] == 1;
     avatar = map[UserFields.columnAvatar];
     highscorePermission = map[UserFields.columnHighscorePermission] == 1;
+    isGuest = map[UserFields.columnIsGuest] == 1;
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -78,6 +83,8 @@ class User {
         json.containsKey('isAdmin') && json['highscorePermission'] == 'ja'
             ? true
             : false;
+    bool isGuest =
+        json.containsKey('isGuest') && json['isGuest'] == 'ja' ? true : false;
 
     return User(
       name: json['name'],
@@ -87,6 +94,7 @@ class User {
       isAdmin: isAdmin,
       avatar: avatar,
       highscorePermission: highscorePermission,
+      isGuest: isGuest,
     );
   }
 
@@ -113,6 +121,12 @@ class User {
         (json['highscorePermission'] != 'ja' &&
             (json['highscorePermission'] != 'nein')))
       return 'Optionales Feld ("highscorePermission":...) muss die Werte "ja" oder "nein" enthalten';
+
+    if (json.containsKey('isGuest') && !(json['isGuest'] is String))
+      return 'Feld ("isGuest":...) ist fehlerhaft! \n Hinweis: ("isGuest":"ja/nein",)';
+    if (json.containsKey('isGuest') &&
+        (json['isGuest'] != 'ja' && (json['isGuest'] != 'nein')))
+      return 'Optionales Feld ("isGuest":...) muss die Werte "ja" oder "nein" enthalten';
 
     String? error = InputValidation.inputPasswordValidation(json['password']);
     if (error != null) return error;

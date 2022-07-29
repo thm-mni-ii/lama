@@ -28,6 +28,11 @@ class UserRepository {
   ///Returns the avatar of the user thats currently logged in.
   String? getAvatar() => authenticatedUser!.avatar;
 
+  Future<void> updateUser() async {
+    authenticatedUser =
+        await DatabaseProvider.db.refreshUser(authenticatedUser!);
+  }
+
   ///Adds lama coins to the user thats currently logged in.
   void addLamaCoins(int coinsToAdd) async {
     if (authenticatedUser!.coins != null) {
@@ -90,5 +95,12 @@ class UserRepository {
   }
 
   ///Returns wether or not a highscore may be posted online
-  bool? getHighscorePermission() => authenticatedUser!.highscorePermission;
+  bool? getHighscorePermission() {
+    return authenticatedUser!.highscorePermission;
+  }
+
+  ///Returns weather or not the current user is a guest
+  bool? getGuestStatus() {
+    return authenticatedUser!.isGuest;
+  }
 }

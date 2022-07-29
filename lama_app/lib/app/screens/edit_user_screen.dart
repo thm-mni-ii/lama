@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lama_app/app/bloc/create_admin_bloc.dart';
+import 'package:lama_app/app/screens/create_admin_screen.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
@@ -120,15 +122,18 @@ class EditUserScreenState extends State<EditUserScreen> {
               //[TextFormField] to change the Username
               _usernameTextField(context),
               //[TextFormField] to change the Password
-              _passwortTextField(context),
+              //TO-DO change if to state with blocpattern - add a gueststate
+              if (!_user.isGuest!) _passwortTextField(context),
               //[TextFormField] to repead the Password for safety
-              _passwortTextField2(context),
+              if (!_user.isGuest!) _passwortTextField2(context),
               //[TextFormField] to change the coins
-              _coinsTextField(context),
+              if (!_user.isGuest!) _coinsTextField(context),
               //[DropdownButtonHideUnderline] to change the grade
               _gradesList(context, _grades),
               //[ElevatedButton] to delete the user
-              _deletUserButoon(context),
+              !_user.isGuest!
+                  ? _deletUserButoon(context)
+                  : _createAdminButton(context),
             ],
           ),
         ),
@@ -740,4 +745,56 @@ class EditUserScreenState extends State<EditUserScreen> {
       ),
     );
   }
+}
+
+///provides a button to create an admin with, if the current user is a guest
+Widget _createAdminButton(BuildContext context) {
+  return ElevatedButton(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Icon(Icons.add),
+        Text(
+          'Erstelle Admin',
+          style: LamaTextTheme.getStyle(fontSize: 14),
+        ),
+        SizedBox(
+          width: 5,
+        ),
+      ],
+    ),
+    onPressed: () => {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (BuildContext context) => CreateAdminBloc(),
+            child: CreateAdminScreen(),
+          ),
+        ),
+      ).then((value) {
+        //if an admin gets created
+        if (value != null) {
+          //render snackbar for confirmation
+          final snackBar = SnackBar(
+              backgroundColor: LamaColors.mainPink,
+              content: Text(
+                'Admin wurde erstellt!',
+                textAlign: TextAlign.center,
+                style: LamaTextTheme.getStyle(
+                    fontSize: 15, color: LamaColors.white),
+              ),
+              duration: Duration(seconds: 2));
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          //remove the guest status from the user
+          context.read<EditUserBloc>().add(EditUserChangeGuest(context));
+        }
+      }),
+    },
+    style: ElevatedButton.styleFrom(
+      minimumSize: Size(50, 45),
+      primary: LamaColors.bluePrimary,
+    ),
+  );
 }

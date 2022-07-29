@@ -163,9 +163,8 @@ class TasksetValidator {
 
           ///MoneyTask
           case "TaskType.moneyTask":
-            if (json.containsKey("von") &&json.containsKey("bis") &&
-                json["von"] is double &&
-                json["bis"] is double &&
+            if (json.containsKey("difficulty") &&
+                json["difficulty"] is int &&
                 json['optimum'] is bool) return null;
             return "Aufgabentyp: MoneyTask";
 
@@ -252,10 +251,15 @@ class TasksetValidator {
 
           ///Buchstabieren
           case "TaskType.buchstabieren":
-            
-              return null;
+            if (json.containsKey('woerter') &&
+                _checkMapType<String>(json['woerter']) &&
+                json.containsKey('first_Letter_caps') &&
+                json['first_Letter_caps'] is int &&
+                json.containsKey('correcting_modus') &&
+                json['correcting_modus'] is int &&
+                json.containsKey('multiple_points') &&
+                json['multiple_points'] is int) return null;
             return "Aufgabentyp: Buchstabieren";
-
           default:
             return "";
         }
@@ -273,6 +277,13 @@ class TasksetValidator {
   static bool _checkListType<T>(List list) {
     for (int i = 0; i < list.length; i++) {
       if (!(list[i] is T)) return false;
+    }
+    return true;
+  }
+
+  static bool _checkMapType<T>(Map map) {
+    for (int i = 0; i < map.length; i++) {
+      if (!(map.entries.elementAt(i).value is T)) return false;
     }
     return true;
   }

@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:lama_app/app/model/user_model.dart';
+
 /// States used by [CheckScreen] and [CheckScreenBloc]
 ///
 /// Author: L.Kammerer
@@ -20,3 +23,16 @@ class ShowDSGVO extends CheckScreenState {
 
 ///should provide an CreateAdminScreen
 class CreateAdmin extends CheckScreenState {}
+
+///shows welcome screen
+class ShowWelcome extends CheckScreenState {}
+
+///after guest was created in welcome screen
+class HasGuest extends CheckScreenState {
+  BuildContext context;
+  User user;
+  HasGuest(
+    this.context,
+    this.user,
+  );
+}

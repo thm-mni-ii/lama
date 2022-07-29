@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
+import 'package:lama_app/app/bloc/edit_user_bloc.dart';
 import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
+import 'package:lama_app/app/bloc/user_management_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/choose_taskset_screen.dart';
+import 'package:lama_app/app/screens/edit_user_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
@@ -120,27 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50)),
                               ),
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    child: SvgPicture.asset(
-                                      'assets/images/svg/avatars/${userRepository!.getAvatar()}.svg',
-                                      semanticsLabel: 'LAMA',
-                                    ),
-                                    radius: 25,
-                                    backgroundColor: LamaColors.mainPink,
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    userRepository!.getUserName()!,
-                                    style: LamaTextTheme.getStyle(
-                                        fontSize: 22.5,
-                                        fontWeight: FontWeight.w600,
-                                        monospace: true),
-                                  ),
-                                ],
-                              ),
+                              child: descriptionButton(context, constraints),
                             ),
                           )
                         ],
@@ -209,6 +192,72 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  ///if the user is a guest, the description turns into a button to edit user details
+  ///after the user was changed, the userRepository gets updated
+  Widget descriptionButton(BuildContext context, BoxConstraints constraints) {
+    if (userRepository!.getGuestStatus()!) {
+      return TextButton(
+        child: Row(children: [
+          userDescription(),
+          SizedBox(width: 10),
+          Icon(
+            Icons.edit,
+            color: LamaColors.white,
+          )
+        ]),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                      create: (BuildContext context) =>
+                          EditUserBloc(userRepository!.authenticatedUser!)),
+                  BlocProvider(
+                      create: (BuildContext context) => UserManagementBloc()),
+                ],
+                child: EditUserScreen(userRepository!.authenticatedUser!),
+              ),
+            ),
+          )
+              .then((value) async => await userRepository!.updateUser())
+              .then((value) => setState(
+                    () {},
+                  ));
+        },
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.all(0),
+        ),
+      );
+    } else {
+      return userDescription();
+    }
+  }
+
+  ///Draws the Avatar and Username at the top of the screen
+  Row userDescription() {
+    return Row(
+      children: [
+        SizedBox(width: 10),
+        CircleAvatar(
+          child: SvgPicture.asset(
+            'assets/images/svg/avatars/${userRepository!.getAvatar()}.svg',
+            semanticsLabel: 'LAMA',
+          ),
+          radius: 25,
+          backgroundColor: LamaColors.mainPink,
+        ),
+        SizedBox(width: 5),
+        Text(
+          userRepository!.getUserName()!,
+          style: LamaTextTheme.getStyle(
+              fontSize: 22.5, fontWeight: FontWeight.w600, monospace: true),
+        ),
+      ],
+    );
+  }
+
   ///Return a Widget that contains the complete center column with
   ///all subjects and the game button.
   ///
@@ -269,7 +318,8 @@ class _HomeScreenState extends State<HomeScreen> {
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
     }
     if (tasksetRepository
-            .getTasksetsForSubjectAndGrade("Deutsch", userRepository!.getGrade())!
+            .getTasksetsForSubjectAndGrade(
+                "Deutsch", userRepository!.getGrade())!
             .length >
         0) {
       children.add(ElevatedButton(

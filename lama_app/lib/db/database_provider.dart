@@ -26,8 +26,8 @@ import 'package:sqflite/sqflite.dart';
 /// Author: F.Brecher, L.Kammerer
 /// latest Changes: 16.09.2021
 class DatabaseProvider {
-  int currentVersion = 2;
-  int oldVersion = 0;
+  int currentVersion = 4;
+  int oldVersion = 3;
 
   DatabaseProvider._();
   static final DatabaseProvider db = DatabaseProvider._();
@@ -157,7 +157,8 @@ class DatabaseProvider {
       UserFields.columnCoins,
       UserFields.columnIsAdmin,
       UserFields.columnAvatar,
-      UserFields.columnHighscorePermission
+      UserFields.columnHighscorePermission,
+      UserFields.columnIsGuest,
     ]);
 
     List<User> userList = <User>[];
@@ -605,7 +606,8 @@ class DatabaseProvider {
         grade: user.grade,
         coins: user.coins,
         isAdmin: user.isAdmin,
-        avatar: user.avatar);
+        avatar: user.avatar,
+        isGuest: user.isGuest);
 
     int? updated = await db?.update(tableUser, newUser.toMap(),
         where: " ${UserFields.columnId} = ?", whereArgs: [user.id]);
@@ -680,6 +682,24 @@ class DatabaseProvider {
 
     int? updated = await db?.update(
         tableUser, <String, dynamic>{UserFields.columnIsAdmin: isAdmin ? 1 : 0},
+        where: " ${UserFields.columnId} = ?", whereArgs: [user.id]);
+
+    if (updated != null) {
+      return await _getUser(user.id);
+    }
+    return null;
+  }
+
+  /// update the isGuest field from a user in table User
+  ///
+  /// {@param} User user, bool isGuest
+  ///
+  /// {@return} <User>
+  Future<User?> updateUserIsGuest(User user, bool isGuest) async {
+    final db = await (database);
+
+    int? updated = await db?.update(
+        tableUser, <String, dynamic>{UserFields.columnIsGuest: isGuest ? 1 : 0},
         where: " ${UserFields.columnId} = ?", whereArgs: [user.id]);
 
     if (updated != null) {
@@ -895,6 +915,11 @@ class DatabaseProvider {
         whereArgs: [adminId]);
   }
 
+  ///refreshes current user (used for userRepository)
+  Future<User?> refreshUser(User user) async {
+    return await _getUser(user.id);
+  }
+
   ///(private)
   ///get an user from table User
   ///
@@ -912,7 +937,8 @@ class DatabaseProvider {
           UserFields.columnCoins,
           UserFields.columnIsAdmin,
           UserFields.columnAvatar,
-          UserFields.columnHighscorePermission
+          UserFields.columnHighscorePermission,
+          UserFields.columnIsGuest,
         ],
         where: "${UserFields.columnId} = ?",
         whereArgs: [id]);

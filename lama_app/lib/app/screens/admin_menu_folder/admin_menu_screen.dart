@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/server_ui/screens/server_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
@@ -24,6 +26,7 @@ import 'package:lama_app/app/state/admin_menu_state.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
 import 'package:lama_app/app/screens/userlist_url_screen.dart';
 import '../highscoreUrl_options_screen.dart';
+import 'taskset_manage/screens/taskset_manage_screen.dart';
 
 ///This file creates the Admin Menu Screen
 ///The Admin Menu Screen provides every navigation to screens
@@ -200,6 +203,37 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               AdminUtils.reloadTasksets(context);
             }),
           ),
+/*           //Navigation Button to 'Aufgabenverwaltung' [OptionTaskScreen]
+          _menuButton(
+            context,
+            Icon(Icons.add_link),
+            'Tasksetverwaltung',
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (BuildContext context) => TasksetManageBloc(),
+                  child: TasksetManageScreen(),
+                ),
+              ),
+            ).then((_) {
+              AdminUtils.reloadTasksets(context);
+            }),
+          ), */
+          //Navigation Button to 'Aufgabenerstellen' [TasksetCreationScreen]
+          _menuButton(
+              context,
+              Icon(Icons.task),
+              'Taskseterstellung',
+              () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (BuildContext context) => CreateTasksetBloc(),
+                        child: TasksetCreationScreen(),
+                      ),
+                    ),
+                  )),
           _menuButton(
             context,
             Icon(Icons.settings),

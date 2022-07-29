@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
-import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/screens/taskset_creation_cart_screen.dart';
@@ -43,7 +42,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
       int.parse(_currentSelectedGrade!),
     );
     taskset.tasks = blocTaskset != null ? blocTaskset.tasks : [];
-    taskset.taskurl = TaskUrl(url: "");
+    //taskset.taskurl = TaskUrl(url: "");
     return taskset;
   }
 

@@ -17,3 +17,5 @@ abstract class CreateTasksetState{
  class InitialState extends CreateTasksetState {}
 
 class ChangedTasksListState extends CreateTasksetState {}
+
+class CreateTasksetSucessfull extends CreateTasksetState {}
