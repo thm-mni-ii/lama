@@ -83,3 +83,10 @@ class SetupChangeUrl extends CheckScreenEvent {
 
 ///used to display a error-message when the Url is wrong
 class SetupErrorMessage extends CheckScreenEvent {}
+
+///used to indicate a success on a url check
+class UrlCheckSuccess extends CheckScreenEvent {
+  bool hasSuccess;
+
+  UrlCheckSuccess(this.hasSuccess);
+}

@@ -53,27 +53,34 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   .add(LoadGuest(context, state.user, false));
             }
             if (state is SetupError) {
-              _insertErrorPopUp(state.errorMessage);
+              showDialog(
+                  context: context,
+                  builder: (_) => _insertErrorPopUp(state.errorMessage));
+            }
+            if (state is SetupSuccessState) {
+              BlocProvider.of<TasksetOptionsBloc>(context)
+                  .add(TasksetOptionsPush());
+              BlocProvider.of<UserlistUrlBloc>(context)
+                  .add(UserlistInsertList());
+              RepositoryProvider.of<TasksetRepository>(context)
+                  .reloadTasksetLoader();
+              context.read<CheckScreenBloc>().add(CheckForAdmin(context));
             }
           },
         ),
         BlocListener<UserlistUrlBloc, UserlistUrlState?>(
           listener: (context, state) {
             if (state is UserlistUrlParsingSuccessfull) {
-              BlocProvider.of<UserlistUrlBloc>(context)
-                  .add(UserlistInsertList());
               BlocProvider.of<CheckScreenBloc>(context)
-                  .add(CheckForAdmin(context));
+                  .add(UrlCheckSuccess(true));
             }
           },
         ),
         BlocListener<TasksetOptionsBloc, TasksetOptionsState?>(
           listener: (context, state) {
             if (state is TasksetOptionsPushSuccess) {
-              RepositoryProvider.of<TasksetRepository>(context)
-                  .reloadTasksetLoader();
               BlocProvider.of<CheckScreenBloc>(context)
-                  .add(CheckForAdmin(context));
+                  .add(UrlCheckSuccess(true));
             }
             if (state is TasksetOptionsPushFailed) {
               showDialog(
@@ -83,62 +90,66 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           },
         ),
       ],
-      child: Scaffold(
-        body: Column(
-          children: [
-            Flexible(
-              flex: 15,
-              child: PageView(
-                controller: controller,
-                children: pages,
-              ),
+      child: BlocBuilder<CheckScreenBloc, CheckScreenState?>(
+        builder: (context, state) {
+          return Scaffold(
+            body: Column(
+              children: [
+                Flexible(
+                  flex: 15,
+                  child: PageView(
+                    controller: controller,
+                    children: pages,
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        flex: 2,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.jumpToPage(1);
+                          },
+                          child: Icon(Icons.home),
+                          style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(0)),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 14,
+                        child: SmoothPageIndicator(
+                          controller: controller,
+                          count: pages.length,
+                        ),
+                      ),
+                      Flexible(
+                        flex: 2,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (controller.page == pages.length - 1) {
+                              BlocProvider.of<CheckScreenBloc>(context)
+                                ..add(CreateAdminEvent(context));
+                            } else {
+                              controller.nextPage(
+                                  duration: Duration(milliseconds: 200),
+                                  curve: Curves.easeIn);
+                            }
+                          },
+                          child: Icon(Icons.navigate_next),
+                          style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(0)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Flexible(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    flex: 2,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        controller.jumpToPage(1);
-                      },
-                      child: Icon(Icons.home),
-                      style:
-                          ElevatedButton.styleFrom(padding: EdgeInsets.all(0)),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 14,
-                    child: SmoothPageIndicator(
-                      controller: controller,
-                      count: pages.length,
-                    ),
-                  ),
-                  Flexible(
-                    flex: 2,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (controller.page == pages.length - 1) {
-                          BlocProvider.of<CheckScreenBloc>(context)
-                            ..add(CreateAdminEvent(context));
-                        } else {
-                          controller.nextPage(
-                              duration: Duration(milliseconds: 200),
-                              curve: Curves.easeIn);
-                        }
-                      },
-                      child: Icon(Icons.navigate_next),
-                      style:
-                          ElevatedButton.styleFrom(padding: EdgeInsets.all(0)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

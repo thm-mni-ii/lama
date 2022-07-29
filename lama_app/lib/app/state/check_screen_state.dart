@@ -60,3 +60,6 @@ class SetupError extends CheckScreenState {
 
   SetupError(this.errorMessage);
 }
+
+//state thats used when both url's are correct
+class SetupSuccessState extends CheckScreenState {}

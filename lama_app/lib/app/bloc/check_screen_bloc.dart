@@ -70,11 +70,18 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
       emit(ChangeUrl());
     });
     on<SetupErrorMessage>((event, emit) async {});
+    on<UrlCheckSuccess>((event, emit) async {
+      if (_hasSuccess != null) {
+        emit(SetupSuccessState());
+      }
+      _hasSuccess = event.hasSuccess;
+    });
   }
   //used to update the setup url when needed
   String? _setupUrl;
   String? _userlistUrl;
   String? _tasksetUrl;
+  bool? _hasSuccess;
   //list of [User] parsed from the [_url]
   List<User>? _userList = [];
 
