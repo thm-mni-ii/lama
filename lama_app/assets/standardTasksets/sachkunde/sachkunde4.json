@@ -7,7 +7,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":"Die Erde braucht .., um sich um die Sonne zu drehen",
-           "lama_text":"Tippe die richtige doppelt Antwort an!",
+           "lama_text":"Tippe die richtige Antwort doppelt an!",
            "left_to_solve": 3,
            "right_answer":"365 Tage",
            "wrong_answers":["30 Tage", "24 Stunden"]

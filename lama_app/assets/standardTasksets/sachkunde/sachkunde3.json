@@ -16,7 +16,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":".. ist die größte Stadt in Hessen",
-           "lama_text":Tippe die richtige doppelt Antwort an!",
+           "lama_text":"Tippe die richtige Antwort doppelt an!",
            "left_to_solve": 3,
            "right_answer":"Frankfurt",
            "wrong_answers":["Kassel", "Wiesbaden"]

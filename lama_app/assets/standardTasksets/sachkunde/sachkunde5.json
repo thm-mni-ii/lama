@@ -16,7 +16,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":"Alle eroberten Gebiete außerhalb Italiens nannten die Römer ..",
-           "lama_text":"Tippe die richtige doppelt Antwort an!",
+           "lama_text":"Tippe die richtige Antwort doppelt an!",
            "left_to_solve": 3,
            "right_answer":"Provinz",
            "wrong_answers":["Limes", "Kastell"]
