@@ -127,11 +127,11 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                   child: InkWell(
                     onTap: () {
                       BlocProvider.of<TTSBloc>(context)
-                          .add(ClickOnQuestionEvent.initVoice("Tippe einmal, um die Antwort oder Frage anzuhören.", ""));
+                          .add(ClickOnQuestionEvent.initVoice("Tippe doppelt, um die Antwort auszuwählen.", ""));
                     },
                     child: Center(
                       child: Text(
-                        "Tippe einmal, um die Antwort oder Frage anzuhören.",
+                        "Tippe doppelt, um die Antwort auszuwählen.",
                         style: TextStyle(fontSize: 15,
                             fontWeight: FontWeight.bold),
                       ),

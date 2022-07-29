@@ -8,5 +8,4 @@ Lamas sind intelligent und leicht zu trainieren!
 Lamas zählen zur Camelidae Familie!
 Lamas kommen in der Natur nur in Südamerika vor!
 Lamawolle ist leicht, warm und wasserabweisend!
-Tippe während einer Frage doppelt, um Vorlesen auszuschalten!
-Tippe während einer Frage oben rechts, um die Frage vorlesen zu lassen!
+Tippe während einer Frage auf einen Text, um ihn vorzulesen!

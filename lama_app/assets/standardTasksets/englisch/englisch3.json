@@ -18,7 +18,7 @@
            "task_type": "ClozeTest",
            "task_reward": 2,
            "question": "I am .. to school",
-           "lama_text": "Tap the right Answer!",
+           "lama_text": "Tap the right Answer twice!",
            "left_to_solve": 3,
            "right_answer": "going",
            "wrong_answers": [
@@ -32,7 +32,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":"I .. learning english",
-           "lama_text":"Tap the right Answer!",
+           "lama_text":"Tap the right Answer twice!",
            "left_to_solve": 3,
            "right_answer":"am",
            "wrong_answers":["be", "horse"],

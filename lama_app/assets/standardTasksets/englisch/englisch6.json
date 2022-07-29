@@ -18,7 +18,7 @@
            "task_type": "ClozeTest",
            "task_reward": 2,
            "question": "Simple Past: I .. in the water",
-           "lama_text": "Tap the right Answer!",
+           "lama_text": "Tap the right Answer twice!",
            "left_to_solve": 3,
            "right_answer": "swam",
            "wrong_answers": [
