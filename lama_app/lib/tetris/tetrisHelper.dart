@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'block_objects/iblock.dart';
 import 'block_objects/block.dart';
-import 'block_objects/Jblock.dart';
-import 'block_objects/Lblock.dart';
-import 'block_objects/SBlock.dart';
-import 'block_objects/sqBlock.dart';
-import 'block_objects/Tblock.dart';
-import 'block_objects/Zblock.dart';
+import 'block_objects/jblock.dart';
+import 'block_objects/lblock.dart';
+import 'block_objects/sblock.dart';
+import 'block_objects/sqblock.dart';
+import 'block_objects/tblock.dart';
+import 'block_objects/zblock.dart';
 import 'tetrisGame.dart';
 
 import 'package:lama_app/util/LamaColors.dart';
