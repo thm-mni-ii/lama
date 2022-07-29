@@ -26,7 +26,8 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
     on<CreateTasksetAbort>((event, emit) => _abort(event.context));
     on<EditTaskset>((event, emit) => taskset = event.taskset);
     on<AddTaskListToTaskset>((event, emit) {
-      taskset!.tasks!.addAll(event.taskList);
+      //taskset!.tasks!.addAll(event.taskList);
+      taskset!.tasks = event.taskList;
     });
     on<CreateTasksetGenerate>((event, emit) => _generate());
     on<AddUrlToTaskset>((event, emit) => taskset!.taskurl = event.taskUrl);

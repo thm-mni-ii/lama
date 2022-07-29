@@ -16,7 +16,7 @@ class RemoveFromTaskList extends TasksetCreateTasklistEvent {
 }
 
 class EditTaskInTaskList extends TasksetCreateTasklistEvent {
-  final int? pos; // TODO ohne ?
+  final int? pos;
   final Task task;
 
   EditTaskInTaskList(this.pos, this.task);

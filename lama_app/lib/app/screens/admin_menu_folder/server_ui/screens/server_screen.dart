@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/repository/server_repository.dart';
+import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
@@ -26,9 +27,9 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
     final serverRepo = RepositoryProvider.of<ServerRepository>(context);
 
     if (first && serverRepo.serverSettings != null) {
-      _url.text = serverRepo.serverSettings!.url!;
-      _userName.text = serverRepo.serverSettings!.userName!;
-      _password.text = serverRepo.serverSettings!.password!;
+      _url.text = serverRepo.serverSettings!.url;
+      _userName.text = serverRepo.serverSettings!.userName;
+      _password.text = serverRepo.serverSettings!.password;
 
       first = false;
     }
@@ -50,13 +51,17 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
           IconButton(
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
+                /* for (var i = 0; i < 8; i++) {
+                  DatabaseProvider.db.deleteTaskUrl(i);
+                }
+                serverRepo.serverSettings = null; */
                 ServerSettings s = ServerSettings(
-                  id: serverRepo.serverSettings?.id,
+                  id: serverRepo.serverSettings?.id ?? 0,
                   url: _url.text,
                   userName: _userName.text,
                   password: _password.text,
                 );
-                serverRepo.setOrUpdate(s);
+                await serverRepo.setOrUpdate(s);
                 print(serverRepo.serverSettings.toString());
                 Navigator.pop(context);
               }

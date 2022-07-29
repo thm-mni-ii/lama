@@ -86,8 +86,7 @@
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
-            "von": 0.0,
-            "bis": 5.0,
+            "difficulty": 1,
             "optimum": true
         },
         {
@@ -96,8 +95,7 @@
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
-            "von": 0.0,
-            "bis": 5.0,
+            "difficulty": 2,
             "optimum": false
         }
     ]

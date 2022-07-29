@@ -124,7 +124,6 @@ class _SetupTasksetBodyState extends State<SetupTasksetBody> {
             margin: EdgeInsets.all(25),
             child: ElevatedButton(
               onPressed: () {
-                // TODO state comit wenn erfolgreich in nächsten screen wenn nicht snackbar anzeigen
                 if (_nameController.text.isNotEmpty &&
                     _currentSelectedGrade != null &&
                     _currentSelectedSubject != null) {

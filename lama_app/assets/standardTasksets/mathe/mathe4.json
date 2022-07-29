@@ -1,6 +1,6 @@
 {
     "taskset_url": {
-        "id": 1,
+        "id": 4,
         "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe4.json"
     },
     "taskset_name": "Standardaufgaben Klasse 4",
@@ -39,8 +39,7 @@
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
-            "von": 10.0,
-            "bis": 25.0,
+            "difficulty": 1,
             "optimum": true
         },
         {

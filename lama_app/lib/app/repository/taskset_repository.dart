@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:external_path/external_path.dart';
+import 'package:ftpconnect/ftpconnect.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_loader.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -58,41 +61,94 @@ class TasksetRepository {
     await tasksetLoader.loadAllTasksets();
   }
 
-  // TODO
-  /// adds a Taskset to the server
-  Future<void> writeToServer(Taskset taskset, String url) async {
-    var response = await http.post(
-      Uri.parse(url),
-      body: taskset.toJson(),
-    );
-    // response abfangen (error)
-    if (response.statusCode >= 400) {
-      throw Error();
+  /// Uploads a File to a server
+  Future<String> fileUpload(Taskset taskset) async {
+    final serverRepo = ServerRepository();
+    Directory dir = await getLocalDir();
+    File fileToUpload = File("$dir/${taskset.name!}");
+
+    // error handling??
+    if (serverRepo.serverSettings != null) {
+      FTPConnect ftpConnect = FTPConnect(
+        serverRepo.serverSettings!.url,
+        user: serverRepo.serverSettings!.userName,
+        pass: serverRepo.serverSettings!.password,
+      );
+      if (await ftpConnect.createFolderIfNotExist(taskset.subject!)) {
+        if (!(await ftpConnect.changeDirectory(taskset.subject!.toLowerCase())))
+          return "Konnte Dir nicht wechseln";
+        if (!(await ftpConnect.existFile(taskset.name!))) {
+          try {
+            await ftpConnect.connect();
+            await ftpConnect.uploadFile(fileToUpload);
+            await ftpConnect.disconnect();
+            // lokal löschen
+            fileToUpload.delete();
+            return "";
+          } catch (e) {
+            //error
+            throw e;
+          }
+        }
+        return "File name bereits vergeben";
+      }
+      return "Dir konnte nicht erzeugt werden";
+    }
+    return "Keine Server Settings gesetzt";
+  }
+
+/*   Future<List<Taskset>> downloadTasksetDirectory() async {
+    final serverRepo = ServerRepository();
+    Directory dir = await getLocalDir();
+    File fileToUpload;
+    List<Taskset> tasksetList = [];
+
+    if (serverRepo.serverSettings != null) {
+      FTPConnect ftpConnect = FTPConnect(
+        serverRepo.serverSettings!.url,
+        user: serverRepo.serverSettings!.userName,
+        pass: serverRepo.serverSettings!.password,
+      );
+      try {
+        await ftpConnect.connect();
+        await ftpConnect.downloadDirectory(serverRepo.serverSettings!.url, dir);
+        await ftpConnect.disconnect();
+      } catch (e) {
+        //error
+        throw e;
+      }
+    }
+    return tasksetList;
+  } */
+
+  /// delets a taskset from the server
+  Future<void> deleteTasksetFromServer(String fileName, String subject) async {
+    final serverRepo = ServerRepository();
+    // error handling??
+    if (serverRepo.serverSettings != null) {
+      FTPConnect ftpConnect = FTPConnect(
+        serverRepo.serverSettings!.url,
+        user: serverRepo.serverSettings!.userName,
+        pass: serverRepo.serverSettings!.password,
+      );
+      try {
+        if (await ftpConnect.changeDirectory(subject)) {
+          await ftpConnect.connect();
+          await ftpConnect.deleteFile(fileName);
+          await ftpConnect.disconnect();
+          return;
+        }
+      } catch (e) {
+        //error
+        throw e;
+      }
     }
   }
 
-  Future<String> fileUpload(/* String text,  */ File file, String url) async {
-    //create multipart request for POST or PATCH method
-    var request = http.MultipartRequest("POST", Uri.parse(url));
-    //add text fields
-    //request.fields["text_field"] = text;
-    //create multipart using filepath, string or bytes
-    var pic = await http.MultipartFile.fromPath("file_field", file.path);
-    //add multipart to request
-    request.files.add(pic);
-    var response = await request.send();
-
-    //Get the response from the server
-    var responseData = await response.stream.toBytes();
-    var responseString = String.fromCharCodes(responseData);
-    print(responseString);
-    return responseString;
-  }
-
-  //TODO
-  /// updates the taskset(s) on the server
-  Future<void> deleteTasksetFromServer(String url) async {
-    var response = await http.delete(Uri.parse(url));
+  Future<Directory> getLocalDir() async {
+    var path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOCUMENTS);
+    return Directory(path + '/LAMA');
   }
 
   /// gives a List of TaskType depending on a specific subject

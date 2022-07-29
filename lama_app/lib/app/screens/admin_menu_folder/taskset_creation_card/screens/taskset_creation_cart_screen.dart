@@ -97,75 +97,84 @@ class TasksetCreationCartScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    // editieren und neu hinzufügen
-                    String createdTaskUrl =
-                        "${serverRepo.serverSettings!.url ?? ""}/${taskset.subject}/${taskset.name}";
-                    if (taskset.taskurl != null) {
-                      // name gleich also bleibt die url gleich ?
-                      //ja -> inhalte vergleichen wenn alles gleich nichts machen ansonsten anpassen
-                      //nein -> alte url aus db löschen und file vom server (nicht in der reihnfolge)
-                      // --> neue file mit neuer url anlegen
-
-                      //m1: neu fetchen an der url oder 2-tes taskset in bloc was dem editierten entspricht wenn null dann wird neues gebaut
-
-                      // is in pool muss verändert werden zu irgend einem Zeitpunkt!!
-
-                      // überall löschen
-
-                      DatabaseProvider.db.deleteTaskUrl(taskset.taskurl!.id);
-                      tasksetRepository.deleteTasksetFromServer(createdTaskUrl);
-                      Taskset t = tasksetManageBloc.allTaskset.firstWhere(
-                        (element) => element.taskurl == taskset.taskurl,
-                      );
-
-                      tasksetRepository.tasksetLoader.loadedTasksets
-                          .forEach((key, value) {
-                        if (key == SubjectGradeRelation(t.subject, t.grade)) {
-                          value.removeWhere(
-                            (element) => element.taskurl == t.taskurl,
-                          );
-                        }
-                      });
-
-                      tasksetManageBloc.allTaskset.removeWhere(
-                        (element) => element.taskurl == taskset.taskurl,
-                      );
-                      if (taskset.isInPool) {
-                        tasksetManageBloc.tasksetPool.removeWhere(
+                    if (serverRepo.serverSettings != null &&
+                        serverRepo.serverSettings!.url.isNotEmpty) {
+                      String createdTaskUrl =
+                          "${serverRepo.serverSettings?.url}/${taskset.subject}/${taskset.name}";
+                      if (taskset.taskurl != null) {
+                        Taskset t = tasksetManageBloc.allTaskset.firstWhere(
                           (element) => element.taskurl == taskset.taskurl,
                         );
+
+                        DatabaseProvider.db.deleteTaskUrl(taskset.taskurl!.id);
+                        // in repo function call
+                        tasksetRepository.deleteTasksetFromServer(
+                          t.name!,
+                          t.subject!,
+                        );
+
+                        tasksetRepository.tasksetLoader.loadedTasksets
+                            .forEach((key, value) {
+                          if (key == SubjectGradeRelation(t.subject, t.grade)) {
+                            value.removeWhere(
+                              (element) => element.taskurl == t.taskurl,
+                            );
+                          }
+                        });
+
+                        tasksetManageBloc.allTaskset.remove(t);
+                        if (taskset.isInPool) {
+                          tasksetManageBloc.tasksetPool.remove(t);
+                        }
                       }
-                    }
-                    // taskurl muss gesetzt werden darf nicht null sein!!
-                    DatabaseProvider.db // oder über tasket id lösen
-                        .insertTaskUrl(TaskUrl(url: createdTaskUrl));
-                    List<TaskUrl> taskUrl =
-                        await DatabaseProvider.db.getTaskUrl();
-                    createTasksetBloc.add(
-                      AddUrlToTaskset(
-                        taskUrl.firstWhere(
-                          (element) => element.url == createdTaskUrl,
+                      // nötig ??
+                      DatabaseProvider.db // oder über tasket id lösen
+                          .insertTaskUrl(TaskUrl(url: createdTaskUrl));
+                      List<TaskUrl> taskUrl =
+                          await DatabaseProvider.db.getTaskUrl();
+                      createTasksetBloc.add(
+                        AddUrlToTaskset(
+                          taskUrl.firstWhere(
+                            (element) => element.url == createdTaskUrl,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                      print(
+                        "fuck you: " +
+                            taskUrl
+                                .firstWhere(
+                                  (element) => element.url == createdTaskUrl,
+                                )
+                                .toString(),
+                      );
+                      // tasklist muss gesetzt werden
+                      createTasksetBloc.add(
+                        AddTaskListToTaskset(tasksetListBloc.taskList),
+                      );
+                      print(taskset.taskurl!.url);
+                      print(taskset.toJson());
+                      tasksetRepository.fileUpload(taskset);
+                      /* tasksetRepository.tasksetLoader.loadedTasksets.addAll({
+                        SubjectGradeRelation(taskset.subject, taskset.grade): [
+                          taskset
+                        ],
+                      }); */
+                      //tasksetManageBloc.allTaskset.add(taskset);
 
-                    // tasklist muss gesetzt werden
-                    createTasksetBloc.add(
-                      AddTaskListToTaskset(tasksetListBloc.taskList),
-                    );
-                    // taskset muss auf server gepushed und in lokale liste geschrieben werden
-                    print(taskset.toJson());
-                    //tasksetRepository.fileUpload(taskset, createdTaskUrl);// locales file
-                    // lokale liste hinzufügen
-                    tasksetRepository.tasksetLoader.loadedTasksets.addAll({
-                      SubjectGradeRelation(taskset.subject, taskset.grade): [
-                        taskset
-                      ],
-                    });
-                    tasksetManageBloc.allTaskset.add(taskset);
-
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: LamaColors.redAccent,
+                          content: const Text(
+                            'Fülle alle Felder aus',
+                            textAlign: TextAlign.center,
+                          ),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    }
                   },
                   child: const Text("Taskset generieren"),
                 ),

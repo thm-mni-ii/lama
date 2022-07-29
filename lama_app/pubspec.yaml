@@ -46,6 +46,7 @@ dependencies:
   dbcrypt: ^2.0.0 
   decimal: ^2.1.0
   fancy_bottom_navigation: ^0.3.2
+  ftpconnect: ^1.0.1
 
   fluttertoast: ^8.0.7
 

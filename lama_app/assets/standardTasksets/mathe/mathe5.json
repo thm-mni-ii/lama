@@ -1,6 +1,6 @@
 {
     "taskset_url": {
-        "id": 1,
+        "id": 5,
         "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe5.json"
     },
     "taskset_name": "Standardaufgaben Klasse 5",
@@ -48,13 +48,13 @@
             "ontap": false
         },
         {
+           
             "id": "t4",
             "task_type": "TaskType.moneyTask",
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
-            "von": 10.0,
-            "bis": 50.0,
+            "difficulty": 1,
             "optimum": true
         },
         {

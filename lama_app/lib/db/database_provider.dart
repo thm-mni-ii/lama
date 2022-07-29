@@ -392,10 +392,11 @@ class DatabaseProvider {
       ServerSettings serverSettings) async {
     final db = await (database);
     final size = await dbSize;
+    print("size" + size.toString());
     if (size == null || size == 0) {
       print("insert");
       serverSettings.id =
-          await db?.insert(tableServer, serverSettings.toJson());
+          (await db?.insert(tableServer, serverSettings.toJson()))!;
     } else {
       print("update");
       db?.update(tableServer, serverSettings.toJson(),

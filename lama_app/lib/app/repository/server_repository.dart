@@ -10,10 +10,10 @@ class ServerFields {
 }
 
 class ServerSettings {
-  int? id;
-  String? url;
-  String? userName;
-  String? password;
+  int id;
+  String url;
+  String userName;
+  String password;
 
   ServerSettings({
     required this.id,
@@ -37,13 +37,7 @@ class ServerSettings {
 
   @override
   String toString() {
-    return (id ?? 0).toString() +
-        " " +
-        (url ?? "url") +
-        " " +
-        (userName ?? "user name") +
-        " " +
-        (password ?? 0).toString();
+    return id.toString() + " " + url + " " + userName + " " + password;
   }
 }
 
@@ -62,15 +56,13 @@ class ServerRepository {
 
   ServerSettings? serverSettings;
 
-  // inital aus git hub ziehen in welche die url
-
   /// loads db values in url, username, password
   void initialize() async {
     serverSettings = await DatabaseProvider.db.getServerSettings();
   }
 
-  void setOrUpdate(ServerSettings serverSettings) async {
+  Future<void> setOrUpdate(ServerSettings serverS) async {
     serverSettings =
-        await DatabaseProvider.db.insertServerSettings(serverSettings);
+        await DatabaseProvider.db.insertServerSettings(serverS);
   }
 }

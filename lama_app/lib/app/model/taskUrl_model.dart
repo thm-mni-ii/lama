@@ -33,4 +33,7 @@ class TaskUrl {
     id = map[TaskUrlFields.columnId];
     url = map[TaskUrlFields.columnTaskUrl];
   }
+
+  @override
+  String toString() => id.toString() + " " + (url ?? "url");
 }
