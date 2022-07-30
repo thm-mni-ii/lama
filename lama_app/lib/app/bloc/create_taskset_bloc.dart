@@ -53,6 +53,10 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
     Navigator.pop(context, null);
   }
 
+  void flushTasks() {
+    taskset!.tasks!.clear();
+  }
+
   Future<void> _generate() async {
     var path = await ExternalPath.getExternalStoragePublicDirectory(
         ExternalPath.DIRECTORY_DOCUMENTS);

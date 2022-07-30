@@ -4,14 +4,12 @@ import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dropdown_widget_String.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/numbers_input_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
-
-import '../widgets/lamacoin_input_widget.dart';
 
 class MoneyEinstellenScreen extends StatefulWidget {
   final TaskMoney? task;
@@ -23,7 +21,6 @@ class MoneyEinstellenScreen extends StatefulWidget {
 
 class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _difController = TextEditingController();
   TextEditingController _rewardController = TextEditingController();
   TextEditingController _leftToSolveController = TextEditingController();
 
@@ -31,17 +28,17 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
   bool? optimumAllowed = false;
   String? _currentSelectedDifficulty;
 
-/*   @override
+  @override
   void initState() {
     if (widget.task != null) {
-      _vonController.text = widget.task!.von.toString();
-      _bisController.text = widget.task!.bis.toString();
+      _currentSelectedDifficulty = widget.task!.difficulty.toString();
+      optimumAllowed = widget.task!.optimum;
       _rewardController.text = widget.task!.reward.toString();
-    
+
       newTask = false;
     }
     super.initState();
-  } */
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +46,16 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
     Size screenSize = MediaQuery.of(context).size;
 
     if (widget.task != null && newTask) {
-      _difController.text = widget.task!.difficulty.toString();
+      _currentSelectedDifficulty = widget.task!.difficulty.toString();
       _rewardController.text = widget.task!.reward.toString();
       _leftToSolveController.text = widget.task!.optimum.toString();
 
       newTask = false;
     }
+
+    print(blocTaskset.tasks![0].toString());
+    print(_currentSelectedDifficulty);
+    print(newTask);
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -76,6 +77,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         HeadLineWidget("Schwierigkeitsgrad"),
                         DropdownWidgetString(
                           hintText: "Auswählen",
+                          currentSelected: _currentSelectedDifficulty,
                           itemsList: ['1', '2', '3'],
                           onChanged: (value) {
                             _currentSelectedDifficulty = value;
@@ -91,7 +93,6 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                                 onChanged: (bool? value) {
                                   setState(() {
                                     optimumAllowed = value;
-                                    print(_currentSelectedDifficulty);
                                   });
                                 },
                               ),
@@ -132,13 +133,14 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                   // add Task
                   BlocProvider.of<CreateTasksetBloc>(context)
                       .add(AddTask(moneyTask));
+                  print(moneyTask.toString());
                   Navigator.pop(context);
                 } else {
                   // edit Task
                   BlocProvider.of<CreateTasksetBloc>(context)
                       .add(EditTask(moneyTask));
+                  print(moneyTask.toString());
                 }
-                print(moneyTask.difficulty);
                 Navigator.pop(context);
               }
             },

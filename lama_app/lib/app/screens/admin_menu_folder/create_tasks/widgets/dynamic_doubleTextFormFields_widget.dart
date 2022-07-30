@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class DynamicTextFormFields extends StatefulWidget {
-  final List<TextEditingController> controllers;
+class DynamicDoubleTextFormFields extends StatefulWidget {
+  final List<TextEditingController> controllers1;
   final List<TextFormField> fields;
-  DynamicTextFormFields(
-      {Key? key, required this.controllers, required this.fields})
+  DynamicDoubleTextFormFields(
+      {Key? key, required this.controllers1, required this.fields})
       : super(key: key);
   @override
-  State<StatefulWidget> createState() => DynamicTextFormFieldsState();
+  State<StatefulWidget> createState() => DynamicDoubleTextFormFieldsState();
 }
 
-class DynamicTextFormFieldsState extends State<DynamicTextFormFields> {
+class DynamicDoubleTextFormFieldsState extends State<DynamicDoubleTextFormFields> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -30,7 +30,7 @@ class DynamicTextFormFieldsState extends State<DynamicTextFormFields> {
               ),
             );
             setState(() {
-              widget.controllers.add(controller);
+              widget.controllers1.add(controller);
               widget.fields.add(textFormField);
             });
           },
@@ -50,16 +50,8 @@ class DynamicTextFormFieldsState extends State<DynamicTextFormFields> {
                 Container(
                     margin: EdgeInsets.only(top: 20),
                     width: MediaQuery.of(context).size.width / 5,
-                    child: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          widget.controllers.removeAt(index);
-                          widget.fields.removeAt(index);
-                        });
-                        print(widget.controllers.map((e) => e.text).toString());
-                      },
-                      icon: Icon(Icons.delete),
-                    ))
+                    child:
+                        IconButton(onPressed: () {}, icon: Icon(Icons.delete)))
               ],
             );
           },

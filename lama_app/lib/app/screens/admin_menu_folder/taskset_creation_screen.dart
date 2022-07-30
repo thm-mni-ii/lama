@@ -132,6 +132,9 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     isDense: true,
                     onChanged: (String? newValue) {
                       setState(() => _currentSelectedSubject = newValue);
+                      if (_oldSubject == null) {
+                        _oldSubject = _currentSelectedSubject;
+                      }
                     },
                     items: tasksetRepo.subjectList.map((String value) {
                       return DropdownMenuItem<String>(
@@ -159,7 +162,12 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                       EditTaskset(buildWholeTaskset(blocTaskset)),
                     );
 
-                    //TODO: Wenn Subject gewechselt wird, soll Taskliste geleert werden
+                    // Falls sich das Fach ändert, wird die Tasks - Liste gelöscht
+                    if (_currentSelectedSubject != _oldSubject) {
+                      BlocProvider.of<CreateTasksetBloc>(context).flushTasks();
+                    }
+
+                    _oldSubject = _currentSelectedSubject;
 
                     Navigator.push(
                       context,

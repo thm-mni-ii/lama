@@ -57,6 +57,7 @@ class CreateGridSelectScreenState extends State<CreateGridSelectScreen> {
                           missingInput: "Angabe fehlt",
                           labelText: "Gib die Kategorie ein",
                         ),
+                        HeadLineWidget("Begriffe"),
                         DynamicTextFormFields(
                           controllers: _controllers,
                           fields: _fields,
