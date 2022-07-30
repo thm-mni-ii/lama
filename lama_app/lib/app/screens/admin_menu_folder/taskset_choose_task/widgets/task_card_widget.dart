@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_buchstabieren/create_buchstabieren_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clock/create_clock_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clozetest/create_clozeTest_screen.dart';
@@ -22,31 +23,31 @@ class TaskCardWidget extends StatelessWidget {
   const TaskCardWidget({Key? key, required this.taskType}) : super(key: key);
 
   Widget screenDependingOnTaskType(TaskType taskType) {
-    switch (taskType) {
+    switch (taskType) {// TODO bloc task?
       case TaskType.moneyTask:
-        return MoneyEinstellenScreen(task: null);
+        return MoneyEinstellenScreen(index: null, task: null);
       case TaskType.fourCards:
-        return CreateFourCardsScreen(task: null);
+        return CreateFourCardsScreen(index: null, task: null);
       case TaskType.equation:
-        return CreateEquationScreen(task: null);
+        return CreateEquationScreen(index: null, task: null);
       case TaskType.zerlegung:
-        return CreateZerlegungScreen(task: null);
+        return CreateZerlegungScreen(index: null, task: null);
       case TaskType.vocableTest:
-        return CreateVocabletestScreen(task: null);
+        return CreateVocabletestScreen(index: null, task: null);
       case TaskType.numberLine:
-        return CreateNumberlineScreen(task: null);
+        return CreateNumberlineScreen(index: null, task: null);
       case TaskType.matchCategory:
-        return CreateMatchCategoryScreen(task: null);
+        return CreateMatchCategoryScreen(index: null, task: null);
       case TaskType.markWords:
-        return CreateMarkWordsScreen(task: null);
+        return CreateMarkWordsScreen(index: null, task: null);
       case TaskType.gridSelect:
-        return CreateGridSelectScreen(task: null);
+        return CreateGridSelectScreen(index: null, task: null);
       case TaskType.clozeTest:
-        return CreateClozeTestScreen(task: null);
+        return CreateClozeTestScreen(index: null, task: null);
       case TaskType.clock:
-        return CreateClockScreen(task: null);
+        return CreateClockScreen(index: null, task: null);
       case TaskType.buchstabieren:
-        return CreateBuchstabierenScreen(task: null);
+        return CreateBuchstabierenScreen(index: null, task: null);
       default:
         return Placeholder();
     }
@@ -54,19 +55,25 @@ class TaskCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Taskset taskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     return Card(
       child: ListTile(
         title: Text(taskType.toString().substring(9).toUpperCase()),
         onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => BlocProvider.value(
-              value: BlocProvider.of<CreateTasksetBloc>(context),
-              child: screenDependingOnTaskType(taskType),
+            context,
+            MaterialPageRoute(
+              builder: (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(
+                    value: BlocProvider.of<CreateTasksetBloc>(context),
+                  ),
+                  BlocProvider.value(
+                    value: BlocProvider.of<TasksetCreateTasklistBloc>(context),
+                  ),
+                ],
+                child: screenDependingOnTaskType(taskType),
+              ),
             ),
           ),
-        ),
         trailing: Icon(
           (Icons.keyboard_arrow_right),
         ),

@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
-import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/text_input_widget.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
-import 'package:lama_app/app/screens/task_type_screens/clock_task_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
 
 import '../widgets/lamacoin_input_widget.dart';
-import '../widgets/numbers_input_widget.dart';
 
 class CreateClockScreen extends StatefulWidget {
+  final int? index;
   final ClockTest? task;
 
-  const CreateClockScreen({Key? key, required this.task}) : super(key: key);
+  const CreateClockScreen({Key? key, required this.index, required this.task}) : super(key: key);
   @override
   CreateClockScreenState createState() => CreateClockScreenState();
 }
@@ -120,13 +118,13 @@ class CreateClockScreenState extends State<CreateClockScreen> {
                     "");
                 if (newTask) {
                   // add Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(AddTask(clockTest));
+                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                      .add(AddToTaskList(clockTest));
                   Navigator.pop(context);
                 } else {
                   // edit Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(EditTask(clockTest));
+                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                      .add(EditTaskInTaskList(widget.index, clockTest));
                 }
                 Navigator.pop(context);
               }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_textFormFields_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
@@ -14,8 +15,9 @@ import 'package:lama_app/util/key_generator.dart';
 
 class CreateGridSelectScreen extends StatefulWidget {
   final TaskGridSelect? task;
+  final int? index;
 
-  const CreateGridSelectScreen({Key? key, required this.task})
+  const CreateGridSelectScreen({Key? key, required this.task, required this.index})
       : super(key: key);
   @override
   CreateGridSelectScreenState createState() => CreateGridSelectScreenState();
@@ -32,6 +34,7 @@ class CreateGridSelectScreenState extends State<CreateGridSelectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tasksetListProvider = BlocProvider.of<TasksetCreateTasklistBloc>(context);
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
@@ -94,15 +97,15 @@ class CreateGridSelectScreenState extends State<CreateGridSelectScreen> {
                 );
                 if (newTask) {
                   // add Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(AddTask(taskMatchCategory));
+                  tasksetListProvider.add(AddToTaskList(taskMatchCategory));
                   Navigator.pop(context);
                 } else {
                   // edit Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(EditTask(taskMatchCategory));
-                }
+                  tasksetListProvider.add(
+                    EditTaskInTaskList(widget.index, taskMatchCategory),
+                  );
                 Navigator.pop(context);
+              }
               }
             },
             child: Text(newTask ? "Task hinzufügen" : "verändere Task"),

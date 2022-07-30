@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
-import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_textFormFields_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/text_input_widget.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -14,9 +13,10 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
 
 class CreateMatchCategoryScreen extends StatefulWidget {
+  final int? index;
   final TaskMatchCategory? task;
 
-  const CreateMatchCategoryScreen({Key? key, required this.task})
+  const CreateMatchCategoryScreen({Key? key, required this.index, required this.task})
       : super(key: key);
   @override
   CreateMatchCategoryScreenState createState() =>
@@ -112,13 +112,13 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
                 );
                 if (newTask) {
                   // add Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(AddTask(taskMatchCategory));
+                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                      .add(AddToTaskList(taskMatchCategory));
                   Navigator.pop(context);
                 } else {
                   // edit Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(EditTask(taskMatchCategory));
+                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                      .add(EditTaskInTaskList(widget.index, taskMatchCategory));
                 }
                 Navigator.pop(context);
               }

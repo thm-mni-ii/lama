@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:external_path/external_path.dart';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_event.dart';
 import 'package:lama_app/app/state/create_taskset_state.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:external_path/external_path.dart';
+import 'package:lama_app/app/task-system/task.dart';
 
 import '../event/create_taskset_event.dart';
 import '../task-system/taskset_model.dart';
@@ -23,38 +23,21 @@ import '../task-system/taskset_model.dart';
 /// latest Changes: 17.06.2022
 class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   Taskset? taskset;
+  
   CreateTasksetBloc({this.taskset}) : super(InitialState()) {
     on<CreateTasksetAbort>((event, emit) => _abort(event.context));
     on<EditTaskset>((event, emit) => taskset = event.taskset);
-    on<AddTask>(
-      (event, emit) {
-        taskset!.tasks!.add(event.task);
-        emit(ChangedTasksListState());
-        print(event.task.toString());
-      },
-    );
-    on<CreateTasksetGenerate>((event, emit) => _generate());
-    on<EditTask>((event, emit) {
-      int pos = taskset!.tasks!.indexWhere(
-        (element) => element.id == event.task.id,
-      );
-      taskset!.tasks!.removeWhere((element) => element.id == event.task.id);
-      taskset!.tasks!.insert(pos, event.task);
+    on<AddTaskListToTaskset>((event, emit) {
+      //taskset!.tasks!.addAll(event.taskList);
+      taskset!.tasks = event.taskList;
     });
-    on<RemoveTask>((event, emit) {
-      taskset!.tasks!.removeWhere((element) => element.id == event.id);
-      emit(ChangedTasksListState());
-    });
+    on<GenerateTaskset>((event, emit) => _generate());
   }
 
   /// private method to abort the current creation process
   /// pops the screen and return null
   void _abort(BuildContext context) {
     Navigator.pop(context, null);
-  }
-
-  void flushTasks() {
-    taskset!.tasks!.clear();
   }
 
   Future<void> _generate() async {

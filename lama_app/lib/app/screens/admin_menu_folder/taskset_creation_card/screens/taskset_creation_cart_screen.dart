@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/widgets/taskset_creation_cart_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
@@ -40,7 +41,10 @@ class TasksetCreationCartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    Taskset taskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
+    final createTasksetBloc = BlocProvider.of<CreateTasksetBloc>(context);
+    Taskset taskset = createTasksetBloc.taskset!;
+    TasksetCreateTasklistBloc tasksetListBloc =
+        BlocProvider.of<TasksetCreateTasklistBloc>(context);
     return Scaffold(
       appBar: CustomAppbar(
         titel: taskset.name!,
@@ -49,17 +53,18 @@ class TasksetCreationCartScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          BlocBuilder<CreateTasksetBloc, CreateTasksetState>(
-            bloc: BlocProvider.of<CreateTasksetBloc>(context),
+          BlocBuilder<TasksetCreateTasklistBloc, TasksetCreateTasklistState>(
+            bloc: tasksetListBloc,
             builder: (context, state) => Expanded(
               child: Container(
                 margin: EdgeInsets.all(5),
                 child: ListView.builder(
                   // möglicher weise nur das im builder ??
                   itemBuilder: (context, index) => TasksetCreationCartWidget(
-                    task: taskset.tasks![index],
+                    index: index,
+                    task: tasksetListBloc.taskList[index],
                   ),
-                  itemCount: taskset.tasks!.length,
+                  itemCount: tasksetListBloc.taskList.length,
                 ),
               ),
             ),
@@ -73,8 +78,11 @@ class TasksetCreationCartScreen extends StatelessWidget {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
+                      builder: (_) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(value: createTasksetBloc),
+                          BlocProvider.value(value: tasksetListBloc),
+                        ],
                         child: TasksetChooseTaskScreen(),
                       ),
                     ),
@@ -83,16 +91,10 @@ class TasksetCreationCartScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    /* DatabaseProvider.db.insertTaskUrl(TaskUrl(url: ""));
-                    RepositoryProvider.of<TasksetRepository>(context)
-                        .writeToServer(taskset); */
-                    /* Navigator.popUntil(
-                      context,
-                      ModalRoute.withName(
-                        TasksetManageScreen.routeName,
-                      ),
-                    ); */
-                    BlocProvider.of<CreateTasksetBloc>(context).add(CreateTasksetGenerate());
+                                          createTasksetBloc.add(
+                        AddTaskListToTaskset(tasksetListBloc.taskList),
+                      );
+                    BlocProvider.of<CreateTasksetBloc>(context).add(GenerateTaskset());
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },

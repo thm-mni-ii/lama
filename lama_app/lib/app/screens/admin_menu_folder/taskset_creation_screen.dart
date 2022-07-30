@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/screens/taskset_creation_cart_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -31,11 +32,12 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
 
-  String? _oldSubject;
-
-  //bool first = true;
+  bool first = true;
 
   Taskset buildWholeTaskset(Taskset? blocTaskset) {
+    if (blocTaskset != null && _currentSelectedSubject != blocTaskset.subject) {
+      BlocProvider.of<TasksetCreateTasklistBloc>(context).taskList.clear();
+    }
     Taskset taskset = Taskset(
       _nameController.text,
       _currentSelectedSubject,
@@ -43,6 +45,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
       int.parse(_currentSelectedGrade!),
     );
     taskset.tasks = blocTaskset != null ? blocTaskset.tasks : [];
+    //taskset.taskurl = TaskUrl(url: "");
     return taskset;
   }
 
@@ -53,19 +56,20 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   ///{@return} [Widget] decided by the incoming state of the [CreateTasksetBloc]
   @override
   Widget build(BuildContext context) {
+    final bloc = BlocProvider.of<CreateTasksetBloc>(context);
+    Taskset? blocTaskset = bloc.taskset;
     Size screenSize = MediaQuery.of(context).size;
-    Taskset? blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset;
     TasksetRepository tasksetRepo =
         RepositoryProvider.of<TasksetRepository>(context);
 
-/*     if (blocTaskset != null && first) {
+    if (blocTaskset != null && first) {
       _currentSelectedGrade = blocTaskset.grade.toString();
       _currentSelectedSubject = blocTaskset.subject;
       _nameController.text = blocTaskset.name!;
-      _descriptionController.text = blocTaskset.description!;
+      _descriptionController.text = blocTaskset.description ?? "";
 
       first = false;
-    } */
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -75,6 +79,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
         color: LamaColors.findSubjectColor(_currentSelectedSubject ?? "normal"),
       ),
       body: Column(
+        // body kann auch setupTasksetBody sein aber dann farb probleme
         children: [
           Expanded(
             child: Container(
@@ -132,9 +137,6 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                     isDense: true,
                     onChanged: (String? newValue) {
                       setState(() => _currentSelectedSubject = newValue);
-                      if (_oldSubject == null) {
-                        _oldSubject = _currentSelectedSubject;
-                      }
                     },
                     items: tasksetRepo.subjectList.map((String value) {
                       return DropdownMenuItem<String>(
@@ -151,48 +153,45 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
             alignment: Alignment.bottomRight,
             child: Container(
               margin: EdgeInsets.all(25),
-              child: ElevatedButton(
-                onPressed: () {
-                  // TODO state comit wenn erfolgreich in nächsten screen wenn nicht snackbar anzeigen
-                  if (_nameController.text.isNotEmpty &&
-                      _currentSelectedGrade != null &&
-                      _currentSelectedSubject != null) {
-                    // initilize everything else in taskset
-                    BlocProvider.of<CreateTasksetBloc>(context).add(
-                      EditTaskset(buildWholeTaskset(blocTaskset)),
-                    );
-
-                    // Falls sich das Fach ändert, wird die Tasks - Liste gelöscht
-                    if (_currentSelectedSubject != _oldSubject) {
-                      BlocProvider.of<CreateTasksetBloc>(context).flushTasks();
-                    }
-
-                    _oldSubject = _currentSelectedSubject;
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => BlocProvider.value(
-                                value:
-                                    BlocProvider.of<CreateTasksetBloc>(context),
-                                child: TasksetCreationCartScreen(),
-                              )),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: LamaColors.redAccent,
-                        content: const Text(
-                          'Fülle alle Felder aus',
-                          textAlign: TextAlign.center,
-                        ),
-                        duration: Duration(seconds: 1),
+            child: ElevatedButton(
+              onPressed: () {
+                if (_nameController.text.isNotEmpty &&
+                    _currentSelectedGrade != null &&
+                    _currentSelectedSubject != null) {
+                  // initilize everything else in taskset
+                  bloc.add(EditTaskset(buildWholeTaskset(blocTaskset)));
+                  print("Abgeschickte tasklist: " +
+                      (blocTaskset?.tasks! ?? []).toString());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(value: bloc),
+                          BlocProvider.value(
+                            value: BlocProvider.of<TasksetCreateTasklistBloc>(
+                                context),
+                          ),
+                        ],
+                        child: TasksetCreationCartScreen(),
                       ),
-                    );
-                  }
-                },
-                child: const Text("Weiter"),
-              ),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: LamaColors.redAccent,
+                      content: const Text(
+                        'Fülle alle Felder aus',
+                        textAlign: TextAlign.center,
+                      ),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                }
+              },
+              child: const Text("Weiter"),
+            ),
             ),
           ),
         ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
-import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -13,9 +13,11 @@ import '../widgets/lamacoin_input_widget.dart';
 import '../widgets/numbers_input_widget.dart';
 
 class CreateNumberlineScreen extends StatefulWidget {
+  final int? index;
   final TaskNumberLine? task;
 
-  const CreateNumberlineScreen({Key? key, required this.task})
+  const CreateNumberlineScreen(
+      {Key? key, required this.index, required this.task})
       : super(key: key);
   @override
   CreateNumberlineScreenState createState() => CreateNumberlineScreenState();
@@ -200,15 +202,15 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                     randomRangeAllowed!,
                     int.parse(_stepsController.text),
                     ontapAllowed!);
-                if (newTask) {
+                if (newTask) {// <=> widget.task == null
                   // add Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(AddTask(taskNumberLine));
+                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                      .add(AddToTaskList(taskNumberLine));
                   Navigator.pop(context);
                 } else {
                   // edit Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(EditTask(taskNumberLine));
+                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                      .add(EditTaskInTaskList(widget.index, taskNumberLine));
                 }
                 Navigator.pop(context);
               }

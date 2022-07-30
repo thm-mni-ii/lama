@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_buchstabieren/create_buchstabieren_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clock/create_clock_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clozetest/create_clozeTest_screen.dart';
@@ -29,35 +30,42 @@ import 'package:lama_app/app/task-system/task.dart';
 /// latest Changes: 09.06.2022
 class TasksetCreationCartWidget extends StatelessWidget {
   final Task task;
+  final int index;
   const TasksetCreationCartWidget({
     Key? key,
     required this.task,
+    required this.index,
   }) : super(key: key);
 
   Widget screenDependingOnTaskType(TaskType taskType) {
     switch (taskType) {
       case TaskType.moneyTask:
-        return MoneyEinstellenScreen(task: task as TaskMoney);
+        return MoneyEinstellenScreen(index: index, task: task as TaskMoney);
       case TaskType.fourCards:
-        return CreateFourCardsScreen(task: task as Task4Cards);
+        return CreateFourCardsScreen(index: index, task: task as Task4Cards);
       case TaskType.equation:
-        return CreateEquationScreen(task: task as TaskEquation);
+        return CreateEquationScreen(index: index, task: task as TaskEquation);
       case TaskType.vocableTest:
-        return CreateVocabletestScreen(task: task as TaskVocableTest);
+        return CreateVocabletestScreen(
+            index: index, task: task as TaskVocableTest);
       case TaskType.numberLine:
-        return CreateNumberlineScreen(task: task as TaskNumberLine);
+        return CreateNumberlineScreen(
+            index: index, task: task as TaskNumberLine);
       case TaskType.matchCategory:
-        return CreateMatchCategoryScreen(task: task as TaskMatchCategory);
+        return CreateMatchCategoryScreen(
+            index: index, task: task as TaskMatchCategory);
       case TaskType.markWords:
-        return CreateMarkWordsScreen(task: task as TaskMarkWords);
+        return CreateMarkWordsScreen(index: index, task: task as TaskMarkWords);
       case TaskType.gridSelect:
-        return CreateGridSelectScreen(task: task as TaskGridSelect);
+        return CreateGridSelectScreen(
+            index: index, task: task as TaskGridSelect);
       case TaskType.clozeTest:
-        return CreateClozeTestScreen(task: task as TaskClozeTest);
+        return CreateClozeTestScreen(index: index, task: task as TaskClozeTest);
       case TaskType.clock:
-        return CreateClockScreen(task: task as ClockTest);
+        return CreateClockScreen(index: index, task: task as ClockTest);
       case TaskType.buchstabieren:
-        return CreateBuchstabierenScreen(task: task as TaskBuchstabieren);
+        return CreateBuchstabierenScreen(
+            index: index, task: task as TaskBuchstabieren);
       default:
         return Placeholder();
     }
@@ -65,6 +73,7 @@ class TasksetCreationCartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final createTasklistBloc = BlocProvider.of<TasksetCreateTasklistBloc>(context);
     return Card(
       elevation: 5,
       child: Dismissible(
@@ -79,7 +88,7 @@ class TasksetCreationCartWidget extends StatelessWidget {
         ),
         direction: DismissDirection.endToStart,
         onDismissed: (DismissDirection dismissDirection) {
-          BlocProvider.of<CreateTasksetBloc>(context).add(RemoveTask(task.id));
+          createTasklistBloc.add(RemoveFromTaskList(task.id));
         },
         child: ListTile(
           title: Text(
@@ -94,8 +103,15 @@ class TasksetCreationCartWidget extends StatelessWidget {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<CreateTasksetBloc>(context),
+                      builder: (_) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(
+                            value: BlocProvider.of<CreateTasksetBloc>(context),
+                          ),
+                          BlocProvider.value(
+                            value: createTasklistBloc,
+                          ),
+                        ],
                         child: screenDependingOnTaskType(task.type),
                       ),
                     ),
@@ -104,8 +120,9 @@ class TasksetCreationCartWidget extends StatelessWidget {
                   color: Colors.black,
                 ),
                 IconButton(
-                  onPressed: () => BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(RemoveTask(task.id)),
+                  onPressed: () {
+                    createTasklistBloc.add(RemoveFromTaskList(task.id));
+                  },
                   icon: Icon(Icons.delete),
                   color: Colors.black,
                 ),

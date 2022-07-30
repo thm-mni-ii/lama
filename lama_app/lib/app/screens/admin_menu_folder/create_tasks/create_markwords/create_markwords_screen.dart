@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_textFormFields_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
@@ -15,8 +16,9 @@ import 'package:lama_app/util/key_generator.dart';
 
 class CreateMarkWordsScreen extends StatefulWidget {
   final TaskMarkWords? task;
+  final int? index;
 
-  const CreateMarkWordsScreen({Key? key, required this.task}) : super(key: key);
+  const CreateMarkWordsScreen({Key? key, required this.task, required this.index}) : super(key: key);
   @override
   CreateMarkWordsScreenState createState() => CreateMarkWordsScreenState();
 }
@@ -31,6 +33,7 @@ class CreateMarkWordsScreenState extends State<CreateMarkWordsScreen> {
   bool newTask = true;
   @override
   Widget build(BuildContext context) {
+    final tasksetListProvider = BlocProvider.of<TasksetCreateTasklistBloc>(context);
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
@@ -94,15 +97,15 @@ class CreateMarkWordsScreenState extends State<CreateMarkWordsScreen> {
                 );
                 if (newTask) {
                   // add Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(AddTask(taskMarkWords));
+                  tasksetListProvider.add(AddToTaskList(taskMarkWords));
                   Navigator.pop(context);
                 } else {
                   // edit Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(EditTask(taskMarkWords));
-                }
+                  tasksetListProvider.add(
+                    EditTaskInTaskList(widget.index, taskMarkWords),
+                  );
                 Navigator.pop(context);
+              }
               }
             },
             child: Text(newTask ? "Task hinzufügen" : "verändere Task"),

@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
-import 'package:lama_app/app/event/create_taskset_event.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dropdown_widget_String.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
 
+import '../widgets/lamacoin_input_widget.dart';
+
 class MoneyEinstellenScreen extends StatefulWidget {
+  final int? index;
   final TaskMoney? task;
 
-  const MoneyEinstellenScreen({Key? key, required this.task}) : super(key: key);
+  const MoneyEinstellenScreen(
+      {Key? key, required this.index, required this.task})
+      : super(key: key);
   @override
   MoneyEinstellenScreenState createState() => MoneyEinstellenScreenState();
 }
@@ -42,7 +46,8 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
+    final tasksetListProvider = BlocProvider.of<TasksetCreateTasklistBloc>(context);
+      Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
     if (widget.task != null && newTask) {
@@ -53,9 +58,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
       newTask = false;
     }
 
-    print(blocTaskset.tasks![0].toString());
-    print(_currentSelectedDifficulty);
-    print(newTask);
+    print("current: $_currentSelectedDifficulty");
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -131,16 +134,15 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                     optimumAllowed);
                 if (newTask) {
                   // add Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(AddTask(moneyTask));
-                  print(moneyTask.toString());
+                  tasksetListProvider.add(AddToTaskList(moneyTask));
                   Navigator.pop(context);
                 } else {
                   // edit Task
-                  BlocProvider.of<CreateTasksetBloc>(context)
-                      .add(EditTask(moneyTask));
-                  print(moneyTask.toString());
+                  tasksetListProvider.add(
+                    EditTaskInTaskList(widget.index, moneyTask),
+                  );
                 }
+                print(moneyTask.difficulty);
                 Navigator.pop(context);
               }
             },
