@@ -203,37 +203,6 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               AdminUtils.reloadTasksets(context);
             }),
           ),
-/*           //Navigation Button to 'Aufgabenverwaltung' [OptionTaskScreen]
-          _menuButton(
-            context,
-            Icon(Icons.add_link),
-            'Tasksetverwaltung',
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (BuildContext context) => TasksetManageBloc(),
-                  child: TasksetManageScreen(),
-                ),
-              ),
-            ).then((_) {
-              AdminUtils.reloadTasksets(context);
-            }),
-          ), */
-          //Navigation Button to 'Aufgabenerstellen' [TasksetCreationScreen]
-          _menuButton(
-              context,
-              Icon(Icons.task),
-              'Taskseterstellung',
-              () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (BuildContext context) => CreateTasksetBloc(),
-                        child: TasksetCreationScreen(),
-                      ),
-                    ),
-                  )),
           _menuButton(
             context,
             Icon(Icons.settings),

@@ -5,6 +5,7 @@ import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/screens/taskset_creation_cart_screen.dart';
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 
@@ -24,6 +25,9 @@ class _SetupTasksetBodyState extends State<SetupTasksetBody> {
   bool first = true;
 
   Taskset buildWholeTaskset(Taskset? blocTaskset) {
+    if (blocTaskset != null && _currentSelectedSubject != blocTaskset.subject) {
+      BlocProvider.of<TasksetCreateTasklistBloc>(context).taskList.clear();
+    }
     Taskset taskset = Taskset(
       _nameController.text,
       _currentSelectedSubject,
@@ -36,7 +40,8 @@ class _SetupTasksetBodyState extends State<SetupTasksetBody> {
 
   @override
   Widget build(BuildContext context) {
-    Taskset? blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset;
+    final bloc = BlocProvider.of<CreateTasksetBloc>(context);
+    Taskset? blocTaskset = bloc.taskset;
     TasksetRepository tasksetRepo =
         RepositoryProvider.of<TasksetRepository>(context);
 
@@ -45,9 +50,9 @@ class _SetupTasksetBodyState extends State<SetupTasksetBody> {
       _currentSelectedSubject = blocTaskset.subject;
       _nameController.text = blocTaskset.name!;
       _descriptionController.text = blocTaskset.description ?? "";
-
       first = false;
     }
+
     return Column(
       children: [
         Expanded(
@@ -85,7 +90,6 @@ class _SetupTasksetBodyState extends State<SetupTasksetBody> {
                     ),
                   ),
                 ),
-                // möglicher weise auch in block => statelesswidget
                 DropdownButtonFormField<String>(
                   hint: Text("Klassenstufe auswählen"),
                   value: _currentSelectedGrade,
@@ -128,20 +132,18 @@ class _SetupTasksetBodyState extends State<SetupTasksetBody> {
                     _currentSelectedGrade != null &&
                     _currentSelectedSubject != null) {
                   // initilize everything else in taskset
-                  BlocProvider.of<CreateTasksetBloc>(context).add(
-                    EditTaskset(buildWholeTaskset(blocTaskset)),
-                  );
+                  bloc.add(EditTaskset(buildWholeTaskset(blocTaskset)));
+                  print("Abgeschickte tasklist: " +
+                      (blocTaskset?.tasks! ?? []).toString());
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => MultiBlocProvider(
                         providers: [
+                          BlocProvider.value(value: bloc),
                           BlocProvider.value(
-                            value:
-                                BlocProvider.of<CreateTasksetBloc>(context),
-                          ),
-                          BlocProvider(
-                            create: (context) => TasksetCreateTasklistBloc(blocTaskset == null ? [] : blocTaskset.tasks!),
+                            value: BlocProvider.of<TasksetCreateTasklistBloc>(
+                                context),
                           ),
                         ],
                         child: TasksetCreationCartScreen(),
