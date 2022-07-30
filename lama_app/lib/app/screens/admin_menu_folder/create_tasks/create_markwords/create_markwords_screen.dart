@@ -18,17 +18,162 @@ class CreateMarkWordsScreen extends StatefulWidget {
 }
 
 class CreateMarkWordsScreenState extends State<CreateMarkWordsScreen> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _rewardController = TextEditingController();
+  TextEditingController _rightAnswer = TextEditingController();
+  TextEditingController _satzController = TextEditingController();
+  bool newTask = true;
+
   @override
   Widget build(BuildContext context) {
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: CustomAppbar(
-        size: screenSize.width / 5,
-        titel: "Mark Words",
-        color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
-      ),
-    );
+        appBar: CustomAppbar(
+          size: screenSize.width / 5,
+          titel: "Mark Words",
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+        ),
+        body: Column(children: [
+          Expanded(
+              child: SingleChildScrollView(
+                  child: Container(
+                      margin: EdgeInsets.all(5),
+                      child: Form(
+                          key: _formKey,
+                          child: Column(children: [
+                            Container(
+                              margin:
+                                  EdgeInsets.only(top: 30, left: 5, right: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Der Satz",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: 5, right: 5),
+                              child: TextFormField(
+                                controller: _satzController,
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(
+                                  labelText: 'Gib den Satz an',
+                                ),
+                                validator: (text) {
+                                  if (text == null || text.isEmpty) {
+                                    return "Der Satz fehlt!";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (String? text) =>
+                                    _satzController.text = text!,
+                              ),
+                            ),
+                            Container(
+                              margin:
+                                  EdgeInsets.only(top: 30, left: 5, right: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Richtige Antwort",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: 5, right: 5),
+                              child: TextFormField(
+                                controller: _rightAnswer,
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(
+                                  labelText: 'Gib die richtige Antwort ein',
+                                ),
+                                validator: (text) {
+                                  if (text == null || text.isEmpty) {
+                                    return "Die Antwort fehlt!";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (String? text) =>
+                                    _rightAnswer.text = text!,
+                              ),
+                            ),
+                            Container(
+                              margin:
+                                  EdgeInsets.only(top: 30, left: 5, right: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Erreichbare Lamacoins",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: 5, right: 5),
+                              child: TextFormField(
+                                controller: _rewardController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Erreichbare Lamacoins',
+                                ),
+                                validator: (text) {
+                                  if (text == null || text.isEmpty) {
+                                    return "Betrag fehlt!";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (String? text) =>
+                                    _rewardController.text = text!,
+                              ),
+                            ),
+                          ])))))
+        ]),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                primary: LamaColors.findSubjectColor(
+                    blocTaskset.subject ?? "normal")),
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                TaskMarkWords taskMarkWords = TaskMarkWords(
+                  widget.task?.id ??
+                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                  TaskType.markWords,
+                  int.parse(_rewardController.text),
+                  "Tippe die richtige Antwort an!",
+                  3,
+                  _satzController.text,
+                  [_rightAnswer.text],
+                );
+                if (newTask) {
+                  // add Task
+                  BlocProvider.of<CreateTasksetBloc>(context)
+                      .add(AddTask(taskMarkWords));
+                  Navigator.pop(context);
+                } else {
+                  // edit Task
+                  BlocProvider.of<CreateTasksetBloc>(context)
+                      .add(EditTask(taskMarkWords));
+                }
+                Navigator.pop(context);
+              }
+            },
+            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
+          ),
+        ));
   }
 }
