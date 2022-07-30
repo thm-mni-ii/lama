@@ -49,6 +49,8 @@ class TaskScreenState extends State<TaskScreen> {
   Image? image;
   late TaskBuchstabieren task;
   int? userGrade;
+  bool alreadyGenerated = false;
+  Widget? dis;
 
   TaskScreenState([this.userGrade]);
 
@@ -353,8 +355,12 @@ class TaskScreenState extends State<TaskScreen> {
       case "MatchCategory":
         return MatchCategoryTaskScreen(task as TaskMatchCategory, constraints);
       case "GridSelect":
-        return GridSelectTaskScreen(
-            task as TaskGridSelect, constraints, GridSelectTaskBloc());
+        if(!alreadyGenerated) {
+          dis = GridSelectTaskScreen(
+              task as TaskGridSelect, constraints, GridSelectTaskBloc());
+              alreadyGenerated = true;
+        }
+        return dis!;
       case "MoneyTask":
         return MoneyTaskScreen(task as TaskMoney, constraints);
       case "VocableTest":
