@@ -514,7 +514,7 @@ class TaskMoney extends Task {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "task_type": type.toString().toString(),
+        "task_type": type.toString(),
         "task_reward": reward,
         "lama_text": lamaText,
         "left_to_solve": leftToSolve,
