@@ -62,7 +62,7 @@ class TasksetRepository {
           TaskType.markWords,
           TaskType.matchCategory,
           TaskType.gridSelect,
-          TaskType.buchstabieren,
+          //TaskType.buchstabieren,
           TaskType.clozeTest
         ];
       case "Englisch":
@@ -71,7 +71,7 @@ class TasksetRepository {
           TaskType.markWords,
           TaskType.matchCategory,
           TaskType.gridSelect,
-          TaskType.buchstabieren,
+          //TaskType.buchstabieren,
           TaskType.vocableTest,
           TaskType.clozeTest
         ];
@@ -81,7 +81,9 @@ class TasksetRepository {
           TaskType.markWords,
           TaskType.matchCategory,
           TaskType.gridSelect,
-          TaskType.buchstabieren,
+          TaskType.clozeTest,
+          TaskType.connect,
+          //TaskType.buchstabieren,
         ];
       default:
         return [];

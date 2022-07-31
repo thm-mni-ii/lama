@@ -6,6 +6,7 @@ import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_taskl
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_buchstabieren/create_buchstabieren_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clock/create_clock_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clozetest/create_clozeTest_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_connect/create_connect_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_equation/create_equation_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_gridselect/create_gridselect_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_markwords/create_markwords_screen.dart';
@@ -48,6 +49,8 @@ class TaskCardWidget extends StatelessWidget {
         return CreateClockScreen(index: null, task: null);
       case TaskType.buchstabieren:
         return CreateBuchstabierenScreen(index: null, task: null);
+      case TaskType.connect:
+        return CreateConnectScreen(index: null, task: null);
       default:
         return Placeholder();
     }
