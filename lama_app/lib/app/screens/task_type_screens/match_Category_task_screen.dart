@@ -7,14 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
-import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
-import '../../bloc/taskBloc/tts_bloc.dart';
-import '../../state/tts_state.dart';
-import '../../event/tts_event.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/event/tts_event.dart';
 
 /// This file creates the Match Category task Screen
 /// The Match Category task is a task where you have to sort 8 given

@@ -9,10 +9,8 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
-import '../../event/tts_event.dart';
+import 'package:lama_app/app/event/tts_event.dart';
 import '../../task-system/task.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:lama_app/app/state/home_screen_state.dart';
 
 
 // Author J.Decher

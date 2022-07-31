@@ -8,16 +8,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
-import 'package:lama_app/app/state/home_screen_state.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 
 
 
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
-import '../../event/tts_event.dart';
+import 'package:lama_app/app/event/tts_event.dart';
 import '../../task-system/task.dart';
 
 /// This file creates the Cloze Test task Screen

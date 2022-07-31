@@ -27,6 +27,7 @@ import 'package:lama_app/app/bloc/taskbloc/tts_bloc.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
 
 
+
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
 
 ///[StatefulWidget] for the screen framework containing the current Task Widget.
@@ -48,7 +49,9 @@ class TaskScreenState extends State<TaskScreen> {
   Image? image;
   late TaskBuchstabieren task;
   int? userGrade;
+  //Es wird gespeichert ob schon Connect_Task Widget schon generiert wurde.
   bool alreadyGenerated = false;
+  //Hier wird das Widget von Connect_task gespeichert, damit es nicht neu generiert wird, wenn TTS getoggled wird
   Widget? dis;
 
   TaskScreenState([this.userGrade]);

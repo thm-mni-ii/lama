@@ -10,6 +10,11 @@ import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
 
+/*
+Bloc Klasse mit Methode, um Texte, die übergeben werden, vorgelesen werden.
+Und Events, um diese Texte vorzulesen.
+ */
+
 class TTSBloc extends Bloc<TTSEvent,TTSState> {
   final FlutterTts flutterTts = FlutterTts();
   String text = "";

@@ -11,9 +11,8 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/GlobalKeyExtension.dart';
-import 'package:lama_app/app/state/home_screen_state.dart';
 
-import '../../event/tts_event.dart';
+import 'package:lama_app/app/event/tts_event.dart';
 
 
 ///This file creates the Connect task Screen
