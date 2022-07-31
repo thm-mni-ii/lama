@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
-import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_textFormFields_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_doubleTextFormfield/dynamic_doubleTextFormFields_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_doubleTextFormfield/two_controller.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_doubleTextFormfield/two_textFields.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/text_input_widget.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -18,8 +17,11 @@ class CreateVocabletestScreen extends StatefulWidget {
   final TaskVocableTest? task;
   final int? index;
 
-  const CreateVocabletestScreen({Key? key, required this.task, required this.index,})
-      : super(key: key);
+  const CreateVocabletestScreen({
+    Key? key,
+    required this.task,
+    required this.index,
+  }) : super(key: key);
   @override
   CreateVocabletestScreenState createState() => CreateVocabletestScreenState();
 }
@@ -27,9 +29,10 @@ class CreateVocabletestScreen extends StatefulWidget {
 class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _rewardController = TextEditingController();
-  TextEditingController _categoryController = TextEditingController();
-  List<TextEditingController> _controllers = [];
-  List<TextFormField> _fields = [];
+  List<TwoControllers> _controllers = [];
+  List<TwoTextfields> _fields = [];
+
+  bool? randomSide = false;
 
   bool newTask = true;
   @override
@@ -53,21 +56,26 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        HeadLineWidget("Kategorie"),
-                        TextInputWidget(
-                          textController: _categoryController,
-                          missingInput: "Angabe fehlt",
-                          labelText: "Gib die Kategorie ein",
-                        ),
-                        HeadLineWidget("Begriffe"),
-                        DynamicTextFormFields(
+                        DynamicDoubleTextFormFields(
                           controllers: _controllers,
                           fields: _fields,
+                          labelText1: "Englisch",
+                          labelText2: "Deutsch",
+                        ),
+                        HeadLineWidget("Weitere Optionen"),
+                        CheckboxListTile(
+                          title: Text("Übersetzung in beide Richtungen"),
+                          value: randomSide,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              randomSide = value;
+                            });
+                          },
                         ),
                         HeadLineWidget("Erreichbare Lamacoins"),
                         LamacoinInputWidget(
                           numberController: _rewardController,
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -84,17 +92,18 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                     blocTaskset.subject ?? "normal")),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                TaskGridSelect taskMatchCategory = TaskGridSelect(
-                  widget.task?.id ??
-                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
-                  TaskType.gridSelect,
-                  int.parse(_rewardController.text),
-                  "Markiere X ${_categoryController.text}",
-                  3,
-                  //TODO: Klappt das wirklich?
-                  _controllers.map((e) => e.text).toList(),
-                );
-                if (newTask) {// <=> widget.task == null
+                TaskVocableTest taskMatchCategory = TaskVocableTest(
+                    widget.task?.id ??
+                        KeyGenerator.generateRandomUniqueKey(
+                            blocTaskset.tasks!),
+                    TaskType.vocableTest,
+                    int.parse(_rewardController.text),
+                    "Translate the shown word!",
+                    3,
+                    [],
+                    randomSide);
+                if (newTask) {
+                  // <=> widget.task == null
                   // add Task
                   BlocProvider.of<TasksetCreateTasklistBloc>(context)
                       .add(AddToTaskList(taskMatchCategory));
@@ -104,6 +113,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                   BlocProvider.of<TasksetCreateTasklistBloc>(context)
                       .add(EditTaskInTaskList(widget.index, taskMatchCategory));
                 }
+                print(_controllers[0].controller1!.text.toString());
                 Navigator.pop(context);
               }
             },

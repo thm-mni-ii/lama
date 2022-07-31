@@ -72,7 +72,7 @@ class TasksetRepository {
           TaskType.matchCategory,
           TaskType.gridSelect,
           //TaskType.buchstabieren,
-          TaskType.vocableTest,
+          //TaskType.vocableTest,
           TaskType.clozeTest
         ];
       case "Sachkunde":
@@ -82,7 +82,7 @@ class TasksetRepository {
           TaskType.matchCategory,
           TaskType.gridSelect,
           TaskType.clozeTest,
-          TaskType.connect,
+          //TaskType.connect,
           //TaskType.buchstabieren,
         ];
       default:

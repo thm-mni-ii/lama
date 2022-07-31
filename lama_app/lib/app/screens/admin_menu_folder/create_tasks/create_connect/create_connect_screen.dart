@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_doubleTextFormfield/dynamic_doubleTextFormFields_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_doubleTextFormfield/two_controller.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_doubleTextFormfield/two_textFields.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/text_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
@@ -16,7 +19,8 @@ class CreateConnectScreen extends StatefulWidget {
   final int? index;
   final TaskConnect? task;
 
-  const CreateConnectScreen({Key? key, required this.index, required this.task}) : super(key: key);
+  const CreateConnectScreen({Key? key, required this.index, required this.task})
+      : super(key: key);
   @override
   CreateConnectScreenState createState() => CreateConnectScreenState();
 }
@@ -24,10 +28,8 @@ class CreateConnectScreen extends StatefulWidget {
 class CreateConnectScreenState extends State<CreateConnectScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _rewardController = TextEditingController();
-  TextEditingController _questionController = TextEditingController();
-  TextEditingController _rightAnswer = TextEditingController();
-  TextEditingController _wrongAnswer1 = TextEditingController();
-  TextEditingController _wrongAnswer2 = TextEditingController();
+  List<TwoControllers> _controllers = [];
+  List<TwoTextfields> _fields = [];
 
   bool newTask = true;
 
@@ -52,28 +54,11 @@ class CreateConnectScreenState extends State<CreateConnectScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        HeadLineWidget("Satz"),
-                        TextInputWidget(
-                          textController: _questionController,
-                          missingInput: "Eingabe fehlt",
-                          labelText: "Gib das gesuchte Wort ein",
-                        ),
-                        HeadLineWidget("Gesuchte Wort"),
-                        TextInputWidget(
-                          textController: _rightAnswer,
-                          missingInput: "Eingabe fehlt",
-                          labelText: "Gib das gesuchte Wort ein",
-                        ),
-                        HeadLineWidget("Falsche Antworten"),
-                        TextInputWidget(
-                          textController: _wrongAnswer1,
-                          missingInput: "Eingabe fehlt",
-                          labelText: "Gib das Wort ein",
-                        ),
-                        TextInputWidget(
-                          textController: _wrongAnswer2,
-                          missingInput: "Eingabe fehlt",
-                          labelText: "Gib das Wort ein",
+                        DynamicDoubleTextFormFields(
+                          controllers: _controllers,
+                          fields: _fields,
+                          labelText1: "Englisch",
+                          labelText2: "Deutsch",
                         ),
                         HeadLineWidget("Erreichbare Lamacoins"),
                         LamacoinInputWidget(
@@ -95,7 +80,7 @@ class CreateConnectScreenState extends State<CreateConnectScreen> {
                     blocTaskset.subject ?? "normal")),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                TaskClozeTest task4Cards = TaskClozeTest(
+/*                 TaskClozeTest task4Cards = TaskClozeTest(
                     widget.task?.id ??
                         KeyGenerator.generateRandomUniqueKey(
                             blocTaskset.tasks!),
@@ -119,7 +104,7 @@ class CreateConnectScreenState extends State<CreateConnectScreen> {
                   BlocProvider.of<TasksetCreateTasklistBloc>(context)
                       .add(EditTaskInTaskList(widget.index, task4Cards));
                 }
-                Navigator.pop(context);
+                Navigator.pop(context); */
               }
             },
             child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
