@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/state/create_taskset_state.dart';
 import 'package:external_path/external_path.dart';
-import 'package:lama_app/app/task-system/task.dart';
 
 import '../event/create_taskset_event.dart';
 import '../task-system/taskset_model.dart';
