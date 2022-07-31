@@ -15,6 +15,10 @@ import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 
+/// [StatelessWidget] that contains the screen for the 4Cards TaskType.
+///
+/// Author: K.Binder
+
 class FourCardTaskScreenStateful extends StatefulWidget {
   final Task4Cards task;
   final List<String> answers = [];
@@ -44,7 +48,6 @@ class FourCards extends State<FourCardTaskScreenStateful> {
   final List<String> answers = [];
   final BoxConstraints constraints;
 
-  //String selectedAnswer = "";
 
 
   FourCards(this.task, this.constraints, answers) {
@@ -174,7 +177,6 @@ class FourCards extends State<FourCardTaskScreenStateful> {
   Widget _buildCards(context, index) {
     String alang;
     task.answerLanguage == null ? alang = "Deutsch" : alang = task.answerLanguage!;
-    //debugPrint(index);
     Color color =
     index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;
 

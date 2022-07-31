@@ -1,14 +1,11 @@
-import 'dart:async';
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
+
+/// Authors: J.Wißbach and A.Grishin
 
 /*
 Bloc Klasse mit Methode, um Texte, die übergeben werden, vorgelesen werden.
@@ -19,9 +16,7 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
   final FlutterTts flutterTts = FlutterTts();
   String text = "";
   String lang = "";
-  //
-  //
-  //log('task.answerLanguage: ${task.answerLanguage}');
+
   readText(String text,String lang) async {
     if(!home_screen_state.isTTs()) {
       return;
@@ -61,37 +56,6 @@ class TTSBloc extends Bloc<TTSEvent,TTSState> {
     });
   }
 
-  // @override
-  // Stream<FourCardState> mapEventToState(FourCardEvent event) async* {
-  //
-  //
-  //
-  //   if (event is AnswerOnInitEvent) {
-  //     readText(event.answer, event.answerLanguage);
-  //   }
-  //
-  //
-  //   if (event is ClickOnWordQuestion) {
-  //     readText(event.texttoPlay, event.answerLanguage);
-  //     yield VoiceTtsState();
-  //   }
-  //
-  //   if (event is ClickOnAnswer) {
-  //     readText(event.answer,event.answerLanguage);
-  //     yield VoiceAnswerTtsState(event.answer);
-  //   }
-  // }
 
-
-
-// readText(String text) async {
-//   if(task.answerLaguage == "Englisch") {
-//     await flutterTts.setLanguage("en-EN");
-//   } else {
-//     await flutterTts.setLanguage("de-De");
-//   }
-//   await flutterTts.setVolume(1.0);
-//   await flutterTts.speak(text);
-// }
 
 }

@@ -119,6 +119,8 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
   Widget build(BuildContext context) {
     String qlang;
     task.questionLanguage == null  ? qlang = "Deutsch" : qlang = task.questionLanguage!;
+    String text = "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!";
+    String text2 = "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!";
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -132,8 +134,8 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
                 if (state is EmptyTTSState ) {
                   context.read<TTSBloc>().add(QuestionOnInitEvent(
                       task.boolThousands!
-                          ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
-                          : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!",qlang));
+                          ? text
+                          : text2,qlang));
                 }
                 return Container(
                 margin: EdgeInsets.all(35),
@@ -145,14 +147,14 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
                     onTap: () {
                       BlocProvider.of<TTSBloc>(context)
                           .add(ClickOnQuestionEvent.initVoice(task.boolThousands!
-                          ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
-                          : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!", qlang));
+                          ? text
+                          : text2, qlang));
                     },
                     child: Center(
                       child: Text(
                         task.boolThousands!
-                            ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
-                            : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!",
+                            ? text
+                            : text2,
                         style: LamaTextTheme.getStyle(
                             color: LamaColors.black, fontSize: 15),
                       ),
@@ -183,7 +185,6 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
     return Center(
           child: InkWell(
             onTap: () {
-              // todo language
               BlocProvider.of<TTSBloc>(context)
                   .add(ClickOnQuestionEvent.initVoice(rightAnswer.toString(), qlang));
             },

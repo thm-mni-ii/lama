@@ -416,7 +416,6 @@ class ClockTaskState extends State<ClockTaskScreen> {
     nip: BubbleNip.leftCenter,
     child: InkWell(
     onTap: () {
-    //log('task.lamaText!: ${task.lamaText!}');
     BlocProvider.of<TTSBloc>(context)
         .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
     },
@@ -875,16 +874,15 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3)),
                     ]),
                 child: InkWell(
-                  onDoubleTap: () {
+                  onTap: () {
                     BlocProvider.of<TaskBloc>(context)
                         .add(AnswerTaskEvent(answers[0]));
                     BlocProvider.of<TTSBloc>(context).
                     add(SetDefaultEvent());
                   },
-                  onTap: () {
+                  onDoubleTap: () {
                     BlocProvider.of<TTSBloc>(context).
                     add(ClickOnAnswerEvent(answers[0]!,"de"));
-
                   },
                   child: Center(
                     child: Text(
@@ -911,14 +909,13 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3))
                     ]),
                 child: InkWell(
-                  onDoubleTap: () {
-                    //selectedAnswer = answers[1]!;
+                  onTap: () {
                     BlocProvider.of<TaskBloc>(context)
                         .add(AnswerTaskEvent(answers[1]));
                     BlocProvider.of<TTSBloc>(context).
                     add(SetDefaultEvent());
                   },
-                  onTap: () {
+                  onDoubleTap: () {
                     BlocProvider.of<TTSBloc>(context).
                     add(ClickOnAnswerEvent(answers[1]!,"de"));
 
@@ -949,14 +946,13 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3))
                     ]),
                 child: InkWell(
-                  onDoubleTap: () {
+                  onTap: () {
                     BlocProvider.of<TaskBloc>(context)
                         .add(AnswerTaskEvent(answers[2]));
                     BlocProvider.of<TTSBloc>(context).
                     add(SetDefaultEvent());
-                    //selectedAnswer = answers[2]!;
                   },
-                  onTap: () {
+                  onDoubleTap: () {
 
                     BlocProvider.of<TTSBloc>(context).
                     add(ClickOnAnswerEvent(answers[2]!,"de"));
