@@ -187,13 +187,13 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                               offset: Offset(0, 3)),
                         ]),
                     child: InkWell(
-                      onTap: () => {
+                      onDoubleTap: () => {
                       BlocProvider.of<TTSBloc>(context).add(
                       ClickOnAnswerEvent(
                       answers[0],alang))
 
                       },
-                      onDoubleTap: () {
+                      onTap: () {
                         BlocProvider.of<TaskBloc>(context)
                             .add(AnswerTaskEvent(answers[0]));
                       },
@@ -219,12 +219,12 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                               offset: Offset(0, 3))
                         ]),
                     child: InkWell(
-                      onTap: () => {
+                      onDoubleTap: () => {
                         BlocProvider.of<TTSBloc>(context).add(
                             ClickOnAnswerEvent(
                                 answers[1],alang))
                       },
-                      onDoubleTap: () {
+                      onTap: () {
                         BlocProvider.of<TaskBloc>(context)
                             .add(AnswerTaskEvent(answers[1]));
                       },
@@ -252,13 +252,13 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                                 offset: Offset(0, 3))
                           ]),
                       child: InkWell(
-                        onTap: () => {
+                        onDoubleTap: () => {
                           BlocProvider.of<TTSBloc>(context).add(
                               ClickOnAnswerEvent(
                                   answers[2],alang))
 
                         },
-                        onDoubleTap: () {
+                        onTap: () {
                           BlocProvider.of<TaskBloc>(context)
                               .add(AnswerTaskEvent(answers[2]));
                         },
