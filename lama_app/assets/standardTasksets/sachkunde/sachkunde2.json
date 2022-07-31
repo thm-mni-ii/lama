@@ -7,7 +7,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":".. ist das gesündeste Getränk",
-           "lama_text":"Tippe eine Antwort doppelt an, um sie vor zulesen!",
+           "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
            "left_to_solve": 3,
            "right_answer":"Wasser",
            "wrong_answers":["Cola", "Apfelsaft"]
