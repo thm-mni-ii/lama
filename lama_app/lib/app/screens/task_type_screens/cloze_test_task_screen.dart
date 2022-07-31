@@ -12,7 +12,6 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
 import 'package:lama_app/app/state/tts_state.dart';
-import 'package:lama_app/app/state/QuestionText.dart';
 
 
 
@@ -81,10 +80,10 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
   @override
   Widget build(BuildContext context) {
     String qlang;
-    task.questionLanguage == null || task.questionLanguage == "" ? qlang = "Deutsch" : qlang = task.questionLanguage!;
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
 
     String alang;
-    task.answerLanguage == null || task.answerLanguage == "" ? alang = "Deutsch" : alang = task.answerLanguage!;
+    task.answerLanguage == null ? alang = "Deutsch" : alang = task.answerLanguage!;
 
     Color color0 = LamaColors.greenAccent;
     Color color1 = LamaColors.blueAccent;
@@ -101,7 +100,6 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                //log('task.question!: ${task.question!}');
 
                context.read<TTSBloc>().add(QuestionOnInitEvent(task.question!,qlang));
-               QuestionText.setText(task.question!, qlang);
              }
             return Container(
                   height: (constraints.maxHeight / 100) * 30,

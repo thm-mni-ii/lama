@@ -15,7 +15,6 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/OperatorWidget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
-import 'package:lama_app/app/state/QuestionText.dart';
 
 import '../../event/tts_event.dart';
 
@@ -123,7 +122,7 @@ class EquationTaskState extends State<EquationTaskScreen> {
   ///Returns the anna saying the lama_text in a speechbubble
   Widget _buildLamaText() {
     String qlang;
-    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
     return BlocProvider(
     create: (context) => TTSBloc(),
       child: Container(
@@ -138,7 +137,6 @@ class EquationTaskState extends State<EquationTaskScreen> {
               builder: (context, state) {
                 if (state is EmptyTTSState) {
                   context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
-                  QuestionText.setText(task.lamaText!, qlang);
                 }
             return InkWell(
               onTap: () {

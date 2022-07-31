@@ -18,7 +18,6 @@ import 'package:lama_app/app/screens/task_type_screens/money_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/number_line_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/vocable_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/zerlegung_task_screen.dart';
-import 'package:lama_app/app/state/QuestionText.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';

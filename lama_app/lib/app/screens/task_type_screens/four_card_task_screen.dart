@@ -10,12 +10,10 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
-import 'package:lama_app/app/state/QuestionText.dart';
 
 class FourCardTaskScreenStateful extends StatefulWidget {
   final Task4Cards task;
@@ -61,8 +59,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
   @override
   Widget build(BuildContext context) {
     String qlang;
-    task.questionLanguage == null || task.questionLanguage == "" ||
-        task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
 
     return BlocProvider(
       create: (context) => TTSBloc(),
@@ -75,7 +72,6 @@ class FourCards extends State<FourCardTaskScreenStateful> {
             builder: (context, TTSState state) {
               if (state is EmptyTTSState) {
                 context.read<TTSBloc>().add(QuestionOnInitEvent(task.question!,qlang));
-                QuestionText.setText(task.question!, qlang);
               }
               return Container(
                 decoration: BoxDecoration(
@@ -177,7 +173,7 @@ class FourCards extends State<FourCardTaskScreenStateful> {
 
   Widget _buildCards(context, index) {
     String alang;
-    task.answerLanguage == null || task.answerLanguage == "" ? alang = "Deutsch" : alang = task.answerLanguage!;
+    task.answerLanguage == null ? alang = "Deutsch" : alang = task.answerLanguage!;
     //debugPrint(index);
     Color color =
     index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;

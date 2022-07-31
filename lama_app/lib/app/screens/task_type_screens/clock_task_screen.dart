@@ -15,7 +15,7 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
-import 'package:lama_app/app/state/QuestionText.dart';
+
 
 import 'package:numberpicker/numberpicker.dart';
 
@@ -384,7 +384,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
   @override
   Widget build(BuildContext context) {
     String qlang;
-    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
 
     print(this.randStunde.toString() + ":" + this.allMinuten.toString());
     print(this.randStunde2.toString() + ":" + this.allMinuten2.toString());
@@ -779,7 +779,6 @@ class ClockTaskState extends State<ClockTaskScreen> {
               if (state is EmptyTTSState ) {
                 context.read<TTSBloc>().add(
                 QuestionOnInitEvent(task.lamaText!, qlang));
-                QuestionText.setText(task.lamaText!, qlang);
               }
               return Stack(
                  children: [

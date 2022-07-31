@@ -19,7 +19,6 @@ import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 
-import 'package:lama_app/app/state/QuestionText.dart';
 
 
 late List<String> buchstabenListe;
@@ -115,7 +114,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   @override
   Widget build(BuildContext context) {
     String qlang;
-    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: Column(
@@ -132,7 +131,6 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                     context.read<TTSBloc>().add(
                         QuestionOnInitEvent(setTaskMessageAccordingToTaskModus(), qlang));
                     alreadySaid = true;
-                    QuestionText.setText(setTaskMessageAccordingToTaskModus(), qlang);
                   }
                   return Stack(
                     children: [

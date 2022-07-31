@@ -13,8 +13,6 @@ import '../../event/tts_event.dart';
 import '../../task-system/task.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
-import 'package:lama_app/app/state/QuestionText.dart';
-
 
 
 // Author J.Decher
@@ -85,7 +83,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
   @override
   Widget build(BuildContext context) {
     String qlang;
-    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
     bool paintRed = !task.ontap!;
     double screenwidth = MediaQuery.of(context).size.width;
     double screenheight = MediaQuery.of(context).size.height;
@@ -107,8 +105,6 @@ class NumberLineState extends State<NumberLineTaskScreen> {
               context.read<TTSBloc>().add(QuestionOnInitEvent(
                   "Gib den im Zahlenstrahl rot markierten Wert an!"
               ,"de"));
-
-              QuestionText.setText("Gib den im Zahlenstrahl rot markierten Wert an!", "Deutsch");
             }
         return lamaHead(context, task, constraints, task.ontap!);
           },
@@ -151,8 +147,6 @@ class NumberLineState extends State<NumberLineTaskScreen> {
               context.read<TTSBloc>().add(QuestionOnInitEvent(
                   "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
                   ,qlang));
-                  QuestionText.setText("Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
-                      ,qlang);
             }
       return Column(children: [
         SizedBox(height: 20),

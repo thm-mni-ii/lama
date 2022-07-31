@@ -12,7 +12,6 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/GlobalKeyExtension.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
-import 'package:lama_app/app/state/QuestionText.dart';
 
 import '../../event/tts_event.dart';
 
@@ -81,7 +80,7 @@ class ConnectState extends State<ConnectTaskScreen> {
   @override
   Widget build(BuildContext context) {
     String qlang;
-    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = "Englisch";
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: Column(
@@ -99,7 +98,6 @@ class ConnectState extends State<ConnectTaskScreen> {
                  builder: (context, state) {
                    if (state is EmptyTTSState && !alreadyUpdated) {
                      context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
-                     QuestionText.setText(task.lamaText!, qlang);
                      this.alreadyUpdated = true;
                    }
                  return Container(

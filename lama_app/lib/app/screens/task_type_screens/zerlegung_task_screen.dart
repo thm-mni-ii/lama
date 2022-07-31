@@ -14,7 +14,6 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 import 'dart:math';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
-import 'package:lama_app/app/state/QuestionText.dart';
 
 import '../../event/tts_event.dart';
 
@@ -121,7 +120,7 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
   @override
   Widget build(BuildContext context) {
     String qlang;
-    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    task.questionLanguage == null  ? qlang = "Deutsch" : qlang = task.questionLanguage!;
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -137,9 +136,6 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
                       task.boolThousands!
                           ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
                           : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!",qlang));
-                  QuestionText.setText(task.boolThousands!
-                      ? "Zerlege die unten angegebene Zahl in Einer, Zehner, Hunderter und Tausender!"
-                      : "Zerlege die unten angegebene Zahl in Einer, Zehner und Hunderter!", qlang);
                 }
                 return Container(
                 margin: EdgeInsets.all(35),

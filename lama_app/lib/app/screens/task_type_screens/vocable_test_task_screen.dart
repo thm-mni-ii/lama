@@ -15,7 +15,6 @@ import 'package:lama_app/app/state/home_screen_state.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
-import 'package:lama_app/app/state/QuestionText.dart';
 
 
 
@@ -63,7 +62,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
     // todo z.b. Wort Papier ist auf de
 
 
-    task.questionLanguage == null || task.questionLanguage == "" || task.questionLanguage == "Deutsch" ? qlang = "Deutsch" : qlang = "Englisch";
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage;
     qlang == "Deutsch" ? qWordLang = "Deutsch" : qWordLang = "Englisch";
 
     log('task.questionLanguage: ${task.questionLanguage}');
@@ -93,7 +92,6 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                         context.read<TTSBloc>().add(
                             QuestionOnInitEvent("Translate the shown word",
                                 qlang));
-                        QuestionText.setText("Translate the shown word", qlang);
                         alreadySaid = true;
                       }
                       return Container(
