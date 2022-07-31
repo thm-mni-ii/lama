@@ -8,6 +8,24 @@ class DynamicTextFormFields extends StatefulWidget {
       : super(key: key);
   @override
   State<StatefulWidget> createState() => DynamicTextFormFieldsState();
+
+  static loadListFromTask(List<TextEditingController> controllers,
+      List<TextFormField> fields, List<String> listFromTask) {
+    int controllersLength = listFromTask.length;
+    print(controllersLength);
+    for (int i = 0; i < controllersLength; i++) {
+      controllers.add(TextEditingController(text: listFromTask[i]));
+
+      fields.add(TextFormField(
+        controller: controllers[i],
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+          border: OutlineInputBorder(),
+          labelText: "${fields.length + 1}. Begriff",
+        ),
+      ));
+    }
+  }
 }
 
 class DynamicTextFormFieldsState extends State<DynamicTextFormFields> {

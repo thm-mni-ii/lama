@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/custom_bottomNavigationBar_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -15,7 +16,9 @@ class CreateEquationScreen extends StatefulWidget {
   final int? index;
   final TaskEquation? task;
 
-  const CreateEquationScreen({Key? key, required this.index, required this.task}) : super(key: key);
+  const CreateEquationScreen(
+      {Key? key, required this.index, required this.task})
+      : super(key: key);
   @override
   CreateEquationScreenState createState() => CreateEquationScreenState();
 }
@@ -39,30 +42,39 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
   String division = '/';
   List<String> allowedOperations = ['+', '-', '*', '/'];
 
-/*   @override
-  void initState() {
-    if (widget.task != null) {
-      _vonController.text = widget.task!.von.toString();
-      _bisController.text = widget.task!.bis.toString();
-      _rewardController.text = widget.task!.reward.toString();
-    
-      newTask = false;
-    }
-    super.initState();
-  } */
-
   @override
   Widget build(BuildContext context) {
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
-/*     if (widget.task != null && newTask) {
+    if (widget.task != null && newTask) {
       _vonController.text = widget.task!.operandRange[0].toString();
       _bisController.text = widget.task!.operandRange[1].toString();
+      allowOperationReplace = widget.task!.allowReplacingOperators;
       _rewardController.text = widget.task!.reward.toString();
 
+      if (!widget.task!.randomAllowedOperators.contains("+")) {
+        plusAllowed = false;
+        allowedOperations.removeWhere((element) => element == plus);
+      }
+
+      if (!widget.task!.randomAllowedOperators.contains("-")) {
+        minusAllowed = false;
+        allowedOperations.removeWhere((element) => element == minus);
+      }
+
+      if (!widget.task!.randomAllowedOperators.contains("/")) {
+        divisionAllowed = false;
+        allowedOperations.removeWhere((element) => element == division);
+      }
+
+      if (!widget.task!.randomAllowedOperators.contains("*")) {
+        multiplyAllowed = false;
+        allowedOperations.removeWhere((element) => element == mal);
+      }
+
       newTask = false;
-    } */
+    }
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -249,48 +261,42 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: LamaColors.findSubjectColor(
-                    blocTaskset.subject ?? "normal")),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                List<int> listVonBis = [
-                  int.parse(_vonController.text),
-                  int.parse(_bisController.text)
-                ];
-                TaskEquation equationTask = TaskEquation(
-                    widget.task?.id ??
-                        KeyGenerator.generateRandomUniqueKey(
-                            blocTaskset.tasks!),
-                    TaskType.equation,
-                    int.parse(_rewardController.text),
-                    "Löse die Gleichung!",
-                    3,
-                    [],
-                    [],
-                    allowedOperations,
-                    allowOperationReplace,
-                    listVonBis,
-                    null,
-                    -1);
-                if (newTask) {
-                  // add Task
-                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                      .add(AddToTaskList(equationTask));
-                  Navigator.pop(context);
-                } else {
-                  // edit Task
-                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                      .add(EditTaskInTaskList(widget.index, equationTask));
-                }
+        bottomNavigationBar: CustomBottomNavigationBar(
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+          newTask: newTask,
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              List<int> listVonBis = [
+                int.parse(_vonController.text),
+                int.parse(_bisController.text)
+              ];
+              TaskEquation equationTask = TaskEquation(
+                  widget.task?.id ??
+                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                  TaskType.equation,
+                  int.parse(_rewardController.text),
+                  "Löse die Gleichung!",
+                  3,
+                  [],
+                  [],
+                  allowedOperations,
+                  allowOperationReplace,
+                  listVonBis,
+                  null,
+                  -1);
+              if (newTask) {
+                // add Task
+                BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                    .add(AddToTaskList(equationTask));
                 Navigator.pop(context);
+              } else {
+                // edit Task
+                BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                    .add(EditTaskInTaskList(widget.index, equationTask));
               }
-            },
-            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-          ),
+              Navigator.pop(context);
+            }
+          },
         ));
   }
 }

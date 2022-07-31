@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/custom_bottomNavigationBar_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
@@ -15,7 +16,9 @@ class CreateZerlegungScreen extends StatefulWidget {
   final int? index;
   final TaskZerlegung? task;
 
-  const CreateZerlegungScreen({Key? key, required this.index, required this.task}) : super(key: key);
+  const CreateZerlegungScreen(
+      {Key? key, required this.index, required this.task})
+      : super(key: key);
   @override
   CreateZerlegungScreenState createState() => CreateZerlegungScreenState();
 }
@@ -36,6 +39,9 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
 
     if (widget.task != null && newTask) {
       _rewardController.text = widget.task!.reward.toString();
+      reverseAllowed = widget.task!.reverse;
+      boolThousandsAllowed = widget.task!.boolThousands;
+      zerosAllowed = widget.task!.zeros;
 
       newTask = false;
     }
@@ -99,40 +105,34 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
             )),
           ],
         ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: LamaColors.findSubjectColor(
-                    blocTaskset.subject ?? "normal")),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                TaskZerlegung zerlegungTask = TaskZerlegung(
-                    widget.task?.id ??
-                        KeyGenerator.generateRandomUniqueKey(
-                            blocTaskset.tasks!),
-                    TaskType.zerlegung,
-                    int.parse(_rewardController.text),
-                    "zerlegt die Zahlen!",
-                    3,
-                    reverseAllowed,
-                    zerosAllowed,
-                    boolThousandsAllowed);
-                if (newTask) {
-                  // add Task
-                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                      .add(AddToTaskList(zerlegungTask));
-                  Navigator.pop(context);
-                } else {
-                  // edit Task
-                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                      .add(EditTaskInTaskList( widget.index, zerlegungTask));
-                }
+        bottomNavigationBar: CustomBottomNavigationBar(
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+          newTask: newTask,
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              TaskZerlegung zerlegungTask = TaskZerlegung(
+                  widget.task?.id ??
+                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                  TaskType.zerlegung,
+                  int.parse(_rewardController.text),
+                  "zerlegt die Zahlen!",
+                  3,
+                  reverseAllowed,
+                  zerosAllowed,
+                  boolThousandsAllowed);
+              if (newTask) {
+                // add Task
+                BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                    .add(AddToTaskList(zerlegungTask));
                 Navigator.pop(context);
+              } else {
+                // edit Task
+                BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                    .add(EditTaskInTaskList(widget.index, zerlegungTask));
               }
-            },
-            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-          ),
+              Navigator.pop(context);
+            }
+          },
         ));
   }
 }

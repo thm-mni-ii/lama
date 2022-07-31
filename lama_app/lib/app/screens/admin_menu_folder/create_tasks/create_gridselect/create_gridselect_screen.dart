@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
-import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/custom_bottomNavigationBar_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_textFormFields_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
@@ -17,7 +17,8 @@ class CreateGridSelectScreen extends StatefulWidget {
   final TaskGridSelect? task;
   final int? index;
 
-  const CreateGridSelectScreen({Key? key, required this.task, required this.index})
+  const CreateGridSelectScreen(
+      {Key? key, required this.task, required this.index})
       : super(key: key);
   @override
   CreateGridSelectScreenState createState() => CreateGridSelectScreenState();
@@ -34,7 +35,29 @@ class CreateGridSelectScreenState extends State<CreateGridSelectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final tasksetListProvider = BlocProvider.of<TasksetCreateTasklistBloc>(context);
+    if (widget.task != null && newTask) {
+      _rewardController.text = widget.task!.reward.toString();
+      _categoryController.text = widget.task!.lamaText.substring(11);
+
+      int controllersLength = widget.task!.wordsToFind.length;
+      for (int i = 0; i < controllersLength; i++) {
+        _controllers
+            .add(TextEditingController(text: widget.task!.wordsToFind[i]));
+
+        _fields.add(TextFormField(
+          controller: _controllers[i],
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+            border: OutlineInputBorder(),
+            labelText: "${_fields.length + 1}. Begriff",
+          ),
+        ));
+      }
+      newTask = false;
+    }
+
+    final tasksetListProvider =
+        BlocProvider.of<TasksetCreateTasklistBloc>(context);
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
@@ -77,39 +100,34 @@ class CreateGridSelectScreenState extends State<CreateGridSelectScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: LamaColors.findSubjectColor(
-                    blocTaskset.subject ?? "normal")),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                TaskGridSelect taskMatchCategory = TaskGridSelect(
-                  widget.task?.id ??
-                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
-                  TaskType.gridSelect,
-                  int.parse(_rewardController.text),
-                  "Markiere X ${_categoryController.text}",
-                  3,
-                  //TODO: Klappt das wirklich?
-                  _controllers.map((e) => e.text).toList(),
-                );
-                if (newTask) {
-                  // add Task
-                  tasksetListProvider.add(AddToTaskList(taskMatchCategory));
-                  Navigator.pop(context);
-                } else {
-                  // edit Task
-                  tasksetListProvider.add(
-                    EditTaskInTaskList(widget.index, taskMatchCategory),
-                  );
+        bottomNavigationBar: CustomBottomNavigationBar(
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+          newTask: newTask,
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              TaskGridSelect taskMatchCategory = TaskGridSelect(
+                widget.task?.id ??
+                    KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                TaskType.gridSelect,
+                int.parse(_rewardController.text),
+                "Markiere X ${_categoryController.text}",
+                3,
+                //TODO: Klappt das wirklich?
+                _controllers.map((e) => e.text).toList(),
+              );
+              if (newTask) {
+                // add Task
+                tasksetListProvider.add(AddToTaskList(taskMatchCategory));
                 Navigator.pop(context);
+              } else {
+                // edit Task
+                tasksetListProvider.add(
+                  EditTaskInTaskList(widget.index, taskMatchCategory),
+                );
               }
-              }
-            },
-            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-          ),
+              Navigator.pop(context);
+            }
+          },
         ));
   }
 }

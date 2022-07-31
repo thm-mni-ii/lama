@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
-import 'package:lama_app/app/event/create_taskset_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/custom_bottomNavigationBar_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_textFormFields_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/text_input_widget.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -18,7 +17,9 @@ class CreateMarkWordsScreen extends StatefulWidget {
   final TaskMarkWords? task;
   final int? index;
 
-  const CreateMarkWordsScreen({Key? key, required this.task, required this.index}) : super(key: key);
+  const CreateMarkWordsScreen(
+      {Key? key, required this.task, required this.index})
+      : super(key: key);
   @override
   CreateMarkWordsScreenState createState() => CreateMarkWordsScreenState();
 }
@@ -26,6 +27,7 @@ class CreateMarkWordsScreen extends StatefulWidget {
 class CreateMarkWordsScreenState extends State<CreateMarkWordsScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _rewardController = TextEditingController();
+  TextEditingController _taskController = TextEditingController();
   TextEditingController _sentenceController = TextEditingController();
   List<TextEditingController> _controllers = [];
   List<TextFormField> _fields = [];
@@ -33,7 +35,18 @@ class CreateMarkWordsScreenState extends State<CreateMarkWordsScreen> {
   bool newTask = true;
   @override
   Widget build(BuildContext context) {
-    final tasksetListProvider = BlocProvider.of<TasksetCreateTasklistBloc>(context);
+    if (widget.task != null && newTask) {
+      _rewardController.text = widget.task!.reward.toString();
+      _sentenceController.text = widget.task!.sentence.toString();
+      _taskController.text = widget.task!.lamaText.toString();
+
+      DynamicTextFormFields.loadListFromTask(
+          _controllers, _fields, widget.task!.rightWords);
+
+      newTask = false;
+    }
+    final tasksetListProvider =
+        BlocProvider.of<TasksetCreateTasklistBloc>(context);
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
@@ -53,6 +66,12 @@ class CreateMarkWordsScreenState extends State<CreateMarkWordsScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
+                        HeadLineWidget("Aufgabenstellung"),
+                        TextInputWidget(
+                          textController: _taskController,
+                          missingInput: "Angabe fehlt",
+                          labelText: "Gib die Aufgabenstellung ein",
+                        ),
                         HeadLineWidget("Satz"),
                         TextInputWidget(
                           textController: _sentenceController,
@@ -76,40 +95,35 @@ class CreateMarkWordsScreenState extends State<CreateMarkWordsScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: LamaColors.findSubjectColor(
-                    blocTaskset.subject ?? "normal")),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                TaskMarkWords taskMarkWords = TaskMarkWords(
-                  widget.task?.id ??
-                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
-                  TaskType.markWords,
-                  int.parse(_rewardController.text),
-                  "Markiere X ${_sentenceController.text}",
-                  3,
-                  _sentenceController.text,
-                  //TODO: Klappt das wirklich?
-                  _controllers.map((e) => e.text).toList(),
-                );
-                if (newTask) {
-                  // add Task
-                  tasksetListProvider.add(AddToTaskList(taskMarkWords));
-                  Navigator.pop(context);
-                } else {
-                  // edit Task
-                  tasksetListProvider.add(
-                    EditTaskInTaskList(widget.index, taskMarkWords),
-                  );
+        bottomNavigationBar: CustomBottomNavigationBar(
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+          newTask: newTask,
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              TaskMarkWords taskMarkWords = TaskMarkWords(
+                widget.task?.id ??
+                    KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                TaskType.markWords,
+                int.parse(_rewardController.text),
+                _taskController.text,
+                3,
+                _sentenceController.text,
+                //TODO: Klappt das wirklich?
+                _controllers.map((e) => e.text).toList(),
+              );
+              if (newTask) {
+                // add Task
+                tasksetListProvider.add(AddToTaskList(taskMarkWords));
                 Navigator.pop(context);
+              } else {
+                // edit Task
+                tasksetListProvider.add(
+                  EditTaskInTaskList(widget.index, taskMarkWords),
+                );
               }
-              }
-            },
-            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-          ),
+              Navigator.pop(context);
+            }
+          },
         ));
   }
 }

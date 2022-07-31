@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/custom_bottomNavigationBar_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dropdown_widget_String.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
@@ -33,25 +34,15 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
   String? _currentSelectedDifficulty;
 
   @override
-  void initState() {
-    if (widget.task != null) {
-      _currentSelectedDifficulty = widget.task!.difficulty.toString();
-      optimumAllowed = widget.task!.optimum;
-      _rewardController.text = widget.task!.reward.toString();
-
-      newTask = false;
-    }
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final tasksetListProvider = BlocProvider.of<TasksetCreateTasklistBloc>(context);
-      Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
+    final tasksetListProvider =
+        BlocProvider.of<TasksetCreateTasklistBloc>(context);
+    Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
     if (widget.task != null && newTask) {
       _currentSelectedDifficulty = widget.task!.difficulty.toString();
+      optimumAllowed = widget.task!.optimum;
       _rewardController.text = widget.task!.reward.toString();
       _leftToSolveController.text = widget.task!.optimum.toString();
 
@@ -114,40 +105,33 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: LamaColors.findSubjectColor(
-                    blocTaskset.subject ?? "normal")),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                TaskMoney moneyTask = TaskMoney(
-                    widget.task?.id ??
-                        KeyGenerator.generateRandomUniqueKey(
-                            blocTaskset.tasks!),
-                    TaskType.moneyTask,
-                    int.parse(_rewardController.text),
-                    "",
-                    3,
-                    int.parse(_currentSelectedDifficulty.toString()),
-                    optimumAllowed);
-                if (newTask) {
-                  // add Task
-                  tasksetListProvider.add(AddToTaskList(moneyTask));
-                  Navigator.pop(context);
-                } else {
-                  // edit Task
-                  tasksetListProvider.add(
-                    EditTaskInTaskList(widget.index, moneyTask),
-                  );
-                }
-                print(moneyTask.difficulty);
+        bottomNavigationBar: CustomBottomNavigationBar(
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+          newTask: newTask,
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              TaskMoney moneyTask = TaskMoney(
+                  widget.task?.id ??
+                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                  TaskType.moneyTask,
+                  int.parse(_rewardController.text),
+                  "",
+                  3,
+                  int.parse(_currentSelectedDifficulty.toString()),
+                  optimumAllowed);
+              if (newTask) {
+                // add Task
+                tasksetListProvider.add(AddToTaskList(moneyTask));
                 Navigator.pop(context);
+              } else {
+                // edit Task
+                tasksetListProvider.add(
+                  EditTaskInTaskList(widget.index, moneyTask),
+                );
               }
-            },
-            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-          ),
+              Navigator.pop(context);
+            }
+          },
         ));
   }
 }

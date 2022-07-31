@@ -30,14 +30,13 @@ class NumberInputWidgetState extends State<NumberInputWidget> {
           labelText: widget.labelText,
         ),
         validator: (text) {
-          if (widget.validator == null) {
-            if (text == null || text.isEmpty) {
-              return widget.missingInput;
-            }
-            return null;
-          } else {
+          if (text == null || text.isEmpty) {
+            return widget.missingInput;
+          }
+          if (widget.validator != null) {
             widget.validator;
           }
+
           return null;
         },
         onSaved: (String? text) => widget.numberController.text = text!,

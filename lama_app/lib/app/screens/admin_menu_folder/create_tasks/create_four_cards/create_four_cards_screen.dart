@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/custom_bottomNavigationBar_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/text_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
@@ -16,7 +17,9 @@ class CreateFourCardsScreen extends StatefulWidget {
   final int? index;
   final Task4Cards? task;
 
-  const CreateFourCardsScreen({Key? key, required this.index, required this.task}) : super(key: key);
+  const CreateFourCardsScreen(
+      {Key? key, required this.index, required this.task})
+      : super(key: key);
   @override
   CreateFourCardsScreenState createState() => CreateFourCardsScreenState();
 }
@@ -25,15 +28,24 @@ class CreateFourCardsScreenState extends State<CreateFourCardsScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _rewardController = TextEditingController();
   TextEditingController _questionController = TextEditingController();
-  TextEditingController _rightAnswer = TextEditingController();
-  TextEditingController _wrongAnswer1 = TextEditingController();
-  TextEditingController _wrongAnswer2 = TextEditingController();
-  TextEditingController _wrongAnswer3 = TextEditingController();
+  List<TextEditingController> _answers =
+      List<TextEditingController>.generate(4, (i) => TextEditingController());
 
   bool newTask = true;
 
   @override
   Widget build(BuildContext context) {
+    if (widget.task != null && newTask) {
+      _rewardController.text = widget.task!.reward.toString();
+      _questionController.text = widget.task!.question.toString();
+      _answers[0].text = widget.task!.rightAnswer.toString();
+      _answers[1].text = widget.task!.wrongAnswers[0].toString();
+      _answers[2].text = widget.task!.wrongAnswers[1].toString();
+      _answers[3].text = widget.task!.wrongAnswers[2].toString();
+
+      newTask = false;
+    }
+    
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
@@ -60,23 +72,23 @@ class CreateFourCardsScreenState extends State<CreateFourCardsScreen> {
                             labelText: "Gib die Frage ein"),
                         HeadLineWidget("Richtige Antwort"),
                         TextInputWidget(
-                          textController: _rightAnswer,
+                          textController: _answers[0],
                           missingInput: "Antwort fehlt",
                           labelText: "Gib die richtige Antwort ein",
                         ),
                         HeadLineWidget("Falsche Antworten"),
                         TextInputWidget(
-                          textController: _wrongAnswer1,
+                          textController: _answers[1],
                           missingInput: "Antwort fehlt",
                           labelText: "Gib eine falsche Antwort ein",
                         ),
                         TextInputWidget(
-                          textController: _wrongAnswer2,
+                          textController: _answers[2],
                           missingInput: "Antwort fehlt",
                           labelText: "Gib eine falsche Antwort ein",
                         ),
                         TextInputWidget(
-                          textController: _wrongAnswer3,
+                          textController: _answers[3],
                           missingInput: "Antwort fehlt",
                           labelText: "Gib eine falsche Antwort ein",
                         ),
@@ -92,44 +104,34 @@ class CreateFourCardsScreenState extends State<CreateFourCardsScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: LamaColors.findSubjectColor(
-                    blocTaskset.subject ?? "normal")),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                Task4Cards task4Cards = Task4Cards(
-                    widget.task?.id ??
-                        KeyGenerator.generateRandomUniqueKey(
-                            blocTaskset.tasks!),
-                    TaskType.fourCards,
-                    int.parse(_rewardController.text),
-                    "Tippe die richtige Antwort an!",
-                    3,
-                    _questionController.text,
-                    _rightAnswer.text,
-                    [
-                      _wrongAnswer1.text,
-                      _wrongAnswer2.text,
-                      _wrongAnswer3.text
-                    ]);
-                if (newTask) {
-                  // add Task
-                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                      .add(AddToTaskList(task4Cards));
-                  Navigator.pop(context);
-                } else {
-                  // edit Task
-                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                      .add(EditTaskInTaskList(widget.index, task4Cards));
-                }
+        bottomNavigationBar: CustomBottomNavigationBar(
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+          newTask: newTask,
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              Task4Cards task4Cards = Task4Cards(
+                  widget.task?.id ??
+                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                  TaskType.fourCards,
+                  int.parse(_rewardController.text),
+                  "Tippe die richtige Antwort an!",
+                  3,
+                  _questionController.text,
+                  _answers[0].text,
+                  [_answers[1].text, _answers[2].text, _answers[3].text]);
+              if (newTask) {
+                // add Task
+                BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                    .add(AddToTaskList(task4Cards));
                 Navigator.pop(context);
+              } else {
+                // edit Task
+                BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                    .add(EditTaskInTaskList(widget.index, task4Cards));
               }
-            },
-            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-          ),
+              Navigator.pop(context);
+            }
+          },
         ));
   }
 }
