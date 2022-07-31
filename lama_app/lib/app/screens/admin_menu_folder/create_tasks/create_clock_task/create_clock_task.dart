@@ -103,8 +103,8 @@ class _CreateClockTaskState extends State<CreateClockTask> {
                 3,
                 _currentSelectedHour,
                 _isTimer,
-                "", //todo right/wrong Answer
-                "");
+                null, //todo right/wrong Answer
+                null);
             if (newTask) {
               // add Task
               BlocProvider.of<TasksetCreateTasklistBloc>(context)

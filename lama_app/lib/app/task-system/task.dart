@@ -82,14 +82,14 @@ class Task {
           json['wrong_answers'],
         );
       case "TaskType.moneyTask":
-        return TaskMoney(          
-          json['id'], 
-          TaskType.moneyTask,
-          json['task_reward'], 
-          json['lama_text'],
-          json['left_to_solve'], 
-          json['difficulty'],
-          json['optimum']);
+        return TaskMoney(
+            json['id'],
+            TaskType.moneyTask,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['difficulty'],
+            json['optimum']);
       case "TaskType.markWords":
         return TaskMarkWords(
           json['id'],
@@ -283,7 +283,7 @@ class Task {
 
   @override
   String toString() {
-    return type.toString() + reward.toString() + lamaText;
+    return type.toString().toString() + reward.toString() + lamaText;
   }
 }
 
@@ -301,13 +301,13 @@ class Task4Cards extends Task {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
         'question': question,
         'wrong_answers': wrongAnswers,
-  };
+      };
 
   @override
   String toString() {
@@ -334,7 +334,7 @@ class TaskClozeTest extends Task {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
@@ -366,7 +366,7 @@ class TaskMarkWords extends Task {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
@@ -409,7 +409,7 @@ class TaskMatchCategory extends Task {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
@@ -448,7 +448,7 @@ class TaskGridSelect extends Task {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
@@ -487,7 +487,7 @@ class ClockTest extends Task {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
@@ -512,15 +512,15 @@ class TaskMoney extends Task {
       int leftToSolve, this.difficulty, this.optimum)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
-        "task_type": type.toString(),
+        "task_type": type.toString().toString(),
         "task_reward": reward,
         "lama_text": lamaText,
         "left_to_solve": leftToSolve,
         "difficulty": difficulty,
         "optimum": optimum,
-    };
+      };
 
   @override
   String toString() {
@@ -541,7 +541,7 @@ class TaskVocableTest extends Task {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
@@ -574,7 +574,7 @@ class TaskConnect extends Task {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
@@ -637,7 +637,7 @@ class TaskEquation extends Task {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
@@ -675,7 +675,7 @@ class TaskZerlegung extends Task {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
@@ -702,7 +702,7 @@ class TaskNumberLine extends Task {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "task_type": type,
+        "task_type": type.toString(),
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,

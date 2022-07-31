@@ -23,7 +23,7 @@ import '../task-system/taskset_model.dart';
 /// latest Changes: 17.06.2022
 class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   Taskset? taskset;
-  
+
   CreateTasksetBloc({this.taskset}) : super(InitialState()) {
     on<CreateTasksetAbort>((event, emit) => _abort(event.context));
     on<EditTaskset>((event, emit) => taskset = event.taskset);
