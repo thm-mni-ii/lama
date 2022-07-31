@@ -7,7 +7,7 @@
            "task_type":"4Cards",
             "task_reward":2,
             "question":"What does 'brave' mean in german?",
-            "lama_text":"Tap the right Answer!",
+            "lama_text":"Tap an answer twice, to read it aloud!",
             "left_to_solve": 3,
             "right_answer":"mutig",
              "wrong_answers":["Berg", "haben", "mögen"],
@@ -18,7 +18,7 @@
            "task_type": "ClozeTest",
            "task_reward": 2,
            "question": "Get .. the road",
-           "lama_text": "Tap the right Answer twice!",
+           "lama_text": "Tap an answer twice to read it aloud!",
            "left_to_solve": 3,
            "right_answer": "off",
            "wrong_answers": [

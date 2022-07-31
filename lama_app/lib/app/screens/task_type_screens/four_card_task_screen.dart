@@ -195,15 +195,15 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                     offset: Offset(0, 3))
               ]),
           child: InkWell(
-            onDoubleTap: () {
-              BlocProvider.of<TTSBloc>(context)
-                  .add(ClickOnQuestionEvent.initVoice(answers[index], alang));
-                //BlocProvider.of<TTSBloc>(context).
-                //add(SetDefaultEvent());
-            },
             onTap: () {
               BlocProvider.of<TaskBloc>(context)
                   .add(AnswerTaskEvent(answers[index]));
+                //BlocProvider.of<TTSBloc>(context).
+                //add(SetDefaultEvent());
+            },
+            onDoubleTap: () {
+              BlocProvider.of<TTSBloc>(context)
+                  .add(ClickOnQuestionEvent.initVoice(answers[index], alang));
             },
             child: Padding(
               padding: EdgeInsets.all(5),

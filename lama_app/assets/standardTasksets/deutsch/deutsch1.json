@@ -35,7 +35,7 @@
       "task_reward": 2,
       "question": "lesen",
       "left_to_solve": 3,
-      "lama_text": "Tippe die richtige Silbentrennung an!",
+      "lama_text": "Tippe eine Antwort doppelt an, um sie vorzulesen!",
       "right_answer": "le-sen",
       "wrong_answers": [
         "lese-n",
@@ -47,7 +47,7 @@
       "task_type": "ClozeTest",
       "task_reward": 2,
       "question": ".. Dino ist groß",
-      "lama_text":"Tippe die richtige Antwort doppelt an!",
+      "lama_text":"Tippe eine Antwort doppelt an, um sie vor zulesen!",
       "left_to_solve": 3,
       "right_answer": "Der",
       "wrong_answers": [

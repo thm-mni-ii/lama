@@ -191,7 +191,6 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                       BlocProvider.of<TTSBloc>(context).add(
                       ClickOnAnswerEvent(
                       answers[0],alang))
-
                       },
                       onTap: () {
                         BlocProvider.of<TaskBloc>(context)

@@ -7,7 +7,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":".. ist das gesündeste Getränk",
-           "lama_text":"Tippe die richtige doppelt Antwort an!",
+           "lama_text":"Tippe eine Antwort doppelt an, um sie vor zulesen!",
            "left_to_solve": 3,
            "right_answer":"Wasser",
            "wrong_answers":["Cola", "Apfelsaft"]
@@ -16,7 +16,7 @@
            "task_type":"4Cards",
            "task_reward":2,
            "question":"Wie heißt das Beingelenk",
-           "lama_text":"Tippe die richtige Antwort doppelt an!",
+           "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
            "left_to_solve": 3,
            "right_answer":"Knie",
            "wrong_answers":["Ellenbogen", "Schulter", "Genick"]

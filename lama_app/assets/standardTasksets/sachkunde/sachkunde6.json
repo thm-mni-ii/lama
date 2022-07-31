@@ -7,7 +7,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":"Das Knochengewebe ist ..",
-           "lama_text":"Tippe die richtige Antwort doppelt an!",
+           "lama_text":"Tippe eine Antwort doppelt an, um sie vor zulesen!",
            "left_to_solve": 3,
            "right_answer":"hart",
            "wrong_answers":["weich", "elastisch"]
@@ -16,7 +16,7 @@
            "task_type":"4Cards",
            "task_reward":2,
            "question":"Wie viele Knochen hat das menschliche Skelett?",
-           "lama_text":"Tippe die richtige Antwort an!",
+           "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
            "left_to_solve": 3,
            "right_answer":"über 200",
            "wrong_answers":["über 1000", "genau 99", "genau 306"]

@@ -316,7 +316,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                   child: InkWell(
                     onDoubleTap: () {
                       String lang;
-                      task.answerLanguage == null || task.answerLanguage == "" ? lang = "Deutsch" :  lang = "Englisch";
+                      task.answerLanguage == null ? lang = "Deutsch" :  lang = task.answerLanguage!;
 
                       BlocProvider.of<TTSBloc>(context).
                       add(ClickOnAnswerEvent(items[i].item!, lang));
@@ -379,6 +379,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
   /// {@return} [Widget] Targetwidget to be displayed on the screen
   Widget buildTargets(BuildContext context, List<String> categoryList,
       String? taskCategory, Color color) {
+      String alang;
+      task.answerLanguage == null ? alang = "Deutsch" : alang = task.answerLanguage!;
       return BlocBuilder<TTSBloc, TTSState>(
         builder: (context, state) {
         return DragTarget<Item>(
@@ -404,7 +406,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                   // todo ist stil
                   onDoubleTap: () {
                     BlocProvider.of<TTSBloc>(context).
-                    add(ClickOnAnswerEvent(taskCategory!, "de"));
+                    add(ClickOnAnswerEvent(taskCategory!, alang));
                   },
                   child: Center(
                     child: Text(

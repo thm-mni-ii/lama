@@ -7,7 +7,7 @@
            "task_type":"4Cards",
             "task_reward":2,
             "question":"Der Igel gehört zu den .. ?",
-            "lama_text":"Tippe die richtige Antwort an!",
+            "lama_text":"Tippe eine Antwort doppelt an, um sie vor zu lesen!",
             "left_to_solve": 3,
             "right_answer":"Säugetieren",
              "wrong_answers":["Reptilien", "Amphibien", "Vögeln"],
@@ -18,7 +18,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":".. sind Rudeltiere",
-           "lama_text":"Tippe die richtige Antwort doppelt an!",
+           "lama_text":"Tippe eine Antwort doppelt an, um sie vor zu lesen!",
            "left_to_solve": 3,
            "right_answer":"Wölfe",
            "wrong_answers":["Katzen", "Bären"]

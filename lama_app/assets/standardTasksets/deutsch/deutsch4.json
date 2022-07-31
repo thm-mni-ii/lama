@@ -15,7 +15,7 @@
            {
            "task_type":"4Cards",
             "task_reward":2,
-            "question":"Welches Wort ist ein Synonym zu Couch? (gleiche Bedeutung)",
+            "question":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
             "lama_text":"Tippe die richtige Antwort an!",
             "left_to_solve": 3,
             "right_answer":"Sofa",
@@ -25,7 +25,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":"Wusstest du, .. Lamas spucken können?",
-           "lama_text":"Tippe die richtige Antwort doppelt an!",
+           "lama_text":"Tippe eine Antwort doppelt an, um sie vor zulesen!",
            "left_to_solve": 3,
            "right_answer":"dass",
            "wrong_answers":["Das", "das"]
