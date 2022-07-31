@@ -13,6 +13,30 @@
             "clockMode": "usMode"
           },
       {
+            "task_type": "ClockDifferent",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "uhr": "vollStunde",
+            "clockMode": "gerMode"
+          },
+      {
+            "task_type": "ClockDifferent",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "uhr": "halbeStunde",
+            "clockMode": "usMode"
+          },
+      {
+            "task_type": "ClockDifferent",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "uhr": "viertelStunden",
+            "clockMode": "gerMode"
+          },
+      {
          "task_type": "NumberLine",
          "task_reward": 1,
          "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
