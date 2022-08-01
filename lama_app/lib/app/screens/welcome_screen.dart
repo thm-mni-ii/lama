@@ -41,7 +41,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             if (state is LoadSetup) {
               BlocProvider.of<TasksetOptionsBloc>(context)
                 ..add(TasksetOptionsChangeURL(state.tasksetUrl!))
-                ..add(TasksetOptionsPush());
+                ..add(TasksetOptionsPush(false));
 
               BlocProvider.of<UserlistUrlBloc>(context)
                 ..add(UserlistUrlChangeUrl(state.userlistUrl!))
@@ -55,15 +55,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             if (state is SetupError) {
               showDialog(
                   context: context,
-                  builder: (_) => _insertErrorPopUp(state.errorMessage));
+                  builder: (_) =>
+                      _insertErrorPopUp(state.errorMessage, state.errorType));
             }
             if (state is SetupSuccessState) {
               BlocProvider.of<TasksetOptionsBloc>(context)
-                  .add(TasksetOptionsPush());
+                  .add(TasksetOptionsPush(true));
               BlocProvider.of<UserlistUrlBloc>(context)
                   .add(UserlistInsertList());
-              RepositoryProvider.of<TasksetRepository>(context)
-                  .reloadTasksetLoader();
+              /* RepositoryProvider.of<TasksetRepository>(context)
+                  .reloadTasksetLoader(); */
               context.read<CheckScreenBloc>().add(CheckForAdmin(context));
             }
           },
@@ -74,18 +75,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               BlocProvider.of<CheckScreenBloc>(context)
                   .add(UrlCheckSuccess(true));
             }
+            if (state is UserlistUrlParsingFailed) {
+              BlocProvider.of<CheckScreenBloc>(context)
+                  .add(DisplaySetupError(state.error, "Nutzerliste"));
+
+              /* BlocProvider.of<TasksetOptionsBloc>(context)
+                  .add(TasksetOptionsDelete()); */
+            }
           },
         ),
         BlocListener<TasksetOptionsBloc, TasksetOptionsState?>(
           listener: (context, state) {
             if (state is TasksetOptionsPushSuccess) {
               BlocProvider.of<CheckScreenBloc>(context)
-                  .add(UrlCheckSuccess(true));
+                  .add(UrlCheckSuccess(false));
+              RepositoryProvider.of<TasksetRepository>(context)
+                  .reloadTasksetLoader();
             }
             if (state is TasksetOptionsPushFailed) {
-              showDialog(
-                  context: context,
-                  builder: (_) => _insertErrorPopUp(state.error));
+              BlocProvider.of<CheckScreenBloc>(context)
+                  .add(DisplaySetupError(state.error, "Aufgaben"));
             }
           },
         ),
@@ -320,10 +329,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   ///provides [AlertDialog] to show error message
   ///
   ///{@param} error message as String
-  Widget _insertErrorPopUp(String error) {
+  Widget _insertErrorPopUp(String error, String errorType) {
     return AlertDialog(
       title: Text(
-        'Fehler beim laden der Aufgaben',
+        'Fehler beim laden der $errorType',
         style: LamaTextTheme.getStyle(
           color: LamaColors.black,
           fontSize: 16,

@@ -7,7 +7,12 @@ import 'package:lama_app/app/model/taskUrl_model.dart';
 abstract class TasksetOptionsEvent {}
 
 ///used to insert an [TaskUrl] into the database and finish the add url process
-class TasksetOptionsPush extends TasksetOptionsEvent {}
+///
+///{@param}[bool] doPushToDb pushes the taskurl into the database on true
+class TasksetOptionsPush extends TasksetOptionsEvent {
+  bool doPushToDb;
+  TasksetOptionsPush(this.doPushToDb);
+}
 
 ///used to add an deleted [TaskUrl] back into the database
 ///

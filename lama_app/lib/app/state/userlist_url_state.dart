@@ -16,7 +16,8 @@ class UserlistUrlDefault extends UserlistUrlState {}
 class UserlistUrlParsingFailed extends UserlistUrlState {
   String error;
   UserlistUrlParsingFailed(
-      {this.error = 'Ein unbestimmter Fehler ist aufgetreten!'});
+      {this.error =
+          'Ein unbestimmter Fehler mit der Userlist-URL ist aufgetreten!'});
 }
 
 ///specific waiting state while an Url is validated

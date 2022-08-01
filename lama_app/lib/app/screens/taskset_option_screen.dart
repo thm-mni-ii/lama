@@ -161,7 +161,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
             validator: (value) => InputValidation.inputURLValidation(value),
             onFieldSubmitted: (value) => {
               if (_formKey.currentState!.validate())
-                context.read<TasksetOptionsBloc>().add(TasksetOptionsPush())
+                context.read<TasksetOptionsBloc>().add(TasksetOptionsPush(true))
             },
           ),
         ],

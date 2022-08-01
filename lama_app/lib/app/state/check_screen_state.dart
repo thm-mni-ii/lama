@@ -57,8 +57,9 @@ class ChangeUrl extends CheckScreenState {}
 //state thats used to indicate that the setup-url threw an error
 class SetupError extends CheckScreenState {
   String errorMessage;
+  String errorType;
 
-  SetupError(this.errorMessage);
+  SetupError(this.errorMessage, this.errorType);
 }
 
 //state thats used when both url's are correct

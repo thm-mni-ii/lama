@@ -69,12 +69,16 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
       _setupUrl = event.setupUrl;
       emit(ChangeUrl());
     });
-    on<SetupErrorMessage>((event, emit) async {});
+    on<DisplaySetupError>((event, emit) async {
+      emit(SetupError(event.error, event.errorType));
+    });
     on<UrlCheckSuccess>((event, emit) async {
-      if (_hasSuccess != null) {
+      if (event.hasSuccess != _hasSuccess && _hasSuccess != null) {
         emit(SetupSuccessState());
+        _hasSuccess = null;
+      } else {
+        _hasSuccess = event.hasSuccess;
       }
-      _hasSuccess = event.hasSuccess;
     });
   }
   //used to update the setup url when needed
@@ -226,6 +230,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   Future<CheckScreenState> _insertSetup(BuildContext context) async {
     //check if JSON file is valid
     String? error = await InputValidation.inputUrlWithJsonValidation(_setupUrl);
+    String errorType = "Setup-URL";
     String? errorUserList;
     String? errorTaskset;
     Map<String, dynamic>? urls;
@@ -233,7 +238,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     //TO-DO: errorhandling
     if (error != null) {
       print(error);
-      return SetupError(error);
+      return SetupError(error, errorType);
     }
     //get the two URLs from the JSON file
     try {
@@ -241,7 +246,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
       urls = _parseUrls(jsonDecode(response.body));
     } on SocketException {
       print('Kritischer Fehler beim erreichen der URL!');
-      return SetupError('Kritischer Fehler beim erreichen der URL!');
+      return SetupError('Kritischer Fehler beim erreichen der URL!', errorType);
     }
     //load userlist through URL
     if (urls != null) {
@@ -255,7 +260,8 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     if (errorTaskset != null && errorUserList != null) {
       print('Taskset error: $errorTaskset Userlist error: $errorUserList');
       return SetupError(
-          'Taskset error: $errorTaskset Userlist error: $errorUserList');
+          'Taskset error: $errorTaskset Userlist error: $errorUserList',
+          errorType);
     } else {
       _userlistUrl = urls!['userListUrl'];
       _tasksetUrl = urls['tasksetUrl'];
