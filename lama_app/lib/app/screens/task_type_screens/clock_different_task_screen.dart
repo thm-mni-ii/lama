@@ -191,197 +191,199 @@ class ClockDifferentState extends State<ClockDifferentScreen> {
     print(this.diffHour);
     print(this.diffMinute);
 
-    return Column(
-      children: [
-        // Lama Speechbubble
-        Container(
-          height: (constraints.maxHeight / 100) * 15,
-          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-          // create space between each childs
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.only(left: 75),
-                  height: 50,
-                  width: MediaQuery.of(context).size.width,
-                  child: Bubble(
-                    nip: BubbleNip.leftCenter,
-                    child: Center(
-                      child: Text(
-                        "Wie viel Zeitunterschied gibt es?",
-                        style: LamaTextTheme.getStyle(
-                            color: LamaColors.black, fontSize: 15),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // Lama Speechbubble
+          Container(
+            height: (constraints.maxHeight / 100) * 15,
+            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+            // create space between each childs
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 75),
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    child: Bubble(
+                      nip: BubbleNip.leftCenter,
+                      child: Center(
+                        child: Text(
+                          "Wie viel Zeitunterschied gibt es?",
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SvgPicture.asset(
-                  "assets/images/svg/lama_head.svg",
-                  semanticsLabel: "Lama Anna",
-                  width: 75,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SvgPicture.asset(
+                    "assets/images/svg/lama_head.svg",
+                    semanticsLabel: "Lama Anna",
+                    width: 75,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 55, right: 50),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (task.clockMode == "usMode") ...[
-                Text(setAM(),
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                Icon(Icons.arrow_right),
-                Text(setAM2(),
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
-              ] else if (task.clockMode == "gerMode") ...[
-                Image.asset(
-                  setImage(),
-                  width: 30,
-                  height: 30,
-                ),
-                Icon(Icons.arrow_right),
-                Image.asset(
-                  setImage2(),
-                  width: 30,
-                  height: 30,
-                ),
-              ]
-            ],
-          ),
-        ),
-
-        //Items
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 50),
-              child: Container(
-                  height: (constraints.maxHeight / 100) * 20,
-                  child: Container(
-                    width: 160,
-                    height: 160,
-                    child: CustomPaint(
-                        painter: ClockPainter(task, constraints, randStunde,
-                            randMinute, halbeMinute, vierMinute, allMinuten)),
-                  )),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 50),
-              child: Container(
-                  height: (constraints.maxHeight / 100) * 20,
-                  child: Container(
-                    width: 160,
-                    height: 160,
-                    child: CustomPaint(
-                        painter: ClockPainter2(
-                            task,
-                            constraints,
-                            randStunde2,
-                            randMinute2,
-                            halbeMinute2,
-                            vierMinute2,
-                            allMinuten2)),
-                  )),
-            )
-          ],
-        ),
-        Container(
-            height: (constraints.maxHeight / 100) * 10,
-            margin: EdgeInsets.only(top: 70),
-            alignment: Alignment.topCenter,
-            padding: EdgeInsets.only(right: 40, left: 40),
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 55, right: 50),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "HH",
-                  style: TextStyle(fontSize: 18),
-                ),
-                Text(
-                  "MM",
-                  style: TextStyle(fontSize: 18),
-                )
+                if (task.clockMode == "usMode") ...[
+                  Text(setAM(),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Icon(Icons.arrow_right),
+                  Text(setAM2(),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
+                ] else if (task.clockMode == "gerMode") ...[
+                  Image.asset(
+                    setImage(),
+                    width: 30,
+                    height: 30,
+                  ),
+                  Icon(Icons.arrow_right),
+                  Image.asset(
+                    setImage2(),
+                    width: 30,
+                    height: 30,
+                  ),
+                ]
               ],
-            )),
-        Container(
-          height: (constraints.maxHeight / 100) * 10,
-          alignment: Alignment.topCenter,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+            ),
+          ),
+    
+          //Items
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              NumberPicker(
-                itemCount: 1,
-                value: currentValue,
-                maxValue: 23,
-                minValue: 0,
-                onChanged: (value) => setState(() => currentValue = value),
+              Padding(
+                padding: EdgeInsets.only(top: 50),
+                child: Container(
+                    height: (constraints.maxHeight / 100) * 20,
+                    child: Container(
+                      width: 160,
+                      height: 160,
+                      child: CustomPaint(
+                          painter: ClockPainter(task, constraints, randStunde,
+                              randMinute, halbeMinute, vierMinute, allMinuten)),
+                    )),
               ),
-              Text(":",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              NumberPicker(
-                itemCount: 1,
-                value: currentValue2,
-                maxValue: 59,
-                minValue: 0,
-                onChanged: (value) => setState(() => currentValue2 = value),
-              ),
+              Padding(
+                padding: EdgeInsets.only(top: 50),
+                child: Container(
+                    height: (constraints.maxHeight / 100) * 20,
+                    child: Container(
+                      width: 160,
+                      height: 160,
+                      child: CustomPaint(
+                          painter: ClockPainter2(
+                              task,
+                              constraints,
+                              randStunde2,
+                              randMinute2,
+                              halbeMinute2,
+                              vierMinute2,
+                              allMinuten2)),
+                    )),
+              )
             ],
           ),
-        ),
-        Container(
-          height: (constraints.maxHeight / 100) * 10,
-          child: Center(
-            child: InkWell(
-                child: Container(
-                  height: (constraints.maxHeight / 100) * 15,
-                  width: (constraints.maxWidth / 100) * 70,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(25),
-                    ),
-                    color: LamaColors.greenAccent,
-                    boxShadow: [
-                      BoxShadow(
-                          offset: Offset(0, 2),
-                          color: LamaColors.black.withOpacity(0.5))
-                    ],
+          Container(
+              height: (constraints.maxHeight / 100) * 10,
+              margin: EdgeInsets.only(top: 70),
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.only(right: 40, left: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "HH",
+                    style: TextStyle(fontSize: 18),
                   ),
-                  child: Center(
-                    child: Text(
-                      "Fertig!",
-                      style: LamaTextTheme.getStyle(
-                        fontSize: 30,
+                  Text(
+                    "MM",
+                    style: TextStyle(fontSize: 18),
+                  )
+                ],
+              )),
+          Container(
+            height: (constraints.maxHeight / 100) * 10,
+            alignment: Alignment.topCenter,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                NumberPicker(
+                  itemCount: 1,
+                  value: currentValue,
+                  maxValue: 23,
+                  minValue: 0,
+                  onChanged: (value) => setState(() => currentValue = value),
+                ),
+                Text(":",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                NumberPicker(
+                  itemCount: 1,
+                  value: currentValue2,
+                  maxValue: 59,
+                  minValue: 0,
+                  onChanged: (value) => setState(() => currentValue2 = value),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: (constraints.maxHeight / 100) * 10,
+            child: Center(
+              child: InkWell(
+                  child: Container(
+                    height: (constraints.maxHeight / 100) * 15,
+                    width: (constraints.maxWidth / 100) * 70,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(25),
+                      ),
+                      color: LamaColors.greenAccent,
+                      boxShadow: [
+                        BoxShadow(
+                            offset: Offset(0, 2),
+                            color: LamaColors.black.withOpacity(0.5))
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Fertig!",
+                        style: LamaTextTheme.getStyle(
+                          fontSize: 30,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                onTap: () {
-                  if (this.currentValue == this.diffHour &&
-                      this.currentValue2 == this.diffMinute) {
-                    BlocProvider.of<TaskBloc>(context)
-                        .add(AnswerTaskEvent.initClockDifferent(correct));
-                  } else {
-                    BlocProvider.of<TaskBloc>(context)
-                        .add(AnswerTaskEvent.initClockDifferent(incorrect));
-                  }
-                }),
+                  onTap: () {
+                    if (this.currentValue == this.diffHour &&
+                        this.currentValue2 == this.diffMinute) {
+                      BlocProvider.of<TaskBloc>(context)
+                          .add(AnswerTaskEvent.initClockDifferent(correct));
+                    } else {
+                      BlocProvider.of<TaskBloc>(context)
+                          .add(AnswerTaskEvent.initClockDifferent(incorrect));
+                    }
+                  }),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
