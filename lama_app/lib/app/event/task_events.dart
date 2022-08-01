@@ -77,4 +77,8 @@ class AnswerTaskEvent extends TaskEvent {
     this.providedAnswerBool = providedAnswerBool;
     this.providedAnswer = providedAnswer;
   }
+  AnswerTaskEvent.initClockDifferent(bool providedAnswerBool) {
+    this.providedAnswerBool = providedAnswerBool;
+    this.providedAnswer = providedAnswer;
+  }
 }
