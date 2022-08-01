@@ -340,6 +340,7 @@ class TaskClozeTest extends Task {
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
         'question': question,
+        'right_answer': rightAnswer,
         'wrong_answers': wrongAnswers,
       };
 
@@ -372,7 +373,7 @@ class TaskMarkWords extends Task {
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
         'sentence': sentence,
-        'right_answers': rightWords,
+        'right_words': rightWords,
       };
 
   @override
@@ -414,10 +415,10 @@ class TaskMatchCategory extends Task {
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
-        'name_cat_one': nameCatOne,
-        'name_cat_two': nameCatTwo,
-        'category_one': categoryOne,
-        'category_two': categoryTwo,
+        'nameCatOne': nameCatOne,
+        'nameCatTwo': nameCatTwo,
+        'categoryOne': categoryOne,
+        'categoryTwo': categoryTwo,
       };
 
   @override
@@ -453,7 +454,7 @@ class TaskGridSelect extends Task {
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
-        'words_to_find': wordsToFind,
+        'wordsToFind': wordsToFind,
       };
 
   @override
@@ -494,7 +495,6 @@ class ClockTest extends Task {
         'left_to_solve': leftToSolve,
         'uhr': uhr,
         'timer': timer,
-        'wrong_answers': wrongAnswers,
       };
 
   @override
@@ -682,7 +682,7 @@ class TaskZerlegung extends Task {
         'left_to_solve': leftToSolve,
         'reverse': reverse,
         'zeros': zeros,
-        'bool_Thousands': boolThousands,
+        'boolThousands': boolThousands,
       };
 
   // do toString Method
