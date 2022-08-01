@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class LamacoinInputWidget extends StatefulWidget {
   final TextEditingController numberController;
   final FormFieldValidator? validator;
 
   LamacoinInputWidget(
-      {Key? key,
-      required this.numberController,
-      this.validator})
+      {Key? key, required this.numberController, this.validator})
       : super(key: key);
 
   @override
@@ -22,17 +21,18 @@ class LamacoinInputWidgetState extends State<LamacoinInputWidget> {
       child: TextFormField(
         controller: widget.numberController,
         keyboardType: TextInputType.number,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly
+        ],
         decoration: InputDecoration(
           labelText: "Gib die Anzahl der erreichbaren Lamacoins an",
         ),
         validator: (text) {
-          if (widget.validator == null) {
-            if (text == null || text.isEmpty) {
-              return "Angabe fehlt";
-            }
-            return null;
-          } else {
-            widget.validator;
+          if (text == null || text.isEmpty) {
+            return "Lamacoins fehlen";
+          }
+          if (int.parse(text) <= 0) {
+            return "Lamacoins müssen größer als 0 sein";
           }
           return null;
         },
