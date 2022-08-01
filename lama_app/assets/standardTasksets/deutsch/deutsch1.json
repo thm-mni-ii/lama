@@ -1,0 +1,56 @@
+{
+    "taskset_name": "Standardaufgaben Klasse 1",
+    "taskset_subject": "Deutsch",
+    "taskset_grade": 1,
+    "taskset_randomize_order": true,
+    "tasks": [
+        {
+            "id": "[#5a805]",
+            "task_type": "TaskType.fourCards",
+            "task_reward": 5,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "lesen",
+            "right_answer": "le-sen",
+            "wrong_answers": [
+                "lese-n",
+                "les-en",
+                "lesen"
+            ]
+        },
+        {
+            "id": "[#e0a84]",
+            "task_type": "TaskType.clozeTest",
+            "task_reward": 2,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "__ Dino ist groß",
+            "right_answer": "Der",
+            "wrong_answers": [
+                "Die",
+                "Das"
+            ]
+        },
+        {
+            "id": "[#af48e]",
+            "task_type": "TaskType.matchCategory",
+            "task_reward": 5,
+            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+            "left_to_solve": 3,
+            "nameCatOne": "Farben",
+            "nameCatTwo": "Gegenstände",
+            "categoryOne": [
+                "Rot",
+                "Blau",
+                "Grün",
+                "Gelb"
+            ],
+            "categoryTwo": [
+                "Auto",
+                "Baum",
+                "Schule",
+                "Mensch"
+            ]
+        }
+    ]
+}

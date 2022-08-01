@@ -1,0 +1,81 @@
+{
+    "taskset_name": "Standardaufgaben Klasse 3",
+    "taskset_subject": "Deutsch",
+    "taskset_grade": 3,
+    "taskset_randomize_order": true,
+    "tasks": [
+        {
+            "id": "[#5a805]",
+            "task_type": "TaskType.fourCards",
+            "task_reward": 5,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "Was ist kein Verb (Tunwort)?",
+            "right_answer": "grün",
+            "wrong_answers": [
+                "begrünen",
+                "reden",
+                "lesen"
+            ]
+        },
+        {
+            "id": "[#e90ee]",
+            "task_type": "TaskType.matchCategory",
+            "task_reward": 5,
+            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+            "left_to_solve": 3,
+            "nameCatOne": "Verben",
+            "nameCatTwo": "Nomen",
+            "categoryOne": [
+                "laufen",
+                "gehen",
+                "schweben",
+                "fallen",
+                "fegen",
+                "fahren",
+                "fliegen",
+                "lernen",
+                "lesen",
+                "hören"
+            ],
+            "categoryTwo": [
+                "haus",
+                "straße",
+                "baum",
+                "auto",
+                "lampe",
+                "licht",
+                "käfer",
+                "zug",
+                "apfel",
+                "birne"
+            ]
+        },
+        {
+            "id": "[#e0a84]",
+            "task_type": "TaskType.clozeTest",
+            "task_reward": 2,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "Ich hoffe, __ das Wetter bald besser wird",
+            "right_answer": "dass",
+            "wrong_answers": [
+                "dieses",
+                "das"
+            ]
+        },
+        {
+            "id": "[#d77ae]",
+            "task_type": "TaskType.gridSelect",
+            "task_reward": 5,
+            "lama_text": "Markiere X Städte",
+            "left_to_solve": 3,
+            "wordsToFind": [
+                "Gießen",
+                "Wetzlar",
+                "Frankfurt",
+                "Berlin"
+            ]
+        }
+    ]
+}
