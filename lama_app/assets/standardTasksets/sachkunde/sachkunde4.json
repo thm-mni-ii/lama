@@ -1,0 +1,69 @@
+{
+    "taskset_name": "Standardaufgaben Klasse 4",
+    "taskset_subject": "Sachkunde",
+    "taskset_grade": 4,
+    "taskset_randomize_order": true,
+    "tasks": [
+        {
+            "id": "[#5a805]",
+            "task_type": "TaskType.fourCards",
+            "task_reward": 5,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "Welcher Planet ist der Größte ?",
+            "right_answer": "Jupiter",
+            "wrong_answers": [
+                "Venus",
+                "Erde",
+                "Saturn"
+            ]
+        },
+        {
+            "id": "[#e0a84]",
+            "task_type": "TaskType.clozeTest",
+            "task_reward": 2,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "Die Erde braucht __, um sich um die Sonne zu drehen",
+            "right_answer": "365 Tage",
+            "wrong_answers": [
+                "30 Tage",
+                "24 Stunden"
+            ]
+        },
+        {
+            "id": "[#af48e]",
+            "task_type": "TaskType.matchCategory",
+            "task_reward": 5,
+            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+            "left_to_solve": 3,
+            "nameCatOne": "Baumfrucht",
+            "nameCatTwo": "Feldfrucht",
+            "categoryOne": [
+                "Nuss",
+                "Apfel",
+                "Dattel",
+                "Eichel"
+            ],
+            "categoryTwo": [
+                "Linse",
+                "Gerste",
+                "Erbse",
+                " Wicke"
+            ]
+        },
+        {
+            "id": "[#d77ae]",
+            "task_type": "TaskType.gridSelect",
+            "task_reward": 5,
+            "lama_text": "Markiere X Bestandteile des menschlichen Auges",
+            "left_to_solve": 3,
+            "wordsToFind": [
+                "Iris",
+                "Linse",
+                "Sehnerv",
+                "Pupille"
+            ]
+        }
+    ]
+}

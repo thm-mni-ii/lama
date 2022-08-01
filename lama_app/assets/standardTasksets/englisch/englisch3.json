@@ -1,0 +1,69 @@
+{
+    "taskset_name": "Standardaufgaben Klasse 3",
+    "taskset_subject": "Englisch",
+    "taskset_grade": 3,
+    "taskset_randomize_order": true,
+    "tasks": [
+        {
+            "id": "[#5a805]",
+            "task_type": "TaskType.fourCards",
+            "task_reward": 5,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "What does 'car' mean in german?",
+            "right_answer": "Auto",
+            "wrong_answers": [
+                "Bagger",
+                "See",
+                "Clown"
+            ]
+        },
+        {
+            "id": "[#e0a84]",
+            "task_type": "TaskType.clozeTest",
+            "task_reward": 2,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "I am __ to school",
+            "right_answer": "going",
+            "wrong_answers": [
+                "go",
+                "horse"
+            ]
+        },
+        {
+            "id": "[#e0a84]",
+            "task_type": "TaskType.clozeTest",
+            "task_reward": 2,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "I __ learning english",
+            "right_answer": "am",
+            "wrong_answers": [
+                "be",
+                "horse"
+            ]
+        },
+        {
+            "id": "[#af48e]",
+            "task_type": "TaskType.matchCategory",
+            "task_reward": 5,
+            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+            "left_to_solve": 3,
+            "nameCatOne": "Simple Past",
+            "nameCatTwo": "Past Participle",
+            "categoryOne": [
+                "was",
+                "came",
+                "did",
+                "knew"
+            ],
+            "categoryTwo": [
+                "been",
+                "come",
+                "done",
+                "known"
+            ]
+        }
+    ]
+}
