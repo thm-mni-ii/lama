@@ -306,6 +306,7 @@ class Task4Cards extends Task {
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
         'question': question,
+        'right_answer': rightAnswer,
         'wrong_answers': wrongAnswers,
       };
 
@@ -679,9 +680,9 @@ class TaskZerlegung extends Task {
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
-        'zeros': zeros,
-        'bool_thousands': boolThousands,
         'reverse': reverse,
+        'zeros': zeros,
+        'bool_Thousands': boolThousands,
       };
 
   // do toString Method
@@ -707,7 +708,7 @@ class TaskNumberLine extends Task {
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
         'range': range,
-        'randomrange': randomrange,
+        'randomRange': randomrange,
         'steps': steps,
         'ontap': ontap,
       };

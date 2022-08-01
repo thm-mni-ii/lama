@@ -89,11 +89,11 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                                     validator: (text) {
                                       if (text == null || text.isEmpty) {
                                         return "Beitrag fehlt!";
-                                      } else if (double.parse(
-                                              _bisController.text) <=
-                                          double.parse(text)) {
-                                        return "Zu groß";
-                                      }
+                                        } else if (double.parse(
+                                                _bisController.text) <=
+                                            double.parse(text)) {
+                                          return "Zu groß";
+                                        }
                                       return null;
                                     },
                                     onSaved: (text) =>
@@ -122,10 +122,10 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                                     validator: (text) {
                                       if (text == null || text.isEmpty) {
                                         return "Beitrag fehlt!";
-                                      } else if (double.parse(text) <=
-                                          double.parse(_vonController.text)) {
-                                        return "Zu klein";
-                                      }
+                                        } else if (double.parse(text) <=
+                                            double.parse(_vonController.text)) {
+                                          return "Zu klein";
+                                        }
                                       return null;
                                     },
                                     onSaved: (text) {
@@ -169,9 +169,7 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                         labelText: "Gib die Schritte ein",
                         missingInput: "Angabe fehlt",
                         validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return "Beitrag fehlt!";
-                          } else if (int.parse(text) <= 0) {
+                          if (int.parse(text) <= 0) {
                             return "Zu klein";
                           } else if ((int.parse(_bisController.text) -
                                       int.parse(_vonController.text)) %

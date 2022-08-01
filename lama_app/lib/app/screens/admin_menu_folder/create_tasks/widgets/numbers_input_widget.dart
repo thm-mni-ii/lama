@@ -4,7 +4,7 @@ class NumberInputWidget extends StatefulWidget {
   final TextEditingController numberController;
   final String? labelText;
   final String? missingInput;
-  final FormFieldValidator? validator;
+  final Function(String)? validator;
 
   NumberInputWidget(
       {Key? key,
@@ -33,11 +33,10 @@ class NumberInputWidgetState extends State<NumberInputWidget> {
           if (text == null || text.isEmpty) {
             return widget.missingInput;
           }
-          if (widget.validator != null) {
-            widget.validator;
+          if(widget.validator == null) {
+            return null;
           }
-
-          return null;
+          return widget.validator!(text);
         },
         onSaved: (String? text) => widget.numberController.text = text!,
       ),
