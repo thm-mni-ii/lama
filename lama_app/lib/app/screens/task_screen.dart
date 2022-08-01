@@ -6,6 +6,7 @@ import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/clock_different_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/clock_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/connect_task_screen.dart';
@@ -352,6 +353,8 @@ class TaskScreenState extends State<TaskScreen> {
         return ClozeTestTaskScreen(task as TaskClozeTest, constraints);
       case "Clock":
         return ClockTaskScreen(task as ClockTest, constraints);
+      case "ClockDifferent":
+        return ClockDifferentScreen(task as ClockDifferent, constraints);
       case "MarkWords":
         return MarkWordsScreen(task as TaskMarkWords, constraints);
       case "MatchCategory":

@@ -5,12 +5,36 @@
    "taskset_randomize_order": false,
    "tasks": [
       {
-            "task_type": "Clock",
+            "task_type": "ClockDifferent",
             "task_reward": 2,
             "lama_text": "Wie viel Zeitunterschied gibt es?",
             "left_to_solve": 3,
-            "uhr": "differentStunden",
-            "timer": false
+            "uhr": "allStunden",
+            "clockMode": "usMode"
+          },
+      {
+            "task_type": "ClockDifferent",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "uhr": "vollStunde",
+            "clockMode": "gerMode"
+          },
+      {
+            "task_type": "ClockDifferent",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "uhr": "halbeStunde",
+            "clockMode": "usMode"
+          },
+      {
+            "task_type": "ClockDifferent",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "uhr": "viertelStunde",
+            "clockMode": "gerMode"
           },
       {
          "task_type": "NumberLine",

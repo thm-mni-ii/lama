@@ -96,6 +96,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           wrongAnswerCallback(t);
           emit(TaskAnswerResultState(false));
         }
+      } else if (t is ClockDifferent) {
+        if (event.providedAnswerBool == true) {
+          rightAnswerCallback(t);
+          emit(TaskAnswerResultState(true));
+        } else {
+          wrongAnswerCallback(t);
+          emit(TaskAnswerResultState(false));
+        }
       } else if (t is TaskClozeTest) {
         if (event.providedAnswer == t.rightAnswer) {
           rightAnswerCallback(t);
