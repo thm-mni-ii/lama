@@ -25,7 +25,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":"Wusstest du, .. Lamas spucken können?",
-           "lama_text":"Tippe eine Antwort doppelt an, um sie vor zulesen!",
+           "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
            "left_to_solve": 3,
            "right_answer":"dass",
            "wrong_answers":["Das", "das"]
