@@ -52,6 +52,9 @@ class Task {
             json['timer'],
             json['right_answer'],
             json['wrong_answers']);
+      case "ClockDifferent":
+        return ClockDifferent(taskType, json['task_reward'], json['lama_text'],
+            json['left_to_solve'], json['uhr'], json['clockMode']);
       case "MoneyTask":
         return TaskMoney(taskType, json['task_reward'], json['lama_text'],
             json['left_to_solve'], json['difficulty'], json['optimum']);
@@ -316,6 +319,23 @@ class TaskGridSelect extends Task {
     for (int i = 0; i < wordsToFind.length; i++) {
       s += wordsToFind[i];
     }
+    return s;
+  }
+}
+
+//Author Handito Bismo
+//Task for Clock Different
+class ClockDifferent extends Task {
+  String? uhr;
+  String? clockMode;
+
+  ClockDifferent(String? taskType, int? reward, String? lamaText,
+      int? leftToSolve, this.uhr, this.clockMode)
+      : super(taskType, reward, lamaText, leftToSolve);
+
+  @override
+  String toString() {
+    String s = super.toString() + uhr!;
     return s;
   }
 }
