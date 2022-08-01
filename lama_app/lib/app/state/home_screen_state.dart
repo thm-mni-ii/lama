@@ -1,5 +1,6 @@
 import 'package:flutter_tts/flutter_tts.dart';
 
+/// Authors: J.Wißbach and A.Grishin
 
 /*
 In dieser Klasse wird gespeichert, ob TTS angeschaltet ist oder nicht.

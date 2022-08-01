@@ -133,6 +133,8 @@ class MarkWordsScreen extends StatelessWidget {
 
   /// Returns sentence as [ListView] where each word is stored as [InkWell].
   Widget _sentence(List<String> sentence) {
+    String qlang;
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
     return BlocBuilder<MarkWordsBloc, MarkWordState>(
         builder: (context, MarkWordState state) {
       return ListView.builder(
@@ -150,7 +152,7 @@ class MarkWordsScreen extends StatelessWidget {
                 BlocProvider.of<MarkWordsBloc>(context)
                     .add(AddAnswerToListEvent(sentence[index])),
               BlocProvider.of<TTSBloc>(context).
-              add(ClickOnAnswerEvent(sentence[index], "de"))
+              add(ClickOnAnswerEvent(sentence[index], qlang))
               },
               child: Container(
                 width: constraints.maxWidth,

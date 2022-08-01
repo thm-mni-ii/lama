@@ -253,6 +253,8 @@ class ConnectState extends State<ConnectTaskScreen> {
   /// int [index]           = Used to locate which item is used from the List
   /// List<Item> [itemList] = Is the list filled with either left or right Items
   Widget _buildPair(index, List<Item> itemList) {
+    String qlang;
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = "Englisch";
     return BlocBuilder<TTSBloc, TTSState>(
       builder: (context, state) {
       return InkWell(
@@ -275,7 +277,7 @@ class ConnectState extends State<ConnectTaskScreen> {
       },
         onDoubleTap: () {
           BlocProvider.of<TTSBloc>(context).
-          add(ClickOnAnswerEvent(itemList[index].content,"de"));
+          add(ClickOnAnswerEvent(itemList[index].content,qlang));
         },
     );
   },

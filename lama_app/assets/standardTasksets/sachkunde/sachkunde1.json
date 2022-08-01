@@ -10,7 +10,7 @@
             "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
             "left_to_solve": 3,
             "right_answer":"Säugetieren",
-             "wrong_answers":["Reptilien", "Tiere", "Vögeln"],
+             "wrong_answers":["Reptilien", "Amphibien", "Vögeln"],
              "question_language":"Deutsch",
              "answer_language":"Deutsch"
              },
@@ -18,7 +18,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":".. sind Rudeltiere",
-           "lama_text":"Tippe eine Antwort achtmal an, um sie vorzulesen!",
+           "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
            "left_to_solve": 3,
            "right_answer":"Wölfe",
            "wrong_answers":["Katzen", "Bären"]

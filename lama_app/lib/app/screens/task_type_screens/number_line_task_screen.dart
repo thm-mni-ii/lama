@@ -102,7 +102,7 @@ class NumberLineState extends State<NumberLineTaskScreen> {
             if (state is EmptyTTSState) {
               context.read<TTSBloc>().add(QuestionOnInitEvent(
                   "Gib den im Zahlenstrahl rot markierten Wert an!"
-              ,"de"));
+              ,qlang));
             }
         return lamaHead(context, task, constraints, task.ontap!);
           },
