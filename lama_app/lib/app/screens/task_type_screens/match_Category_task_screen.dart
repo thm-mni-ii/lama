@@ -317,7 +317,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                     onDoubleTap: () {
                       String lang;
                       task.answerLanguage == null ? lang = "Deutsch" :  lang = task.answerLanguage!;
-
                       BlocProvider.of<TTSBloc>(context).
                       add(ClickOnAnswerEvent(items[i].item!, lang));
                     },

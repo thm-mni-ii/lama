@@ -602,185 +602,211 @@ class ClockTaskState extends State<ClockTaskScreen> {
         ),
       );
     } else if (task.uhr == "differentStunden") {
-      return Column(
-        children: [
-          // Lama Speechbubble
-          Container(
-            height: (constraints.maxHeight / 100) * 15,
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            // create space between each childs
-            child: Stack(
+      return BlocProvider(
+        create: (context) => TTSBloc(),
+        child: BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, TTSState state) {
+            if (state is EmptyTTSState) {
+              context.read<TTSBloc>().add(
+                  QuestionOnInitEvent(task.lamaText!, qlang));
+            }
+            return Column(
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 75),
-                    height: 50,
-                    width: MediaQuery.of(context).size.width,
-                    child: Bubble(
-                      nip: BubbleNip.leftCenter,
-                      child: Center(
-                        child: Text(
-                          "Wie viel Zeitunterschied gibt es?",
-                          style: LamaTextTheme.getStyle(
-                              color: LamaColors.black, fontSize: 15),
+              // Lama Speechbubble
+              Container(
+                height: (constraints.maxHeight / 100) * 15,
+                padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                // create space between each childs
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 75),
+                        height: 50,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
+                        child: Bubble(
+                          nip: BubbleNip.leftCenter,
+                          child: InkWell(
+                            onTap: () {
+                              BlocProvider.of<TTSBloc>(context)
+                                  .add(ClickOnQuestionEvent.initVoice(
+                                  task.lamaText!, qlang));
+                            },
+                          child: Center(
+                            child: Text(
+                              task.lamaText!,
+                              style: LamaTextTheme.getStyle(
+                                  color: LamaColors.black, fontSize: 15),
+                            ),
+                          ),
+                        ),
                         ),
                       ),
                     ),
-                  ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SvgPicture.asset(
+                        "assets/images/svg/lama_head.svg",
+                        semanticsLabel: "Lama Anna",
+                        width: 75,
+                      ),
+                    ),
+                  ],
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SvgPicture.asset(
-                    "assets/images/svg/lama_head.svg",
-                    semanticsLabel: "Lama Anna",
-                    width: 75,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 55, right: 50),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(setAM(),
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                Icon(Icons.arrow_right),
-                Text(setAM2(),
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
-              ],
-            ),
-          ),
-
-          //Items
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 50),
-                child: Container(
-                    height: (constraints.maxHeight / 100) * 20,
-                    child: Container(
-                      width: 160,
-                      height: 160,
-                      child: CustomPaint(
-                          painter: ClockPainter(task, constraints, randStunde,
-                              randMinute, vierMinute, allMinuten)),
-                    )),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 50),
-                child: Container(
-                    height: (constraints.maxHeight / 100) * 20,
-                    child: Container(
-                      width: 160,
-                      height: 160,
-                      child: CustomPaint(
-                          painter: ClockPainter2(task, constraints, randStunde2,
-                              randMinute2, vierMinute2, allMinuten2)),
-                    )),
-              )
-            ],
-          ),
-          Container(
-              margin: EdgeInsets.only(top: 70),
-              alignment: Alignment.topCenter,
-              padding: EdgeInsets.only(right: 40, left: 40),
-              child: Row(
+              Container(
+                padding: EdgeInsets.only(left: 55, right: 50),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(setAM(),
+                        style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Icon(Icons.arrow_right),
+                    Text(setAM2(),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold))
+                  ],
+                ),
+              ),
+
+              //Items
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "HH",
-                    style: TextStyle(fontSize: 18),
+                  Padding(
+                    padding: EdgeInsets.only(top: 50),
+                    child: Container(
+                        height: (constraints.maxHeight / 100) * 20,
+                        child: Container(
+                          width: 160,
+                          height: 160,
+                          child: CustomPaint(
+                              painter: ClockPainter(task, constraints,
+                                  randStunde,
+                                  randMinute, vierMinute, allMinuten)),
+                        )),
                   ),
-                  Text(
-                    "MM",
-                    style: TextStyle(fontSize: 18),
+                  Padding(
+                    padding: EdgeInsets.only(top: 50),
+                    child: Container(
+                        height: (constraints.maxHeight / 100) * 20,
+                        child: Container(
+                          width: 160,
+                          height: 160,
+                          child: CustomPaint(
+                              painter: ClockPainter2(task, constraints,
+                                  randStunde2,
+                                  randMinute2, vierMinute2, allMinuten2)),
+                        )),
                   )
                 ],
-              )),
-          Container(
-            margin: EdgeInsets.only(top: 50, bottom: 50),
-            alignment: Alignment.topCenter,
-            padding: EdgeInsets.only(left: 80, right: 80),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                    child: NumberPicker(
-                  itemCount: 1,
-                  value: currentValue,
-                  maxValue: 23,
-                  minValue: 0,
-                  onChanged: (value) => setState(() => currentValue = value),
-                )),
-                Text(":",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                Container(
-                  child: NumberPicker(
-                    itemCount: 1,
-                    value: currentValue2,
-                    maxValue: 59,
-                    minValue: 0,
-                    onChanged: (value) => setState(() => currentValue2 = value),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            height: (constraints.maxHeight / 100) * 9,
-            child: Center(
-              child: InkWell(
-                  child: Container(
-                    height: (constraints.maxHeight / 100) * 15,
-                    width: (constraints.maxWidth / 100) * 70,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(25),
+              ),
+              Container(
+                  margin: EdgeInsets.only(top: 70),
+                  alignment: Alignment.topCenter,
+                  padding: EdgeInsets.only(right: 40, left: 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "HH",
+                        style: TextStyle(fontSize: 18),
                       ),
-                      color: LamaColors.greenAccent,
-                      boxShadow: [
-                        BoxShadow(
-                            offset: Offset(0, 2),
-                            color: LamaColors.black.withOpacity(0.5))
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Fertig!",
-                        style: LamaTextTheme.getStyle(
-                          fontSize: 30,
+                      Text(
+                        "MM",
+                        style: TextStyle(fontSize: 18),
+                      )
+                    ],
+                  )),
+              Container(
+                margin: EdgeInsets.only(top: 50, bottom: 50),
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.only(left: 80, right: 80),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        child: NumberPicker(
+                          itemCount: 1,
+                          value: currentValue,
+                          maxValue: 23,
+                          minValue: 0,
+                          onChanged: (value) =>
+                              setState(() => currentValue = value),
+                        )),
+                    Text(":",
+                        style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    Container(
+                      child: NumberPicker(
+                        itemCount: 1,
+                        value: currentValue2,
+                        maxValue: 59,
+                        minValue: 0,
+                        onChanged: (value) =>
+                            setState(() => currentValue2 = value),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                height: (constraints.maxHeight / 100) * 9,
+                child: Center(
+                  child: InkWell(
+                      child: Container(
+                        height: (constraints.maxHeight / 100) * 15,
+                        width: (constraints.maxWidth / 100) * 70,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(25),
+                          ),
+                          color: LamaColors.greenAccent,
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(0, 2),
+                                color: LamaColors.black.withOpacity(0.5))
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Fertig!",
+                            style: LamaTextTheme.getStyle(
+                              fontSize: 30,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  onTap: () {
-                    if (this.currentValue == this.diffHour &&
-                        this.currentValue2 == this.diffMinute) {
-                      BlocProvider.of<TaskBloc>(context)
-                          .add(AnswerTaskEvent.initClockTask(correct));
-                    } else {
-                      BlocProvider.of<TaskBloc>(context)
-                          .add(AnswerTaskEvent.initClockTask(incorrect));
-                    }
-                  }),
-            ),
+                      onTap: () {
+                        if (this.currentValue == this.diffHour &&
+                            this.currentValue2 == this.diffMinute) {
+                          BlocProvider.of<TaskBloc>(context)
+                              .add(AnswerTaskEvent.initClockTask(correct));
+                        } else {
+                          BlocProvider.of<TaskBloc>(context)
+                              .add(AnswerTaskEvent.initClockTask(incorrect));
+                        }
+                      }),
+                ),
+              )
+            ]
+            );
+          }
           ),
-        ],
-      );
+        );
     } else {
-  return BlocProvider(
-  create: (context) => TTSBloc(),
-  child: Column(children: [
+      return BlocProvider(
+        create: (context) => TTSBloc(),
+          child: Column(children: [
         // Lama Speechbubble
           Container(
           height: (constraints.maxHeight / 100) * 15,
