@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/check_screen_bloc.dart';
@@ -101,61 +99,64 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ],
       child: BlocBuilder<CheckScreenBloc, CheckScreenState?>(
         builder: (context, state) {
-          return Scaffold(
-            body: Column(
-              children: [
-                Flexible(
-                  flex: 15,
-                  child: PageView(
-                    controller: controller,
-                    children: pages,
+          return ScrollConfiguration(
+            behavior: MyCustomScrollBehavior(),
+            child: Scaffold(
+              body: Column(
+                children: [
+                  Flexible(
+                    flex: 15,
+                    child: PageView(
+                      controller: controller,
+                      children: pages,
+                    ),
                   ),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        flex: 2,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            controller.jumpToPage(1);
-                          },
-                          child: Icon(Icons.home),
-                          style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(0)),
+                  Flexible(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          flex: 2,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              controller.jumpToPage(1);
+                            },
+                            child: Icon(Icons.home),
+                            style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(0)),
+                          ),
                         ),
-                      ),
-                      Flexible(
-                        flex: 14,
-                        child: SmoothPageIndicator(
-                          controller: controller,
-                          count: pages.length,
+                        Flexible(
+                          flex: 14,
+                          child: SmoothPageIndicator(
+                            controller: controller,
+                            count: pages.length,
+                          ),
                         ),
-                      ),
-                      Flexible(
-                        flex: 2,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (controller.page == pages.length - 1) {
-                              BlocProvider.of<CheckScreenBloc>(context)
-                                ..add(CreateAdminEvent(context));
-                            } else {
-                              controller.nextPage(
-                                  duration: Duration(milliseconds: 200),
-                                  curve: Curves.easeIn);
-                            }
-                          },
-                          child: Icon(Icons.navigate_next),
-                          style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(0)),
+                        Flexible(
+                          flex: 2,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (controller.page == pages.length - 1) {
+                                BlocProvider.of<CheckScreenBloc>(context)
+                                  ..add(CreateAdminEvent(context));
+                              } else {
+                                controller.nextPage(
+                                    duration: Duration(milliseconds: 200),
+                                    curve: Curves.easeIn);
+                              }
+                            },
+                            child: Icon(Icons.navigate_next),
+                            style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(0)),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -361,4 +362,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ],
     );
   }
+}
+
+///used to make welcome screen useable with a mouse
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        // etc.
+      };
 }
