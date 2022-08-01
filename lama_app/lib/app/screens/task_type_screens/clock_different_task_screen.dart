@@ -297,6 +297,7 @@ class ClockDifferentState extends State<ClockDifferentScreen> {
           ],
         ),
         Container(
+            height: (constraints.maxHeight / 100) * 10,
             margin: EdgeInsets.only(top: 70),
             alignment: Alignment.topCenter,
             padding: EdgeInsets.only(right: 40, left: 40),
@@ -315,37 +316,34 @@ class ClockDifferentState extends State<ClockDifferentScreen> {
               ],
             )),
         Container(
-          margin: EdgeInsets.only(top: 50, bottom: 50),
+          height: (constraints.maxHeight / 100) * 10,
           alignment: Alignment.topCenter,
-          padding: EdgeInsets.only(left: 80, right: 80),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                  child: NumberPicker(
+              NumberPicker(
                 itemCount: 1,
                 value: currentValue,
                 maxValue: 23,
                 minValue: 0,
                 onChanged: (value) => setState(() => currentValue = value),
-              )),
+              ),
               Text(":",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              Container(
-                child: NumberPicker(
-                  itemCount: 1,
-                  value: currentValue2,
-                  maxValue: 59,
-                  minValue: 0,
-                  onChanged: (value) => setState(() => currentValue2 = value),
-                ),
-              )
+              NumberPicker(
+                itemCount: 1,
+                value: currentValue2,
+                maxValue: 59,
+                minValue: 0,
+                onChanged: (value) => setState(() => currentValue2 = value),
+              ),
             ],
           ),
         ),
         Container(
-          height: (constraints.maxHeight / 100) * 9,
+          height: (constraints.maxHeight / 100) * 10,
           child: Center(
             child: InkWell(
                 child: Container(
