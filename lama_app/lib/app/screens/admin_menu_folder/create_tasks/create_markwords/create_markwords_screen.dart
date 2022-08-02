@@ -108,7 +108,6 @@ class CreateMarkWordsScreenState extends State<CreateMarkWordsScreen> {
                 _taskController.text,
                 3,
                 _sentenceController.text,
-                //TODO: Klappt das wirklich?
                 _controllers.map((e) => e.text).toList(),
               );
               if (newTask) {
