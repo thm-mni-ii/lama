@@ -4,6 +4,7 @@ import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/custom_bottomNavigationBar_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/numbers_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -104,27 +105,15 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Expanded(
-                                  child: Container(
-                                    margin: EdgeInsets.only(right: 30),
-                                    child: TextFormField(
-                                      controller: _vonController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Von',
-                                      ),
-                                      validator: (text) {
-                                        if (text == null || text.isEmpty) {
-                                          return "Beitrag fehlt!";
-                                        } else if (double.parse(
-                                                _bisController.text) <=
-                                            double.parse(text)) {
+                                  child: NumberInputWidget(
+                                    numberController: _vonController,
+                                    missingInput: "Zahl angeben",
+                                    labelText: "von",
+                                    validator: (text) {
+                                      if (int.parse(_bisController.text) <= int.parse(text)) {
                                           return "Zu groß";
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (text) =>
-                                          _vonController.text = text!,
-                                    ),
+                                      }
+                                    },
                                   ),
                                 ),
                                 Expanded(
@@ -137,28 +126,16 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 30),
-                                    child: TextFormField(
-                                      controller: _bisController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Bis',
-                                      ),
-                                      validator: (text) {
-                                        if (text == null || text.isEmpty) {
-                                          return "Beitrag fehlt!";
-                                        } else if (double.parse(text) <=
-                                            double.parse(_vonController.text)) {
+                                  child: NumberInputWidget(
+                                    numberController: _bisController, 
+                                    missingInput: "Zahl angeben", 
+                                    labelText: "bis",
+                                    validator: (text) {
+                                      if (int.parse(text) <= int.parse(_vonController.text)) {
                                           return "Zu klein";
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (text) {
-                                        _bisController.text = text!;
-                                      },
-                                    ),
-                                  ),
+                                      }
+                                    },
+                                  )
                                 ),
                               ],
                             ),
@@ -181,7 +158,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                     allowedOperations.removeWhere(
                                         (element) => element == plus);
                                   }
-                                  print(allowedOperations);
                                 },
                               ),
                               CheckboxListTile(
@@ -197,7 +173,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                     allowedOperations.removeWhere(
                                         (element) => element == minus);
                                   }
-                                  print(allowedOperations);
                                 },
                               ),
                               CheckboxListTile(
@@ -213,7 +188,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                     allowedOperations.removeWhere(
                                         (element) => element == mal);
                                   }
-                                  print(allowedOperations);
                                 },
                               ),
                               CheckboxListTile(
@@ -229,7 +203,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                     allowedOperations.removeWhere(
                                         (element) => element == division);
                                   }
-                                  print(allowedOperations);
                                 },
                               ),
                             ],
@@ -270,6 +243,18 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                 int.parse(_vonController.text),
                 int.parse(_bisController.text)
               ];
+              if(allowedOperations.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: LamaColors.redAccent,
+                        content: const Text(
+                          'Keine Rechenoperationen ausgewählt',
+                          textAlign: TextAlign.center,
+                        ),
+                        duration: Duration(seconds: 1),
+                      ),
+                      );
+              } else {
               TaskEquation equationTask = TaskEquation(
                   widget.task?.id ??
                       KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
@@ -295,6 +280,7 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                     .add(EditTaskInTaskList(widget.index, equationTask));
               }
               Navigator.pop(context);
+            }
             }
           },
         ));

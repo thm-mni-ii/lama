@@ -77,30 +77,18 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(right: 30),
-                                  child: TextFormField(
-                                    controller: _vonController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Von',
-                                    ),
+                                Expanded(
+                                  child: NumberInputWidget(
+                                    numberController: _vonController,
+                                    missingInput: "Zahl angeben",
+                                    labelText: "von",
                                     validator: (text) {
-                                      if (text == null || text.isEmpty) {
-                                        return "Beitrag fehlt!";
-                                        } else if (double.parse(
-                                                _bisController.text) <=
-                                            double.parse(text)) {
+                                      if (int.parse(_bisController.text) <= int.parse(text)) {
                                           return "Zu groß";
-                                        }
-                                      return null;
+                                      }
                                     },
-                                    onSaved: (text) =>
-                                        _vonController.text = text!,
                                   ),
                                 ),
-                              ),
                               Expanded(
                                 child: Container(
                                   margin: EdgeInsets.only(left: 30),
@@ -110,30 +98,18 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 30),
-                                  child: TextFormField(
-                                    controller: _bisController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Bis',
-                                    ),
+                                Expanded(
+                                  child: NumberInputWidget(
+                                    numberController: _bisController, 
+                                    missingInput: "Zahl angeben", 
+                                    labelText: "bis",
                                     validator: (text) {
-                                      if (text == null || text.isEmpty) {
-                                        return "Beitrag fehlt!";
-                                        } else if (double.parse(text) <=
-                                            double.parse(_vonController.text)) {
+                                      if (int.parse(text) <= int.parse(_vonController.text)) {
                                           return "Zu klein";
-                                        }
-                                      return null;
+                                      }
                                     },
-                                    onSaved: (text) {
-                                      _bisController.text = text!;
-                                    },
-                                  ),
+                                  )
                                 ),
-                              ),
                             ],
                           ),
                         ),
