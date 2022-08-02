@@ -302,35 +302,33 @@ class TaskScreenState extends State<TaskScreen> {
   Widget getScreenForTaskWithConstraints(
       Task task, BoxConstraints constraints) {
     switch (task.type) {
-      case "4Cards":
+      case TaskType.fourCards:
         return FourCardTaskScreen(task as Task4Cards, constraints);
-      case "Zerlegung":
-        return ZerlegungTaskScreen(
-            task: task as TaskZerlegung?, constraints: constraints);
-      case "NumberLine":
+      case TaskType.zerlegung:
+        return ZerlegungTaskScreen(task: task as TaskZerlegung, constraints: constraints);
+      case TaskType.numberLine:
         return NumberLineTaskScreen(task as TaskNumberLine, constraints);
-      case "ClozeTest":
+      case TaskType.clozeTest:
         return ClozeTestTaskScreen(task as TaskClozeTest, constraints);
-      case "Clock":
+      case TaskType.clock:
         return ClockTaskScreen(task as ClockTest, constraints);
-      case "ClockDifferent":
+      case TaskType.clock:
         return ClockDifferentScreen(task as ClockDifferent, constraints);
-      case "MarkWords":
+      case TaskType.markWords:
         return MarkWordsScreen(task as TaskMarkWords, constraints);
-      case "MatchCategory":
+      case TaskType.matchCategory:
         return MatchCategoryTaskScreen(task as TaskMatchCategory, constraints);
-      case "GridSelect":
-        return GridSelectTaskScreen(
-            task as TaskGridSelect, constraints, GridSelectTaskBloc());
-      case "MoneyTask":
+      case TaskType.gridSelect:
+        return GridSelectTaskScreen(task as TaskGridSelect, constraints, GridSelectTaskBloc());
+      case TaskType.moneyTask:
         return MoneyTaskScreen(task as TaskMoney, constraints);
-      case "VocableTest":
+      case TaskType.vocableTest:
         return VocableTestTaskScreen(task as TaskVocableTest, constraints);
-      case "Connect":
+      case TaskType.connect:
         return ConnectTaskScreen(task as TaskConnect, constraints);
-      case "Equation":
+      case TaskType.equation:
         return EquationTaskScreen(task as TaskEquation, constraints);
-      case "Buchstabieren":
+      case TaskType.buchstabieren:
         // precacheAllImagesForTask(task, context);
         randomNummer = erstelleEineRandomNummer(task);
         return BuchstabierenTaskScreen(
@@ -352,7 +350,7 @@ class TaskScreenState extends State<TaskScreen> {
     for (int i = 0; i < results.length; i++) {
       if (results[i]) {
         rightAnswers++;
-        if (tasks[i].leftToSolve! > -1) coinsEarned += tasks[i].reward!;
+        if (tasks[i].leftToSolve! > -1) coinsEarned += tasks[i].reward;
       }
     }
     return Column(
