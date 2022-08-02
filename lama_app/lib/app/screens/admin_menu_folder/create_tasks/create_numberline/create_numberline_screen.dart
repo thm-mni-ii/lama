@@ -80,7 +80,6 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                                 Expanded(
                                   child: NumberInputWidget(
                                     numberController: _vonController,
-                                    missingInput: "Zahl angeben",
                                     labelText: "von",
                                     validator: (text) {
                                       if (int.parse(_bisController.text) <= int.parse(text)) {
@@ -100,8 +99,7 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                               ),
                                 Expanded(
                                   child: NumberInputWidget(
-                                    numberController: _bisController, 
-                                    missingInput: "Zahl angeben", 
+                                    numberController: _bisController,  
                                     labelText: "bis",
                                     validator: (text) {
                                       if (int.parse(text) <= int.parse(_vonController.text)) {
@@ -143,7 +141,6 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                       NumberInputWidget(
                         numberController: _stepsController,
                         labelText: "Gib die Schritte ein",
-                        missingInput: "Angabe fehlt",
                         validator: (text) {
                           if (int.parse(text) <= 0) {
                             return "Zu klein";

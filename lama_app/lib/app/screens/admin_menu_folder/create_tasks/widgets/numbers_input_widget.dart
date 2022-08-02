@@ -4,13 +4,11 @@ import 'package:flutter/services.dart';
 class NumberInputWidget extends StatefulWidget {
   final TextEditingController numberController;
   final String? labelText;
-  final String? missingInput;
   final Function(String)? validator;
 
   NumberInputWidget(
       {Key? key,
       required this.numberController,
-      required this.missingInput,
       required this.labelText,
       this.validator})
       : super(key: key);
@@ -37,7 +35,7 @@ class NumberInputWidgetState extends State<NumberInputWidget> {
         ),
         validator: (text) {
           if (text == null || text.isEmpty) {
-            return widget.missingInput;
+            return "Eingabe fehlt";
           }
           if (widget.validator == null) {
             return null;

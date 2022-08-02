@@ -107,7 +107,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                 Expanded(
                                   child: NumberInputWidget(
                                     numberController: _vonController,
-                                    missingInput: "Zahl angeben",
                                     labelText: "von",
                                     validator: (text) {
                                       if (int.parse(_bisController.text) <= int.parse(text)) {
@@ -128,7 +127,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                 Expanded(
                                   child: NumberInputWidget(
                                     numberController: _bisController, 
-                                    missingInput: "Zahl angeben", 
                                     labelText: "bis",
                                     validator: (text) {
                                       if (int.parse(text) <= int.parse(_vonController.text)) {

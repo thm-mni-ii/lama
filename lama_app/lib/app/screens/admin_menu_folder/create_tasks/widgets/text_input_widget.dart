@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 class TextInputWidget extends StatefulWidget {
   final TextEditingController textController;
   final String? labelText;
-  final String? missingInput;
 
   TextInputWidget(
       {Key? key,
       required this.textController,
-      required this.missingInput,
       required this.labelText})
       : super(key: key);
 
@@ -29,7 +27,7 @@ class TextInputWidgetState extends State<TextInputWidget> {
         ),
         validator: (text) {
           if (text == null || text.isEmpty) {
-            return widget.missingInput;
+            return "Eingabe fehlt";
           }
           return null;
         },

@@ -68,28 +68,23 @@ class CreateFourCardsScreenState extends State<CreateFourCardsScreen> {
                         HeadLineWidget("Frage"),
                         TextInputWidget(
                             textController: _questionController,
-                            missingInput: "Frage fehlt",
                             labelText: "Gib die Frage ein"),
                         HeadLineWidget("Richtige Antwort"),
                         TextInputWidget(
                           textController: _answers[0],
-                          missingInput: "Antwort fehlt",
                           labelText: "Gib die richtige Antwort ein",
                         ),
                         HeadLineWidget("Falsche Antworten"),
                         TextInputWidget(
                           textController: _answers[1],
-                          missingInput: "Antwort fehlt",
                           labelText: "Gib eine falsche Antwort ein",
                         ),
                         TextInputWidget(
                           textController: _answers[2],
-                          missingInput: "Antwort fehlt",
                           labelText: "Gib eine falsche Antwort ein",
                         ),
                         TextInputWidget(
                           textController: _answers[3],
-                          missingInput: "Antwort fehlt",
                           labelText: "Gib eine falsche Antwort ein",
                         ),
                         HeadLineWidget("Erreichbare Lamacoins"),

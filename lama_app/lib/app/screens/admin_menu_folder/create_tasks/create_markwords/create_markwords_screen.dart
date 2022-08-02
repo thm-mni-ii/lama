@@ -69,13 +69,11 @@ class CreateMarkWordsScreenState extends State<CreateMarkWordsScreen> {
                         HeadLineWidget("Aufgabenstellung"),
                         TextInputWidget(
                           textController: _taskController,
-                          missingInput: "Angabe fehlt",
                           labelText: "Gib die Aufgabenstellung ein",
                         ),
                         HeadLineWidget("Satz"),
                         TextInputWidget(
                           textController: _sentenceController,
-                          missingInput: "Angabe fehlt",
                           labelText: "Gib den Satz ein",
                         ),
                         HeadLineWidget("Richtige Wörter"),

@@ -67,24 +67,20 @@ class CreateClozeTestScreenState extends State<CreateClozeTestScreen> {
                       HeadLineWidget("Satz"),
                       TextInputWidget(
                         textController: _questionController,
-                        missingInput: "Eingabe fehlt",
                         labelText: "Gib den Satz ein",
                       ),
                       HeadLineWidget("Gesuchte Wort"),
                       TextInputWidget(
                         textController: _rightAnswer,
-                        missingInput: "Eingabe fehlt",
                         labelText: "Gib das gesuchte Wort ein",
                       ),
                       HeadLineWidget("Falsche Antworten"),
                       TextInputWidget(
                         textController: _wrongAnswer1,
-                        missingInput: "Eingabe fehlt",
                         labelText: "Gib ein falsches Wort ein",
                       ),
                       TextInputWidget(
                         textController: _wrongAnswer2,
-                        missingInput: "Eingabe fehlt",
                         labelText: "Gib ein falsches Wort ein",
                       ),
                       HeadLineWidget("Erreichbare Lamacoins"),

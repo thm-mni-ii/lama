@@ -77,7 +77,6 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
                         HeadLineWidget("1. Kategorie"),
                         TextInputWidget(
                           textController: _category1Controller,
-                          missingInput: "Angabe fehlt",
                           labelText: "Gib die 1. Kategorie ein",
                         ),
                         DynamicTextFormFields(
@@ -87,7 +86,6 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
                         HeadLineWidget("2. Kategorie"),
                         TextInputWidget(
                           textController: _category2Controller,
-                          missingInput: "Angabe fehlt",
                           labelText: "Gib die 2. Kategorie ein",
                         ),
                         DynamicTextFormFields(

@@ -80,7 +80,6 @@ class CreateGridSelectScreenState extends State<CreateGridSelectScreen> {
                         HeadLineWidget("Kategorie"),
                         TextInputWidget(
                           textController: _categoryController,
-                          missingInput: "Angabe fehlt",
                           labelText: "Gib die Kategorie ein",
                         ),
                         HeadLineWidget("Begriffe"),
