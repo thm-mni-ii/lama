@@ -198,8 +198,6 @@ class FourCards extends State<FourCardTaskScreenStateful> {
             onTap: () {
               BlocProvider.of<TaskBloc>(context)
                   .add(AnswerTaskEvent(answers[index]));
-                //BlocProvider.of<TTSBloc>(context).
-                //add(SetDefaultEvent());
             },
             onDoubleTap: () {
               BlocProvider.of<TTSBloc>(context)
