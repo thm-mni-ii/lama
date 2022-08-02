@@ -151,7 +151,7 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                                       int.parse(_vonController.text)) %
                                   int.parse(text) !=
                               0) {
-                            return "Step size sollte ein Teiler vom ende - start sein";
+                            return "Step size muss ein Teiler von (Ende - Start) sein";
                           }
                           return null;
                         },

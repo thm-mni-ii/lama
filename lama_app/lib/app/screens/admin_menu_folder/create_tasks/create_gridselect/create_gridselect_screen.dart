@@ -112,7 +112,6 @@ class CreateGridSelectScreenState extends State<CreateGridSelectScreen> {
                 int.parse(_rewardController.text),
                 "Markiere X ${_categoryController.text}",
                 3,
-                //TODO: Klappt das wirklich?
                 _controllers.map((e) => e.text).toList(),
               );
               if (newTask) {

@@ -248,10 +248,10 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                       SnackBar(
                         backgroundColor: LamaColors.redAccent,
                         content: const Text(
-                          'Keine Rechenoperationen ausgewählt',
+                          'Wähle mindestens eine Rechenoperation aus',
                           textAlign: TextAlign.center,
                         ),
-                        duration: Duration(seconds: 1),
+                        duration: Duration(seconds: 2),
                       ),
                       );
               } else {

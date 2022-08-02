@@ -40,6 +40,12 @@ class DynamicTextFormFieldsState extends State<DynamicTextFormFields> {
             final TextEditingController controller = TextEditingController();
             final TextFormField textFormField = TextFormField(
               controller: controller,
+              validator: (text) {
+                if (text == null || text.isEmpty) {
+                  return "Eingabe fehlt";
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 5, horizontal: 5),
