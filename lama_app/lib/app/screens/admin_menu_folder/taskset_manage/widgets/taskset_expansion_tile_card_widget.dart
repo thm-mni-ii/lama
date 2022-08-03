@@ -75,9 +75,13 @@ class TasksetExpansionTileCardWidget extends StatelessWidget {
                   color: Colors.white,
                 ),
                 IconButton(
-                  onPressed: () => taskset.isInPool
-                      ? tasksetManageBloc.add(RemoveTasksetPool(context: context, taskset: taskset))
-                      : tasksetManageBloc.add(AddTasksetPool(context: context,taskset: taskset)),
+                  onPressed: () => taskset.taskurl!.id == null
+                      ? null
+                      : taskset.isInPool
+                          ? tasksetManageBloc.add(RemoveTasksetPool(
+                              context: context, taskset: taskset))
+                          : tasksetManageBloc.add(AddTasksetPool(
+                              context: context, taskset: taskset)),
                   icon: taskset.isInPool
                       ? Icon(Icons.remove_circle_outline_rounded)
                       : Icon(Icons.add),

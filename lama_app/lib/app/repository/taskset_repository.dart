@@ -91,6 +91,7 @@ class TasksetRepository {
         String tmp = json.encode(taskset.toJson());
         var bytes = Utf8Encoder().convert(tmp);
         await file.write(Stream.value(bytes));
+        file.close();
         client.close();
         client.done;
 

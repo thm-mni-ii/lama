@@ -6,7 +6,7 @@
     "taskset_name": "Standardaufgaben Klasse 1",
     "taskset_subject": "Mathe",
     "taskset_grade": 1,
-    "is_in_Pool": false,
+    "is_in_Pool": true,
     "taskset_randomize_order": true,
     "tasks": [
         {
