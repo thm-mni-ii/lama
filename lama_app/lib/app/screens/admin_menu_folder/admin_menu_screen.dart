@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/server_ui/screens/server_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
@@ -432,7 +433,8 @@ abstract class AdminUtils {
   ///    [RepositoryProvider]
   ///    [TasksetRepository]
   static void reloadTasksets(BuildContext context) {
-    RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
+    var tmp = RepositoryProvider.of<TasksetRepository>(context);
+    tmp.reloadTasksetLoader(RepositoryProvider.of<ServerRepository>(context));
   }
 
   ///porvides [AppBar] with default design for Screens used by the Admin

@@ -4,6 +4,7 @@ final String tableServer = "server_settings";
 
 class ServerFields {
   static final String columnId = "serverSettingsId";
+  static final String columnPort = "port";
   static final String columnUrl = "url";
   static final String columnUserName = "userName";
   static final String columnPassword = "password";
@@ -12,24 +13,28 @@ class ServerFields {
 class ServerSettings {
   int id;
   String url;
+  int port;
   String userName;
   String password;
 
   ServerSettings({
     required this.id,
     required this.url,
+    required this.port,
     required this.userName,
     required this.password,
   });
 
   ServerSettings.fromJson(Map<String, dynamic> json)
       : id = json['serverSettingsId'],
+        port = json['port'],
         url = json['url'],
         userName = json['userName'],
         password = json['password'];
 
   Map<String, dynamic> toJson() => {
         'serverSettingsId': id,
+        'port': port,
         'url': url,
         'userName': userName,
         'password': password,
@@ -37,7 +42,14 @@ class ServerSettings {
 
   @override
   String toString() {
-    return id.toString() + " " + url + " " + userName + " " + password;
+    return id.toString() +
+        " " +
+        "$port " +
+        url +
+        " " +
+        userName +
+        " " +
+        password;
   }
 }
 
@@ -62,7 +74,6 @@ class ServerRepository {
   }
 
   Future<void> setOrUpdate(ServerSettings serverS) async {
-    serverSettings =
-        await DatabaseProvider.db.insertServerSettings(serverS);
+    serverSettings = await DatabaseProvider.db.insertServerSettings(serverS);
   }
 }

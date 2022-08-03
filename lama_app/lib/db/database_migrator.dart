@@ -83,6 +83,7 @@ class DBMigrator {
         ");",
     10: "CREATE TABLE IF NOT EXISTS $tableServer("
         "${ServerFields.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "${ServerFields.columnPort} INTEGER,"
         "${ServerFields.columnUrl} TEXT,"
         "${ServerFields.columnUserName} TEXT,"
         "${ServerFields.columnPassword} TEXT"

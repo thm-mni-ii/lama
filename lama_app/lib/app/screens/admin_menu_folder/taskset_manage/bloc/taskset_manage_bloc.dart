@@ -1,9 +1,11 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_state.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
+import 'package:lama_app/app/task-system/subject_grade_relation.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
-import 'package:lama_app/db/database_provider.dart';
 
 ///[Bloc] for the [TasksetManageScreen]
 ///
@@ -24,11 +26,13 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
     on<AddTasksetPool>((event, emit) {
       tasksetPool.add(event.taskset);
       event.taskset.isInPool = true;
+      updateTaskset(event.context, event.taskset);
       emit(ChangeTasksetStatus());
     });
-    on<RemoveTasksetPool>((event, emit) {
+    on<RemoveTasksetPool>((event, emit) async {
       tasksetPool.remove(event.taskset); // remove where
       event.taskset.isInPool = false;
+      updateTaskset(event.context, event.taskset);
       emit(ChangeTasksetStatus());
     });
     on<AddListOfTasksetsPool>((event, emit) {
@@ -47,12 +51,50 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
       });
       emit(ChangeTasksetStatus());
     });
-    on<DeleteTaskset>((event, emit) {// benutzen
-      DatabaseProvider.db.deleteTaskUrl(event.taskUrl.id);
-      allTaskset.removeWhere((element) => element.taskurl == event.taskUrl);
-      // vom Server löschen 
+    on<DeleteTaskset>((event, emit) async {
+      final repo = RepositoryProvider.of<TasksetRepository>(event.context);
+      // benutzen
+      //DatabaseProvider.db.deleteTaskUrl(event.taskUrl.id);
+      //print(allTaskset);
+      emit(WaitingTasksetStatus());
+      await repo.deleteTasksetFromServer(event.context, event.taskset);
+      repo
+          .tasksetLoader
+          .loadedTasksets[
+              SubjectGradeRelation(event.taskset.subject, event.taskset.grade)]!
+          .remove(event.taskset);
+
+      allTaskset.remove(event.taskset);
+      if (event.taskset.isInPool) {
+        tasksetPool.remove(event.taskset);
+      }
+      //print(allTaskset);
+      // vom Server löschen
       //ServerRepository().deleteFile();
       emit(ChangeTasksetStatus());
     });
+    on<UploadTaskset>((event, emit) async {
+      final repo = RepositoryProvider.of<TasksetRepository>(event.context);
+      await repo.fileUpload(event.context, event.taskset).toString();
+      if (repo.tasksetLoader.loadedTasksets[SubjectGradeRelation(
+              event.taskset.subject, event.taskset.grade)] ==
+          null) {
+        repo.tasksetLoader.loadedTasksets[SubjectGradeRelation(
+            event.taskset.subject, event.taskset.grade)] = [event.taskset];
+      }
+      repo
+          .tasksetLoader
+          .loadedTasksets[
+              SubjectGradeRelation(event.taskset.subject, event.taskset.grade)]!
+          .add(event.taskset);
+      allTaskset.add(event.taskset);
+    });
+  }
+
+  void updateTaskset(BuildContext context, Taskset taskset) async {
+    final repo = RepositoryProvider.of<TasksetRepository>(context);
+
+    await repo.deleteTasksetFromServer(context, taskset);
+    await repo.fileUpload(context, taskset);
   }
 }

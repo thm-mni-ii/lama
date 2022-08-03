@@ -119,6 +119,7 @@ class DatabaseProvider {
 
     var serverSettings = await db?.query(tableServer, columns: [
       ServerFields.columnId,
+      ServerFields.columnPort,
       ServerFields.columnUrl,
       ServerFields.columnUserName,
       ServerFields.columnPassword,

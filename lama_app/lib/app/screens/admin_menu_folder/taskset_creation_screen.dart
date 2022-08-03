@@ -168,10 +168,12 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                                   BlocProvider.of<CreateTasksetBloc>(context),
                             ),
                             BlocProvider(
-                              create: (context) => TasksetCreateTasklistBloc(blocTaskset == null ? [] : blocTaskset.tasks!),
+                              create: (context) => TasksetCreateTasklistBloc(
+                                blocTaskset == null ? [] : blocTaskset.tasks!,
+                              ),
                             ),
                           ],
-                          child: TasksetCreationCartScreen(),
+                          child: TasksetCreationCartScreen(isEdit: !first,editedTaskset: blocTaskset),
                         ),
                       ),
                     );

@@ -32,7 +32,10 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
       taskset!.tasks = event.taskList;
     });
     on<CreateTasksetGenerate>((event, emit) => _generate());
-    on<AddUrlToTaskset>((event, emit) => taskset!.taskurl = event.taskUrl);
+    on<AddUrlToTaskset>((event, emit) {
+      taskset!.taskurl = event.taskUrl;
+      print("bloc: " + taskset!.taskurl.toString());
+    });
   }
 
   /// private method to abort the current creation process

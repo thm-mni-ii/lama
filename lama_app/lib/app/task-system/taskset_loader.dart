@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
+import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/admin_menu_screen.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,7 +40,7 @@ class TasksetLoader {
   ///Loads all Tasksets.
   ///
   ///This includes all standard tasksets if they are not disabled in the admin menu.
-  Future<void> loadAllTasksets() async {
+  Future<void> loadAllTasksets(ServerRepository serverRepository) async {
     /* ONLY NEEDED WHEN A LOCAL COPY SHOUL EXIST AND POSSIBLY PERSIST
     //get path for the taskset directory (only accessible by this app)
     Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -80,6 +83,22 @@ class TasksetLoader {
             ];
             await loadTasksFromUrls(standardTaskUrls);
           }
+          List<Taskset> tmp = await TasksetRepository()
+              .downloadTasksetDirectory(serverRepository);
+          for (var element in tmp) {
+            if (loadedTasksets[
+                    SubjectGradeRelation(element.subject, element.grade)] ==
+                null) {
+              loadedTasksets[
+                  SubjectGradeRelation(element.subject, element.grade)] = [];
+            }
+            loadedTasksets[
+                    SubjectGradeRelation(element.subject, element.grade)]!
+                .add(element);
+            print(element.taskurl);
+            print("test" + element.toJson().toString());
+          }
+
           _loadTasksetPool();
         }
       } on SocketException catch (_) {
@@ -231,7 +250,7 @@ class TasksetLoader {
   List<Taskset>? getLoadedTasksetsForSubjectAndGrade(
       String subject, int? grade) {
     SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
-    if (loadedTasksets.containsKey(sgr)) return loadedTasksets[sgr];
+    if (tasksetPool.containsKey(sgr)) return tasksetPool[sgr];
     return [];
   }
 

@@ -12,10 +12,12 @@ import 'package:lama_app/app/task-system/taskset_model.dart';
 ///Main method that launches the app.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  TasksetRepository tasksetRepository = TasksetRepository();
-  tasksetRepository.initialize();
+
+
   ServerRepository serverRepository = ServerRepository();
   serverRepository.initialize();
+  TasksetRepository tasksetRepository = TasksetRepository();
+  tasksetRepository.initialize(serverRepository);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await precacheSvgs();
   runApp(MultiRepositoryProvider(

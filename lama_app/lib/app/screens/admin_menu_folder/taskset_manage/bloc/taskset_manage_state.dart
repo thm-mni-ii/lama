@@ -10,3 +10,5 @@ abstract class TasksetManageState {}
 class TasksetManageInitial extends TasksetManageState {}
 
 class ChangeTasksetStatus extends TasksetManageState {}
+
+class WaitingTasksetStatus extends TasksetManageState {}

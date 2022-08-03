@@ -1,4 +1,4 @@
-import 'package:lama_app/app/model/taskUrl_model.dart';
+import 'package:flutter/material.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 
@@ -12,15 +12,18 @@ class CreateTaskset extends TasksetManageEvent {}
 
 /// adds a taskset to the pool of used tasksets
 class AddTasksetPool extends TasksetManageEvent {
+  final BuildContext context;
   final Taskset taskset;
 
-  AddTasksetPool(this.taskset);
+  AddTasksetPool({required this.context, required this.taskset});
 }
+
 /// removes a taskset from the pool of used tasksets
 class RemoveTasksetPool extends TasksetManageEvent {
+  final BuildContext context;
   final Taskset taskset;
 
-  RemoveTasksetPool(this.taskset);
+  RemoveTasksetPool({required this.context, required this.taskset});
 }
 
 class AddListOfTasksetsPool extends TasksetManageEvent {
@@ -36,7 +39,15 @@ class RemoveListOfTasksetsPool extends TasksetManageEvent {
 }
 
 class DeleteTaskset extends TasksetManageEvent {
-  final TaskUrl taskUrl;
+  final Taskset taskset;
+  final BuildContext context;
 
-  DeleteTaskset(this.taskUrl);
+  DeleteTaskset(this.taskset, this.context);
+}
+
+class UploadTaskset extends TasksetManageEvent {
+  final Taskset taskset;
+  final BuildContext context;
+
+  UploadTaskset(this.taskset, this.context);
 }

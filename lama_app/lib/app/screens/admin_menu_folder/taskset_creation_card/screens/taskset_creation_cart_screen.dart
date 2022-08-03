@@ -10,12 +10,11 @@ import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_taskl
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_choose_task/screens/taskset_choose_task_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_card/widgets/taskset_creation_cart_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_event.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/subject_grade_relation.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
-import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/LamaColors.dart';
-import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 
@@ -39,7 +38,10 @@ import '../../../../bloc/create_taskset_bloc.dart';
 /// Author: Handito Bismo, Nico Soethe, Tim Steinmüller
 /// latest Changes: 09.06.2022
 class TasksetCreationCartScreen extends StatelessWidget {
-  const TasksetCreationCartScreen() : super();
+  final bool isEdit;
+  final Taskset? editedTaskset;
+  const TasksetCreationCartScreen({required this.isEdit, required this.editedTaskset})
+      : super();
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +54,6 @@ class TasksetCreationCartScreen extends StatelessWidget {
         BlocProvider.of<TasksetCreateTasklistBloc>(context);
     TasksetManageBloc tasksetManageBloc =
         BlocProvider.of<TasksetManageBloc>(context);
-    TasksetRepository tasksetRepository =
-        RepositoryProvider.of<TasksetRepository>(context);
 
     return Scaffold(
       appBar: CustomAppbar(
@@ -104,66 +104,21 @@ class TasksetCreationCartScreen extends StatelessWidget {
                     if (serverRepo.serverSettings != null &&
                         serverRepo.serverSettings!.url.isNotEmpty) {
                       String createdTaskUrl =
-                          "${serverRepo.serverSettings?.url}/${taskset.subject}/${taskset.name}";
-                      if (taskset.taskurl != null) {
-                        Taskset t = tasksetManageBloc.allTaskset.firstWhere(
-                          (element) => element.taskurl == taskset.taskurl,
-                        );
-
-                        DatabaseProvider.db.deleteTaskUrl(taskset.taskurl!.id);
-                        // in repo function call
-                        tasksetRepository.deleteTasksetFromServer(
-                          t.name!,
-                          t.subject!,
-                        );
-
-                        tasksetRepository.tasksetLoader.loadedTasksets
-                            .forEach((key, value) {
-                          if (key == SubjectGradeRelation(t.subject, t.grade)) {
-                            value.removeWhere(
-                              (element) => element.taskurl == t.taskurl,
-                            );
-                          }
-                        });
-
-                        tasksetManageBloc.allTaskset.remove(t);
-                        if (taskset.isInPool) {
-                          tasksetManageBloc.tasksetPool.remove(t);
-                        }
+                          "${serverRepo.serverSettings?.url}upload/${taskset.grade}/${taskset.name}";
+                      if (isEdit) {
+                        tasksetManageBloc.add(DeleteTaskset(editedTaskset!, context));
                       }
-                      // nötig ??
-                      DatabaseProvider.db // oder über tasket id lösen
-                          .insertTaskUrl(TaskUrl(url: createdTaskUrl));
-                      List<TaskUrl> taskUrl =
-                          await DatabaseProvider.db.getTaskUrl();
                       createTasksetBloc.add(
-                        AddUrlToTaskset(
-                          taskUrl.firstWhere(
-                            (element) => element.url == createdTaskUrl,
-                          ),
-                        ),
-                      );
-                      print(
-                        "fuck you: " +
-                            taskUrl
-                                .firstWhere(
-                                  (element) => element.url == createdTaskUrl,
-                                )
-                                .toString(),
+                        AddUrlToTaskset(TaskUrl(url: createdTaskUrl)),
                       );
                       // tasklist muss gesetzt werden
                       createTasksetBloc.add(
                         AddTaskListToTaskset(tasksetListBloc.taskList),
                       );
-                      print(taskset.taskurl!.url);
-                      print(taskset.toJson());
-                      tasksetRepository.fileUpload(taskset);
-                      /* tasksetRepository.tasksetLoader.loadedTasksets.addAll({
-                        SubjectGradeRelation(taskset.subject, taskset.grade): [
-                          taskset
-                        ],
-                      }); */
-                      //tasksetManageBloc.allTaskset.add(taskset);
+                      //print("create TaskUrl obj: " + h.toString());
+                      //print(taskset.toJson());
+                      //print("TaskUrl in bloc: " + taskset.taskurl!.url.toString());
+                      tasksetManageBloc.add(UploadTaskset(taskset, context));
 
                       Navigator.pop(context);
                       Navigator.pop(context);
@@ -172,7 +127,7 @@ class TasksetCreationCartScreen extends StatelessWidget {
                         SnackBar(
                           backgroundColor: LamaColors.redAccent,
                           content: const Text(
-                            'Fülle alle Felder aus',
+                            'Serversettings nicht gesetzt',
                             textAlign: TextAlign.center,
                           ),
                           duration: Duration(seconds: 1),
@@ -180,7 +135,8 @@ class TasksetCreationCartScreen extends StatelessWidget {
                       );
                     }
                   },
-                  child: const Text("Taskset generieren"),
+                  child:
+                      Text(isEdit ? "Taskset editieren" : "Taskset generieren"),
                 ),
               ],
             ),

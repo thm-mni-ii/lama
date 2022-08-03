@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_state.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/widgets/new_tasksets.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/widgets/taskset_expansion_tile_widget.dart';
 import 'package:lama_app/app/screens/taskset_option_screen.dart';
@@ -85,7 +87,14 @@ class _TasksetManageScreenState extends State<TasksetManageScreen> {
             ),
           ),
         ),
-        body: screenOfNavigator(_currentPageIndex),
+        body: BlocBuilder<TasksetManageBloc, TasksetManageState>(
+          builder: (context, state) {
+            if (state is WaitingTasksetStatus) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return screenOfNavigator(_currentPageIndex);
+          },
+        ),
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(

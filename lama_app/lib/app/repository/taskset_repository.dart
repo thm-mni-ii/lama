@@ -1,12 +1,12 @@
-import 'dart:io';
+import 'dart:convert';
 
-import 'package:external_path/external_path.dart';
-import 'package:ftpconnect/ftpconnect.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/repository/server_repository.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_loader.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:dartssh2/dartssh2.dart';
 
 /// Repository that provides access to the loaded tasksets.
 ///
@@ -20,9 +20,9 @@ class TasksetRepository {
   List<String> klassenStufe = ["1", "2", "3", "4", "5", "6"];
 
   ///Initializes the [TasksetLoader] and loads all tasksets.
-  Future<void> initialize() async {
+  Future<void> initialize(ServerRepository serverRepository) async {
     tasksetLoader = TasksetLoader();
-    await tasksetLoader.loadAllTasksets();
+    await tasksetLoader.loadAllTasksets(serverRepository);
   }
 
   ///Returns a List of all [Taskset] that belong to [subject] and are aimed at [grade]
@@ -56,99 +56,139 @@ class TasksetRepository {
   ///Under the hood this method is identical to [initialize()] except it doesnt return a Future.
   ///This is because it is used to reload the tasks during runtime, while [initialize()] is called during initialization.
   ///Therefore this method exists to provide a more intuitively named method.
-  void reloadTasksetLoader() async {
+  void reloadTasksetLoader(ServerRepository serverRepository) async {
     tasksetLoader = TasksetLoader();
-    await tasksetLoader.loadAllTasksets();
+    await tasksetLoader.loadAllTasksets(serverRepository);
   }
 
   /// Uploads a File to a server
-  Future<String> fileUpload(Taskset taskset) async {
-    final serverRepo = ServerRepository();
-    Directory dir = await getLocalDir();
-    File fileToUpload = File("$dir/${taskset.name!}");
+  Future<String> fileUpload(BuildContext context, Taskset taskset) async {
+    final serverRepo = RepositoryProvider.of<ServerRepository>(context);
 
     // error handling??
-    if (serverRepo.serverSettings != null) {
-      FTPConnect ftpConnect = FTPConnect(
-        serverRepo.serverSettings!.url,
-        user: serverRepo.serverSettings!.userName,
-        pass: serverRepo.serverSettings!.password,
-      );
-      if (await ftpConnect.createFolderIfNotExist(taskset.subject!)) {
-        if (!(await ftpConnect.changeDirectory(taskset.subject!.toLowerCase())))
-          return "Konnte Dir nicht wechseln";
-        if (!(await ftpConnect.existFile(taskset.name!))) {
-          try {
-            await ftpConnect.connect();
-            await ftpConnect.uploadFile(fileToUpload);
-            await ftpConnect.disconnect();
-            // lokal löschen
-            fileToUpload.delete();
-            return "";
-          } catch (e) {
-            //error
-            throw e;
-          }
+    if (serverRepo.serverSettings != null && taskset.taskurl!.id == null) {
+      try {
+        final client = SSHClient(
+          await SSHSocket.connect(
+              /* 'lama.mni.thm.de' */ serverRepo.serverSettings!.url,
+              serverRepo.serverSettings!.port),
+          username: /* 'lama-upload' */ serverRepo.serverSettings!.userName,
+          onPasswordRequest:
+              () => /* 'a0ef2dc2950087c544164b4163817015' */ serverRepo
+                  .serverSettings!.password,
+        );
+
+        final sftp = await client.sftp();
+        final list = await sftp.listdir('./upload');
+        List<String> folderList = list.map((e) => e.filename).toList();
+        if (!folderList.contains(taskset.grade.toString())) {
+          await sftp.mkdir('./upload/${taskset.grade}/');
         }
-        return "File name bereits vergeben";
+        final file = await sftp.open(
+          './upload/${taskset.grade}/${taskset.name!}',
+          mode: SftpFileOpenMode.create | SftpFileOpenMode.write,
+        );
+        String tmp = json.encode(taskset.toJson());
+        var bytes = Utf8Encoder().convert(tmp);
+        await file.write(Stream.value(bytes));
+        client.close();
+        client.done;
+
+        return "";
+      } catch (e) {
+        throw e; // in ui fangen
       }
-      return "Dir konnte nicht erzeugt werden";
     }
+    // TODO nutzen um anzuzeigen das was fehlts
     return "Keine Server Settings gesetzt";
   }
 
-/*   Future<List<Taskset>> downloadTasksetDirectory() async {
-    final serverRepo = ServerRepository();
-    Directory dir = await getLocalDir();
-    File fileToUpload;
+  Future<List<Taskset>> downloadTasksetDirectory(
+      ServerRepository serverRepo) async {
     List<Taskset> tasksetList = [];
 
+    //try {
     if (serverRepo.serverSettings != null) {
-      FTPConnect ftpConnect = FTPConnect(
-        serverRepo.serverSettings!.url,
-        user: serverRepo.serverSettings!.userName,
-        pass: serverRepo.serverSettings!.password,
+      final client = SSHClient(
+        await SSHSocket.connect(
+            /* 'lama.mni.thm.de' */ serverRepo.serverSettings!.url,
+            serverRepo.serverSettings!.port),
+        username: /* 'lama-upload' */ serverRepo.serverSettings!.userName,
+        onPasswordRequest:
+            () => /* 'a0ef2dc2950087c544164b4163817015' */ serverRepo
+                .serverSettings!.password,
       );
-      try {
-        await ftpConnect.connect();
-        await ftpConnect.downloadDirectory(serverRepo.serverSettings!.url, dir);
-        await ftpConnect.disconnect();
-      } catch (e) {
-        //error
-        throw e;
-      }
-    }
-    return tasksetList;
-  } */
 
-  /// delets a taskset from the server
-  Future<void> deleteTasksetFromServer(String fileName, String subject) async {
-    final serverRepo = ServerRepository();
-    // error handling??
-    if (serverRepo.serverSettings != null) {
-      FTPConnect ftpConnect = FTPConnect(
-        serverRepo.serverSettings!.url,
-        user: serverRepo.serverSettings!.userName,
-        pass: serverRepo.serverSettings!.password,
-      );
-      try {
-        if (await ftpConnect.changeDirectory(subject)) {
-          await ftpConnect.connect();
-          await ftpConnect.deleteFile(fileName);
-          await ftpConnect.disconnect();
-          return;
+      Map<String, List<String>> allFileNames = {};
+
+      final sftp = await client.sftp();
+      final list = await sftp.listdir('./upload');
+
+      for (var folderName in list) {
+        if (klassenStufe.contains(folderName.filename)) {
+          final listOfFileNames =
+              await sftp.listdir('./upload/${folderName.filename}');
+          final l = listOfFileNames.map((e) => e.filename).toList();
+          l.removeWhere((element) => element == '.' || element == "..");
+          allFileNames.addAll({'${folderName.filename}': l});
         }
-      } catch (e) {
-        //error
-        throw e;
       }
+      var listTmp = [];
+      allFileNames.forEach((key, value) {
+        value.forEach((element) {
+          listTmp.add('./upload/$key/$element');
+        });
+      });
+
+      for (var fullname in listTmp) {
+        final tmp = await sftp.open(fullname);
+        final content = await tmp.readBytes();
+        print(utf8.decode(content));
+        tasksetList
+            .add(Taskset.fromJson(json.decode(Utf8Decoder().convert(content))));
+        //print(latin1.decode(content));
+        tmp.close();
+      }
+
+      client.close();
+      client.done;
     }
+    /* } catch (e) {
+      //error
+      throw e;
+    } */
+    return tasksetList;
   }
 
-  Future<Directory> getLocalDir() async {
-    var path = await ExternalPath.getExternalStoragePublicDirectory(
-        ExternalPath.DIRECTORY_DOCUMENTS);
-    return Directory(path + '/LAMA');
+  /// delets a taskset from the server
+  Future<String> deleteTasksetFromServer(
+      BuildContext context, Taskset taskset) async {
+    final serverRepo = RepositoryProvider.of<ServerRepository>(context);
+    // error handling??
+    if (serverRepo.serverSettings != null && taskset.taskurl!.id == null) {
+      try {
+        final client = SSHClient(
+          await SSHSocket.connect(
+              /* 'lama.mni.thm.de' */ serverRepo.serverSettings!.url,
+              serverRepo.serverSettings!.port),
+          username: /* 'lama-upload' */ serverRepo.serverSettings!.userName,
+          onPasswordRequest:
+              () => /* 'a0ef2dc2950087c544164b4163817015' */ serverRepo
+                  .serverSettings!.password,
+        );
+        print(taskset.toJson().toString());
+        final sftp = await client.sftp();
+        await sftp.remove('./upload/${taskset.grade}/${taskset.name}');
+        client.close();
+        client.done;
+
+        return "";
+      } catch (e) {
+        //error
+        throw e;
+      }
+    }
+    return "Keine Server Settings gesetzt";
   }
 
   /// gives a List of TaskType depending on a specific subject

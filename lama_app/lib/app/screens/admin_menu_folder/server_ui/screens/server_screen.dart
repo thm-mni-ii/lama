@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/repository/server_repository.dart';
-import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
-import 'package:lama_app/util/input_validation.dart';
 
 class ServerSettingsScreen extends StatefulWidget {
   const ServerSettingsScreen({Key? key}) : super(key: key);
@@ -18,6 +16,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
   TextEditingController _url = TextEditingController();
   TextEditingController _userName = TextEditingController();
   TextEditingController _password = TextEditingController();
+  TextEditingController _port = TextEditingController();
 
   bool first = true;
 
@@ -30,6 +29,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
       _url.text = serverRepo.serverSettings!.url;
       _userName.text = serverRepo.serverSettings!.userName;
       _password.text = serverRepo.serverSettings!.password;
+      _port.text = serverRepo.serverSettings!.port.toString();
 
       first = false;
     }
@@ -57,6 +57,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                 serverRepo.serverSettings = null; */
                 ServerSettings s = ServerSettings(
                   id: serverRepo.serverSettings?.id ?? 0,
+                  port: int.parse(_port.text),
                   url: _url.text,
                   userName: _userName.text,
                   password: _password.text,
@@ -84,8 +85,16 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                   if (text == null || text.isEmpty) {
                     return "Please give a url";
                   }
-                  if (InputValidation.inputURLValidation(_url.text) != null) {
-                    return InputValidation.inputURLValidation(_url.text);
+                  return null;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(label: Text("Port")),
+                controller: _port,
+                keyboardType: TextInputType.number,
+                validator: (String? text) {
+                  if (text == null || text.isEmpty) {
+                    return "Please give a port";
                   }
                   return null;
                 },

@@ -146,7 +146,7 @@ class _SetupTasksetBodyState extends State<SetupTasksetBody> {
                                 context),
                           ),
                         ],
-                        child: TasksetCreationCartScreen(),
+                        child: TasksetCreationCartScreen(isEdit: !first, editedTaskset: blocTaskset),
                       ),
                     ),
                   );

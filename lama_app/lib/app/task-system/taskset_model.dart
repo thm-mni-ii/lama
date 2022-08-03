@@ -26,6 +26,7 @@ class Taskset {
   Taskset.fromJson(Map<String, dynamic> json) {
     //Taskset(json['taskset_name'], json['taskset_subject'], json['taskset_description'], json['taskset_grade']);
     name = json['taskset_name'];
+    taskurl = TaskUrl.fromMap(json['taskset_url']);
     isInPool = json["is_in_Pool"];
     subject = json['taskset_subject'];
     description = json['taskset_description'];
@@ -50,7 +51,7 @@ class Taskset {
   }
 
   Map<String, dynamic> toJson() => {
-        "taskset_url": taskurl!.toJson(),
+        "taskset_url": taskurl?.toJson(),
         "taskset_name": name,
         "is_in_Pool": isInPool,
         "taskset_subject": subject,
