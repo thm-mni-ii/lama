@@ -39,7 +39,6 @@ class ConnectTaskScreen extends StatefulWidget {
 
 /// ConnectState class creates the Conect task Screen
 class ConnectState extends State<ConnectTaskScreen> {
-  bool alreadyUpdated = false;
   // task infos and constraints handed over by tasktypeScreen
   final TaskConnect task;
   final BoxConstraints constraints;
@@ -95,9 +94,8 @@ class ConnectState extends State<ConnectTaskScreen> {
                 alignment: Alignment.centerLeft,
                 child: BlocBuilder<TTSBloc, TTSState>(
                  builder: (context, state) {
-                   if (state is EmptyTTSState && !alreadyUpdated) {
+                   if (state is EmptyTTSState) {
                      context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
-                     this.alreadyUpdated = true;
                    }
                  return Container(
                   padding: EdgeInsets.only(left: 75),
