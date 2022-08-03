@@ -28,8 +28,6 @@ import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/bloc/taskbloc/tts_bloc.dart';
 import 'package:lama_app/app/state/home_screen_state.dart';
 
-
-
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
 
 ///[StatefulWidget] for the screen framework containing the current Task Widget.
@@ -67,8 +65,12 @@ class TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    IconData ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
-    String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
+    IconData ikon = home_screen_state.isTTs()
+        ? Icons.volume_up_rounded
+        : Icons.volume_mute_rounded;
+    String path = home_screen_state.isTTs()
+        ? "assets/images/svg/Ton.svg"
+        : "assets/images/svg/Ton_Tod.svg";
     LinearGradient? lg;
     return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
@@ -152,23 +154,24 @@ class TaskScreenState extends State<TaskScreen> {
                               BlocProvider(
                                 create: (context) => TTSBloc(),
                                 child: BlocBuilder<TTSBloc, TTSState>(
-                                builder: (context, state) {
+                                    builder: (context, state) {
                                   return Align(
                                     alignment: Alignment.centerRight,
                                     child: IconButton(
-                                      onPressed: () { home_screen_state.toggle();
-                                        setState(() {
-                                          ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
-                                        });
-                                      },
+                                        onPressed: () {
+                                          home_screen_state.toggle();
+                                          setState(() {
+                                            ikon = home_screen_state.isTTs()
+                                                ? Icons.volume_up_rounded
+                                                : Icons.volume_mute_rounded;
+                                          });
+                                        },
                                         icon: Icon(
-                                          size: 35,
-                                          ikon
-                                        )
-                                    ),
+                                            color: Colors.white,
+                                            size: 35,
+                                            ikon)),
                                   );
-                                }
-                                ),
+                                }),
                               ),
                             ],
                           ),
@@ -354,10 +357,10 @@ class TaskScreenState extends State<TaskScreen> {
       case "MatchCategory":
         return MatchCategoryTaskScreen(task as TaskMatchCategory, constraints);
       case "GridSelect":
-        if(!alreadyGenerated) {
+        if (!alreadyGenerated) {
           dis = GridSelectTaskScreen(
               task as TaskGridSelect, constraints, GridSelectTaskBloc());
-              alreadyGenerated = true;
+          alreadyGenerated = true;
         }
         return dis!;
       case "MoneyTask":
@@ -566,6 +569,5 @@ class TaskScreenState extends State<TaskScreen> {
     );
   }
 }
-void nothing() {
 
-}
+void nothing() {}

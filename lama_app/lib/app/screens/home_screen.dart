@@ -173,6 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         });
                                         },
                                         icon: Icon(
+                                          color: Colors.white,
                                             size: 35,
                                             ikon
                                         )
