@@ -69,6 +69,7 @@ class TasksetLoader {
           for (int i = 1; i <= GRADES_SUPPORTED; i++) {
             //load all standardtasks from url
             List<TaskUrl> standardTaskUrls = [
+              // TODO einkomentieren wenn gitrepo standarttasksets korekt sind(siehe auch zweitens) 
               TaskUrl(url: "assets/standardTasksets/mathe/mathe$i.json"),
               //"https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
 /*               TaskUrl(
@@ -273,6 +274,8 @@ class TasksetLoader {
 
       String temp = await rootBundle.loadString(taskUrls[i].url!);
       await buildTasksetFromJson(temp);
+
+      // TODO zweitens
 
 /*       var response = await http.get(
         Uri.parse(taskUrls[i].url!),

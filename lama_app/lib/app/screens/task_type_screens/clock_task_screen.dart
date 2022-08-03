@@ -361,6 +361,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(this.randStunde.toString() + ":" + this.allMinuten.toString());
+    print(this.randStunde2.toString() + ":" + this.allMinuten2.toString());
     print(this.diffHour);
     print(this.diffMinute);
     if (task.uhr == "allStunden") {
