@@ -14,7 +14,7 @@
            "task_type":"4Cards",
             "task_reward":2,
             "question":"Was ist kein Nomen (Namenwort)",
-            "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
+            "lama_text":"Tippe die richtige Antwort an!",
             "left_to_solve": 3,
             "right_answer":"aufgeben",
              "wrong_answers":["Aufgabe", "Anfahrt", "Abgang"]
@@ -33,7 +33,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":"Der Koffer steht .. dem Schrank",
-           "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
+           "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
            "right_answer":"hinter",
            "wrong_answers":["bis", "aus"]

@@ -43,35 +43,26 @@ class ToggleTextToSpeech extends StatefulWidget {
 
 class ToggleTextToSpeechWidget extends State<ToggleTextToSpeech> {
   List<Widget> children = [];
-  String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
-  final FlutterTts flutterTts = FlutterTts();
-  talk (String text) async {
-    flutterTts.speak(text);
-  }
+  IconData ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
+
   @override
   Widget build(BuildContext context) {
-    talk(path);
     children.add(SizedBox(
         child: Stack(
             alignment: Alignment.topRight,
             children: [
               Align(
                 alignment: Alignment.centerRight,
-                child: InkWell(
-                  child: CircleAvatar(
-                    maxRadius: 29,
-                    child: SvgPicture.asset(
-                      path,
-                    ),
-                    backgroundColor: LamaColors.blueAccent,
-                  ),
-                  onTap: () {
-                    home_screen_state.toggle();
-                    setState(() {
-                     // finaltooltipp = tooltipptext;
-                      path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
-                    });
-                  },
+                child: IconButton(
+                    onPressed: () { home_screen_state.toggle();
+                      setState(() {
+                        ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
+                      });
+                    },
+                    icon: Icon(
+                        size: 35,
+                        ikon
+                    )
                 ),
               ),
 
@@ -103,9 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     userRepository = RepositoryProvider.of<UserRepository>(context);
-
+    IconData ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
     if(!changedSound) {
       tooltipptext = RepositoryProvider.of<LamaFactsRepository>(context).getRandomLamaFact();
     }
@@ -174,23 +164,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                       right: ((constraints.maxWidth / 100) * 2.5)),
                                   child: Align(
                                     alignment: Alignment.centerRight,
-                                    child: InkWell(
-                                      child: CircleAvatar(
-                                          maxRadius: 21,
-                                          child: SvgPicture.asset(
-                                              path,
-                                              semanticsLabel: 'TonIcon',
-                                              color: LamaColors.purpleAccent
-                                          ),
-                                          backgroundColor: LamaColors.white,
-                                      ),
-                                        onTap: () => {
-                                          home_screen_state.toggle(),
-                                          setState(() {
-                                            tooltipptext = tooltipptext!;
-                                            changedSound = true;
-                                          })
-                                        }
+                                    child: IconButton(
+                                        onPressed: () { home_screen_state.toggle();
+                                        setState(() {
+                                          tooltipptext = tooltipptext!;
+                                          changedSound = true;
+                                          ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
+                                        });
+                                        },
+                                        icon: Icon(
+                                            size: 35,
+                                            ikon
+                                        )
                                     ),
                                   ),
                                 )

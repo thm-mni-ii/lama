@@ -21,6 +21,7 @@ import 'package:lama_app/app/screens/task_type_screens/vocable_test_task_screen.
 import 'package:lama_app/app/screens/task_type_screens/zerlegung_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
+import 'package:lama_app/snake/views/view.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/app/state/tts_state.dart';
@@ -66,6 +67,7 @@ class TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    IconData ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
     String path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
     LinearGradient? lg;
     return BlocBuilder<TaskBloc, TaskState>(
@@ -153,24 +155,16 @@ class TaskScreenState extends State<TaskScreen> {
                                 builder: (context, state) {
                                   return Align(
                                     alignment: Alignment.centerRight,
-                                    child: InkWell(
-                                        child: CircleAvatar(
-                                          maxRadius: 21,
-                                          child: SvgPicture.asset(
-                                            // todo
-                                              path,
-                                              semanticsLabel: 'TonIcon',
-                                              color: LamaColors.purpleAccent
-                                          ),
-                                          backgroundColor: LamaColors.white,
-                                        ),
-                                        onTap: () =>
-                                        {
-                                          home_screen_state.toggle(),
-                                          setState(() {
-                                            path = home_screen_state.isTTs() ? "assets/images/svg/Ton.svg" : "assets/images/svg/Ton_Tod.svg";
-                                          })
-                                        }
+                                    child: IconButton(
+                                      onPressed: () { home_screen_state.toggle();
+                                        setState(() {
+                                          ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
+                                        });
+                                      },
+                                        icon: Icon(
+                                          size: 35,
+                                          ikon
+                                        )
                                     ),
                                   );
                                 }
@@ -571,4 +565,7 @@ class TaskScreenState extends State<TaskScreen> {
       ),
     );
   }
+}
+void nothing() {
+
 }

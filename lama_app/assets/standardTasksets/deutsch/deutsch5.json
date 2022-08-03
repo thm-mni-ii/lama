@@ -7,7 +7,7 @@
            "task_type":"4Cards",
             "task_reward":2,
             "question":"Wie hieß Goethe mit Vornamen?",
-            "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
+            "lama_text":"Tippe die richtige Antwort an!",
             "left_to_solve": 3,
             "right_answer":"Johann Wolfgang",
              "wrong_answers":["Jonas Wolfgang", "Johann Wolffang", "Jona Hoftal"]
@@ -16,7 +16,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":"Ich hoffe, .. das Wetter bald besser wird",
-           "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
+           "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
            "right_answer":"dass",
            "wrong_answers":["dieses", "das"]

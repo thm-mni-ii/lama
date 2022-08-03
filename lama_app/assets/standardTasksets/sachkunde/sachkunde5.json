@@ -7,7 +7,7 @@
            "task_type":"4Cards",
            "task_reward":2,
            "question":"Wer kämpfte hauptsächlich in der Arena ?",
-           "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
+           "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
            "right_answer":"Gladiatoren",
            "wrong_answers":["Christen", "Kinder", "Bauern"]
@@ -16,7 +16,7 @@
            "task_type":"ClozeTest",
            "task_reward":2,
            "question":"Alle eroberten Gebiete außerhalb Italiens nannten die Römer ..",
-           "lama_text":"Tippe eine Antwort doppelt an, um sie vorzulesen!",
+           "lama_text":"Tippe die richtige Antwort an!",
            "left_to_solve": 3,
            "right_answer":"Provinz",
            "wrong_answers":["Limes", "Kastell"]
