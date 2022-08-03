@@ -10,7 +10,9 @@
             "lama_text":"Tippe die richtige Antwort an!",
             "left_to_solve": 3,
             "right_answer":"Säugetieren",
-             "wrong_answers":["Reptilien", "Amphibien", "Vögeln"]
+             "wrong_answers":["Reptilien", "Amphibien", "Vögeln"],
+             "question_language":"Deutsch",
+             "answer_language":"Deutsch"
              },
          {
            "task_type":"ClozeTest",

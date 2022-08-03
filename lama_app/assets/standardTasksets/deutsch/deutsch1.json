@@ -46,8 +46,8 @@
     {
       "task_type": "ClozeTest",
       "task_reward": 2,
-      "question": "__ Dino ist groß",
-      "lama_text": "Tippe die richtige Antwort an!",
+      "question": ".. Dino ist groß",
+      "lama_text":"Tippe die richtige Antwort an!",
       "left_to_solve": 3,
       "right_answer": "Der",
       "wrong_answers": [

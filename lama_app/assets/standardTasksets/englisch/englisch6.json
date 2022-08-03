@@ -10,19 +10,23 @@
             "lama_text":"Tap the right Answer!",
             "left_to_solve": 3,
             "right_answer":"vertrauen",
-             "wrong_answers":["drücken", "brauchen", "rosten"]
+             "wrong_answers":["drücken", "brauchen", "rosten"],
+             "question_language":"Englisch",
+             "answer_language":"Deutsch"
              },
          {
            "task_type": "ClozeTest",
            "task_reward": 2,
-           "question": "Simple Past: I __ in the water",
+           "question": "Simple Past: I .. in the water",
            "lama_text": "Tap the right Answer!",
            "left_to_solve": 3,
            "right_answer": "swam",
            "wrong_answers": [
              "swimming",
              "swum"
-           ]
+           ],
+           "question_language":"Englisch",
+           "answer_language":"Englisch"
          },
          {
            "task_type": "MatchCategory",
@@ -32,7 +36,8 @@
            "nameCatOne": "Simple Present",
            "nameCatTwo": "Simple Past",
            "categoryOne": ["work", "go", "see", "sell"],
-           "categoryTwo": ["worked", "went", "saw", "sold"]
+           "categoryTwo": ["worked", "went", "saw", "sold"],
+           "question_language":"Englisch"
          },
          {
           "task_type":"VocableTest",
@@ -40,7 +45,9 @@
           "lama_text": "Translate the shown word!",
           "left_to_solve": 3,
           "wordPairs": [{"word":"newspaper","translation":"Zeitung"}, {"word":"skyscraper", "translation":"Wolkenkratzer"}],
-          "randomizeSide": true
+          "randomizeSide": true,
+           "question_language":"Englisch",
+           "answer_language":"Deutsch"
         },
          {
            "task_type": "MatchCategory",
@@ -50,7 +57,9 @@
            "nameCatOne": "Simple Past",
            "nameCatTwo": "Past Participle",
            "categoryOne": ["was", "came", "did", "knew"],
-           "categoryTwo": ["been", "come", "done", "known"]
+           "categoryTwo": ["been", "come", "done", "known"],
+           "question_language":"Englisch",
+           "answer_language":"Englisch"
          }
         ]
 }

@@ -9,6 +9,7 @@ import 'package:collection/collection.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/OperantsEnum.dart';
 
+
 /// [Bloc] for the [TaskScreen]
 ///
 /// This Bloc handles everything related to tasks from

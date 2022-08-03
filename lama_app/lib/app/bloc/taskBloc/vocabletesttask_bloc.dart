@@ -30,16 +30,16 @@ class VocableTestTaskBloc
         int side = rng.nextInt(2);
         if (side == 0) {
           emit(VocableTestTaskTranslationState(
-              task.vocablePairs[curWordPair].a, resultList));
+              task.vocablePairs[curWordPair].a, resultList,task.questionLanguage!));
           sideUsed = 0;
         } else {
           emit(VocableTestTaskTranslationState(
-              task.vocablePairs[curWordPair].b, resultList));
+              task.vocablePairs[curWordPair].b, resultList,"Deutsch"));
           sideUsed = 1;
         }
       } else {
         emit(VocableTestTaskTranslationState(
-            task.vocablePairs[curWordPair].a, resultList));
+            task.vocablePairs[curWordPair].a, resultList,"Deutsch"));
       }
     });
     on<VocableTestTaskAnswerEvent>((event, emit) async {
@@ -71,16 +71,16 @@ class VocableTestTaskBloc
           int side = rng.nextInt(2);
           if (side == 0) {
             emit(VocableTestTaskTranslationState(
-                task.vocablePairs[curWordPair].a, resultList));
+                task.vocablePairs[curWordPair].a, resultList,task.questionLanguage!));
             sideUsed = 0;
           } else {
             emit(VocableTestTaskTranslationState(
-                task.vocablePairs[curWordPair].b, resultList));
+                task.vocablePairs[curWordPair].b, resultList,"Deutsch"));
             sideUsed = 1;
           }
         } else {
           emit(VocableTestTaskTranslationState(
-              task.vocablePairs[curWordPair].a, resultList));
+              task.vocablePairs[curWordPair].a, resultList,"Deutsch"));
         }
       } else
         emit(VocableTestFinishedTaskState(resultList));
@@ -128,8 +128,9 @@ class VocableTestTaskInitState extends VocableTestTaskState {}
 class VocableTestTaskTranslationState extends VocableTestTaskState {
   List<bool?>? resultList;
   String? wordToTranslate;
+  String? lang;
 
-  VocableTestTaskTranslationState(this.wordToTranslate, this.resultList);
+  VocableTestTaskTranslationState(this.wordToTranslate, this.resultList, this.lang);
 }
 
 ///Subclass of [VocableTestTaskState] for [VocableTestTaskBloc]

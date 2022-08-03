@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,10 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/event/tts_event.dart';
+
 /// This file creates the Match Category task Screen
 /// The Match Category task is a task where you have to sort 8 given
 /// words into one of the given Topics with drag and drop.
@@ -18,7 +24,6 @@ import 'package:lama_app/util/LamaTextTheme.dart';
 ///
 /// Author: T.Rentsch
 /// latest Changes: 22.07.2021
-
 /// Global Variables
 // Flag to check if the screen is build for the first time
 bool firstStart = true;
@@ -39,6 +44,9 @@ class MatchCategoryTaskScreen extends StatefulWidget {
 }
 
 class MatchCategoryState extends State<MatchCategoryTaskScreen> {
+
+
+
   // task infos and constraints handed over by tasktypeScreen
   final BoxConstraints constraints;
   final TaskMatchCategory task;
@@ -65,6 +73,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
     }*/
   }
 
+
   @override
   void initState() {
     super.initState();
@@ -79,44 +88,75 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    String qlang;
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
+    return BlocProvider(
+      create: (context) => TTSBloc(),
+      child: Column(
       children: [
         // Lama Speechbubble
-        Container(
-          height: (constraints.maxHeight / 100) * 15,
-          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-          // create space between each childs
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.only(left: 75),
-                  height: 50,
-                  width: MediaQuery.of(context).size.width,
-                  child: Bubble(
-                    nip: BubbleNip.leftCenter,
-                    child: Center(
-                      child: Text(
-                        task.lamaText!,
-                        style: LamaTextTheme.getStyle(
-                            color: LamaColors.black, fontSize: 15),
+        // Aufgabestellung vorlesen jedes mal wenn screen neu geladen wird
+        BlocBuilder<TTSBloc, TTSState>(
+            builder: (context, state) {
+              if (state is EmptyTTSState ) {
+                context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
+                //alreadySaid = true;
+              }
+            return Container(
+              height: (constraints.maxHeight / 100) * 15,
+              padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+              // create space between each childs
+              child: BlocListener<TTSBloc, TTSState>(
+                  listener: (context, TTSState state) {
+                    if (state is EmptyTTSState) {
+                     //log('data: ${task.lamaText!}');
+                      context.read<TTSBloc>().add(
+                      QuestionOnInitEvent(task.lamaText!, "Deutsch"));
+              }
+            },
+                child: Stack(
+                  children: [
+                   Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 75),
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                          child: Bubble(
+                            nip: BubbleNip.leftCenter,
+                            child: Center(
+                               child: InkWell(
+                                onTap: () => {
+
+                                  BlocProvider.of<TTSBloc>(context).add(
+                                  ClickOnQuestionEvent.initVoice(
+                                  task.lamaText!, qlang)),
+
+                                 },
+                                  child: Text(
+                                  task.lamaText!,
+                                  style: LamaTextTheme.getStyle(
+                                  color: LamaColors.black, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SvgPicture.asset(
-                  "assets/images/svg/lama_head.svg",
-                  semanticsLabel: "Lama Anna",
-                  width: 75,
+                   Align(
+                      alignment: Alignment.centerLeft,
+                      child: SvgPicture.asset(
+                      "assets/images/svg/lama_head.svg",
+                      semanticsLabel: "Lama Anna",
+                      width: 75,
                 ),
               )
             ],
           ),
-        ),
+          ),
+        );
+  },
+),
         //Items
         Padding(
             padding: EdgeInsets.all(5),
@@ -179,13 +219,13 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                                 alignment: Alignment.bottomCenter,
                                 child: Center(
                                     child: FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: Text(
-                                    "Kein Item zum zurücksetzen gefunden",
-                                    style: LamaTextTheme.getStyle(),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ))),
+                                      fit: BoxFit.fitWidth,
+                                      child: Text(
+                                        "Kein Item zum zurücksetzen gefunden",
+                                        style: LamaTextTheme.getStyle(),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ))),
                             backgroundColor: LamaColors.mainPink,
                           ),
                         );
@@ -196,7 +236,8 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
               ),
             ))
       ],
-    );
+    ),
+);
   }
 
   /// generateItems is Used to create every draggable Item displayed on the Screen.
@@ -257,7 +298,9 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
             left: items[i].left,
             child: Draggable<Item>(
               data: items[i],
-              child: Container(
+              child: BlocBuilder<TTSBloc, TTSState>(
+              builder: (context, state) {
+                return Container(
                   height: (constraints.maxHeight / 100) * 8,
                   width: (constraints.maxWidth / 100) * 38,
                   decoration: BoxDecoration(
@@ -270,9 +313,19 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             blurRadius: 7,
                             offset: Offset(0, 3)),
                       ]),
-                  child: Center(
-                    child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
-                  )),
+                  child: InkWell(
+                    onDoubleTap: () {
+                      String lang;
+                      task.answerLanguage == null ? lang = "Deutsch" :  lang = task.answerLanguage!;
+                      BlocProvider.of<TTSBloc>(context).
+                      add(ClickOnAnswerEvent(items[i].item!, lang));
+                    },
+                    child: Center(
+                      child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
+                    ),
+                  ));
+              },
+            ),
               feedback: Material(
                   child: Container(
                       height: 50,
@@ -304,9 +357,11 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             blurRadius: 7,
                             offset: Offset(0, 3)),
                       ]),
-                  child: Center(
-                    child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
-                  )),
+
+                    child: Center(
+                      child: Text(items[i].item!, style: LamaTextTheme.getStyle()),
+                    ),
+                  ),
             )),
       );
     }
@@ -323,8 +378,12 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
   /// {@return} [Widget] Targetwidget to be displayed on the screen
   Widget buildTargets(BuildContext context, List<String> categoryList,
       String? taskCategory, Color color) {
-    return DragTarget<Item>(
-      builder: (context, candidate, rejectedData) => Container(
+      String alang;
+      task.answerLanguage == null ? alang = "Deutsch" : alang = task.answerLanguage!;
+      return BlocBuilder<TTSBloc, TTSState>(
+        builder: (context, state) {
+        return DragTarget<Item>(
+         builder: (context, candidate, rejectedData) => Container(
           height: (constraints.maxHeight / 100) * 45,
           width: (constraints.maxWidth / 100) * 45,
           decoration: BoxDecoration(
@@ -342,39 +401,51 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
               padding: EdgeInsets.all(10),
               child: FittedBox(
                 fit: BoxFit.fitWidth,
-                child: Center(
-                  child: Text(
-                    taskCategory!,
-                    style: LamaTextTheme.getStyle(
-                      color: LamaColors.white,
-                      fontSize: 30,
+                child: InkWell(
+                  // todo ist stil
+                  onDoubleTap: () {
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswerEvent(taskCategory!, alang));
+                  },
+                  child: Center(
+                    child: Text(
+                      taskCategory!,
+                      style: LamaTextTheme.getStyle(
+                        color: LamaColors.white,
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                 ),
               ))),
-      onWillAccept: (data) => true,
-      onAccept: (data) {
-        // Check if draged Item is contained in the Items for this Category
-        categoryList.contains(data.item)
-            ? results.add(true)
-            : results.add(false);
-        // reload screen
-        setState(() {
-          // After Draging the Item needs to be removed from the Screen
-          deletinons.add(data);
-          items.removeWhere((element) {
-            return element.item == data.item;
-          });
-          // If the draged Item was the Last one on the Screen
-          // reset all Variables and send the resluts to check
-          if (items.isEmpty) {
-            firstStart = true;
-            BlocProvider.of<TaskBloc>(context)
-                .add(AnswerTaskEvent.initMatchCategory(results));
-          }
+           onWillAccept: (data) => true,
+           onAccept: (data) {
+          // Check if draged Item is contained in the Items for this Category
+          categoryList.contains(data.item)
+              ? results.add(true)
+              : results.add(false);
+          // reload screen
+          setState(() {
+            // After Draging the Item needs to be removed from the Screen
+            deletinons.add(data);
+            items.removeWhere((element) {
+              return element.item == data.item;
+            });
+            // If the draged Item was the Last one on the Screen
+            // reset all Variables and send the resluts to check
+            if (items.isNotEmpty) {
+              BlocProvider.of<TTSBloc>(context).add(IsNotEmptyStateEvent());
+            }
+            if (items.isEmpty) {
+              firstStart = true;
+              BlocProvider.of<TaskBloc>(context)
+                  .add(AnswerTaskEvent.initMatchCategory(results));
+            }
         });
       },
     );
+  },
+);
   }
 }
 
