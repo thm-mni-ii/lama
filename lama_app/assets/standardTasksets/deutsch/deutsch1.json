@@ -2,9 +2,10 @@
   "taskset_name": "Standardaufgaben Klasse 1",
   "taskset_subject": "Deutsch",
   "taskset_grade": 1,
+  "taskset_randomize_order": true,
   "tasks": [
     {
-      "task_type": "Buchstabieren",
+      "task_type": "TaskType.buchstabieren",
       "task_reward": 2,
       "left_to_solve": 3,
       "lama_text": "Test Text",
@@ -31,7 +32,8 @@
       }
     },
     {
-      "task_type": "4Cards",
+      "id": "[#5a805]",
+      "task_type": "TaskType.fourCards",
       "task_reward": 2,
       "question": "lesen",
       "left_to_solve": 3,
@@ -44,7 +46,8 @@
       ]
     },
     {
-      "task_type": "ClozeTest",
+      "id": "[#e0a84]",
+      "task_type": "TaskType.clozeTest",
       "task_reward": 2,
       "question": ".. Dino ist groß",
       "lama_text":"Tippe die richtige Antwort an!",
@@ -56,7 +59,8 @@
       ]
     },
     {
-      "task_type": "MatchCategory",
+      "id": "[#af48e]",
+      "task_type": "TaskType.matchCategory",
       "task_reward": 2,
       "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
       "left_to_solve": 3,
