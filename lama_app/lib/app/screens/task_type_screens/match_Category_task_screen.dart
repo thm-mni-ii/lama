@@ -100,20 +100,11 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
             builder: (context, state) {
               if (state is EmptyTTSState ) {
                 context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
-                //alreadySaid = true;
               }
             return Container(
               height: (constraints.maxHeight / 100) * 15,
               padding: EdgeInsets.only(left: 15, right: 15, top: 15),
               // create space between each childs
-              child: BlocListener<TTSBloc, TTSState>(
-                  listener: (context, TTSState state) {
-                    if (state is EmptyTTSState) {
-                     //log('data: ${task.lamaText!}');
-                      context.read<TTSBloc>().add(
-                      QuestionOnInitEvent(task.lamaText!, "Deutsch"));
-              }
-            },
                 child: Stack(
                   children: [
                    Align(
@@ -127,11 +118,9 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                             child: Center(
                                child: InkWell(
                                 onTap: () => {
-
                                   BlocProvider.of<TTSBloc>(context).add(
                                   ClickOnQuestionEvent.initVoice(
                                   task.lamaText!, qlang)),
-
                                  },
                                   child: Text(
                                   task.lamaText!,
@@ -152,7 +141,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                 ),
               )
             ],
-          ),
           ),
         );
   },
@@ -402,7 +390,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
               child: FittedBox(
                 fit: BoxFit.fitWidth,
                 child: InkWell(
-                  // todo ist stil
                   onDoubleTap: () {
                     BlocProvider.of<TTSBloc>(context).
                     add(ClickOnAnswerEvent(taskCategory!, alang));
