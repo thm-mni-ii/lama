@@ -250,7 +250,8 @@ class TasksetLoader {
   List<Taskset>? getLoadedTasksetsForSubjectAndGrade(
       String subject, int? grade) {
     SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
-    if (tasksetPool.containsKey(sgr)) return tasksetPool[sgr];
+    // TODO sollte pool sein 
+    if (loadedTasksets.containsKey(sgr)) return loadedTasksets[sgr];
     return [];
   }
 
