@@ -1,4 +1,5 @@
 import 'package:bubble/bubble.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -60,10 +61,17 @@ class FourCardTaskScreen extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Container(
-              padding: EdgeInsets.only(left: 75),
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              child: Bubble(
+                padding: EdgeInsets.only(left: 75),
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                child: BubbleSpecialTwo(
+                  isSender: false,
+                  color: LamaColors.mainPink,
+                  text: task.lamaText!,
+                  textStyle:
+                      TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                )
+                /* child: Bubble(
                 nip: BubbleNip.leftCenter,
                 child: Center(
                   child: Text(
@@ -71,8 +79,8 @@ class FourCardTaskScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),
-              ),
-            ),
+              ), */
+                ),
           ),
           Align(
             alignment: Alignment.centerLeft,

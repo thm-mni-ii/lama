@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:bubble/bubble.dart';
+import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
+import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -118,10 +120,16 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    padding: EdgeInsets.only(left: 75),
-                    height: 60,
-                    width: MediaQuery.of(context).size.width,
-                    child: Bubble(
+                      padding: EdgeInsets.only(left: 75),
+                      height: 60,
+                      width: MediaQuery.of(context).size.width,
+                      child: BubbleSpecialOne(
+                        isSender: false,
+                        color: LamaColors.mainPink,
+                        text: setTaskMessageAccordingToTaskModus(),
+                        textStyle: LamaTextTheme.getStyle(fontSize: 15),
+                      )
+                      /* child: Bubble(
                       nip: BubbleNip.leftCenter,
                       child: Center(
                         child: Text(
@@ -130,8 +138,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
                               color: LamaColors.black, fontSize: 15),
                         ),
                       ),
-                    ),
-                  ),
+                    ), */
+                      ),
                 ),
                 Align(
                   alignment: Alignment.centerLeft,

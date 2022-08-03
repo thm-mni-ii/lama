@@ -1,4 +1,5 @@
 import 'package:bubble/bubble.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +42,10 @@ class ClozeTestTaskScreen extends StatelessWidget {
           child: Align(
             child: Text(task.question!,
                 textAlign: TextAlign.center,
-                style: LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 30,)),
+                style: LamaTextTheme.getStyle(
+                  color: LamaColors.black,
+                  fontSize: 30,
+                )),
             //alignment: Alignment.centerLeft,
           )),
       // Lama Speechbubble
@@ -54,10 +58,17 @@ class ClozeTestTaskScreen extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                padding: EdgeInsets.only(left: 75),
-                height: 50,
-                width: MediaQuery.of(context).size.width,
-                child: Bubble(
+                  padding: EdgeInsets.only(left: 75),
+                  height: 50,
+                  width: MediaQuery.of(context).size.width,
+                  child: BubbleSpecialTwo(
+                    isSender: false,
+                    color: LamaColors.mainPink,
+                    text: task.lamaText!,
+                    textStyle: LamaTextTheme.getStyle(
+                        color: LamaColors.black, fontSize: 15),
+                  )
+                  /* child: Bubble(
                   nip: BubbleNip.leftCenter,
                   child: Center(
                     child: Text(
@@ -66,8 +77,8 @@ class ClozeTestTaskScreen extends StatelessWidget {
                           LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 15),
                     ),
                   ),
-                ),
-              ),
+                ), */
+                  ),
             ),
             Align(
               alignment: Alignment.centerLeft,
@@ -107,7 +118,10 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   child: Center(
                     child: Text(
                       answers[0]!,
-                      style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
+                      style: LamaTextTheme.getStyle(
+                        color: LamaColors.white,
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                 ),
@@ -131,7 +145,10 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   child: Center(
                     child: Text(
                       answers[1]!,
-                      style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
+                      style: LamaTextTheme.getStyle(
+                        color: LamaColors.white,
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                 ),
@@ -155,7 +172,10 @@ class ClozeTestTaskScreen extends StatelessWidget {
                   child: Center(
                     child: Text(
                       answers[2]!,
-                      style: LamaTextTheme.getStyle(color: LamaColors.white, fontSize: 30,),
+                      style: LamaTextTheme.getStyle(
+                        color: LamaColors.white,
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                 ),

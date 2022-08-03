@@ -1,4 +1,5 @@
 import 'package:bubble/bubble.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -142,40 +143,47 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: _buildMenuButtonColumn(constraints)),
                             ),
                             Align(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 15, bottom: 15),
-                                child: SvgPicture.asset(
-                                  "assets/images/svg/lama_head.svg",
-                                  semanticsLabel: "Lama Anna",
-                                  width: (constraints.maxWidth / 100) * 15,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: 20,
-                                    right: (constraints.maxWidth / 100) * 15),
-                                child: Container(
-                                  height: (constraints.maxHeight / 100) * 10,
-                                  width: (constraints.maxWidth / 100) * 80,
-                                  child: Bubble(
-                                    nip: BubbleNip.rightCenter,
-                                    color: LamaColors.mainPink,
-                                    borderColor: LamaColors.mainPink,
-                                    shadowColor: LamaColors.black,
-                                    child: Center(
-                                      child: Text(
-                                        RepositoryProvider.of<
-                                                LamaFactsRepository>(context)
-                                            .getRandomLamaFact(),
-                                        style: LamaTextTheme.getStyle(
-                                            fontSize: 15),
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                padding: EdgeInsets.only(bottom: 20),
+                                height: (constraints.maxHeight / 100) * 10,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 20,
+                                        child: BubbleSpecialTwo(
+                                          color: LamaColors.mainPink,
+                                          text: RepositoryProvider.of<
+                                                  LamaFactsRepository>(context)
+                                              .getRandomLamaFact(),
+                                          textStyle: LamaTextTheme.getStyle(
+                                              fontSize: 15),
+                                        )
+                                        /* child: Bubble(
+                                        nip: BubbleNip.rightCenter,
+                                        color: LamaColors.mainPink,
+                                        borderColor: LamaColors.mainPink,
+                                        shadowColor: LamaColors.black,
+                                        child: Center(
+                                          child: Text(
+                                            RepositoryProvider.of<
+                                                        LamaFactsRepository>(
+                                                    context)
+                                                .getRandomLamaFact(),
+                                            style: LamaTextTheme.getStyle(
+                                                fontSize: 15),
+                                          ),
+                                        ),
+                                      ), */
+                                        ),
+                                    Expanded(
+                                      flex: 5,
+                                      child: SvgPicture.asset(
+                                        "assets/images/svg/lama_head.svg",
+                                        semanticsLabel: "Lama Anna",
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ),
