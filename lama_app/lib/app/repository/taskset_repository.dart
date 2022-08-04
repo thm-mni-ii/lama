@@ -70,12 +70,11 @@ class TasksetRepository {
       try {
         final client = SSHClient(
           await SSHSocket.connect(
-              /* 'lama.mni.thm.de' */ serverRepo.serverSettings!.url,
-              serverRepo.serverSettings!.port),
-          username: /* 'lama-upload' */ serverRepo.serverSettings!.userName,
-          onPasswordRequest:
-              () => /* 'a0ef2dc2950087c544164b4163817015' */ serverRepo
-                  .serverSettings!.password,
+            serverRepo.serverSettings!.url,
+            serverRepo.serverSettings!.port,
+          ),
+          username: serverRepo.serverSettings!.userName,
+          onPasswordRequest: () => serverRepo.serverSettings!.password,
         );
 
         final sftp = await client.sftp();
@@ -112,12 +111,11 @@ class TasksetRepository {
     if (serverRepo.serverSettings != null) {
       final client = SSHClient(
         await SSHSocket.connect(
-            /* 'lama.mni.thm.de' */ serverRepo.serverSettings!.url,
-            serverRepo.serverSettings!.port),
-        username: /* 'lama-upload' */ serverRepo.serverSettings!.userName,
-        onPasswordRequest:
-            () => /* 'a0ef2dc2950087c544164b4163817015' */ serverRepo
-                .serverSettings!.password,
+          serverRepo.serverSettings!.url,
+          serverRepo.serverSettings!.port,
+        ),
+        username: serverRepo.serverSettings!.userName,
+        onPasswordRequest: () => serverRepo.serverSettings!.password,
       );
 
       Map<String, List<String>> allFileNames = {};
@@ -170,12 +168,11 @@ class TasksetRepository {
       try {
         final client = SSHClient(
           await SSHSocket.connect(
-              /* 'lama.mni.thm.de' */ serverRepo.serverSettings!.url,
-              serverRepo.serverSettings!.port),
-          username: /* 'lama-upload' */ serverRepo.serverSettings!.userName,
-          onPasswordRequest:
-              () => /* 'a0ef2dc2950087c544164b4163817015' */ serverRepo
-                  .serverSettings!.password,
+            serverRepo.serverSettings!.url,
+            serverRepo.serverSettings!.port,
+          ),
+          username: serverRepo.serverSettings!.userName,
+          onPasswordRequest: () => serverRepo.serverSettings!.password,
         );
         print(taskset.toJson().toString());
         final sftp = await client.sftp();
