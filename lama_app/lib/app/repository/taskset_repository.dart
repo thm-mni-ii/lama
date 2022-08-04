@@ -27,7 +27,7 @@ class TasksetRepository {
 
   ///Returns a List of all [Taskset] that belong to [subject] and are aimed at [grade]
   List<Taskset>? getTasksetsForSubjectAndGrade(String subject, int? grade) {
-    return tasksetLoader.getLoadedTasksetsForSubjectAndGrade(subject, grade);
+    return tasksetLoader.getTasksetPoolForSubjectAndGrade(subject, grade);
   }
 
   ///Returns a List of all [Taskset] that belong to [subject] and are aimed at [grade]

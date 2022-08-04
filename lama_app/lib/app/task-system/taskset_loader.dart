@@ -26,9 +26,7 @@ class TasksetLoader {
     loadedTasksets.forEach((key, value) {
       value.forEach((element) {
         if (element.isInPool) {
-          if (tasksetPool[key] == null) {
-            tasksetPool[key] = [];
-          }
+          if (tasksetPool[key] == null) tasksetPool[key] = [];
           tasksetPool[key]!.add(element);
         }
       });
