@@ -71,8 +71,7 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
     });
     on<UploadTaskset>((event, emit) async {
       final repo = RepositoryProvider.of<TasksetRepository>(event.context);
-      print("FUCK YOU: " +
-          (await repo.fileUpload(event.context, event.taskset)).toString());
+      await repo.fileUpload(event.context, event.taskset).toString();
       if (repo.tasksetLoader.loadedTasksets[SubjectGradeRelation(
               event.taskset.subject, event.taskset.grade)] ==
           null) {
@@ -91,8 +90,8 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
   void updateTaskset(BuildContext context, Taskset taskset) async {
     final repo = RepositoryProvider.of<TasksetRepository>(context);
 
-    await repo.deleteTasksetFromServer(context, taskset);
-    await repo.fileUpload(context, taskset);
+    print("frage 1: " + (await repo.deleteTasksetFromServer(context, taskset)).toString());
+    print("frage 2: " + (await repo.fileUpload(context, taskset)).toString());
   }
 
   void removeATaskset(BuildContext context, Taskset taskset) {
