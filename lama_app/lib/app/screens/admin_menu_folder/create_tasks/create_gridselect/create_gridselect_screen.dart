@@ -112,6 +112,8 @@ class CreateGridSelectScreenState extends State<CreateGridSelectScreen> {
                 "Markiere X ${_categoryController.text}",
                 3,
                 _controllers.map((e) => e.text).toList(),
+                null,
+                null
               );
               if (newTask) {
                 // add Task

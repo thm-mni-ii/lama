@@ -9,6 +9,12 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+
+import 'package:lama_app/app/event/tts_event.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+
+
 import 'package:numberpicker/numberpicker.dart';
 
 /// Author: H.Bismo
@@ -47,6 +53,8 @@ class ClockTaskState extends State<ClockTaskScreen> {
   var vierMinute;
   var vierMinute2;
   var allMinuten;
+  bool alreadySaid = false;
+
   List<String> wrongAnswer = [];
 
   String setImage() {
@@ -282,197 +290,251 @@ class ClockTaskState extends State<ClockTaskScreen> {
     return this.wrgStunde2.toString() + ":" + this.wrgMinute2.toString();
   }
 
+  void _showAlertDialog(String txt) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(txt),
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
     if (task.uhr == "allStunden") {
-      return Column(
-        children: [
-          // Lama Speechbubble
-          Container(
-            height: (constraints.maxHeight / 100) * 15,
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            // create space between each childs
-            child: Stack(
+      return BlocProvider(
+        create: (context) => TTSBloc(),
+        child: BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, TTSState state) {
+            if (state is EmptyTTSState) {
+              context.read<TTSBloc>().add(
+                  QuestionOnInitEvent(task.lamaText!, "qlang"));
+            }
+            return Column(
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 75),
-                    height: 50,
-                    width: MediaQuery.of(context).size.width,
-                    child: Bubble(
-                      nip: BubbleNip.leftCenter,
-                      child: Center(
-                        child: Text(
-                          "Wie viel Uhr ist es?",
-                          style: LamaTextTheme.getStyle(
-                              color: LamaColors.black, fontSize: 15),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SvgPicture.asset(
-                    "assets/images/svg/lama_head.svg",
-                    semanticsLabel: "Lama Anna",
-                    width: 75,
-                  ),
-                ),
-                Align(
-                    alignment: Alignment(1.0, 5.0),
-                    child: Container(
-                        padding: EdgeInsets.only(left: 100, top: 15),
-                        child: Image.asset(
-                          setImage(),
-                          width: 30,
-                          height: 30,
-                        ))),
-              ],
-            ),
-          ),
-          //Items
-          Padding(
-            padding: EdgeInsets.all(5),
-            child: Container(
-                height: (constraints.maxHeight / 100) * 45,
-                child: Container(
-                  width: 270,
-                  height: 270,
-                  child: CustomPaint(
-                      painter: ClockPainter(task, constraints, randStunde,
-                          randMinute, vierMinute, allMinuten)),
-                )),
-          ),
-          Container(
-            height: (constraints.maxHeight / 100) * 27.5,
-            alignment: Alignment.topCenter,
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                      child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Center(
-                      child: Text(
-                        showtimer!,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  )),
-                  Container(
-                      height: (constraints.maxHeight / 100) * 15,
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: TextField(
-                            autocorrect: false,
-                            enableSuggestions: false,
-                            cursorColor: Colors.white,
-                            controller: controller,
-                            decoration: InputDecoration(
-                                fillColor: LamaColors.blueAccent,
-                                hintStyle: LamaTextTheme.getStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                    color: LamaColors.white.withOpacity(0.5)),
-                                filled: true,
-                                border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50)),
-                                    borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50)),
-                                    borderSide: BorderSide.none),
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50)),
-                                    borderSide: BorderSide.none),
-                                hintText: 'Gib die Uhrzeit ein! (HH:MM)'),
-                            maxLines: 1,
-                            keyboardType: TextInputType.text,
-                            textAlign: TextAlign.center,
-                            style: LamaTextTheme.getStyle(
-                                fontSize: 22.5, fontWeight: FontWeight.w500),
+                // Lama Speechbubble
+                Container(
+                  height: (constraints.maxHeight / 100) * 15,
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  // create space between each childs
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 75),
+                          height: 50,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          child: Bubble(
+                            nip: BubbleNip.leftCenter,
+                            child: InkWell(
+                              onTap: () {
+                                BlocProvider.of<TTSBloc>(context)
+                                    .add(ClickOnQuestionEvent.initVoice(
+                                    task.lamaText!, qlang));
+                              },
+                              child: Center(
+                                child: Text(task.lamaText!,
+                                  style: LamaTextTheme.getStyle(
+                                      color: LamaColors.black, fontSize: 15),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      )),
-                ]),
-          ),
-          Container(
-            height: (constraints.maxHeight / 100) * 9,
-            child: Center(
-              child: InkWell(
-                  child: Container(
-                    height: (constraints.maxHeight / 100) * 15,
-                    width: (constraints.maxWidth / 100) * 70,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(25),
                       ),
-                      color: LamaColors.greenAccent,
-                      boxShadow: [
-                        BoxShadow(
-                            offset: Offset(0, 2),
-                            color: LamaColors.black.withOpacity(0.5))
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Fertig!",
-                        style: LamaTextTheme.getStyle(
-                          fontSize: 30,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: SvgPicture.asset(
+                          "assets/images/svg/lama_head.svg",
+                          semanticsLabel: "Lama Anna",
+                          width: 75,
                         ),
                       ),
+                      Align(
+                          alignment: Alignment(1.0, 5.0),
+                          child: Container(
+                              padding: EdgeInsets.only(left: 100, top: 15),
+                              child: Image.asset(
+                                setImage(),
+                                width: 30,
+                                height: 30,
+                              )
+                          )
+                      ),
+                    ],
+                  ),
+                ),
+                //Items
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Container(
+                      height: (constraints.maxHeight / 100) * 45,
+                      child: Container(
+                        width: 270,
+                        height: 270,
+                        child: CustomPaint(
+                            painter: ClockPainter(task, constraints, randStunde,
+                                randMinute, vierMinute, allMinuten)),
+                      )
+                  ),
+                ),
+                Container(
+                  height: (constraints.maxHeight / 100) * 27.5,
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Center(
+                                child: Text(
+                                  showtimer!,
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            )
+                        ),
+                        Container(
+                            height: (constraints.maxHeight / 100) * 15,
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15),
+                                child: TextField(
+                                  autocorrect: false,
+                                  enableSuggestions: false,
+                                  cursorColor: Colors.white,
+                                  controller: controller,
+                                  decoration: InputDecoration(
+                                      fillColor: LamaColors.blueAccent,
+                                      hintStyle: LamaTextTheme.getStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500,
+                                          color: LamaColors.white.withOpacity(
+                                              0.5)),
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.all(Radius.circular(50)),
+                                          borderSide: BorderSide.none),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.all(Radius.circular(50)),
+                                          borderSide: BorderSide.none),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.all(Radius.circular(50)),
+                                          borderSide: BorderSide.none),
+                                      hintText: 'Gib die Uhrzeit ein! (HH:MM)'),
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.text,
+                                  textAlign: TextAlign.center,
+                                  style: LamaTextTheme.getStyle(
+                                      fontSize: 22.5,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            )
+                        ),
+                      ]
+                  ),
+                ),
+                Container(
+                  height: (constraints.maxHeight / 100) * 9,
+                  child: Center(
+                    child: InkWell(
+                        child: Container(
+                          height: (constraints.maxHeight / 100) * 15,
+                          width: (constraints.maxWidth / 100) * 70,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(25),
+                            ),
+                            color: LamaColors.greenAccent,
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: Offset(0, 2),
+                                  color: LamaColors.black.withOpacity(0.5))
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Fertig!",
+                              style: LamaTextTheme.getStyle(
+                                fontSize: 30,
+                              ),
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          bool noInput = true;
+                          if ((controller.text) != null) {
+                            noInput = false;
+                          }
+                          if (noInput) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: Duration(seconds: 2),
+                              content: Container(
+                                  height: (constraints.maxHeight / 100) * 6,
+                                  alignment: Alignment.bottomCenter,
+                                  child: Center(
+                                      child: FittedBox(
+                                        fit: BoxFit.fitWidth,
+                                        child: Text(
+                                          "Gib eine Zahl ein!",
+                                          style: LamaTextTheme.getStyle(),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      )
+                                  )
+                              ),
+                              backgroundColor: LamaColors.mainPink,
+                            )
+                            );
+                          } else {
+                            bool answer = (controller.text) == task.rightAnswer;
+                            BlocProvider.of<TaskBloc>(context)
+                                .add(AnswerTaskEvent.initClockTask(answer));
+                            print(answer);
+                          }
+                        }
                     ),
                   ),
-                  onTap: () {
-                    bool noInput = true;
-                    if ((controller.text) != null) {
-                      noInput = false;
-                    }
-                    if (noInput) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        duration: Duration(seconds: 2),
-                        content: Container(
-                            height: (constraints.maxHeight / 100) * 6,
-                            alignment: Alignment.bottomCenter,
-                            child: Center(
-                                child: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Text(
-                                "Gib eine Zahl ein!",
-                                style: LamaTextTheme.getStyle(),
-                                textAlign: TextAlign.center,
-                              ),
-                            ))),
-                        backgroundColor: LamaColors.mainPink,
-                      ));
-                    } else {
-                      bool answer = (controller.text) == task.rightAnswer;
-                      BlocProvider.of<TaskBloc>(context)
-                          .add(AnswerTaskEvent.initClockTask(answer));
-                      print(answer);
-                    }
-                  }),
-            ),
-          ),
-        ],
+                ),
+              ],
+            );
+          }
+        ),
       );
     } else {
-      return Column(children: [
+      return BlocProvider(
+        create: (context) => TTSBloc(),
+          child: Column(children: [
         // Lama Speechbubble
-        Container(
+          Container(
           height: (constraints.maxHeight / 100) * 15,
           padding: EdgeInsets.only(left: 15, right: 15, top: 15),
           // create space between each childs
-          child: Stack(
-            children: [
+          
+           child: BlocBuilder<TTSBloc, TTSState>(
+             builder: (context, state) {
+              if (state is EmptyTTSState ) {
+                context.read<TTSBloc>().add(
+                QuestionOnInitEvent(task.lamaText!, qlang));
+              }
+              return Stack(
+                 children: [
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -481,11 +543,17 @@ class ClockTaskState extends State<ClockTaskScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: Bubble(
                     nip: BubbleNip.leftCenter,
-                    child: Center(
-                      child: Text(
-                        "Wie viel Uhr ist es?",
-                        style: LamaTextTheme.getStyle(
-                            color: LamaColors.black, fontSize: 15),
+                    child: InkWell(
+                      onTap: () {
+                        BlocProvider.of<TTSBloc>(context)
+                            .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                      },
+                      child: Center(
+                        child: Text(
+                          task.lamaText!,
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),
@@ -509,7 +577,9 @@ class ClockTaskState extends State<ClockTaskScreen> {
                         height: 30,
                       ))),
             ],
-          ),
+          );
+        },
+        ),
         ),
         //Items
         Padding(
@@ -524,7 +594,9 @@ class ClockTaskState extends State<ClockTaskScreen> {
                         randMinute, vierMinute, allMinuten)),
               )),
         ),
-        Container(
+        BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, state) {
+        return Container(
           height: (constraints.maxHeight / 100) * 35,
           alignment: Alignment.bottomCenter,
           padding: EdgeInsets.only(top: 20),
@@ -558,38 +630,20 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3)),
                     ]),
                 child: InkWell(
-                  onTap: () => BlocProvider.of<TaskBloc>(context)
-                      .add(AnswerTaskEvent(answers[0])),
+                  onTap: () {
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(AnswerTaskEvent(answers[0]));
+                    BlocProvider.of<TTSBloc>(context).
+                    add(SetDefaultEvent());
+                  },
+                  onDoubleTap: () {
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswerEvent(answers[0]!,qlang));
+
+                  },
                   child: Center(
                     child: Text(
                       answers[0]!,
-                      style: LamaTextTheme.getStyle(
-                        color: LamaColors.white,
-                        fontSize: 30,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                height: 55,
-                width: 150,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: LamaColors.blueAccent,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3))
-                    ]),
-                child: InkWell(
-                  onTap: () => BlocProvider.of<TaskBloc>(context)
-                      .add(AnswerTaskEvent(answers[1])),
-                  child: Center(
-                    child: Text(
-                      answers[1]!,
                       style: LamaTextTheme.getStyle(
                         color: LamaColors.white,
                         fontSize: 30,
@@ -612,23 +666,70 @@ class ClockTaskState extends State<ClockTaskScreen> {
                           offset: Offset(0, 3))
                     ]),
                 child: InkWell(
-                  onTap: () => BlocProvider.of<TaskBloc>(context)
-                      .add(AnswerTaskEvent(answers[2])),
+                  onTap: () {
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(AnswerTaskEvent(answers[1]));
+                    BlocProvider.of<TTSBloc>(context).
+                    add(SetDefaultEvent());
+                  },
+                  onDoubleTap: () {
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswerEvent(answers[1]!,qlang));
+                  },
                   child: Center(
                     child: Text(
-                      answers[2]!,
+                      answers[1]!,
                       style: LamaTextTheme.getStyle(
-                        color: LamaColors.white,
+                        color:  LamaColors.white,
                         fontSize: 30,
                       ),
                     ),
                   ),
                 ),
               ),
+
+              Container(
+                height: 55,
+                width: 150,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    color: LamaColors.greenAccent,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3))
+                    ]),
+                child: InkWell(
+                  onTap: () {
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(AnswerTaskEvent(answers[2]));
+                    BlocProvider.of<TTSBloc>(context).
+                    add(SetDefaultEvent());
+                  },
+                  onDoubleTap: () {
+                    BlocProvider.of<TTSBloc>(context).
+                    add(ClickOnAnswerEvent(answers[2]!,qlang));
+                    },
+                    child: Center(
+                      child: Text(
+                        answers[2]!,
+                        style: LamaTextTheme.getStyle(
+                          color: LamaColors.white,
+                          fontSize: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+              ),
             ],
           ),
-        )
-      ]);
+        );
+        },
+      )
+      ]),
+    );
     }
   }
 }

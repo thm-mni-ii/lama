@@ -112,7 +112,7 @@ class TasksetValidator {
                 json["timer"] is bool) return null;
             return "Aufgabentyp: Clock";
 
-          case "ClockDifferent":
+          case "TaskType.clockDifferent":
             if (json.containsKey("uhr") &&
                 json["uhr"] is String &&
                 json.containsKey("clockMode") &&

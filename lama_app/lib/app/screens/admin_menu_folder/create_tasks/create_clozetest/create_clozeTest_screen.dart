@@ -109,6 +109,8 @@ class CreateClozeTestScreenState extends State<CreateClozeTestScreen> {
                   3,
                   _questionController.text,
                   _rightAnswer.text,
+                  null,
+                  null,
                   [
                     _wrongAnswer1.text,
                     _wrongAnswer2.text,

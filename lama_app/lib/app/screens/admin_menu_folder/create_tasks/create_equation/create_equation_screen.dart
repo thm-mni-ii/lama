@@ -266,7 +266,9 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                   allowOperationReplace,
                   listVonBis,
                   null,
-                  -1);
+                  -1,
+                  null,
+                  null,);
               if (newTask) {
                 // add Task
                 BlocProvider.of<TasksetCreateTasklistBloc>(context)

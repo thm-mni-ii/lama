@@ -107,6 +107,8 @@ class CreateMarkWordsScreenState extends State<CreateMarkWordsScreen> {
                 3,
                 _sentenceController.text,
                 _controllers.map((e) => e.text).toList(),
+                null,
+                null,
               );
               if (newTask) {
                 // add Task

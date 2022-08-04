@@ -46,3 +46,10 @@ class AllTasksCompletedState extends TaskState {
   List<bool> answerResults;
   AllTasksCompletedState(this.tasks, this.answerResults);
 }
+
+
+class TaskAnswerSelected extends TaskState {
+  String subject;
+  Task task;
+  TaskAnswerSelected(this.subject, this.task);
+}

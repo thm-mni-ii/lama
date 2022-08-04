@@ -118,7 +118,9 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                   "",
                   3,
                   int.parse(_currentSelectedDifficulty.toString()),
-                  optimumAllowed);
+                  optimumAllowed,
+                  null,
+                  null);
               if (newTask) {
                 // add Task
                 tasksetListProvider.add(AddToTaskList(moneyTask));

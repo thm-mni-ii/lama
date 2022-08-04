@@ -5,12 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/equation_bloc.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/OperatorWidget.dart';
+
+import 'package:lama_app/app/event/tts_event.dart';
+
 
 /// [StatefulWidget] that contains the screen for the Equation TaskType
 ///
@@ -114,7 +119,11 @@ class EquationTaskState extends State<EquationTaskScreen> {
 
   ///Returns the anna saying the lama_text in a speechbubble
   Widget _buildLamaText() {
-    return Container(
+    String qlang;
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
+    return BlocProvider(
+    create: (context) => TTSBloc(),
+      child: Container(
       padding: EdgeInsets.only(left: 15, right: 15),
       height: (constraints.maxHeight / 100) * 30,
       width: (constraints.maxWidth),
@@ -122,21 +131,34 @@ class EquationTaskState extends State<EquationTaskScreen> {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Container(
-              padding: EdgeInsets.only(left: 75),
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              child: Bubble(
-                nip: BubbleNip.leftCenter,
-                child: Center(
-                  child: Text(
-                    task.lamaText!,
-                    style: LamaTextTheme.getStyle(
-                        fontSize: 15, color: LamaColors.black),
+            child: BlocBuilder<TTSBloc, TTSState>(
+              builder: (context, state) {
+                if (state is EmptyTTSState) {
+                  context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
+                }
+            return InkWell(
+              onTap: () {
+                BlocProvider.of<TTSBloc>(context)
+                    .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+              },
+              child: Container(
+                padding: EdgeInsets.only(left: 75),
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                child: Bubble(
+                  nip: BubbleNip.leftCenter,
+                  child: Center(
+                    child: Text(
+                      task.lamaText!,
+                      style: LamaTextTheme.getStyle(
+                          fontSize: 15, color: LamaColors.black),
+                    ),
                   ),
                 ),
               ),
-            ),
+            );
+  },
+),
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -148,7 +170,8 @@ class EquationTaskState extends State<EquationTaskScreen> {
           )
         ],
       ),
-    );
+    ),
+);
   }
 
   Widget _buildResetButton() {
@@ -181,6 +204,10 @@ class EquationTaskState extends State<EquationTaskScreen> {
   }
 
   Widget _buildSubmitButton() {
+    return BlocProvider(
+  create: (context) => TTSBloc(),
+  child: BlocBuilder<TTSBloc, TTSState>(
+  builder: (context, state) {
     return Container(
       width: (constraints.maxWidth / 100) * 35,
       height: (constraints.maxHeight / 100) * 10,
@@ -198,6 +225,8 @@ class EquationTaskState extends State<EquationTaskScreen> {
         onTap: () {
           BlocProvider.of<TaskBloc>(context)
               .add(AnswerTaskEvent.initEquationNew(bloc.currentEquation));
+          BlocProvider.of<TTSBloc>(context).
+            add(SetDefaultEvent());
         },
         child: Center(
           child: Text(
@@ -208,6 +237,9 @@ class EquationTaskState extends State<EquationTaskScreen> {
         ),
       ),
     );
+  },
+),
+);
   }
 
   /// Return possible answers for equation in [GridView] as [Widget]

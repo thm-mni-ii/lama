@@ -119,7 +119,9 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
                   3,
                   reverseAllowed,
                   zerosAllowed,
-                  boolThousandsAllowed);
+                  boolThousandsAllowed,
+                  null,
+                  null,);
               if (newTask) {
                 // add Task
                 BlocProvider.of<TasksetCreateTasklistBloc>(context)

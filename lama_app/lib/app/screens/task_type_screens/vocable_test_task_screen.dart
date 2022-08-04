@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,12 @@ import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/app/event/tts_event.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+
+
+
 
 /// [StatefulWidget] that contains the screen for the VocableTest TaskType.
 ///
@@ -32,7 +40,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
   final TaskVocableTest task;
   final BoxConstraints constraints;
   final TextEditingController controller = TextEditingController();
-
+  bool alreadySaid = false;
   late VocableTestTaskBloc bloc;
   VocableTestTaskScreenState(this.task, this.constraints) {
     bloc = VocableTestTaskBloc(task);
@@ -48,9 +56,20 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
   }
 
   Widget build(BuildContext context) {
-    return BlocProvider<VocableTestTaskBloc>(
-      create: (context) => bloc,
-      child: BlocListener<VocableTestTaskBloc, VocableTestTaskState>(
+    String qlang;
+    String qWordLang;
+    // todo z.b. Wort Papier ist auf de
+
+
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage;
+    qlang == "Deutsch" ? qWordLang = "Deutsch" : qWordLang = "Englisch";
+
+    log('task.questionLanguage: ${task.questionLanguage}');
+    return BlocProvider(
+      create: (context) => TTSBloc(),
+      child: BlocProvider<VocableTestTaskBloc>(
+        create: (context) => bloc,
+        child: BlocListener<VocableTestTaskBloc, VocableTestTaskState>(
         listener: (BuildContext context, state) {
           if (state is VocableTestFinishedTaskState)
             Future.microtask(() => BlocProvider.of<TaskBloc>(context)
@@ -65,30 +84,50 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                   horizontal: (constraints.maxWidth / 100) * 10,
                   vertical: (constraints.maxHeight / 100) * 5,
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
-                      gradient: LinearGradient(colors: [
-                        LamaColors.orangePrimary,
-                        LamaColors.orangeAccent
-                      ])),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Center(
-                      child: BlocBuilder<VocableTestTaskBloc,
-                          VocableTestTaskState>(builder: (context, state) {
-                        if (state is VocableTestTaskTranslationState)
-                          return Text(
-                            state.wordToTranslate!,
-                            textAlign: TextAlign.center,
-                            style: LamaTextTheme.getStyle(fontSize: 35),
-                          );
-                        else
-                          return Text("Error!");
-                      }),
-                    ),
-                  ),
-                ),
+                child: BlocBuilder<TTSBloc, TTSState>(
+                  builder:
+                    (context, TTSState state) {
+                      if (state is EmptyTTSState && !alreadySaid) {
+                        context.read<TTSBloc>().add(
+                            QuestionOnInitEvent("Translate the shown word",
+                                qlang));
+                        alreadySaid = true;
+                      }
+                      return Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            gradient: LinearGradient(colors: [
+                              LamaColors.orangePrimary,
+                              LamaColors.orangeAccent
+                            ])),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Center(
+                            child: BlocBuilder<VocableTestTaskBloc,
+                                VocableTestTaskState>(
+                                builder: (context, state) {
+                                  if (state is VocableTestTaskTranslationState)
+                                    return InkWell(
+                                      onTap: () {
+                                        // todo language
+                                        BlocProvider.of<TTSBloc>(context)
+                                            .add(ReadQuestionEvent(state.wordToTranslate!, state.lang!));
+                                      },
+                                      child: Text(
+                                        state.wordToTranslate!,
+                                        textAlign: TextAlign.center,
+                                        style: LamaTextTheme.getStyle(
+                                            fontSize: 35),
+                                      ),
+                                    );
+                                  else
+                                    return Text("Error!");
+                                }),
+                          ),
+                        ),
+                      );
+                    }
+                  )
               ),
             ),
             Container(
@@ -129,7 +168,9 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                     ),
                   ),
                 )),
-            Container(
+            BlocBuilder<TTSBloc, TTSState>(
+               builder: (context, state) {
+    return Container(
               height: (constraints.maxHeight / 100) * 15,
               padding: EdgeInsets.only(left: 15, right: 15),
               child: Stack(children: [
@@ -141,11 +182,17 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                     width: MediaQuery.of(context).size.width,
                     child: Bubble(
                       nip: BubbleNip.leftCenter,
-                      child: Center(
-                        child: Text(
-                          task.lamaText!,
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                      child: InkWell(
+                        onTap: () {
+                          BlocProvider.of<TTSBloc>(context)
+                              .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                        },
+                        child: Center(
+                          child: Text(
+                            task.lamaText!,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
@@ -160,7 +207,9 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                   ),
                 ),
               ]),
-            ),
+            );
+  },
+),
             Container(
               height: (constraints.maxHeight / 100) * 25,
               child: Center(
@@ -232,6 +281,7 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
           ],
         ),
       ),
-    );
+    ),
+);
   }
 }

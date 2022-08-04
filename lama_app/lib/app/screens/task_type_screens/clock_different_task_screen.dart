@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
+import 'package:lama_app/app/bloc/taskbloc/tts_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:numberpicker/numberpicker.dart';
+
+import '../../event/tts_event.dart';
+import '../../state/tts_state.dart';
 
 /// Author: H.Bismo
 
@@ -191,7 +195,9 @@ class ClockDifferentState extends State<ClockDifferentScreen> {
     print(this.diffHour);
     print(this.diffMinute);
 
-    return SingleChildScrollView(
+    return BlocProvider(
+      create: (context) => TTSBloc(),
+  child: SingleChildScrollView(
       child: Column(
         children: [
           // Lama Speechbubble
@@ -203,21 +209,34 @@ class ClockDifferentState extends State<ClockDifferentScreen> {
               children: [
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 75),
-                    height: 50,
-                    width: MediaQuery.of(context).size.width,
-                    child: Bubble(
-                      nip: BubbleNip.leftCenter,
-                      child: Center(
-                        child: Text(
-                          "Wie viel Zeitunterschied gibt es?",
-                          style: LamaTextTheme.getStyle(
-                              color: LamaColors.black, fontSize: 15),
+                  child: BlocBuilder<TTSBloc, TTSState>(
+                builder: (context, state) {
+                  if (state is EmptyTTSState) {
+                    context.read<TTSBloc>().add(QuestionOnInitEvent("Wie viel Zeitunterschied gibt es?","de")); // hard
+                  }
+                  return InkWell(
+                    onTap: () {
+                      BlocProvider.of<TTSBloc>(context)
+                          .add(ClickOnQuestionEvent.initVoice("Wie viel Zeitunterschied gibt es?", "de"));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(left: 75),
+                      height: 50,
+                      width: MediaQuery.of(context).size.width,
+                      child: Bubble(
+                        nip: BubbleNip.leftCenter,
+                        child: Center(
+                          child: Text(
+                            "Wie viel Zeitunterschied gibt es?",
+                            style: LamaTextTheme.getStyle(
+                                color: LamaColors.black, fontSize: 15),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  );
+  },
+),
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -384,7 +403,8 @@ class ClockDifferentState extends State<ClockDifferentScreen> {
           ),
         ],
       ),
-    );
+    ),
+);
   }
 }
 
