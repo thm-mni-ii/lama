@@ -85,12 +85,7 @@ class TasksetCreationCartScreen extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     if(tasksetListBloc.taskList.isNotEmpty) {
-                    createTasksetBloc.add(
-                      AddTaskListToTaskset(tasksetListBloc.taskList),
-                    );
-                    BlocProvider.of<CreateTasksetBloc>(context).add(GenerateTaskset());
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                    BlocProvider.of<CreateTasksetBloc>(context).add(GenerateTaskset(tasksetListBloc.taskList, context));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

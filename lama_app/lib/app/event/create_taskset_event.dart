@@ -26,7 +26,9 @@ class CreateTasksetChangeSubtitle extends CreateTasksetEvent {
 /// {@param}[Taskset] taskset that should be generated
 class CreateTasksetGenerate extends CreateTasksetEvent {
   Taskset taskset;
-  CreateTasksetGenerate(this.taskset);
+  BuildContext context;
+  List<Task> taskList;
+  CreateTasksetGenerate(this.taskset, this.context, this.taskList);
 }
 
 /// used to abort the process
@@ -50,7 +52,12 @@ class AddUrlToTaskset extends CreateTasksetEvent {
 }
 
 /// writes a Taskset to the db and a json to the server with a specific url
-class GenerateTaskset extends CreateTasksetEvent {}
+class GenerateTaskset extends CreateTasksetEvent {
+
+  List<Task> taskList;
+  BuildContext context;
+  GenerateTaskset(this.taskList, this.context);
+}
 
 /// used to add a [Task] to the [Taskset] in Bloc
 ///
