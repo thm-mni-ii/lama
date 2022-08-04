@@ -5,6 +5,7 @@
   "taskset_randomize_order": true,
   "tasks": [
          {
+          "id": "1",
          "task_type":"TaskType.fourCards",
           "task_reward":2,
           "question":"Was ist kein Gedichtsmetrum?",
@@ -14,6 +15,7 @@
            "wrong_answers":["Daktylus", "Trochäus", "Jambus"]
            },
        {
+        "id": "2",
          "task_type":"TaskType.clozeTest",
          "task_reward":2,
          "question":"Ich hoffe, .. das Wetter bald besser wird",
@@ -23,6 +25,7 @@
          "wrong_answers":["dieses", "das"]
        },
        {
+        "id": "3",
          "task_type": "TaskType.connect",
          "task_reward":2,
          "left_to_solve": 3,
@@ -32,6 +35,7 @@
          "rightAnswers": ["Autor:Kafka", "Dichter:Schiller", "Buch:Harry Potter", "Ballade:Der Erlkönig"]
        },
        {
+        "id": "4",
          "task_type":"TaskType.gridSelect",
          "task_reward":3,
          "lama_text":"Markiere X Dichter",
@@ -39,6 +43,7 @@
          "wordsToFind":["Schiller", "Goethe", "Brecht", "Grimm"]
        },
        {
+        "id": "5",
          "task_type": "TaskType.matchCategory",
          "task_reward":2,
          "lama_text": "Ordne jeder Person die Passende Werke zu",

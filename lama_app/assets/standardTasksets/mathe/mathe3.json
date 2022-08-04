@@ -1,83 +1,90 @@
 {
-  "taskset_name": "Standardaufgaben Klasse 3",
-  "taskset_subject": "Mathe",
-  "taskset_grade": 3,
-  "taskset_randomize_order": true,
-  "tasks": [
-    {
-      "task_type": "NumberLine",
-      "task_reward": 1,
-      "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
-      "left_to_solve": 3,
-      "range": [
-        0,
-        100
-      ],
-      "randomRange": true,
-      "steps": 5,
-      "ontap": true
-    },
-    {
-      "task_type": "NumberLine",
-      "task_reward": 1,
-      "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
-      "left_to_solve": 3,
-      "range": [
-        0,
-        1000
-      ],
-      "randomRange": false,
-      "steps": 50,
-      "ontap": false
-    },
-    {
-      "task_type": "Equation",
-      "task_reward": 2,
-      "lama_text": "Löse die Gleichung!",
-      "left_to_solve": 4,
-      "random_allowed_operators": [
-        "*"
-      ],
-      "operand_range": [
-        0,
-        10
-      ],
-      "fields_to_replace": 1,
-      "allow_replacing_operators": false,
-      "operator_amount": 1
-    },
-    {
-      "task_type": "Clock",
-      "task_reward": 2,
-      "lama_text": "Wie viel Uhr ist es?",
-      "left_to_solve": 3,
-      "uhr": "viertelStunde",
-      "timer": false
-    },
-    {
-      "task_type": "MoneyTask",
-      "task_reward": 2,
-      "lama_text": "",
-      "left_to_solve": 3,
-      "difficulty": 3,
-      "optimum": false
-    },
-    {
-      "task_type": "MoneyTask",
-      "task_reward": 2,
-      "lama_text": "",
-      "left_to_solve": 3,
-      "difficulty": 2,
-      "optimum": true
-    },
-    {
-      "task_type": "Zerlegung",
-      "task_reward": 2,
-      "lama_text": " zerlegt die Zahlen!",
-      "left_to_solve": 3,
-      "reverse": false,
-      "zeros": true,
-      "boolThousands": true
-    }
-  ]
+    "taskset_name": "Standardaufgaben Klasse 3",
+    "taskset_subject": "Mathe",
+    "taskset_grade": 3,
+    "taskset_randomize_order": true,
+    "tasks": [
+        {
+            "id": "1",
+            "task_type": "TaskType.numberLine",
+            "task_reward": 1,
+            "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
+            "left_to_solve": 3,
+            "range": [
+                0,
+                100
+            ],
+            "randomRange": true,
+            "steps": 5,
+            "ontap": true
+        },
+        {
+            "id": "2",
+            "task_type": "TaskType.numberLine",
+            "task_reward": 1,
+            "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
+            "left_to_solve": 3,
+            "range": [
+                0,
+                1000
+            ],
+            "randomRange": false,
+            "steps": 5,
+            "ontap": false
+        },
+        {
+            "id": "3",
+            "task_type": "TaskType.equation",
+            "task_reward": 2,
+            "lama_text": "Löse die Gleichung!",
+            "left_to_solve": 4,
+            "random_allowed_operators": [
+                "*"
+            ],
+            "operand_range": [
+                0,
+                10
+            ],
+            "fields_to_replace": 1,
+            "allow_replacing_operators": false,
+            "operator_amount": 1
+        },
+        {
+            "id": "4",
+            "task_type": "TaskType.clock",
+            "task_reward": 2,
+            "lama_text": "Wie viel Uhr ist es?",
+            "left_to_solve": 3,
+            "uhr": "viertelStunde",
+            "timer": false
+        },
+        {
+            "id": "5",
+            "task_type": "TaskType.moneyTask",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "difficulty": 3,
+            "optimum": false
+        },
+        {
+            "id": "6",
+            "task_type": "TaskType.moneyTask",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "difficulty": 3,
+            "optimum": true
+        },
+        {
+            "id": "7",
+            "task_type": "TaskType.zerlegung",
+            "task_reward": 5,
+            "lama_text": "zerlegt die Zahlen!",
+            "left_to_solve": 3,
+            "reverse": false,
+            "zeros": true,
+            "boolThousands": true
+        }
+    ]
 }

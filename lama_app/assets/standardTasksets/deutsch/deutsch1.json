@@ -5,6 +5,7 @@
   "taskset_randomize_order": true,
   "tasks": [
     {
+      "id": "1",
       "task_type": "TaskType.buchstabieren",
       "task_reward": 2,
       "left_to_solve": 3,

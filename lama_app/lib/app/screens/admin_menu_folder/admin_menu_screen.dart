@@ -1,17 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
+import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
+import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
+import 'package:lama_app/app/screens/taskset_option_screen.dart';
+import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 //Lama default
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 //Blocs
 import 'package:lama_app/app/bloc/admin_menu_bloc.dart';
-import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
-import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/bloc/highscoreUrl_screen_bloc.dart';
@@ -20,11 +24,10 @@ import 'package:lama_app/app/event/admin_menu_event.dart';
 //States
 import 'package:lama_app/app/state/admin_menu_state.dart';
 //Screens
-import 'package:lama_app/app/screens/taskset_option_screen.dart';
 import 'package:lama_app/app/screens/user_management_screen.dart';
-import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/screens/userlist_url_screen.dart';
-import 'highscoreUrl_options_screen.dart';
+import '../highscoreUrl_options_screen.dart';
+import 'taskset_manage/screens/taskset_manage_screen.dart';
 
 ///This file creates the Admin Menu Screen
 ///The Admin Menu Screen provides every navigation to screens
@@ -57,8 +60,36 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: _bar(screensize.width / 5, 'Adminmenü', LamaColors.bluePrimary)
-          as PreferredSizeWidget?,
+      appBar: AppBar(
+        leading: IconButton(
+          padding: EdgeInsets.all(0),
+          icon: Icon(
+            Icons.logout,
+            size: 30,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (BuildContext context) => UserSelectionBloc(),
+                child: UserSelectionScreen(),
+              ),
+            ),
+          ),
+        ),
+        title: Text(
+          'Adminmenü',
+          style: LamaTextTheme.getStyle(fontSize: 18),
+        ),
+        toolbarHeight: screensize.width / 5,
+        backgroundColor: LamaColors.bluePrimary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
+          ),
+        ),
+      ),
       body: BlocListener(
         bloc: BlocProvider.of<AdminMenuBloc>(context),
         listener: (context, dynamic state) {
@@ -76,9 +107,7 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
               context.read<AdminMenuBloc>().add(AdminMenuLoadDefaultEvent());
               return Center(child: CircularProgressIndicator());
             }
-            if (state is AdminMenuDefaultState) {
-              return _buttonColumne(context);
-            }
+            if (state is AdminMenuDefaultState) return _buttonColumne(context);
 
             ///Force the [AdminMenuLoadPrefsEvent] to get the current value of the [SharedPreferences]
             context.read<AdminMenuBloc>().add(AdminMenuLoadPrefsEvent());
@@ -92,8 +121,9 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           'assets/images/svg/GitHub.svg',
           semanticsLabel: 'LAMA',
         ),
-        onPressed: () =>
-            context.read<AdminMenuBloc>().add(AdminMenuGitHubPopUpEvent()),
+        onPressed: () {
+          context.read<AdminMenuBloc>().add(AdminMenuGitHubPopUpEvent());
+        },
       ),
     );
   }
@@ -122,35 +152,32 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
             context,
             Icon(Icons.group_add),
             'Nutzerverwaltung',
-            () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) => UserManagementBloc(),
-                    child: UserManagementScreen(),
-                  ),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (BuildContext context) => UserManagementBloc(),
+                  child: UserManagementScreen(),
                 ),
-              )
-            },
+              ),
+            ),
           ),
           //Navigation Button to 'Nutzerliste einfügen' [UserlistUrlScreen]
           _menuButton(
             context,
             Icon(Icons.assignment_ind_sharp),
             'Nutzerliste einfügen',
-            () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) => UserlistUrlBloc(),
-                    child: UserlistUrlScreen(),
-                  ),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (BuildContext context) => UserlistUrlBloc(),
+                  child: UserlistUrlScreen(),
                 ),
-              )
-            },
+              ),
+            ),
           ),
+          //Navigation Button to 'Aufgabenverwaltung' [OptionTaskScreen]
           //Navigation Button to 'Aufgabenverwaltung' [OptionTaskScreen]
           _menuButton(
             context,
@@ -172,9 +199,30 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           ),
           _menuButton(
             context,
+            Icon(Icons.task),
+            'Taskseterstellung',
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (BuildContext context) => CreateTasksetBloc(),
+                    ),
+                    BlocProvider(
+                      create: (context) => TasksetCreateTasklistBloc([]),
+                    ),
+                  ],
+                child: TasksetCreationScreen(),
+              ),
+            ),
+           )
+          ),
+          _menuButton(
+            context,
             Icon(Icons.settings),
             'Highscore Einstellungen',
-            () async => {
+            () async {
               userList = await Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -183,9 +231,9 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
                     child: HighscoreUrlOptionScreen(),
                   ),
                 ),
-              ),
+              );
               await DatabaseProvider.db
-                  .updateAllUserHighscorePermission(userList!)
+                  .updateAllUserHighscorePermission(userList!);
             },
           ),
           //Checkbox to deaktivate the default Tasksets
@@ -215,39 +263,38 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
         MaterialState.hovered,
         MaterialState.focused,
       };
-      if (states.any(interactiveStates.contains)) {
-        return LamaColors.blueAccent;
-      }
+      if (states.any(interactiveStates.contains)) return LamaColors.blueAccent;
       return LamaColors.bluePrimary;
     }
 
     //return [Checkbox] 'Standardaufgaben aktivieren?'
-    return Center(
-      child: Row(
-        children: [
-          Checkbox(
-            checkColor: Colors.white,
-            fillColor: MaterialStateProperty.resolveWith(getColor),
-            value: _isChecked,
-            onChanged: (bool? value) {
-              setState(() {
-                _isChecked = value;
-                context.read<AdminMenuBloc>().add(AdminMenuChangePrefsEvent(
+    return Row(
+      children: [
+        Checkbox(
+          checkColor: Colors.white,
+          fillColor: MaterialStateProperty.resolveWith(getColor),
+          value: _isChecked,
+          onChanged: (bool? value) => setState(() {
+            _isChecked = value;
+            context.read<AdminMenuBloc>().add(
+                  AdminMenuChangePrefsEvent(
                     AdminUtils.enableDefaultTasksetsPref,
                     _isChecked,
-                    RepositoryProvider.of<TasksetRepository>(context)));
-                AdminUtils.reloadTasksets(context);
-              });
-            },
+                    RepositoryProvider.of<TasksetRepository>(context),
+                  ),
+                );
+            AdminUtils.reloadTasksets(context);
+          }),
+        ),
+        Text(
+          'Standardaufgaben aktivieren?',
+          style: LamaTextTheme.getStyle(
+            fontSize: 14,
+            color: LamaColors.black,
           ),
-          Text(
-            'Standardaufgaben aktivieren?',
-            style:
-                LamaTextTheme.getStyle(fontSize: 14, color: LamaColors.black),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 
@@ -289,6 +336,19 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
     );
   }
 
+  Widget _customTextWidget(
+          String text, FontWeight fontWeight, TextAlign? textAlign) =>
+      Text(
+        text,
+        style: LamaTextTheme.getStyle(
+          color: LamaColors.black,
+          fontSize: 16,
+          fontWeight: fontWeight,
+          monospace: true,
+        ),
+        textAlign: textAlign,
+      );
+
   ///(private)
   ///Alert to show the GitHub repository link with authors
   Widget _gitHubAlert() {
@@ -301,151 +361,53 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
         ),
         textAlign: TextAlign.center,
       ),
-      content: Column(children: [
-        SvgPicture.asset(
-          'assets/images/svg/GitHub.svg',
-          semanticsLabel: 'LAMA',
-        ),
-        SizedBox(height: 50),
-        Text(
-          "Link",
-          style: LamaTextTheme.getStyle(
-            color: LamaColors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
-            monospace: true,
+      content: Column(
+        children: [
+          SvgPicture.asset(
+            'assets/images/svg/GitHub.svg',
+            semanticsLabel: 'LAMA',
           ),
-        ),
-        Text(
-          "https://github.com/thm-mni-ii/lama",
-          style: LamaTextTheme.getStyle(
-            color: LamaColors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            monospace: true,
+          SizedBox(height: 50),
+          _customTextWidget("Link", FontWeight.w800, null),
+          _customTextWidget(
+            "https://github.com/thm-mni-ii/lama",
+            FontWeight.w500,
+            TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 25),
-            Text(
-              "Projektleitung:",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                monospace: true,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 25),
+              _customTextWidget(
+                "Projektleitung:",
+                FontWeight.w800,
+                TextAlign.left,
               ),
-              textAlign: TextAlign.left,
-            ),
-            Text(
-              "Dario Pläschke",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                monospace: true,
+              _customTextWidget("Dario Pläschke", FontWeight.w500, null),
+              SizedBox(height: 15),
+              _customTextWidget("App:", FontWeight.w800, null),
+              _customTextWidget(
+                "Kevin Binder (Leitung)\nLars Kammerer\nFranz Leonhardt\nTobias Rentsch\nFabian Brescher",
+                FontWeight.w500,
+                null,
               ),
-            ),
-            SizedBox(height: 15),
-            Text(
-              "App:",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                monospace: true,
+              SizedBox(height: 15),
+              _customTextWidget("Spiele:", FontWeight.w800, null),
+              _customTextWidget(
+                "Vinzenz Branzk (Leitung)\nFlorian Silber",
+                FontWeight.w500,
+                null,
               ),
-            ),
-            Text(
-              "Kevin Binder (Leitung)\nLars Kammerer\nFranz Leonhardt\nTobias Rentsch\nFabian Brescher",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                monospace: true,
-              ),
-            ),
-            SizedBox(height: 15),
-            Text(
-              "Spiele:",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                monospace: true,
-              ),
-            ),
-            Text(
-              "Vinzenz Branzk (Leitung)\nFlorian Silber",
-              style: LamaTextTheme.getStyle(
-                color: LamaColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                monospace: true,
-              ),
-            ),
-          ],
-        ),
-      ]),
+            ],
+          ),
+        ],
+      ),
       actions: [
         TextButton(
-          child: Text('Schließen'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          child: const Text('Schließen'),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ],
-    );
-  }
-
-  ///(private)
-  ///porvides [AppBar] with [AdminMenuScreen] specific default design
-  ///
-  ///Customise the leading of the [AppBar] to provide
-  ///an logout function which leads to [UserSelectionScreen] via
-  ///[Navigator].pushReplacement
-  ///
-  ///{@params}
-  ///[AppBar] size as double size
-  ///[AppBar] titel as String title
-  ///[AppBar] [Color] as colors
-  ///
-  ///{@return} [AppBar] with generel AdminMenu specific design
-  Widget _bar(double size, String titel, Color colors) {
-    return AppBar(
-      leading: Builder(
-        builder: (BuildContext context) {
-          return IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) => UserSelectionBloc(),
-                    child: UserSelectionScreen(),
-                  ),
-                ),
-              );
-            },
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          );
-        },
-      ),
-      title: Text(
-        titel,
-        style: LamaTextTheme.getStyle(fontSize: 18),
-      ),
-      toolbarHeight: size,
-      backgroundColor: colors,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(30),
-        ),
-      ),
     );
   }
 }
@@ -520,8 +482,7 @@ abstract class AdminUtils {
   ///[VoidCallback] as functionRight. onPressed for the 'Abbrechen' (abort) Button.
   ///
   ///{@return} [Row] with two [Ink] Buttons
-  //TODO Rename to abort not Aboard
-  static Widget saveAboardButtons(
+  static Widget saveAbordButtons(
       VoidCallback functionLeft, VoidCallback functionRight) {
     return Row(
       children: [
@@ -534,10 +495,11 @@ abstract class AdminUtils {
             ),
             padding: EdgeInsets.all(7.0),
             child: IconButton(
-                icon: Icon(Icons.save, size: 28),
-                color: Colors.white,
-                tooltip: 'Bestätigen',
-                onPressed: functionLeft),
+              icon: Icon(Icons.save, size: 28),
+              color: Colors.white,
+              tooltip: 'Bestätigen',
+              onPressed: functionLeft,
+            ),
           ),
         ),
         Ink(
@@ -547,10 +509,11 @@ abstract class AdminUtils {
           ),
           padding: EdgeInsets.all(2.0),
           child: IconButton(
-              icon: Icon(Icons.close_rounded),
-              color: Colors.white,
-              tooltip: 'Abbrechen',
-              onPressed: functionRight),
+            icon: Icon(Icons.close_rounded),
+            color: Colors.white,
+            tooltip: 'Abbrechen',
+            onPressed: functionRight,
+          ),
         ),
       ],
       mainAxisAlignment: MainAxisAlignment.end,

@@ -96,6 +96,7 @@
           "right_words": ["Bild!"]
       },
       {
+        "id": "6",
          "task_type": "TaskType.connect",
          "task_reward":2,
          "left_to_solve": 3,

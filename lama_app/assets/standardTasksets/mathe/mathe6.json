@@ -4,16 +4,17 @@
    "taskset_grade": 6,
    "taskset_randomize_order": true,
    "tasks": [
+    {
+        "id": "1",
+        "task_type": "TaskType.clockDifferent",
+        "task_reward": 2,
+        "lama_text": "Wie viel Zeitunterschied gibt es?",
+        "left_to_solve": 3,
+        "uhr": "allStunden",
+        "clockMode": "usMode"
+      },
        {
-           "task_type": "TaskType.clockDifferent",
-           "task_reward": 2,
-           "lama_text": "Wie viel Zeitunterschied gibt es?",
-           "left_to_solve": 3,
-           "uhr": "allStunden",
-           "clockMode": "usMode"
-         },
-       {
-           "id": "1",
+           "id": "2",
            "task_type": "TaskType.clock",
            "task_reward": 2,
            "lama_text": "Wie viel Uhr ist es?",
@@ -22,7 +23,7 @@
            "timer": false
        },
        {
-           "id": "4",
+           "id": "3",
            "task_type": "TaskType.numberLine",
            "task_reward": 1,
            "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
@@ -36,7 +37,7 @@
            "ontap": true
        },
        {
-           "id": "6",
+           "id": "4",
            "task_type": "TaskType.equation",
            "task_reward": 2,
            "lama_text": "Löse die Gleichung!",
@@ -54,7 +55,7 @@
            "operator_amount": 2
        },
        {
-           "id": "7",
+           "id": "5",
            "task_type": "TaskType.equation",
            "task_reward": 2,
            "lama_text": "Löse die Gleichung!",

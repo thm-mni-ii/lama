@@ -10,12 +10,14 @@
           "task_reward": 5,
           "lama_text": "Tippe die richtige Antwort an!",
           "left_to_solve": 3,
+          "question": "Whats does 'trust' mean in german?",
           "right_answer":"vertrauen",
            "wrong_answers":["drücken", "brauchen", "rosten"],
            "question_language":"Englisch",
            "answer_language":"Deutsch"
            },
        {
+        "id": "2",
          "task_type": "TaskType.clozeTest",
          "task_reward": 2,
          "question": "Simple Past: I .. in the water",
@@ -30,6 +32,7 @@
          "answer_language":"Englisch"
        },
        {
+        "id": "3",
          "task_type": "TaskType.matchCategory",
          "task_reward":2,
          "lama_text": "Move each word in the correct category!",
@@ -41,6 +44,7 @@
          "question_language":"Englisch"
        },
        {
+        "id": "4",
         "task_type":"TaskType.vocableTest",
         "task_reward":5,
         "lama_text": "Translate the shown word!",
@@ -51,6 +55,7 @@
          "answer_language":"Deutsch"
       },
        {
+        "id": "5",
          "task_type": "TaskType.matchCategory",
          "task_reward":2,
          "lama_text": "Move each word in the correct category!",

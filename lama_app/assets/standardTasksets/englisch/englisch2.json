@@ -5,6 +5,7 @@
      "taskset_randomize_order":true,
       "tasks": [
           {
+            "id": "1",
                "task_type":"TaskType.fourCards",
                "task_reward":2,
                "question":"What does 'book' mean in german?",
@@ -16,6 +17,7 @@
                "answer_language":"Deutsch"
             },
             {
+               "id": "3",
                "task_type":"TaskType.vocableTest",
                "task_reward":5,
                "lama_text": "Translate the shown word!",

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/screens/admin_menu_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/admin_menu_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;

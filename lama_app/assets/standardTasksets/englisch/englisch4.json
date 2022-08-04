@@ -5,6 +5,7 @@
   "taskset_randomize_order": true,
   "tasks": [
     {
+      "id": "1",
       "task_type": "TaskType.fourCards",
       "task_reward": 2,
       "question": "What does 'shoe' mean in german?",
@@ -20,6 +21,7 @@
       "answer_language":"Deutsch"
     },
     {
+      "id": "2",
       "task_type": "TaskType.fourCards",
       "task_reward": 2,
       "question": "Who discovered America",
@@ -35,6 +37,7 @@
       "answer_language":"Deutsch"
     },
     {
+      "id": "3",
       "task_type": "TaskType.clozeTest",
       "task_reward": 2,
       "question": "I am .. to school",
@@ -49,6 +52,7 @@
       "answer_language":"Englisch"
     },
     {
+      "id": "4",
       "task_type":"TaskType.clozeTest",
       "task_reward":2,
       "question":"I .. learning english",
@@ -60,6 +64,7 @@
       "answer_language":"Englisch"
     },
     {
+      "id": "5",
       "task_type": "TaskType.matchCategory",
       "task_reward":2,
       "lama_text": "Move each word in the correct category!",
@@ -72,6 +77,7 @@
       "answer_language":"Englisch"
     },
     {
+      "id": "6",
       "task_type": "TaskType.matchCategory",
       "task_reward":2,
       "lama_text": "Move each word in the correct category!",
@@ -84,6 +90,7 @@
       "answer_language":"Englisch"
     },
     {
+      "id": "7",
       "task_type":"TaskType.vocableTest",
       "task_reward":5,
       "lama_text": "Translate the shown word!",
