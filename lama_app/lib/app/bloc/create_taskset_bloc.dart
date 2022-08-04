@@ -5,8 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/state/create_taskset_state.dart';
-import 'package:external_path/external_path.dart';
-import 'package:lama_app/app/task-system/task.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../event/create_taskset_event.dart';
 import '../task-system/taskset_model.dart';
@@ -23,7 +22,6 @@ import '../task-system/taskset_model.dart';
 /// latest Changes: 17.06.2022
 class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   Taskset? taskset;
-  
   CreateTasksetBloc({this.taskset}) : super(InitialState()) {
     on<CreateTasksetAbort>((event, emit) => _abort(event.context));
     on<EditTaskset>((event, emit) => taskset = event.taskset);
@@ -45,8 +43,11 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   }
 
   Future<void> _generate() async {
-    var path = await ExternalPath.getExternalStoragePublicDirectory(
-        ExternalPath.DIRECTORY_DOCUMENTS);
+    print(Platform.isAndroid);
+    Directory? directory = Platform.isAndroid
+        ? await getExternalStorageDirectory() //FOR ANDROID
+        : await getApplicationDocumentsDirectory(); //FOR iOS
+    String path = directory!.path;
     File file = File(path + '/LAMA/' + taskset!.name! + '.json');
     String json = jsonEncode(taskset);
     file.createSync(recursive: true);

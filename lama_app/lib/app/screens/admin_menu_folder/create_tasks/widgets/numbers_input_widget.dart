@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class NumberInputWidget extends StatefulWidget {
   final TextEditingController numberController;
   final String? labelText;
-  final String? missingInput;
-  final FormFieldValidator? validator;
+  final Function(String)? validator;
 
   NumberInputWidget(
       {Key? key,
       required this.numberController,
-      required this.missingInput,
       required this.labelText,
       this.validator})
       : super(key: key);
@@ -17,6 +16,8 @@ class NumberInputWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => NumberInputWidgetState();
 }
+
+// class allows only int numbers, see inputformatters
 
 class NumberInputWidgetState extends State<NumberInputWidget> {
   @override
@@ -26,19 +27,20 @@ class NumberInputWidgetState extends State<NumberInputWidget> {
       child: TextFormField(
         controller: widget.numberController,
         keyboardType: TextInputType.number,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly
+        ],
         decoration: InputDecoration(
           labelText: widget.labelText,
         ),
         validator: (text) {
-          if (widget.validator == null) {
-            if (text == null || text.isEmpty) {
-              return widget.missingInput;
-            }
-            return null;
-          } else {
-            widget.validator;
+          if (text == null || text.isEmpty) {
+            return "Eingabe fehlt";
           }
-          return null;
+          if (widget.validator == null) {
+            return null;
+          }
+          return widget.validator!(text);
         },
         onSaved: (String? text) => widget.numberController.text = text!,
       ),

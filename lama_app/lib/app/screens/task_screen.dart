@@ -4,7 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/gridselecttask_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_screen.dart';
+import 'package:lama_app/app/screens/task_type_screens/clock_different_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/clock_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/cloze_test_task_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/connect_task_screen.dart';
@@ -19,8 +21,12 @@ import 'package:lama_app/app/screens/task_type_screens/vocable_test_task_screen.
 import 'package:lama_app/app/screens/task_type_screens/zerlegung_task_screen.dart';
 import 'package:lama_app/app/state/task_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
+import 'package:lama_app/snake/views/view.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/bloc/taskbloc/tts_bloc.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
 
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
 
@@ -43,6 +49,10 @@ class TaskScreenState extends State<TaskScreen> {
   Image? image;
   late TaskBuchstabieren task;
   int? userGrade;
+  //Es wird gespeichert ob schon Connect_Task Widget schon generiert wurde.
+  bool alreadyGenerated = false;
+  //Hier wird das Widget von Connect_task gespeichert, damit es nicht neu generiert wird, wenn TTS getoggled wird
+  Widget? dis;
 
   TaskScreenState([this.userGrade]);
 
@@ -55,6 +65,12 @@ class TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    IconData ikon = home_screen_state.isTTs()
+        ? Icons.volume_up_rounded
+        : Icons.volume_mute_rounded;
+    String path = home_screen_state.isTTs()
+        ? "assets/images/svg/Ton.svg"
+        : "assets/images/svg/Ton_Tod.svg";
     LinearGradient? lg;
     return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
@@ -127,13 +143,35 @@ class TaskScreenState extends State<TaskScreen> {
                               Align(
                                 alignment: Alignment.centerRight,
                                 child: Padding(
-                                  padding: EdgeInsets.only(right: 15),
+                                  padding: EdgeInsets.only(right: 47),
                                   child: Container(
-                                    height: (constraints.maxHeight / 100) * 5,
-                                    width: (constraints.maxHeight / 100) * 5,
+                                    height: (constraints.maxHeight / 100) * 7,
+                                    width: (constraints.maxHeight / 100) * 7,
                                     child: coinImg,
                                   ),
                                 ),
+                              ),
+                              BlocProvider(
+                                create: (context) => TTSBloc(),
+                                child: BlocBuilder<TTSBloc, TTSState>(
+                                    builder: (context, state) {
+                                  return Align(
+                                    alignment: Alignment.centerRight,
+                                    child: IconButton(
+                                        onPressed: () {
+                                          home_screen_state.toggle();
+                                          setState(() {
+                                            ikon = home_screen_state.isTTs()
+                                                ? Icons.volume_up_rounded
+                                                : Icons.volume_mute_rounded;
+                                          });
+                                        },
+                                        icon: Icon(
+                                            color: Colors.white,
+                                            size: 35,
+                                            ikon)),
+                                  );
+                                }),
                               ),
                             ],
                           ),
@@ -302,7 +340,7 @@ class TaskScreenState extends State<TaskScreen> {
       Task task, BoxConstraints constraints) {
     switch (task.type) {
       case TaskType.fourCards:
-        return FourCardTaskScreen(task as Task4Cards, constraints);
+        return FourCardTaskScreenStateful(task as Task4Cards, constraints);
       case TaskType.zerlegung:
         return ZerlegungTaskScreen(task: task as TaskZerlegung, constraints: constraints);
       case TaskType.numberLine:
@@ -311,12 +349,19 @@ class TaskScreenState extends State<TaskScreen> {
         return ClozeTestTaskScreen(task as TaskClozeTest, constraints);
       case TaskType.clock:
         return ClockTaskScreen(task as ClockTest, constraints);
+      case TaskType.clockDifferent:
+        return ClockDifferentScreen(task as ClockDifferent, constraints);
       case TaskType.markWords:
         return MarkWordsScreen(task as TaskMarkWords, constraints);
       case TaskType.matchCategory:
         return MatchCategoryTaskScreen(task as TaskMatchCategory, constraints);
       case TaskType.gridSelect:
-        return GridSelectTaskScreen(task as TaskGridSelect, constraints, GridSelectTaskBloc());
+        if (!alreadyGenerated) {
+          dis = GridSelectTaskScreen(
+            task as TaskGridSelect, constraints, GridSelectTaskBloc());
+          alreadyGenerated = true;
+        }
+        return dis!;
       case TaskType.moneyTask:
         return MoneyTaskScreen(task as TaskMoney, constraints);
       case TaskType.vocableTest:
@@ -523,3 +568,5 @@ class TaskScreenState extends State<TaskScreen> {
     );
   }
 }
+
+void nothing() {}

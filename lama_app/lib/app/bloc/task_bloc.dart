@@ -9,6 +9,7 @@ import 'package:collection/collection.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/OperantsEnum.dart';
 
+
 /// [Bloc] for the [TaskScreen]
 ///
 /// This Bloc handles everything related to tasks from
@@ -89,6 +90,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           rightAnswerCallback(t);
           emit(TaskAnswerResultState(true));
         } else if (event.providedAnswerBool == true) {
+          rightAnswerCallback(t);
+          emit(TaskAnswerResultState(true));
+        } else {
+          wrongAnswerCallback(t);
+          emit(TaskAnswerResultState(false));
+        }
+      } else if (t is ClockDifferent) {
+        if (event.providedAnswerBool == true) {
           rightAnswerCallback(t);
           emit(TaskAnswerResultState(true));
         } else {

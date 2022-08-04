@@ -19,25 +19,25 @@
             "timer": false
         },
         {
-            "id": "t2",
+            "id": "2",
             "task_type": "TaskType.moneyTask",
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
-            "difficulty": 1,
+            "difficulty": 2,
             "optimum": false
         },
         {
-            "id": "t3",
+            "id": "3",
             "task_type": "TaskType.moneyTask",
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
-            "difficulty": 1,
+            "difficulty": 2,
             "optimum": false
         },
         {
-            "id": "t4",
+            "id": "4",
             "task_type": "TaskType.numberLine",
             "task_reward": 1,
             "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
@@ -51,28 +51,24 @@
             "ontap": true
         },
         {
-            "id": "t5",
-            "task_type": "TaskType.numberLine",
-            "task_reward": 1,
-            "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
+            "id": "[#2abbb]",
+            "task_type": "TaskType.zerlegung",
+            "task_reward": 5,
+            "lama_text": "zerlegt die Zahlen!",
             "left_to_solve": 3,
-            "range": [
-                0,
-                100
-            ],
-            "randomRange": false,
-            "steps": 5,
-            "ontap": false
+            "reverse": false,
+            "zeros": false,
+            "boolThousands": false
         },
         {
-            "id": "t6",
+            "id": "6",
             "task_type": "TaskType.equation",
             "task_reward": 2,
             "lama_text": "Löse die Gleichung!",
             "left_to_solve": 4,
             "random_allowed_operators": [
-                "-",
-                "+"
+                "+",
+                "-"
             ],
             "operand_range": [
                 0,
@@ -83,28 +79,10 @@
             "operator_amount": 1
         },
         {
-            "id": "t7",
-            "task_type": "TaskType.equation",
-            "task_reward": 2,
-            "lama_text": "Löse die Gleichung!",
-            "left_to_solve": 4,
-            "random_allowed_operators": [
-                "-",
-                "+"
-            ],
-            "operand_range": [
-                0,
-                20
-            ],
-            "fields_to_replace": 1,
-            "allow_replacing_operators": false,
-            "operator_amount": 1
-        },
-        {
-            "id": "t8",
+            "id": "[#2abbb]",
             "task_type": "TaskType.zerlegung",
             "task_reward": 2,
-            "lama_text": " zerlegt die Zahlen!",
+            "lama_text": "zerlegt die Zahlen!",
             "left_to_solve": 3,
             "reverse": false,
             "zeros": false,

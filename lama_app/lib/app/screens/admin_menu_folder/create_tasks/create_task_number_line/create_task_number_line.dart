@@ -42,7 +42,7 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
       _startController.text = widget.task!.range.first.toString();
       _endController.text = widget.task!.range.last.toString();
       _rewardController.text = widget.task!.reward.toString();
-      _changeSettings = widget.task!.ontap;
+      _changeSettings = widget.task!.ontap!;
       _stepSizeController.text = widget.task!.steps.toString();
 
       newTask = false;
@@ -218,6 +218,8 @@ class _CreateTaskNumberLineState extends State<CreateTaskNumberLine> {
                     false, // a random range or (start - end)
                     1,
                     _changeSettings,
+                    null,
+                    null,
                   );
                   if (newTask) {
                     // add Task

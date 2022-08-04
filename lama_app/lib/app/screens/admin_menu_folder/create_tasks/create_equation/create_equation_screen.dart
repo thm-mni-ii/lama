@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/custom_bottomNavigationBar_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/numbers_input_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
@@ -15,7 +17,9 @@ class CreateEquationScreen extends StatefulWidget {
   final int? index;
   final TaskEquation? task;
 
-  const CreateEquationScreen({Key? key, required this.index, required this.task}) : super(key: key);
+  const CreateEquationScreen(
+      {Key? key, required this.index, required this.task})
+      : super(key: key);
   @override
   CreateEquationScreenState createState() => CreateEquationScreenState();
 }
@@ -39,30 +43,39 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
   String division = '/';
   List<String> allowedOperations = ['+', '-', '*', '/'];
 
-/*   @override
-  void initState() {
-    if (widget.task != null) {
-      _vonController.text = widget.task!.von.toString();
-      _bisController.text = widget.task!.bis.toString();
-      _rewardController.text = widget.task!.reward.toString();
-    
-      newTask = false;
-    }
-    super.initState();
-  } */
-
   @override
   Widget build(BuildContext context) {
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
-/*     if (widget.task != null && newTask) {
+    if (widget.task != null && newTask) {
       _vonController.text = widget.task!.operandRange[0].toString();
       _bisController.text = widget.task!.operandRange[1].toString();
+      allowOperationReplace = widget.task!.allowReplacingOperators;
       _rewardController.text = widget.task!.reward.toString();
 
+      if (!widget.task!.randomAllowedOperators.contains("+")) {
+        plusAllowed = false;
+        allowedOperations.removeWhere((element) => element == plus);
+      }
+
+      if (!widget.task!.randomAllowedOperators.contains("-")) {
+        minusAllowed = false;
+        allowedOperations.removeWhere((element) => element == minus);
+      }
+
+      if (!widget.task!.randomAllowedOperators.contains("/")) {
+        divisionAllowed = false;
+        allowedOperations.removeWhere((element) => element == division);
+      }
+
+      if (!widget.task!.randomAllowedOperators.contains("*")) {
+        multiplyAllowed = false;
+        allowedOperations.removeWhere((element) => element == mal);
+      }
+
       newTask = false;
-    } */
+    }
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -92,27 +105,15 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Expanded(
-                                  child: Container(
-                                    margin: EdgeInsets.only(right: 30),
-                                    child: TextFormField(
-                                      controller: _vonController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Von',
-                                      ),
-                                      validator: (text) {
-                                        if (text == null || text.isEmpty) {
-                                          return "Beitrag fehlt!";
-                                        } else if (double.parse(
-                                                _bisController.text) <=
-                                            double.parse(text)) {
-                                          return "Zu groß";
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (text) =>
-                                          _vonController.text = text!,
-                                    ),
+                                  child: NumberInputWidget(
+                                    numberController: _vonController,
+                                    labelText: "von",
+                                    validator: (text) {
+                                      if (int.parse(_bisController.text) <=
+                                          int.parse(text)) {
+                                        return "Zu groß";
+                                      }
+                                    },
                                   ),
                                 ),
                                 Expanded(
@@ -125,29 +126,16 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 30),
-                                    child: TextFormField(
-                                      controller: _bisController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Bis',
-                                      ),
-                                      validator: (text) {
-                                        if (text == null || text.isEmpty) {
-                                          return "Beitrag fehlt!";
-                                        } else if (double.parse(text) <=
-                                            double.parse(_vonController.text)) {
-                                          return "Zu klein";
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (text) {
-                                        _bisController.text = text!;
-                                      },
-                                    ),
-                                  ),
-                                ),
+                                    child: NumberInputWidget(
+                                  numberController: _bisController,
+                                  labelText: "bis",
+                                  validator: (text) {
+                                    if (int.parse(text) <=
+                                        int.parse(_vonController.text)) {
+                                      return "Zu klein";
+                                    }
+                                  },
+                                )),
                               ],
                             ),
                           ),
@@ -169,7 +157,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                     allowedOperations.removeWhere(
                                         (element) => element == plus);
                                   }
-                                  print(allowedOperations);
                                 },
                               ),
                               CheckboxListTile(
@@ -185,7 +172,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                     allowedOperations.removeWhere(
                                         (element) => element == minus);
                                   }
-                                  print(allowedOperations);
                                 },
                               ),
                               CheckboxListTile(
@@ -201,7 +187,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                     allowedOperations.removeWhere(
                                         (element) => element == mal);
                                   }
-                                  print(allowedOperations);
                                 },
                               ),
                               CheckboxListTile(
@@ -217,7 +202,6 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                     allowedOperations.removeWhere(
                                         (element) => element == division);
                                   }
-                                  print(allowedOperations);
                                 },
                               ),
                             ],
@@ -249,33 +233,44 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: LamaColors.findSubjectColor(
-                    blocTaskset.subject ?? "normal")),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                List<int> listVonBis = [
-                  int.parse(_vonController.text),
-                  int.parse(_bisController.text)
-                ];
+        bottomNavigationBar: CustomBottomNavigationBar(
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+          newTask: newTask,
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              List<int> listVonBis = [
+                int.parse(_vonController.text),
+                int.parse(_bisController.text)
+              ];
+              if (allowedOperations.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: LamaColors.redAccent,
+                    content: const Text(
+                      'Wähle mindestens eine Rechenoperation aus',
+                      textAlign: TextAlign.center,
+                    ),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              } else {
                 TaskEquation equationTask = TaskEquation(
-                    widget.task?.id ??
-                        KeyGenerator.generateRandomUniqueKey(
-                            blocTaskset.tasks!),
-                    TaskType.equation,
-                    int.parse(_rewardController.text),
-                    "Löse die Gleichung!",
-                    3,
-                    [],
-                    [],
-                    allowedOperations,
-                    allowOperationReplace,
-                    listVonBis,
-                    null,
-                    -1);
+                  widget.task?.id ??
+                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                  TaskType.equation,
+                  int.parse(_rewardController.text),
+                  "Löse die Gleichung!",
+                  3,
+                  [],
+                  [],
+                  allowedOperations,
+                  allowOperationReplace,
+                  listVonBis,
+                  null,
+                  -1,
+                  null,
+                  null,
+                );
                 if (newTask) {
                   // add Task
                   BlocProvider.of<TasksetCreateTasklistBloc>(context)
@@ -288,9 +283,8 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                 }
                 Navigator.pop(context);
               }
-            },
-            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-          ),
+            }
+          },
         ));
   }
 }

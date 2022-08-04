@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/custom_bottomNavigationBar_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dropdown_widget_String.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/widgets/custom_appbar.dart';
@@ -25,7 +26,6 @@ class MoneyEinstellenScreen extends StatefulWidget {
 
 class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _difController = TextEditingController();
   TextEditingController _rewardController = TextEditingController();
   TextEditingController _leftToSolveController = TextEditingController();
 
@@ -41,12 +41,15 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
     Size screenSize = MediaQuery.of(context).size;
 
     if (widget.task != null && newTask) {
-      _difController.text = widget.task!.difficulty.toString();
+      _currentSelectedDifficulty = widget.task!.difficulty.toString();
+      optimumAllowed = widget.task!.optimum;
       _rewardController.text = widget.task!.reward.toString();
       _leftToSolveController.text = widget.task!.optimum.toString();
 
       newTask = false;
     }
+
+    print("current: $_currentSelectedDifficulty");
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -68,6 +71,7 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                         HeadLineWidget("Schwierigkeitsgrad"),
                         DropdownWidgetString(
                           hintText: "Auswählen",
+                          currentSelected: _currentSelectedDifficulty,
                           itemsList: ['1', '2', '3'],
                           onChanged: (value) {
                             _currentSelectedDifficulty = value;
@@ -83,7 +87,6 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
                                 onChanged: (bool? value) {
                                   setState(() {
                                     optimumAllowed = value;
-                                    print(_currentSelectedDifficulty);
                                   });
                                 },
                               ),
@@ -102,40 +105,35 @@ class MoneyEinstellenScreenState extends State<MoneyEinstellenScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: LamaColors.findSubjectColor(
-                    blocTaskset.subject ?? "normal")),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                TaskMoney moneyTask = TaskMoney(
-                    widget.task?.id ??
-                        KeyGenerator.generateRandomUniqueKey(
-                            blocTaskset.tasks!),
-                    TaskType.moneyTask,
-                    int.parse(_rewardController.text),
-                    "",
-                    3,
-                    int.parse(_currentSelectedDifficulty.toString()),
-                    optimumAllowed);
-                if (newTask) {
-                  // add Task
-                  tasksetListProvider.add(AddToTaskList(moneyTask));
-                  Navigator.pop(context);
-                } else {
-                  // edit Task
-                  tasksetListProvider.add(
-                    EditTaskInTaskList(widget.index, moneyTask),
-                  );
-                }
-                print(moneyTask.difficulty);
+        bottomNavigationBar: CustomBottomNavigationBar(
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+          newTask: newTask,
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              TaskMoney moneyTask = TaskMoney(
+                  widget.task?.id ??
+                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                  TaskType.moneyTask,
+                  int.parse(_rewardController.text),
+                  "",
+                  3,
+                  int.parse(_currentSelectedDifficulty.toString()),
+                  optimumAllowed,
+                  null,
+                  null);
+              if (newTask) {
+                // add Task
+                tasksetListProvider.add(AddToTaskList(moneyTask));
                 Navigator.pop(context);
+              } else {
+                // edit Task
+                tasksetListProvider.add(
+                  EditTaskInTaskList(widget.index, moneyTask),
+                );
               }
-            },
-            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-          ),
+              Navigator.pop(context);
+            }
+          },
         ));
   }
 }

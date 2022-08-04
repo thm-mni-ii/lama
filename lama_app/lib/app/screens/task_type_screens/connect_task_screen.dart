@@ -2,11 +2,16 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+
+import 'package:lama_app/app/event/tts_event.dart';
+
 
 ///This file creates the Connect task Screen
 ///The connect task is a task where two list of words gets showen on the screen
@@ -32,6 +37,7 @@ class ConnectTaskScreen extends StatefulWidget {
 
 /// ConnectState class creates the Conect task Screen
 class ConnectState extends State<ConnectTaskScreen> {
+  bool alreadyUpdated = false;
   // task infos and constraints handed over by tasktypeScreen
   final TaskConnect task;
   final BoxConstraints constraints;
@@ -56,6 +62,7 @@ class ConnectState extends State<ConnectTaskScreen> {
     task.pair2.shuffle();
     colors.shuffle();
     int i = 0;
+
     // fill the left and right word lists with Item types
     task.pair1.forEach((element) {
       leftWords.add(Item(false, element.toString(), true, colors[i], task));
@@ -69,7 +76,11 @@ class ConnectState extends State<ConnectTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    String qlang;
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = "Englisch";
+    return BlocProvider(
+      create: (context) => TTSBloc(),
+      child: Column(
       children: [
         //Creating lama + lamaspeechbubble
         Container(
@@ -80,21 +91,35 @@ class ConnectState extends State<ConnectTaskScreen> {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: Container(
+                child: BlocBuilder<TTSBloc, TTSState>(
+                 builder: (context, state) {
+                   if (state is EmptyTTSState && !alreadyUpdated) {
+                     context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText,qlang));
+                     this.alreadyUpdated = true;
+                   }
+                 return Container(
                   padding: EdgeInsets.only(left: 75),
                   height: 50,
                   width: MediaQuery.of(context).size.width,
                   child: Bubble(
                     nip: BubbleNip.leftCenter,
-                    child: Center(
-                      child: Text(
-                        task.lamaText,
-                        style: LamaTextTheme.getStyle(
-                            color: LamaColors.black, fontSize: 15),
+                    child: InkWell(
+                      onTap: () {
+                        BlocProvider.of<TTSBloc>(context)
+                            .add(ClickOnQuestionEvent.initVoice(task.lamaText, qlang));
+                      },
+                      child: Center(
+                        child: Text(
+                          task.lamaText,
+                          style: LamaTextTheme.getStyle(
+                              color: LamaColors.black, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                );
+                },
+              ),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -112,7 +137,9 @@ class ConnectState extends State<ConnectTaskScreen> {
           child: Row(
             children: [
               //left words
-              Container(
+              BlocBuilder<TTSBloc, TTSState>(
+              builder: (context, state) {
+                return Container(
                   padding: EdgeInsets.only(top: 20, left: 10),
                   width: (constraints.maxWidth / 100) * 37.5,
                   height: (constraints.maxHeight / 100) * 60,
@@ -125,7 +152,9 @@ class ConnectState extends State<ConnectTaskScreen> {
                     itemCount: leftWords.length,
                     itemBuilder: (context, index) =>
                         _buildPair(index, leftWords),
-                  )),
+                  ));
+  },
+),
               //Space between both containers
               Container(
                 width: (constraints.maxWidth / 100) * 25,
@@ -183,17 +212,18 @@ class ConnectState extends State<ConnectTaskScreen> {
                       alignment: Alignment.bottomCenter,
                       child: Center(
                           child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text(
-                          "Verbinde mindestens ein Wort!",
-                          style: LamaTextTheme.getStyle(),
-                          textAlign: TextAlign.center,
-                        ),
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              "Verbinde mindestens ein Wort!",
+                              style: LamaTextTheme.getStyle(),
+                              textAlign: TextAlign.center,
+                            ),
                       ))),
                   backgroundColor: LamaColors.mainPink,
                 ));
               } else {
                 bool answer = checkAnswer();
+                //log('data: $selectedAnswer');
                 print(answer);
                 BlocProvider.of<TaskBloc>(context)
                     .add(AnswerTaskEvent.initConnect(answer));
@@ -212,7 +242,8 @@ class ConnectState extends State<ConnectTaskScreen> {
           height: (constraints.maxHeight / 100) * 5,
         )
       ],
-    );
+    ),
+);
   }
 
   /// _buildPair is used by the Gridview Builder to build the Widgets shown left and right on the screen.
@@ -220,24 +251,35 @@ class ConnectState extends State<ConnectTaskScreen> {
   /// int [index]           = Used to locate which item is used from the List
   /// List<Item> [itemList] = Is the list filled with either left or right Items
   Widget _buildPair(index, List<Item> itemList) {
-    return InkWell(
-      child: Container(
+    String qlang;
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = "Englisch";
+    return BlocBuilder<TTSBloc, TTSState>(
+      builder: (context, state) {
+      return InkWell(
+        child: Container(
           height: 7,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               color: itemList[index].shownColor,
               border: Border.all(color: LamaColors.black)),
           child: Center(
+            //todo
             child: Text(itemList[index].content,
                 textAlign: TextAlign.center,
                 style: LamaTextTheme.getStyle(
                     fontSize: 15, color: LamaColors.black)),
           )),
       // Used to call the touch method. Needs to be set for every single widget
-      onTap: () {
-        touch(index, itemList);
+        onTap: () {
+          touch(index, itemList);
       },
+        onDoubleTap: () {
+          BlocProvider.of<TTSBloc>(context).
+          add(ClickOnAnswerEvent(itemList[index].content,qlang));
+        },
     );
+  },
+);
   }
 
   /// touch is called when one of the Items gets pressed on.
@@ -294,11 +336,11 @@ class ConnectState extends State<ConnectTaskScreen> {
               child: Center(
                   child: FittedBox(
                 fit: BoxFit.fitWidth,
-                child: Text(
-                  "Wähle zuerst ein Wort von der linken Seite aus !",
-                  style: LamaTextTheme.getStyle(),
-                  textAlign: TextAlign.center,
-                ),
+                    child: Text(
+                      "Wähle zuerst ein Wort von der linken Seite aus !",
+                      style: LamaTextTheme.getStyle(),
+                      textAlign: TextAlign.center,
+                    ),
               ))),
           backgroundColor: LamaColors.mainPink,
         ));

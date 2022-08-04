@@ -3,10 +3,13 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
+import 'package:lama_app/app/state/tts_state.dart';
 import '../../../util/LamaColors.dart';
 import '../../../util/LamaTextTheme.dart';
+import 'package:lama_app/app/event/tts_event.dart';
 import '../../task-system/task.dart';
 
 // Author J.Decher
@@ -35,37 +38,37 @@ class NumberLineState extends State<NumberLineTaskScreen> {
   bool firstTry = true;
   bool tappedCorrectly = false;
   bool tappedIncorrectly = false;
-  //double rating = 40; for Slider
+
   NumberLineState(this.task, this.constraints) {
     this.rngStart = task.range[0];
     this.rngEnd = task.range[1];
 
-    if (task.randomrange) {
+    if (task.randomrange!) {
       int temp = rngEnd! - rngStart!;
       this.rngStart = random.nextInt(temp ~/ 2) + task.range[0];
       this.rngEnd =
           random.nextInt(temp ~/ 2) + (task.range[0] + task.range[1]) ~/ 2 + 1;
     }
-    if (task.steps > 0) {
-      rngStart = ((rngStart!.toDouble() / task.steps).round() * task.steps);
-      rngEnd = ((rngEnd!.toDouble() / task.steps).round() * task.steps);
+    if (task.steps! > 0) {
+      rngStart = ((rngStart!.toDouble() / task.steps!).round() * task.steps!);
+      rngEnd = ((rngEnd!.toDouble() / task.steps!).round() * task.steps!);
     }
 
     this.gesuchteZahl = random.nextInt(rngEnd! - rngStart!) + rngStart!;
 
-    if (task.steps > 0) {
+    if (task.steps! > 0) {
       gesuchteZahl =
-          ((gesuchteZahl!.toDouble() / task.steps).round() * task.steps);
+          ((gesuchteZahl!.toDouble() / task.steps!).round() * task.steps!);
     }
     while (this.gesuchteZahl == rngStart || this.gesuchteZahl == rngEnd) {
-      if (task.randomrange) {
+      if (task.randomrange!) {
         rngStart = random.nextInt((rngEnd! - rngStart!) ~/ 2) + task.range[0];
-        rngStart = ((rngStart!.toDouble() / task.steps).round() * task.steps);
+        rngStart = ((rngStart!.toDouble() / task.steps!).round() * task.steps!);
       }
       this.gesuchteZahl = random.nextInt(rngEnd! - rngStart!) + rngStart!;
-      if (task.steps > 0) {
+      if (task.steps! > 0) {
         gesuchteZahl =
-            ((gesuchteZahl!.toDouble() / task.steps).round() * task.steps);
+            ((gesuchteZahl!.toDouble() / task.steps!).round() * task.steps!);
       }
     }
     this.dgesuchteZahl = gesuchteZahl!.toDouble();
@@ -74,7 +77,11 @@ class NumberLineState extends State<NumberLineTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool paintRed = !task.ontap;
+    String qlang;
+    task.questionLanguage == null
+        ? qlang = "Deutsch"
+        : qlang = task.questionLanguage!;
+    bool paintRed = !task.ontap!;
     double screenwidth = MediaQuery.of(context).size.width;
     double screenheight = MediaQuery.of(context).size.height;
     endPixel = screenwidth.toInt();
@@ -84,175 +91,201 @@ class NumberLineState extends State<NumberLineTaskScreen> {
         (endPixel! / (rngEnd! - rngStart!)) * (dgesuchteZahl! - rngStart!);
     int diff = rngEnd! - rngStart!;
     // If user has to enter the number in a text field
-    if (!task.ontap) {
-      return Column(children: [
-        SizedBox(height: 20),
-        lamaHead(context, task, constraints, task.ontap),
-        SizedBox(height: 50),
+    if (!task.ontap!) {
+      return BlocProvider(
+        create: (context) => TTSBloc(),
+        child: Column(children: [
+          SizedBox(height: 20),
+          BlocBuilder<TTSBloc, TTSState>(
+            builder: (context, state) {
+              if (state is EmptyTTSState) {
+                context.read<TTSBloc>().add(QuestionOnInitEvent(
+                    "Gib den im Zahlenstrahl rot markierten Wert an!", qlang));
+              }
+              return lamaHead(context, task, constraints, task.ontap!);
+            },
+          ),
+          SizedBox(height: 50),
 
-        // Shows correct answer on screen
-        // buildText(context, dgesuchteZahl.toInt(), 100),
+          // Shows correct answer on screen
+          // buildText(context, dgesuchteZahl.toInt(), 100),
 
-        // Start and end of number line as text
-        numbers(context, rngStart, rngEnd),
-        Align(
-          alignment: Alignment.topCenter,
-        ),
-        Padding(
-          padding: EdgeInsets.all(2),
-          // Numberline
-          child: Container(
-            width: screenwidth - screenwidth / 10,
-            height: screenheight / 25,
-            child: CustomPaint(
-              foregroundPainter: LinePainter(
-                  dgesuchterPixel, endPixel, paintRed, rngStart, rngEnd, diff),
+          // Start and end of number line as text
+          numbers(context, rngStart, rngEnd),
+          Align(
+            alignment: Alignment.topCenter,
+          ),
+          Padding(
+            padding: EdgeInsets.all(2),
+            // Numberline
+            child: Container(
+              width: screenwidth - screenwidth / 10,
+              height: screenheight / 25,
+              child: CustomPaint(
+                foregroundPainter: LinePainter(dgesuchterPixel, endPixel,
+                    paintRed, rngStart, rngEnd, diff),
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 50),
-        keyboard(context, controller, dgesuchteZahl!.toInt()),
-        SizedBox(height: 50),
-        fertigButton(context, constraints, controller, dgesuchteZahl, diff),
-      ]);
+          SizedBox(height: 50),
+          keyboard(context, controller, dgesuchteZahl!.toInt()),
+          SizedBox(height: 50),
+          fertigButton(context, constraints, controller, dgesuchteZahl, diff),
+        ]),
+      );
       // If user has to tap the correct area
     } else {
-      return Column(children: [
-        SizedBox(height: 20),
-        lamaHead(context, task, constraints, task.ontap),
-        SizedBox(height: 50),
-        Text(
-          "Gesuchte Zahl: " + gesuchteZahl.toString(),
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-        Container(
-          height: screenheight / 25,
-          width: screenwidth,
-          child: numbers(context, rngStart, rngEnd),
-        ),
-        // Stack for correct/incorrect areas, icons and number line
-        Stack(
-          children: [
-            Container(
-              height: screenheight / 25 + 20,
-              child: Container(
-                alignment: Alignment.center,
-                child: Container(
-                  height: screenheight / 25,
-                  width: screenwidth - screenwidth / 10,
-                  child: CustomPaint(
-                    foregroundPainter: LinePainter(dgesuchterPixel, endPixel,
-                        paintRed, rngStart, rngEnd, diff),
-                  ),
-                ),
+      return BlocProvider(
+        create: (context) => TTSBloc(),
+        child: BlocBuilder<TTSBloc, TTSState>(
+          builder: (context, state) {
+            if (state is EmptyTTSState) {
+              context.read<TTSBloc>().add(QuestionOnInitEvent(
+                  "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?",
+                  qlang));
+            }
+            return Column(children: [
+              SizedBox(height: 20),
+              lamaHead(context, task, constraints, task.ontap!),
+              SizedBox(height: 50),
+              Text(
+                "Gesuchte Zahl: " + gesuchteZahl.toString(),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
-            ),
-
-            //Icon correct
-            Positioned(
-              top: 10,
-              left: dgesuchterPixel! + screenwidth / 60,
-              child: Container(
-                width: screenwidth / 15,
+              Container(
                 height: screenheight / 25,
-                child: Icon(Icons.check_circle,
-                    size: screenwidth / 15,
-                    color: tappedCorrectly
-                        ? Colors.green
-                        : Colors.white.withOpacity(0)),
+                width: screenwidth,
+                child: numbers(context, rngStart, rngEnd),
               ),
-            ),
-            //Icon incorrect
-            Positioned(
-              top: 10,
-              left: dgesuchterPixel! + screenwidth / 60,
-              child: Container(
-                width: screenwidth / 15,
-                height: screenheight / 25,
-                child: Icon(Icons.cancel,
-                    size: screenwidth / 15,
-                    color: tappedIncorrectly
-                        ? Colors.red
-                        : Colors.white.withOpacity(0)),
-              ),
-            ),
-            //Correct area
-            Positioned(
-              left: dgesuchterPixel,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    if (firstTry) {
-                      tappedCorrectly = !tappedCorrectly;
-                      firstTry = false;
-                    }
-                  });
-                },
-                child: Container(
-                  width: screenwidth / 10,
-                  height: screenheight / 25 + 20,
-                  decoration: BoxDecoration(color: Colors.green.withOpacity(0)),
-                ),
-              ),
-            ),
-            //Incorrect area to the left
-            Positioned(
-              child: Container(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (firstTry) {
-                        tappedIncorrectly = !tappedIncorrectly;
-                        firstTry = false;
-                      }
-                    });
-                  },
-                  child: Container(
-                    width: dgesuchterPixel,
+              // Stack for correct/incorrect areas, icons and number line
+              Stack(
+                children: [
+                  Container(
                     height: screenheight / 25 + 20,
-                    decoration: BoxDecoration(color: Colors.red.withOpacity(0)),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Container(
+                        height: screenheight / 25,
+                        width: screenwidth - screenwidth / 10,
+                        child: CustomPaint(
+                          foregroundPainter: LinePainter(dgesuchterPixel,
+                              endPixel, paintRed, rngStart, rngEnd, diff),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+
+                  //Icon correct
+                  Positioned(
+                    top: 10,
+                    left: dgesuchterPixel! + screenwidth / 60,
+                    child: Container(
+                      width: screenwidth / 15,
+                      height: screenheight / 25,
+                      child: Icon(Icons.check_circle,
+                          size: screenwidth / 15,
+                          color: tappedCorrectly
+                              ? Colors.green
+                              : Colors.white.withOpacity(0)),
+                    ),
+                  ),
+                  //Icon incorrect
+                  Positioned(
+                    top: 10,
+                    left: dgesuchterPixel! + screenwidth / 60,
+                    child: Container(
+                      width: screenwidth / 15,
+                      height: screenheight / 25,
+                      child: Icon(Icons.cancel,
+                          size: screenwidth / 15,
+                          color: tappedIncorrectly
+                              ? Colors.red
+                              : Colors.white.withOpacity(0)),
+                    ),
+                  ),
+                  //Correct area
+                  Positioned(
+                    left: dgesuchterPixel,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (firstTry) {
+                            tappedCorrectly = !tappedCorrectly;
+                            firstTry = false;
+                          }
+                        });
+                      },
+                      child: Container(
+                        width: screenwidth / 10,
+                        height: screenheight / 25 + 20,
+                        decoration:
+                            BoxDecoration(color: Colors.green.withOpacity(0)),
+                      ),
+                    ),
+                  ),
+                  //Incorrect area to the left
+                  Positioned(
+                    child: Container(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (firstTry) {
+                              tappedIncorrectly = !tappedIncorrectly;
+                              firstTry = false;
+                            }
+                          });
+                        },
+                        child: Container(
+                          width: dgesuchterPixel,
+                          height: screenheight / 25 + 20,
+                          decoration:
+                              BoxDecoration(color: Colors.red.withOpacity(0)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  //Incorrect area to the right
+                  Positioned(
+                    left: dgesuchterPixel! + screenwidth / 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (firstTry) {
+                            tappedIncorrectly = !tappedIncorrectly;
+                            firstTry = false;
+                          }
+                        });
+                      },
+                      child: Container(
+                        width: screenwidth,
+                        height: screenheight / 25 + 20,
+                        decoration:
+                            BoxDecoration(color: Colors.red.withOpacity(0)),
+                      ),
+                    ),
+                  ),
+                  // // Another option for the user to give their input. Still needs controller and 'value' needs to be fixed.
+                  // Slider(
+                  //     value: rating,
+                  //     min: rngStart.toDouble(),
+                  //     max: rngEnd.toDouble(),
+                  //     divisions: diff ~/ task.steps,
+                  //     //label: rating.toString(),
+                  //     onChanged: (double newRating) {
+                  //       setState(() {
+                  //         rating = newRating;
+                  //       });
+                  //     }),
+                ],
               ),
-            ),
-            //Incorrect area to the right
-            Positioned(
-              left: dgesuchterPixel! + screenwidth / 10,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    if (firstTry) {
-                      tappedIncorrectly = !tappedIncorrectly;
-                      firstTry = false;
-                    }
-                  });
-                },
-                child: Container(
-                  width: screenwidth,
-                  height: screenheight / 25 + 20,
-                  decoration: BoxDecoration(color: Colors.red.withOpacity(0)),
-                ),
-              ),
-            ),
-            // // Another option for the user to give their input. Still needs controller and 'value' needs to be fixed.
-            // Slider(
-            //     value: rating,
-            //     min: rngStart.toDouble(),
-            //     max: rngEnd.toDouble(),
-            //     divisions: diff ~/ task.steps,
-            //     //label: rating.toString(),
-            //     onChanged: (double newRating) {
-            //       setState(() {
-            //         rating = newRating;
-            //       });
-            //     }),
-          ],
+              SizedBox(height: 50),
+              SizedBox(height: 50),
+              fertigButtonTap(context, constraints, controller, tappedCorrectly,
+                  tappedIncorrectly),
+            ]);
+          },
         ),
-        SizedBox(height: 50),
-        SizedBox(height: 50),
-        fertigButtonTap(context, constraints, controller, tappedCorrectly,
-            tappedIncorrectly),
-      ]);
+      );
     }
   }
 }
@@ -390,12 +423,22 @@ Widget lamaHead(
           width: MediaQuery.of(context).size.width,
           child: Bubble(
             nip: BubbleNip.leftCenter,
-            child: Center(
-              child: Text(
-                onTap
-                    ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
-                    : "Gib den im Zahlenstrahl rot markierten Wert an!",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            child: InkWell(
+              onTap: () {
+                BlocProvider.of<TTSBloc>(context).add(
+                    ClickOnQuestionEvent.initVoice(
+                        onTap
+                            ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
+                            : "Gib den im Zahlenstrahl rot markierten Wert an!",
+                        ""));
+              },
+              child: Center(
+                child: Text(
+                  onTap
+                      ? "Wo befindet sich der unten angegebene Wert auf dem Zahlenstrahl?"
+                      : "Gib den im Zahlenstrahl rot markierten Wert an!",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),

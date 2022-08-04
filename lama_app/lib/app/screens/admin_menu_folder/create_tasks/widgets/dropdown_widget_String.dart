@@ -26,7 +26,7 @@ class DropdownWidgetStringState extends State<DropdownWidgetString> {
       margin: EdgeInsets.all(5),
       child: DropdownButtonFormField<String>(
         hint: Text(widget.hintText.toString()),
-        value: currentSelected,
+        value: widget.currentSelected,
         isDense: true,
         onChanged: (String? newValue) {
           setState(() {

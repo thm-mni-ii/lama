@@ -16,7 +16,8 @@ class CreateClockScreen extends StatefulWidget {
   final int? index;
   final ClockTest? task;
 
-  const CreateClockScreen({Key? key, required this.index, required this.task}) : super(key: key);
+  const CreateClockScreen({Key? key, required this.index, required this.task})
+      : super(key: key);
   @override
   CreateClockScreenState createState() => CreateClockScreenState();
 }
@@ -64,9 +65,9 @@ class CreateClockScreenState extends State<CreateClockScreen> {
                       children: [
                         HeadLineWidget("Uhr"),
                         TextInputWidget(
-                            textController: _uhrController,
-                            missingInput: "Angabe fehlt",
-                            labelText: "Uhr angeben"),
+                          textController: _uhrController,
+                          labelText: "Uhr angeben",
+                        ),
                         Container(
                           child: Column(
                             children: [
@@ -105,17 +106,19 @@ class CreateClockScreenState extends State<CreateClockScreen> {
               if (_formKey.currentState!.validate()) {
                 //List<int> list = [int.parse(_vonController.text), int.parse(_bisController.text)];
                 ClockTest clockTest = ClockTest(
-                    widget.task?.id ??
-                        KeyGenerator.generateRandomUniqueKey(
-                            blocTaskset.tasks!),
-                    TaskType.clock,
-                    int.parse(_rewardController.text),
-                    "Wie viel Uhr ist es?",
-                    3,
-                    _uhrController.text,
-                    timerAllowed,
-                    "", //todo right/wrong Answer
-                    "");
+                  widget.task?.id ??
+                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                  TaskType.clock,
+                  int.parse(_rewardController.text),
+                  "Wie viel Uhr ist es?",
+                  3,
+                  _uhrController.text,
+                  timerAllowed,
+                  "", //todo right/wrong Answer
+                  "",
+                  null,
+                  null,
+                );
                 if (newTask) {
                   // add Task
                   BlocProvider.of<TasksetCreateTasklistBloc>(context)

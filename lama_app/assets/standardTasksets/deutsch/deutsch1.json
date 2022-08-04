@@ -1,0 +1,84 @@
+{
+  "taskset_name": "Standardaufgaben Klasse 1",
+  "taskset_subject": "Deutsch",
+  "taskset_grade": 1,
+  "taskset_randomize_order": true,
+  "tasks": [
+    {
+      "id": "1",
+      "task_type": "TaskType.buchstabieren",
+      "task_reward": 2,
+      "left_to_solve": 3,
+      "lama_text": "Test Text",
+      "first_Letter_caps": 0,
+      "correcting_modus": 0,
+      "multiple_points": 4,
+      "woerter": {
+        "Auto": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Auto.png?raw=true",
+        "Baum": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Baum.png?raw=true",
+        "Biene": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Biene.png?raw=true",
+        "Faultier": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Faultier.png?raw=true",
+        "Fisch": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Fisch.png?raw=true",
+        "Frosch": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Frosch.png?raw=true",
+        "Hund": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Hund.png?raw=true",
+        "Igel": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Igel.png?raw=true",
+        "Jaguar": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Jaguar.png?raw=true",
+        "Krokodil": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Krokodil.png?raw=true",
+        "Küken": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Küken.png?raw=true",
+        "Regenwurm": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Regenwurm.png?raw=true",
+        "Robbe": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Robbe.png?raw=true",
+        "Schmetterling": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Schmetterling.png?raw=true",
+        "Schnecke": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Schnecke.png?raw=true"
+
+      }
+    },
+    {
+      "id": "[#5a805]",
+      "task_type": "TaskType.fourCards",
+      "task_reward": 2,
+      "question": "lesen",
+      "left_to_solve": 3,
+      "lama_text": "Tippe die richtige Silbentrennung an!",
+      "right_answer": "le-sen",
+      "wrong_answers": [
+        "lese-n",
+        "les-en",
+        "lesen"
+      ]
+    },
+    {
+      "id": "[#e0a84]",
+      "task_type": "TaskType.clozeTest",
+      "task_reward": 2,
+      "question": ".. Dino ist groß",
+      "lama_text":"Tippe die richtige Antwort an!",
+      "left_to_solve": 3,
+      "right_answer": "Der",
+      "wrong_answers": [
+        "Die",
+        "Das"
+      ]
+    },
+    {
+      "id": "[#af48e]",
+      "task_type": "TaskType.matchCategory",
+      "task_reward": 2,
+      "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+      "left_to_solve": 3,
+      "nameCatOne": "Farben",
+      "nameCatTwo": "Gegenstände",
+      "categoryOne": [
+        "Rot",
+        "Blau",
+        "Grün",
+        "Gelb"
+      ],
+      "categoryTwo": [
+        "Auto",
+        "Baum",
+        "Schule",
+        "Mensch"
+      ]
+    }
+  ]
+}

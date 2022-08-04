@@ -50,8 +50,8 @@ dependencies:
   fluttertoast: ^8.0.7
 
   smooth_page_indicator: any
+  flutter_tts: ^3.5.0
   numberpicker: ^2.1.1
-  external_path: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -84,9 +84,9 @@ flutter:
     - assets/images/png/
     - assets/sounds/
     - assets/standardTasksets/mathe/
-   # - assets/standardTasksets/deutsch/
-   # - assets/standardTasksets/englisch/
-   # - assets/standardTasksets/sachkunde/
+    - assets/standardTasksets/deutsch/
+    - assets/standardTasksets/englisch/
+    - assets/standardTasksets/sachkunde/
     - assets/md/
     - assets/lama_facts.txt
     - assets/images/

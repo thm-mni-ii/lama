@@ -35,6 +35,9 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   bool first = true;
 
   Taskset buildWholeTaskset(Taskset? blocTaskset) {
+    if (blocTaskset != null && _currentSelectedSubject != blocTaskset.subject) {
+      BlocProvider.of<TasksetCreateTasklistBloc>(context).taskList.clear();
+    }
     Taskset taskset = Taskset(
       _nameController.text,
       _currentSelectedSubject,
@@ -53,8 +56,9 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
   ///{@return} [Widget] decided by the incoming state of the [CreateTasksetBloc]
   @override
   Widget build(BuildContext context) {
+    final bloc = BlocProvider.of<CreateTasksetBloc>(context);
+    Taskset? blocTaskset = bloc.taskset;
     Size screenSize = MediaQuery.of(context).size;
-    Taskset? blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset;
     TasksetRepository tasksetRepo =
         RepositoryProvider.of<TasksetRepository>(context);
 
@@ -173,7 +177,8 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                               ),
                             ),
                           ],
-                          child: TasksetCreationCartScreen(isEdit: !first,editedTaskset: blocTaskset),
+                          child: TasksetCreationCartScreen(
+                              isEdit: !first, editedTaskset: blocTaskset),
                         ),
                       ),
                     );

@@ -8,6 +8,24 @@ class DynamicTextFormFields extends StatefulWidget {
       : super(key: key);
   @override
   State<StatefulWidget> createState() => DynamicTextFormFieldsState();
+
+  static loadListFromTask(List<TextEditingController> controllers,
+      List<TextFormField> fields, List<String> listFromTask) {
+    int controllersLength = listFromTask.length;
+    print(controllersLength);
+    for (int i = 0; i < controllersLength; i++) {
+      controllers.add(TextEditingController(text: listFromTask[i]));
+
+      fields.add(TextFormField(
+        controller: controllers[i],
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+          border: OutlineInputBorder(),
+          labelText: "${fields.length + 1}. Begriff",
+        ),
+      ));
+    }
+  }
 }
 
 class DynamicTextFormFieldsState extends State<DynamicTextFormFields> {
@@ -22,6 +40,12 @@ class DynamicTextFormFieldsState extends State<DynamicTextFormFields> {
             final TextEditingController controller = TextEditingController();
             final TextFormField textFormField = TextFormField(
               controller: controller,
+              validator: (text) {
+                if (text == null || text.isEmpty) {
+                  return "Eingabe fehlt";
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 5, horizontal: 5),
@@ -50,8 +74,16 @@ class DynamicTextFormFieldsState extends State<DynamicTextFormFields> {
                 Container(
                     margin: EdgeInsets.only(top: 20),
                     width: MediaQuery.of(context).size.width / 5,
-                    child:
-                        IconButton(onPressed: () {}, icon: Icon(Icons.delete)))
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          widget.controllers.removeAt(index);
+                          widget.fields.removeAt(index);
+                        });
+                        print(widget.controllers.map((e) => e.text).toString());
+                      },
+                      icon: Icon(Icons.delete),
+                    ))
               ],
             );
           },

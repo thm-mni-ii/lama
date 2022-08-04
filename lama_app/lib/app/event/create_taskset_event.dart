@@ -49,9 +49,6 @@ class AddUrlToTaskset extends CreateTasksetEvent {
   AddUrlToTaskset(this.taskUrl);
 }
 
-/// writes a Taskset to the db and a json to the server with a specific url
-class GenerateTaskset extends CreateTasksetEvent {}
-
 /// used to add a [Task] to the [Taskset] in Bloc
 ///
 /// {@param}[Task] task that should be added to the list

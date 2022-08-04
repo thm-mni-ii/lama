@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/custom_bottomNavigationBar_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_textFormFields_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/headline_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/lamacoin_input_widget.dart';
@@ -16,7 +17,8 @@ class CreateMatchCategoryScreen extends StatefulWidget {
   final int? index;
   final TaskMatchCategory? task;
 
-  const CreateMatchCategoryScreen({Key? key, required this.index, required this.task})
+  const CreateMatchCategoryScreen(
+      {Key? key, required this.index, required this.task})
       : super(key: key);
   @override
   CreateMatchCategoryScreenState createState() =>
@@ -38,6 +40,21 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.task != null && newTask) {
+      _rewardController.text = widget.task!.reward.toString();
+      _category1Controller.text = widget.task!.nameCatOne.toString();
+      _category2Controller.text = widget.task!.nameCatTwo.toString();
+
+      print("1:" + widget.task!.categoryOne.toString());
+      print("2:" + widget.task!.categoryTwo.toString());
+
+      DynamicTextFormFields.loadListFromTask(
+          _controllers1, _fields1, widget.task!.categoryOne);
+      DynamicTextFormFields.loadListFromTask(
+          _controllers2, _fields2, widget.task!.categoryTwo);
+
+      newTask = false;
+    }
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
@@ -60,7 +77,6 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
                         HeadLineWidget("1. Kategorie"),
                         TextInputWidget(
                           textController: _category1Controller,
-                          missingInput: "Angabe fehlt",
                           labelText: "Gib die 1. Kategorie ein",
                         ),
                         DynamicTextFormFields(
@@ -70,7 +86,6 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
                         HeadLineWidget("2. Kategorie"),
                         TextInputWidget(
                           textController: _category2Controller,
-                          missingInput: "Angabe fehlt",
                           labelText: "Gib die 2. Kategorie ein",
                         ),
                         DynamicTextFormFields(
@@ -89,42 +104,38 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: LamaColors.findSubjectColor(
-                    blocTaskset.subject ?? "normal")),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                TaskMatchCategory taskMatchCategory = TaskMatchCategory(
-                  widget.task?.id ??
-                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
-                  TaskType.matchCategory,
-                  int.parse(_rewardController.text),
-                  "Schiebe jedes Wort in die Richtige Kategorie",
-                  3,
-                  _category1Controller.text,
-                  _category2Controller.text,
-                  //TODO: Klappt das wirklich?
-                  _controllers1.map((e) => e.text).toList(),
-                  _controllers2.map((e) => e.text).toList(),
-                );
-                if (newTask) {
-                  // add Task
-                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                      .add(AddToTaskList(taskMatchCategory));
-                  Navigator.pop(context);
-                } else {
-                  // edit Task
-                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                      .add(EditTaskInTaskList(widget.index, taskMatchCategory));
-                }
+        bottomNavigationBar: CustomBottomNavigationBar(
+          color: LamaColors.findSubjectColor(blocTaskset.subject ?? "normal"),
+          newTask: newTask,
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              TaskMatchCategory taskMatchCategory = TaskMatchCategory(
+                widget.task?.id ??
+                    KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                TaskType.matchCategory,
+                int.parse(_rewardController.text),
+                "Schiebe jedes Wort in die Richtige Kategorie",
+                3,
+                _category1Controller.text,
+                _category2Controller.text,
+                _controllers1.map((e) => e.text).toList(),
+                _controllers2.map((e) => e.text).toList(),
+                null,
+                null,
+              );
+              if (newTask) {
+                // add Task
+                BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                    .add(AddToTaskList(taskMatchCategory));
                 Navigator.pop(context);
+              } else {
+                // edit Task
+                BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                    .add(EditTaskInTaskList(widget.index, taskMatchCategory));
               }
-            },
-            child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
-          ),
+              Navigator.pop(context);
+            }
+          },
         ));
-  } 
+  }
 }

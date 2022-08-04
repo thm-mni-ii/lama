@@ -1,0 +1,65 @@
+{
+  "taskset_name": "Standardaufgaben Klasse 6",
+  "taskset_subject": "Sachkunde",
+  "taskset_grade": 6,
+  "taskset_randomize_order": true,
+  "tasks": [
+      {
+          "id": "[#5a805]",
+          "task_type": "TaskType.fourCards",
+          "task_reward": 2,
+          "lama_text": "Tippe die richtige Antwort an!",
+          "left_to_solve": 3,
+          "question":"Wie viele Knochen hat das menschliche Skelett?",
+          "right_answer":"über 200",
+          "wrong_answers":["über 1000", "genau 99", "genau 306"]
+      },
+      {
+          "id": "[#e0a84]",
+          "task_type": "TaskType.clozeTest",
+          "task_reward": 2,
+          "lama_text": "Tippe die richtige Antwort an!",
+          "left_to_solve": 3,
+          "question": "Alle eroberten Gebiete außerhalb Italiens nannten die Römer __",
+          "right_answer": "Provinz",
+          "wrong_answers": [
+              "Limes",
+              "Kastell"
+          ]
+      },
+      {
+          "id": "[#af48e]",
+          "task_type": "TaskType.matchCategory",
+          "task_reward": 2,
+          "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+          "left_to_solve": 3,
+          "nameCatOne": " Ja ",
+          "nameCatTwo": "Nein",
+          "categoryOne": ["Merkel", "Kohl", "Schröder", "Schmidt"],
+          "categoryTwo": ["Müller", "Fischer", "Wagner", "Spahn"]
+      },
+      {
+          "id": "[#d77ae]",
+          "task_type": "TaskType.gridSelect",
+          "task_reward": 3,
+          "lama_text": "Markiere X physikalische Größen",
+          "left_to_solve": 3,
+          "wordsToFind": [
+              "Ampere",
+              "Kelvin",
+              "Celsius",
+              "Energie"
+          ]
+      },
+       {
+        "id": "2",
+         "task_type": "TaskType.connect",
+         "task_reward":2,
+         "left_to_solve": 3,
+         "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+         "pair1": ["Thüringen", "Niedersachsen", "Saarland", "Sachsen"],
+         "pair2": ["Erfurt", "Hannover", "Saarbrücken", "Dresden"],
+         "rightAnswers": ["Thüringen:Erfurt", "Niedersachsen:Hannover", "Saarland:Saarbrücken", "Sachsen:Dresden"]
+       }
+  ]
+}

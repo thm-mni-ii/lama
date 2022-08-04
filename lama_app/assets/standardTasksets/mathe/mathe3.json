@@ -10,7 +10,7 @@
   "taskset_randomize_order": true,
   "tasks": [
     {
-      "id": "t1",
+      "id": "1",
       "task_type": "TaskType.numberLine",
       "task_reward": 1,
       "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
@@ -24,7 +24,7 @@
       "ontap": true
     },
     {
-      "id": "t2",
+      "id": "2",
       "task_type": "TaskType.numberLine",
       "task_reward": 1,
       "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
@@ -34,11 +34,11 @@
         1000
       ],
       "randomRange": false,
-      "steps": 50,
+      "steps": 5,
       "ontap": false
     },
     {
-      "id": "t3",
+      "id": "3",
       "task_type": "TaskType.equation",
       "task_reward": 2,
       "lama_text": "Löse die Gleichung!",
@@ -55,7 +55,7 @@
       "operator_amount": 1
     },
     {
-      "id": "t4",
+      "id": "4",
       "task_type": "TaskType.clock",
       "task_reward": 2,
       "lama_text": "Wie viel Uhr ist es?",
@@ -64,28 +64,28 @@
       "timer": false
     },
     {
-      "id": "t5",
+      "id": "5",
       "task_type": "TaskType.moneyTask",
       "task_reward": 2,
       "lama_text": "",
       "left_to_solve": 3,
-      "difficulty": 2,
+      "difficulty": 3,
       "optimum": false
     },
     {
-      "id": "t6",
+      "id": "6",
       "task_type": "TaskType.moneyTask",
       "task_reward": 2,
       "lama_text": "",
       "left_to_solve": 3,
-      "difficulty": 2,
+      "difficulty": 3,
       "optimum": true
     },
     {
-      "id": "t7",
+      "id": "7",
       "task_type": "TaskType.zerlegung",
-      "task_reward": 2,
-      "lama_text": " zerlegt die Zahlen!",
+      "task_reward": 5,
+      "lama_text": "zerlegt die Zahlen!",
       "left_to_solve": 3,
       "reverse": false,
       "zeros": true,

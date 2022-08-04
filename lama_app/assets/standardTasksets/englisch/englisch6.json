@@ -1,0 +1,71 @@
+{
+  "taskset_name": "Standardaufgaben Klasse 6",
+  "taskset_subject": "Englisch",
+  "taskset_grade": 6,
+  "taskset_randomize_order": true,
+  "tasks": [
+      {
+          "id": "[#5a805]",
+          "task_type": "TaskType.fourCards",
+          "task_reward": 5,
+          "lama_text": "Tippe die richtige Antwort an!",
+          "left_to_solve": 3,
+          "question": "Whats does 'trust' mean in german?",
+          "right_answer":"vertrauen",
+           "wrong_answers":["drücken", "brauchen", "rosten"],
+           "question_language":"Englisch",
+           "answer_language":"Deutsch"
+           },
+       {
+        "id": "2",
+         "task_type": "TaskType.clozeTest",
+         "task_reward": 2,
+         "question": "Simple Past: I .. in the water",
+         "lama_text": "Tap the right Answer!",
+         "left_to_solve": 3,
+         "right_answer": "swam",
+         "wrong_answers": [
+           "swimming",
+           "swum"
+         ],
+         "question_language":"Englisch",
+         "answer_language":"Englisch"
+       },
+       {
+        "id": "3",
+         "task_type": "TaskType.matchCategory",
+         "task_reward":2,
+         "lama_text": "Move each word in the correct category!",
+         "left_to_solve": 3,
+         "nameCatOne": "Simple Present",
+         "nameCatTwo": "Simple Past",
+         "categoryOne": ["work", "go", "see", "sell"],
+         "categoryTwo": ["worked", "went", "saw", "sold"],
+         "question_language":"Englisch"
+       },
+       {
+        "id": "4",
+        "task_type":"TaskType.vocableTest",
+        "task_reward":5,
+        "lama_text": "Translate the shown word!",
+        "left_to_solve": 3,
+        "wordPairs": [{"word":"newspaper","translation":"Zeitung"}, {"word":"skyscraper", "translation":"Wolkenkratzer"}],
+        "randomizeSide": true,
+         "question_language":"Englisch",
+         "answer_language":"Deutsch"
+      },
+       {
+        "id": "5",
+         "task_type": "TaskType.matchCategory",
+         "task_reward":2,
+         "lama_text": "Move each word in the correct category!",
+         "left_to_solve": 3,
+         "nameCatOne": "Simple Past",
+         "nameCatTwo": "Past Participle",
+         "categoryOne": ["was", "came", "did", "knew"],
+         "categoryTwo": ["been", "come", "done", "known"],
+         "question_language":"Englisch",
+         "answer_language":"Englisch"
+       }
+      ]
+}

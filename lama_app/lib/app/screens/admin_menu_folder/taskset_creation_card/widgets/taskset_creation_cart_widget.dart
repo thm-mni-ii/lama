@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_buchstabieren/create_buchstabieren_screen.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clock/create_clock_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clock_task/create_clock_task.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_clozetest/create_clozeTest_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_connect/create_connect_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_equation/create_equation_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_gridselect/create_gridselect_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_markwords/create_markwords_screen.dart';
@@ -13,6 +14,7 @@ import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_money
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_four_cards/create_four_cards_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_numberline/create_numberline_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_vocabletest/create_vocabletest_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_zerlegung/create_zerlegung_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 
 ///This file creates the Taskset Creation Cart Widget
@@ -61,10 +63,14 @@ class TasksetCreationCartWidget extends StatelessWidget {
       case TaskType.clozeTest:
         return CreateClozeTestScreen(index: index, task: task as TaskClozeTest);
       case TaskType.clock:
-        return CreateClockScreen(index: index, task: task as ClockTest);
+        return CreateClockTask(index: index, task: task as ClockTest);
       case TaskType.buchstabieren:
         return CreateBuchstabierenScreen(
             index: index, task: task as TaskBuchstabieren);
+      case TaskType.connect:
+        return CreateConnectScreen(index: index, task: task as TaskConnect);
+      case TaskType.zerlegung:
+        return CreateZerlegungScreen(index: index, task: task as TaskZerlegung);
       default:
         return Placeholder();
     }
