@@ -173,7 +173,11 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                             ),
                             BlocProvider(
                               create: (context) => TasksetCreateTasklistBloc(
-                                blocTaskset == null ? [] : blocTaskset.tasks!,
+                                blocTaskset == null ||
+                                        blocTaskset.subject !=
+                                            _currentSelectedSubject
+                                    ? []
+                                    : blocTaskset.tasks!,
                               ),
                             ),
                           ],
