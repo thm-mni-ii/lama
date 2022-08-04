@@ -26,9 +26,10 @@ class TasksetLoader {
     loadedTasksets.forEach((key, value) {
       value.forEach((element) {
         if (element.isInPool) {
-          tasksetPool.addAll({
-            key: [element]
-          });
+          if (tasksetPool[key] == null) {
+            tasksetPool[key] = [];
+          }
+          tasksetPool[key]!.add(element);
         }
       });
     });
@@ -252,7 +253,6 @@ class TasksetLoader {
   List<Taskset>? getLoadedTasksetsForSubjectAndGrade(
       String subject, int? grade) {
     SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
-    // TODO sollte pool sein
     if (tasksetPool.containsKey(sgr)) return tasksetPool[sgr];
     return [];
   }
