@@ -101,7 +101,10 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                     "Translate the shown word!",
                     3,
                     [],
-                    randomSide);
+                    randomSide,
+                    "Englisch",
+                    "Deutsch",
+                    );
                 if (newTask) {
                   // <=> widget.task == null
                   // add Task

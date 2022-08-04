@@ -10,6 +10,11 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:collection/collection.dart';
 import 'dart:math';
+import 'package:lama_app/app/event/tts_event.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
+
+
 
 /// This file creates the Money task Screen
 /// The Money Task is used to learn the calculating with money.
@@ -26,6 +31,7 @@ import 'dart:math';
 class MoneyTaskScreen extends StatefulWidget {
   final TaskMoney task;
   final BoxConstraints constraints;
+
 
   MoneyTaskScreen(this.task, this.constraints);
 
@@ -57,6 +63,8 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
   late String moneyAmountText;
   int minCount = 0;
   int tempAmount = 0;
+  int questionRead = 0;
+  bool alreadySaid = false;
 
   MoneyTaskState(this.task, this.constraints) {
     finalMoneyAmount = currentAmountInt;
@@ -143,9 +151,17 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String qlang;
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
     final sum = amounts.sum;
     tempAmount = 0;
-    return Column(children: [
+    String text = task.optimum!  ?
+    "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!"
+        : "Sammle $moneyAmountText€ mit den Münzen zusammen!";
+
+    return BlocProvider(
+    create: (context) => TTSBloc(),
+    child: Column(children: [
       // Lama Speechbubble
       Container(
         height: (constraints.maxHeight / 100) * 20,
@@ -155,23 +171,40 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
           children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: Container(
+              child: BlocBuilder<TTSBloc, TTSState>(
+                builder: (context, state) {
+                  if (state is EmptyTTSState && !alreadySaid) {
+                    context.read<TTSBloc>().add(
+                    QuestionOnInitEvent(text,qlang));
+                    alreadySaid = true;
+                  }
+                  return Container(
                 padding: EdgeInsets.only(left: 75),
                 height: 50,
                 width: MediaQuery.of(context).size.width,
                 child: Bubble(
                   nip: BubbleNip.leftCenter,
-                  child: Center(
-                    child: Text(
-                      task.optimum!
-                          ? "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!"
-                          : "Sammle $moneyAmountText€ mit den Münzen zusammen!",
-                      style: LamaTextTheme.getStyle(
-                          color: LamaColors.black, fontSize: 15),
+                  child: InkWell(
+                    onTap: () {
+
+                      BlocProvider.of<TTSBloc>(context)
+                          .add(ClickOnQuestionEvent.initVoice(task.optimum! ? "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!":
+                            "Sammle $moneyAmountText€ mit den Münzen zusammen!", qlang));
+                    },
+                    child: Center(
+                      child: Text(
+                        task.optimum!
+                            ? "Sammle $moneyAmountText€ mit so wenig Münzen wie möglich zusammen!"
+                            : "Sammle $moneyAmountText€ mit den Münzen zusammen!",
+                        style: LamaTextTheme.getStyle(
+                            color: LamaColors.black, fontSize: 15),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              );
+        },
+      ),
             ),
             Align(
               alignment: Alignment.centerLeft,
@@ -589,7 +622,8 @@ class MoneyTaskState extends State<MoneyTaskScreen> {
           ),
         ),
       ),
-    ]);
+    ]),
+);
   }
 
   /// updateAmount is used to refresh the coin press counter

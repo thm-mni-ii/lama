@@ -7,7 +7,7 @@
         {
             "id": "[#5a805]",
             "task_type": "TaskType.fourCards",
-            "task_reward": 5,
+            "task_reward": 2,
             "lama_text": "Tippe die richtige Antwort an!",
             "left_to_solve": 3,
             "question": "Der Igel gehört zu den .. ?",
@@ -34,7 +34,7 @@
         {
             "id": "[#af48e]",
             "task_type": "TaskType.matchCategory",
-            "task_reward": 5,
+            "task_reward": 2,
             "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
             "left_to_solve": 3,
             "nameCatOne": "Säugetier",
@@ -55,7 +55,7 @@
         {
             "id": "[#d77ae]",
             "task_type": "TaskType.gridSelect",
-            "task_reward": 5,
+            "task_reward": 3,
             "lama_text": "Markiere X Nadelbäume",
             "left_to_solve": 3,
             "wordsToFind": [
@@ -63,6 +63,16 @@
                 "Kiefer",
                 "Tanne"
             ]
-        }
+        },
+        {
+            "id": "5",
+           "task_type": "TaskType.connect",
+           "task_reward":2,
+           "left_to_solve": 3,
+           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+           "pair1": ["Vogel", "Säugetier", "Reptil", "Fisch"],
+           "pair2": ["Spatz", "Delphin", "Krokodil", "Lachs"],
+           "rightAnswers": ["Vogel:Spatz", "Säugetier:Delphin", "Reptil:Krokodil", "Fisch:Lachs"]
+         }
     ]
-}
+  }

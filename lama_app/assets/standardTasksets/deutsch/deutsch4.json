@@ -1,99 +1,109 @@
 {
-    "taskset_name": "Standardaufgaben Klasse 4",
-    "taskset_subject": "Deutsch",
-    "taskset_grade": 4,
-    "taskset_randomize_order": true,
-    "tasks": [
-        {
-            "id": "[#5a805]",
-            "task_type": "TaskType.fourCards",
-            "task_reward": 5,
-            "lama_text": "Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "question": "Welches Wort ist ein Synonym zu Couch? (gleiche Bedeutung)",
-            "right_answer": "Sofa",
-            "wrong_answers": [
-                "Sessel",
-                "Stuhl",
-                "Sitzsack"
-            ]
-        },
-        {
-            "id": "[#e90ee]",
-            "task_type": "TaskType.matchCategory",
-            "task_reward": 5,
-            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
-            "left_to_solve": 3,
-            "nameCatOne": "Farben",
-            "nameCatTwo": "Gegenstände",
-            "categoryOne": [
-                "Rot",
-                "Blau",
-                "Grün",
-                "Gelb"
-            ],
-            "categoryTwo": [
-                "Auto",
-                "Baum",
-                "Schule",
-                "Mensch"
-            ]
-        },
-        {
-            "id": "[#e0a84]",
-            "task_type": "TaskType.clozeTest",
-            "task_reward": 2,
-            "lama_text": "Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "question": "Wusstest du, ___ Lamas spucken können?",
-            "right_answer": "dass",
-            "wrong_answers": [
-                "Das",
-                "das"
-            ]
-        },
-        {
-            "id": "[#d77ae]",
-            "task_type": "TaskType.gridSelect",
-            "task_reward": 5,
-            "lama_text": "Markiere X Flüsse",
-            "left_to_solve": 3,
-            "wordsToFind": [
-                "Rhein",
-                "Lahn",
-                "Werra",
-                "Main"
-            ]
-        },
-        {
-            "id": "[#af48e]",
-            "task_type": "TaskType.matchCategory",
-            "task_reward": 5,
-            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
-            "left_to_solve": 3,
-            "nameCatOne": "Gegenwart",
-            "nameCatTwo": "Vergangenheit",
-            "categoryOne": [
-                "laufen",
-                "gehen",
-                "lernen",
-                "fallen"
-            ],
-            "categoryTwo": [
-                "lief",
-                "ging",
-                "lernte",
-                "fiel"
-            ]
-        },
-        {
-            "id": "[#5e9fd]",
-            "task_type": "TaskType.markWords",
-            "task_reward": 5,
-            "lama_text": "Tippe alle Akkusativobjekte an!",
-            "left_to_solve": 3,
-            "sentence": "Das Kind schenkt dem Opa ein Bild!",
-            "right_words": ["Bild!"]
-        }
-    ]
+  "taskset_name": "Standardaufgaben Klasse 4",
+  "taskset_subject": "Deutsch",
+  "taskset_grade": 4,
+  "taskset_randomize_order": true,
+  "tasks": [
+      {
+          "id": "[#5a805]",
+          "task_type": "TaskType.fourCards",
+          "task_reward": 2,
+          "lama_text": "Tippe die richtige Antwort an!",
+          "left_to_solve": 3,
+          "question": "Welches Wort ist ein Synonym zu Couch? (gleiche Bedeutung)",
+          "right_answer": "Sofa",
+          "wrong_answers": [
+              "Sessel",
+              "Stuhl",
+              "Sitzsack"
+          ]
+      },
+      {
+          "id": "[#e90ee]",
+          "task_type": "TaskType.matchCategory",
+          "task_reward": 2,
+          "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+          "left_to_solve": 3,
+          "nameCatOne": "Farben",
+          "nameCatTwo": "Gegenstände",
+          "categoryOne": [
+              "Rot",
+              "Blau",
+              "Grün",
+              "Gelb"
+          ],
+          "categoryTwo": [
+              "Auto",
+              "Baum",
+              "Schule",
+              "Mensch"
+          ]
+      },
+      {
+          "id": "[#e0a84]",
+          "task_type": "TaskType.clozeTest",
+          "task_reward": 2,
+          "lama_text": "Tippe die richtige Antwort an!",
+          "left_to_solve": 3,
+          "question": "Wusstest du, .. Lamas spucken können?",
+          "right_answer": "dass",
+          "wrong_answers": [
+              "Das",
+              "das"
+          ]
+      },
+      {
+          "id": "[#d77ae]",
+          "task_type": "TaskType.gridSelect",
+          "task_reward": 3,
+          "lama_text": "Markiere X Flüsse",
+          "left_to_solve": 3,
+          "wordsToFind": [
+              "Rhein",
+              "Lahn",
+              "Werra",
+              "Main"
+          ]
+      },
+      {
+          "id": "[#af48e]",
+          "task_type": "TaskType.matchCategory",
+          "task_reward": 2,
+          "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+          "left_to_solve": 3,
+          "nameCatOne": "Gegenwart",
+          "nameCatTwo": "Vergangenheit",
+          "categoryOne": [
+              "laufen",
+              "gehen",
+              "lernen",
+              "fallen"
+          ],
+          "categoryTwo": [
+              "lief",
+              "ging",
+              "lernte",
+              "fiel"
+          ]
+      },
+      {
+          "id": "[#5e9fd]",
+          "task_type": "TaskType.markWords",
+          "task_reward": 2,
+          "lama_text": "Tippe alle Akkusativobjekte an!",
+          "left_to_solve": 3,
+          "sentence": "Das Kind schenkt dem Opa ein Bild!",
+          "right_words": ["Bild!"]
+      },
+      {
+        "id": "6",
+         "task_type": "TaskType.connect",
+         "task_reward":2,
+         "left_to_solve": 3,
+         "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+         "pair1": ["Perfekt", "Präteritum", "Futur I"],
+         "pair2": ["gefahren", "fuhr", "werde"],
+         "rightAnswers": ["Perfekt:gefahren", "Präteritum:fuhr", "Futur I:werde"]
+       }
+  ]
 }

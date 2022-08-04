@@ -113,6 +113,8 @@ class CreateFourCardsScreenState extends State<CreateFourCardsScreen> {
                   3,
                   _questionController.text,
                   _answers[0].text,
+                  null,
+                  null,
                   [_answers[1].text, _answers[2].text, _answers[3].text]);
               if (newTask) {
                 // add Task

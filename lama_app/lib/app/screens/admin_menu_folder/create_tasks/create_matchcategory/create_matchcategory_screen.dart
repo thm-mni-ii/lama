@@ -120,6 +120,8 @@ class CreateMatchCategoryScreenState extends State<CreateMatchCategoryScreen> {
                 _category2Controller.text,
                 _controllers1.map((e) => e.text).toList(),
                 _controllers2.map((e) => e.text).toList(),
+                null,
+                null,
               );
               if (newTask) {
                 // add Task

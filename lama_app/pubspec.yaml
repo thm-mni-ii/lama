@@ -48,6 +48,7 @@ dependencies:
   fluttertoast: ^8.0.7
 
   smooth_page_indicator: any
+  flutter_tts: ^3.5.0
   numberpicker: ^2.1.1
   external_path: ^1.0.1
 dev_dependencies:

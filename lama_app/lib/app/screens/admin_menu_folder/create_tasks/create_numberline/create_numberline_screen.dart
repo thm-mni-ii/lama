@@ -183,7 +183,10 @@ class CreateNumberlineScreenState extends State<CreateNumberlineScreen> {
                   list,
                   randomRangeAllowed!,
                   int.parse(_stepsController.text),
-                  ontapAllowed!);
+                  ontapAllowed!,
+                  null,
+                  null,
+                  );
               if (newTask) {
                 // <=> widget.task == null
                 // add Task
