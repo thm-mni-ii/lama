@@ -75,7 +75,7 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
     });
     on<UploadTaskset>((event, emit) async {
       final repo = RepositoryProvider.of<TasksetRepository>(event.context);
-      await repo.fileUpload(event.context, event.taskset).toString();
+      print("FUCK YOU: " + (await repo.fileUpload(event.context, event.taskset)).toString());
       if (repo.tasksetLoader.loadedTasksets[SubjectGradeRelation(
               event.taskset.subject, event.taskset.grade)] ==
           null) {

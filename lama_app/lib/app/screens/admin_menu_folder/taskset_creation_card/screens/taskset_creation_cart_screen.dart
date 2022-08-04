@@ -35,7 +35,8 @@ import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 class TasksetCreationCartScreen extends StatelessWidget {
   final bool isEdit;
   final Taskset? editedTaskset;
-  const TasksetCreationCartScreen({required this.isEdit, required this.editedTaskset})
+  const TasksetCreationCartScreen(
+      {required this.isEdit, required this.editedTaskset})
       : super();
 
   @override
@@ -96,33 +97,47 @@ class TasksetCreationCartScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    if (serverRepo.serverSettings != null &&
-                        serverRepo.serverSettings!.url.isNotEmpty) {
-                      String createdTaskUrl =
-                          "${serverRepo.serverSettings?.url}upload/${taskset.grade}/${taskset.name}";
-                      if (isEdit) {
-                        tasksetManageBloc.add(DeleteTaskset(editedTaskset!, context));
-                      }
-                      createTasksetBloc.add(
-                        AddUrlToTaskset(TaskUrl(url: createdTaskUrl)),
-                      );
-                      // tasklist muss gesetzt werden
-                      createTasksetBloc.add(
-                        AddTaskListToTaskset(tasksetListBloc.taskList),
-                      );
-                      //print("create TaskUrl obj: " + h.toString());
-                      //print(taskset.toJson());
-                      //print("TaskUrl in bloc: " + taskset.taskurl!.url.toString());
-                      tasksetManageBloc.add(UploadTaskset(taskset, context));
+                    if (tasksetListBloc.taskList.isNotEmpty) {
+                      if (serverRepo.serverSettings != null &&
+                          serverRepo.serverSettings!.url.isNotEmpty) {
+                        String createdTaskUrl =
+                            "${serverRepo.serverSettings?.url}upload/${taskset.grade}/${taskset.name}";
+                        if (isEdit) {
+                          tasksetManageBloc
+                              .add(DeleteTaskset(editedTaskset!, context));
+                        }
+                        createTasksetBloc.add(
+                          AddUrlToTaskset(TaskUrl(url: createdTaskUrl)),
+                        );
+                        // tasklist muss gesetzt werden
+                        createTasksetBloc.add(
+                          AddTaskListToTaskset(tasksetListBloc.taskList),
+                        );
+                        //print("create TaskUrl obj: " + h.toString());
+                        //print(taskset.toJson());
+                        //print("TaskUrl in bloc: " + taskset.taskurl!.url.toString());
+                        tasksetManageBloc.add(UploadTaskset(taskset, context));
 
-                      Navigator.pop(context);
-                      Navigator.pop(context);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: LamaColors.redAccent,
+                            content: const Text(
+                              'Serversettings nicht gesetzt',
+                              textAlign: TextAlign.center,
+                            ),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           backgroundColor: LamaColors.redAccent,
                           content: const Text(
-                            'Serversettings nicht gesetzt',
+                            'Füge deinem Taskset ein Task hinzu',
                             textAlign: TextAlign.center,
                           ),
                           duration: Duration(seconds: 1),
