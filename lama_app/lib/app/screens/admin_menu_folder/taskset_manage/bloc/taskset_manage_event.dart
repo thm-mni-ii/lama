@@ -27,15 +27,17 @@ class RemoveTasksetPool extends TasksetManageEvent {
 }
 
 class AddListOfTasksetsPool extends TasksetManageEvent {
+  final BuildContext context;
   final List<Taskset> tasksetList;
 
-  AddListOfTasksetsPool(this.tasksetList);
+  AddListOfTasksetsPool(this.context, this.tasksetList);
 }
 
 class RemoveListOfTasksetsPool extends TasksetManageEvent {
+  final BuildContext context;
   final List<Taskset> tasksetList;
 
-  RemoveListOfTasksetsPool(this.tasksetList);
+  RemoveListOfTasksetsPool(this.context, this.tasksetList);
 }
 
 class DeleteTaskset extends TasksetManageEvent {

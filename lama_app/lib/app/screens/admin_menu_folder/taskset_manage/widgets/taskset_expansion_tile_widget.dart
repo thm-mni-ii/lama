@@ -57,9 +57,9 @@ class TasksetExpansionTileWidget extends StatelessWidget {
                 ? IconButton(// update server files
                     onPressed: () => areTasksetsOfGradeInPool(index + 1)
                         ? tasksetBloc
-                            .add(RemoveListOfTasksetsPool(list(index + 1)))
+                            .add(RemoveListOfTasksetsPool(context, list(index + 1)))
                         : tasksetBloc
-                            .add(AddListOfTasksetsPool(list(index + 1))),
+                            .add(AddListOfTasksetsPool(context, list(index + 1))),
                     icon: areTasksetsOfGradeInPool(index + 1)
                         ? Icon(Icons.remove_circle_outline)
                         : Icon(Icons.add),

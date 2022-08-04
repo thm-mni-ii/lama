@@ -24,30 +24,26 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
   TasksetManageBloc({required this.tasksetPool, required this.allTaskset})
       : super(TasksetManageInitial()) {
     on<AddTasksetPool>((event, emit) {
-      tasksetPool.add(event.taskset);
-      event.taskset.isInPool = true;
-      updateTaskset(event.context, event.taskset);
+      addATaskset(event.context, event.taskset);
       emit(ChangeTasksetStatus());
     });
     on<RemoveTasksetPool>((event, emit) async {
-      tasksetPool.remove(event.taskset); // remove where
-      event.taskset.isInPool = false;
-      updateTaskset(event.context, event.taskset);
+      removeATaskset(event.context, event.taskset);
       emit(ChangeTasksetStatus());
     });
     on<AddListOfTasksetsPool>((event, emit) {
       event.tasksetList.forEach((element) {
-        if (!tasksetPool.contains(element)) {
-          tasksetPool.add(element);
-          element.isInPool = true;
+        if (!element.isInPool && element.taskurl!.id != null) {
+          addATaskset(event.context, element);
         }
       });
       emit(ChangeTasksetStatus());
     });
     on<RemoveListOfTasksetsPool>((event, emit) {
       event.tasksetList.forEach((element) {
-        element.isInPool = false;
-        tasksetPool.remove(element); // remove where
+        if (element.taskurl!.id != null) {
+          removeATaskset(event.context, element);
+        }
       });
       emit(ChangeTasksetStatus());
     });
@@ -75,7 +71,8 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
     });
     on<UploadTaskset>((event, emit) async {
       final repo = RepositoryProvider.of<TasksetRepository>(event.context);
-      print("FUCK YOU: " + (await repo.fileUpload(event.context, event.taskset)).toString());
+      print("FUCK YOU: " +
+          (await repo.fileUpload(event.context, event.taskset)).toString());
       if (repo.tasksetLoader.loadedTasksets[SubjectGradeRelation(
               event.taskset.subject, event.taskset.grade)] ==
           null) {
@@ -96,5 +93,17 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
 
     await repo.deleteTasksetFromServer(context, taskset);
     await repo.fileUpload(context, taskset);
+  }
+
+  void removeATaskset(BuildContext context, Taskset taskset) {
+    tasksetPool.remove(taskset);
+    taskset.isInPool = false;
+    updateTaskset(context, taskset);
+  }
+
+  void addATaskset(BuildContext context, Taskset taskset) {
+    tasksetPool.add(taskset);
+    taskset.isInPool = true;
+    updateTaskset(context, taskset);
   }
 }
