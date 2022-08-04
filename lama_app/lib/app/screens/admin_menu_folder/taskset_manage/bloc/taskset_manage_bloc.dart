@@ -90,8 +90,8 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
   void updateTaskset(BuildContext context, Taskset taskset) async {
     final repo = RepositoryProvider.of<TasksetRepository>(context);
 
-    print("frage 1: " + (await repo.deleteTasksetFromServer(context, taskset)).toString());
-    print("frage 2: " + (await repo.fileUpload(context, taskset)).toString());
+    await repo.deleteTasksetFromServer(context, taskset);
+    await repo.fileUpload(context, taskset);
   }
 
   void removeATaskset(BuildContext context, Taskset taskset) {
