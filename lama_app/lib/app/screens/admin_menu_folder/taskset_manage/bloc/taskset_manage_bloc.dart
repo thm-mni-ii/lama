@@ -33,7 +33,7 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
     });
     on<AddListOfTasksetsPool>((event, emit) {
       event.tasksetList.forEach((element) {
-        if (!element.isInPool && element.taskurl!.id != null) {
+        if (!element.isInPool && element.taskurl!.id == null) {
           addATaskset(event.context, element);
         }
       });
@@ -41,7 +41,7 @@ class TasksetManageBloc extends Bloc<TasksetManageEvent, TasksetManageState> {
     });
     on<RemoveListOfTasksetsPool>((event, emit) {
       event.tasksetList.forEach((element) {
-        if (element.taskurl!.id != null) {
+        if (element.taskurl!.id == null) {
           removeATaskset(event.context, element);
         }
       });
