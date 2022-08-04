@@ -159,18 +159,13 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                       _currentSelectedGrade != null &&
                       _currentSelectedSubject != null) {
                     // initilize everything else in taskset
-                    BlocProvider.of<CreateTasksetBloc>(context).add(
-                      EditTaskset(buildWholeTaskset(blocTaskset)),
-                    );
+                    bloc.add(EditTaskset(buildWholeTaskset(blocTaskset)));
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => MultiBlocProvider(
                           providers: [
-                            BlocProvider.value(
-                              value:
-                                  BlocProvider.of<CreateTasksetBloc>(context),
-                            ),
+                            BlocProvider.value(value: bloc),
                             BlocProvider(
                               create: (context) => TasksetCreateTasklistBloc(
                                 blocTaskset == null ||
@@ -182,7 +177,9 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                             ),
                           ],
                           child: TasksetCreationCartScreen(
-                              isEdit: !first, editedTaskset: blocTaskset),
+                            isEdit: !first,
+                            editedTaskset: blocTaskset,
+                          ),
                         ),
                       ),
                     );
@@ -194,7 +191,7 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
                           'Fülle alle Felder aus',
                           textAlign: TextAlign.center,
                         ),
-                        duration: Duration(seconds: 1),
+                        duration: const Duration(seconds: 1),
                       ),
                     );
                   }
