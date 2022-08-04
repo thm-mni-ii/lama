@@ -67,7 +67,7 @@ class TasksetRepository {
 
     // error handling??
     if (serverRepo.serverSettings != null && taskset.taskurl!.id == null) {
-      try {
+      //try {
         final client = SSHClient(
           await SSHSocket.connect(
             serverRepo.serverSettings!.url,
@@ -95,9 +95,9 @@ class TasksetRepository {
         client.done;
 
         return "";
-      } catch (e) {
+      /* } catch (e) {
         throw e; // in ui fangen
-      }
+      } */
     }
     // TODO nutzen um anzuzeigen das was fehlts
     return "Keine Server Settings gesetzt";

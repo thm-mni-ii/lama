@@ -1,4 +1,9 @@
 {
+    "taskset_url": {
+        "id": 19,
+        "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde1.json"
+    },
+    "is_in_Pool": true,
     "taskset_name": "Standardaufgaben Klasse 1",
     "taskset_subject": "Sachkunde",
     "taskset_grade": 1,
@@ -66,13 +71,28 @@
         },
         {
             "id": "5",
-           "task_type": "TaskType.connect",
-           "task_reward":2,
-           "left_to_solve": 3,
-           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
-           "pair1": ["Vogel", "Säugetier", "Reptil", "Fisch"],
-           "pair2": ["Spatz", "Delphin", "Krokodil", "Lachs"],
-           "rightAnswers": ["Vogel:Spatz", "Säugetier:Delphin", "Reptil:Krokodil", "Fisch:Lachs"]
-         }
+            "task_type": "TaskType.connect",
+            "task_reward": 2,
+            "left_to_solve": 3,
+            "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+            "pair1": [
+                "Vogel",
+                "Säugetier",
+                "Reptil",
+                "Fisch"
+            ],
+            "pair2": [
+                "Spatz",
+                "Delphin",
+                "Krokodil",
+                "Lachs"
+            ],
+            "rightAnswers": [
+                "Vogel:Spatz",
+                "Säugetier:Delphin",
+                "Reptil:Krokodil",
+                "Fisch:Lachs"
+            ]
+        }
     ]
-  }
+}
