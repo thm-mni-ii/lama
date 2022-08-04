@@ -71,16 +71,16 @@ class TasksetLoader {
             List<TaskUrl> standardTaskUrls = [
               TaskUrl(
                   url:
-                      "https://raw.githubusercontent.com/thm-mni-ii/lama/taskset_erstellung-taskset_manage_screen/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe$i.json"),
               TaskUrl(
                   url:
-                      "https://raw.githubusercontent.com/thm-mni-ii/lama/taskset_erstellung-taskset_manage_screen/lama_app/assets/standardTasksets/deutsch/deutsch$i.json"),
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch$i.json"),
               TaskUrl(
                   url:
-                      "https://raw.githubusercontent.com/thm-mni-ii/lama/taskset_erstellung-taskset_manage_screen/lama_app/assets/standardTasksets/englisch/englisch$i.json"),
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch$i.json"),
               TaskUrl(
                   url:
-                      "https://raw.githubusercontent.com/thm-mni-ii/lama/taskset_erstellung-taskset_manage_screen/lama_app/assets/standardTasksets/sachkunde/sachkunde$i.json"),
+                      "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde$i.json"),
             ];
             await loadTasksFromUrls(standardTaskUrls);
           }
