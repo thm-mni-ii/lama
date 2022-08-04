@@ -251,11 +251,12 @@ class TasksetLoader {
   List<Taskset>? getLoadedTasksetsForSubjectAndGrade(
       String subject, int? grade) {
     SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
-    if (tasksetPool.containsKey(sgr)) return tasksetPool[sgr];
+    if (loadedTasksets.containsKey(sgr)) return loadedTasksets[sgr];
     return [];
   }
 
   ///Gets all Tasksets that match a specific subject-grade combination (e.g. math and second grade)
+  /// returns the List that is used by the children
   List<Taskset>? getTasksetPoolForSubjectAndGrade(String subject, int? grade) {
     SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
     if (tasksetPool.containsKey(sgr)) return tasksetPool[sgr];
