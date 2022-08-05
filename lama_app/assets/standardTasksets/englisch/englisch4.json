@@ -1,4 +1,10 @@
 {
+  
+  "taskset_url": {
+    "id": 10,
+    "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch4.json"
+  },
+  "is_in_Pool": true,
   "taskset_name": "Standardaufgaben Klasse 4",
   "taskset_subject": "Englisch",
   "taskset_grade": 4,

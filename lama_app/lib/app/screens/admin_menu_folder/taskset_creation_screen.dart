@@ -153,45 +153,51 @@ class TasksetCreationScreenState extends State<TasksetCreationScreen> {
             alignment: Alignment.bottomRight,
             child: Container(
               margin: EdgeInsets.all(25),
-            child: ElevatedButton(
-              onPressed: () {
-                if (_nameController.text.isNotEmpty &&
-                    _currentSelectedGrade != null &&
-                    _currentSelectedSubject != null) {
-                  // initilize everything else in taskset
-                  bloc.add(EditTaskset(buildWholeTaskset(blocTaskset)));
-                  print("Abgeschickte tasklist: " +
-                      (blocTaskset?.tasks! ?? []).toString());
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => MultiBlocProvider(
-                        providers: [
-                          BlocProvider.value(value: bloc),
-                          BlocProvider.value(
-                            value: BlocProvider.of<TasksetCreateTasklistBloc>(
-                                context),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (_nameController.text.isNotEmpty &&
+                      _currentSelectedGrade != null &&
+                      _currentSelectedSubject != null) {
+                    // initilize everything else in taskset
+                    bloc.add(EditTaskset(buildWholeTaskset(blocTaskset)));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider.value(value: bloc),
+                            BlocProvider(
+                              create: (context) => TasksetCreateTasklistBloc(
+                                blocTaskset == null ||
+                                        blocTaskset.subject !=
+                                            _currentSelectedSubject
+                                    ? []
+                                    : blocTaskset.tasks!,
+                              ),
+                            ),
+                          ],
+                          child: TasksetCreationCartScreen(
+                            isEdit: !first,
+                            editedTaskset: blocTaskset,
                           ),
-                        ],
-                        child: TasksetCreationCartScreen(),
+                        ),
                       ),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: LamaColors.redAccent,
-                      content: const Text(
-                        'Fülle alle Felder aus',
-                        textAlign: TextAlign.center,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: LamaColors.redAccent,
+                        content: const Text(
+                          'Fülle alle Felder aus',
+                          textAlign: TextAlign.center,
+                        ),
+                        duration: const Duration(seconds: 1),
                       ),
-                      duration: Duration(seconds: 1),
-                    ),
-                  );
-                }
-              },
-              child: const Text("Weiter"),
-            ),
+                    );
+                  }
+                },
+                child: const Text("Weiter"),
+              ),
             ),
           ),
         ],

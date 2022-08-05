@@ -17,14 +17,14 @@ import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_vocab
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_zerlegung/create_zerlegung_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/create_four_cards/create_four_cards_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
-import 'package:lama_app/app/task-system/taskset_model.dart';
 
 class TaskCardWidget extends StatelessWidget {
   final TaskType taskType;
   const TaskCardWidget({Key? key, required this.taskType}) : super(key: key);
 
   Widget screenDependingOnTaskType(TaskType taskType) {
-    switch (taskType) {// TODO bloc task?
+    switch (taskType) {
+      // TODO bloc task?
       case TaskType.moneyTask:
         return MoneyEinstellenScreen(index: null, task: null);
       case TaskType.fourCards:
@@ -62,21 +62,21 @@ class TaskCardWidget extends StatelessWidget {
       child: ListTile(
         title: Text(taskType.toString().substring(9).toUpperCase()),
         onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => MultiBlocProvider(
-                providers: [
-                  BlocProvider.value(
-                    value: BlocProvider.of<CreateTasksetBloc>(context),
-                  ),
-                  BlocProvider.value(
-                    value: BlocProvider.of<TasksetCreateTasklistBloc>(context),
-                  ),
-                ],
-                child: screenDependingOnTaskType(taskType),
-              ),
+          context,
+          MaterialPageRoute(
+            builder: (_) => MultiBlocProvider(
+              providers: [
+                BlocProvider.value(
+                  value: BlocProvider.of<CreateTasksetBloc>(context),
+                ),
+                BlocProvider.value(
+                  value: BlocProvider.of<TasksetCreateTasklistBloc>(context),
+                ),
+              ],
+              child: screenDependingOnTaskType(taskType),
             ),
           ),
+        ),
         trailing: Icon(
           (Icons.keyboard_arrow_right),
         ),

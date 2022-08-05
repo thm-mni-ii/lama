@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
-import 'package:lama_app/app/bloc/create_admin_bloc.dart';
 import 'package:lama_app/app/bloc/edit_user_bloc.dart';
 import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
@@ -167,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: IconButton(
                                         onPressed: () { home_screen_state.toggle();
                                         setState(() {
-                                          tooltipptext = tooltipptext!;
+                                          tooltipptext = tooltipptext;
                                           changedSound = true;
                                           ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
                                         });

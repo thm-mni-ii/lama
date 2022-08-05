@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 //Lama default
@@ -425,7 +424,7 @@ class OptionTaskScreennState extends State<OptionTaskScreen> {
   Widget _bar(double size) {
     return AppBar(
       title: Text(
-        'Aufgabenverwaltung',
+        'Taskset importieren',
         style: LamaTextTheme.getStyle(fontSize: 18),
       ),
       toolbarHeight: size,

@@ -1,7 +1,6 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
-import 'package:lama_app/snake/snakeGame.dart';
 
 import 'package:lama_app/game_snake_aus_iNet/snake_game.dart';
 

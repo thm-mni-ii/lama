@@ -45,7 +45,7 @@ class CreateFourCardsScreenState extends State<CreateFourCardsScreen> {
 
       newTask = false;
     }
-    
+
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 

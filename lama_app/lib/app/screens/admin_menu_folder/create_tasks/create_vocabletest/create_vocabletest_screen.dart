@@ -14,8 +14,8 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
 
 class CreateVocabletestScreen extends StatefulWidget {
-  final TaskVocableTest? task;
   final int? index;
+  final TaskVocableTest? task;
 
   const CreateVocabletestScreen({
     Key? key,

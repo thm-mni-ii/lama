@@ -1,11 +1,16 @@
 {
+    "taskset_url": {
+        "id": 2,
+        "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe2.json"
+    },
     "taskset_name": "Standardaufgaben Klasse 2",
     "taskset_subject": "Mathe",
     "taskset_grade": 2,
+    "is_in_Pool": true,
     "taskset_randomize_order": true,
     "tasks": [
         {
-            "id": "1",
+            "id": "t1",
             "task_type": "TaskType.clock",
             "task_reward": 2,
             "lama_text": "Wie viel Uhr ist es?",

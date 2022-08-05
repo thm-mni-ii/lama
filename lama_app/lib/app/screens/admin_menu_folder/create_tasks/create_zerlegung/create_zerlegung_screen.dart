@@ -111,17 +111,18 @@ class CreateZerlegungScreenState extends State<CreateZerlegungScreen> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               TaskZerlegung zerlegungTask = TaskZerlegung(
-                  widget.task?.id ??
-                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
-                  TaskType.zerlegung,
-                  int.parse(_rewardController.text),
-                  "zerlegt die Zahlen!",
-                  3,
-                  reverseAllowed,
-                  zerosAllowed,
-                  boolThousandsAllowed,
-                  null,
-                  null,);
+                widget.task?.id ??
+                    KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                TaskType.zerlegung,
+                int.parse(_rewardController.text),
+                "zerlegt die Zahlen!",
+                3,
+                reverseAllowed,
+                zerosAllowed,
+                boolThousandsAllowed,
+                null,
+                null,
+              );
               if (newTask) {
                 // add Task
                 BlocProvider.of<TasksetCreateTasklistBloc>(context)

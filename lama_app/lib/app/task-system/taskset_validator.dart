@@ -1,5 +1,6 @@
 // import 'dart:ffi';
 
+import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/pair.dart';
 
 ///This class provides methods to validate a [Taskset] and a [Task].
@@ -62,7 +63,6 @@ class TasksetValidator {
           json["lama_text"] is String &&
           json["left_to_solve"] is int) {
         switch (json["task_type"]) {
-
           ///4Cards
           case "TaskType.fourCards":
             if (json.containsKey("question") &&

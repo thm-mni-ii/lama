@@ -1,4 +1,9 @@
 {
+    "taskset_url": {
+        "id": 23,
+        "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde5.json"
+    },
+    "is_in_Pool": true,
   "taskset_name": "Standardaufgaben Klasse 5",
   "taskset_subject": "Sachkunde",
   "taskset_grade": 5,

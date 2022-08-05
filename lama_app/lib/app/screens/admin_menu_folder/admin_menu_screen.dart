@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
-import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
-import 'package:lama_app/app/screens/admin_menu_folder/taskset_creation_screen.dart';
-import 'package:lama_app/app/screens/taskset_option_screen.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/server_ui/screens/server_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/taskset_manage_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 //Lama default
@@ -182,41 +180,28 @@ class _AdminMenuScreenState extends State<AdminMenuScreen> {
           _menuButton(
             context,
             Icon(Icons.add_link),
-            'Aufgabenverwaltung',
-            () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (BuildContext context) => TasksetOptionsBloc(),
-                    child: OptionTaskScreen(),
-                  ),
-                ),
-              ).then((_) {
-                AdminUtils.reloadTasksets(context);
-              })
-            },
-          ),
-          _menuButton(
-            context,
-            Icon(Icons.task),
-            'Taskseterstellung',
+            'Tasksetverwaltung',
             () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MultiBlocProvider(
-                  providers: [
-                    BlocProvider(
-                      create: (BuildContext context) => CreateTasksetBloc(),
-                    ),
-                    BlocProvider(
-                      create: (context) => TasksetCreateTasklistBloc([]),
-                    ),
-                  ],
-                child: TasksetCreationScreen(),
+                builder: (context) => TasksetManageScreen(),
               ),
-            ),
-           )
+            ).then((_) {
+              AdminUtils.reloadTasksets(context);
+            }),
+          ),
+          _menuButton(
+            context,
+            Icon(Icons.add_link),
+            'Server Einstellungen',
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ServerSettingsScreen(),
+              ),
+            ).then((_) {
+              AdminUtils.reloadTasksets(context);
+            }),
           ),
           _menuButton(
             context,
@@ -447,7 +432,8 @@ abstract class AdminUtils {
   ///    [RepositoryProvider]
   ///    [TasksetRepository]
   static void reloadTasksets(BuildContext context) {
-    RepositoryProvider.of<TasksetRepository>(context).reloadTasksetLoader();
+    var tmp = RepositoryProvider.of<TasksetRepository>(context);
+    tmp.reloadTasksetLoader(RepositoryProvider.of<ServerRepository>(context));
   }
 
   ///porvides [AppBar] with default design for Screens used by the Admin

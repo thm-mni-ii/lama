@@ -20,9 +20,7 @@ class GameOverMode extends StatelessWidget {
     required this.lifes,
     required this.onQuitPressed,
     required this.onRetryPressed,
-  })  : assert(score != null),
-        assert(onQuitPressed != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -29,6 +29,18 @@ enum TaskType {
 }
 
 class Task {
+  String id;
+  TaskType type;
+  int reward;
+  String lamaText;
+  int originalLeftToSolve;
+  int? leftToSolve;
+
+  Task(this.id, this.type, this.reward, this.lamaText,
+      this.originalLeftToSolve) {
+    leftToSolve = originalLeftToSolve;
+  }
+
   ///factory constructor that creates the corresponding
   ///subclass of [Task] based on the [taskType].
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -302,18 +314,6 @@ class Task {
       default:
         return {};
     }
-  }
-
-  String id;
-  TaskType type;
-  int reward;
-  String lamaText;
-  int originalLeftToSolve;
-  int? leftToSolve;
-
-  Task(this.id, this.type, this.reward, this.lamaText,
-      this.originalLeftToSolve) {
-    leftToSolve = originalLeftToSolve;
   }
 
   @override
@@ -596,9 +596,7 @@ class TaskMoney extends Task {
       };
 
   @override
-  String toString() {
-    return super.toString() + difficulty.toString();
-  }
+  String toString() => super.toString() + difficulty.toString();
 }
 
 ///Subclass of [Task] for the Tasktype "VocableTest"

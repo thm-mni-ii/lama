@@ -1,6 +1,4 @@
-import 'dart:math';
 import 'package:bubble/bubble.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -134,12 +132,12 @@ class EquationTaskState extends State<EquationTaskScreen> {
             child: BlocBuilder<TTSBloc, TTSState>(
               builder: (context, state) {
                 if (state is EmptyTTSState) {
-                  context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
+                  context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText,qlang));
                 }
             return InkWell(
               onTap: () {
                 BlocProvider.of<TTSBloc>(context)
-                    .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                    .add(ClickOnQuestionEvent.initVoice(task.lamaText, qlang));
               },
               child: Container(
                 padding: EdgeInsets.only(left: 75),
@@ -149,7 +147,7 @@ class EquationTaskState extends State<EquationTaskScreen> {
                   nip: BubbleNip.leftCenter,
                   child: Center(
                     child: Text(
-                      task.lamaText!,
+                      task.lamaText,
                       style: LamaTextTheme.getStyle(
                           fontSize: 15, color: LamaColors.black),
                     ),

@@ -109,8 +109,9 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                     numberController: _vonController,
                                     labelText: "von",
                                     validator: (text) {
-                                      if (int.parse(_bisController.text) <= int.parse(text)) {
-                                          return "Zu groß";
+                                      if (int.parse(_bisController.text) <=
+                                          int.parse(text)) {
+                                        return "Zu groß";
                                       }
                                     },
                                   ),
@@ -125,16 +126,16 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: NumberInputWidget(
-                                    numberController: _bisController, 
-                                    labelText: "bis",
-                                    validator: (text) {
-                                      if (int.parse(text) <= int.parse(_vonController.text)) {
-                                          return "Zu klein";
-                                      }
-                                    },
-                                  )
-                                ),
+                                    child: NumberInputWidget(
+                                  numberController: _bisController,
+                                  labelText: "bis",
+                                  validator: (text) {
+                                    if (int.parse(text) <=
+                                        int.parse(_vonController.text)) {
+                                      return "Zu klein";
+                                    }
+                                  },
+                                )),
                               ],
                             ),
                           ),
@@ -241,19 +242,19 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                 int.parse(_vonController.text),
                 int.parse(_bisController.text)
               ];
-              if(allowedOperations.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: LamaColors.redAccent,
-                        content: const Text(
-                          'Wähle mindestens eine Rechenoperation aus',
-                          textAlign: TextAlign.center,
-                        ),
-                        duration: Duration(seconds: 2),
-                      ),
-                      );
+              if (allowedOperations.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: LamaColors.redAccent,
+                    content: const Text(
+                      'Wähle mindestens eine Rechenoperation aus',
+                      textAlign: TextAlign.center,
+                    ),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               } else {
-              TaskEquation equationTask = TaskEquation(
+                TaskEquation equationTask = TaskEquation(
                   widget.task?.id ??
                       KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
                   TaskType.equation,
@@ -268,19 +269,20 @@ class CreateEquationScreenState extends State<CreateEquationScreen> {
                   null,
                   -1,
                   null,
-                  null,);
-              if (newTask) {
-                // add Task
-                BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                    .add(AddToTaskList(equationTask));
+                  null,
+                );
+                if (newTask) {
+                  // add Task
+                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                      .add(AddToTaskList(equationTask));
+                  Navigator.pop(context);
+                } else {
+                  // edit Task
+                  BlocProvider.of<TasksetCreateTasklistBloc>(context)
+                      .add(EditTaskInTaskList(widget.index, equationTask));
+                }
                 Navigator.pop(context);
-              } else {
-                // edit Task
-                BlocProvider.of<TasksetCreateTasklistBloc>(context)
-                    .add(EditTaskInTaskList(widget.index, equationTask));
               }
-              Navigator.pop(context);
-            }
             }
           },
         ));

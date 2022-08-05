@@ -14,8 +14,8 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
 
 class CreateMarkWordsScreen extends StatefulWidget {
-  final TaskMarkWords? task;
   final int? index;
+  final TaskMarkWords? task;
 
   const CreateMarkWordsScreen(
       {Key? key, required this.task, required this.index})

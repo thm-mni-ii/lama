@@ -1,4 +1,9 @@
 {
+  "taskset_url": {
+    "id": 13,
+    "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch1.json"
+  },
+  "is_in_Pool": true,
   "taskset_name": "Standardaufgaben Klasse 1",
   "taskset_subject": "Deutsch",
   "taskset_grade": 1,
@@ -29,7 +34,6 @@
         "Robbe": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Robbe.png?raw=true",
         "Schmetterling": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Schmetterling.png?raw=true",
         "Schnecke": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Schnecke.png?raw=true"
-
       }
     },
     {
@@ -51,7 +55,7 @@
       "task_type": "TaskType.clozeTest",
       "task_reward": 2,
       "question": ".. Dino ist groß",
-      "lama_text":"Tippe die richtige Antwort an!",
+      "lama_text": "Tippe die richtige Antwort an!",
       "left_to_solve": 3,
       "right_answer": "Der",
       "wrong_answers": [

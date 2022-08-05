@@ -7,11 +7,8 @@ import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/screens/ta
 
 abstract class TasksetManageState {}
 
-
 class TasksetManageInitial extends TasksetManageState {}
 
-class TasksetManageLoaded extends TasksetManageState {}
+class ChangeTasksetStatus extends TasksetManageState {}
 
-class TasksetManageLoading extends TasksetManageState {}
-
-class TasksetManageError extends TasksetManageState {}
+class WaitingTasksetStatus extends TasksetManageState {}

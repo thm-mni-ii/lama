@@ -420,7 +420,7 @@ class TaskScreenState extends State<TaskScreen> {
           child: Padding(
             padding: const EdgeInsets.only(left: 10, right: 5),
             child: Scrollbar(
-              isAlwaysShown: true,
+              thumbVisibility: true,
               child: ListView.separated(
                   itemBuilder: (context, index) {
                     return buildListItem(

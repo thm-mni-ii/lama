@@ -22,7 +22,6 @@ import '../task-system/taskset_model.dart';
 /// latest Changes: 17.06.2022
 class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   Taskset? taskset;
-
   CreateTasksetBloc({this.taskset}) : super(InitialState()) {
     on<CreateTasksetAbort>((event, emit) => _abort(event.context));
     on<EditTaskset>((event, emit) => taskset = event.taskset);
@@ -30,7 +29,11 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
       //taskset!.tasks!.addAll(event.taskList);
       taskset!.tasks = event.taskList;
     });
-    on<GenerateTaskset>((event, emit) => _generate());
+    on<CreateTasksetGenerate>((event, emit) => _generate());
+    on<AddUrlToTaskset>((event, emit) {
+      taskset!.taskurl = event.taskUrl;
+      print("bloc: " + taskset!.taskurl.toString());
+    });
   }
 
   /// private method to abort the current creation process
@@ -42,8 +45,8 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   Future<void> _generate() async {
     print(Platform.isAndroid);
     Directory? directory = Platform.isAndroid
-      ? await getExternalStorageDirectory() //FOR ANDROID
-      : await getApplicationDocumentsDirectory(); //FOR iOS
+        ? await getExternalStorageDirectory() //FOR ANDROID
+        : await getApplicationDocumentsDirectory(); //FOR iOS
     String path = directory!.path;
     File file = File(path + '/LAMA/' + taskset!.name! + '.json');
     String json = jsonEncode(taskset);

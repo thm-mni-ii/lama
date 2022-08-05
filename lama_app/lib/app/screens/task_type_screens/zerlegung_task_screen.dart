@@ -1,7 +1,5 @@
 import 'package:bubble/bubble.dart';
-import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
@@ -110,7 +108,6 @@ class ZerlegungTaskScreenState extends State<ZerlegungTaskScreen> {
  
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _answerParts = List.filled(4, 0);
   }

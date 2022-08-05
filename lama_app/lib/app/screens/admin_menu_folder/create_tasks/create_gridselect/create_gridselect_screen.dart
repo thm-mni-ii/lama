@@ -14,8 +14,8 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
 
 class CreateGridSelectScreen extends StatefulWidget {
-  final TaskGridSelect? task;
   final int? index;
+  final TaskGridSelect? task;
 
   const CreateGridSelectScreen(
       {Key? key, required this.task, required this.index})

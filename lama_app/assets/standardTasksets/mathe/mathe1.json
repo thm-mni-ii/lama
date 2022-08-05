@@ -1,7 +1,12 @@
 {
+    "taskset_url": {
+        "id": 1,
+        "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe1.json"
+    },
     "taskset_name": "Standardaufgaben Klasse 1",
     "taskset_subject": "Mathe",
     "taskset_grade": 1,
+    "is_in_Pool": true,
     "taskset_randomize_order": true,
     "tasks": [
         {
@@ -51,7 +56,7 @@
             "lama_text": "",
             "left_to_solve": 3,
             "difficulty": 1,
-            "optimum": false
+            "optimum": true
         },
         {
             "id": "[#2abbb]",

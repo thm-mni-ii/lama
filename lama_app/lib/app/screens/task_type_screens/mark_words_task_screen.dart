@@ -63,7 +63,7 @@ class MarkWordsScreen extends StatelessWidget {
                     child: BlocBuilder<TTSBloc, TTSState>(
                     builder: (context, state) {
                       if (state is EmptyTTSState) {
-                        context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!, qlang));
+                        context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText, qlang));
                       }
                       return Container(
                       padding: EdgeInsets.only(left: 75),
@@ -73,7 +73,7 @@ class MarkWordsScreen extends StatelessWidget {
                         nip: BubbleNip.leftCenter,
                         child: Center(
                           child: Text(
-                            task.lamaText!,
+                            task.lamaText,
                             style: LamaTextTheme.getStyle(
                                 fontSize: 15, color: LamaColors.black),
                           ),
