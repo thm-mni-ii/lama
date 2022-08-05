@@ -30,7 +30,7 @@ class VocableTestTaskBloc
         int side = rng.nextInt(2);
         if (side == 0) {
           emit(VocableTestTaskTranslationState(
-              task.vocablePairs[curWordPair].a, resultList,task.questionLanguage!));
+              task.vocablePairs[curWordPair].a, resultList,task.questionLanguage));
           sideUsed = 0;
         } else {
           emit(VocableTestTaskTranslationState(
@@ -71,7 +71,7 @@ class VocableTestTaskBloc
           int side = rng.nextInt(2);
           if (side == 0) {
             emit(VocableTestTaskTranslationState(
-                task.vocablePairs[curWordPair].a, resultList,task.questionLanguage!));
+                task.vocablePairs[curWordPair].a, resultList,task.questionLanguage));
             sideUsed = 0;
           } else {
             emit(VocableTestTaskTranslationState(

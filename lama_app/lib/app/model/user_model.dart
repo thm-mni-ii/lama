@@ -128,7 +128,7 @@ class User {
         (json['isGuest'] != 'ja' && (json['isGuest'] != 'nein')))
       return 'Optionales Feld ("isGuest":...) muss die Werte "ja" oder "nein" enthalten';
 
-    String? error = InputValidation.inputPasswortValidation(json['password']);
+    String? error = InputValidation.inputPasswordValidation(json['password']);
     if (error != null) return error;
 
     error = InputValidation.inputUsernameValidation(json['name']);

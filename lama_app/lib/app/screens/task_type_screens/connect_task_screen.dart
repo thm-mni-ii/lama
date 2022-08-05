@@ -1,5 +1,4 @@
 import 'package:bubble/bubble.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,7 +9,6 @@ import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
-import 'package:lama_app/util/GlobalKeyExtension.dart';
 
 import 'package:lama_app/app/event/tts_event.dart';
 
@@ -39,6 +37,7 @@ class ConnectTaskScreen extends StatefulWidget {
 
 /// ConnectState class creates the Conect task Screen
 class ConnectState extends State<ConnectTaskScreen> {
+  bool alreadyUpdated = false;
   // task infos and constraints handed over by tasktypeScreen
   final TaskConnect task;
   final BoxConstraints constraints;
@@ -94,8 +93,9 @@ class ConnectState extends State<ConnectTaskScreen> {
                 alignment: Alignment.centerLeft,
                 child: BlocBuilder<TTSBloc, TTSState>(
                  builder: (context, state) {
-                   if (state is EmptyTTSState) {
-                     context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText!,qlang));
+                   if (state is EmptyTTSState && !alreadyUpdated) {
+                     context.read<TTSBloc>().add(QuestionOnInitEvent(task.lamaText,qlang));
+                     this.alreadyUpdated = true;
                    }
                  return Container(
                   padding: EdgeInsets.only(left: 75),
@@ -106,11 +106,11 @@ class ConnectState extends State<ConnectTaskScreen> {
                     child: InkWell(
                       onTap: () {
                         BlocProvider.of<TTSBloc>(context)
-                            .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                            .add(ClickOnQuestionEvent.initVoice(task.lamaText, qlang));
                       },
                       child: Center(
                         child: Text(
-                          task.lamaText!,
+                          task.lamaText,
                           style: LamaTextTheme.getStyle(
                               color: LamaColors.black, fontSize: 15),
                         ),

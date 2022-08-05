@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:bubble/bubble.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -185,11 +184,11 @@ class VocableTestTaskScreenState extends State<VocableTestTaskScreen> {
                       child: InkWell(
                         onTap: () {
                           BlocProvider.of<TTSBloc>(context)
-                              .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                              .add(ClickOnQuestionEvent.initVoice(task.lamaText, qlang));
                         },
                         child: Center(
                           child: Text(
-                            task.lamaText!,
+                            task.lamaText,
                             style: TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold),
                           ),

@@ -1,10 +1,18 @@
 {
+  
+  "taskset_url": {
+    "id": 10,
+    "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/englisch/englisch4.json"
+  },
+  "is_in_Pool": true,
   "taskset_name": "Standardaufgaben Klasse 4",
   "taskset_subject": "Englisch",
   "taskset_grade": 4,
+  "taskset_randomize_order": true,
   "tasks": [
     {
-      "task_type": "4Cards",
+      "id": "1",
+      "task_type": "TaskType.fourCards",
       "task_reward": 2,
       "question": "What does 'shoe' mean in german?",
       "lama_text": "Tap the right Answer!",
@@ -19,7 +27,8 @@
       "answer_language":"Deutsch"
     },
     {
-      "task_type": "4Cards",
+      "id": "2",
+      "task_type": "TaskType.fourCards",
       "task_reward": 2,
       "question": "Who discovered America",
       "lama_text": "Tap the right Answer!",
@@ -34,7 +43,8 @@
       "answer_language":"Deutsch"
     },
     {
-      "task_type": "ClozeTest",
+      "id": "3",
+      "task_type": "TaskType.clozeTest",
       "task_reward": 2,
       "question": "I am .. to school",
       "lama_text": "Tap the right Answer!",
@@ -48,7 +58,8 @@
       "answer_language":"Englisch"
     },
     {
-      "task_type":"ClozeTest",
+      "id": "4",
+      "task_type":"TaskType.clozeTest",
       "task_reward":2,
       "question":"I .. learning english",
       "lama_text":"Tap the right Answer!",
@@ -59,7 +70,8 @@
       "answer_language":"Englisch"
     },
     {
-      "task_type": "MatchCategory",
+      "id": "5",
+      "task_type": "TaskType.matchCategory",
       "task_reward":2,
       "lama_text": "Move each word in the correct category!",
       "left_to_solve": 3,
@@ -71,7 +83,8 @@
       "answer_language":"Englisch"
     },
     {
-      "task_type": "MatchCategory",
+      "id": "6",
+      "task_type": "TaskType.matchCategory",
       "task_reward":2,
       "lama_text": "Move each word in the correct category!",
       "left_to_solve": 3,
@@ -83,7 +96,8 @@
       "answer_language":"Englisch"
     },
     {
-      "task_type":"VocableTest",
+      "id": "7",
+      "task_type":"TaskType.vocableTest",
       "task_reward":5,
       "lama_text": "Translate the shown word!",
       "left_to_solve": 3,

@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:bubble/bubble.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -137,11 +136,11 @@ class ClozeTest extends State<ClozeTestTaskScreen> {
                   child: InkWell(
                     onTap: () {
                       BlocProvider.of<TTSBloc>(context)
-                          .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                          .add(ClickOnQuestionEvent.initVoice(task.lamaText, qlang));
                     },
                     child: Center(
                       child: Text(
-                        task.lamaText!,
+                        task.lamaText,
                         style:
                         LamaTextTheme.getStyle(color: LamaColors.black, fontSize: 15),
                       ),

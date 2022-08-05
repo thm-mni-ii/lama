@@ -8,6 +8,7 @@ import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/userSolvedTaskAmount_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
 
 /// This class is a helper to handle the code which create or update tables in the database.
 ///
@@ -79,6 +80,13 @@ class DBMigrator {
         "${LeftToSolveFields.columnLeftToSolve} INTEGER,"
         "${LeftToSolveFields.columnUserLTSId} INTEGER,"
         "${LeftToSolveFields.columnDoesStillExist} INTEGER"
+        ");",
+    10: "CREATE TABLE IF NOT EXISTS $tableServer("
+        "${ServerFields.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "${ServerFields.columnPort} INTEGER,"
+        "${ServerFields.columnUrl} TEXT,"
+        "${ServerFields.columnUserName} TEXT,"
+        "${ServerFields.columnPassword} TEXT"
         ");"
   };
 

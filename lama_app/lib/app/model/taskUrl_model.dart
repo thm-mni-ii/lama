@@ -4,7 +4,7 @@ final String tableTaskUrl = "task_url";
 ///Set the column names
 ///
 /// Author: F.Brecher
-class TaskUrlFields{
+class TaskUrlFields {
   static final String columnId = "id";
   static final String columnTaskUrl = "url";
 }
@@ -21,12 +21,10 @@ class TaskUrl {
   ///Map the variables
   ///
   ///{@return} Map<String, dynamic>
-  Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
-      TaskUrlFields.columnTaskUrl: url
-    };
-    return map;
-  }
+  Map<String, dynamic> toJson() => {
+        TaskUrlFields.columnId: id,
+        TaskUrlFields.columnTaskUrl: url,
+      };
 
   ///get the data from the map
   ///
@@ -35,4 +33,7 @@ class TaskUrl {
     id = map[TaskUrlFields.columnId];
     url = map[TaskUrlFields.columnTaskUrl];
   }
+
+  @override
+  String toString() => id.toString() + " " + (url ?? "url");
 }

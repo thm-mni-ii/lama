@@ -1,135 +1,81 @@
 {
+   "taskset_url": {
+      "id": 6,
+      "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe6.json"
+   },
    "taskset_name": "Standardaufgaben Klasse 6",
    "taskset_subject": "Mathe",
    "taskset_grade": 6,
-   "taskset_randomize_order": false,
+   "taskset_randomize_order": true,
+   "is_in_Pool": true,
    "tasks": [
-      {
-            "task_type": "ClockDifferent",
-            "task_reward": 2,
-            "lama_text": "Wie viel Zeitunterschied gibt es?",
-            "left_to_solve": 3,
-            "uhr": "allStunden",
-            "clockMode": "usMode"
-          },
-      {
-            "task_type": "ClockDifferent",
-            "task_reward": 2,
-            "lama_text": "",
-            "left_to_solve": 3,
-            "uhr": "vollStunde",
-            "clockMode": "gerMode"
-          },
-      {
-            "task_type": "ClockDifferent",
-            "task_reward": 2,
-            "lama_text": "",
-            "left_to_solve": 3,
-            "uhr": "halbeStunde",
-            "clockMode": "usMode"
-          },
-      {
-            "task_type": "ClockDifferent",
-            "task_reward": 2,
-            "lama_text": "",
-            "left_to_solve": 3,
-            "uhr": "viertelStunde",
-            "clockMode": "gerMode"
-          },
-      {
-         "task_type": "NumberLine",
-         "task_reward": 1,
-         "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
-         "left_to_solve": 3,
-         "range": [
-            -100,
-            0
-         ],
-         "randomRange": false,
-         "steps": 5,
-         "ontap": true
+    {
+        "id": "1",
+        "task_type": "TaskType.clockDifferent",
+        "task_reward": 2,
+        "lama_text": "Wie viel Zeitunterschied gibt es?",
+        "left_to_solve": 3,
+        "uhr": "allStunden",
+        "clockMode": "usMode"
       },
-      {
-         "task_type": "NumberLine",
-         "task_reward": 1,
-         "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
-         "left_to_solve": 3,
-         "range": [
-            -100,
-            0
-         ],
-         "randomRange": true,
-         "steps": 5,
-         "ontap": false
-      },
-      {
-         "task_type": "Equation",
-         "task_reward": 2,
-         "lama_text": "Löse die Gleichung!",
-         "left_to_solve": 4,
-         "random_allowed_operators": [
-            "*",
-            "-"
-         ],
-         "operand_range": [
-            0,
-            5
-         ],
-         "fields_to_replace": 2,
-         "allow_replacing_operators": false,
-         "operator_amount": 2
-      },
-      {
-         "task_type": "Equation",
-         "task_reward": 2,
-         "lama_text": "Löse die Gleichung!",
-         "left_to_solve": 4,
-         "random_allowed_operators": [
-            "/",
-            "+"
-         ],
-         "operand_range": [
-            0,
-            10
-         ],
-         "fields_to_replace": 2,
-         "operator_amount": 2
-      },
-      {
-         "task_type": "Equation",
-         "task_reward": 2,
-         "lama_text": "Löse die Gleichung!",
-         "left_to_solve": 4,
-         "operand_range": [
-            0,
-            10
-         ],
-         "fields_to_replace": 2,
-         "allow_replacing_operators": true
-      },
-      {
-         "task_type": "Equation",
-         "task_reward": 2,
-         "lama_text": "Löse die Gleichung!",
-         "left_to_solve": 4,
-         "operand_range": [
-            0,
-            10
-         ],
-         "fields_to_replace": 2,
-         "allow_replacing_operators": true
-      },
-      {
-         "task_type": "Equation",
-         "task_reward": 2,
-         "lama_text": "Löse die Gleichung!",
-         "left_to_solve": 4,
-         "operand_range": [
-            0,
-            10
-         ],
-         "fields_to_replace": 2,
-         "allow_replacing_operators": true
-      }
+       {
+           "id": "2",
+           "task_type": "TaskType.clock",
+           "task_reward": 2,
+           "lama_text": "Wie viel Uhr ist es?",
+           "left_to_solve": 3,
+           "uhr": "halbeStunde",
+           "timer": false
+       },
+       {
+           "id": "3",
+           "task_type": "TaskType.numberLine",
+           "task_reward": 1,
+           "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
+           "left_to_solve": 3,
+           "range": [
+               -100,
+               0
+           ],
+           "randomRange": false,
+           "steps": 5,
+           "ontap": true
+       },
+       {
+           "id": "4",
+           "task_type": "TaskType.equation",
+           "task_reward": 2,
+           "lama_text": "Löse die Gleichung!",
+           "left_to_solve": 4,
+           "random_allowed_operators": [
+               "*",
+               "-"
+           ],
+           "operand_range": [
+               0,
+               5
+           ],
+           "fields_to_replace": 2,
+           "allow_replacing_operators": false,
+           "operator_amount": 2
+       },
+       {
+           "id": "5",
+           "task_type": "TaskType.equation",
+           "task_reward": 2,
+           "lama_text": "Löse die Gleichung!",
+           "left_to_solve": 4,
+           "random_allowed_operators": [
+               "/",
+               "+"
+           ],
+           "operand_range": [
+               0,
+               10
+           ],
+           "fields_to_replace": 2,
+           "allow_replacing_operators": true,
+           "operator_amount": 2
+       }
    ]
 }

@@ -32,7 +32,7 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState?> {
     on<EditUserDeleteUserCheck>((event, emit) async {
       emit(await _deleteUserCheck());
     });
-    on<EditUserDeleteUserAbrove>((event, emit) async {
+    on<EditUserDeleteUserApprove>((event, emit) async {
       _deleteUser(event.context);
     });
     on<EditUserDeleteUserAbort>((event, emit) async {
@@ -48,7 +48,7 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState?> {
     on<EditUserChangeUsername>((event, emit) async {
       _changedUser.name = event.name;
     });
-    on<EditUserChangePasswort>((event, emit) async {
+    on<EditUserChangePassword>((event, emit) async {
       _changedUser.password = event.passwort;
     });
     on<EditUserChangeCoins>((event, emit) async {

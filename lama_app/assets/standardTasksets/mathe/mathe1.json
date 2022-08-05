@@ -1,20 +1,27 @@
 {
+    "taskset_url": {
+        "id": 1,
+        "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe1.json"
+    },
     "taskset_name": "Standardaufgaben Klasse 1",
     "taskset_subject": "Mathe",
     "taskset_grade": 1,
+    "is_in_Pool": true,
     "taskset_randomize_order": true,
     "tasks": [
         {
-            "task_type": "Clock",
+            "id": "1",
+            "task_type": "TaskType.clock",
             "task_reward": 2,
             "lama_text": "Wie viel Uhr ist es?",
             "left_to_solve": 3,
             "uhr": "vollStunde",
             "timer": false
-          },
+        },
         {
-            "task_type": "NumberLine",
-            "task_reward": 2,
+            "id": "[#6fa35]",
+            "task_type": "TaskType.numberLine",
+            "task_reward": 10,
             "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
             "range": [
@@ -26,20 +33,8 @@
             "ontap": true
         },
         {
-            "task_type": "NumberLine",
-            "task_reward": 2,
-            "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
-            "left_to_solve": 3,
-            "range": [
-                0,
-                10
-            ],
-            "randomRange": false,
-            "steps": 1,
-            "ontap": false
-        },
-        {
-            "task_type": "Equation",
+            "id": "5",
+            "task_type": "TaskType.equation",
             "task_reward": 2,
             "lama_text": "Löse die Gleichung!",
             "left_to_solve": 4,
@@ -52,39 +47,26 @@
             ],
             "fields_to_replace": 1,
             "allow_replacing_operators": false,
-            "operator_amount": 1
+            "operator_amount": -1
         },
         {
-            "task_type": "Equation",
-            "task_reward": 2,
-            "lama_text": "Löse die Gleichung!",
-            "left_to_solve": 4,
-            "random_allowed_operators": [
-                "+"
-            ],
-            "operand_range": [
-                0,
-                10
-            ],
-            "fields_to_replace": 1,
-            "allow_replacing_operators": false,
-            "operator_amount": 1
-        },
-        {
-            "task_type": "MoneyTask",
+            "id": "6",
+            "task_type": "TaskType.moneyTask",
             "task_reward": 2,
             "lama_text": "",
             "left_to_solve": 3,
             "difficulty": 1,
-            "optimum": false
+            "optimum": true
         },
         {
-            "task_type": "MoneyTask",
-            "task_reward": 2,
-            "lama_text": "",
+            "id": "[#2abbb]",
+            "task_type": "TaskType.zerlegung",
+            "task_reward": 5,
+            "lama_text": "zerlegt die Zahlen!",
             "left_to_solve": 3,
-            "difficulty": 1,
-            "optimum": false
+            "reverse": false,
+            "zeros": false,
+            "boolThousands": false
         }
     ]
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lama_app/util/LamaColors.dart';
 
 class MenuButton extends StatelessWidget {
   final Function onClickedFunction;

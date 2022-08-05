@@ -25,9 +25,7 @@ class ClockTaskScreen extends StatefulWidget {
   ClockTaskScreen(this.task, this.constraints);
 
   @override
-  State<StatefulWidget> createState() {
-    return ClockTaskState(task, constraints);
-  }
+  State<StatefulWidget> createState() => ClockTaskState(task, constraints);
 }
 
 class ClockTaskState extends State<ClockTaskScreen> {
@@ -311,7 +309,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
           builder: (context, TTSState state) {
             if (state is EmptyTTSState) {
               context.read<TTSBloc>().add(
-                  QuestionOnInitEvent(task.lamaText!, "qlang"));
+                  QuestionOnInitEvent(task.lamaText, "qlang"));
             }
             return Column(
               children: [
@@ -337,10 +335,10 @@ class ClockTaskState extends State<ClockTaskScreen> {
                               onTap: () {
                                 BlocProvider.of<TTSBloc>(context)
                                     .add(ClickOnQuestionEvent.initVoice(
-                                    task.lamaText!, qlang));
+                                    task.lamaText, qlang));
                               },
                               child: Center(
-                                child: Text(task.lamaText!,
+                                child: Text(task.lamaText,
                                   style: LamaTextTheme.getStyle(
                                       color: LamaColors.black, fontSize: 15),
                                 ),
@@ -531,7 +529,7 @@ class ClockTaskState extends State<ClockTaskScreen> {
              builder: (context, state) {
               if (state is EmptyTTSState ) {
                 context.read<TTSBloc>().add(
-                QuestionOnInitEvent(task.lamaText!, qlang));
+                QuestionOnInitEvent(task.lamaText, qlang));
               }
               return Stack(
                  children: [
@@ -546,11 +544,11 @@ class ClockTaskState extends State<ClockTaskScreen> {
                     child: InkWell(
                       onTap: () {
                         BlocProvider.of<TTSBloc>(context)
-                            .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                            .add(ClickOnQuestionEvent.initVoice(task.lamaText, qlang));
                       },
                       child: Center(
                         child: Text(
-                          task.lamaText!,
+                          task.lamaText,
                           style: LamaTextTheme.getStyle(
                               color: LamaColors.black, fontSize: 15),
                         ),

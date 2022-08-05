@@ -126,11 +126,11 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                   child: InkWell(
                     onTap: () {
                       BlocProvider.of<TTSBloc>(context)
-                          .add(ClickOnQuestionEvent.initVoice(task.lamaText!, qlang));
+                          .add(ClickOnQuestionEvent.initVoice(task.lamaText, qlang));
                     },
                     child: Center(
                       child: Text(
-                        task.lamaText!,
+                        task.lamaText,
                         style: TextStyle(fontSize: 15,
                             fontWeight: FontWeight.bold),
                       ),

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
-import 'package:lama_app/app/screens/admin_menu_screen.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/admin_menu_screen.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -17,24 +17,16 @@ class UserRepository {
   UserRepository(this.authenticatedUser);
 
   ///Returns the username of the user thats currently logged in.
-  String? getUserName() {
-    return authenticatedUser!.name;
-  }
+  String? getUserName() => authenticatedUser!.name;
 
   ///Returns the amount of lama coins of the user thats currently logged in.
-  int? getLamaCoins() {
-    return authenticatedUser!.coins;
-  }
+  int? getLamaCoins() => authenticatedUser!.coins;
 
   ///Returns the grade of the user thats currently logged in.
-  int? getGrade() {
-    return authenticatedUser!.grade;
-  }
+  int? getGrade() => authenticatedUser!.grade;
 
   ///Returns the avatar of the user thats currently logged in.
-  String? getAvatar() {
-    return authenticatedUser!.avatar;
-  }
+  String? getAvatar() => authenticatedUser!.avatar;
 
   Future<void> updateUser() async {
     authenticatedUser =
@@ -94,10 +86,8 @@ class UserRepository {
   }
 
   ///Returns the highscore for [gameId] for the user thats currently logged in.
-  Future<int?> getMyHighscore(int gameId) async {
-    return await DatabaseProvider.db
-        .getHighscoreOfUserInGame(authenticatedUser!, gameId);
-  }
+  Future<int?> getMyHighscore(int gameId) async => await DatabaseProvider.db
+      .getHighscoreOfUserInGame(authenticatedUser!, gameId);
 
   ///Returns the highscore for [gameId] among ALL users.
   Future<int?> getHighscore(int gameId) async {

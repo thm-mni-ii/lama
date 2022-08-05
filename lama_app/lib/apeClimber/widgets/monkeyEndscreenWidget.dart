@@ -5,10 +5,13 @@ import 'package:lama_app/util/LamaColors.dart';
 class MonkeyEndscreenWidget extends StatelessWidget {
   /// Score to display on game over menu.
   final String? text;
+
   /// score to display
   final int score;
+
   /// highscore of the current user in the current game
   final int? userHighScore;
+
   /// highscore of the current game
   final int? alltimeHighScore;
 
@@ -22,9 +25,7 @@ class MonkeyEndscreenWidget extends StatelessWidget {
     this.alltimeHighScore,
     required this.score,
     required this.onQuitPressed,
-  })  : assert(score != null),
-        assert(onQuitPressed != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,23 +45,24 @@ class MonkeyEndscreenWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 0,
-                    vertical: 10,
-                  ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 0,
+                  vertical: 10,
+                ),
                 child: Text(
                   text!,
                   style: TextStyle(
-                      shadows: [
-                        Shadow(
-                            color: LamaColors.black.withOpacity(0.3),
-                            offset: Offset(2,2)
-                        ),
-                      ],
-                      fontSize: 20.0,
-                      color: LamaColors.white,
-                      fontStyle: FontStyle.italic,
-                      decoration: TextDecoration.underline),
+                    shadows: [
+                      Shadow(
+                        color: LamaColors.black.withOpacity(0.3),
+                        offset: Offset(2, 2),
+                      ),
+                    ],
+                    fontSize: 20.0,
+                    color: LamaColors.white,
+                    fontStyle: FontStyle.italic,
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
               ),
               Text(
@@ -82,23 +84,18 @@ class MonkeyEndscreenWidget extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       primary: LamaColors.bluePrimary,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0)
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
                       padding: EdgeInsets.symmetric(
-                          horizontal: 30,
-                          vertical: 15
+                        horizontal: 30,
+                        vertical: 15,
                       ),
                     ),
                     child: Text(
                       'Beenden',
-                      style: TextStyle(
-                        color: LamaColors.white,
-                        fontSize: 30,
-                      ),
+                      style: TextStyle(color: LamaColors.white, fontSize: 30),
                     ),
-                    onPressed: () {
-                      onQuitPressed.call();
-                    },
+                    onPressed: () => onQuitPressed.call(),
                   ),
                 ],
               )

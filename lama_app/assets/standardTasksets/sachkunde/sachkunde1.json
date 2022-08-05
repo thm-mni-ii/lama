@@ -1,53 +1,98 @@
 {
-    "taskset_name":"Standardaufgaben Klasse 1",
-     "taskset_subject":"Sachkunde",
-      "taskset_grade":1,
-       "tasks": [
-           {
-           "task_type":"4Cards",
-            "task_reward":2,
-            "question":"Der Igel gehört zu den .. ?",
-            "lama_text":"Tippe die richtige Antwort an!",
+    "taskset_url": {
+        "id": 19,
+        "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde1.json"
+    },
+    "is_in_Pool": true,
+    "taskset_name": "Standardaufgaben Klasse 1",
+    "taskset_subject": "Sachkunde",
+    "taskset_grade": 1,
+    "taskset_randomize_order": true,
+    "tasks": [
+        {
+            "id": "[#5a805]",
+            "task_type": "TaskType.fourCards",
+            "task_reward": 2,
+            "lama_text": "Tippe die richtige Antwort an!",
             "left_to_solve": 3,
-            "right_answer":"Säugetieren",
-             "wrong_answers":["Reptilien", "Amphibien", "Vögeln"],
-             "question_language":"Deutsch",
-             "answer_language":"Deutsch"
-             },
-         {
-           "task_type":"ClozeTest",
-           "task_reward":2,
-           "question":".. sind Rudeltiere",
-           "lama_text":"Tippe die richtige Antwort an!",
-           "left_to_solve": 3,
-           "right_answer":"Wölfe",
-           "wrong_answers":["Katzen", "Bären"]
-         },
-         {
-           "task_type": "MatchCategory",
-           "task_reward":2,
-           "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
-           "left_to_solve": 3,
-           "nameCatOne": "Säugetier",
-           "nameCatTwo": "Reptil",
-           "categoryOne": ["Lama", "Alpaka", "Biber", "Delfin"],
-           "categoryTwo": ["Schildkröte", "Krokodil", "Schlange", "Echse"]
-         },
-         {
-           "task_type":"GridSelect",
-           "task_reward":3,
-           "lama_text":"Markiere X Nadelbäume",
-           "left_to_solve": 3,
-           "wordsToFind":["Fichte", "Kiefer", "Tanne"]
-         },
-         {
-           "task_type": "Connect",
-           "task_reward":2,
-           "left_to_solve": 3,
-           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
-           "pair1": ["Vogel", "Säugetier", "Reptil", "Fisch"],
-           "pair2": ["Spatz", "Delphin", "Krokodil", "Lachs"],
-           "rightAnswers": ["Vogel:Spatz", "Säugetier:Delphin", "Reptil:Krokodil", "Fisch:Lachs"]
-         }
-        ]
+            "question": "Der Igel gehört zu den .. ?",
+            "right_answer": "Säugetieren",
+            "wrong_answers": [
+                "Reptilien",
+                "Amphibien",
+                "Vögeln"
+            ]
+        },
+        {
+            "id": "[#e0a84]",
+            "task_type": "TaskType.clozeTest",
+            "task_reward": 2,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "__ sind Rudeltiere",
+            "right_answer": "Wölfe",
+            "wrong_answers": [
+                "Katzen",
+                "Bären"
+            ]
+        },
+        {
+            "id": "[#af48e]",
+            "task_type": "TaskType.matchCategory",
+            "task_reward": 2,
+            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+            "left_to_solve": 3,
+            "nameCatOne": "Säugetier",
+            "nameCatTwo": "Reptil",
+            "categoryOne": [
+                "Lama",
+                "Alpaka",
+                "Biber",
+                "Delfin"
+            ],
+            "categoryTwo": [
+                "Schildkröte",
+                "Krokodil",
+                "Schlange",
+                "Echse"
+            ]
+        },
+        {
+            "id": "[#d77ae]",
+            "task_type": "TaskType.gridSelect",
+            "task_reward": 3,
+            "lama_text": "Markiere X Nadelbäume",
+            "left_to_solve": 3,
+            "wordsToFind": [
+                "Fichte",
+                "Kiefer",
+                "Tanne"
+            ]
+        },
+        {
+            "id": "5",
+            "task_type": "TaskType.connect",
+            "task_reward": 2,
+            "left_to_solve": 3,
+            "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+            "pair1": [
+                "Vogel",
+                "Säugetier",
+                "Reptil",
+                "Fisch"
+            ],
+            "pair2": [
+                "Spatz",
+                "Delphin",
+                "Krokodil",
+                "Lachs"
+            ],
+            "rightAnswers": [
+                "Vogel:Spatz",
+                "Säugetier:Delphin",
+                "Reptil:Krokodil",
+                "Fisch:Lachs"
+            ]
+        }
+    ]
 }
