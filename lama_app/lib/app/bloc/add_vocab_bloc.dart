@@ -16,5 +16,8 @@ class AddVocabBloc extends Bloc<AddVocabEvent, AddVocabState> {
     on<ReorderEvent>((event, emit) async {
       emit(ReorderState());
     });
+    on<SwapEvent>((event, emit) async {
+      emit(SwapState());
+    });
   }
 }

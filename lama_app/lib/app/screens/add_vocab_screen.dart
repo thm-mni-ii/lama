@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:io';
 import 'dart:collection';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/add_vocab_bloc.dart';
@@ -43,172 +44,245 @@ class AddVocabScreenState extends State<AddVocabScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: LamaColors.mainPink,
-        title: const Text("Vokabeln hinzufügen"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (textScanning) const CircularProgressIndicator(),
-            if (!textScanning && imageFile == null)
-              Container(
-                child: Text('Noch kein Bild ausgewaehlt'),
-              ),
-            // if (imageFile != null)
-            //   Image.file(
-            //     File(imageFile!.path),
-            //   ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                  padding: const EdgeInsets.only(top: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      getImage(ImageSource.gallery);
-                    },
-                    child: Container(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.image,
-                            size: 30,
-                          ),
-                          Text(
-                            "Gallery",
-                            style: TextStyle(
-                                fontSize: 13, color: Colors.grey[600]),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                  padding: const EdgeInsets.only(top: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      getImage(ImageSource.camera);
-                    },
-                    child: Container(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.camera_alt,
-                            size: 30,
-                          ),
-                          Text(
-                            "Camera",
-                            style: TextStyle(
-                                fontSize: 13, color: Colors.grey[600]),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            BlocBuilder<AddVocabBloc, AddVocabState>(
-              builder: (context, state) {
-                return Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(child: Text('Vokabeln ordnen/löschen')),
-                        Radio(
-                          value: 0,
-                          groupValue: selectedValue,
-                          onChanged: (value) => setState(() {
-                            context.read<AddVocabBloc>().add(EditableEvent());
-                            // BlocProvider.of<AddVocabBloc>(context)
-                            //     .add(EditableEvent(AddVocabBloc().editable));
-                            selectedValue = 0;
-                            // print(AddVocabBloc().editable);
-                            //print(listType);
-                            if (state is EditableState) ;
-                          }),
-                        ),
-                        Expanded(child: Text('Vokabeln editieren')),
-                        Radio(
-                          value: 1,
-                          groupValue: selectedValue,
-                          onChanged: (value) => setState(() {
-                            context.read<AddVocabBloc>().add(ReorderEvent());
-                            selectedValue = 1;
-                            if (state is ReorderState) ;
-                          }),
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                        icon: Icon(Icons.print),
-                        onPressed: () {
-                          print(vocabList1);
-                        }),
-                    Row(
-                      children: [
-                        LimitedBox(
-                            maxWidth: MediaQuery.of(context).size.width / 2,
-                            child: vocabList2.isEmpty
-                                ? Container(
-                                    child: Text('empty list'),
-                                  )
-                                : ReorderVocab(vocabList1, state)),
 
-                        // FittedBox(
-                        //   fit: BoxFit.scaleDown,
-                        //   child: LimitedBox(
-                        //     maxHeight: MediaQuery.of(context).size.width,
-                        //     maxWidth: MediaQuery.of(context).size.width / 3,
-                        //     child: Container(
-                        //       child: vocabList2.isEmpty
-                        //           ? Container(
-                        //               child: Text('swap buttons'),
-                        //             )
-                        //           : SingleChildScrollView(
-                        //             child: Column(
-                        //                 children: [
-                        //                   for (var i in vocabList1)
-                        //                     Container(
-                        //                       margin: EdgeInsets.fromLTRB(0, 7, 0, 7),
-                        //                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        //                       child: Icon(Icons.compare_arrows),
-                        //                     ),
-                        //                 ],
-                        //               ),
-                        //           ),
-                        //     ),
-                        //   ),
-                        // ),
-
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: LimitedBox(
-                              maxWidth: MediaQuery.of(context).size.width / 2,
-                              child: vocabList2.isEmpty
-                                  ? Container(
-                                      child: Text('empty list'),
-                                    )
-                                  : ReorderVocab(vocabList2, state)),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
+        // resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: LamaColors.mainPink,
+          title: const Text("Vokabeln hinzufügen"),
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (textScanning) const CircularProgressIndicator(),
+              
+              if (!textScanning && imageFile == null)
+                Container(
+                  child: Text('Noch kein Bild ausgewaehlt'),
+                ),
+              // if (imageFile != null)
+              //   Image.file(
+              //     File(imageFile!.path),
+              //   ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.only(top: 10),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        getImage(ImageSource.gallery);
+                         BlocProvider.of<AddVocabBloc>(context)
+                              .add(ReorderEvent());
+                      },
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.image,
+                              size: 30,
+                            ),
+                            Text(
+                              "Gallery",
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.grey[600]),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.only(top: 10),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        getImage(ImageSource.camera);
+                      },
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.camera_alt,
+                              size: 30,
+                            ),
+                            Text(
+                              "Camera",
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.grey[600]),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (!vocabList1.isEmpty || !vocabList2.isEmpty)
+                BlocBuilder<AddVocabBloc, AddVocabState>(
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(child: Text('Vokabeln ordnen/löschen')),
+                            Radio(
+                              value: 0,
+                              groupValue: selectedValue,
+                              onChanged: (value) => setState(() {
+                                context
+                                    .read<AddVocabBloc>()
+                                    .add(ReorderEvent());
+                                // BlocProvider.of<AddVocabBloc>(context)
+                                //     .add(EditableEvent(AddVocabBloc().editable));
+                                selectedValue = 0;
+                                // print(AddVocabBloc().editable);
+                                //print(listType);
+                              }),
+                            ),
+                            Expanded(child: Text('Vokabeln editieren/hinzufügen')),
+                            Radio(
+                              value: 1,
+                              groupValue: selectedValue,
+                              onChanged: (value) => setState(() {
+                                context
+                                    .read<AddVocabBloc>()
+                                    .add(EditableEvent());
+                                selectedValue = 1;
+                              }),
+                            ),
+                            Expanded(child: Text('Vokabeln verschieben')),
+                            Radio(
+                              value: 2,
+                              groupValue: selectedValue,
+                              onChanged: (value) => setState(() {
+                                context.read<AddVocabBloc>().add(SwapEvent());
+                                selectedValue = 2;
+                              }),
+                            ),
+                          ],
+                        ),
+                        (state is EditableState)
+                            ? Row(
+                                children: [
+                                  Expanded(
+                                    child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        constraints: BoxConstraints(),
+                                        icon: Icon(Icons.add),
+                                        onPressed: () {
+                                          setState(() {
+                                            vocabList1.add('');
+                                          });
+                                        }),
+                                  ),
+                                  Expanded(
+                                    child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        constraints: BoxConstraints(),
+                                        icon: Icon(Icons.add),
+                                        onPressed: () {
+                                          setState(() {
+                                            vocabList2.add('');
+                                          });
+                                        }),
+                                  ),
+                                ],
+                              )
+                            : Container(),
+                        Row(
+                          children: [
+                            LimitedBox(
+                                maxWidth: MediaQuery.of(context).size.width / 2,
+                                child: vocabList2.isEmpty
+                                    ? Container(
+                                        child: Text('empty list'),
+                                      )
+                                    : ReorderVocab(vocabList1, state, 1)),
+
+                            // FittedBox(
+                            //   fit: BoxFit.scaleDown,
+                            //   child: LimitedBox(
+                            //     maxHeight: MediaQuery.of(context).size.width,
+                            //     maxWidth: MediaQuery.of(context).size.width / 3,
+                            //     child: Container(
+                            //       child: vocabList2.isEmpty
+                            //           ? Container(
+                            //               child: Text('swap buttons'),
+                            //             )
+                            //           : SingleChildScrollView(
+                            //             child: Column(
+                            //                 children: [
+                            //                   for (var i in vocabList1)
+                            //                     Container(
+                            //                       margin: EdgeInsets.fromLTRB(0, 7, 0, 7),
+                            //                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            //                       child: Icon(Icons.compare_arrows),
+                            //                     ),
+                            //                 ],
+                            //               ),
+                            //           ),
+                            //     ),
+                            //   ),
+                            // ),
+
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: LimitedBox(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width / 2,
+                                  child: vocabList2.isEmpty
+                                      ? Container(
+                                          child: Text('empty list'),
+                                        )
+                                      : ReorderVocab(vocabList2, state, 2)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: Container(
+          height: MediaQuery.of(context).size.height / 15,
+          child: BottomAppBar(
+            child: IconTheme(
+              data:
+                  IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2 - 1,
+                    child: IconButton(
+                      icon: const Icon(Icons.close),
+                      color: Colors.red,
+                      onPressed: () {
+                        context.read<AddVocabBloc>().add(AddVocabCamEvent());
+                      },
+                    ),
+                  ),
+                  // Container(
+                  //     alignment: Alignment.center,
+                  //     width: 2,
+                  //     height: MediaQuery.of(context).size.height / 15,
+                  //     color: Colors.grey),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2 - 1,
+                    child: IconButton(
+                      icon: const Icon(Icons.check),
+                      color: Colors.green,
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 
 // source for code https://github.com/ritsat/text_recognition
@@ -343,15 +417,16 @@ class AddVocabScreenState extends State<AddVocabScreen> {
   bool testbool = true;
   final textController = TextEditingController();
   String testString = 'asdasd';
-  Widget ReorderVocab(List<String> vocabList, AddVocabState state) {
+  Widget ReorderVocab(List<String> vocabList, AddVocabState state, int list) {
     return ReorderableListView(
+        buildDefaultDragHandles: (state is ReorderState),
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         children: [
           for (int index = 0; index < vocabList.length; index += 1)
             ListTile(
               key: Key('$index'),
-              title: (state is ReorderState)
+              title: (state is EditableState)
                   ? TextFormField(
                       //controller: textController,
                       // decoration: InputDecoration(hintText: vocabList[index]),
@@ -369,7 +444,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                       overflow: TextOverflow.ellipsis,
                     ),
 
-              leading: (state is EditableState)
+              leading: (state is ReorderState)
                   ? IconButton(
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
@@ -381,10 +456,24 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                           print(vocabList);
                         });
                       })
-                  : SizedBox(
-                      height: 0,
-                      width: 0,
-                    ),
+                  : (state is SwapState)
+                      ? IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
+                          icon: Icon((vocabList == vocabList1)
+                              ? Icons.arrow_forward
+                              : Icons.arrow_back),
+                          onPressed: () {
+                            setState(() {
+                              moveSingleVocab(index, list);
+
+                              print(vocabList);
+                            });
+                          })
+                      : SizedBox(
+                          height: 0,
+                          width: 0,
+                        ),
 
               // leading: IconButton(
               //     padding: EdgeInsets.zero,
@@ -395,6 +484,19 @@ class AddVocabScreenState extends State<AddVocabScreen> {
               //       setState(() {});
               //     }),
               dense: false,
+              //   trailing: (vocabList == vocabList1 && state is SwapState)
+              //       ? IconButton(
+              //           padding: EdgeInsets.zero,
+              //           constraints: BoxConstraints(),
+              //           icon: Icon(Icons.compare_arrows),
+              //           onPressed: () {
+              //             setState(() {
+              //               print(vocabList);
+              //             });
+              //           })
+              //       : SizedBox(
+              //           height: 0,
+              //         ),
             ),
         ],
         onReorder: (int oldIndex, int newIndex) {
@@ -406,5 +508,15 @@ class AddVocabScreenState extends State<AddVocabScreen> {
             vocabList.insert(newIndex, item);
           });
         });
+  }
+
+  void moveSingleVocab(int index, int list) {
+    if (list == 1) {
+      vocabList2.insert(index, vocabList1[index]);
+      vocabList1.removeAt(index);
+    } else {
+      vocabList1.insert(index, vocabList2[index]);
+      vocabList2.removeAt(index);
+    }
   }
 }
