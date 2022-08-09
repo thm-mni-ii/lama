@@ -23,7 +23,8 @@ class GameListScreen extends StatelessWidget {
         "Tippe die entsprechende Richtung an, um auf die andere Seite des Baumes zu springen und so den Ästen auszuweichen!"),
     GameListItem("Tetris", 20,
         "Setze die Blöcke zusammen und schaffe möglichst keine Lücke!"),
-    GameListItem("Tap The Lama",20,"Erwische die Lamaköpfe,  indem du im richtigen Moment auf die unteren Lamabuttons drückst!")
+    GameListItem("Tap The Lama", 20,
+        "Erwische die Lamaköpfe,  indem du im richtigen Moment auf die unteren Lamabuttons drückst!")
   ];
 
   @override
@@ -86,7 +87,10 @@ class GameListScreen extends StatelessWidget {
                       return ListView.separated(
                         itemCount: games.length,
                         itemBuilder: (context, index) {
-                          return buildGameListItem(context, index, constraints);
+                          // until games are fixed
+                          return (index == 3 || index == 4)
+                              ? buildGameListItem(context, index, constraints)
+                              : Container();
                         },
                         separatorBuilder: (context, index) => SizedBox(
                           height: (constraints.maxHeight / 100) * 5,
