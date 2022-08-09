@@ -135,6 +135,7 @@ class TasksetLoader {
           if (tasksetSachkunde != "")
             await buildTasksetFromJson(tasksetSachkunde);
         }
+        _loadTasksetPool();
       }
 
       // for (int i = 1; i <= GRADES_SUPPORTED; i++) {
