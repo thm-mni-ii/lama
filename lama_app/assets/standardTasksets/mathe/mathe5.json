@@ -1,50 +1,54 @@
 {
-    "taskset_url": {
-        "id": 5,
-        "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/mathe/mathe5.json"
-    },
     "taskset_name": "Standardaufgaben Klasse 5",
     "taskset_subject": "Mathe",
     "taskset_grade": 5,
-    "is_in_Pool": true,
     "taskset_randomize_order": true,
     "tasks": [
         {
-            "id": "1",
-            "task_type": "TaskType.clock",
+            "task_type": "Zerlegung",
             "task_reward": 2,
-            "lama_text": "Wie viel Uhr ist es?",
+            "lama_text": " zerlegt die Zahlen!",
             "left_to_solve": 3,
-            "uhr": "allStunden",
-            "timer": false
+            "reverse": true,
+            "zeros": true,
+            "boolThousands": true 
         },
         {
-            "id": "4",
-            "task_type": "TaskType.numberLine",
+            "task_type": "NumberLine",
             "task_reward": 1,
             "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
-            "range": [
-                0,
-                100
-            ],
-            "randomRange": false,
+            "range": [ 
+                 0,
+                 100
+              ],
+            "randomRange": true,
             "steps": 5,
             "ontap": true
-        },
-        {
-            "id": "[#2abbb]",
-            "task_type": "TaskType.zerlegung",
-            "task_reward": 5,
-            "lama_text": "zerlegt die Zahlen!",
+          },
+          {
+            "task_type": "NumberLine",
+            "task_reward": 1,
+            "lama_text": "Gib den im Zahlenstrahl rot markierten Wert an!",
             "left_to_solve": 3,
-            "reverse": false,
-            "zeros": true,
-            "boolThousands": true
+            "range": [ 
+                 0,
+                 10000
+              ],
+            "randomRange": false,
+            "steps": 250,
+            "ontap": false
+          },
+        {
+            "task_type": "MoneyTask",
+            "task_reward": 2,
+            "lama_text": "",
+            "left_to_solve": 3,
+            "difficulty": 1,
+            "optimum": true
         },
         {
-            "id": "6",
-            "task_type": "TaskType.equation",
+            "task_type": "Equation",
             "task_reward": 2,
             "lama_text": "Löse die Gleichung!",
             "left_to_solve": 4,
@@ -58,16 +62,6 @@
             "fields_to_replace": 2,
             "allow_replacing_operators": false,
             "operator_amount": 1
-        },
-        {
-            "id": "[#2abbb]",
-            "task_type": "TaskType.zerlegung",
-            "task_reward": 2,
-            "lama_text": "zerlegt die Zahlen!",
-            "left_to_solve": 3,
-            "reverse": true,
-            "zeros": true,
-            "boolThousands": true
         }
     ]
 }

@@ -1,72 +1,51 @@
 {
-    "taskset_url": {
-        "id": 20,
-        "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/sachkunde/sachkunde2.json"
-    },
-    "is_in_Pool": true,
-    "taskset_name": "Standardaufgaben Klasse 2",
-    "taskset_subject": "Sachkunde",
-    "taskset_grade": 2,
-    "taskset_randomize_order": true,
-    "tasks": [
-        {
-            "id": "[#5a805]",
-            "task_type": "TaskType.fourCards",
-            "task_reward": 5,
-            "lama_text": "Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "question": "Wie heißt das Beingelenk",
-            "right_answer": "Knie",
-            "wrong_answers": [
-                "Ellenbogen",
-                "Schulter",
-                "Genick"
-            ]
-        },
-        {
-            "id": "[#e0a84]",
-            "task_type": "TaskType.clozeTest",
-            "task_reward": 2,
-            "lama_text": "Tippe die richtige Antwort an!",
-            "left_to_solve": 3,
-            "question": ".. ist das gesündeste Getränk",
-            "right_answer": "Wasser",
-            "wrong_answers": [
-                "Cola",
-                "Apfelsaft"
-            ]
-        },
-        {
-            "id": "[#af48e]",
-            "task_type": "TaskType.matchCategory",
-            "task_reward": 5,
-            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
-            "left_to_solve": 3,
-            "nameCatOne": "Gesund",
-            "nameCatTwo": "Ungesund",
-            "categoryOne": [
-                "Wasser",
-                "Gemüse",
-                "Obst"
-            ],
-            "categoryTwo": [
-                "Cola",
-                "Fett",
-                "Süßes"
-            ]
-        },
-        {
-            "id": "[#d77ae]",
-            "task_type": "TaskType.gridSelect",
-            "task_reward": 5,
-            "lama_text": "Markiere X Gemüse",
-            "left_to_solve": 3,
-            "wordsToFind": [
-                "Karotte",
-                "Sellerie",
-                "Zwiebel",
-                "Spargel"
-            ]
-        }
-    ]
+    "taskset_name":"Standardaufgaben Klasse 2",
+     "taskset_subject":"Sachkunde",
+      "taskset_grade":2,
+       "tasks": [
+         {
+           "task_type":"ClozeTest",
+           "task_reward":2,
+           "question":".. ist das gesündeste Getränk",
+           "lama_text":"Tippe die richtige Antwort an!",
+           "left_to_solve": 3,
+           "right_answer":"Wasser",
+           "wrong_answers":["Cola", "Apfelsaft"]
+         },
+         {
+           "task_type":"4Cards",
+           "task_reward":2,
+           "question":"Wie heißt das Beingelenk",
+           "lama_text":"Tippe die richtige Antwort an!",
+           "left_to_solve": 3,
+           "right_answer":"Knie",
+           "wrong_answers":["Ellenbogen", "Schulter", "Genick"]
+         },
+         {
+           "task_type": "Connect",
+           "task_reward":2,
+           "left_to_solve": 3,
+           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+           "pair1": ["Hessen", "Bayern", "Berlin", "Sachsen"],
+           "pair2": ["Wiesbaden", "München", "Berlin", "Dresden"],
+           "rightAnswers": ["Hessen:Wiesbaden", "Bayern:München", "Berlin:Berlin", "Sachsen:Dresden"]
+         },
+         {
+           "task_type":"GridSelect",
+           "task_reward":3,
+           "lama_text":"Markiere X Gemüse",
+           "left_to_solve": 3,
+           "wordsToFind":["Karotte", "Sellerie", "Zwiebel", "Spargel"]
+         },
+         {
+           "task_type": "MatchCategory",
+           "task_reward":2,
+           "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+           "left_to_solve": 3,
+           "nameCatOne": "Gesund",
+           "nameCatTwo": "Ungesund",
+           "categoryOne": ["Wasser", "Gemüse", "Obst"],
+           "categoryTwo": ["Cola", "Fett", "Süßes"]
+         }
+        ]
 }

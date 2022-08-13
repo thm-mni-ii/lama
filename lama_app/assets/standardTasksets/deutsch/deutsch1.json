@@ -1,17 +1,10 @@
 {
-  "taskset_url": {
-    "id": 13,
-    "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch1.json"
-  },
-  "is_in_Pool": true,
   "taskset_name": "Standardaufgaben Klasse 1",
   "taskset_subject": "Deutsch",
   "taskset_grade": 1,
-  "taskset_randomize_order": true,
   "tasks": [
     {
-      "id": "1",
-      "task_type": "TaskType.buchstabieren",
+      "task_type": "Buchstabieren",
       "task_reward": 2,
       "left_to_solve": 3,
       "lama_text": "Test Text",
@@ -34,11 +27,11 @@
         "Robbe": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Robbe.png?raw=true",
         "Schmetterling": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Schmetterling.png?raw=true",
         "Schnecke": "https://github.com/handitosb/lamaapps/blob/main/Bilder_Test/Schnecke.png?raw=true"
+
       }
     },
     {
-      "id": "[#5a805]",
-      "task_type": "TaskType.fourCards",
+      "task_type": "4Cards",
       "task_reward": 2,
       "question": "lesen",
       "left_to_solve": 3,
@@ -51,10 +44,9 @@
       ]
     },
     {
-      "id": "[#e0a84]",
-      "task_type": "TaskType.clozeTest",
+      "task_type": "ClozeTest",
       "task_reward": 2,
-      "question": ".. Dino ist groß",
+      "question": "__ Dino ist groß",
       "lama_text": "Tippe die richtige Antwort an!",
       "left_to_solve": 3,
       "right_answer": "Der",
@@ -64,8 +56,7 @@
       ]
     },
     {
-      "id": "[#af48e]",
-      "task_type": "TaskType.matchCategory",
+      "task_type": "MatchCategory",
       "task_reward": 2,
       "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
       "left_to_solve": 3,
