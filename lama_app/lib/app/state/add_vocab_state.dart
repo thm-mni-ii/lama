@@ -9,3 +9,5 @@ class EditableState extends AddVocabState {}
 class ReorderState extends AddVocabState {}
 
 class SwapState extends AddVocabState {}
+
+class CropState extends AddVocabState {}

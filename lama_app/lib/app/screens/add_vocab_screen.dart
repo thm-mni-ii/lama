@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/add_vocab_bloc.dart';
 import 'package:lama_app/app/event/add_vocab_events.dart';
+import 'package:lama_app/app/screens/add_vocab_crop.dart';
 import 'package:lama_app/app/state/add_vocab_state.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:translator/translator.dart';
@@ -55,7 +57,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (textScanning) const CircularProgressIndicator(),
-              
+
               if (!textScanning && imageFile == null)
                 Container(
                   child: Text('Noch kein Bild ausgewaehlt'),
@@ -73,8 +75,8 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         getImage(ImageSource.gallery);
-                         BlocProvider.of<AddVocabBloc>(context)
-                              .add(ReorderEvent());
+                        BlocProvider.of<AddVocabBloc>(context)
+                            .add(ReorderEvent());
                       },
                       child: Container(
                         child: Column(
@@ -119,6 +121,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                   ),
                 ],
               ),
+
               if (!vocabList1.isEmpty || !vocabList2.isEmpty)
                 BlocBuilder<AddVocabBloc, AddVocabState>(
                   builder: (context, state) {
@@ -141,7 +144,8 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                                 //print(listType);
                               }),
                             ),
-                            Expanded(child: Text('Vokabeln editieren/hinzufügen')),
+                            Expanded(
+                                child: Text('Vokabeln editieren/hinzufügen')),
                             Radio(
                               value: 1,
                               groupValue: selectedValue,
@@ -292,6 +296,8 @@ class AddVocabScreenState extends State<AddVocabScreen> {
       if (pickedImage != null) {
         textScanning = true;
         imageFile = pickedImage;
+        //cropMyImage();
+
         setState(() {});
         getRecognisedText(pickedImage);
       }
@@ -518,5 +524,31 @@ class AddVocabScreenState extends State<AddVocabScreen> {
       vocabList1.insert(index, vocabList2[index]);
       vocabList2.removeAt(index);
     }
+  }
+
+  Future<void> cropMyImage() async {
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
+      sourcePath: imageFile!.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+        WebUiSettings(
+          context: context,
+        ),
+      ],
+    );
   }
 }
