@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_admin_bloc.dart';
@@ -26,18 +25,10 @@ class UserManagementBloc
     extends Bloc<UserManagementEvent, UserManagementState?> {
   UserManagementBloc({UserManagementState? initialState})
       : super(initialState) {
-    on<LoadAllUsers>((event, emit) async {
-      emit(await _loadUsers());
-    });
-    on<LogoutAdminScreen>((event, emit) async {
-      _logout(event.context);
-    });
-    on<CreateUser>((event, emit) async {
-      _createUserScreen(event.context);
-    });
-    on<CreateAdmin>((event, emit) async {
-      _createAdminScreen(event.context);
-    });
+    on<LoadAllUsers>((event, emit) async => emit(await _loadUsers()));
+    on<LogoutAdminScreen>((event, emit) async => _logout(event.context));
+    on<CreateUser>((event, emit) async => _createUserScreen(event.context));
+    on<CreateAdmin>((event, emit) async => _createAdminScreen(event.context));
     on<EditUser>((event, emit) async {
       _editUserScreen(event.context, event.user);
     });
@@ -47,33 +38,29 @@ class UserManagementBloc
   ///navigats via [Navigator.push] to the [CreateUserScreen] plus [CreateUserBloc]
   ///
   ///{@param}[BuildContext] as context
-  void _createUserScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (BuildContext context) => CreateUserBloc(),
-          child: CreateUserScreen(),
+  void _createUserScreen(BuildContext context) => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (BuildContext context) => CreateUserBloc(),
+            child: CreateUserScreen(),
+          ),
         ),
-      ),
-    ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
-  }
+      ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
 
   ///(private)
   ///navigats via [Navigator.push] to the [CreateAdminScreen] plus [CreateAdminBloc]
   ///
   ///{@param}[BuildContext] as context
-  void _createAdminScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (BuildContext context) => CreateAdminBloc(),
-          child: CreateAdminScreen(),
+  void _createAdminScreen(BuildContext context) => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (BuildContext context) => CreateAdminBloc(),
+            child: CreateAdminScreen(),
+          ),
         ),
-      ),
-    ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
-  }
+      ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
 
   ///(private)
   ///navigats via [Navigator.push] to the [EditUserScreen] plus [EditUserBloc]
@@ -81,25 +68,21 @@ class UserManagementBloc
   ///{@params}
   ///[BuildContext] as context
   ///[User] as user that should be edited
-  void _editUserScreen(BuildContext context, User user) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (BuildContext context) => EditUserBloc(user),
-          child: EditUserScreen(user),
+  void _editUserScreen(BuildContext context, User user) => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (BuildContext context) => EditUserBloc(user),
+            child: EditUserScreen(user),
+          ),
         ),
-      ),
-    ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
-  }
+      ).then((value) => context.read<UserManagementBloc>().add(LoadAllUsers()));
 
   ///(private)
   ///pops the Screen
   ///
   ///{@param}[BuildContext] as context
-  void _logout(BuildContext context) {
-    Navigator.pop(context);
-  }
+  void _logout(BuildContext context) => Navigator.pop(context);
 
   ///(private)
   ///load all stored [User] from the database and

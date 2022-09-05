@@ -1,9 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_admin_bloc.dart';
-import 'package:lama_app/app/bloc/create_user_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
 import 'package:lama_app/app/event/check_screen_event.dart';
 import 'package:lama_app/app/model/user_model.dart';
@@ -153,15 +151,13 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   ///via [Navigator].pushReplacement
   ///
   ///{@param} [BuildContext] as context
-  void _navigateAdminExist(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (BuildContext context) => UserSelectionBloc(),
-          child: UserSelectionScreen(),
+  void _navigateAdminExist(BuildContext context) => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (BuildContext context) => UserSelectionBloc(),
+            child: UserSelectionScreen(),
+          ),
         ),
-      ),
-    );
-  }
+      );
 }

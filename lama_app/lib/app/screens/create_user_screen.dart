@@ -109,10 +109,10 @@ class CreateUserScreenState extends State<CreateUserScreen> {
                 hintText: 'Password',
               ),
               validator: (value) {
-                return InputValidation.inputPasswortValidation(value);
+                return InputValidation.inputPasswordValidation(value);
               },
               onChanged: (value) {
-                context.read<CreateUserBloc>().add(UserPasswortChange(value));
+                context.read<CreateUserBloc>().add(UserPasswordChange(value));
               },
               obscureText: true,
             ),
