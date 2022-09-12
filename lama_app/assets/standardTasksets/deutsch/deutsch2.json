@@ -1,59 +1,110 @@
 {
-    "taskset_name":"Standardaufgaben Klasse 2",
-     "taskset_subject":"Deutsch",
-      "taskset_grade":2,
-       "tasks": [
+    "taskset_url": {
+        "id": 14,
+        "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch2.json"
+    },
+    "is_in_Pool": true,
+    "taskset_name": "Standardaufgaben Klasse 2",
+    "taskset_subject": "Deutsch",
+    "taskset_grade": 2,
+    "taskset_randomize_order": true,
+    "tasks": [
         {
-          "task_type":"GridSelect",
-           "task_reward":3,
-           "lama_text":"Markiere X Fahrzeuge",
-           "left_to_solve": 3,
-           "wordsToFind":["auto", "Bus", "Flugzeug", "Minivan"]
-            },
-           {
-           "task_type":"4Cards",
-            "task_reward":2,
-            "question":"Was ist kein Nomen (Namenwort)",
-            "lama_text":"Tippe die richtige Antwort an!",
+            "id": "[#5a805]",
+            "task_type": "TaskType.fourCards",
+            "task_reward": 3,
+            "lama_text": "Tippe die richtige Antwort an!",
             "left_to_solve": 3,
-            "right_answer":"aufgeben",
-             "wrong_answers":["Aufgabe", "Anfahrt", "Abgang"]
-             },
-         {
-           "task_type": "MatchCategory",
-           "task_reward":2,
-           "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
-           "left_to_solve": 3,
-           "nameCatOne": "Verben",
-           "nameCatTwo": "Nomen",
-           "categoryOne": ["laufen", "gehen", "schweben", "fallen"],
-           "categoryTwo": ["Haus", "Straße", "Baum", "Auto"]
-         },
-         {
-           "task_type":"ClozeTest",
-           "task_reward":2,
-           "question":"Der Koffer steht __ dem Schrank",
-           "lama_text":"Tippe die richtige Antwort an!",
-           "left_to_solve": 3,
-           "right_answer":"hinter",
-           "wrong_answers":["bis", "aus"]
-         },
-         {
-           "task_type":"MarkWords",
-           "task_reward":2,
-           "lama_text":"Tippe alle Verben an!",
-           "left_to_solve": 3,
-           "sentence": "Das Auto parkt in der Garage!",
-           "right_words": ["parkt"]
-         },
-         {
-           "task_type": "Connect",
-           "task_reward":2,
-           "left_to_solve": 3,
-           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
-           "pair1": ["Fisch", "Löwe", "Eisbär", "Affe"],
-           "pair2": ["Wasser", "Wüste", "Nordpol", "Dschungel"],
-           "rightAnswers": ["Fisch:Wasser", "Löwe:Wüste", "Eisbär:Nordpol", "Affe:Dschungel"]
-         }
-       ]
+            "question": "Was ist kein Nomen (Namenwort)",
+            "right_answer": "aufgeben",
+            "wrong_answers": [
+                "Aufgabe",
+                "Anfahrt",
+                "Abgang"
+            ]
+        },
+        {
+            "id": "[#e90ee]",
+            "task_type": "TaskType.matchCategory",
+            "task_reward": 2,
+            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+            "left_to_solve": 3,
+            "nameCatOne": "Verben",
+            "nameCatTwo": "Nomen",
+            "categoryOne": [
+                "laufen",
+                "gehen",
+                "schweben",
+                "fallen"
+            ],
+            "categoryTwo": [
+                "Haus",
+                "Straße",
+                "Baum",
+                "Auto"
+            ]
+        },
+        {
+            "id": "[#e0a84]",
+            "task_type": "TaskType.clozeTest",
+            "task_reward": 2,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "Der Koffer steht .. dem Schrank",
+            "right_answer": "hinter",
+            "wrong_answers": [
+                "bis",
+                "aus"
+            ]
+        },
+        {
+            "id": "[#d77ae]",
+            "task_type": "TaskType.gridSelect",
+            "task_reward": 2,
+            "lama_text": "Markiere X Fahrzeuge",
+            "left_to_solve": 3,
+            "wordsToFind": [
+                "auto",
+                "Bus",
+                "Flugzeug",
+                "Minivan"
+            ]
+        },
+        {
+            "id": "[#5e9fd]",
+            "task_type": "TaskType.markWords",
+            "task_reward": 2,
+            "lama_text": "Tippe alle Verben an!",
+            "left_to_solve": 3,
+            "sentence": "Das Auto parkt in der Garage!",
+            "right_words": [
+                "parkt"
+            ]
+        },
+        {
+            "id": "5",
+            "task_type": "TaskType.connect",
+            "task_reward": 2,
+            "left_to_solve": 3,
+            "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
+            "pair1": [
+                "Fisch",
+                "Löwe",
+                "Eisbär",
+                "Affe"
+            ],
+            "pair2": [
+                "Wasser",
+                "Wüste",
+                "Nordpol",
+                "Dschungel"
+            ],
+            "rightAnswers": [
+                "Fisch:Wasser",
+                "Löwe:Wüste",
+                "Eisbär:Nordpol",
+                "Affe:Dschungel"
+            ]
+        }
+    ]
 }

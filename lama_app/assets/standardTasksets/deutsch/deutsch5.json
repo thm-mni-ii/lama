@@ -1,51 +1,95 @@
 {
-    "taskset_name":"Standardaufgaben Klasse 5",
-     "taskset_subject":"Deutsch",
-      "taskset_grade":5,
-       "tasks": [
-           {
-           "task_type":"4Cards",
-            "task_reward":2,
-            "question":"Wie hieß Goethe mit Vornamen?",
-            "lama_text":"Tippe die richtige Antwort an!",
+    "taskset_url": {
+        "id": 17,
+        "url": "https://raw.githubusercontent.com/thm-mni-ii/lama/master/lama_app/assets/standardTasksets/deutsch/deutsch5.json"
+    },
+    "is_in_Pool": true,
+    "taskset_name": "Standardaufgaben Klasse 5",
+    "taskset_subject": "Deutsch",
+    "taskset_grade": 5,
+    "taskset_randomize_order": true,
+    "tasks": [
+        {
+            "id": "[#5a805]",
+            "task_type": "TaskType.fourCards",
+            "task_reward": 2,
+            "lama_text": "Tippe die richtige Antwort an!",
             "left_to_solve": 3,
-            "right_answer":"Johann Wolfgang",
-             "wrong_answers":["Jonas Wolfgang", "Johann Wolffang", "Jona Hoftal"]
-             },
-         {
-           "task_type":"ClozeTest",
-           "task_reward":2,
-           "question":"Ich hoffe, __ das Wetter bald besser wird",
-           "lama_text":"Tippe die richtige Antwort an!",
-           "left_to_solve": 3,
-           "right_answer":"dass",
-           "wrong_answers":["dieses", "das"]
-         },
-         {
-           "task_type": "Connect",
-           "task_reward":2,
-           "left_to_solve": 3,
-           "lama_text": "Wähle zu jedem linken Wort die passenden rechten Wörter aus",
-           "pair1": ["Genitiv", "Akkusativ", "Nominativ", "Dativ"],
-           "pair2": ["Wessen .. ?", "Wen oder Was", "Wer oder Was", "Wem .. ?"],
-           "rightAnswers": ["Genitiv:Wessen .. ?", "Akkusativ:Wen oder Was", "Nominativ:Wer oder Was", "Dativ:Wem .. ?"]
-         },
-         {
-           "task_type":"GridSelect",
-           "task_reward":3,
-           "lama_text":"Markiere X Länder",
-           "left_to_solve": 3,
-           "wordsToFind":["Finnland", "Irland", "Belgien", "Ungarn"]
-         },
-         {
-           "task_type": "MatchCategory",
-           "task_reward":2,
-           "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
-           "left_to_solve": 3,
-           "nameCatOne": "Präsens",
-           "nameCatTwo": "Präteritum",
-           "categoryOne": ["laufe", "läufst", "laufen", "lauft"],
-           "categoryTwo": ["lief", "liefst", "liefen", "lieft"]
-         }
-        ]
+            "question": "Wie hieß Goethe mit Vornamen?",
+            "right_answer": "Johann Wolfgang",
+            "wrong_answers": [
+                "Jonas Wolfgang",
+                "Johann Wolffang",
+                "Jona Hoftal"
+            ]
+        },
+        {
+            "id": "[#e90ee]",
+            "task_type": "TaskType.matchCategory",
+            "task_reward": 2,
+            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+            "left_to_solve": 3,
+            "nameCatOne": "Farben",
+            "nameCatTwo": "Gegenstände",
+            "categoryOne": [
+                "Rot",
+                "Blau",
+                "Grün",
+                "Gelb"
+            ],
+            "categoryTwo": [
+                "Auto",
+                "Baum",
+                "Schule",
+                "Mensch"
+            ]
+        },
+        {
+            "id": "[#e0a84]",
+            "task_type": "TaskType.clozeTest",
+            "task_reward": 2,
+            "lama_text": "Tippe die richtige Antwort an!",
+            "left_to_solve": 3,
+            "question": "Ich hoffe, .. das Wetter bald besser wird",
+            "right_answer": "dass",
+            "wrong_answers": [
+                "dieses",
+                "das"
+            ]
+        },
+        {
+            "id": "[#d77ae]",
+            "task_type": "TaskType.gridSelect",
+            "task_reward": 3,
+            "lama_text": "Markiere X Länder",
+            "left_to_solve": 3,
+            "wordsToFind": [
+                "Finnland",
+                "Irland",
+                "Belgien",
+                "Ungarn"
+            ]
+        },
+        {
+            "id": "[#af48e]",
+            "task_type": "TaskType.matchCategory",
+            "task_reward": 2,
+            "lama_text": "Schiebe jedes Wort in die Richtige Kategorie",
+            "left_to_solve": 3,
+            "nameCatOne": "Präsens",
+            "nameCatTwo": "Präteritum",
+            "categoryOne": [
+                "laufe",
+                "läufst",
+                "laufen",
+                "lauft"
+            ],
+            "categoryTwo": [
+                "lief",
+                "liefst",
+                "liefen",
+                "lieft"
+            ]
+        }
+    ]
 }

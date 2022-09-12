@@ -31,10 +31,9 @@ class UsernameChange extends CreateUserEvent {
 ///used to change [User] password in Bloc
 ///
 ///{@param}[String] password that should be set
-//TODO should be password not passwort
-class UserPasswortChange extends CreateUserEvent {
+class UserPasswordChange extends CreateUserEvent {
   String passwort;
-  UserPasswortChange(this.passwort);
+  UserPasswordChange(this.passwort);
 }
 
 ///used to change [User] grade in Bloc

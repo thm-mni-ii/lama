@@ -45,8 +45,26 @@ class User {
   ///Map the variables
   ///
   ///{@return} Map<String, dynamic>
-  Map<dynamic, dynamic> toMap() {
+  Map<dynamic, dynamic> toMapHive() {
     var map = <String, dynamic>{
+      UserFields.columnName: name,
+      UserFields.columnPassword: password,
+      UserFields.columnGrade: grade,
+      UserFields.columnCoins: coins,
+      UserFields.columnIsAdmin: (isAdmin == null || !isAdmin!) ? 0 : 1,
+      UserFields.columnAvatar: avatar,
+      UserFields.columnHighscorePermission:
+          (highscorePermission == null || !highscorePermission!) ? 0 : 1,
+      UserFields.columnIsGuest: (isGuest == null || !isGuest!) ? 0 : 1,
+    };
+    return map;
+  }
+
+  ///Map the variables
+  ///
+  ///{@return} Map<String, dynamic>
+  Map<String, Object?> toMapSQL() {
+    var map = <String, Object?>{
       UserFields.columnName: name,
       UserFields.columnPassword: password,
       UserFields.columnGrade: grade,
@@ -128,7 +146,7 @@ class User {
         (json['isGuest'] != 'ja' && (json['isGuest'] != 'nein')))
       return 'Optionales Feld ("isGuest":...) muss die Werte "ja" oder "nein" enthalten';
 
-    String? error = InputValidation.inputPasswortValidation(json['password']);
+    String? error = InputValidation.inputPasswordValidation(json['password']);
     if (error != null) return error;
 
     error = InputValidation.inputUsernameValidation(json['name']);
@@ -153,7 +171,7 @@ class UserList {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.userList != null) {
-      data['userList'] = this.userList!.map((e) => e.toMap()).toList();
+      data['userList'] = this.userList!.map((e) => e.toMapSQL()).toList();
     }
     return data;
   }

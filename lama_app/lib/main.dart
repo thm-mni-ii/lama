@@ -6,24 +6,52 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lama_app/app/app.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/taskset_manage/bloc/taskset_manage_bloc.dart';
+import 'package:lama_app/app/task-system/subject_grade_relation.dart';
+import 'package:lama_app/app/task-system/taskset_model.dart';
 
 ///Main method that launches the app.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  ServerRepository serverRepository = ServerRepository();
+  serverRepository.initialize();
   //initialize hive database
-  await Hive.initFlutter();
   if (kIsWeb) {
+    await Hive.initFlutter();
     print("WEB Enabled: => Hive initiated");
   }
   TasksetRepository tasksetRepository = TasksetRepository();
-  tasksetRepository.initialize();
+  tasksetRepository.initialize(serverRepository);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await precacheSvgs();
-  runApp(RepositoryProvider(
-    create: (context) => tasksetRepository,
-    child: LamaApp(),
+  runApp(MultiRepositoryProvider(
+    providers: [
+      RepositoryProvider(
+        create: (context) => tasksetRepository,
+      ),
+      RepositoryProvider(
+        create: (context) => serverRepository,
+      ),
+    ],
+    child: BlocProvider(
+      create: (context) => TasksetManageBloc(
+        allTaskset: taskset(tasksetRepository.tasksetLoader.loadedTasksets),
+        tasksetPool: taskset(tasksetRepository.tasksetLoader.tasksetPool),
+      ),
+      child: LamaApp(),
+    ),
   ));
+}
+
+List<Taskset> taskset(
+    Map<SubjectGradeRelation, List<Taskset>> tasksetGradeKorrelation) {
+  List<Taskset> list = [];
+  tasksetGradeKorrelation.forEach((key, value) => list.addAll(value));
+  print(list);
+  return list;
 }
 
 ///Precaches the svgs files.
@@ -31,7 +59,7 @@ void main() async {
 ///Especially important for the "MoneyTask" since the svgs would need
 ///a second to load otherwise which looks cheap and unprofessional.
 Future<List<void>> precacheSvgs() async {
-  return await Future.wait([
+  return Future.wait([
     precachePicture(
       ExactAssetPicture(SvgPicture.svgStringDecoder,
           'assets/images/svg/EuroCoins/1_Cent.svg'),

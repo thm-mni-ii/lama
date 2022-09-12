@@ -9,6 +9,7 @@ import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
 import 'package:lama_app/app/event/check_screen_event.dart';
 import 'package:lama_app/app/event/taskset_options_event.dart';
 import 'package:lama_app/app/event/userlist_url_event.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
 import 'package:lama_app/app/repository/taskset_repository.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
 import 'package:lama_app/app/state/taskset_options_state.dart';
@@ -88,7 +89,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               BlocProvider.of<CheckScreenBloc>(context)
                   .add(UrlCheckSuccess(false));
               RepositoryProvider.of<TasksetRepository>(context)
-                  .reloadTasksetLoader();
+                  .reloadTasksetLoader(
+                      RepositoryProvider.of<ServerRepository>(context));
             }
             if (state is TasksetOptionsPushFailed) {
               BlocProvider.of<CheckScreenBloc>(context)

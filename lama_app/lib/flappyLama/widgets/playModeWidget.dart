@@ -9,10 +9,7 @@ class PlayModeButton extends StatelessWidget {
   // This function will be called when button is pressed.
   final Function onButtonPressed;
 
-  const PlayModeButton({
-    required this.onButtonPressed,
-    required this.playMode
-  });
+  const PlayModeButton({required this.onButtonPressed, required this.playMode});
 
   @override
   Widget build(BuildContext context) {
@@ -20,31 +17,23 @@ class PlayModeButton extends StatelessWidget {
         alignment: Alignment.bottomLeft,
         child: Padding(
             padding: EdgeInsets.only(bottom: 80),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: LamaColors.mainPink.withOpacity(0.7),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0)
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5
-                      ),
-                    ),
-                    child: Icon(
-                      playMode ? Icons.pause : Icons.play_arrow,
-                      color: Colors.white,
-                      size: 30.0,
-                    ),
-                    onPressed: () {
-                      onButtonPressed?.call();
-                    },
-                  ),
-                ])
-        )
-    );
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: LamaColors.mainPink.withOpacity(0.7),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                ),
+                child: Icon(
+                  playMode ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white,
+                  size: 30.0,
+                ),
+                onPressed: () {
+                  onButtonPressed.call();
+                },
+              ),
+            ])));
   }
 }

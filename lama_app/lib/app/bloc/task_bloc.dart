@@ -9,6 +9,7 @@ import 'package:collection/collection.dart';
 import 'package:lama_app/db/database_provider.dart';
 import 'package:lama_app/util/OperantsEnum.dart';
 
+
 /// [Bloc] for the [TaskScreen]
 ///
 /// This Bloc handles everything related to tasks from
@@ -89,6 +90,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           rightAnswerCallback(t);
           emit(TaskAnswerResultState(true));
         } else if (event.providedAnswerBool == true) {
+          rightAnswerCallback(t);
+          emit(TaskAnswerResultState(true));
+        } else {
+          wrongAnswerCallback(t);
+          emit(TaskAnswerResultState(false));
+        }
+      } else if (t is ClockDifferent) {
+        if (event.providedAnswerBool == true) {
           rightAnswerCallback(t);
           emit(TaskAnswerResultState(true));
         } else {
@@ -195,7 +204,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   void rightAnswerCallback(Task t) async {
     if (t.leftToSolve! > 0) {
       answerResults.add(true);
-      userRepository!.addLamaCoins(t.reward!);
+      userRepository!.addLamaCoins(t.reward);
     } else
       answerResults.add(true);
     int? updatedRows = await DatabaseProvider.db
@@ -208,9 +217,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   /// Handles everything that should happen when a task is solved wrongly.
   ///
   /// For now this only adds the result to the list for the summary screen.
-  void wrongAnswerCallback(Task t) {
-    answerResults.add(false);
-  }
+  void wrongAnswerCallback(Task t) => answerResults.add(false);
 
   /// parses and evaluates a mathematical expression.
   ///
@@ -337,7 +344,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       case Operants.NUMBER:
         return 0;
     }
-    return 0;
   }
 
   /// returns the corresponding operant of the passed string
@@ -359,16 +365,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   /// Checks if two String lists ([list1] and [list2]) contain exactly the same elements.
   bool equals(List<String> list1, List<String>? list2) {
-    if (!(list1 is List<String> && list2 is List<String>) ||
-        list1.length != list2.length) {
-      return false;
-    }
+    if (!(list2 is List<String>) || list1.length != list2.length) return false;
+    //return list1.every((element) => list2.contains(element));
     list1.sort();
     list2.sort();
     for (int i = 0; i < list1.length; i++) {
-      if (list1[i] != list2[i]) {
-        return false;
-      }
+      if (list1[i] != list2[i]) return false;
     }
     return true;
   }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/choose_taskset_bloc.dart';
-import 'package:lama_app/app/bloc/create_admin_bloc.dart';
 import 'package:lama_app/app/bloc/edit_user_bloc.dart';
 import 'package:lama_app/app/bloc/game_list_screen_bloc.dart';
 import 'package:lama_app/app/bloc/user_management_bloc.dart';
@@ -18,6 +17,9 @@ import 'package:lama_app/app/screens/user_selection_screen.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
+import 'package:lama_app/app/state/home_screen_state.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 import 'game_list_screen.dart';
 import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper.dart';
@@ -29,17 +31,57 @@ import 'package:lama_app/app/screens/task_type_screens/buchstabieren_task_helper
 ///
 /// Author: K.Binder
 class HomeScreen extends StatefulWidget {
+  String text = "";
   @override
   State<StatefulWidget> createState() => _HomeScreenState();
 }
 
+class ToggleTextToSpeech extends StatefulWidget {
+  @override
+  ToggleTextToSpeechWidget createState() => ToggleTextToSpeechWidget();
+}
+
+class ToggleTextToSpeechWidget extends State<ToggleTextToSpeech> {
+  List<Widget> children = [];
+  IconData ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
+
+  @override
+  Widget build(BuildContext context) {
+    children.add(SizedBox(
+        child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                    onPressed: () { home_screen_state.toggle();
+                      setState(() {
+                        ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
+                      });
+                    },
+                    icon: Icon(
+                        size: 35,
+                        ikon
+                    )
+                ),
+              ),
+
+            ]
+        ))
+    );
+    return children[0];
+  }
+}
 /// [State] that contains the UI side logic for the [HomeScreen]
 ///
 /// Author: K.Binder
 class _HomeScreenState extends State<HomeScreen> {
   UserRepository? userRepository;
-
+  String tooltipptext ="";
+  bool changedSound = false;
   DateTime? backButtonPressedTime;
+
+  static String finaltooltipp = "";
 
   final snackBar = SnackBar(
       backgroundColor: LamaColors.mainPink,
@@ -53,6 +95,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     userRepository = RepositoryProvider.of<UserRepository>(context);
+    IconData ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
+    if(!changedSound) {
+      tooltipptext = RepositoryProvider.of<LamaFactsRepository>(context).getRandomLamaFact();
+    }
+    changedSound = false;
     return Scaffold(
       body: WillPopScope(
         onWillPop: onWillPop,
@@ -112,6 +159,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: LamaTextTheme.getStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500)),
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                      right: ((constraints.maxWidth / 100) * 2.5)),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: IconButton(
+                                        onPressed: () { home_screen_state.toggle();
+                                        setState(() {
+                                          tooltipptext = tooltipptext;
+                                          changedSound = true;
+                                          ikon = home_screen_state.isTTs() ? Icons.volume_up_rounded : Icons.volume_mute_rounded;
+                                        });
+                                        },
+                                        icon: Icon(
+                                          color: Colors.white,
+                                            size: 35,
+                                            ikon
+                                        )
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -139,51 +207,45 @@ class _HomeScreenState extends State<HomeScreen> {
                             Center(
                               child: Container(
                                   width: (constraints.maxWidth / 100) * 75,
-                                  height: (constraints.maxHeight / 100) * 75,
+                                  height: (constraints.maxHeight / 100) * 95,
                                   child: _buildMenuButtonColumn(constraints)),
                             ),
                             Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                padding: EdgeInsets.only(bottom: 20),
-                                height: (constraints.maxHeight / 100) * 10,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 20,
-                                        child: BubbleSpecialTwo(
-                                          color: LamaColors.mainPink,
-                                          text: RepositoryProvider.of<
-                                                  LamaFactsRepository>(context)
-                                              .getRandomLamaFact(),
-                                          textStyle: LamaTextTheme.getStyle(
-                                              fontSize: 15),
-                                        )
-                                        /* child: Bubble(
-                                        nip: BubbleNip.rightCenter,
-                                        color: LamaColors.mainPink,
-                                        borderColor: LamaColors.mainPink,
-                                        shadowColor: LamaColors.black,
-                                        child: Center(
-                                          child: Text(
-                                            RepositoryProvider.of<
-                                                        LamaFactsRepository>(
-                                                    context)
-                                                .getRandomLamaFact(),
-                                            style: LamaTextTheme.getStyle(
-                                                fontSize: 15),
-                                          ),
-                                        ),
-                                      ), */
-                                        ),
-                                    Expanded(
-                                      flex: 5,
-                                      child: SvgPicture.asset(
-                                        "assets/images/svg/lama_head.svg",
-                                        semanticsLabel: "Lama Anna",
+                              alignment: Alignment.bottomRight,
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 15, bottom: 15),
+                                child: SvgPicture.asset(
+                                  "assets/images/svg/lama_head.svg",
+                                  semanticsLabel: "Lama Anna",
+                                  width: (constraints.maxWidth / 100) * 15,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: 20,
+                                    right: (constraints.maxWidth / 100) * 15),
+                                child: Container(
+                                  height: (constraints.maxHeight / 100) * 10,
+                                  width: (constraints.maxWidth / 100) * 80,
+                                  child: Bubble(
+                                    nip: BubbleNip.rightCenter,
+                                    color: LamaColors.mainPink,
+                                    borderColor: LamaColors.mainPink,
+                                    shadowColor: LamaColors.black,
+                                    child: Center(
+                                      child: Text(
+                                        tooltipptext,
+                                        //RepositoryProvider.of<
+                                        //        LamaFactsRepository>(context)
+                                        //    .getRandomLamaFact(),
+                                        style: LamaTextTheme.getStyle(
+                                            fontSize: 15),
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -277,7 +339,6 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Widget> children = [];
     TasksetRepository tasksetRepository =
         RepositoryProvider.of<TasksetRepository>(context);
-
     if (tasksetRepository
             .getTasksetsForSubjectAndGrade("Mathe", userRepository!.getGrade())!
             .length >

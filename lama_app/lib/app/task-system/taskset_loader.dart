@@ -1,6 +1,9 @@
 import 'dart:convert';
 
-import 'package:lama_app/app/screens/admin_menu_screen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:lama_app/app/repository/server_repository.dart';
+import 'package:lama_app/app/repository/taskset_repository.dart';
+import 'package:lama_app/app/screens/admin_menu_folder/admin_menu_screen.dart';
 import 'package:lama_app/util/input_validation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
@@ -20,6 +23,18 @@ import 'dart:io';
 ///Author: K.Binder
 class TasksetLoader {
   Map<SubjectGradeRelation, List<Taskset>> loadedTasksets = {};
+  Map<SubjectGradeRelation, List<Taskset>> tasksetPool = {};
+
+  void _loadTasksetPool() {
+    loadedTasksets.forEach((key, value) {
+      value.forEach((element) {
+        if (element.isInPool) {
+          if (tasksetPool[key] == null) tasksetPool[key] = [];
+          tasksetPool[key]!.add(element);
+        }
+      });
+    });
+  }
 
   //Change this constant if you want to support more grades than 1-6.
   //Keep in mind youll have to add standard taskset for each subject for the new grade otherwise the app will crash on startup.
@@ -28,7 +43,7 @@ class TasksetLoader {
   ///Loads all Tasksets.
   ///
   ///This includes all standard tasksets if they are not disabled in the admin menu.
-  Future<void> loadAllTasksets() async {
+  Future<void> loadAllTasksets(ServerRepository serverRepository) async {
     /* ONLY NEEDED WHEN A LOCAL COPY SHOUL EXIST AND POSSIBLY PERSIST
     //get path for the taskset directory (only accessible by this app)
     Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -49,8 +64,8 @@ class TasksetLoader {
         prefs.getBool(AdminUtils.enableDefaultTasksetsPref);
     if (enableDefaultTasksetPref == null || enableDefaultTasksetPref) {
       //load all standardtasks
-      //TO-DO commented out for webversion
-      /*  try {
+
+      /* try {
         final result = await InternetAddress.lookup('example.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           print('connected');
@@ -72,38 +87,59 @@ class TasksetLoader {
             ];
             await loadTasksFromUrls(standardTaskUrls);
           }
-        }
-      } on SocketException catch (_) { */
-      print('not connected');
-      for (int i = 1; i <= GRADES_SUPPORTED; i++) {
-        //load all standardtasks from local assets folder. needed in case
-        //the app user has no internet connection
-        String tasksetMathe = await rootBundle
-            .loadString(
-                'assets/standardTasksets/mathe/mathe' + i.toString() + '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
+          List<Taskset> tmp = await TasksetRepository()
+              .downloadTasksetDirectory(serverRepository);
+          for (var element in tmp) {
+            if (loadedTasksets[
+                    SubjectGradeRelation(element.subject, element.grade)] ==
+                null) {
+              loadedTasksets[
+                  SubjectGradeRelation(element.subject, element.grade)] = [];
+            }
+            loadedTasksets[
+                    SubjectGradeRelation(element.subject, element.grade)]!
+                .add(element);
+            print(element.taskurl);
+            print("test" + element.toJson().toString());
+          }
 
-        String tasksetDeutsch = await rootBundle
-            .loadString('assets/standardTasksets/deutsch/deutsch' +
-                i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
-        String tasksetEnglisch = await rootBundle
-            .loadString('assets/standardTasksets/englisch/englisch' +
-                i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetEnglisch != "") await buildTasksetFromJson(tasksetEnglisch);
-        String tasksetSachkunde = await rootBundle
-            .loadString('assets/standardTasksets/sachkunde/sachkunde' +
-                i.toString() +
-                '.json')
-            .catchError((err) => Future.value(""));
-        if (tasksetSachkunde != "")
-          await buildTasksetFromJson(tasksetSachkunde);
-        /* } */ ////TO-DO commented out for webversion
+          _loadTasksetPool();
+        }
+      } on SocketException catch (_) */
+      {
+        print('not connected');
+        for (int i = 1; i <= GRADES_SUPPORTED; i++) {
+          //load all standardtasks from local assets folder. needed in case
+          //the app user has no internet connection
+          String tasksetMathe = await rootBundle
+              .loadString('assets/standardTasksets/mathe/mathe' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetMathe != "") await buildTasksetFromJson(tasksetMathe);
+
+          String tasksetDeutsch = await rootBundle
+              .loadString('assets/standardTasksets/deutsch/deutsch' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetDeutsch != "") await buildTasksetFromJson(tasksetDeutsch);
+          String tasksetEnglisch = await rootBundle
+              .loadString('assets/standardTasksets/englisch/englisch' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetEnglisch != "")
+            await buildTasksetFromJson(tasksetEnglisch);
+          String tasksetSachkunde = await rootBundle
+              .loadString('assets/standardTasksets/sachkunde/sachkunde' +
+                  i.toString() +
+                  '.json')
+              .catchError((err) => Future.value(""));
+          if (tasksetSachkunde != "")
+            await buildTasksetFromJson(tasksetSachkunde);
+        }
+        _loadTasksetPool();
       }
 
       // for (int i = 1; i <= GRADES_SUPPORTED; i++) {
@@ -220,10 +256,16 @@ class TasksetLoader {
   List<Taskset>? getLoadedTasksetsForSubjectAndGrade(
       String subject, int? grade) {
     SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
-    if (loadedTasksets.containsKey(sgr))
-      return loadedTasksets[sgr];
-    else
-      return <Taskset>[];
+    if (loadedTasksets.containsKey(sgr)) return loadedTasksets[sgr];
+    return [];
+  }
+
+  ///Gets all Tasksets that match a specific subject-grade combination (e.g. math and second grade)
+  /// returns the List that is used by the children
+  List<Taskset>? getTasksetPoolForSubjectAndGrade(String subject, int? grade) {
+    SubjectGradeRelation sgr = SubjectGradeRelation(subject, grade);
+    if (tasksetPool.containsKey(sgr)) return tasksetPool[sgr];
+    return [];
   }
 
   ///Loads tasks from a list of [TaskUrl]'s and builds them, making them useable
@@ -233,7 +275,12 @@ class TasksetLoader {
       String? result =
           await InputValidation.inputUrlWithJsonValidation(taskUrls[i].url);
 
-      final response = await http.get(Uri.parse(taskUrls[i].url!));
+      print("counter: $i");
+
+      var response = await http.get(
+        Uri.parse(taskUrls[i].url!),
+        headers: {'Content-type': 'application/json'},
+      );
       if (result == null) {
         await buildTasksetFromJson(utf8.decode(response.bodyBytes));
       }

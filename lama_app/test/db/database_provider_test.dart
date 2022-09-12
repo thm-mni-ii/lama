@@ -4,7 +4,6 @@ import 'package:lama_app/app/model/game_model.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/model/subject_model.dart';
 import 'package:lama_app/app/model/taskUrl_model.dart';
-import 'package:lama_app/app/model/userHasAchievement_model.dart';
 import 'package:lama_app/app/model/userSolvedTaskAmount_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/db/database_provider.dart';

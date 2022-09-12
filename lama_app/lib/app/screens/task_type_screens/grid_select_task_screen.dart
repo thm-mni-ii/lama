@@ -1,17 +1,21 @@
 import 'dart:math';
 
 import 'package:bubble/bubble.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lama_app/app/bloc/taskBloc/gridselecttask_bloc.dart';
+import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
 import 'package:lama_app/app/bloc/task_bloc.dart';
 import 'package:lama_app/app/event/task_events.dart';
 import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:lama_app/util/pair.dart';
+
+import 'package:lama_app/app/event/tts_event.dart';
+import 'package:lama_app/app/state/tts_state.dart';
+
 
 /// [StatelessWidget] that contains the screen for the GridSelect TaskType.
 ///
@@ -40,9 +44,18 @@ class GridSelectTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<GridSelectTaskBloc>(
-      create: (context) => gridSelectTaskBloc,
-      child: Column(
+    String qlang;
+    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<GridSelectTaskBloc>(
+          create: (context) => gridSelectTaskBloc,
+    ),
+        BlocProvider(
+          create: (context) => TTSBloc(),
+        ),
+      ],
+        child: Column(
         children: [
           Container(
             height: (constraints.maxHeight / 100) * 65,
@@ -74,11 +87,25 @@ class GridSelectTaskScreen extends StatelessWidget {
                   child: Bubble(
                     nip: BubbleNip.leftCenter,
                     child: Center(
-                      child: Text(
-                        actualLamaText!,
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
+                      child: BlocBuilder<TTSBloc, TTSState>(
+                      builder: (context, state) {
+                        if (state is EmptyTTSState) {
+                          context.read<TTSBloc>().add(QuestionOnInitEvent(actualLamaText!,qlang));
+                        }
+
+                        return InkWell(
+                          onTap: () {
+                            BlocProvider.of<TTSBloc>(context)
+                                .add(ClickOnQuestionEvent.initVoice(actualLamaText!, qlang));
+                          },
+                          child: Text(
+                          actualLamaText!,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
                       ),
+                        );
+                      },
+                    ),
                     ),
                   ),
                 ),
@@ -131,7 +158,7 @@ class GridSelectTaskScreen extends StatelessWidget {
           )
         ],
       ),
-    );
+);
   }
 
   ///Generates all [TableRow]
