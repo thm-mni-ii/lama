@@ -296,10 +296,32 @@ class AddVocabScreenState extends State<AddVocabScreen> {
       if (pickedImage != null) {
         textScanning = true;
         imageFile = pickedImage;
-        //cropMyImage();
+        CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: imageFile!.path,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.ratio3x2,
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9
+          ],
+          uiSettings: [
+            AndroidUiSettings(
+                toolbarTitle: 'Cropper',
+                toolbarColor: Colors.deepOrange,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false),
+            IOSUiSettings(
+              title: 'Cropper',
+            ),
+            WebUiSettings(
+              context: context,
+            ),
+          ],
+        );
 
         setState(() {});
-        getRecognisedText(pickedImage);
+        getRecognisedText(croppedFile);
       }
     } catch (e) {
       textScanning = false;
@@ -309,10 +331,10 @@ class AddVocabScreenState extends State<AddVocabScreen> {
     }
   }
 
-  void getRecognisedText(XFile image) async {
+  void getRecognisedText(CroppedFile? image) async {
     vocabList1.clear();
     vocabList2.clear();
-    final inputImage = InputImage.fromFilePath(image.path);
+    final inputImage = InputImage.fromFilePath(image!.path);
     final textDetector = GoogleMlKit.vision.textDetector();
     RecognisedText recognisedText = await textDetector.processImage(inputImage);
     await textDetector.close();

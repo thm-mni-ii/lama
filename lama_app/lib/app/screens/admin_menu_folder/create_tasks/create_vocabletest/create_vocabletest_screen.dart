@@ -30,13 +30,31 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _rewardController = TextEditingController();
   List<TwoControllers> _controllers = [];
+  TwoControllers twoController = TwoControllers();
   List<TwoTextfields> _fields = [];
-
+  TextEditingController controller1 = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
   bool? randomSide = false;
 
   bool newTask = true;
   @override
   Widget build(BuildContext context) {
+    if (widget.task != null && newTask) {
+      _rewardController.text = widget.task!.reward.toString();
+      int controllersLength = widget.task!.vocablePairs.length;
+      for (int i = 0; i < controllersLength; i++) {
+        _controllers.add(twoController);
+        _fields.add(TwoTextfields(
+          controller1: _controllers[i].controller1,
+          controller2: _controllers[i].controller2,
+          index: i,
+          initialValue1: widget.task!.vocablePairs[i].a,
+          initialValue2: widget.task!.vocablePairs[i].b,
+        ));
+      }
+      newTask = false;
+    }
+
     Taskset blocTaskset = BlocProvider.of<CreateTasksetBloc>(context).taskset!;
     Size screenSize = MediaQuery.of(context).size;
 
@@ -93,18 +111,17 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 TaskVocableTest taskMatchCategory = TaskVocableTest(
-                    widget.task?.id ??
-                        KeyGenerator.generateRandomUniqueKey(
-                            blocTaskset.tasks!),
-                    TaskType.vocableTest,
-                    int.parse(_rewardController.text),
-                    "Translate the shown word!",
-                    3,
-                    [],
-                    randomSide,
-                    "Englisch",
-                    "Deutsch",
-                    );
+                  widget.task?.id ??
+                      KeyGenerator.generateRandomUniqueKey(blocTaskset.tasks!),
+                  TaskType.vocableTest,
+                  int.parse(_rewardController.text),
+                  "Translate the shown word!",
+                  3,
+                  [],
+                  randomSide,
+                  "Englisch",
+                  "Deutsch",
+                );
                 if (newTask) {
                   // <=> widget.task == null
                   // add Task
@@ -116,7 +133,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                   BlocProvider.of<TasksetCreateTasklistBloc>(context)
                       .add(EditTaskInTaskList(widget.index, taskMatchCategory));
                 }
-                print(_controllers[0].controller1!.text.toString());
+               print(_controllers[0].controller1!.text.toString());
                 Navigator.pop(context);
               }
             },
