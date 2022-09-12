@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/state/create_taskset_state.dart';
 import 'package:path_provider/path_provider.dart';
@@ -44,16 +43,14 @@ class CreateTasksetBloc extends Bloc<CreateTasksetEvent, CreateTasksetState> {
   }
 
   Future<void> _generate() async {
-    if (!kIsWeb) {
-      print(Platform.isAndroid);
-      Directory? directory = Platform.isAndroid
-          ? await getExternalStorageDirectory() //FOR ANDROID
-          : await getApplicationDocumentsDirectory(); //FOR iOS
-      String path = directory!.path;
-      File file = File(path + '/LAMA/' + taskset!.name! + '.json');
-      String json = jsonEncode(taskset);
-      file.createSync(recursive: true);
-      file.writeAsStringSync(json);
-    }
+    print(Platform.isAndroid);
+    Directory? directory = Platform.isAndroid
+        ? await getExternalStorageDirectory() //FOR ANDROID
+        : await getApplicationDocumentsDirectory(); //FOR iOS
+    String path = directory!.path;
+    File file = File(path + '/LAMA/' + taskset!.name! + '.json');
+    String json = jsonEncode(taskset);
+    file.createSync(recursive: true);
+    file.writeAsStringSync(json);
   }
 }
