@@ -111,7 +111,7 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                       //log('data: ${task.lamaText!}');
                       context
                           .read<TTSBloc>()
-                          .add(QuestionOnInitEvent(task.lamaText!,qlang));
+                          .add(QuestionOnInitEvent(task.lamaText, qlang));
                     }
                   },
                   child: Stack(
@@ -152,7 +152,6 @@ class MatchCategoryState extends State<MatchCategoryTaskScreen> {
                     ],
                   ),
                 ),
-
               );
             },
           ),

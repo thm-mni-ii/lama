@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
+import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
+import 'package:lama_app/app/event/taskset_options_event.dart';
+import 'package:lama_app/app/event/userlist_url_event.dart';
 
 //Lama defaults
 import 'package:lama_app/util/LamaColors.dart';
@@ -153,7 +157,8 @@ class CheckScreenPage extends State<CheckScreen> {
           ///if there are no users a welcomescreen gets drawn
           ///from there one can create an admin or a guest
           if (state is ShowWelcome) {
-            final controller = PageController();
+            context.read<CheckScreenBloc>().add(LoadWelcomeScreen(context));
+            /*        final controller = PageController();
             final pages = getPages(controller);
             return Scaffold(
               body: Column(
@@ -212,12 +217,12 @@ class CheckScreenPage extends State<CheckScreen> {
                   ),
                 ],
               ),
-            );
+            ); */
           }
           if (state is HasGuest) {
             context
                 .read<CheckScreenBloc>()
-                .add(LoadGuest(state.context, state.user));
+                .add(LoadGuest(state.context, state.user, true));
           }
 
           ///default waiting screen with app icon
@@ -230,131 +235,6 @@ class CheckScreenPage extends State<CheckScreen> {
           );
         },
       ),
-    );
-  }
-
-  List<Widget> getPages(PageController controller) {
-    return [
-      PageViewerModel(
-        title: "Alles lernen mit Anna",
-        description:
-            "Mit dieser App ist Lernen interaktiv, belohnend und spaßig!"
-            " Hier wird gezeigt wie die App funktioniert.",
-        image: SvgPicture.asset(
-          'assets/images/svg/app_icon.svg',
-          semanticsLabel: 'LAMA',
-        ),
-      ),
-      PageViewerModel(
-        title: "Übersicht",
-        description:
-            "Du weißt bereits wie die App funktioniert? Dann benutze die unten "
-            "angezeigten Navigationstasten, um schnell einzusteigen. ",
-        image: Image.asset("assets/images/png/no_login_home.png"),
-        button: ElevatedButton(
-          onPressed: () {
-            controller.jumpToPage(2);
-          },
-          child: Text("Zur Gastseite",
-              style: LamaTextTheme.getStyle(fontSize: 15)),
-        ),
-        button2: ElevatedButton(
-          onPressed: () {
-            controller.jumpToPage(3);
-          },
-          child: Text(
-            "Zur Adminseite",
-            style: LamaTextTheme.getStyle(fontSize: 15),
-          ),
-        ),
-      ),
-      PageViewerModel(
-          title: "Spring einfach rein!",
-          description: "Du möchtest als Gast weiter und einfach die "
-              "Standardaufgaben ausprobieren? Einen Admin kann man später "
-              "immernoch anlegen.",
-          image: Image.asset('assets/images/png/features.png'),
-          button: ElevatedButton(
-            onPressed: () {
-              context.read<CheckScreenBloc>().add(CreateGuestEvent(context));
-            },
-            child: Text("Weiter als Gast",
-                style: LamaTextTheme.getStyle(fontSize: 15)),
-          )),
-      PageViewerModel(
-          title: "Verwalte deine Schüler und ihre Aufgaben",
-          description:
-              "Es kann ein Admin angelegt werden, mit dem jeder Schüler einen "
-              "eigenen Account mit Name, Passwort und Klasse erstellen kann. Es gibt "
-              "pro Klasse ein Set an Standardaufgaben und die Möglichkeit, eigene "
-              "Aufgaben nach einem Muster zu erstellen.",
-          image: Image.asset('assets/images/png/admin_feature.png'),
-          button: ElevatedButton(
-            onPressed: () {
-              context.read<CheckScreenBloc>().add(CreateAdminEvent(context));
-            },
-            child: Text("Weiter als Admin",
-                style: LamaTextTheme.getStyle(fontSize: 15)),
-          )),
-      PageViewerModel(
-        title: "Alles Verstanden? Los geht's!",
-        description:
-            "Wende dich bei Fragen an unser github und lese dir die dort "
-            "verfügbaren PDF-Dateien durch! Wir wünschen dir viel Spaß mit der "
-            "App!",
-        image: Image.asset("assets/images/png/plane-1598084_1280.png"),
-      )
-    ];
-  }
-
-  Widget PageViewerModel(
-      {String? title,
-      String? description,
-      var image,
-      ElevatedButton? button,
-      ElevatedButton? button2}) {
-    return Column(
-      children: [
-        Flexible(
-            flex: 3,
-            child: Padding(
-              padding: EdgeInsets.all(40),
-              child: Center(
-                child: image,
-              ),
-            )),
-        Flexible(
-            flex: 3,
-            child: Column(children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Text(
-                  title!,
-                  style: LamaTextTheme.getStyle(color: Colors.black),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
-                  description!,
-                  style: LamaTextTheme.getStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 5),
-                child: button,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 5),
-                child: button2,
-              ),
-            ])),
-      ],
     );
   }
 }

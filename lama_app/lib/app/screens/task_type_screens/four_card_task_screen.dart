@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bubble/bubble.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -29,26 +30,19 @@ class FourCardTaskScreenStateful extends StatefulWidget {
     answers.add(task.rightAnswer!);
     print(answers.length);
     answers.shuffle();
-
   }
-
 
   @override
   FourCards createState() {
     FourCardTaskScreenStateful(task, constraints);
     return FourCards(task, constraints, answers);
   }
-
-
 }
 
 class FourCards extends State<FourCardTaskScreenStateful> {
-
   final Task4Cards task;
   final List<String> answers = [];
   final BoxConstraints constraints;
-
-
 
   FourCards(this.task, this.constraints, answers) {
     this.answers.add(answers[0]);
@@ -57,12 +51,12 @@ class FourCards extends State<FourCardTaskScreenStateful> {
     this.answers.add(answers[3]);
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     String qlang;
-    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
+    task.questionLanguage == null
+        ? qlang = "Deutsch"
+        : qlang = task.questionLanguage!;
 
     return BlocProvider(
       create: (context) => TTSBloc(),
@@ -74,7 +68,9 @@ class FourCards extends State<FourCardTaskScreenStateful> {
           child: BlocBuilder<TTSBloc, TTSState>(
             builder: (context, TTSState state) {
               if (state is EmptyTTSState) {
-                context.read<TTSBloc>().add(QuestionOnInitEvent(task.question!,qlang));
+                context
+                    .read<TTSBloc>()
+                    .add(QuestionOnInitEvent(task.question!, qlang));
               }
               return Container(
                 decoration: BoxDecoration(
@@ -90,67 +86,64 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                           blurRadius: 7,
                           offset: Offset(0, 3))
                     ]),
-                    child: InkWell(
-                      onTap: () {
-                        BlocProvider.of<TTSBloc>(context)
-                            .add(ClickOnQuestionEvent.initVoice(task.question!, qlang));
-                      },
-                      child: Center(
-                        child: Text(task.question!,
-                            textAlign: TextAlign.center,
-                            style: LamaTextTheme.getStyle(fontSize: 30)
-                        ),
-                      ),
-                    ),
+                child: InkWell(
+                  onTap: () {
+                    BlocProvider.of<TTSBloc>(context).add(
+                        ClickOnQuestionEvent.initVoice(task.question!, qlang));
+                  },
+                  child: Center(
+                    child: Text(task.question!,
+                        textAlign: TextAlign.center,
+                        style: LamaTextTheme.getStyle(fontSize: 30)),
+                  ),
+                ),
               );
             },
           ),
         ),
         BlocBuilder<TTSBloc, TTSState>(
           builder: (context, state) {
-        return Container(
-          height: (constraints.maxHeight / 100) * 15,
-          padding: EdgeInsets.only(left: 15, right: 15),
-          child: Stack(children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                padding: EdgeInsets.only(left: 75),
-                height: 50,
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
-                child: Bubble(
-                  nip: BubbleNip.leftCenter,
-                  child: InkWell(
-                    onTap: () {
-                      BlocProvider.of<TTSBloc>(context)
-                          .add(ClickOnQuestionEvent.initVoice(task.lamaText, qlang));
-                    },
-                    child: Center(
-                      child: Text(
-                        task.lamaText,
-                        style: TextStyle(fontSize: 15,
-                            fontWeight: FontWeight.bold),
+            return Container(
+              height: (constraints.maxHeight / 100) * 15,
+              padding: EdgeInsets.only(left: 15, right: 15),
+              child: Stack(children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 75),
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    child: Bubble(
+                      nip: BubbleNip.leftCenter,
+                      child: InkWell(
+                        onTap: () {
+                          BlocProvider.of<TTSBloc>(context).add(
+                              ClickOnQuestionEvent.initVoice(
+                                  task.lamaText, qlang));
+                        },
+                        child: Center(
+                          child: Text(
+                            task.lamaText,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: SvgPicture.asset(
-                "assets/images/svg/lama_head.svg",
-                semanticsLabel: "Lama Anna",
-                width: 75,
-              ),
-            ),
-          ]),
-        );
-  },
-),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SvgPicture.asset(
+                    "assets/images/svg/lama_head.svg",
+                    semanticsLabel: "Lama Anna",
+                    width: 75,
+                  ),
+                ),
+              ]),
+            );
+          },
+        ),
         Container(
             height: (constraints.maxHeight / 100) * 45,
             child: Padding(
@@ -169,16 +162,17 @@ class FourCards extends State<FourCardTaskScreenStateful> {
                     itemCount: 4,
                     itemBuilder: (context, index) =>
                         _buildCards(context, index)))),
-
       ]),
     );
   }
 
   Widget _buildCards(context, index) {
     String alang;
-    task.answerLanguage == null ? alang = "Deutsch" : alang = task.answerLanguage!;
+    task.answerLanguage == null
+        ? alang = "Deutsch"
+        : alang = task.answerLanguage!;
     Color color =
-    index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;
+        index % 3 == 0 ? LamaColors.greenAccent : LamaColors.blueAccent;
 
     return BlocBuilder<TTSBloc, TTSState>(
       builder: (context, state) {
