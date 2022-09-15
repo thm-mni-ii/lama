@@ -52,6 +52,8 @@ class AnimatedComponent extends SpriteAnimationComponent
   /// width and height of the lama in pixel
   final double _size;
 
+  bool boolIsHittingTop = false;
+
   AnimatedComponent(
     this._size,
     this._game,
@@ -197,9 +199,10 @@ class AnimatedComponent extends SpriteAnimationComponent
 
       // callback
       // onHitTop.call();
+      boolIsHittingTop = true;
       return true;
     }
-
+    boolIsHittingTop = false;
     return false;
   }
 
@@ -218,6 +221,8 @@ class AnimatedComponent extends SpriteAnimationComponent
       position.y = _game.screenSize.height - _size;
       // remove the speed
       _speedY = 0.0;
+      print("GROUND HIIIIT");
+      _game.gameOver = true;
       // callback
       // onHitGround.call();
       return true;
@@ -236,7 +241,10 @@ class AnimatedComponent extends SpriteAnimationComponent
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
+    double test = this.position.y;
 
-    flap();
+    if (position.y > 30) {
+      _game.gameOver = true;
+    }
   }
 }

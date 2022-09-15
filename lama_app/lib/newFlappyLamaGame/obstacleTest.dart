@@ -1,10 +1,27 @@
 import 'dart:core';
 import 'dart:math';
+import 'dart:ui';
+import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
+import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
+import 'package:flame/palette.dart';
+import 'package:flame/sprite.dart';
+import 'package:flutter/animation.dart';
+
 import 'baseFlappy.dart';
+import 'package:flame/components.dart';
+import 'package:flame/game.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/input.dart';
+import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flutter/services.dart';
 
 class ObstacleCompTest extends Component with HasGameRef {
   late Sprite kaktusTopComponent;
