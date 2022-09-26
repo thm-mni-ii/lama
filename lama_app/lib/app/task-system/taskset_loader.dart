@@ -65,7 +65,7 @@ class TasksetLoader {
     if (enableDefaultTasksetPref == null || enableDefaultTasksetPref) {
       //load all standardtasks
 
-      /* try {
+      try {
         final result = await InternetAddress.lookup('example.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           print('connected');
@@ -103,10 +103,9 @@ class TasksetLoader {
             print("test" + element.toJson().toString());
           }
 
-          _loadTasksetPool();
+          //_loadTasksetPool();
         }
-      } on SocketException catch (_) */
-      {
+      } on SocketException catch (_) {
         print('not connected');
         for (int i = 1; i <= GRADES_SUPPORTED; i++) {
           //load all standardtasks from local assets folder. needed in case
@@ -139,7 +138,7 @@ class TasksetLoader {
           if (tasksetSachkunde != "")
             await buildTasksetFromJson(tasksetSachkunde);
         }
-        _loadTasksetPool();
+        //_loadTasksetPool();
       }
 
       // for (int i = 1; i <= GRADES_SUPPORTED; i++) {
@@ -210,6 +209,7 @@ class TasksetLoader {
     print("Reset: " +
         (await DatabaseProvider.db.resetAllStillExistFlags()).toString() +
         "Entries");
+    _loadTasksetPool();
   }
 
   ///Builds a Taskset from a json string and puts it into [loadedTasksets()].
