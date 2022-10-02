@@ -284,7 +284,8 @@ class FlappyLamaGame2 extends FlameGame
           tileSize,
           screenSize,
           maxHoleSize,
-          minHoleSize);
+          minHoleSize,
+          userLama);
       add(obst1);
       addScore();
     }
@@ -307,7 +308,8 @@ class FlappyLamaGame2 extends FlameGame
           tileSize,
           screenSize,
           maxHoleSize,
-          minHoleSize);
+          minHoleSize,
+          userLama);
       add(obst2);
       addScore();
     }
@@ -502,7 +504,8 @@ class FlappyLamaGame2 extends FlameGame
         tileSize,
         screenSize,
         maxHoleSize,
-        minHoleSize);
+        minHoleSize,
+        userLama);
     add(obst1);
     obst2 = ObstacleCompNewTry(
         this,
@@ -513,7 +516,8 @@ class FlappyLamaGame2 extends FlameGame
         tileSize,
         screenSize,
         maxHoleSize,
-        minHoleSize);
+        minHoleSize,
+        userLama);
     add(obst2);
     add(FlappyScoreDisplay(this));
   }

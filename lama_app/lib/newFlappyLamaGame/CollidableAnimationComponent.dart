@@ -153,6 +153,7 @@ class AnimatedComponent extends SpriteAnimationComponent
   @override
   void update(double dt) {
     super.update(dt);
+
     // last y for animation selection
     var lastY = y;
 
@@ -240,9 +241,13 @@ class AnimatedComponent extends SpriteAnimationComponent
     Set<Vector2> intersectionPoints,
     PositionComponent other,
   ) {
+    print("LAMA HIT");
     super.onCollisionStart(intersectionPoints, other);
     double test = this.position.y;
 
+    if (position.y > 30) {
+      _game.gameOver = true;
+    }
     if (position.y > 30) {
       _game.gameOver = true;
     }

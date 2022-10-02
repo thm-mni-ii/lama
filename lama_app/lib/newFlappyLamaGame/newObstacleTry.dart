@@ -33,6 +33,8 @@ class ObstacleCompNewTry extends PositionComponent
   late SpriteComponent kaktusBottomComponent;
   late SpriteComponent tmp;
 
+  late PositionComponent lama;
+
   /// list of all the single sprites of the component
   late List<SpriteComponent> _sprites = [];
 
@@ -123,6 +125,7 @@ class ObstacleCompNewTry extends PositionComponent
     this.screenSize,
     this.maxHoleSize,
     this.minHoleSize,
+    this.lama,
   ) : super(
           size: size,
           anchor: Anchor.center,
@@ -189,7 +192,7 @@ class ObstacleCompNewTry extends PositionComponent
           position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
           parentSize: fixedLengthList[i].size,
         )
-            /*  ..paint = hitboxPaint
+            /*         ..paint = hitboxPaint
             ..renderShape = true, */
             );
       }
@@ -218,7 +221,10 @@ class ObstacleCompNewTry extends PositionComponent
           ],
           position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
           parentSize: fixedLengthList[i].size,
-        ));
+        )
+            /*     ..paint = hitboxPaint
+            ..renderShape = true, */
+            );
       }
       // body of the obstacle
       else if (!(i >= _holeIndex! && i <= _holeIndex! + _holeSize!)) {
@@ -245,7 +251,10 @@ class ObstacleCompNewTry extends PositionComponent
           ],
           position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
           parentSize: fixedLengthList[i].size,
-        ));
+        )
+            /*            ..paint = hitboxPaint
+            ..renderShape = true, */
+            );
       }
     }
     //sets the position for all Sprite Components
@@ -369,7 +378,7 @@ class ObstacleCompNewTry extends PositionComponent
           position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
           parentSize: fixedLengthList[i].size,
         )
-            /*  ..paint = hitboxPaint
+            /*      ..paint = hitboxPaint
             ..renderShape = true, */
             );
       }
@@ -453,6 +462,9 @@ class ObstacleCompNewTry extends PositionComponent
   Future<void> update(double dt) async {
     super.update(dt);
     position.x += _velocity * dt;
+    if (collidingWith(lama)) {
+      _game.gameOver = true;
+    }
 
     /*    if (position.x < -(screenSize.width + 50)) {
       position.x = 100;
@@ -479,7 +491,7 @@ class ObstacleCompNewTry extends PositionComponent
     print("hiiiit bei  $testpos");
 //> -460 bei obst 2
     if (position.x < -207 && position.x > -360) {
-      _game.gameOver = true;
+      //  _game.gameOver = true; ------------------------------------------------------------------------------pre lösung
     }
   }
 
