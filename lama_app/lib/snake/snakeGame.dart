@@ -1,4 +1,4 @@
- /*import 'dart:ui';
+/*  import 'dart:ui';
 import 'dart:developer' as developer;
 import 'dart:math';
 
@@ -30,8 +30,8 @@ import 'package:lama_app/snake/views/gameOverView.dart';
 /// This class represents the Snake game and its components.
 class SnakeGame extends Game with TapDetector {
   final bool log = true;
-  Background background;
-  SnakeComponent snake;
+ late Background background;
+ late SnakeComponent snake;
 
   /// id of the game
   final gameId = 1;
@@ -40,25 +40,25 @@ class SnakeGame extends Game with TapDetector {
   bool _savedHighScore = false;
 
   /// the personal highScore
-  int userHighScore;
+ late int userHighScore;
 
   /// the all time highScore in this game
-  int allTimeHighScore;
+ late int allTimeHighScore;
 
   /// all apples on the game field
   List<Apple> apples = [];
   Random rnd = Random();
-  ScoreDisplay scoreDisplay;
-  ArrowButton arrowButtonDown;
-  ArrowButton arrowButtonUp;
-  ArrowButton arrowButtonLeft;
-  ArrowButton arrowButtonRight;
-  PauseButton pauseButton;
+ late ScoreDisplay scoreDisplay;
+ late ArrowButton arrowButtonDown;
+ late ArrowButton arrowButtonUp;
+ late ArrowButton arrowButtonLeft;
+ late ArrowButton arrowButtonRight;
+ late PauseButton pauseButton;
 
   int score = 0;
 
-  Size screenSize;
-  double tileSize;
+ late Size screenSize;
+ late double tileSize;
 
   /// max fields on the x axis
   int maxFieldX = 25;
@@ -94,18 +94,18 @@ class SnakeGame extends Game with TapDetector {
   double _relativeButtonSize = 0.16;
 
   /// audioplayer
-  AudioCache _bitePlayer;
+ late AudioCache _bitePlayer;
 
   /// active view for displaying different states
   View activeView = View.home; // views added
-  HomeView homeView;
-  GameOverView gameOverView;
+late  HomeView homeView;
+ late GameOverView gameOverView;
 
   /// context of the game to allow access to the navigator
-  BuildContext context;
+ late BuildContext context;
 
   /// repository to access the database with the logged in user
-  UserRepository userRepo;
+ late UserRepository userRepo;
 
   /// flag to indicate if the highscore already saved
   bool _saved = false;
@@ -120,11 +120,12 @@ class SnakeGame extends Game with TapDetector {
   /// This method is vor the initialization process of the game class.
   /// It runs asynchron and it will flag the [_initialized] to true when its finished.
   void initialize() async {
-    resize(await Flame.util.initialDimensions());
+  resize(size)
+    //resize(await Flame.util.initialDimensions());
     // load _serHighScore
-    userHighScore = await userRepo.getMyHighscore(gameId);
+    userHighScore = (await userRepo.getMyHighscore(gameId))!;
     // load allTimeHighScore
-    allTimeHighScore = await userRepo.getHighscore(gameId);
+    allTimeHighScore = (await userRepo.getHighscore(gameId))!;
 
     background = Background(this, _controlBarRelativeHeight);
     spawnApples();
@@ -204,7 +205,7 @@ class SnakeGame extends Game with TapDetector {
     if (!_savedHighScore) {
       _savedHighScore = true;
       userRepo.addHighscore(Highscore(
-          gameID: gameId, score: score, userID: userRepo.authenticatedUser.id));
+          gameID: gameId, score: score, userID: userRepo.authenticatedUser!.id));
     }
   }
 
@@ -238,12 +239,13 @@ class SnakeGame extends Game with TapDetector {
   }
 
   /// This method spawns [maxApples] [Apple]s on the game field.
-  void spawnApples() {
+  Future<void> spawnApples() async {
+    final sprite = await loadSprite('flame.png');
     while (apples.length < maxApples) {
       var excludePositions = apples.map((e) => e.position).toList();
       excludePositions.addAll(
-          snake?.snakeParts?.map((e) => Position(e.fieldX, e.fieldY)) ?? []);
-      apples.add(Apple(this, excludePositions));
+          snake.snakeParts.map((e) => Position(e.fieldX, e.fieldY)));
+      apples.add(Apple(this, sprite,excludePositions)); //iamge einfügen
     }
   }
 
@@ -327,7 +329,7 @@ class SnakeGame extends Game with TapDetector {
         userRepo.addHighscore(Highscore(
             gameID: 1,
             score: this.score,
-            userID: this.userRepo.authenticatedUser.id));
+            userID: this.userRepo.authenticatedUser?.id));
       }
     }
   }
@@ -340,17 +342,18 @@ class SnakeGame extends Game with TapDetector {
     }
   }
 
-  void onTapDown(TapDownDetails d) {
+  void onTapDown(TapDownInfo info) {
+    TapDownInfo d = info;
     if (!_initialized) {
       return;
     }
 
     if (activeView != View.home) {
-      arrowButtonDown.onTapDown(d);
-      arrowButtonUp.onTapDown(d);
+/*       arrowButtonDown.onTapDown(info);
+      arrowButtonUp.onTapDown(info);
       arrowButtonLeft.onTapDown(d);
       arrowButtonRight.onTapDown(d);
-      pauseButton.onTapDown(d);
+      pauseButton.onTapDown(d); */
     }
 
     // start button
@@ -401,4 +404,4 @@ class SnakeGame extends Game with TapDetector {
     }
   }
 }
- */
+  */

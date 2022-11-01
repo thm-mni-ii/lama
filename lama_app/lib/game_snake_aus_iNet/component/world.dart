@@ -39,7 +39,8 @@ class World extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
             _snake.grow(nextCell);
             _grid.generateFood();
           } else {
-            _snake.move(nextCell);
+            _snake.move(
+                nextCell); //ich brauche die current Cell und die letzte Cell
           }
         }
       } else {
@@ -79,6 +80,28 @@ class World extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
 
   //TODO use vector addition instead of a switch
   Cell _getNextCell() {
+    var row = _snake.head.row;
+    var column = _snake.head.column;
+
+    switch (_snake.direction) {
+      case Direction.up:
+        row--;
+        break;
+      case Direction.right:
+        column++;
+        break;
+      case Direction.down:
+        row++;
+        break;
+      case Direction.left:
+        column--;
+        break;
+    }
+    return _grid.findCell(column, row);
+  }
+
+  Cell _getCurrentCell() {
+    //hierauf wird drauf aufgebaut -> dann wird ein sankeHead an dieser sStelle zu, SnakeBody
     var row = _snake.head.row;
     var column = _snake.head.column;
 

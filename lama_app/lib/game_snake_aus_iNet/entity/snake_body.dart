@@ -7,6 +7,7 @@ import '../config/styles.dart';
 
 class SnakeBody {
   static void render(Canvas canvas, Vector2 location, int cellSize) {
+    //hier muss das img eingefügt werden
     canvas.drawRect(
         Rect.fromPoints(
             findStart(location, cellSize), findEnd(location, cellSize)),

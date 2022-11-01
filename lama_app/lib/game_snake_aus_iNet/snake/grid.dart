@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:lama_app/game_snake_aus_iNet/entity/food2.dart';
 
 import '../component/cell.dart';
 
@@ -33,7 +34,7 @@ class Grid {
     }
   }
 
-  void generateFood() {
+  void generateFood(/* PositionComponent testapfel */) {
     var allCells = _cells.expand((element) => element).toList();
     var emptyCells = allCells
         .where((element) => element.cellType == CellType.empty)

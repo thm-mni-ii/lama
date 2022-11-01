@@ -9,34 +9,42 @@ import 'package:lama_app/snake/models/position.dart';
 /// This class will render the apple and consists of all necessary properties.
 class Apple {
   final SnakeGame _game;
+
   /// the current position of the apple on the game field
-  Position position;
+  late Position position;
+
   /// the [Rect] of the apple
-  Rect _appleRect;
-  Random _rnd = Random();
+  late Rect _appleRect;
+  late Random _rnd = Random();
+
   /// the relative size of the apple related to the games tilesize
-  double _relativeToTile = 0.85;
+  late double _relativeToTile = 0.85;
+
   /// the [Sprite] of the Apple
-  Sprite _imageSprite;
+  late Sprite _imageSprite;
 
   /// The constructor needs the owning game as well as the position the Apple
   /// shouldnt located on.
-  Apple(this._game, [List<Position> excludePositions]) {
-    setRandomPosition(excludePositions);
+  Apple(this._game,this._imageSprite, [List<Position>? excludePositions]) {
+    setRandomPosition(excludePositions!);
 
     _imageSprite = Sprite('png/apple.png');
+   // final sprite = await loadSprite('flame.png');
   }
 
   /// This method sets a new random [Position] of the Apple.
   /// [excludePositions] = this Positions will get ignored when finding a new one
-  void setRandomPosition([List<Position> excludePositions]) {
+  void setRandomPosition([List<Position>? excludePositions]) {
     // new random Position
-    var newPosition = Position(_rnd.nextInt(this._game.maxFieldX) + 1, _rnd.nextInt(this._game.maxFieldY) + this._game.fieldOffsetY + 1);
+    var newPosition = Position(_rnd.nextInt(this._game.maxFieldX) + 1,
+        _rnd.nextInt(this._game.maxFieldY) + this._game.fieldOffsetY + 1);
 
     // exclude a list of Positions
     if (excludePositions != null) {
-      while (excludePositions.any((pos) => pos.x == newPosition.x && pos.y == newPosition.y)) {
-        newPosition = Position(_rnd.nextInt(this._game.maxFieldX) + 1, _rnd.nextInt(this._game.maxFieldY) + this._game.fieldOffsetY + 1);
+      while (excludePositions
+          .any((pos) => pos.x == newPosition.x && pos.y == newPosition.y)) {
+        newPosition = Position(_rnd.nextInt(this._game.maxFieldX) + 1,
+            _rnd.nextInt(this._game.maxFieldY) + this._game.fieldOffsetY + 1);
       }
     }
 
@@ -50,11 +58,15 @@ class Apple {
         this._game.tileSize);
   }
 
+
+
   void render(Canvas c) {
     //c.drawArc(_appleRect.deflate(this.game.tileSize * (1 - _relativeToTile)), 0, 10, true, _applePaint);
 
-    _imageSprite.renderRect(c, _appleRect.deflate(this._game.tileSize * (1 - _relativeToTile)));
+    _imageSprite.renderRect(
+        c, _appleRect.deflate(this._game.tileSize * (1 - _relativeToTile)));
   }
 
   void update(double timeDelta) {}
-} */
+}
+ */

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
+import 'package:flutter/material.dart';
 
 import '../config/styles.dart';
 import '../snake_game.dart';
@@ -24,6 +25,7 @@ class BackGround extends PositionComponent with HasGameRef<SnakeGame> {
   @override
   void render(Canvas canvas) {
     canvas.drawRect(Rect.fromPoints(start, end), Styles.white);
+
     _drawVerticalLines(canvas);
     _drawHorizontalLines(canvas);
   }

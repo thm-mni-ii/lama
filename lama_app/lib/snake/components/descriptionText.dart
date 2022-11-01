@@ -1,20 +1,25 @@
-/* import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/painting.dart';
 import 'package:lama_app/snake/snakeGame.dart';
+
+import '../../game_snake_aus_iNet/snake_game.dart';
 
 /// This class contains a centered description text on an Offset to the top.
 class DescriptionText {
   final SnakeGame game;
+
   /// [TextPainter] of the text
   TextPainter _painter = TextPainter(
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
     maxLines: 10,
   );
+
   /// position of the centered text
-  Offset _position;
+  late Offset _position;
+
   /// offset to the top
-  double _offsetY;
+  late double _offsetY;
 
   DescriptionText(this.game, this._offsetY) {
     resize();
@@ -29,19 +34,19 @@ class DescriptionText {
       ),
       children: <TextSpan>[
         TextSpan(
-          text: 'Versuche soviele Äpfel wie\nmöglich zu essen ohne dich\nselber zu beißen oder die Wand\nzu berühren!',
+          text:
+              'Versuche soviele Äpfel wie\nmöglich zu essen ohne dich\nselber zu beißen oder die Wand\nzu berühren!',
           style: TextStyle(
               fontSize: this.game.screenSize.height * 0.03,
-              fontFamily: 'Serif'
-          ),
+              fontFamily: 'Serif'),
         ),
         TextSpan(
-          text: '\nMein Highscore: ${game.userHighScore}\nHighscore: ${game.allTimeHighScore}',
+          text:
+              '\nMein Highscore: ${game.userHighScore}\nHighscore: ${game.allTimeHighScore}',
           style: TextStyle(
               fontSize: this.game.screenSize.height * 0.03,
               fontFamily: 'Serif',
-              fontWeight: FontWeight.bold
-          ),
+              fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -61,4 +66,4 @@ class DescriptionText {
   }
 
   void update(double t) {}
-} */
+}
