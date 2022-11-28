@@ -279,7 +279,9 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                     child: IconButton(
                       icon: const Icon(Icons.check),
                       color: Colors.green,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pop(vocabList1);
+                      },
                     ),
                   ),
                 ],

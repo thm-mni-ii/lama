@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lama_app/app/bloc/add_vocab_bloc.dart';
 import 'package:lama_app/app/bloc/create_taskset_bloc.dart';
+import 'package:lama_app/app/screens/add_vocab_screen.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/bloc/taskset_create_tasklist_bloc.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_doubleTextFormfield/dynamic_doubleTextFormFields_widget.dart';
 import 'package:lama_app/app/screens/admin_menu_folder/create_tasks/widgets/dynamic_doubleTextFormfield/two_controller.dart';
@@ -37,6 +39,8 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
   bool? randomSide = false;
 
   bool newTask = true;
+
+  var vocabList1 = ['test'];
   @override
   Widget build(BuildContext context) {
     if (widget.task != null && newTask) {
@@ -74,6 +78,26 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
+                        ListTile(
+                          title: Text("Nehme Bild auf"),
+                          trailing: Icon(Icons.add),
+                          onTap: () async {
+                            final vocabList1 = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (BuildContext context) =>
+                                      AddVocabBloc(),
+                                  child: AddVocabScreen(),
+                                ),
+                              ),
+                            );
+                            setState(() {
+                              if (vocabList1 != null)
+                                this.vocabList1 = vocabList1;
+                            });
+                          },
+                        ),
                         DynamicDoubleTextFormFields(
                           controllers: _controllers,
                           fields: _fields,
@@ -93,7 +117,8 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                         HeadLineWidget("Erreichbare Lamacoins"),
                         LamacoinInputWidget(
                           numberController: _rewardController,
-                        )
+                        ),
+                        Text(vocabList1[0])
                       ],
                     ),
                   ),
@@ -133,7 +158,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                   BlocProvider.of<TasksetCreateTasklistBloc>(context)
                       .add(EditTaskInTaskList(widget.index, taskMatchCategory));
                 }
-               print(_controllers[0].controller1!.text.toString());
+                print(_controllers[0].controller1!.text.toString());
                 Navigator.pop(context);
               }
             },
