@@ -41,7 +41,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
 
   bool newTask = true;
 
-  var vocabList1 = ['test'];
+  late var complete_vocabList = [];
   @override
   Widget build(BuildContext context) {
     if (widget.task != null && newTask) {
@@ -91,7 +91,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                               Text("Foto machen oder Bild aus Galerie wählen"),
                           trailing: Icon(Icons.add),
                           onTap: () async {
-                            final vocabList1 = await Navigator.push(
+                            final complete_vocabList = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => BlocProvider(
@@ -102,8 +102,8 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                               ),
                             );
                             setState(() {
-                              if (vocabList1 != null)
-                                this.vocabList1 = vocabList1;
+                              if (complete_vocabList != null)
+                                this.complete_vocabList = complete_vocabList;
                             });
                           },
                         ),
@@ -127,7 +127,13 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                         LamacoinInputWidget(
                           numberController: _rewardController,
                         ),
-                        Text(vocabList1[0])
+                        if (!complete_vocabList.isEmpty)
+                          Column(
+                            children: [
+                              Text(complete_vocabList[0]),
+                              Text(complete_vocabList[1]),
+                            ],
+                          ),
                       ],
                     ),
                   ),

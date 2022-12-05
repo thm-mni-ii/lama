@@ -31,6 +31,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
   late String scannedText = ' ';
   final vocabList1 = <String>[];
   final vocabList2 = <String>[];
+  final complete_vocabList = <String>[];
   late List<Pair<String?, String?>> vocabPairList;
   XFile? imageFile;
   List<String> testList = ['wort1', 'wort1', 'wort1'];
@@ -290,7 +291,9 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                         icon: const Icon(Icons.check),
                         color: Colors.green,
                         onPressed: () {
-                          Navigator.of(context).pop(vocabList1);
+                          print(complete_vocabList);
+                          Navigator.of(context).pop(complete_vocabList);
+                          
                         },
                       ),
                     ),
@@ -346,6 +349,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
   void getRecognisedText(CroppedFile? image) async {
     vocabList1.clear();
     vocabList2.clear();
+    complete_vocabList.clear();
     final inputImage = InputImage.fromFilePath(image!.path);
     final textDetector = GoogleMlKit.vision.textDetector();
     RecognisedText recognisedText = await textDetector.processImage(inputImage);
@@ -382,8 +386,10 @@ class AddVocabScreenState extends State<AddVocabScreen> {
       if (isWord(block.text)) {
         if (centerPointList[x] < centerPoint) {
           vocabList1.add(block.text);
+          complete_vocabList.add(block.text);
         } else {
           vocabList2.add(block.text);
+          complete_vocabList.add(block.text);
         }
       }
       x++;
@@ -554,9 +560,13 @@ class AddVocabScreenState extends State<AddVocabScreen> {
     if (list == 1) {
       vocabList2.insert(index, vocabList1[index]);
       vocabList1.removeAt(index);
+       complete_vocabList.insert(index, vocabList1[index]);
+      complete_vocabList.removeAt(index);
     } else {
       vocabList1.insert(index, vocabList2[index]);
       vocabList2.removeAt(index);
+       complete_vocabList.insert(index, vocabList2[index]);
+      complete_vocabList.removeAt(index);
     }
   }
 
