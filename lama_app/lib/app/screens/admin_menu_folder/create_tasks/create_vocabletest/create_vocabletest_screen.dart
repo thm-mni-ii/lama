@@ -49,7 +49,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
       _rewardController.text = widget.task!.reward.toString();
       int controllersLength = widget.task!.vocablePairs.length;
       updateDynamicFields(controllersLength, widget.task!.vocablePairs);
-      updateDynamicFields(complete_vocabList.length, scannedPairs);
+      //updateDynamicFields(complete_vocabList.length, scannedPairs);
 
       newTask = false;
     }
@@ -103,6 +103,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                               }
                               updateDynamicFields(
                                   scannedPairs.length, scannedPairs);
+                              this.scannedPairs = [];
                             });
                           },
                         ),
@@ -197,8 +198,14 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
       twoController.controller2 = controller2;
       _controllers.add(twoController);
       _fields.add(TwoTextfields(
-        controller1: _controllers[i].controller1,
-        controller2: _controllers[i].controller2,
+        controller1: _controllers
+            .where((element) => element.controller1 == controller1)
+            .first
+            .controller1,
+        controller2: _controllers
+            .where((element) => element.controller2 == controller2)
+            .first
+            .controller2,
         index: i,
         labelText1: "Englisch",
         labelText2: "Deutsch",
