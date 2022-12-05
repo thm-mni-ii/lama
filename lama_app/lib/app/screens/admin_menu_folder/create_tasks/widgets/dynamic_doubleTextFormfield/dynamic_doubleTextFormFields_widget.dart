@@ -8,10 +8,31 @@ class DynamicDoubleTextFormFields extends StatefulWidget {
   final String? labelText1;
   final String? labelText2;
   DynamicDoubleTextFormFields(
-      {Key? key, required this.controllers, required this.fields, this.labelText1, this.labelText2})
+      {Key? key,
+      required this.controllers,
+      required this.fields,
+      this.labelText1,
+      this.labelText2})
       : super(key: key);
   @override
   State<StatefulWidget> createState() => DynamicDoubleTextFormFieldsState();
+  static loadListFromTask(List<TextEditingController> controllers,
+      List<TextFormField> fields, List<String> listFromTask) {
+    int controllersLength = listFromTask.length;
+    print(controllersLength);
+    for (int i = 0; i < controllersLength; i++) {
+      controllers.add(TextEditingController(text: listFromTask[i]));
+
+      fields.add(TextFormField(
+        controller: controllers[i],
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+          border: OutlineInputBorder(),
+          labelText: "${fields.length + 1}. Begriff",
+        ),
+      ));
+    }
+  }
 }
 
 class DynamicDoubleTextFormFieldsState
@@ -25,9 +46,13 @@ class DynamicDoubleTextFormFieldsState
           trailing: Icon(Icons.add),
           onTap: () {
             final TwoControllers controller = TwoControllers();
+            final TextEditingController controller1 = TextEditingController();
+            final TextEditingController controller2 = TextEditingController();
+            controller.controller1 = controller1;
+            controller.controller2 = controller2;
             final TwoTextfields textFormField = TwoTextfields(
-              controller1: controller.controller1,
-              controller2: controller.controller2,
+              controller1: controller1,
+              controller2: controller2,
               index: (widget.fields.length + 1),
               labelText1: widget.labelText1,
               labelText2: widget.labelText2,

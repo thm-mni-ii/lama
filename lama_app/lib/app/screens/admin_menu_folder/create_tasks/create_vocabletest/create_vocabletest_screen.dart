@@ -14,6 +14,7 @@ import 'package:lama_app/app/task-system/task.dart';
 import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/key_generator.dart';
+import 'package:lama_app/util/pair.dart';
 
 class CreateVocabletestScreen extends StatefulWidget {
   final int? index;
@@ -37,6 +38,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
   TextEditingController controller1 = TextEditingController();
   TextEditingController controller2 = TextEditingController();
   bool? randomSide = false;
+  List<Pair<String?, String?>> pairs = [];
 
   bool newTask = true;
 
@@ -134,6 +136,10 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                 primary: LamaColors.findSubjectColor(
                     blocTaskset.subject ?? "normal")),
             onPressed: () {
+              _controllers.forEach((element) {
+                pairs.add(
+                    Pair(element.controller1!.text, element.controller2!.text));
+              });
               if (_formKey.currentState!.validate()) {
                 TaskVocableTest taskMatchCategory = TaskVocableTest(
                   widget.task?.id ??
@@ -142,7 +148,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                   int.parse(_rewardController.text),
                   "Translate the shown word!",
                   3,
-                  [],
+                  pairs,
                   randomSide,
                   "Englisch",
                   "Deutsch",
