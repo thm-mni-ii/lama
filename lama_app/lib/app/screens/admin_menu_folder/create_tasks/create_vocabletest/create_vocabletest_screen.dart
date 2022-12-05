@@ -49,10 +49,14 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
       _rewardController.text = widget.task!.reward.toString();
       int controllersLength = widget.task!.vocablePairs.length;
       for (int i = 0; i < controllersLength; i++) {
+        controller1.text = widget.task!.vocablePairs[i].a!;
+        controller2.text = widget.task!.vocablePairs[i].b!;
+        twoController.controller1 = controller1;
+        twoController.controller2 = controller2;
         _controllers.add(twoController);
         _fields.add(TwoTextfields(
-          controller1: _controllers[i].controller1,
-          controller2: _controllers[i].controller2,
+          controller1: controller1,
+          controller2: controller2,
           index: i,
           initialValue1: widget.task!.vocablePairs[i].a,
           initialValue2: widget.task!.vocablePairs[i].b,
