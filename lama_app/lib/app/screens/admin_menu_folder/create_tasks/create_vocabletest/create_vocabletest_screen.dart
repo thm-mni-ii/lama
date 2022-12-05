@@ -33,10 +33,9 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _rewardController = TextEditingController();
   List<TwoControllers> _controllers = [];
-  TwoControllers twoController = TwoControllers();
+
   List<TwoTextfields> _fields = [];
-  TextEditingController controller1 = TextEditingController();
-  TextEditingController controller2 = TextEditingController();
+
   bool randomSide = false;
   List<Pair<String?, String?>> pairs = [];
 
@@ -49,17 +48,20 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
       _rewardController.text = widget.task!.reward.toString();
       int controllersLength = widget.task!.vocablePairs.length;
       for (int i = 0; i < controllersLength; i++) {
+        TwoControllers twoController = TwoControllers();
+        TextEditingController? controller1 = TextEditingController();
+        TextEditingController? controller2 = TextEditingController();
         controller1.text = widget.task!.vocablePairs[i].a!;
         controller2.text = widget.task!.vocablePairs[i].b!;
         twoController.controller1 = controller1;
         twoController.controller2 = controller2;
         _controllers.add(twoController);
         _fields.add(TwoTextfields(
-          controller1: controller1,
-          controller2: controller2,
+          controller1: _controllers[i].controller1,
+          controller2: _controllers[i].controller2,
           index: i,
-          initialValue1: widget.task!.vocablePairs[i].a,
-          initialValue2: widget.task!.vocablePairs[i].b,
+          labelText1: "Englisch",
+          labelText2: "Deutsch",
         ));
       }
       newTask = false;
@@ -85,7 +87,8 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                     child: Column(
                       children: [
                         ListTile(
-                          title: Text("Foto machen oder Bild aus Galerie wählen"),
+                          title:
+                              Text("Foto machen oder Bild aus Galerie wählen"),
                           trailing: Icon(Icons.add),
                           onTap: () async {
                             final vocabList1 = await Navigator.push(
@@ -168,7 +171,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                   BlocProvider.of<TasksetCreateTasklistBloc>(context)
                       .add(EditTaskInTaskList(widget.index, taskMatchCategory));
                 }
-                print(_controllers[0].controller1!.text.toString());
+
                 Navigator.pop(context);
               }
             },

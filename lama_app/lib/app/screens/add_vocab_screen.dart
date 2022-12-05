@@ -66,7 +66,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
               //   Image.file(
               //     File(imageFile!.path),
               //   ),
-              if (vocabList1.isEmpty||vocabList2.isEmpty)
+              if (vocabList1.isEmpty || vocabList2.isEmpty)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -75,7 +75,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                       padding: const EdgeInsets.only(top: 10),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: LamaColors.orangeAccent),
+                            primary: LamaColors.orangeAccent),
                         onPressed: () {
                           getImage(ImageSource.gallery);
                           BlocProvider.of<AddVocabBloc>(context)
@@ -103,7 +103,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                       padding: const EdgeInsets.only(top: 10),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: LamaColors.orangeAccent),
+                            primary: LamaColors.orangeAccent),
                         onPressed: () {
                           getImage(ImageSource.camera);
                         },
@@ -130,7 +130,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
               if (!vocabList1.isEmpty || !vocabList2.isEmpty)
                 BlocBuilder<AddVocabBloc, AddVocabState>(
                   builder: (context, state) {
-                    return Column(                         
+                    return Column(
                       children: [
                         Container(
                           margin: EdgeInsets.fromLTRB(5, 10, 0, 5),
@@ -267,7 +267,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                   IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
               child: Row(
                 children: <Widget>[
-                  if (!vocabList1.isEmpty||vocabList2.isEmpty)
+                  if (!vocabList1.isEmpty || vocabList2.isEmpty)
                     Container(
                       width: MediaQuery.of(context).size.width / 2 - 1,
                       child: IconButton(
@@ -283,7 +283,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                   //     width: 2,
                   //     height: MediaQuery.of(context).size.height / 15,
                   //     color: Colors.grey),
-                  if (!vocabList1.isEmpty||vocabList2.isEmpty)
+                  if (!vocabList1.isEmpty || vocabList2.isEmpty)
                     Container(
                       width: MediaQuery.of(context).size.width / 2 - 1,
                       child: IconButton(
