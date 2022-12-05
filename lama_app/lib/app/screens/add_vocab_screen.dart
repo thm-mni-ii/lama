@@ -49,7 +49,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
 
         // resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: LamaColors.mainPink,
+          backgroundColor: LamaColors.orangeAccent,
           title: const Text("Vokabeln hinzufügen"),
         ),
         body: SingleChildScrollView(
@@ -66,106 +66,114 @@ class AddVocabScreenState extends State<AddVocabScreen> {
               //   Image.file(
               //     File(imageFile!.path),
               //   ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    padding: const EdgeInsets.only(top: 10),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        getImage(ImageSource.gallery);
-                        BlocProvider.of<AddVocabBloc>(context)
-                            .add(ReorderEvent());
-                      },
-                      child: Container(
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.image,
-                              size: 30,
-                            ),
-                            Text(
-                              "Gallery",
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey[600]),
-                            )
-                          ],
+              if (vocabList1.isEmpty||vocabList2.isEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.only(top: 10),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: LamaColors.orangeAccent),
+                        onPressed: () {
+                          getImage(ImageSource.gallery);
+                          BlocProvider.of<AddVocabBloc>(context)
+                              .add(ReorderEvent());
+                        },
+                        child: Container(
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.image,
+                                size: 30,
+                              ),
+                              Text(
+                                "Galerie",
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey[600]),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    padding: const EdgeInsets.only(top: 10),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        getImage(ImageSource.camera);
-                      },
-                      child: Container(
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.camera_alt,
-                              size: 30,
-                            ),
-                            Text(
-                              "Camera",
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey[600]),
-                            )
-                          ],
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.only(top: 10),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: LamaColors.orangeAccent),
+                        onPressed: () {
+                          getImage(ImageSource.camera);
+                        },
+                        child: Container(
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.camera_alt,
+                                size: 30,
+                              ),
+                              Text(
+                                "Kamera",
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey[600]),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
               if (!vocabList1.isEmpty || !vocabList2.isEmpty)
                 BlocBuilder<AddVocabBloc, AddVocabState>(
                   builder: (context, state) {
-                    return Column(
+                    return Column(                         
                       children: [
-                        Row(
-                          children: [
-                            Expanded(child: Text('Vokabeln ordnen/löschen')),
-                            Radio(
-                              value: 0,
-                              groupValue: selectedValue,
-                              onChanged: (value) => setState(() {
-                                context
-                                    .read<AddVocabBloc>()
-                                    .add(ReorderEvent());
-                                // BlocProvider.of<AddVocabBloc>(context)
-                                //     .add(EditableEvent(AddVocabBloc().editable));
-                                selectedValue = 0;
-                                // print(AddVocabBloc().editable);
-                                //print(listType);
-                              }),
-                            ),
-                            Expanded(
-                                child: Text('Vokabeln editieren/hinzufügen')),
-                            Radio(
-                              value: 1,
-                              groupValue: selectedValue,
-                              onChanged: (value) => setState(() {
-                                context
-                                    .read<AddVocabBloc>()
-                                    .add(EditableEvent());
-                                selectedValue = 1;
-                              }),
-                            ),
-                            Expanded(child: Text('Vokabeln verschieben')),
-                            Radio(
-                              value: 2,
-                              groupValue: selectedValue,
-                              onChanged: (value) => setState(() {
-                                context.read<AddVocabBloc>().add(SwapEvent());
-                                selectedValue = 2;
-                              }),
-                            ),
-                          ],
+                        Container(
+                          margin: EdgeInsets.fromLTRB(5, 10, 0, 5),
+                          child: Row(
+                            children: [
+                              Expanded(child: Text('Vokabeln ordnen/löschen')),
+                              Radio(
+                                value: 0,
+                                groupValue: selectedValue,
+                                onChanged: (value) => setState(() {
+                                  context
+                                      .read<AddVocabBloc>()
+                                      .add(ReorderEvent());
+                                  // BlocProvider.of<AddVocabBloc>(context)
+                                  //     .add(EditableEvent(AddVocabBloc().editable));
+                                  selectedValue = 0;
+                                  // print(AddVocabBloc().editable);
+                                  //print(listType);
+                                }),
+                              ),
+                              Expanded(
+                                  child: Text('Vokabeln editieren/hinzufügen')),
+                              Radio(
+                                value: 1,
+                                groupValue: selectedValue,
+                                onChanged: (value) => setState(() {
+                                  context
+                                      .read<AddVocabBloc>()
+                                      .add(EditableEvent());
+                                  selectedValue = 1;
+                                }),
+                              ),
+                              Expanded(child: Text('Vokabeln verschieben')),
+                              Radio(
+                                value: 2,
+                                groupValue: selectedValue,
+                                onChanged: (value) => setState(() {
+                                  context.read<AddVocabBloc>().add(SwapEvent());
+                                  selectedValue = 2;
+                                }),
+                              ),
+                            ],
+                          ),
                         ),
                         (state is EditableState)
                             ? Row(
@@ -259,31 +267,33 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                   IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
               child: Row(
                 children: <Widget>[
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2 - 1,
-                    child: IconButton(
-                      icon: const Icon(Icons.close),
-                      color: Colors.red,
-                      onPressed: () {
-                        context.read<AddVocabBloc>().add(AddVocabCamEvent());
-                      },
+                  if (!vocabList1.isEmpty||vocabList2.isEmpty)
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2 - 1,
+                      child: IconButton(
+                        icon: const Icon(Icons.close),
+                        color: Colors.red,
+                        onPressed: () {
+                          context.read<AddVocabBloc>().add(AddVocabCamEvent());
+                        },
+                      ),
                     ),
-                  ),
                   // Container(
                   //     alignment: Alignment.center,
                   //     width: 2,
                   //     height: MediaQuery.of(context).size.height / 15,
                   //     color: Colors.grey),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2 - 1,
-                    child: IconButton(
-                      icon: const Icon(Icons.check),
-                      color: Colors.green,
-                      onPressed: () {
-                        Navigator.of(context).pop(vocabList1);
-                      },
+                  if (!vocabList1.isEmpty||vocabList2.isEmpty)
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2 - 1,
+                      child: IconButton(
+                        icon: const Icon(Icons.check),
+                        color: Colors.green,
+                        onPressed: () {
+                          Navigator.of(context).pop(vocabList1);
+                        },
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -309,7 +319,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
           uiSettings: [
             AndroidUiSettings(
                 toolbarTitle: 'Cropper',
-                toolbarColor: Colors.deepOrange,
+                toolbarColor: LamaColors.orangeAccent,
                 toolbarWidgetColor: Colors.white,
                 initAspectRatio: CropAspectRatioPreset.original,
                 lockAspectRatio: false),
