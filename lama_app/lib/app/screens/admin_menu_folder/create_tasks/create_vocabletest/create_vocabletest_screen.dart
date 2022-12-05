@@ -41,29 +41,16 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
 
   bool newTask = true;
 
-  late var complete_vocabList = [];
+  List<String> complete_vocabList = [];
+  List<Pair<String?, String?>> scannedPairs = [];
   @override
   Widget build(BuildContext context) {
     if (widget.task != null && newTask) {
       _rewardController.text = widget.task!.reward.toString();
       int controllersLength = widget.task!.vocablePairs.length;
-      for (int i = 0; i < controllersLength; i++) {
-        TwoControllers twoController = TwoControllers();
-        TextEditingController? controller1 = TextEditingController();
-        TextEditingController? controller2 = TextEditingController();
-        controller1.text = widget.task!.vocablePairs[i].a!;
-        controller2.text = widget.task!.vocablePairs[i].b!;
-        twoController.controller1 = controller1;
-        twoController.controller2 = controller2;
-        _controllers.add(twoController);
-        _fields.add(TwoTextfields(
-          controller1: _controllers[i].controller1,
-          controller2: _controllers[i].controller2,
-          index: i,
-          labelText1: "Englisch",
-          labelText2: "Deutsch",
-        ));
-      }
+      updateDynamicFields(controllersLength, widget.task!.vocablePairs);
+      updateDynamicFields(complete_vocabList.length, scannedPairs);
+
       newTask = false;
     }
 
@@ -91,7 +78,8 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                               Text("Foto machen oder Bild aus Galerie wählen"),
                           trailing: Icon(Icons.add),
                           onTap: () async {
-                            final complete_vocabList = await Navigator.push(
+                            final List<String> complete_vocabList =
+                                await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => BlocProvider(
@@ -104,6 +92,17 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                             setState(() {
                               if (complete_vocabList != null)
                                 this.complete_vocabList = complete_vocabList;
+                              double pairIndex = complete_vocabList.length / 2;
+
+                              for (int i = 0; i < pairIndex; i++) {
+                                //throws error if complete_vocabList is uneven number
+                                //editing vocabs after scanning doesnt seem to work
+                                scannedPairs.add(Pair(
+                                    complete_vocabList[i + pairIndex.toInt()],
+                                    complete_vocabList[i]));
+                              }
+                              updateDynamicFields(
+                                  scannedPairs.length, scannedPairs);
                             });
                           },
                         ),
@@ -184,5 +183,26 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
             child: Text(newTask ? "Task hinzufügen" : "verändere Task"),
           ),
         ));
+  }
+
+  void updateDynamicFields(
+      int controllersLength, List<Pair<String?, String?>> vocablePairs) {
+    for (int i = 0; i < controllersLength; i++) {
+      TwoControllers twoController = TwoControllers();
+      TextEditingController? controller1 = TextEditingController();
+      TextEditingController? controller2 = TextEditingController();
+      controller1.text = vocablePairs[i].a!;
+      controller2.text = vocablePairs[i].b!;
+      twoController.controller1 = controller1;
+      twoController.controller2 = controller2;
+      _controllers.add(twoController);
+      _fields.add(TwoTextfields(
+        controller1: _controllers[i].controller1,
+        controller2: _controllers[i].controller2,
+        index: i,
+        labelText1: "Englisch",
+        labelText2: "Deutsch",
+      ));
+    }
   }
 }
