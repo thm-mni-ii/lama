@@ -37,7 +37,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
   List<TwoTextfields> _fields = [];
   TextEditingController controller1 = TextEditingController();
   TextEditingController controller2 = TextEditingController();
-  bool? randomSide = false;
+  bool randomSide = false;
   List<Pair<String?, String?>> pairs = [];
 
   bool newTask = true;
@@ -112,7 +112,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                           value: randomSide,
                           onChanged: (bool? value) {
                             setState(() {
-                              randomSide = value;
+                              randomSide = value!;
                             });
                           },
                         ),

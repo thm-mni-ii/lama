@@ -25,25 +25,25 @@ class VocableTestTaskBloc
     resultList =
         List.generate(task.vocablePairs.length, (_) => null, growable: false);
     on<VocableTestTaskGetWordEvent>((event, emit) async {
-      if (task.randomizeSide!) {
+      if (task.randomizeSide) {
         var rng = Random();
         int side = rng.nextInt(2);
         if (side == 0) {
-          emit(VocableTestTaskTranslationState(
-              task.vocablePairs[curWordPair].a, resultList,task.questionLanguage));
+          emit(VocableTestTaskTranslationState(task.vocablePairs[curWordPair].a,
+              resultList, task.questionLanguage));
           sideUsed = 0;
         } else {
           emit(VocableTestTaskTranslationState(
-              task.vocablePairs[curWordPair].b, resultList,"Deutsch"));
+              task.vocablePairs[curWordPair].b, resultList, "Deutsch"));
           sideUsed = 1;
         }
       } else {
         emit(VocableTestTaskTranslationState(
-            task.vocablePairs[curWordPair].a, resultList,"Deutsch"));
+            task.vocablePairs[curWordPair].a, resultList, "Deutsch"));
       }
     });
     on<VocableTestTaskAnswerEvent>((event, emit) async {
-      if (task.randomizeSide!) {
+      if (task.randomizeSide) {
         if (sideUsed == 0) {
           if (event.answer == task.vocablePairs[curWordPair].b) {
             resultList![curWordPair] = true;
@@ -66,21 +66,23 @@ class VocableTestTaskBloc
       }
       curWordPair++;
       if (curWordPair < task.vocablePairs.length) {
-        if (task.randomizeSide!) {
+        if (task.randomizeSide) {
           var rng = Random();
           int side = rng.nextInt(2);
           if (side == 0) {
             emit(VocableTestTaskTranslationState(
-                task.vocablePairs[curWordPair].a, resultList,task.questionLanguage));
+                task.vocablePairs[curWordPair].a,
+                resultList,
+                task.questionLanguage));
             sideUsed = 0;
           } else {
             emit(VocableTestTaskTranslationState(
-                task.vocablePairs[curWordPair].b, resultList,"Deutsch"));
+                task.vocablePairs[curWordPair].b, resultList, "Deutsch"));
             sideUsed = 1;
           }
         } else {
           emit(VocableTestTaskTranslationState(
-              task.vocablePairs[curWordPair].a, resultList,"Deutsch"));
+              task.vocablePairs[curWordPair].a, resultList, "Deutsch"));
         }
       } else
         emit(VocableTestFinishedTaskState(resultList));
@@ -130,7 +132,8 @@ class VocableTestTaskTranslationState extends VocableTestTaskState {
   String? wordToTranslate;
   String? lang;
 
-  VocableTestTaskTranslationState(this.wordToTranslate, this.resultList, this.lang);
+  VocableTestTaskTranslationState(
+      this.wordToTranslate, this.resultList, this.lang);
 }
 
 ///Subclass of [VocableTestTaskState] for [VocableTestTaskBloc]
