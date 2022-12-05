@@ -81,7 +81,7 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                     child: Column(
                       children: [
                         ListTile(
-                          title: Text("Nehme Bild auf"),
+                          title: Text("Foto machen oder Bild aus Galerie wählen"),
                           trailing: Icon(Icons.add),
                           onTap: () async {
                             final vocabList1 = await Navigator.push(
