@@ -20,10 +20,12 @@ class VocableTestTaskBloc
   int curWordPair = 0;
   //Which "side" is shown word->translation, translation->word
   int sideUsed = 0;
-
+  int vocab_amount = 3;
   VocableTestTaskBloc(this.task) : super(VocableTestTaskInitState()) {
-    resultList =
-        List.generate(task.vocablePairs.length, (_) => null, growable: false);
+    // resultList =
+    //     List.generate(task.vocablePairs.length, (_) => null, growable: false);
+    resultList = List.generate(vocab_amount, (_) => null, growable: false);
+    task.vocablePairs.shuffle();
     on<VocableTestTaskGetWordEvent>((event, emit) async {
       if (task.randomizeSide) {
         var rng = Random();
@@ -65,7 +67,7 @@ class VocableTestTaskBloc
         }
       }
       curWordPair++;
-      if (curWordPair < task.vocablePairs.length) {
+      if (curWordPair < vocab_amount) {
         if (task.randomizeSide) {
           var rng = Random();
           int side = rng.nextInt(2);
