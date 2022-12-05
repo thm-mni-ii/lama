@@ -9,6 +9,7 @@ import 'package:lama_app/app/bloc/add_vocab_bloc.dart';
 import 'package:lama_app/app/event/add_vocab_events.dart';
 import 'package:lama_app/app/screens/add_vocab_crop.dart';
 import 'package:lama_app/app/state/add_vocab_state.dart';
+import 'package:lama_app/tetris/tetrisGame.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -275,7 +276,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                         icon: const Icon(Icons.close),
                         color: Colors.red,
                         onPressed: () {
-                          context.read<AddVocabBloc>().add(AddVocabCamEvent());
+                          Navigator.of(context).pop(complete_vocabList);
                         },
                       ),
                     ),
@@ -291,9 +292,31 @@ class AddVocabScreenState extends State<AddVocabScreen> {
                         icon: const Icon(Icons.check),
                         color: Colors.green,
                         onPressed: () {
-                          setCompleteVocabList(vocabList1, vocabList2);
-                          print(complete_vocabList);
-                          Navigator.of(context).pop(complete_vocabList);
+                          if (vocabList1.length != vocabList2.length) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                duration: Duration(seconds: 2),
+                                content: Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 15,
+                                    alignment: Alignment.bottomCenter,
+                                    child: Center(
+                                        child: FittedBox(
+                                      fit: BoxFit.fitWidth,
+                                      child: Text(
+                                        "Es müssen auf beiden Seiten gleichviele Vokabeln stehen!",
+                                        style: LamaTextTheme.getStyle(),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ))),
+                                backgroundColor: LamaColors.mainPink,
+                              ),
+                            );
+                          } else {
+                            setCompleteVocabList(vocabList1, vocabList2);
+                            print(complete_vocabList);
+                            Navigator.of(context).pop(complete_vocabList);
+                          }
                         },
                       ),
                     ),
