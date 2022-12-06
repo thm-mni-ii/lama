@@ -129,26 +129,6 @@ class ChooseTasksetScreenState extends State<ChooseTasksetScreen> {
                 ),
               ),
             ),
-            if (chosenSubject == 'Englisch') ...[
-              Positioned(
-                bottom: 20,
-                right: 20,
-                child: FloatingActionButton.extended(
-                    icon: Icon(Icons.post_add),
-                    label: Text('Neue Vokabeln hinzufügen'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (BuildContext context) => AddVocabBloc(),
-                            child: AddVocabScreen(),
-                          ),
-                        ),
-                      ).then((value) => (setState(() {})));
-                    }),
-              ),
-            ]
           ],
         ),
       ),

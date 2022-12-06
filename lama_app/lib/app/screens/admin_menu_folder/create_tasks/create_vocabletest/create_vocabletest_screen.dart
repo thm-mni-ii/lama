@@ -127,13 +127,6 @@ class CreateVocabletestScreenState extends State<CreateVocabletestScreen> {
                         LamacoinInputWidget(
                           numberController: _rewardController,
                         ),
-                        if (!complete_vocabList.isEmpty)
-                          Column(
-                            children: [
-                              Text(complete_vocabList[0]),
-                              Text(complete_vocabList[1]),
-                            ],
-                          ),
                       ],
                     ),
                   ),
