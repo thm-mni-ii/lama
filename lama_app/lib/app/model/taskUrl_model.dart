@@ -26,10 +26,18 @@ class TaskUrl {
         TaskUrlFields.columnTaskUrl: url,
       };
 
+  ///Map the variables
+  ///
+  ///{@return} Map<String, dynamic>
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{TaskUrlFields.columnTaskUrl: url};
+    return map;
+  }
+
   ///get the data from the map
   ///
   ///{@param} Map<String, dynamic> map
-  TaskUrl.fromMap(Map<String, dynamic> map) {
+  TaskUrl.fromMap(Map<dynamic, dynamic> map) {
     id = map[TaskUrlFields.columnId];
     url = map[TaskUrlFields.columnTaskUrl];
   }

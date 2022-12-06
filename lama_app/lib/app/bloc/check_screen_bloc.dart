@@ -1,18 +1,32 @@
+import 'dart:convert';
+
+import 'dart:io';
+
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lama_app/app/bloc/create_admin_bloc.dart';
+import 'package:lama_app/app/bloc/create_user_bloc.dart';
+import 'package:lama_app/app/bloc/taskset_options_bloc.dart';
 import 'package:lama_app/app/bloc/user_selection_bloc.dart';
+import 'package:lama_app/app/bloc/userlist_url_bloc.dart';
+
 import 'package:lama_app/app/event/check_screen_event.dart';
+import 'package:lama_app/app/model/taskUrl_model.dart';
 import 'package:lama_app/app/model/user_model.dart';
 import 'package:lama_app/app/repository/lamafacts_repository.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/app/screens/create_admin_screen.dart';
 import 'package:lama_app/app/screens/home_screen.dart';
 import 'package:lama_app/app/screens/user_selection_screen.dart';
+import 'package:lama_app/app/screens/welcome_screen.dart';
 import 'package:lama_app/app/state/check_screen_state.dart';
+import 'package:lama_app/app/task-system/taskset_validator.dart';
 import 'package:lama_app/db/database_provider.dart';
+import 'package:lama_app/util/input_validation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 ///[Bloc] for the [CheckScreen]
 ///
@@ -31,7 +45,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
       emit(await _hasAdmin(event.context));
     });
     on<DSGVOAccepted>((event, emit) async {
-      emit(await _loadWelcome(event.context));
+      await _loadWelcome(event.context);
     });
     on<CreateAdminEvent>((event, emit) async {
       emit(await _navigator(event.context));
@@ -41,10 +55,39 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
     });
     on<LoadGuest>((event, emit) async {
       ///wait for tasks to load
-      await Future.delayed(Duration(milliseconds: 2000));
+      if (event.doWait) await Future.delayed(Duration(milliseconds: 2000));
       await _loadGuest(event.context, event.user);
     });
+    on<LoadWelcomeScreen>((event, emit) async {
+      await _loadWelcome(event.context);
+    });
+    on<InsertSetupEvent>((event, emit) async {
+      emit(await _insertSetup(event.context));
+      //emit(LoadSetup(_userlistUrl, _tasksetUrl));
+    });
+    on<SetupChangeUrl>((event, emit) async {
+      _setupUrl = event.setupUrl;
+      emit(ChangeUrl());
+    });
+    on<DisplaySetupError>((event, emit) async {
+      emit(SetupError(event.error, event.errorType));
+    });
+    on<UrlCheckSuccess>((event, emit) async {
+      if (event.hasSuccess != _hasSuccess && _hasSuccess != null) {
+        emit(SetupSuccessState());
+        _hasSuccess = null;
+      } else {
+        _hasSuccess = event.hasSuccess;
+      }
+    });
   }
+  //used to update the setup url when needed
+  String? _setupUrl;
+  String? _userlistUrl;
+  String? _tasksetUrl;
+  bool? _hasSuccess;
+  //list of [User] parsed from the [_url]
+  List<User>? _userList = [];
 
   ///(private)
   ///check if an admin is stored in the Database
@@ -65,15 +108,32 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
         return HasGuest(context, user);
       }
     }
-
     //set [SharedPreferences]
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('enableDefaultTaskset', true);
     return ShowDSGVO(await _loadDSGVO());
   }
 
-  Future<CheckScreenState> _loadWelcome(BuildContext context) async {
-    return ShowWelcome();
+  Future<void> _loadWelcome(BuildContext context) async {
+    await Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => CheckScreenBloc(),
+            ),
+            BlocProvider(
+              create: (context) => TasksetOptionsBloc(),
+            ),
+            BlocProvider(
+              create: (context) => UserlistUrlBloc(),
+            ),
+          ],
+          child: WelcomeScreen(),
+        ),
+      ),
+    );
   }
 
   ///(private)
@@ -86,8 +146,7 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   }
 
   Future<CheckScreenState> _createGuest(BuildContext context) async {
-    //loda lama facts
-
+    //load lama facts
     //create and push guest user into database
     User user = User(
       grade: 1,
@@ -151,13 +210,129 @@ class CheckScreenBloc extends Bloc<CheckScreenEvent, CheckScreenState?> {
   ///via [Navigator].pushReplacement
   ///
   ///{@param} [BuildContext] as context
-  void _navigateAdminExist(BuildContext context) => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (BuildContext context) => UserSelectionBloc(),
-            child: UserSelectionScreen(),
-          ),
+  void _navigateAdminExist(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (BuildContext context) => UserSelectionBloc(),
+          child: UserSelectionScreen(),
         ),
-      );
+      ),
+    );
+  }
+
+  ///(private)
+  ///used to read the setup JSON and navigate to [UserSelectionScreen] or show
+  ///an Error-Message if reaching the Url fails
+  ///
+  ///{@param} [BuildContext] to navigate
+  Future<CheckScreenState> _insertSetup(BuildContext context) async {
+    //check if JSON file is valid
+    String? error = await InputValidation.inputUrlWithJsonValidation(_setupUrl);
+    String errorType = "Setup-URL";
+    String? errorUserList;
+    String? errorTaskset;
+    Map<String, dynamic>? urls;
+
+    //TO-DO: errorhandling
+    if (error != null) {
+      print(error);
+      return SetupError(error, errorType);
+    }
+    //get the two URLs from the JSON file
+    try {
+      final response = await http.get(Uri.parse(_setupUrl!));
+      urls = _parseUrls(jsonDecode(response.body));
+    } on SocketException {
+      print('Kritischer Fehler beim erreichen der URL!');
+      return SetupError('Kritischer Fehler beim erreichen der URL!', errorType);
+    }
+    //load userlist through URL
+    if (urls != null) {
+      errorUserList =
+          await InputValidation.inputUrlWithJsonValidation(urls['userListUrl']);
+      errorTaskset =
+          await InputValidation.inputUrlWithJsonValidation(urls['tasksetUrl']);
+    }
+    //load taskset through URL
+    /* errorUserList != null ?  print(errorUserList) :  */
+    if (errorTaskset != null && errorUserList != null) {
+      print('Taskset error: $errorTaskset Userlist error: $errorUserList');
+      return SetupError(
+          'Taskset error: $errorTaskset Userlist error: $errorUserList',
+          errorType);
+    } else {
+      _userlistUrl = urls!['userListUrl'];
+      _tasksetUrl = urls['tasksetUrl'];
+    }
+    return LoadSetup(_userlistUrl, _tasksetUrl);
+    /* try {
+      final response = await http.get(Uri.parse(urls['userListUrl']!));
+      _userList = _parseUserList(jsonDecode(response.body));
+    } on SocketException {
+      print('Kritischer Fehler beim erreichen der URL!');
+    }
+    _userList!.forEach((user) async {
+      await DatabaseProvider.db.insertUser(user);
+    });
+    final response = await http.get(Uri.parse(urls!['tasksetUrl']!));
+    //Check if URL is reachable
+    if (response.statusCode == 200) {
+      //Taskset validtion
+      String? tasksetError =
+          TasksetValidator.isValidTaskset(jsonDecode(response.body));
+      if (tasksetError != null) {
+        print(tasksetError);
+      }
+    }
+    await DatabaseProvider.db.insertTaskUrl(TaskUrl(url: urls['tasksetUrl']));
+    //if everything works, navigate to UserSelectionScreen
+    _navigateAdminExist(context); */
+  }
+
+  ///parses URLS from the json file and checks if the urls are strings
+  Map<String, dynamic>? _parseUrls(Map<String, dynamic> json) {
+    if (!(json.containsKey('userListUrl') && json['userListUrl'] is String)) {
+      print("Es wurde keine userlist url gefunden");
+      return null;
+    }
+    if (!(json.containsKey('tasksetUrl') && json['tasksetUrl'] is String)) {
+      print("Es wurde keine taskset url gefunden");
+      return null;
+    }
+
+    return json;
+  }
+
+  List<User>? _parseUserList(Map<String, dynamic> userJson) {
+    //Check if UserList "users" exist in the json file
+    if (!(userJson.containsKey('users') && userJson['users'] is List)) {
+      print(
+          'Feld ("users": [...]) fehlt oder ist fehlerhaft! \n Hinweis: ("users": [NUTZER])');
+      return null;
+    }
+    var userList = userJson['users'] as List?;
+    if (userList == null || userList.length == 0) {
+      print(
+          'Feld ("users": [...]) darf nicht leer sein! \n Hinweis: ("users": [NUTZER])');
+      return null;
+    }
+    for (int i = 0; i < userList.length; i++) {
+      //Check if user is valid
+      String? error = User.isValidUser(userList[i]);
+      if (error != null) {
+        print('\n Nutzer: (${i + 1})');
+        return null;
+      }
+      //Add valid User to _userList
+      _userList!.add(User.fromJson(userList[i]));
+    }
+    //return valid _userList to UI
+    return _userList;
+  }
+
+  void _parseTaskset() {
+    //Insert URL to Database
+  }
 }

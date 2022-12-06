@@ -4,7 +4,7 @@ final String tableUserSolvedTaskAmount = "user_solved_task_amount";
 ///Set the column names
 ///
 /// Author: F.Brecher
-class UserSolvedTaskAmountFields{
+class UserSolvedTaskAmountFields {
   static final String columnUserId = "userID";
   static final String columnSubjectId = "id";
   static final String columnAmount = "amount";
@@ -39,5 +39,28 @@ class UserSolvedTaskAmount {
     userId = map[UserSolvedTaskAmountFields.columnUserId];
     subjectId = map[UserSolvedTaskAmountFields.columnSubjectId];
     amount = map[UserSolvedTaskAmountFields.columnAmount];
+  }
+}
+
+class UserSolvedTaskAmountList {
+  List<UserSolvedTaskAmount>? userSolvedTaskAmountList;
+  UserSolvedTaskAmountList(this.userSolvedTaskAmountList);
+
+  UserSolvedTaskAmountList.fromJson(Map<String, dynamic> json) {
+    if (json['userSolvedTaskAmountList'] != null) {
+      userSolvedTaskAmountList = <UserSolvedTaskAmount>[];
+      json['userSolvedTaskAmountList'].forEach((v) {
+        userSolvedTaskAmountList!.add(new UserSolvedTaskAmount.fromMap(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.userSolvedTaskAmountList != null) {
+      data['userSolvedTaskAmountList'] =
+          this.userSolvedTaskAmountList!.map((e) => e.toMap()).toList();
+    }
+    return data;
   }
 }

@@ -63,7 +63,7 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState?> {
       return _parsUserList(jsonDecode(respons.body));
     } on SocketException {
       return UserlistUrlParsingFailed(
-        error: 'Kritischer Fehler beim erreichen der URL!',
+        error: 'Kritischer Fehler beim erreichen der Userlist-URL!',
       );
     }
   }
@@ -95,7 +95,7 @@ class UserlistUrlBloc extends Bloc<UserlistUrlEvent, UserlistUrlState?> {
         error:
             'Feld ("users": [...]) darf nicht leer sein! \n Hinweis: ("users": [NUTZER])',
       );
-
+    _userList.length -= _userList.length;
     for (int i = 0; i < userList.length; i++) {
       //Check if user is valid
       String? error = User.isValidUser(userList[i]);

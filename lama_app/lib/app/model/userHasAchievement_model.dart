@@ -4,7 +4,7 @@ final String tableUserHasAchievements = "user_has_achievement";
 ///Set the column names
 ///
 /// Author: F.Brecher
-class UserHasAchievementsFields{
+class UserHasAchievementsFields {
   static final String columnUserId = "userID";
   static final String columnAchievementId = "achievementID";
 }
@@ -35,5 +35,28 @@ class UserHasAchievement {
   UserHasAchievement.fromMap(Map<String, dynamic> map) {
     userID = map[UserHasAchievementsFields.columnUserId];
     achievementID = map[UserHasAchievementsFields.columnAchievementId];
+  }
+}
+
+class UserHasAchievementList {
+  List<UserHasAchievement>? userHasAchievementList;
+  UserHasAchievementList(this.userHasAchievementList);
+
+  UserHasAchievementList.fromJson(Map<String, dynamic> json) {
+    if (json['userHasAchievementList'] != null) {
+      userHasAchievementList = <UserHasAchievement>[];
+      json['userHasAchievementList'].forEach((v) {
+        userHasAchievementList!.add(new UserHasAchievement.fromMap(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.userHasAchievementList != null) {
+      data['userHasAchievementList'] =
+          this.userHasAchievementList!.map((e) => e.toMap()).toList();
+    }
+    return data;
   }
 }

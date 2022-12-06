@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:bubble/bubble.dart';
+import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
+import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,8 +20,6 @@ import 'buchstabieren_task_helper.dart';
 import 'package:lama_app/app/event/tts_event.dart';
 import 'package:lama_app/app/state/tts_state.dart';
 import 'package:lama_app/app/bloc/taskBloc/tts_bloc.dart';
-
-
 
 late List<String> buchstabenListe;
 late List<int> buchstabenIndexListe;
@@ -43,7 +43,8 @@ int flagForCorrectingModus = 0; //  1->represent left   /   2->represents right
 int antwortZaehler = 0;
 int counterForCorrektPushedButtons =
     0; //increments if the correct button was pressed
-bool isCorrect = true; //tracks if all answers were correct in multiple_points mode
+bool isCorrect =
+    true; //tracks if all answers were correct in multiple_points mode
 bool alreadySaid = false;
 //Der Buchstabieren Task kann auf zwei verschiedene Arten erzeugt werden, welche Art es sein soll wird in der JSON beim CorrectionModus abgefragt
 //ist der CorrectionModus auf fals(bzw. 0), so wir ein Bild aufgerufen, und zu dem Begriff auf dem Bild unsortiere Buchstaben erstellt, welche es anzuklicken gilt, um das Wort zu buchstabieren.
@@ -59,7 +60,7 @@ class BuchstabierenTaskScreen extends StatefulWidget {
   BuchstabierenTaskScreen(
       this.task, this.constraints, this.pictureFromNetwork, this.randomNummer,
       [this.userGrade]) {
-   alreadySaid = false;
+    alreadySaid = false;
   }
 
   @override
@@ -114,7 +115,9 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
   @override
   Widget build(BuildContext context) {
     String qlang;
-    task.questionLanguage == null ? qlang = "Deutsch" : qlang = task.questionLanguage!;
+    task.questionLanguage == null
+        ? qlang = "Deutsch"
+        : qlang = task.questionLanguage!;
     return BlocProvider(
       create: (context) => TTSBloc(),
       child: Column(
@@ -125,54 +128,51 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
             padding: EdgeInsets.only(left: 15, right: 15, top: 15),
             // create space between each childs
             child: BlocBuilder<TTSBloc, TTSState>(
-                builder:
-                    (context, TTSState state) {
-                  if (state is EmptyTTSState && !alreadySaid ) {
-                    context.read<TTSBloc>().add(
-                        QuestionOnInitEvent(setTaskMessageAccordingToTaskModus(), qlang));
-                    alreadySaid = true;
-                  }
-                  return Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 75),
-                          height: 60,
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          child: Bubble(
-                            nip: BubbleNip.leftCenter,
-                            child: InkWell(
-                              onTap: () {
-                                BlocProvider.of<TTSBloc>(context)
-                                    .add(ClickOnQuestionEvent.initVoice(setTaskMessageAccordingToTaskModus(), qlang));
-                              },
-                              child: Center(
-                                child: Text(
-                                  setTaskMessageAccordingToTaskModus(),
-                                  style: LamaTextTheme.getStyle(
-                                      color: LamaColors.black, fontSize: 15),
-                                ),
-                              ),
+                builder: (context, TTSState state) {
+              if (state is EmptyTTSState && !alreadySaid) {
+                context.read<TTSBloc>().add(QuestionOnInitEvent(
+                    setTaskMessageAccordingToTaskModus(), qlang));
+                alreadySaid = true;
+              }
+              return Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 75),
+                      height: 60,
+                      width: MediaQuery.of(context).size.width,
+                      child: Bubble(
+                        nip: BubbleNip.leftCenter,
+                        child: InkWell(
+                          onTap: () {
+                            BlocProvider.of<TTSBloc>(context).add(
+                                ClickOnQuestionEvent.initVoice(
+                                    setTaskMessageAccordingToTaskModus(),
+                                    qlang));
+                          },
+                          child: Center(
+                            child: Text(
+                              setTaskMessageAccordingToTaskModus(),
+                              style: LamaTextTheme.getStyle(
+                                  color: LamaColors.black, fontSize: 15),
                             ),
                           ),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: SvgPicture.asset(
-                          "assets/images/svg/lama_head.svg",
-                          semanticsLabel: "Lama Anna",
-                          width: 75,
-                        ),
-                      ),
-                    ],
-                  );
-              }
-),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: SvgPicture.asset(
+                      "assets/images/svg/lama_head.svg",
+                      semanticsLabel: "Lama Anna",
+                      width: 75,
+                    ),
+                  ),
+                ],
+              );
+            }),
           ),
 
           Container(
@@ -381,9 +381,7 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
         shadowColor: Colors.black,
         elevation: 10,
       ),
-      child: Text(
-          buchstabe,
-          style: LamaTextTheme.getStyle(fontSize: 30)),
+      child: Text(buchstabe, style: LamaTextTheme.getStyle(fontSize: 30)),
     );
   }
 
@@ -563,7 +561,8 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
     }
     return null;
   }
-
+  //TO-DO commented out for webversion
+/* 
   Future<bool?> hasInternet() async {
     try {
       final result = await InternetAddress.lookup('example.com');
@@ -576,5 +575,5 @@ class BuchstabierenTaskState extends State<BuchstabierenTaskScreen> {
       return false;
     }
     return null;
-  }
+  } */
 }

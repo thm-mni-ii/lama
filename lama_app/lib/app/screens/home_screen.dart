@@ -1,4 +1,5 @@
 import 'package:bubble/bubble.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -262,37 +263,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /*Widget buildtooltip(BoxConstraints constraints) {
-    Widget child;
-    Align(
-      alignment: Alignment.bottomLeft,
-      child: Padding(
-        padding: EdgeInsets.only(
-            bottom: 20,
-            right: (constraints.maxWidth / 100) * 15),
-        child: Container(
-          height: (constraints.maxHeight / 100) * 10,
-          width: (constraints.maxWidth / 100) * 80,
-          child: Bubble(
-            nip: BubbleNip.rightCenter,
-            color: LamaColors.mainPink,
-            borderColor: LamaColors.mainPink,
-            shadowColor: LamaColors.black,
-            child: Center(
-              child: Text(
-                RepositoryProvider.of<
-                    LamaFactsRepository>(context)
-                    .getRandomLamaFact(),
-                style: LamaTextTheme.getStyle(
-                    fontSize: 15),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    return child;
-  }*/
   ///if the user is a guest, the description turns into a button to edit user details
   ///after the user was changed, the userRepository gets updated
   Widget descriptionButton(BuildContext context, BoxConstraints constraints) {
@@ -373,8 +343,6 @@ class _HomeScreenState extends State<HomeScreen> {
             .getTasksetsForSubjectAndGrade("Mathe", userRepository!.getGrade())!
             .length >
         0) {
-      //children.add(ToggleTextToSpeech());
-
       children.add(ElevatedButton(
         child: Stack(
           alignment: Alignment.center,
@@ -418,7 +386,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ).then((value) => (setState(() {}))),
       ));
       children.add(SizedBox(height: (constraints.maxHeight / 100) * 2.5));
-      //children.add(buildtooltip(constraints));
     }
     if (tasksetRepository
             .getTasksetsForSubjectAndGrade(

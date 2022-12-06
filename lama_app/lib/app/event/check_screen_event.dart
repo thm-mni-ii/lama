@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lama_app/app/model/user_model.dart';
+import 'package:lama_app/app/repository/lamafacts_repository.dart';
+import 'package:lama_app/app/repository/user_repository.dart';
+import 'package:lama_app/app/screens/check_Screen.dart';
 
 /// Events used by [CheckScreen] and [CheckScreenBloc]
 ///
@@ -31,6 +34,9 @@ class CreateAdminEvent extends CheckScreenEvent {
   CreateAdminEvent(this.context);
 }
 
+///used to create guest
+///
+///{@param}[BuildContext] to navigate
 class CreateGuestEvent extends CheckScreenEvent {
   BuildContext context;
   CreateGuestEvent(this.context);
@@ -39,12 +45,53 @@ class CreateGuestEvent extends CheckScreenEvent {
 ///used to denie the DSGVO
 class DSGVODenied extends CheckScreenEvent {}
 
+///used to load a guest and navigate to [HomeScreen]
+///uses doWait to give loading time on launch of the app
+///
+///{@param}[BuildContext] to navigate and [User] for the guest
 class LoadGuest extends CheckScreenEvent {
   BuildContext context;
   User user;
+  bool doWait;
 
-  LoadGuest(
-    this.context,
-    this.user,
-  );
+  LoadGuest(this.context, this.user, this.doWait);
+}
+
+class LoadWelcomeScreen extends CheckScreenEvent {
+  BuildContext context;
+
+  LoadWelcomeScreen(this.context);
+}
+
+///used to load setup URL and navigate to [UserSelectionScreen] on success
+///
+///{@param}[BuildContext] to navigate
+class InsertSetupEvent extends CheckScreenEvent {
+  BuildContext context;
+
+  InsertSetupEvent(this.context);
+}
+
+///used to update the setup URL
+///
+///{@param}[String] to pass the URL
+class SetupChangeUrl extends CheckScreenEvent {
+  String? setupUrl;
+
+  SetupChangeUrl(this.setupUrl);
+}
+
+///used to display a error-message when the Url is wrong
+class DisplaySetupError extends CheckScreenEvent {
+  String error;
+  String errorType;
+
+  DisplaySetupError(this.error, this.errorType);
+}
+
+///used to indicate a success on a url check
+class UrlCheckSuccess extends CheckScreenEvent {
+  bool hasSuccess;
+
+  UrlCheckSuccess(this.hasSuccess);
 }

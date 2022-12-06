@@ -44,3 +44,26 @@ class SaftyQuestion {
     answer = map[SaftyQuestionFields.columnSaftyAnswer];
   }
 }
+
+class SaftyQuestionList {
+  List<SaftyQuestion>? saftyQuestionList;
+  SaftyQuestionList(this.saftyQuestionList);
+
+  SaftyQuestionList.fromJson(Map<String, dynamic> json) {
+    if (json['saftyQuestionList'] != null) {
+      saftyQuestionList = <SaftyQuestion>[];
+      json['saftyQuestionList'].forEach((v) {
+        saftyQuestionList!.add(new SaftyQuestion.fromMap(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.saftyQuestionList != null) {
+      data['saftyQuestionList'] =
+          this.saftyQuestionList!.map((e) => e.toMap()).toList();
+    }
+    return data;
+  }
+}

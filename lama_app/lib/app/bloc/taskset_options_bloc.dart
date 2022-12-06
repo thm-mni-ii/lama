@@ -25,7 +25,7 @@ class TasksetOptionsBloc
       : super(initialState) {
     on<TasksetOptionsPush>((event, emit) async {
       emit(TasksetOptionsWaiting("Aufgaben werden überprüft und geladen..."));
-      emit(await _tasksetOptionsPush());
+      emit(await _tasksetOptionsPush(event.doPushToDb));
     });
     on<TasksetOptionsDelete>((event, emit) async {
       emit(TasksetOptionsWaiting("Aufgaben werden gelöscht..."));
@@ -56,8 +56,8 @@ class TasksetOptionsBloc
   ///stores the [_tasksetUrl] in the Database using [_insertUrl]
   ///
   ///{@return} an [TasksetOptionsPushSuccess] state or an error state depending on [_insertUrl] result
-  Future<TasksetOptionsState> _tasksetOptionsPush() async {
-    return await _insertUrl(TaskUrl(url: _tasksetUrl));
+  Future<TasksetOptionsState> _tasksetOptionsPush(bool doPushToDb) async {
+    return await _insertUrl(TaskUrl(url: _tasksetUrl), doPushToDb);
   }
 
   ///(private)
@@ -68,7 +68,7 @@ class TasksetOptionsBloc
   ///
   ///{@return} an [TasksetOptionsPushSuccess] state or an error state depending on [_insertUrl] result
   Future<TasksetOptionsState> _tasksetOptionsReAddUrl(TaskUrl url) async {
-    TasksetOptionsState retValue = await _insertUrl(url);
+    TasksetOptionsState retValue = await _insertUrl(url, true);
     if (retValue is TasksetOptionsPushSuccess) deletedUrls.remove(url);
     return retValue;
   }
@@ -83,7 +83,7 @@ class TasksetOptionsBloc
   ///
   ///{@return}[TasksetOptionsPushSuccess] if the url validation is successfull else [TasksetOptionsPushFailed]
   ///with specific error message
-  Future<TasksetOptionsState> _insertUrl(TaskUrl url) async {
+  Future<TasksetOptionsState> _insertUrl(TaskUrl url, bool doPushToDb) async {
     //Check if URL is valid
     String? error = await InputValidation.inputUrlWithJsonValidation(url.url);
     if (error != null) {
@@ -100,7 +100,7 @@ class TasksetOptionsBloc
       }
     }
     //Insert URL to Database
-    await DatabaseProvider.db.insertTaskUrl(url);
+    if (doPushToDb) await DatabaseProvider.db.insertTaskUrl(url);
     return TasksetOptionsPushSuccess();
   }
 

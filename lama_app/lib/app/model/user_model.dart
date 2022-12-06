@@ -45,8 +45,26 @@ class User {
   ///Map the variables
   ///
   ///{@return} Map<String, dynamic>
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMapHive() {
     var map = <String, dynamic>{
+      UserFields.columnName: name,
+      UserFields.columnPassword: password,
+      UserFields.columnGrade: grade,
+      UserFields.columnCoins: coins,
+      UserFields.columnIsAdmin: (isAdmin == null || !isAdmin!) ? 0 : 1,
+      UserFields.columnAvatar: avatar,
+      UserFields.columnHighscorePermission:
+          (highscorePermission == null || !highscorePermission!) ? 0 : 1,
+      UserFields.columnIsGuest: (isGuest == null || !isGuest!) ? 0 : 1,
+    };
+    return map;
+  }
+
+  ///Map the variables
+  ///
+  ///{@return} Map<String, dynamic>
+  Map<String, Object?> toMapSQL() {
+    var map = <String, Object?>{
       UserFields.columnName: name,
       UserFields.columnPassword: password,
       UserFields.columnGrade: grade,
@@ -63,7 +81,7 @@ class User {
   ///get the data from the map
   ///
   ///{@param} Map<String, dynamic> map
-  User.fromMap(Map<String, dynamic> map) {
+  User.fromMap(Map<dynamic, dynamic> map) {
     id = map[UserFields.columnId];
     name = map[UserFields.columnName];
     grade = map[UserFields.columnGrade];
@@ -134,5 +152,27 @@ class User {
     error = InputValidation.inputUsernameValidation(json['name']);
     if (error != null) return error;
     return null;
+  }
+}
+
+class UserList {
+  List<User>? userList;
+  UserList(this.userList);
+
+  UserList.fromJson(Map<String, dynamic> json) {
+    if (json['userList'] != null) {
+      userList = <User>[];
+      json['userList'].forEach((v) {
+        userList!.add(new User.fromMap(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.userList != null) {
+      data['userList'] = this.userList!.map((e) => e.toMapSQL()).toList();
+    }
+    return data;
   }
 }
