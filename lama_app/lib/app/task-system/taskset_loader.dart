@@ -65,7 +65,7 @@ class TasksetLoader {
     if (enableDefaultTasksetPref == null || enableDefaultTasksetPref) {
       //load all standardtasks
 
-      /* try {
+      try {
         final result = await InternetAddress.lookup('example.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           print('connected');
@@ -105,7 +105,7 @@ class TasksetLoader {
 
           _loadTasksetPool();
         }
-      } on SocketException catch (_) */
+      } on SocketException catch (_) 
       {
         print('not connected');
         for (int i = 1; i <= GRADES_SUPPORTED; i++) {
