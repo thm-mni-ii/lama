@@ -21,4 +21,9 @@ class Pair<T1, T2> extends Equatable {
   static Pair<String?, String?> fromJson(Map<String, dynamic> json) {
     return Pair(json['word'], json['translation']);
   }
+
+  Map<String, dynamic> toJson() => {
+        "word": a,
+        "translation": b,
+      };
 }

@@ -87,28 +87,26 @@ class Task {
         );
       case "TaskType.clock":
         return ClockTest(
-          json['id'],
-          TaskType.clock,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          json['uhr'],
-          json['timer'],
-          json['right_answer'],
-          json['wrong_answers'],
-          json['question_language'],
-          json['answer_language']
-        );
+            json['id'],
+            TaskType.clock,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['uhr'],
+            json['timer'],
+            json['right_answer'],
+            json['wrong_answers'],
+            json['question_language'],
+            json['answer_language']);
       case "TaskType.clockDifferent":
         return ClockDifferent(
-          json['id'],
-          TaskType.clockDifferent,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'], 
-          json['uhr'], 
-          json['clockMode']
-        );
+            json['id'],
+            TaskType.clockDifferent,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['uhr'],
+            json['clockMode']);
       case "TaskType.moneyTask":
         return TaskMoney(
             json['id'],
@@ -119,87 +117,80 @@ class Task {
             json['difficulty'],
             json['optimum'],
             json['question_language'],
-            json['answer_language']
-            );
+            json['answer_language']);
       case "TaskType.markWords":
         return TaskMarkWords(
-          json['id'],
-          TaskType.markWords,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          json['sentence'],
-          List<String>.from(json['right_words']),
-          json['question_language'],
-          json['answer_language']
-        );
+            json['id'],
+            TaskType.markWords,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['sentence'],
+            List<String>.from(json['right_words']),
+            json['question_language'],
+            json['answer_language']);
       case "TaskType.numberLine":
         return TaskNumberLine(
-          json['id'],
-          TaskType.numberLine,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          List<int>.from(json['range']),
-          json["randomRange"],
-          json['steps'],
-          json['ontap'],
-          json['question_language'],
-          json['answer_language']
-        );
+            json['id'],
+            TaskType.numberLine,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            List<int>.from(json['range']),
+            json["randomRange"],
+            json['steps'],
+            json['ontap'],
+            json['question_language'],
+            json['answer_language']);
       case "TaskType.matchCategory":
         return TaskMatchCategory(
-          json['id'],
-          TaskType.matchCategory,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          json['nameCatOne'],
-          json['nameCatTwo'],
-          List<String>.from(json['categoryOne']),
-          List<String>.from(json['categoryTwo']),
-          json['question_language'],
-          json['answer_language']
-        );
+            json['id'],
+            TaskType.matchCategory,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            json['nameCatOne'],
+            json['nameCatTwo'],
+            List<String>.from(json['categoryOne']),
+            List<String>.from(json['categoryTwo']),
+            json['question_language'],
+            json['answer_language']);
       case "TaskType.gridSelect":
         return TaskGridSelect(
-          json['id'],
-          TaskType.gridSelect,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          List<String>.from(json['wordsToFind']),
-          json['question_language'],
-          json['answer_language']
-        );
+            json['id'],
+            TaskType.gridSelect,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            List<String>.from(json['wordsToFind']),
+            json['question_language'],
+            json['answer_language']);
       case "TaskType.vocableTest":
         var wordPairs = json['wordPairs'] as List;
         List<Pair<String?, String?>> wordPairList =
             wordPairs.map((pair) => Pair.fromJson(pair)).toList();
         return TaskVocableTest(
-          json['id'],
-          TaskType.vocableTest,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          wordPairList,
-          json['randomizeSide'],
-          json['question_language'],
-          json['answer_language']
-        );
+            json['id'],
+            TaskType.vocableTest,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            wordPairList,
+            json['randomizeSide'],
+            json['question_language'],
+            json['answer_language']);
       case "TaskType.connect":
         return TaskConnect(
-          json['id'],
-          TaskType.connect,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          List<String>.from(json['pair1']),
-          List<String>.from(json['pair2']),
-          List<String>.from(json['rightAnswers']),
-          json['question_language'],
-          json['answer_language']
-        );
+            json['id'],
+            TaskType.connect,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            List<String>.from(json['pair1']),
+            List<String>.from(json['pair2']),
+            List<String>.from(json['rightAnswers']),
+            json['question_language'],
+            json['answer_language']);
       case "TaskType.equation":
         List<String> equation = [];
         List<String> options = [];
@@ -232,21 +223,20 @@ class Task {
                     : json['operator_amount']
             : operatorAmount = null;
         return TaskEquation(
-          json['id'],
-          TaskType.equation,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          equation,
-          options,
-          randomAllowedOperators,
-          allowReplacingOperators,
-          resultRange,
-          operatorAmount,
-          fieldsToReplace,
-          json['question_language'],
-          json['answer_language']
-        );
+            json['id'],
+            TaskType.equation,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            equation,
+            options,
+            randomAllowedOperators,
+            allowReplacingOperators,
+            resultRange,
+            operatorAmount,
+            fieldsToReplace,
+            json['question_language'],
+            json['answer_language']);
       case "TaskType.buchstabieren":
         Map<String, String>? woerter;
         if (json['woerter'] != null) {
@@ -266,18 +256,17 @@ class Task {
           multiplePoints = json['multiple_points'];
         }
         return TaskBuchstabieren(
-          json['id'],
-          TaskType.buchstabieren,
-          json['task_reward'],
-          json['lama_text'],
-          json['left_to_solve'],
-          woerter!,
-          firstLetterBig,
-          correctingModus,
-          multiplePoints,
-          json['question_language'],
-          json['answer_language']
-        );
+            json['id'],
+            TaskType.buchstabieren,
+            json['task_reward'],
+            json['lama_text'],
+            json['left_to_solve'],
+            woerter!,
+            firstLetterBig,
+            correctingModus,
+            multiplePoints,
+            json['question_language'],
+            json['answer_language']);
       default:
         return TaskEmpty('', TaskType.empty, 0, "", 0);
     }
@@ -332,9 +321,17 @@ class Task4Cards extends Task {
   String? questionLanguage;
   String? answerLanguage;
 
-
-  Task4Cards(String id, TaskType taskType, int reward, String lamaText,
-      int leftToSolve, this.question, this.rightAnswer, this.questionLanguage, this.answerLanguage, this.wrongAnswers)
+  Task4Cards(
+      String id,
+      TaskType taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.question,
+      this.rightAnswer,
+      this.questionLanguage,
+      this.answerLanguage,
+      this.wrongAnswers)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
@@ -369,8 +366,17 @@ class TaskClozeTest extends Task {
   String? questionLanguage;
   String? answerLanguage;
 
-  TaskClozeTest(String id, TaskType taskType, int reward, String lamaText,
-      int leftToSolve, this.question, this.rightAnswer, this.questionLanguage, this.answerLanguage, this.wrongAnswers)
+  TaskClozeTest(
+      String id,
+      TaskType taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.question,
+      this.rightAnswer,
+      this.questionLanguage,
+      this.answerLanguage,
+      this.wrongAnswers)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
@@ -404,8 +410,16 @@ class TaskMarkWords extends Task {
   String? questionLanguage;
   String? answerLanguage;
 
-  TaskMarkWords(String id, TaskType taskType, int reward, String lamaText,
-      int leftToSolve, this.sentence, this.rightWords, this.questionLanguage, this.answerLanguage)
+  TaskMarkWords(
+      String id,
+      TaskType taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.sentence,
+      this.rightWords,
+      this.questionLanguage,
+      this.answerLanguage)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
@@ -452,8 +466,7 @@ class TaskMatchCategory extends Task {
       this.categoryOne,
       this.categoryTwo,
       this.questionLanguage,
-      this.answerLanguage
-      )
+      this.answerLanguage)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
@@ -493,8 +506,15 @@ class TaskGridSelect extends Task {
   String? questionLanguage;
   String? answerLanguage;
 
-  TaskGridSelect(String id, TaskType taskType, int reward, String lamaText,
-      int leftToSolve, this.wordsToFind, this.questionLanguage, this.answerLanguage)
+  TaskGridSelect(
+      String id,
+      TaskType taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.wordsToFind,
+      this.questionLanguage,
+      this.answerLanguage)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
@@ -553,7 +573,7 @@ class ClockTest extends Task {
       this.timer,
       this.rightAnswer,
       this.wrongAnswers,
-      this.questionLanguage, 
+      this.questionLanguage,
       this.answerLanguage)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
@@ -581,8 +601,16 @@ class TaskMoney extends Task {
   String? questionLanguage;
   String? answerLanguage;
 
-  TaskMoney(String id, TaskType taskType, int reward, String lamaText,
-      int leftToSolve, this.difficulty, this.optimum, this.questionLanguage, this.answerLanguage)
+  TaskMoney(
+      String id,
+      TaskType taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.difficulty,
+      this.optimum,
+      this.questionLanguage,
+      this.answerLanguage)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
@@ -604,12 +632,20 @@ class TaskMoney extends Task {
 ///Author: K.Binder
 class TaskVocableTest extends Task {
   List<Pair<String?, String?>> vocablePairs;
-  bool? randomizeSide;
+  bool randomizeSide;
   String answerLanguage;
   String questionLanguage;
 
-  TaskVocableTest(String id, TaskType taskType, int reward, String lamaText,
-      int leftToSolve, this.vocablePairs, this.randomizeSide, this.questionLanguage, this.answerLanguage)
+  TaskVocableTest(
+      String id,
+      TaskType taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.vocablePairs,
+      this.randomizeSide,
+      this.questionLanguage,
+      this.answerLanguage)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
@@ -618,8 +654,10 @@ class TaskVocableTest extends Task {
         'task_reward': reward,
         'lama_text': lamaText,
         'left_to_solve': leftToSolve,
-        'vocable_pairs': vocablePairs,
-        'randomize_side': randomizeSide,
+        'wordPairs': vocablePairs,
+        'randomizeSide': randomizeSide,
+        'question_language': questionLanguage,
+        'answer_language': answerLanguage,
       };
 
   @override
@@ -643,8 +681,17 @@ class TaskConnect extends Task {
   String? questionLanguage;
   String? answerLanguage;
 
-  TaskConnect(String id, TaskType taskType, int reward, String lamaText,
-      int leftToSolve, this.pair1, this.pair2, this.rightAnswers, this.questionLanguage, this.answerLanguage)
+  TaskConnect(
+      String id,
+      TaskType taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.pair1,
+      this.pair2,
+      this.rightAnswers,
+      this.questionLanguage,
+      this.answerLanguage)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
@@ -755,8 +802,17 @@ class TaskZerlegung extends Task {
   String? questionLanguage;
   String? answerLanguage;
 
-  TaskZerlegung(String id, TaskType taskType, int reward, String lamaText,
-      int leftToSolve, this.reverse, this.zeros, this.boolThousands, this.questionLanguage, this.answerLanguage)
+  TaskZerlegung(
+      String id,
+      TaskType taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.reverse,
+      this.zeros,
+      this.boolThousands,
+      this.questionLanguage,
+      this.answerLanguage)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {
@@ -784,8 +840,18 @@ class TaskNumberLine extends Task {
   bool? ontap;
   String? questionLanguage;
   String? answerLanguage;
-  TaskNumberLine(String id, TaskType taskType, int reward, String lamaText,
-      int leftToSolve, this.range, this.randomrange, this.steps, this.ontap, this.questionLanguage, this.answerLanguage)
+  TaskNumberLine(
+      String id,
+      TaskType taskType,
+      int reward,
+      String lamaText,
+      int leftToSolve,
+      this.range,
+      this.randomrange,
+      this.steps,
+      this.ontap,
+      this.questionLanguage,
+      this.answerLanguage)
       : super(id, taskType, reward, lamaText, leftToSolve);
 
   Map<String, dynamic> toJson() => {

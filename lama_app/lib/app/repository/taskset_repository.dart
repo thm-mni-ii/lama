@@ -217,7 +217,7 @@ class TasksetRepository {
           TaskType.matchCategory,
           TaskType.gridSelect,
           //TaskType.buchstabieren,
-          //TaskType.vocableTest,
+          TaskType.vocableTest,
           TaskType.clozeTest
         ];
       case "Sachkunde":

@@ -5,6 +5,8 @@ class TwoTextfields extends StatefulWidget {
   TextEditingController? controller2;
   String? labelText1;
   String? labelText2;
+  String? initialValue1;
+  String? initialValue2;
   int? index;
 
   TwoTextfields({
@@ -13,6 +15,8 @@ class TwoTextfields extends StatefulWidget {
     required this.index,
     this.labelText1,
     this.labelText2,
+    this.initialValue1,
+    this.initialValue2,
     Key? key,
   }) : super(key: key);
 
@@ -26,6 +30,7 @@ class TwoTextfieldState extends State<TwoTextfields> {
     return Container(
       child: Column(children: [
         TextFormField(
+          initialValue: widget.initialValue1,
           controller: widget.controller1,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
@@ -34,6 +39,7 @@ class TwoTextfieldState extends State<TwoTextfields> {
           ),
         ),
         TextFormField(
+          initialValue: widget.initialValue2,
           controller: widget.controller2,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
