@@ -82,9 +82,6 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
     );
     add(snakeTail);
 
-    /*   testtest = ObstacleCompNewTry();
-    add(testtest); */
-
     var start = gameRef.offSets.start;
     _location =
         Vector2(column * _cellSize + start.x, row * _cellSize + start.y);
@@ -93,7 +90,33 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
   @override
   Future<void> update(double dt) async {
     super.update(dt);
-    if (test == 0) {}
+
+    switch (cellDirection) {
+      case CellDirection.up:
+        snakeTail.setDirectionOfAnimation(2);
+        snakeHead.setDirectionOfAnimation(2);
+
+        // TODO: Handle this case.
+        break;
+      case CellDirection.down:
+        snakeTail.setDirectionOfAnimation(1);
+        snakeHead.setDirectionOfAnimation(1);
+
+        // TODO: Handle this case.
+        break;
+      case CellDirection.left:
+        snakeTail.setDirectionOfAnimation(3);
+        snakeHead.setDirectionOfAnimation(3);
+
+        // TODO: Handle this case.
+        break;
+      case CellDirection.right:
+        snakeTail.setDirectionOfAnimation(4);
+        snakeHead.setDirectionOfAnimation(4);
+
+        // TODO: Handle this case.
+        break;
+    }
   }
 
   void setDirectionSnakeHead(int a) {
@@ -118,8 +141,8 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
         snakeBody.y = 2000.0;
         snakeTail.x = 2000.0;
         snakeTail.y = 2000.0;
-
         break;
+
       case CellType.snakeBody:
         SnakeBody.render(canvas, _location, _cellSize);
         appleSpriteComp.x = 2000.0;
@@ -130,8 +153,8 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
         snakeBody.y = _location.y;
         snakeTail.x = 2000.0;
         snakeTail.y = 2000.0;
-
         break;
+
       case CellType.food:
         Food.render(canvas, _location, _cellSize);
         appleSpriteComp.x = _location.x;
@@ -142,44 +165,18 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
         snakeBody.y = 2000.0;
         snakeTail.x = 2000.0;
         snakeTail.y = 2000.0;
-
         break;
 
       case CellType.snakeTail:
-        switch (cellDirection) {
-          case CellDirection.up:
-            snakeTail.setDirectionOfAnimation(2);
-
-            // TODO: Handle this case.
-            break;
-          case CellDirection.down:
-            snakeTail.setDirectionOfAnimation(1);
-
-            // TODO: Handle this case.
-            break;
-          case CellDirection.left:
-            snakeTail.setDirectionOfAnimation(3);
-
-            // TODO: Handle this case.
-            break;
-          case CellDirection.right:
-            snakeTail.setDirectionOfAnimation(4);
-
-            // TODO: Handle this case.
-            break;
-        }
-
+        SnakeBody.render(canvas, _location, _cellSize);
         snakeTail.x = _location.x;
         snakeTail.y = _location.y;
-
         appleSpriteComp.x = 2000.0;
         appleSpriteComp.y = 2000.0;
         snakeHead.x = 2000.0;
         snakeHead.y = 2000.0;
         snakeBody.x = 2000.0;
         snakeBody.y = 2000.0;
-        SnakeBody.render(canvas, _location, _cellSize);
-
         break;
 
       case CellType.empty:
@@ -189,7 +186,6 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
         snakeHead.y = 2000.0;
         snakeBody.x = 2000.0;
         snakeBody.y = 2000.0;
-
         snakeTail.x = 2000.0;
         snakeTail.y = 2000.0;
         break;

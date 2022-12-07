@@ -44,7 +44,11 @@ void _navigateToGame(String gameName, BuildContext context,
   Widget gameToLaunch;
   switch (gameName) {
     case "Snake":
-      gameToLaunch = SnakeScreen(userRepository);
+      //quick solution to get Highscores
+      int? userHighScore = await userRepository!.getMyHighscore(1);
+      int? allTimeHighScore = await userRepository.getHighscore(1);
+      gameToLaunch =
+          SnakeScreen(userRepository, userHighScore, allTimeHighScore);
       break;
     case "Flappy-Lama":
       //quick solution to get Highscores

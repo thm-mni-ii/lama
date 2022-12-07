@@ -72,17 +72,6 @@ class FlappyLamaGame2 extends FlameGame
   /// obstacle list
   List<ObstacleCompTest> obstaclesPre = [];
 
-  //Obstacle Stuff
-/*   var amountObstaclesPerColumn = 3;
-  var obstacleTopEndList = <Obstacle5>[];
-  var obstacleBottomEndList = <Obstacle5>[];
-  var obstacleBodyList = <Obstacle5>[];
-  static double obstacleSize = 0.0;
-
-  Obstacle5 obstacleTopEnd = Obstacle5(false);
-  Obstacle5 obstacleBottomEnd = Obstacle5(false);
-  Obstacle5 obstacleBody = Obstacle5(false); */
-
   double xTopEnd = 50;
   double xBottomEnd = 100;
   double xBody = 200;
@@ -112,9 +101,6 @@ class FlappyLamaGame2 extends FlameGame
   /// the id of flappyLama game which is used in the database
   final int _gameId = 2;
 
-  /// obstacle list
-  //List<FlappyObstacle> obstacles = [];
-
   /// the achieved score in this round
   int score = 0;
 
@@ -126,17 +112,17 @@ class FlappyLamaGame2 extends FlameGame
   /// screensize of the game
   late Size _screenSize;
 
+  /// Getter of [_screenSize]
+  Size get screenSize {
+    return _screenSize;
+  }
+
   double xComponent = 200;
   double yComponent = 200;
 
   bool gameOver = false;
 
   bool removedone = false;
-
-  /// Getter of [_screenSize]
-  Size get screenSize {
-    return _screenSize;
-  }
 
   /// gravity of the lama = falling speed
   static const double GRAVITY = 1000;
@@ -187,7 +173,6 @@ class FlappyLamaGame2 extends FlameGame
       'png/kaktus_end_bottom.png',
       'png/kaktus_end_top.png',
     ]);
-    initializeAsync();
   }
 
   void saveHighScore() {
@@ -208,13 +193,6 @@ class FlappyLamaGame2 extends FlameGame
     allTimeHighScore = await _userRepo.getHighscore(_gameId);
   }
   //#endregion
-
-  void loadStartScreenAsync() async {}
-
-  /// This method load the [Size] of the screen and loads the StartScreen
-  void initializeAsync() async {
-    loadStartScreenAsync();
-  }
 
   void onGameResize(Vector2 size) {
     // get the screensize fom [MediaQuery] because [size] is incorrect on some devices
@@ -244,31 +222,6 @@ class FlappyLamaGame2 extends FlameGame
       addScore();
     }
 
-    /*    if (obstacles[0].position.x <= -(screenSize.width + 50)) {
-      remove(obstacles[0]);
-      obstacles[0] = ObstacleCompNewTry(
-          this,
-          Vector2(0, 0),
-          false,
-          Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
-          _context,
-          tileSize,
-          screenSize);
-      add(obstacles[0]);
-    }
-
-    if (obstacles[1].position.x <= -(screenSize.width + 50)) {
-      remove(obstacles[1]);
-      obstacles[1] = ObstacleCompNewTry(
-          this,
-          Vector2(0, 0),
-          false,
-          Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
-          _context,
-          tileSize,
-          screenSize);
-      add(obstacles[1]);
-    } */
     if (obst1.x <= -(screenSize.width + 250)) {
       addScore();
     }
@@ -419,7 +372,6 @@ class FlappyLamaGame2 extends FlameGame
   void render(Canvas canvas) {
     super.render(canvas);
     if (gameOver == true) {
-      //openGameOverMenu;
       showGameOverText(canvas);
     }
   }
@@ -449,51 +401,6 @@ class FlappyLamaGame2 extends FlameGame
       componentSize,
     );
     add(userLama);
-/* 
-    // add obstacles
-    obstaclesPre.clear();
-    obstaclesPre
-        .add(ObstacleCompTest(this, false, _lamaSize, addScore, null, 7, 8));
-    obstaclesPre
-        .add(ObstacleCompTest(this, true, _lamaSize, addScore, null, 7, 8));
-
-    add(obstaclesPre[0]);
-    add(obstaclesPre[1]);
-
-    // add reset function = set the ref hole to constraint the hole size and position
-    obstaclesPre[0].onResetting = obstaclesPre[1].setConstraints;
-    obstaclesPre[1].onResetting = obstaclesPre[0].setConstraints;
-
-    // initial change the second obstacle to avoid a to large gap
-    obstaclesPre[1]
-        .setConstraints(obstaclesPre[0].holeIndex, obstaclesPre[0].holeSize);
-    obstaclesPre[1].resetObstacle();
-    obstaclesPre[0].resetObstacle(); */
-
-    //add(ObstacleComp(this, Vector2(0, 0), _context));
-    /*    obstacles.clear();
-    obstacles.add(ObstacleCompNewTry(
-        this,
-        Vector2(0, 0),
-        false,
-        Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles),
-        _context,
-        tileSize,
-        screenSize));
-    add(obstacles[0]);
-
-    obstacles.add(ObstacleCompNewTry(
-        this,
-        Vector2(0, 0),
-        true,
-        Vector2((tileSize * _sizeInTiles), (tileSize * _sizeInTiles)),
-        _context,
-        tileSize,
-        screenSize));
-
-    add(obstacles[1]); */
-    /*  add(ObstacleCompNewTry(this, Vector2(0, 0), Vector2(screenSize.width, 0),
-        Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles), _context)); */
 
     obst1 = ObstacleCompNewTry(
         this,

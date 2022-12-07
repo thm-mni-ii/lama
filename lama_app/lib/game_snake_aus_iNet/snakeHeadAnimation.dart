@@ -74,8 +74,8 @@ class AnimatedComponent extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     // size
-    height = 30; //_size;
-    width = 30; //_size;
+    height = 34; //_size;
+    width = 34; //_size;
 
     animation = await gameRef.loadSpriteAnimation(
       'png/snake_head_top.png',
@@ -133,19 +133,18 @@ class AnimatedComponent extends SpriteAnimationComponent
     ///
     ///
     final hitboxPaint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
-    add(
-      PolygonHitbox.relative(
-        [
-          Vector2(-1.0, 0.0),
-          Vector2(-1.0, -1.0),
-          Vector2(0.0, -1.0),
-          Vector2(0.0, 0.0),
-        ],
-        parentSize: spriteSize,
-      )
-        ..paint = hitboxPaint
-        ..renderShape = true,
-    );
+    add(PolygonHitbox.relative(
+      [
+        Vector2(-1.0, 0.0),
+        Vector2(-1.0, -1.0),
+        Vector2(0.0, -1.0),
+        Vector2(0.0, 0.0),
+      ],
+      parentSize: spriteSize,
+    )
+        /*     ..paint = hitboxPaint
+        ..renderShape = true, */
+        );
   }
 
   @override

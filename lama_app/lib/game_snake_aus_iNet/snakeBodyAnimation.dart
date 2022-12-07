@@ -78,8 +78,8 @@ class SnakeBodyy extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     // size
-    height = 30;
-    width = 30;
+    height = 34;
+    width = 34;
 
     animation = await gameRef.loadSpriteAnimation(
       'png/snake_body.png',
@@ -135,20 +135,20 @@ class SnakeBodyy extends SpriteAnimationComponent
     ////////////////////////////////////////////////////////////
     ///
     ///
-    final hitboxPaint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
-    add(
-      PolygonHitbox.relative(
-        [
-          Vector2(-1.0, 0.0),
-          Vector2(-1.0, -1.0),
-          Vector2(0.0, -1.0),
-          Vector2(0.0, 0.0),
-        ],
-        parentSize: spriteSize,
-      )
-        ..paint = hitboxPaint
-        ..renderShape = true,
-    );
+    final hitboxPaint = BasicPalette.green.paint()
+      ..style = PaintingStyle.stroke;
+    add(PolygonHitbox.relative(
+      [
+        Vector2(-1.0, 0.0),
+        Vector2(-1.0, -1.0),
+        Vector2(0.0, -1.0),
+        Vector2(0.0, 0.0),
+      ],
+      parentSize: spriteSize,
+    )
+/*         ..paint = hitboxPaint
+        ..renderShape = true, */
+        );
   }
 
   /// This method let the lama fly up with an impuls.

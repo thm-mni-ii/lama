@@ -34,7 +34,7 @@ class Grid {
     }
   }
 
-  void generateFood(/* PositionComponent testapfel */) {
+  void generateFood() {
     var allCells = _cells.expand((element) => element).toList();
     var emptyCells = allCells
         .where((element) => element.cellType == CellType.empty)

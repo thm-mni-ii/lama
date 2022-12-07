@@ -77,44 +77,26 @@ class Snake extends SpriteComponent {
     if (ishead == 0) {
       snakeBody.addFirst(SnakeBodyPart.fromCell(cell, 0));
       if (direction == Direction.left) {
-        head.setDirectionSnakeHead(3);
+        // head.setDirectionSnakeHead(3);
+        head.cellDirection = CellDirection.left;
         snakeBody.first.cell.cellDirection = CellDirection.left;
         snakeBody.first.next!.cell.cellDirection = CellDirection.left;
       }
       if (direction == Direction.right) {
-        head.setDirectionSnakeHead(4);
+        //   head.setDirectionSnakeHead(4);
+        head.cellDirection = CellDirection.right;
         snakeBody.first.cell.cellDirection = CellDirection.right;
         snakeBody.first.next!.cell.cellDirection = CellDirection.right;
       }
       if (direction == Direction.up) {
-        head.setDirectionSnakeHead(2);
+        //   head.setDirectionSnakeHead(2);
+        head.cellDirection = CellDirection.up;
         snakeBody.first.cell.cellDirection = CellDirection.up;
         snakeBody.first.next!.cell.cellDirection = CellDirection.up;
       }
       if (direction == Direction.down) {
-        head.setDirectionSnakeHead(1);
-        snakeBody.first.cell.cellDirection = CellDirection.down;
-        snakeBody.first.next!.cell.cellDirection = CellDirection.down;
-      }
-    } else {
-      snakeBody.addFirst(SnakeBodyPart.fromCell(cell, 1));
-      if (direction == Direction.left) {
-        head.setDirectionSnakeHead(3);
-        snakeBody.first.cell.cellDirection = CellDirection.left;
-        snakeBody.first.next!.cell.cellDirection = CellDirection.left;
-      }
-      if (direction == Direction.right) {
-        head.setDirectionSnakeHead(4);
-        snakeBody.first.cell.cellDirection = CellDirection.right;
-        snakeBody.first.next!.cell.cellDirection = CellDirection.right;
-      }
-      if (direction == Direction.up) {
-        head.setDirectionSnakeHead(2);
-        snakeBody.first.cell.cellDirection = CellDirection.up;
-        snakeBody.first.next!.cell.cellDirection = CellDirection.up;
-      }
-      if (direction == Direction.down) {
-        head.setDirectionSnakeHead(1);
+        //  head.setDirectionSnakeHead(1);
+        head.cellDirection = CellDirection.down;
         snakeBody.first.cell.cellDirection = CellDirection.down;
         snakeBody.first.next!.cell.cellDirection = CellDirection.down;
       }

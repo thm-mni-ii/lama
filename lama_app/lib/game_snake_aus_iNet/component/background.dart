@@ -24,10 +24,12 @@ class BackGround extends PositionComponent with HasGameRef<SnakeGame> {
 
   @override
   void render(Canvas canvas) {
-    canvas.drawRect(Rect.fromPoints(start, end), Styles.white);
+    //hier wird die Hintergrundfarbe bestimmt
+    canvas.drawRect(Rect.fromPoints(start, end), Styles.blue);
 
-    _drawVerticalLines(canvas);
-    _drawHorizontalLines(canvas);
+//hier wird das Raster der Zellen eingezeichnet
+/*     _drawVerticalLines(canvas);
+    _drawHorizontalLines(canvas); */
   }
 
   void _drawVerticalLines(Canvas c) {

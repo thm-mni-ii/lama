@@ -14,13 +14,14 @@ import 'cell.dart';
 import 'dynamic_fps_position_component.dart';
 
 class World extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
+  SnakeGame _snakeGame;
   final Grid _grid;
   final Snake _snake = Snake();
   final CommandQueue _commandQueue = CommandQueue();
 
   bool gameOver = false;
 
-  World(this._grid) : super(GameConfig.fps) {
+  World(this._grid, this._snakeGame) : super(GameConfig.fps) {
     _initializeSnake();
   }
 
@@ -38,13 +39,14 @@ class World extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
           if (nextCell.cellType == CellType.food) {
             _snake.grow(nextCell);
             _grid.generateFood();
+            _snakeGame.addPoint();
           } else {
-            _snake.move(
-                nextCell); //ich brauche die current Cell und die letzte Cell
+            _snake.move(nextCell);
           }
         }
       } else {
         gameOver = true;
+        _snakeGame.gameOver = true;
       }
     }
   }
