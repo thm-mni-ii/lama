@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:lama_app/game_snake_aus_iNet/snake/snake.dart';
 
 import '../entity/food.dart';
 import '../entity/snake_body.dart';
@@ -11,6 +12,8 @@ import '../snakeHeadAnimation.dart';
 import '../snakeBodyAnimation.dart';
 
 enum CellType { empty, snakeBody, food, snakeHead, snakeTail }
+
+enum CellDirection { up, down, left, right }
 
 class Cell extends PositionComponent with HasGameRef<SnakeGame> {
   var appleImage = 'png/apple.png';
@@ -28,6 +31,8 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
   late SnakeBodyy snakeBody;
   late SnakeTail snakeTail;
   late ObstacleCompNewTry testtest;
+
+  CellDirection cellDirection = CellDirection.right;
 
   int get row => _index.x.toInt();
 
@@ -77,8 +82,8 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
     );
     add(snakeTail);
 
-    testtest = ObstacleCompNewTry();
-    add(testtest);
+    /*   testtest = ObstacleCompNewTry();
+    add(testtest); */
 
     var start = gameRef.offSets.start;
     _location =
@@ -95,64 +100,98 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
     snakeHead.setDirectionOfAnimation(a);
   }
 
+  void setDirectionSnakeTail(int a) {
+    snakeTail.setDirectionOfAnimation(a);
+  }
+
   @override
   void render(Canvas canvas) {
     // TODO get rid of switch by making the cell type an object and directly call render on it.
     switch (cellType) {
       case CellType.snakeHead:
         SnakeBody.render(canvas, _location, _cellSize);
-        appleSpriteComp.x = 0.0;
-        appleSpriteComp.y = 0.0;
+        appleSpriteComp.x = 2000.0;
+        appleSpriteComp.y = 2000.0;
         snakeHead.x = _location.x;
         snakeHead.y = _location.y;
-        snakeBody.x = 0.0;
-        snakeBody.y = 0.0;
+        snakeBody.x = 2000.0;
+        snakeBody.y = 2000.0;
+        snakeTail.x = 2000.0;
+        snakeTail.y = 2000.0;
 
         break;
       case CellType.snakeBody:
         SnakeBody.render(canvas, _location, _cellSize);
-        appleSpriteComp.x = 0.0;
-        appleSpriteComp.y = 0.0;
-        snakeHead.x = 0.0;
-        snakeHead.y = 0.0;
+        appleSpriteComp.x = 2000.0;
+        appleSpriteComp.y = 2000.0;
+        snakeHead.x = 2000.0;
+        snakeHead.y = 2000.0;
         snakeBody.x = _location.x;
         snakeBody.y = _location.y;
+        snakeTail.x = 2000.0;
+        snakeTail.y = 2000.0;
 
         break;
       case CellType.food:
         Food.render(canvas, _location, _cellSize);
         appleSpriteComp.x = _location.x;
         appleSpriteComp.y = _location.y;
-        snakeHead.x = 0.0;
-        snakeHead.y = 0.0;
-        snakeBody.x = 0.0;
-        snakeBody.y = 0.0;
-        test = 0;
+        snakeHead.x = 2000.0;
+        snakeHead.y = 2000.0;
+        snakeBody.x = 2000.0;
+        snakeBody.y = 2000.0;
+        snakeTail.x = 2000.0;
+        snakeTail.y = 2000.0;
 
         break;
 
       case CellType.snakeTail:
+        switch (cellDirection) {
+          case CellDirection.up:
+            snakeTail.setDirectionOfAnimation(2);
+
+            // TODO: Handle this case.
+            break;
+          case CellDirection.down:
+            snakeTail.setDirectionOfAnimation(1);
+
+            // TODO: Handle this case.
+            break;
+          case CellDirection.left:
+            snakeTail.setDirectionOfAnimation(3);
+
+            // TODO: Handle this case.
+            break;
+          case CellDirection.right:
+            snakeTail.setDirectionOfAnimation(4);
+
+            // TODO: Handle this case.
+            break;
+        }
+
+        snakeTail.x = _location.x;
+        snakeTail.y = _location.y;
+
+        appleSpriteComp.x = 2000.0;
+        appleSpriteComp.y = 2000.0;
+        snakeHead.x = 2000.0;
+        snakeHead.y = 2000.0;
+        snakeBody.x = 2000.0;
+        snakeBody.y = 2000.0;
         SnakeBody.render(canvas, _location, _cellSize);
-        testtest.x = _location.x;
-        testtest.y = _location.y;
-        appleSpriteComp.x = 0.0;
-        appleSpriteComp.y = 0.0;
-        snakeHead.x = 0.0;
-        snakeHead.y = 0.0;
-        snakeBody.x = 0.0;
-        snakeBody.y = 0.0;
-        test = 0;
 
         break;
+
       case CellType.empty:
-        appleSpriteComp.x = 0.0;
-        appleSpriteComp.y = 0.0;
-        snakeHead.x = 0.0;
-        snakeHead.y = 0.0;
-        snakeBody.x = 0.0;
-        snakeBody.y = 0.0;
-        testtest.x = 0.0;
-        testtest.y = 0.0;
+        appleSpriteComp.x = 2000.0;
+        appleSpriteComp.y = 2000.0;
+        snakeHead.x = 2000.0;
+        snakeHead.y = 2000.0;
+        snakeBody.x = 2000.0;
+        snakeBody.y = 2000.0;
+
+        snakeTail.x = 2000.0;
+        snakeTail.y = 2000.0;
         break;
     }
   }

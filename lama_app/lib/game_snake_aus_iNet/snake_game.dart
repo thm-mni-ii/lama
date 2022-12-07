@@ -10,7 +10,7 @@ import 'component/background.dart';
 import 'component/world.dart';
 import 'config/game_config.dart';
 import 'entity/food2.dart';
-import 'entity/snake_body.dart';
+
 import 'snake/grid.dart';
 import 'snake/offsets.dart';
 
@@ -21,7 +21,7 @@ class SnakeGame extends FlameGame with TapDetector {
   World? world;
   OffSets offSets = OffSets(Vector2.zero());
   late PositionComponent testapfel;
-  late AnimatedComponent userLama;
+
   late SnakeBodyy snakebody;
 
   var duration = const Duration(seconds: 1);
@@ -51,24 +51,6 @@ class SnakeGame extends FlameGame with TapDetector {
 
     world = World(grid);
     add(world!);
-
-    /*  userLama = AnimatedComponent(
-      50,
-      this,
-      Vector2(0, 0),
-      Vector2(150, 100),
-      Vector2(150, 100),
-    );
-    add(userLama); */
-
-/*     snakebody = SnakeBodyy(
-      50,
-      this,
-      Vector2(0, 0),
-      Vector2(150, 150),
-      Vector2(150, 100),
-    );
-    add(snakebody); */
   }
 
   @override

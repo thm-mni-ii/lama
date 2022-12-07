@@ -12,6 +12,11 @@ class Snake extends SpriteComponent {
 
   Direction direction = Direction.right;
   Cell head = Cell.zero;
+  Cell tail = Cell.zero;
+
+  Direction wichDir() {
+    return direction;
+  }
 
   void move(Cell nextCell) {
     _removeLast();
@@ -42,6 +47,10 @@ class Snake extends SpriteComponent {
     head = cell;
   }
 
+  void setTail(Cell cell) {
+    tail = cell;
+  }
+
   bool isHorizontal() {
     return direction == Direction.left || direction == Direction.right;
   }
@@ -69,29 +78,45 @@ class Snake extends SpriteComponent {
       snakeBody.addFirst(SnakeBodyPart.fromCell(cell, 0));
       if (direction == Direction.left) {
         head.setDirectionSnakeHead(3);
+        snakeBody.first.cell.cellDirection = CellDirection.left;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.left;
       }
       if (direction == Direction.right) {
         head.setDirectionSnakeHead(4);
+        snakeBody.first.cell.cellDirection = CellDirection.right;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.right;
       }
       if (direction == Direction.up) {
         head.setDirectionSnakeHead(2);
+        snakeBody.first.cell.cellDirection = CellDirection.up;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.up;
       }
       if (direction == Direction.down) {
         head.setDirectionSnakeHead(1);
+        snakeBody.first.cell.cellDirection = CellDirection.down;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.down;
       }
     } else {
       snakeBody.addFirst(SnakeBodyPart.fromCell(cell, 1));
       if (direction == Direction.left) {
         head.setDirectionSnakeHead(3);
+        snakeBody.first.cell.cellDirection = CellDirection.left;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.left;
       }
       if (direction == Direction.right) {
         head.setDirectionSnakeHead(4);
+        snakeBody.first.cell.cellDirection = CellDirection.right;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.right;
       }
       if (direction == Direction.up) {
         head.setDirectionSnakeHead(2);
+        snakeBody.first.cell.cellDirection = CellDirection.up;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.up;
       }
       if (direction == Direction.down) {
         head.setDirectionSnakeHead(1);
+        snakeBody.first.cell.cellDirection = CellDirection.down;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.down;
       }
     }
   }
@@ -107,6 +132,20 @@ class Snake extends SpriteComponent {
   }
 
   void setNextTail() {
+    tail = snakeBody.last.cell;
     snakeBody.last.cell.cellType = CellType.snakeTail;
+
+/*     if (direction == Direction.left) {
+      tail.setDirectionSnakeTail(3);
+    }
+    if (direction == Direction.right) {
+      tail.setDirectionSnakeTail(4);
+    }
+    if (direction == Direction.up) {
+      tail.setDirectionSnakeTail(2);
+    }
+    if (direction == Direction.down) {
+      tail.setDirectionSnakeTail(1);
+    } */
   }
 }

@@ -75,6 +75,9 @@ class World extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
       if (i == 0) {
         _snake.setHead(snakePart);
       }
+      if (i == (snakeLength - 1)) {
+        _snake.setTail(snakePart);
+      }
     }
   }
 

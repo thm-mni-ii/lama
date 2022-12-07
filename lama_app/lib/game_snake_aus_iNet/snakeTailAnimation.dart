@@ -89,22 +89,22 @@ class SnakeTail extends SpriteAnimationComponent
     ///
     ///
     final spriteSheetup = SpriteSheet(
-      image: await Flame.images.load('png/snake_tail.png'),
+      image: await Flame.images.load('png/snake_tail_botToTop.png'),
       srcSize: Vector2(30.0, 30.0),
     );
 
     final spriteSheetdown = SpriteSheet(
-      image: await Flame.images.load('png/snake_tail.png'),
+      image: await Flame.images.load('png/snake_tail_topToBot.png'),
       srcSize: Vector2(30.0, 30.0),
     );
 
     final spriteSheetleft = SpriteSheet(
-      image: await Flame.images.load('png/snake_tail.png'),
+      image: await Flame.images.load('png/snake_tail_rightToLeft.png'),
       srcSize: Vector2(30.0, 30.0),
     );
 
     final spriteSheetright = SpriteSheet(
-      image: await Flame.images.load('png/snake_tail.png'),
+      image: await Flame.images.load('png/snake_tail_leftToRight.png'),
       srcSize: Vector2(30.0, 30.0),
     );
 
@@ -159,6 +159,7 @@ class SnakeTail extends SpriteAnimationComponent
     switch (a) {
       case 0:
         _currentAnimation = _downAnimation;
+
         break;
       case 1:
         _currentAnimation = _downAnimation;
