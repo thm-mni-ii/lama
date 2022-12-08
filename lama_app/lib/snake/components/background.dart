@@ -1,4 +1,4 @@
-/* import 'dart:ui';
+/*  import 'dart:ui';
 
 import 'package:lama_app/snake/models/position.dart';
 import 'package:lama_app/snake/snakeGame.dart';
@@ -147,4 +147,5 @@ class Background {
 
   void update(double t) {}
 }
+ 
  */

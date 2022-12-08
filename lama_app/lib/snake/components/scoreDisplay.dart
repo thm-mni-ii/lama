@@ -6,40 +6,54 @@ import 'package:lama_app/snake/snakeGame.dart';
 /// This class represents the score display and will render it
 class ScoreDisplay {
   final SnakeGame game;
+
   /// Offset to the top relative to the the a relative size (sqrt(width * height));
-  double _offsetYPercent;
+  late double _offsetYPercent;
+
   /// radius of the button
-  double _radiusPercent;
+  late double _radiusPercent;
+
   /// thickness of the border
-  double _borderThickness;
+  late double _borderThickness;
+
   /// [Path] of the border
-  Path _borderPath;
+  late Path _borderPath;
+
   /// [Rect] of the button
-  Rect _fillRect;
+  late Rect _fillRect;
+
   /// [Paint] of the border as default stroke
   final Paint _borderPaint = Paint()
     ..style = PaintingStyle.stroke
     ..color = Color(0x80000000);
+
   /// [Paint] of the background
-  final Paint _fillPaint = Paint()
-    ..color = Color(0x4DFD4A6F);
+  final Paint _fillPaint = Paint()..color = Color(0x4DFD4A6F);
+
   /// [Color] of the text
   final Color _textColor = Color(0xbbffffff);
+
   /// [TextPainter] of the text
-  TextPainter _painter;
+  late TextPainter _painter;
+
   /// [TextStyle] of the text
-  TextStyle _textStyle;
+  late TextStyle _textStyle;
+
   /// position of the score display
-  Offset _position;
+  late Offset _position;
 
   /// This class displays the [score] of the [SnakeGame] class.
-  ScoreDisplay(this.game, [this._offsetYPercent = 0.025, this._radiusPercent = 0.15, this._borderThickness = 1.5]) {
+  ScoreDisplay(this.game,
+      [this._offsetYPercent = 0.025,
+      this._radiusPercent = 0.15,
+      this._borderThickness = 1.5]) {
     resize();
   }
 
   void resize() {
     // relative length related to the screensize
-    var relativeSize = sqrt(this.game.screenSize.width * this.game.screenSize.height);
+    var relativeSize =
+        sqrt(this.game.screenSize.width * this.game.screenSize.height);
 
     // Paint for the text
     _painter = TextPainter(
@@ -65,7 +79,9 @@ class ScoreDisplay {
 
     // rectangle for the background
     _fillRect = Rect.fromLTWH(
-        (game.screenSize.width / 2) - ((relativeSize * this._radiusPercent) / 2) + _borderThickness,
+        (game.screenSize.width / 2) -
+            ((relativeSize * this._radiusPercent) / 2) +
+            _borderThickness,
         this._offsetYPercent * relativeSize + _borderThickness / 2,
         relativeSize * this._radiusPercent - _borderThickness * 2,
         relativeSize * this._radiusPercent - _borderThickness);
@@ -89,7 +105,7 @@ class ScoreDisplay {
       // set new offset depending on the text width
       _position = Offset(
         (_fillRect.left) + (_fillRect.width / 2) - _painter.width / 2,
-          (_fillRect.top) + (_fillRect.height / 2) - _painter.height / 2,
+        (_fillRect.top) + (_fillRect.height / 2) - _painter.height / 2,
       );
     }
   }
@@ -102,4 +118,5 @@ class ScoreDisplay {
     // draw text
     _painter.paint(c, _position);
   }
-} */
+}
+ */

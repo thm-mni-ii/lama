@@ -44,10 +44,18 @@ void _navigateToGame(String gameName, BuildContext context,
   Widget gameToLaunch;
   switch (gameName) {
     case "Snake":
-      gameToLaunch = SnakeScreen(userRepository);
+      //quick solution to get Highscores
+      int? userHighScore = await userRepository!.getMyHighscore(1);
+      int? allTimeHighScore = await userRepository.getHighscore(1);
+      gameToLaunch =
+          SnakeScreen(userRepository, userHighScore, allTimeHighScore);
       break;
     case "Flappy-Lama":
-      gameToLaunch = FlappyGameScreen(userRepository);
+      //quick solution to get Highscores
+      int? userHighScore = await userRepository!.getMyHighscore(2);
+      int? allTimeHighScore = await userRepository.getHighscore(2);
+      gameToLaunch =
+          FlappyLamaScreen(userRepository, userHighScore, allTimeHighScore);
       break;
     case "Affen-Leiter":
       gameToLaunch = ClimberGameScreen(userRepository);
@@ -63,7 +71,7 @@ void _navigateToGame(String gameName, BuildContext context,
       int? userHighScore = await userRepository!.getMyHighscore(5);
       int? allTimeHighScore = await userRepository.getHighscore(5);
       gameToLaunch =
-          TapTheLamaScreen(userRepository,userHighScore, allTimeHighScore);
+          TapTheLamaScreen(userRepository, userHighScore, allTimeHighScore);
       break;
     default:
       throw Exception("Trying to launch game that does not exist");

@@ -12,15 +12,18 @@ import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/animation.dart';
 
-import 'baseFlappy.dart';
+import 'snake_game.dart';
 
 class AnimatedComponent extends SpriteAnimationComponent
-    with CollisionCallbacks, HasGameRef {
+    with CollisionCallbacks, HasGameRef<SnakeGame> {
   final Vector2 velocity;
 
   late SpriteAnimation _upAnimation;
-  late SpriteAnimation _idleAnimation;
-  late SpriteAnimation _fallAnimation;
+  late SpriteAnimation _leftAnimation;
+  late SpriteAnimation _downAnimation;
+  late SpriteAnimation _rightAnimation;
+  late SpriteAnimation _currentAnimation;
+
   late SpriteAnimationComponent _upComponent;
 
   /// animation in flying up mode
@@ -38,7 +41,7 @@ class AnimatedComponent extends SpriteAnimationComponent
   /// callback when the lama hits the ground
   late Function onHitGround;
 
-  final FlappyLamaGame2 _game;
+  //final SnakeGame _game;
 
   /// actual speed of the lama
   double _speedY = 0.0;
@@ -56,7 +59,7 @@ class AnimatedComponent extends SpriteAnimationComponent
 
   AnimatedComponent(
     this._size,
-    this._game,
+    //this._game,
     this.velocity,
     Vector2 position,
     Vector2 size, {
@@ -65,69 +68,71 @@ class AnimatedComponent extends SpriteAnimationComponent
           position: position,
           size: size,
           angle: angle,
-          anchor: Anchor.center,
+          anchor: Anchor.topLeft,
         );
 
   @override
   Future<void> onLoad() async {
     // size
-    height = _size;
-    width = _size;
+    height = 34; //_size;
+    width = 34; //_size;
 
     animation = await gameRef.loadSpriteAnimation(
-      'png/lama_animation.png',
+      'png/snake_head_top.png',
       SpriteAnimationData.sequenced(
         amount: 6,
         stepTime: 0.2,
-        textureSize: Vector2.all(24),
+        textureSize: Vector2.all(30),
       ),
     );
 ////////////////////////////////////////////////////////////
     ///
     ///
-    final spriteSheet = SpriteSheet(
-      image: await Flame.images.load('png/lama_animation.png'),
-      srcSize: Vector2(24.0, 24.0),
+    final spriteSheetup = SpriteSheet(
+      image: await Flame.images.load('png/snake_head_top.png'),
+      srcSize: Vector2(30.0, 30.0),
     );
 
-    final spriteSize = Vector2(80.0, 90.0);
+    final spriteSheetdown = SpriteSheet(
+      image: await Flame.images.load('png/snake_head_down.png'),
+      srcSize: Vector2(30.0, 30.0),
+    );
+
+    final spriteSheetleft = SpriteSheet(
+      image: await Flame.images.load('png/snake_head_left.png'),
+      srcSize: Vector2(30.0, 30.0),
+    );
+
+    final spriteSheetright = SpriteSheet(
+      image: await Flame.images.load('png/snake_head_right.png'),
+      srcSize: Vector2(30.0, 30.0),
+    );
+
+    final spriteSize = Vector2(60.0, 60.0);
     // idle / hover animation
-    _idleAnimation =
-        spriteSheet.createAnimation(row: 0, from: 0, to: 4, stepTime: 0.1);
+    _currentAnimation =
+        spriteSheetleft.createAnimation(row: 0, from: 0, to: 1, stepTime: 0.1);
+
+    _leftAnimation =
+        spriteSheetleft.createAnimation(row: 0, from: 0, to: 1, stepTime: 0.1);
+
+    _rightAnimation =
+        spriteSheetright.createAnimation(row: 0, from: 0, to: 1, stepTime: 0.1);
 
     // up animation
     _upAnimation =
-        spriteSheet.createAnimation(row: 0, from: 5, to: 8, stepTime: 0.1);
+        spriteSheetup.createAnimation(row: 0, from: 0, to: 1, stepTime: 0.1);
 
     // fall animation
-    _fallAnimation =
-        spriteSheet.createAnimation(row: 0, from: 9, to: 12, stepTime: 0.1);
+    _downAnimation =
+        spriteSheetdown.createAnimation(row: 0, from: 0, to: 1, stepTime: 0.1);
 
     // start animation
-
-    _upComponent = SpriteAnimationComponent(
-      animation: _upAnimation,
-      position: Vector2(150, y),
-      size: spriteSize,
-    );
-
-    _fallComponent = SpriteAnimationComponent(
-      animation: _fallAnimation,
-      position: Vector2(150, y),
-      size: spriteSize,
-    );
-
-    _idleComponent = SpriteAnimationComponent(
-      animation: _idleAnimation,
-      position: Vector2(150, y),
-      size: spriteSize,
-    );
 
     ////////////////////////////////////////////////////////////
     ///
     ///
-    final hitboxPaint = BasicPalette.white.paint()
-      ..style = PaintingStyle.stroke;
+    final hitboxPaint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
     add(PolygonHitbox.relative(
       [
         Vector2(-1.0, 0.0),
@@ -137,42 +142,36 @@ class AnimatedComponent extends SpriteAnimationComponent
       ],
       parentSize: spriteSize,
     )
-        /*   ..paint = hitboxPaint
+        /*     ..paint = hitboxPaint
         ..renderShape = true, */
         );
-  }
-
-  /// This method let the lama fly up with an impuls.
-  ///
-  /// sideffects:
-  ///   [_speedY] = [_flapSpeed]
-  void flap() {
-    _speedY = _flapSpeed;
   }
 
   @override
   void update(double dt) {
     super.update(dt);
 
-    // last y for animation selection
-    var lastY = y;
+    animation = _currentAnimation;
+  }
 
-    // speed
-    _speedY += GRAVITY * dt;
-    // new y
-    position.y += _speedY * dt;
-    // hits the ground?
-    if (!isHittingGround()) {
-      // hit the top?
-      isHittingTop(dt);
-    }
-    // choose animation
-    if (lastY > y) {
-      animation = _upAnimation;
-    } else if (lastY < y) {
-      animation = _fallAnimation;
-    } else {
-      animation = _idleAnimation;
+  void setDirectionOfAnimation(int a) {
+    switch (a) {
+      case 0:
+        _currentAnimation = _downAnimation;
+        break;
+      case 1:
+        _currentAnimation = _downAnimation;
+        break;
+      case 2:
+        _currentAnimation = _upAnimation;
+        break;
+      case 3:
+        _currentAnimation = _leftAnimation;
+        break;
+      case 4:
+        _currentAnimation = _rightAnimation;
+        break;
+      default:
     }
   }
 
@@ -216,8 +215,8 @@ class AnimatedComponent extends SpriteAnimationComponent
   /// sideeffects:
   ///   [_speedY] = 0 when hitting
   ///   [y] = bottom of the screen when hitting
-  bool isHittingGround() {
-    if (position.y > _game.screenSize.height - _size) {
+/*   bool isHittingGround() {
+/*     if (position.y > _game.screenSize.height - _size) {
       // fix the lama
       position.y = _game.screenSize.height - _size;
       // remove the speed
@@ -229,8 +228,8 @@ class AnimatedComponent extends SpriteAnimationComponent
       return true;
     }
 
-    return false;
-  }
+    return false; */
+  } */
 
 /*   final Paint hitboxPaint = BasicPalette.green.paint()
     ..style = PaintingStyle.stroke;
@@ -241,7 +240,7 @@ class AnimatedComponent extends SpriteAnimationComponent
     Set<Vector2> intersectionPoints,
     PositionComponent other,
   ) {
-    print("LAMA HIT");
+    /*    print("LAMA HIT");
     super.onCollisionStart(intersectionPoints, other);
     double test = this.position.y;
 
@@ -250,6 +249,6 @@ class AnimatedComponent extends SpriteAnimationComponent
     }
     if (position.y > 30) {
       _game.gameOver = true;
-    }
+    } */
   }
 }

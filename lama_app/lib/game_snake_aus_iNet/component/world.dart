@@ -14,13 +14,14 @@ import 'cell.dart';
 import 'dynamic_fps_position_component.dart';
 
 class World extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
+  SnakeGame _snakeGame;
   final Grid _grid;
   final Snake _snake = Snake();
   final CommandQueue _commandQueue = CommandQueue();
 
   bool gameOver = false;
 
-  World(this._grid) : super(GameConfig.fps) {
+  World(this._grid, this._snakeGame) : super(GameConfig.fps) {
     _initializeSnake();
   }
 
@@ -38,12 +39,14 @@ class World extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
           if (nextCell.cellType == CellType.food) {
             _snake.grow(nextCell);
             _grid.generateFood();
+            _snakeGame.addPoint();
           } else {
             _snake.move(nextCell);
           }
         }
       } else {
         gameOver = true;
+        _snakeGame.gameOver = true;
       }
     }
   }
@@ -74,11 +77,36 @@ class World extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
       if (i == 0) {
         _snake.setHead(snakePart);
       }
+      if (i == (snakeLength - 1)) {
+        _snake.setTail(snakePart);
+      }
     }
   }
 
   //TODO use vector addition instead of a switch
   Cell _getNextCell() {
+    var row = _snake.head.row;
+    var column = _snake.head.column;
+
+    switch (_snake.direction) {
+      case Direction.up:
+        row--;
+        break;
+      case Direction.right:
+        column++;
+        break;
+      case Direction.down:
+        row++;
+        break;
+      case Direction.left:
+        column--;
+        break;
+    }
+    return _grid.findCell(column, row);
+  }
+
+  Cell _getCurrentCell() {
+    //hierauf wird drauf aufgebaut -> dann wird ein sankeHead an dieser sStelle zu, SnakeBody
     var row = _snake.head.row;
     var column = _snake.head.column;
 

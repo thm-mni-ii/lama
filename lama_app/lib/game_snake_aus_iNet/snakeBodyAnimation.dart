@@ -12,15 +12,18 @@ import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/animation.dart';
 
-import 'baseFlappy.dart';
+import 'snake_game.dart';
 
-class AnimatedComponent extends SpriteAnimationComponent
-    with CollisionCallbacks, HasGameRef {
+class SnakeBodyy extends SpriteAnimationComponent
+    with CollisionCallbacks, HasGameRef<SnakeGame> {
   final Vector2 velocity;
 
   late SpriteAnimation _upAnimation;
-  late SpriteAnimation _idleAnimation;
-  late SpriteAnimation _fallAnimation;
+  late SpriteAnimation _leftOrRightAnimation;
+  late SpriteAnimation _downOrUpAnimation;
+  late SpriteAnimation _rightAnimation;
+  late SpriteAnimation _currentAnimation;
+
   late SpriteAnimationComponent _upComponent;
 
   /// animation in flying up mode
@@ -38,7 +41,7 @@ class AnimatedComponent extends SpriteAnimationComponent
   /// callback when the lama hits the ground
   late Function onHitGround;
 
-  final FlappyLamaGame2 _game;
+  // final SnakeGame _game;
 
   /// actual speed of the lama
   double _speedY = 0.0;
@@ -54,9 +57,13 @@ class AnimatedComponent extends SpriteAnimationComponent
 
   bool boolIsHittingTop = false;
 
-  AnimatedComponent(
+  late SpriteAnimation _bottomToRightCurveAnimation;
+
+  late SpriteAnimation _bottomToLeftCurveAnimation;
+
+  SnakeBodyy(
     this._size,
-    this._game,
+    //this._game,
     this.velocity,
     Vector2 position,
     Vector2 size, {
@@ -65,68 +72,70 @@ class AnimatedComponent extends SpriteAnimationComponent
           position: position,
           size: size,
           angle: angle,
-          anchor: Anchor.center,
+          anchor: Anchor.topLeft,
         );
 
   @override
   Future<void> onLoad() async {
     // size
-    height = _size;
-    width = _size;
+    height = 34;
+    width = 34;
 
     animation = await gameRef.loadSpriteAnimation(
-      'png/lama_animation.png',
+      'png/snake_body.png',
       SpriteAnimationData.sequenced(
         amount: 6,
         stepTime: 0.2,
-        textureSize: Vector2.all(24),
+        textureSize: Vector2.all(30),
       ),
     );
 ////////////////////////////////////////////////////////////
     ///
     ///
-    final spriteSheet = SpriteSheet(
-      image: await Flame.images.load('png/lama_animation.png'),
-      srcSize: Vector2(24.0, 24.0),
+
+    final spriteSheetdownOrUp = SpriteSheet(
+      image: await Flame.images.load('png/snake_body.png'),
+      srcSize: Vector2(30.0, 30.0),
     );
 
-    final spriteSize = Vector2(80.0, 90.0);
+    final spriteSheetleftOrRight = SpriteSheet(
+      image: await Flame.images.load('png/snake_body_leftOrRight.png'),
+      srcSize: Vector2(30.0, 30.0),
+    );
+
+    final spriteSheetBottomToRightCurve = SpriteSheet(
+      image: await Flame.images.load('png/snake_body_curve_BottomToRight.png'),
+      srcSize: Vector2(30.0, 30.0),
+    );
+
+    final spriteSheetBottomToLeftCurve = SpriteSheet(
+      image: await Flame.images.load('png/snake_body_curve_bottomToLeft.png'),
+      srcSize: Vector2(30.0, 30.0),
+    );
+
+    final spriteSize = Vector2(60.0, 60.0);
     // idle / hover animation
-    _idleAnimation =
-        spriteSheet.createAnimation(row: 0, from: 0, to: 4, stepTime: 0.1);
+    _currentAnimation = spriteSheetleftOrRight.createAnimation(
+        row: 0, from: 0, to: 1, stepTime: 0.1);
 
-    // up animation
-    _upAnimation =
-        spriteSheet.createAnimation(row: 0, from: 5, to: 8, stepTime: 0.1);
+    _leftOrRightAnimation = spriteSheetleftOrRight.createAnimation(
+        row: 0, from: 0, to: 1, stepTime: 0.1);
 
-    // fall animation
-    _fallAnimation =
-        spriteSheet.createAnimation(row: 0, from: 9, to: 12, stepTime: 0.1);
+    _bottomToRightCurveAnimation = spriteSheetBottomToRightCurve
+        .createAnimation(row: 0, from: 0, to: 1, stepTime: 0.1);
+
+    _bottomToLeftCurveAnimation = spriteSheetBottomToLeftCurve.createAnimation(
+        row: 0, from: 0, to: 1, stepTime: 0.1);
+
+    _downOrUpAnimation = spriteSheetdownOrUp.createAnimation(
+        row: 0, from: 0, to: 1, stepTime: 0.1);
 
     // start animation
-
-    _upComponent = SpriteAnimationComponent(
-      animation: _upAnimation,
-      position: Vector2(150, y),
-      size: spriteSize,
-    );
-
-    _fallComponent = SpriteAnimationComponent(
-      animation: _fallAnimation,
-      position: Vector2(150, y),
-      size: spriteSize,
-    );
-
-    _idleComponent = SpriteAnimationComponent(
-      animation: _idleAnimation,
-      position: Vector2(150, y),
-      size: spriteSize,
-    );
 
     ////////////////////////////////////////////////////////////
     ///
     ///
-    final hitboxPaint = BasicPalette.white.paint()
+    final hitboxPaint = BasicPalette.green.paint()
       ..style = PaintingStyle.stroke;
     add(PolygonHitbox.relative(
       [
@@ -137,7 +146,7 @@ class AnimatedComponent extends SpriteAnimationComponent
       ],
       parentSize: spriteSize,
     )
-        /*   ..paint = hitboxPaint
+/*         ..paint = hitboxPaint
         ..renderShape = true, */
         );
   }
@@ -153,27 +162,36 @@ class AnimatedComponent extends SpriteAnimationComponent
   @override
   void update(double dt) {
     super.update(dt);
+    animation = _currentAnimation;
+  }
 
-    // last y for animation selection
-    var lastY = y;
+  void setDirectionOfAnimation(int a) {
+    switch (a) {
+      case 0:
+        _currentAnimation = _downOrUpAnimation;
+        break;
+      case 1:
+        setBodyToBottomRightCruve();
+        break;
+      case 2:
+        setBodyToBottomLeftCruve();
+        break;
+      case 3:
+        _currentAnimation = _leftOrRightAnimation;
+        break;
+      case 4:
+        _currentAnimation = _leftOrRightAnimation;
+        break;
+      default:
+    }
+  }
 
-    // speed
-    _speedY += GRAVITY * dt;
-    // new y
-    position.y += _speedY * dt;
-    // hits the ground?
-    if (!isHittingGround()) {
-      // hit the top?
-      isHittingTop(dt);
-    }
-    // choose animation
-    if (lastY > y) {
-      animation = _upAnimation;
-    } else if (lastY < y) {
-      animation = _fallAnimation;
-    } else {
-      animation = _idleAnimation;
-    }
+  void setBodyToBottomRightCruve() {
+    _currentAnimation = _bottomToRightCurveAnimation;
+  }
+
+  void setBodyToBottomLeftCruve() {
+    _currentAnimation = _bottomToLeftCurveAnimation;
   }
 
 ////////////////////////////////
@@ -216,8 +234,8 @@ class AnimatedComponent extends SpriteAnimationComponent
   /// sideeffects:
   ///   [_speedY] = 0 when hitting
   ///   [y] = bottom of the screen when hitting
-  bool isHittingGround() {
-    if (position.y > _game.screenSize.height - _size) {
+/*   bool isHittingGround() {
+/*     if (position.y > _game.screenSize.height - _size) {
       // fix the lama
       position.y = _game.screenSize.height - _size;
       // remove the speed
@@ -229,8 +247,8 @@ class AnimatedComponent extends SpriteAnimationComponent
       return true;
     }
 
-    return false;
-  }
+    return false; */
+  } */
 
 /*   final Paint hitboxPaint = BasicPalette.green.paint()
     ..style = PaintingStyle.stroke;
@@ -241,7 +259,7 @@ class AnimatedComponent extends SpriteAnimationComponent
     Set<Vector2> intersectionPoints,
     PositionComponent other,
   ) {
-    print("LAMA HIT");
+    /*    print("LAMA HIT");
     super.onCollisionStart(intersectionPoints, other);
     double test = this.position.y;
 
@@ -250,6 +268,6 @@ class AnimatedComponent extends SpriteAnimationComponent
     }
     if (position.y > 30) {
       _game.gameOver = true;
-    }
+    } */
   }
 }

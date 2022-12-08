@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:lama_app/game_snake_aus_iNet/entity/food2.dart';
 
 import '../component/cell.dart';
 

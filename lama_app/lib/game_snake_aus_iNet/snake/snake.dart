@@ -12,16 +12,25 @@ class Snake extends SpriteComponent {
 
   Direction direction = Direction.right;
   Cell head = Cell.zero;
+  Cell tail = Cell.zero;
+
+  Direction wichDir() {
+    return direction;
+  }
 
   void move(Cell nextCell) {
     _removeLast();
     head = nextCell;
-    _addFirst(head);
+    _addFirst(head, 0);
+    setPrevHeadToBody();
+    setNextTail();
   }
 
   void grow(Cell nextCell) {
     head = nextCell;
-    _addFirst(head);
+    _addFirst(head, 0);
+    setPrevHeadToBody();
+    // setNextTail();
   }
 
   bool checkCrash(Cell nextCell) {
@@ -38,6 +47,10 @@ class Snake extends SpriteComponent {
     head = cell;
   }
 
+  void setTail(Cell cell) {
+    tail = cell;
+  }
+
   bool isHorizontal() {
     return direction == Direction.left || direction == Direction.right;
   }
@@ -47,19 +60,74 @@ class Snake extends SpriteComponent {
   }
 
   void addCell(Cell cell) {
-    _add(SnakeBodyPart.fromCell(cell));
+    //hier wird nur irgend ein Teil eingefügt, -> unterscheidung zwischen head und body muss erfolgen
+    if (cell == head) {
+      _add(SnakeBodyPart.fromCell(cell, 0));
+    } else {
+      _add(SnakeBodyPart.fromCell(cell, 1));
+    }
   }
 
   void _add(SnakeBodyPart part) {
     snakeBody.add(part);
   }
 
-  void _addFirst(Cell cell) {
-    snakeBody.addFirst(SnakeBodyPart.fromCell(cell));
+  void _addFirst(Cell cell, int ishead) {
+    //zu diesem Zeitpunkt ist die übergebene cell immer ein Head an dieser Stelle, nachfolgenden UNterscheidung bringt noch nichts
+    if (ishead == 0) {
+      snakeBody.addFirst(SnakeBodyPart.fromCell(cell, 0));
+      if (direction == Direction.left) {
+        // head.setDirectionSnakeHead(3);
+        head.cellDirection = CellDirection.left;
+        snakeBody.first.cell.cellDirection = CellDirection.left;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.left;
+      }
+      if (direction == Direction.right) {
+        //   head.setDirectionSnakeHead(4);
+        head.cellDirection = CellDirection.right;
+        snakeBody.first.cell.cellDirection = CellDirection.right;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.right;
+      }
+      if (direction == Direction.up) {
+        //   head.setDirectionSnakeHead(2);
+        head.cellDirection = CellDirection.up;
+        snakeBody.first.cell.cellDirection = CellDirection.up;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.up;
+      }
+      if (direction == Direction.down) {
+        //  head.setDirectionSnakeHead(1);
+        head.cellDirection = CellDirection.down;
+        snakeBody.first.cell.cellDirection = CellDirection.down;
+        snakeBody.first.next!.cell.cellDirection = CellDirection.down;
+      }
+    }
   }
 
   void _removeLast() {
     snakeBody.last.cell.cellType = CellType.empty;
     snakeBody.remove(snakeBody.last);
+  }
+
+  void setPrevHeadToBody() {
+    snakeBody.first.next!.cell.cellType = CellType.snakeBody;
+    snakeBody.first.next!.next!.cell.cellType = CellType.snakeBody;
+  }
+
+  void setNextTail() {
+    tail = snakeBody.last.cell;
+    snakeBody.last.cell.cellType = CellType.snakeTail;
+
+/*     if (direction == Direction.left) {
+      tail.setDirectionSnakeTail(3);
+    }
+    if (direction == Direction.right) {
+      tail.setDirectionSnakeTail(4);
+    }
+    if (direction == Direction.up) {
+      tail.setDirectionSnakeTail(2);
+    }
+    if (direction == Direction.down) {
+      tail.setDirectionSnakeTail(1);
+    } */
   }
 }

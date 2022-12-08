@@ -1,24 +1,30 @@
-/* import 'dart:ui';
+import 'dart:ui';
+import '../../game_snake_aus_iNet/snake_game.dart';
 import '../snakeGame.dart';
 import 'package:flutter/painting.dart';
 
 /// This class contains a visualsation of a back button
 class GoBackButton {
   final SnakeGame game;
+
   /// [RRect] of the button (rounded rectangle)
-  RRect rect;
+  late RRect rect;
+
   /// [Paint] of the rounded button
-  Paint _startPaint = Paint()
-    ..color = Color(0xff6dff4a);
+  Paint _startPaint = Paint()..color = Color(0xff6dff4a);
+
   /// [TextPainter] of the text with default centering and left to right
   TextPainter _painter = TextPainter(
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
   );
+
   /// [TextStyle] of the text
-  TextStyle _textStyle;
+  late TextStyle _textStyle;
+
   /// position of the text
-  Offset _position;
+  late Offset _position;
+
   /// Offset of the button [top, left, right, bottom]
   final _buttonOffset = [0.7, 0.1, 0.1, 0.1];
 
@@ -64,7 +70,7 @@ class GoBackButton {
 
   void render(Canvas c) {
     c.drawRRect(rect, _startPaint);
-    
+
     // draw text
     _painter.paint(c, _position);
   }
@@ -73,4 +79,3 @@ class GoBackButton {
 
   void onTapDown() {}
 }
- */

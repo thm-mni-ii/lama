@@ -1,12 +1,26 @@
 import 'dart:math';
+import 'dart:ui';
+import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+
+import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
+import 'package:flame/sprite.dart';
+import 'package:flutter/animation.dart';
 
 import 'baseFlappy.dart';
+import 'package:flame/components.dart';
+import 'package:flame/game.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/input.dart';
+import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter/services.dart';
 
 //add(ObstacleComp(this, Vector2(0, 0), Vector2(screenSize.width, 0),
 //     Vector2(tileSize * _sizeInTiles, tileSize * _sizeInTiles), _context));
@@ -18,6 +32,8 @@ class ObstacleCompNewTry extends PositionComponent
   late SpriteComponent kaktusBodyComponent3;
   late SpriteComponent kaktusBottomComponent;
   late SpriteComponent tmp;
+
+  late PositionComponent lama;
 
   /// list of all the single sprites of the component
   late List<SpriteComponent> _sprites = [];
@@ -34,10 +50,10 @@ class ObstacleCompNewTry extends PositionComponent
   final double _sizeInTiles = 1.5;
 
   /// minimum size of the hole = multiples by [_sizeInTiles] {[minHoleSize] * [_sizeInTiles]}
-  double minHoleSize = 2;
+  double minHoleSize = 7; //2 wenns schwerer wird
 
   /// maximum size of the hole = multiples by [_sizeInTiles] {[maxHoleSize] * [_sizeInTiles]}
-  double maxHoleSize = 3;
+  double maxHoleSize = 8; //3 wenns schwerer wird
 
   /// maximum distance between the different holes
   final int _maxHoleDistance = 3;
@@ -107,6 +123,9 @@ class ObstacleCompNewTry extends PositionComponent
     BuildContext _context,
     this.tileSize,
     this.screenSize,
+    this.maxHoleSize,
+    this.minHoleSize,
+    this.lama,
   ) : super(
           size: size,
           anchor: Anchor.center,
@@ -173,7 +192,7 @@ class ObstacleCompNewTry extends PositionComponent
           position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
           parentSize: fixedLengthList[i].size,
         )
-            /*  ..paint = hitboxPaint
+            /*         ..paint = hitboxPaint
             ..renderShape = true, */
             );
       }
@@ -202,7 +221,10 @@ class ObstacleCompNewTry extends PositionComponent
           ],
           position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
           parentSize: fixedLengthList[i].size,
-        ));
+        )
+            /*     ..paint = hitboxPaint
+            ..renderShape = true, */
+            );
       }
       // body of the obstacle
       else if (!(i >= _holeIndex! && i <= _holeIndex! + _holeSize!)) {
@@ -229,7 +251,10 @@ class ObstacleCompNewTry extends PositionComponent
           ],
           position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
           parentSize: fixedLengthList[i].size,
-        ));
+        )
+            /*            ..paint = hitboxPaint
+            ..renderShape = true, */
+            );
       }
     }
     //sets the position for all Sprite Components
@@ -353,7 +378,7 @@ class ObstacleCompNewTry extends PositionComponent
           position: Vector2(fixedLengthList[i].x, fixedLengthList[i].y),
           parentSize: fixedLengthList[i].size,
         )
-            /*  ..paint = hitboxPaint
+            /*      ..paint = hitboxPaint
             ..renderShape = true, */
             );
       }
@@ -437,6 +462,9 @@ class ObstacleCompNewTry extends PositionComponent
   Future<void> update(double dt) async {
     super.update(dt);
     position.x += _velocity * dt;
+    if (collidingWith(lama)) {
+      _game.gameOver = true;
+    }
 
     /*    if (position.x < -(screenSize.width + 50)) {
       position.x = 100;
@@ -459,7 +487,12 @@ class ObstacleCompNewTry extends PositionComponent
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
-    print("COOOOOOOOOOOOKISIIIIIIIIIIIIIOOOON");
+    var testpos = position.x;
+    print("hiiiit bei  $testpos");
+//> -460 bei obst 2
+    if (position.x < -207 && position.x > -360) {
+      //  _game.gameOver = true; ------------------------------------------------------------------------------pre lösung
+    }
   }
 
   /// This method generate a new hole depending on the [minHoleSize], [maxHoleSize] and [_sizeInTiles].
