@@ -88,10 +88,7 @@ class GameListScreen extends StatelessWidget {
                         itemCount: games.length,
                         itemBuilder: (context, index) {
                           // until games are fixed
-                          return (index == 3 ||
-                                  index == 4 ||
-                                  index == 1 ||
-                                  index == 0)
+                          return (index == 1 || index == 3 || index == 4)
                               ? buildGameListItem(context, index, constraints)
                               : Container();
                         },
