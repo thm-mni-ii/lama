@@ -90,33 +90,6 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
   @override
   Future<void> update(double dt) async {
     super.update(dt);
-
-    switch (cellDirection) {
-      case CellDirection.up:
-        snakeTail.setDirectionOfAnimation(2);
-        snakeHead.setDirectionOfAnimation(2);
-
-        // TODO: Handle this case.
-        break;
-      case CellDirection.down:
-        snakeTail.setDirectionOfAnimation(1);
-        snakeHead.setDirectionOfAnimation(1);
-
-        // TODO: Handle this case.
-        break;
-      case CellDirection.left:
-        snakeTail.setDirectionOfAnimation(3);
-        snakeHead.setDirectionOfAnimation(3);
-
-        // TODO: Handle this case.
-        break;
-      case CellDirection.right:
-        snakeTail.setDirectionOfAnimation(4);
-        snakeHead.setDirectionOfAnimation(4);
-
-        // TODO: Handle this case.
-        break;
-    }
   }
 
   void setDirectionSnakeHead(int a) {
@@ -130,6 +103,7 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
   @override
   void render(Canvas canvas) {
     // TODO get rid of switch by making the cell type an object and directly call render on it.
+
     switch (cellType) {
       case CellType.snakeHead:
         SnakeBody.render(canvas, _location, _cellSize);
@@ -141,6 +115,32 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
         snakeBody.y = 2000.0;
         snakeTail.x = 2000.0;
         snakeTail.y = 2000.0;
+        switch (cellDirection) {
+          case CellDirection.up:
+            snakeTail.setDirectionOfAnimation(2);
+            snakeHead.setDirectionOfAnimation(2);
+
+            // TODO: Handle this case.
+            break;
+          case CellDirection.down:
+            snakeTail.setDirectionOfAnimation(1);
+            snakeHead.setDirectionOfAnimation(1);
+
+            // TODO: Handle this case.
+            break;
+          case CellDirection.left:
+            snakeTail.setDirectionOfAnimation(3);
+            snakeHead.setDirectionOfAnimation(3);
+
+            // TODO: Handle this case.
+            break;
+          case CellDirection.right:
+            snakeHead.setDirectionOfAnimation(4);
+            snakeTail.setDirectionOfAnimation(4);
+
+            // TODO: Handle this case.
+            break;
+        }
         break;
 
       case CellType.snakeBody:
@@ -177,6 +177,32 @@ class Cell extends PositionComponent with HasGameRef<SnakeGame> {
         snakeHead.y = 2000.0;
         snakeBody.x = 2000.0;
         snakeBody.y = 2000.0;
+        switch (cellDirection) {
+          case CellDirection.up:
+            snakeTail.setDirectionOfAnimation(2);
+            snakeHead.setDirectionOfAnimation(2);
+
+            // TODO: Handle this case.
+            break;
+          case CellDirection.down:
+            snakeTail.setDirectionOfAnimation(1);
+            snakeHead.setDirectionOfAnimation(1);
+
+            // TODO: Handle this case.
+            break;
+          case CellDirection.left:
+            snakeTail.setDirectionOfAnimation(3);
+            snakeHead.setDirectionOfAnimation(3);
+
+            // TODO: Handle this case.
+            break;
+          case CellDirection.right:
+            snakeHead.setDirectionOfAnimation(4);
+            snakeTail.setDirectionOfAnimation(4);
+
+            // TODO: Handle this case.
+            break;
+        }
         break;
 
       case CellType.empty:
