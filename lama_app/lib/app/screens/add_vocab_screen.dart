@@ -14,7 +14,7 @@ import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:translator/translator.dart';
 import 'package:lama_app/util/pair.dart';
 
@@ -373,9 +373,9 @@ class AddVocabScreenState extends State<AddVocabScreen> {
     vocabList1.clear();
     vocabList2.clear();
     final inputImage = InputImage.fromFilePath(image!.path);
-    final textDetector = GoogleMlKit.vision.textDetector();
-    RecognisedText recognisedText = await textDetector.processImage(inputImage);
-    await textDetector.close();
+    final TextRecognizer textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+    await textRecognizer.close();
     scannedText = "";
 
     final centerPointList = <int>[];
@@ -384,10 +384,10 @@ class AddVocabScreenState extends State<AddVocabScreen> {
     int i = 0;
     int x = 0;
 
-    for (TextBlock block in recognisedText.blocks) {
+    for (TextBlock block in recognizedText.blocks) {
       int? singleCenterPoint = 0;
       final singleCenterPointList = <String>[];
-      List<String> cornerPoints = block.rect.center.toString().split('');
+      List<String> cornerPoints = block.boundingBox.center.toString().split('');
 
       for (int k = 0; k < cornerPoints.length; k++) {
         if (cornerPoints[k] == '.') break;
@@ -404,7 +404,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
     }
 
     // adds vocabs to respective lists by dividing table at the average top left word corner point
-    for (TextBlock block in recognisedText.blocks) {
+    for (TextBlock block in recognizedText.blocks) {
       if (isWord(block.text)) {
         if (centerPointList[x] < centerPoint) {
           vocabList1.add(block.text);

@@ -16,7 +16,6 @@ import 'package:lama_app/app/task-system/taskset_model.dart';
 import 'package:lama_app/util/LamaColors.dart';
 import 'package:lama_app/util/LamaTextTheme.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 
 /// [StatefulWidget] that contains the screen that shows all Tasksets.
 ///
