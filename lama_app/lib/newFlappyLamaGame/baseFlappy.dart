@@ -5,29 +5,11 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/input.dart';
-import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
-
-import 'package:lama_app/app/model/game_model.dart';
 import 'package:lama_app/app/model/highscore_model.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
-import 'package:lama_app/flappyLama/components/flappyLama.dart';
-import 'package:lama_app/flappyLama/components/flappyObstacle.dart';
+
 import 'package:lama_app/flappyLama/components/flappyScoreDisplay.dart';
-import 'package:lama_app/flappyLama/widgets/playModeWidget.dart';
-import 'package:lama_app/flappyLama/widgets/startScreen.dart';
-import 'package:lama_app/newFlappyLamaGame/obstacleFlappyLama.dart';
-
-import '../app/screens/game_list_screen.dart';
-import 'package:flame/events.dart';
-//import 'package:lama_app/newFlappyLamaGame/lamaSpriteAnimation.dart';
-
-import 'dart:math';
-import 'dart:ui';
-
-import 'package:flame/collisions.dart';
-import 'package:flame/components.dart';
-import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 
 import '../util/LamaColors.dart';
@@ -36,8 +18,6 @@ import 'backgroundFlappyLama.dart';
 
 import 'newObstacleTry.dart';
 import 'obstacleTest.dart';
-
-import 'pauseButton.dart';
 
 class FlappyLamaGame2 extends FlameGame
     with TapDetector, HasCollisionDetection {

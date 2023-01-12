@@ -458,6 +458,18 @@ class ObstacleCompNewTry extends PositionComponent
     //  _objectPassed = false;
   }
 
+  void render(Canvas c) {
+    // render each part of the obstacle
+    for (SpriteComponent obstaclePart in _sprites) {
+      // has to save the canvas because otherwise it will lead to a render problem by adding up the x and y fields
+      c.save();
+      // render the part of the obstacle
+      obstaclePart.render(c);
+      // restore the canvas to the original data
+      c.restore();
+    }
+  }
+
   @override
   Future<void> update(double dt) async {
     super.update(dt);

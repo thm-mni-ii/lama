@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/app/repository/user_repository.dart';
 import 'package:lama_app/flappyLama/flappyLamaGame.dart';
 
+import '../../apeClimberUpdate/climberGame2.dart';
 import '../../newFlappyLamaGame/baseFlappy.dart';
 import '../../newFlappyLamaGame/flappyLamaMenu.dart';
 
@@ -53,8 +54,10 @@ class FlappyGameScreen extends StatelessWidget {
                 color: Colors.green,
                 // child: FlappyLamaGame(context, userRepository).widget,
                 child: GameWidget(
-                  game: FlappyLamaGame2(context, userRepository!, userHighScore,
-                      allTimeHighScore),
+                  game: ApeClimberGame(context,
+                      userRepository!) /* FlappyLamaGame2(context, userRepository!, userHighScore,
+                      allTimeHighScore) */
+                  ,
                 ),
               ))
             ])));
