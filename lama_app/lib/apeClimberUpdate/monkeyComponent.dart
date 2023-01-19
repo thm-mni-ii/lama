@@ -1,44 +1,54 @@
-/*  import 'dart:ui';
-
-import 'package:flame/animation.dart';
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/spritesheet.dart';
+import 'dart:ui';
+import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/sprite.dart';
 
 /// This class is [AnimationComponent] to display a monkey with all its properties.
-class Monkey extends AnimationComponent {
+class Monkey extends SpriteAnimationComponent {
   // SETTINGS
   // --------
   /// time which is needed to move
-  final stepTime;
+  late final stepTime;
+
   /// offset (x, y) of the monkey to the center of the screen relative to its size (value * _size)
   final relOffsetCenter = [0.3, 0.0];
   // --------
   // SETTINGS
-
   /// width and height of the lama in pixel
-  final double _size;
+  late final double _size;
+
   /// animation of idling left
-  Animation _idleLeft;
+  late SpriteAnimation _idleLeft;
+
   /// animation of idling right
-  Animation _idleRight;
+  late SpriteAnimation _idleRight;
+
   /// animation of climbing left
-  Animation _climbLeft;
+  late SpriteAnimation _climbLeft;
+
   /// animation of climbing right
-  Animation _climbRight;
+  late SpriteAnimation _climbRight;
+
   /// animation of change left
-  Animation _switchLeft;
+  late SpriteAnimation _switchLeft;
+
   /// animation of change right
-  Animation _switchRight;
+  late SpriteAnimation _switchRight;
+
   /// is the monkey on the left side of the screen
   bool _isLeft = true;
+
   /// is the monkey switching the sides
   bool _switching = false;
+
   /// time left for the switching
   double _moveTimeLeft = 0;
+
   /// is the monkey moving (switching or climbing)
   bool _moving = false;
+
   /// Function which gets called when the movement finished
-  Function onMovementFinished;
+  late Function onMovementFinished;
 
   get isLeft {
     return _isLeft;
@@ -49,40 +59,45 @@ class Monkey extends AnimationComponent {
   }
 
   /// Initialize the class with the given [_size] and [_game].
-  Monkey(this._size, this.stepTime) : super.empty() {
+  Monkey(this._size, this.stepTime) {
+    // size
+    height = _size;
+    width = _size;
+  }
+
+  @override
+  Future<void> onLoad() async {
     // size
     height = _size;
     width = _size;
 
-    // loads the spriteSheet from assets
     final spriteSheet = SpriteSheet(
-      imageName: 'png/monkey_animation.png',
-      textureWidth: 48,
-      textureHeight: 48,
-      columns: 11,
-      rows: 1,
+      image: await Flame.images.load('png/monkey_animation.png'),
+      srcSize: Vector2(48.0, 48.0),
     );
 
-    // loads the spriteSheet from assets
     final spriteSheetMirror = SpriteSheet(
-      imageName: 'png/monkey_animation_mirror.png',
-      textureWidth: 48,
-      textureHeight: 48,
-      columns: 11,
-      rows: 1,
+      image: await Flame.images.load('png/monkey_animation_mirror.png'),
+      srcSize: Vector2(48.0, 48.0),
     );
 
     // idle
-    _idleLeft = spriteSheet.createAnimation(0, loop: true, from: 0, to: 3, stepTime: stepTime);
-    _idleRight = spriteSheetMirror.createAnimation(0, loop: true, from: 0, to: 3, stepTime: stepTime);
+    _idleLeft = spriteSheet.createAnimation(
+        row: 0, loop: true, from: 0, to: 3, stepTime: stepTime);
+    _idleRight = spriteSheetMirror.createAnimation(
+        row: 0, loop: true, from: 0, to: 3, stepTime: stepTime);
 
     // climb
-    _climbLeft = spriteSheet.createAnimation(0, loop: false, from: 3, to: 7, stepTime: stepTime / 4);
-    _climbRight = spriteSheetMirror.createAnimation(0, loop: false, from: 3, to: 7, stepTime: stepTime / 4);
+    _climbLeft = spriteSheet.createAnimation(
+        row: 0, loop: false, from: 3, to: 7, stepTime: stepTime / 4);
+    _climbRight = spriteSheetMirror.createAnimation(
+        row: 0, loop: false, from: 3, to: 7, stepTime: stepTime / 4);
 
     // change
-    _switchLeft = spriteSheet.createAnimation(0, loop: false, from: 8, to: 11, stepTime: stepTime / 4);
-    _switchRight = spriteSheetMirror.createAnimation(0, loop: false, from: 8, to: 11, stepTime: stepTime / 4);
+    _switchLeft = spriteSheet.createAnimation(
+        row: 0, loop: false, from: 8, to: 11, stepTime: stepTime / 4);
+    _switchRight = spriteSheetMirror.createAnimation(
+        row: 0, loop: false, from: 8, to: 11, stepTime: stepTime / 4);
 
     animation = _idleLeft;
   }
@@ -98,24 +113,6 @@ class Monkey extends AnimationComponent {
         break;
     }
   }
-
-  /// This method will activate the climb up animation one time to its corresponding side and set its constraints.
-  ///
-  /// sideeffects:
-  ///   [_moving] = true
-  ///   [_animation] = climb animation
-  void climbUp() {
-    if (_moving) {
-      return;
-    }
-
-    _moving = true;
-    _moveTimeLeft = stepTime;
-
-    animation = _isLeft ? _climbLeft : _climbRight
-      ..reset();
-  }
-
 
   /// This method will activate the switch animation one time to its corresponding side and set its constraints.
   ///
@@ -138,20 +135,20 @@ class Monkey extends AnimationComponent {
   }
 
   @override
-  void update(double t) {
+  void update(double dt) {
     // monkey is switching the sides
     if (_moving) {
       if (_moveTimeLeft > 0) {
         if (_switching) {
           // calculate the width the monkey moves on the x coordinate in t
-          var stepWidth = (_size + 2 * relOffsetCenter[0] * _size) * ((t < _moveTimeLeft ? t : _moveTimeLeft) / stepTime);
+          var stepWidth = (_size + 2 * relOffsetCenter[0] * _size) *
+              ((dt < _moveTimeLeft ? dt : _moveTimeLeft) / stepTime);
           // decrease or increase the x coordinate depending on the direction
           x += (_isLeft) ? stepWidth : -stepWidth;
         }
         // decrease the switchTimeLeft
-        _moveTimeLeft -= t;
-      }
-      else {
+        _moveTimeLeft -= dt;
+      } else {
         if (_switching) {
           _switching = false;
           _isLeft = !_isLeft;
@@ -161,21 +158,37 @@ class Monkey extends AnimationComponent {
         _moving = false;
         animation = _isLeft ? _idleLeft : _idleRight;
 
-        onMovementFinished?.call();
+        onMovementFinished.call();
       }
     }
 
-    super.update(t);
+    super.update(dt);
   }
 
-  void resize(Size size) {
+  /// This method will activate the climb up animation one time to its corresponding side and set its constraints.
+  ///
+  /// sideeffects:
+  ///   [_moving] = true
+  ///   [_animation] = climb animation
+  void climbUp() {
+    if (_moving) {
+      return;
+    }
+
+    _moving = true;
+    _moveTimeLeft = stepTime;
+
+    animation = _isLeft ? _climbLeft : _climbRight
+      ..reset();
+  }
+
+  @override
+  void onGameResize(Vector2 canvasSize) {
+    super.onGameResize(canvasSize);
     // start location in the center with the offset
-    x = size.width / 2 - _size - relOffsetCenter[0] * _size;
-    y = size.height / 1.4 - _size / 2 - relOffsetCenter[1] * _size;
+    x = canvasSize.x / 2 - _size - relOffsetCenter[0] * _size;
+    y = canvasSize.y / 1.4 - _size / 2 - relOffsetCenter[1] * _size;
   }
 }
 
-enum ClimbSide {
-  Left,
-  Right
-}  */
+enum ClimbSide { Left, Right }

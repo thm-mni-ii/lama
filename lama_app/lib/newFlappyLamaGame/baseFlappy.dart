@@ -57,10 +57,6 @@ class FlappyLamaGame2 extends FlameGame
   double xBody = 200;
   double yPosObstacle = 250;
 
-  var obstacleTopEndImage = 'png/kaktus_end_top.png';
-  var obstacleBottomEndImage = 'png/kaktus_end_bottom.png';
-  var obstacleBodyImage = 'png/kaktus_body.png';
-
   var obstacleProbability = .3;
   var obstacleFirstColumExisting = false;
   var obstacleThirdColumnExisting = false;

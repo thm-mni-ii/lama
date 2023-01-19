@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../app/repository/user_repository.dart';
 import 'backgroundApeClimber.dart';
+import 'monkeyComponent.dart';
 
 class ApeClimberGame extends FlameGame with TapDetector {
   // SETTINGS
@@ -42,6 +43,9 @@ class ApeClimberGame extends FlameGame with TapDetector {
   // --------
   // SETTINGS
 
+  late Monkey _monkey;
+/*   Queue<ClimbSide> _inputQueue = Queue();
+ */
   /// flag which indicates if the game is running
   bool _running = false;
 
@@ -111,6 +115,10 @@ class ApeClimberGame extends FlameGame with TapDetector {
     _allTimeHighScore = (await _userRepo.getHighscore(_gameId))!;
 
     add(ApeClimberParallaxComponent());
+
+    _monkey = Monkey(
+        _monkeySize, _animationTime); // ..onMovementFinished = _checkCollision;
+    add(_monkey);
 
 /*          // add tree
     _tree = Tree(_treeComponentAmount, _animationTime)..width = _monkeySize;
