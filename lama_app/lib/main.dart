@@ -26,7 +26,7 @@ void main() async {
   TasksetRepository tasksetRepository = TasksetRepository();
   tasksetRepository.initialize(serverRepository);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await precacheSvgs();
+  //await precacheSvgs();
   runApp(MultiRepositoryProvider(
     providers: [
       RepositoryProvider(
@@ -58,7 +58,7 @@ List<Taskset> taskset(
 ///
 ///Especially important for the "MoneyTask" since the svgs would need
 ///a second to load otherwise which looks cheap and unprofessional.
-Future<List<void>> precacheSvgs() async {
+/* Future<List<void>> precacheSvgs() async {
   return Future.wait([
     precachePicture(
       ExactAssetPicture(SvgPicture.svgStringDecoder,
@@ -112,3 +112,4 @@ Future<List<void>> precacheSvgs() async {
     ),
   ]);
 }
+ */

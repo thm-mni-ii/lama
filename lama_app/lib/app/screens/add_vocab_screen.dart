@@ -373,8 +373,8 @@ class AddVocabScreenState extends State<AddVocabScreen> {
     vocabList1.clear();
     vocabList2.clear();
     final inputImage = InputImage.fromFilePath(image!.path);
-    final textDetector = GoogleMlKit.vision.textDetector();
-    RecognisedText recognisedText = await textDetector.processImage(inputImage);
+    final textDetector = GoogleMlKit.vision.textRecognizer();
+    RecognizedText recognisedText = await textDetector.processImage(inputImage);
     await textDetector.close();
     scannedText = "";
 
@@ -387,7 +387,7 @@ class AddVocabScreenState extends State<AddVocabScreen> {
     for (TextBlock block in recognisedText.blocks) {
       int? singleCenterPoint = 0;
       final singleCenterPointList = <String>[];
-      List<String> cornerPoints = block.rect.center.toString().split('');
+      List<String> cornerPoints = block.boundingBox.center.toString().split('');
 
       for (int k = 0; k < cornerPoints.length; k++) {
         if (cornerPoints[k] == '.') break;
