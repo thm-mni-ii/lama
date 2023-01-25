@@ -122,9 +122,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           flex: 2,
                           child: ElevatedButton(
                             onPressed: () {
-                              controller.jumpToPage(1);
+                              controller.previousPage(
+                                  duration: Duration(milliseconds: 200),
+                                  curve: Curves.easeIn);
                             },
-                            child: Icon(Icons.home),
+                            child: Icon(Icons.navigate_before),
                             style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.all(0)),
                           ),
@@ -140,14 +142,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           flex: 2,
                           child: ElevatedButton(
                             onPressed: () {
-                              if (controller.page == pages.length - 1) {
-                                BlocProvider.of<CheckScreenBloc>(context)
-                                  ..add(CreateAdminEvent(context));
-                              } else {
-                                controller.nextPage(
-                                    duration: Duration(milliseconds: 200),
-                                    curve: Curves.easeIn);
-                              }
+                              controller.nextPage(
+                                  duration: Duration(milliseconds: 200),
+                                  curve: Curves.easeIn);
                             },
                             child: Icon(Icons.navigate_next),
                             style: ElevatedButton.styleFrom(
@@ -180,65 +177,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ),
       PageViewerModel(
-        title: "Übersicht",
+        title: "Lerne spielend und spiele Spiele!",
         description:
-            "Du weißt bereits wie die App funktioniert? Dann benutze die unten "
-            "angezeigten Navigationstasten, um schnell einzusteigen. ",
-        image: Image.asset("assets/images/png/no_login_home.png"),
-        button: ElevatedButton(
-          onPressed: () {
-            controller.jumpToPage(2);
-          },
-          child: Text("Zur Gastseite",
-              style: LamaTextTheme.getStyle(fontSize: 15)),
-        ),
-        widget: ElevatedButton(
-          onPressed: () {
-            controller.jumpToPage(3);
-          },
-          child: Text(
-            "Zur Adminseite",
-            style: LamaTextTheme.getStyle(fontSize: 15),
-          ),
-        ),
-        widget2: ElevatedButton(
-          onPressed: () {
-            controller.jumpToPage(4);
-          },
-          child: Text(
-            "Zur Setupseite",
-            style: LamaTextTheme.getStyle(fontSize: 15),
-          ),
-        ),
+            "Wähle zwischen unterschiedlichen Fächern wie Deutsch und Mathe "
+            "und löse die gestellten Aufgaben! Antwortest du richtig, erhältst "
+            "du Lamamünzen, mit denen du Spiele wie Tetris spielen kannst.",
+        image: Image.asset("assets/images/png/plane-1598084_1280.png"),
       ),
-      PageViewerModel(
-          title: "Spring einfach rein!",
-          description: "Du möchtest als Gast weiter und einfach die "
-              "Standardaufgaben ausprobieren? Einen Admin kann man später "
-              "immernoch anlegen.",
-          image: Image.asset('assets/images/png/features.png'),
-          button: ElevatedButton(
-            onPressed: () {
-              context.read<CheckScreenBloc>().add(CreateGuestEvent(context));
-            },
-            child: Text("Weiter als Gast",
-                style: LamaTextTheme.getStyle(fontSize: 15)),
-          )),
-      PageViewerModel(
-          title: "Verwalte deine Schüler und ihre Aufgaben",
-          description:
-              "Es kann ein Admin angelegt werden, mit dem jeder Schüler einen "
-              "eigenen Account mit Name, Passwort und Klasse erstellen kann. Es gibt "
-              "pro Klasse ein Set an Standardaufgaben und die Möglichkeit, eigene "
-              "Aufgaben nach einem Muster zu erstellen.",
-          image: Image.asset('assets/images/png/admin_feature.png'),
-          button: ElevatedButton(
-            onPressed: () {
-              context.read<CheckScreenBloc>().add(CreateAdminEvent(context));
-            },
-            child: Text("Weiter als Admin",
-                style: LamaTextTheme.getStyle(fontSize: 15)),
-          )),
       PageViewerModel(
           title: "Dein Lehrer hat dir einen Link gegeben?",
           description:
@@ -261,12 +206,62 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             },
           )),
       PageViewerModel(
-        title: "Alles Verstanden? Los geht's!",
+          title: "Spring einfach rein!",
+          description: "Du möchtest als Gast weiter und einfach die "
+              "Standardaufgaben ausprobieren? Einen Admin kann man später "
+              "immernoch anlegen.",
+          image: Image.asset('assets/images/png/features.png'),
+          button: ElevatedButton(
+            onPressed: () {
+              context.read<CheckScreenBloc>().add(CreateGuestEvent(context));
+            },
+            child: Text("Weiter als Gast",
+                style: LamaTextTheme.getStyle(fontSize: 15)),
+          )),
+      PageViewerModel(
+          title: "Verwalte deine Schüler und ihre Aufgaben",
+          description:
+              "Es kann ein Admin angelegt werden, mit dem Schüleraccounts "
+              "erstellt und verwaltet werden. Mit der Tasksetverwaltung "
+              "lassen sich eigene Aufgaben nach einem Muster erstellen.",
+          image: Image.asset('assets/images/png/admin_feature.png'),
+          button: ElevatedButton(
+            onPressed: () {
+              context.read<CheckScreenBloc>().add(CreateAdminEvent(context));
+            },
+            child: Text("Weiter als Admin",
+                style: LamaTextTheme.getStyle(fontSize: 15)),
+          )),
+      PageViewerModel(
+        title: "Übersicht",
         description:
-            "Wende dich bei Fragen an unser github und lese dir die dort "
-            "verfügbaren PDF-Dateien durch! Wir wünschen dir viel Spaß mit der "
-            "App!",
-        image: Image.asset("assets/images/png/plane-1598084_1280.png"),
+            "Wähle eine Einloggvariante aus, um mit dem Spaß zu beginnen! ",
+        image: Image.asset("assets/images/png/no_login_home.png"),
+        button: ElevatedButton(
+          onPressed: () {
+            controller.jumpToPage(2);
+          },
+          child: Text("Zur Linkseite",
+              style: LamaTextTheme.getStyle(fontSize: 15)),
+        ),
+        widget: ElevatedButton(
+          onPressed: () {
+            controller.jumpToPage(3);
+          },
+          child: Text(
+            "Zur Gastseite",
+            style: LamaTextTheme.getStyle(fontSize: 15),
+          ),
+        ),
+        widget2: ElevatedButton(
+          onPressed: () {
+            controller.jumpToPage(4);
+          },
+          child: Text(
+            "Zur Adminseite",
+            style: LamaTextTheme.getStyle(fontSize: 15),
+          ),
+        ),
       )
     ];
   }
@@ -290,38 +285,53 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             )),
         Flexible(
-            flex: 3,
+            flex: 4,
             child: Column(children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Text(
-                  title!,
-                  style: LamaTextTheme.getStyle(color: Colors.black),
-                  textAlign: TextAlign.center,
+              Flexible(
+                flex: 3,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: Text(
+                    title!,
+                    style: LamaTextTheme.getStyle(color: Colors.black),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
-                  description!,
-                  style: LamaTextTheme.getStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal),
-                  textAlign: TextAlign.center,
+              Flexible(
+                flex: 7,
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    description!,
+                    style: LamaTextTheme.getStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, bottom: 5),
-                child: button,
+              Flexible(
+                flex: 2,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 5),
+                  child: button,
+                ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-                child: widget,
+              Flexible(
+                flex: 2,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 5),
+                  child: widget,
+                ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-                child: widget2,
+              Flexible(
+                flex: 2,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 5),
+                  child: widget2,
+                ),
               ),
             ])),
       ],
