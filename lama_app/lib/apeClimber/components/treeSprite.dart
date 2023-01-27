@@ -16,7 +16,7 @@ class TreeSprite extends SpriteComponent with HasGameRef {
   /// This constructor needs the [width], [height], [x], [y] and
   /// [alterSprite] which indicates if the alternating sprite is needed.
   TreeSprite(double width, double height, double x, double y,
-      [this.alterSprite = false]) {
+      [this.alterSprite = true]) {
     _width = width;
     _height = height + 0.5;
     _x = x;
@@ -25,6 +25,9 @@ class TreeSprite extends SpriteComponent with HasGameRef {
 
   @override
   Future<void> onLoad() async {
+    alterSprite
+        ? sprite = await gameRef.loadSprite('png/tree7th.png')
+        : sprite = await gameRef.loadSprite('png/tree7th2.png');
     tmp = SpriteComponent()
       ..sprite = await gameRef.loadSprite('png/tree7th.png')
       ..height = _height + 0.5
@@ -40,7 +43,6 @@ class TreeSprite extends SpriteComponent with HasGameRef {
       ..x = _x
       ..y = _y;
     // ..anchor = Anchor.topLeft;
-
     alterSprite ? add(tmp) : add(tmp2);
   }
 }

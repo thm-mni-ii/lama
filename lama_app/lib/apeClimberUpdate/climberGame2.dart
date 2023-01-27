@@ -1,9 +1,13 @@
+import 'dart:collection';
+
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
+import 'package:lama_app/apeClimber/components/treeSprite.dart';
 
+import '../apeClimber/components/tree.dart';
 import '../app/repository/user_repository.dart';
 import 'backgroundApeClimber.dart';
 import 'monkeyComponent.dart';
@@ -42,10 +46,6 @@ class ApeClimberGame extends FlameGame with TapDetector {
   final _treeComponentAmount = 5;
   // --------
   // SETTINGS
-
-  late Monkey _monkey;
-/*   Queue<ClimbSide> _inputQueue = Queue();
- */
   /// flag which indicates if the game is running
   bool _running = false;
 
@@ -67,9 +67,16 @@ class ApeClimberGame extends FlameGame with TapDetector {
   /// the achieved score in this round
   int score = 0;
 
-/*     Monkey _monkey;
+  late Monkey _monkey;
+
   Queue<ClimbSide> _inputQueue = Queue();
 
+  /// Tree component
+  late Tree _tree;
+
+  late TreeSprite _treeSprite;
+
+/*    
   /// Timer component for display and organize the gametimer.
   MonkeyTimer _timer;
 
@@ -120,10 +127,15 @@ class ApeClimberGame extends FlameGame with TapDetector {
         _monkeySize, _animationTime); // ..onMovementFinished = _checkCollision;
     add(_monkey);
 
-/*          // add tree
-    _tree = Tree(_treeComponentAmount, _animationTime)..width = _monkeySize;
+/*     _treeSprite = TreeSprite(50, 50, 50, 50);
+    add(_treeSprite); */
+
+    // add tree
+    _tree = Tree(screenSize, _treeComponentAmount, _animationTime)
+      ..width = _monkeySize;
     add(_tree);
 
+/*    
         addWidgetOverlay(
         startWidgetName,
         MonkeyStartWidget(
@@ -152,11 +164,11 @@ class ApeClimberGame extends FlameGame with TapDetector {
   }
 
   void onTapDown(TapDownInfo info) {
-/*     if (_running) {
+    if (_running) {
       // add input to queue
-      _inputQueue.addFirst(d.localPosition.dx < screenSize.width / 2
+      _inputQueue.addFirst(info.eventPosition.global.x < screenSize.width / 2
           ? ClimbSide.Left
           : ClimbSide.Right);
-    } */
+    }
   }
 }

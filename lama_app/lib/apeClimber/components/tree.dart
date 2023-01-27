@@ -1,7 +1,8 @@
-/* import 'dart:collection';
+import 'dart:collection';
 import 'dart:ui';
 
-import 'package:flame/components/component.dart';
+import 'package:flame/components.dart';
+
 import 'package:lama_app/apeClimber/components/treeSprite.dart';
 
 /// This class is [PositionComponent] to display a complete tree.
@@ -14,23 +15,29 @@ class Tree extends PositionComponent {
   // SETTINGS
 
   /// height of each components (constraints: [componentCount] and [_screenSize]
-  double _individualHeight;
+  late double _individualHeight;
+
   /// size of the screen
   Size _screenSize;
+
   /// flag if the components are moving
   bool _moving = false;
+
   /// pixel each component will move on the y coordinate
   double _moveWidth = 96;
+
   /// pixel left which the components has to move
   double _moveTimeLeft = 0;
+
   /// number of components
   final int componentCount;
+
   /// all components of the tree
   Queue<TreeSprite> _treeComponents = Queue<TreeSprite>();
 
   /// The constructor need the amount [componentCount] of components the tree should consists of
   /// and the time [_moveTime] it needs to move the tree.
-  Tree(this.componentCount, this._moveTime);
+  Tree(this._screenSize, this.componentCount, this._moveTime);
 
   /// This method adds all components depending on the [componentCount].
   void _addTreeParts() {
@@ -63,8 +70,9 @@ class Tree extends PositionComponent {
     if (_moving && _screenSize != null) {
       // movement ongoing?
       if (_moveTimeLeft > 0) {
-        var dtMoveWidth = (_moveWidth) * ((dt < _moveTimeLeft ? dt : _moveTimeLeft) / _moveTime);
-        _treeComponents?.forEach((element) {
+        var dtMoveWidth = (_moveWidth) *
+            ((dt < _moveTimeLeft ? dt : _moveTimeLeft) / _moveTime);
+        _treeComponents.forEach((element) {
           element.y += dtMoveWidth;
         });
 
@@ -76,7 +84,9 @@ class Tree extends PositionComponent {
               _individualHeight,
               _screenSize.width / 2 - width / 2,
               _treeComponents.last.y - _individualHeight,
-              (_treeComponents.isNotEmpty ? !_treeComponents.last.alterSprite : false)));
+              (_treeComponents.isNotEmpty
+                  ? !_treeComponents.last.alterSprite
+                  : false)));
         }
         _moveTimeLeft -= dt;
       }
@@ -92,8 +102,7 @@ class Tree extends PositionComponent {
   @override
   void render(Canvas c) {
     // render each sprite of the tree
-    _treeComponents?.forEach((element)
-    {
+    _treeComponents.forEach((element) {
       c.save();
       element.render(c);
       c.restore();
@@ -101,16 +110,17 @@ class Tree extends PositionComponent {
   }
 
   @override
-  void resize(Size size) {
+  void onGameResize(Vector2 canvasSize) {
+    _individualHeight = 50;
+    _addTreeParts();
     // set the screensize
-    _screenSize = size;
-    if (size.height > 0) {
+    // _screenSize = size;
+    if (canvasSize.y > 0) {
       // calculate the individual height
       _individualHeight = _screenSize.height / (componentCount - 1);
       // add all tree components
       _addTreeParts();
     }
-    super.resize(size);
+    super.onGameResize(canvasSize);
   }
-
-} */
+}
