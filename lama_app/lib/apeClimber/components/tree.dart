@@ -49,6 +49,7 @@ class Tree extends PositionComponent {
           (i - 1) * _individualHeight,
           i.isEven));
     }
+    addAll(_treeComponents);
   }
 
   /// This methods flag the movement of the tree by [y] to the bottom in [_moveTime].
@@ -88,6 +89,8 @@ class Tree extends PositionComponent {
                   ? !_treeComponents.last.alterSprite
                   : false)));
         }
+        /*       removeAll(_treeComponents);
+        addAll(_treeComponents); */
         _moveTimeLeft -= dt;
       }
       // movement finished = disable movement
@@ -111,10 +114,12 @@ class Tree extends PositionComponent {
 
   @override
   void onGameResize(Vector2 canvasSize) {
-    _individualHeight = 50;
-    _addTreeParts();
+    //_individualHeight = 50;
+    //_addTreeParts();
     // set the screensize
     // _screenSize = size;
+    print("thats the canvas Size");
+    print(canvasSize.y);
     if (canvasSize.y > 0) {
       // calculate the individual height
       _individualHeight = _screenSize.height / (componentCount - 1);

@@ -44,5 +44,6 @@ class TreeSprite extends SpriteComponent with HasGameRef {
       ..y = _y;
     // ..anchor = Anchor.topLeft;
     alterSprite ? add(tmp) : add(tmp2);
+    //add(tmp);
   }
 }

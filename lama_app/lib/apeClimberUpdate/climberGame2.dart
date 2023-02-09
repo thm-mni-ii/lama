@@ -7,6 +7,7 @@ import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/treeSprite.dart';
 
+import '../apeClimber/components/climberBranches.dart';
 import '../apeClimber/components/tree.dart';
 import '../app/repository/user_repository.dart';
 import 'backgroundApeClimber.dart';
@@ -47,7 +48,7 @@ class ApeClimberGame extends FlameGame with TapDetector {
   // --------
   // SETTINGS
   /// flag which indicates if the game is running
-  bool _running = false;
+  bool _running = true;
 
   /// a bool flag which indicates if the score of the game has been saved
   bool _savedHighScore = false;
@@ -80,18 +81,14 @@ class ApeClimberGame extends FlameGame with TapDetector {
   /// Timer component for display and organize the gametimer.
   MonkeyTimer _timer;
 
-    /// Tree component
-  Tree _tree;
 
     /// Background component
   ParallaxComponent _back;
-  
-    /// pixel left which the background has to move
-  ClimberBranches _climberBranches;
-  double branchSize;
+  */
 
-
-   */
+  /// pixel left which the background has to move
+  late ClimberBranches _climberBranches;
+  late double branchSize;
 
   /// the [UserRepository] to interact with the database and get the user infos
   late UserRepository _userRepo;
@@ -100,8 +97,6 @@ class ApeClimberGame extends FlameGame with TapDetector {
   BuildContext _context;
 
   late Size screenSize;
-
-  late double branchSize;
 
   ApeClimberGame(this._context, this._userRepo) {
     Flame.images.loadAll([
@@ -123,17 +118,20 @@ class ApeClimberGame extends FlameGame with TapDetector {
 
     add(ApeClimberParallaxComponent());
 
-    _monkey = Monkey(
-        _monkeySize, _animationTime); // ..onMovementFinished = _checkCollision;
+    _monkey = Monkey(_monkeySize, _animationTime)
+      ..onMovementFinished = _checkCollision;
     add(_monkey);
-
-/*     _treeSprite = TreeSprite(50, 50, 50, 50);
-    add(_treeSprite); */
 
     // add tree
     _tree = Tree(screenSize, _treeComponentAmount, _animationTime)
       ..width = _monkeySize;
     add(_tree);
+
+    // add branches
+    _climberBranches =
+        ClimberBranches(this, _monkeySize, _monkeySize / 4, _animationTime)
+          ..onBranchesMoved = increaseScore;
+    add(_climberBranches);
 
 /*    
         addWidgetOverlay(
@@ -142,6 +140,12 @@ class ApeClimberGame extends FlameGame with TapDetector {
             userHighScore: _userHighScore,
             alltimeHighScore: _allTimeHighScore,
             onStartPressed: _startGame)); */
+  }
+
+  /// This method increase the score as well as the score widget.
+  void increaseScore() {
+    score += 1;
+    // _updateScoreWidget();
   }
 
   @override
@@ -163,7 +167,52 @@ class ApeClimberGame extends FlameGame with TapDetector {
     super.render(c);
   }
 
+  @override
+  void update(double t) {
+    // check input queue to select the next movement
+    if (_monkey != null && !_monkey.isMoving && _inputQueue.isNotEmpty) {
+      /*    components
+          .whereType<Monkey>()
+          .forEach((element) => element.move(_inputQueue.removeLast())); */
+
+      // _moveBackground();
+
+      // move the tree
+      _tree.move(_monkeySize);
+      // move the branches
+      _climberBranches.move(_monkeySize);
+    }
+
+    // background y animation on movement
+/*     if (_backMoving) {
+      if (_backgroundMoveTimeLeft > 0) {
+        _back.layerDelta = Offset(6, -6);
+        _backgroundMoveTimeLeft -= t;
+      } else {
+        _backMoving = false;
+        _back.layerDelta = Offset(6, 0);
+      }
+    } */
+
+    super.update(t);
+  }
+
+  /// This method checks if the monkey collides with the collision branch.
+  void _checkCollision() {
+    try {
+      if (_monkey.isLeft == _climberBranches.isLeft) {
+        //decreaseScore();
+        _climberBranches.highlightCollisionBranch();
+/*         _timer.pause();
+        _gameOver("Ast berührt!!"); */
+      }
+    } on StateError {
+      print("[Error] _checkCollision : monkey not found");
+    }
+  }
+
   void onTapDown(TapDownInfo info) {
+    print("tapDown");
     if (_running) {
       // add input to queue
       _inputQueue.addFirst(info.eventPosition.global.x < screenSize.width / 2

@@ -45,7 +45,7 @@ class Monkey extends SpriteAnimationComponent {
   double _moveTimeLeft = 0;
 
   /// is the monkey moving (switching or climbing)
-  bool _moving = false;
+  bool _moving = true;
 
   /// Function which gets called when the movement finished
   late Function onMovementFinished;
