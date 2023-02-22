@@ -1,10 +1,14 @@
 import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/palette.dart';
 
 import 'package:flutter/material.dart';
 
-class ClimberBranch extends SpriteComponent {
+class ClimberBranch extends SpriteComponent with CollisionCallbacks {
+  late ShapeHitbox hitbox;
+
   /// opacity of the hitbox
   double opacity = 1;
 
@@ -17,8 +21,8 @@ class ClimberBranch extends SpriteComponent {
       sprite?.renderRect(c, Rect.fromLTWH(x, y, width, height),
           overridePaint: Paint()
             ..color = hit
-                ? Colors.white.withOpacity(0.7)
-                : Colors.white.withOpacity(opacity));
+                ? Colors.white.withOpacity(1.0)
+                : Colors.red.withOpacity(0.7));
     } else {
       super.render(c);
     }

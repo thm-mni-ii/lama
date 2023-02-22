@@ -5,6 +5,8 @@ import 'package:flame/components.dart';
 
 import 'package:lama_app/apeClimber/components/treeSprite.dart';
 
+import '../../apeClimberUpdate/climberGame2.dart';
+
 /// This class is [PositionComponent] to display a complete tree.
 class Tree extends PositionComponent {
   // SETTINGS
@@ -13,6 +15,9 @@ class Tree extends PositionComponent {
   final double _moveTime;
   // --------
   // SETTINGS
+
+  /// reference to the BaseGame
+  final ApeClimberGame _game;
 
   /// height of each components (constraints: [componentCount] and [_screenSize]
   late double _individualHeight;
@@ -37,11 +42,11 @@ class Tree extends PositionComponent {
 
   /// The constructor need the amount [componentCount] of components the tree should consists of
   /// and the time [_moveTime] it needs to move the tree.
-  Tree(this._screenSize, this.componentCount, this._moveTime);
+  Tree(this._game, this._screenSize, this.componentCount, this._moveTime);
 
   /// This method adds all components depending on the [componentCount].
   void _addTreeParts() {
-    for (int i = 0; i < componentCount; i++) {
+    for (int i = 0; i < componentCount + 1; i++) {
       _treeComponents.addFirst(TreeSprite(
           width,
           _individualHeight,
@@ -55,7 +60,9 @@ class Tree extends PositionComponent {
   /// This methods flag the movement of the tree by [y] to the bottom in [_moveTime].
   ///
   /// This will handle in [update]
+  int test = 0;
   void move(double y) {
+    test += 1;
     if (_moving) {
       return;
     }
@@ -68,7 +75,8 @@ class Tree extends PositionComponent {
   @override
   void update(double dt) {
     // movement active?
-    if (_moving && _screenSize != null) {
+    //neu: _screenSize wurde zu _game.screensize
+    if (_moving && _game.screenSize != null) {
       // movement ongoing?
       if (_moveTimeLeft > 0) {
         var dtMoveWidth = (_moveWidth) *
@@ -78,19 +86,21 @@ class Tree extends PositionComponent {
         });
 
         // remove the part which moves out of the screen and add one on the top
-        if (_treeComponents.first.y > _screenSize.height) {
+        if (test ==
+            2 /* _treeComponents.first.y > _screenSize.height */ /* /5 */) {
+          test = 0;
           _treeComponents.removeFirst();
           _treeComponents.add(TreeSprite(
               width,
               _individualHeight,
               _screenSize.width / 2 - width / 2,
-              _treeComponents.last.y - _individualHeight,
+              _treeComponents.last.y -
+                  _individualHeight * 2, //*2 wurde hinzugefügt
               (_treeComponents.isNotEmpty
                   ? !_treeComponents.last.alterSprite
                   : false)));
+          add(_treeComponents.last);
         }
-        /*       removeAll(_treeComponents);
-        addAll(_treeComponents); */
         _moveTimeLeft -= dt;
       }
       // movement finished = disable movement

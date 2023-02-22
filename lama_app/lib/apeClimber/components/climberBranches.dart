@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'dart:math';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/palette.dart';
 
 import 'package:flame/sprite.dart';
 import 'package:lama_app/apeClimber/climberGame.dart';
@@ -10,7 +12,7 @@ import 'package:lama_app/apeClimber/components/climberBranch.dart';
 import '../../apeClimberUpdate/climberGame2.dart';
 
 /// This class is [Component] to display a [List] of [ClimberBranch]s.
-class ClimberBranches extends Component {
+class ClimberBranches extends PositionComponent {
   // SETTINGS
   // --------
   /// flag to show the branch on the display
@@ -70,7 +72,7 @@ class ClimberBranches extends Component {
 
   /// This method highlightes the branch which the monkey will hit.
   void highlightCollisionBranch() {
-    collisionBranch.hit = true;
+    collisionBranch.hit = false;
   }
 
   /// This method creates all branch SpriteComponents
@@ -101,7 +103,7 @@ class ClimberBranches extends Component {
 
       _lastBranch = branch;
     }
-    collisionBranch = _branches[1];
+    collisionBranch = _branches[0]; // das ist Neu!!!!!!!!!!!!
   }
 
   /// This method checks all branches if they are out of the screen and reset them to the start,

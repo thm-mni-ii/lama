@@ -8,12 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/treeSprite.dart';
 
 import '../apeClimber/components/climberBranches.dart';
+import '../apeClimber/components/monkeyTimer.dart';
 import '../apeClimber/components/tree.dart';
+import '../apeClimber/widgets/monkeyScoreWidget.dart';
+import '../apeClimber/widgets/monkeyTimerWidget.dart';
 import '../app/repository/user_repository.dart';
+import '../util/LamaColors.dart';
 import 'backgroundApeClimber.dart';
 import 'monkeyComponent.dart';
 
-class ApeClimberGame extends FlameGame with TapDetector {
+class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
+  int time = 120;
+  late TextPaint pointsText;
+  late TextPaint timeText;
   // SETTINGS
   // --------
   /// amount of tiles on the x coordinate
@@ -60,7 +67,7 @@ class ApeClimberGame extends FlameGame with TapDetector {
   double _backgroundMoveTimeLeft = 0;
 
   /// the personal highScore
-  late int _userHighScore;
+  int userHighScore = 0;
 
   /// the all time highScore in this game
   late int _allTimeHighScore;
@@ -77,11 +84,10 @@ class ApeClimberGame extends FlameGame with TapDetector {
 
   late TreeSprite _treeSprite;
 
-/*    
   /// Timer component for display and organize the gametimer.
-  MonkeyTimer _timer;
+  late MonkeyTimer _timer;
 
-
+/*
     /// Background component
   ParallaxComponent _back;
   */
@@ -112,7 +118,7 @@ class ApeClimberGame extends FlameGame with TapDetector {
   Future<void> onLoad() async {
     //   resize(await Flame.util.initialDimensions()); --wird womöglich automatisch gemacht
     // load _serHighScore
-    _userHighScore = (await _userRepo.getMyHighscore(_gameId))!;
+    userHighScore = (await _userRepo.getMyHighscore(_gameId))!;
     // load allTimeHighScore
     _allTimeHighScore = (await _userRepo.getHighscore(_gameId))!;
 
@@ -123,7 +129,7 @@ class ApeClimberGame extends FlameGame with TapDetector {
     add(_monkey);
 
     // add tree
-    _tree = Tree(screenSize, _treeComponentAmount, _animationTime)
+    _tree = Tree(this, screenSize, _treeComponentAmount, _animationTime)
       ..width = _monkeySize;
     add(_tree);
 
@@ -133,6 +139,16 @@ class ApeClimberGame extends FlameGame with TapDetector {
           ..onBranchesMoved = increaseScore;
     add(_climberBranches);
 
+/*     // initialize Timer Component
+    _timer = MonkeyTimer(_onTimerFinished)
+      ..onWidgetUpdated = _onTimerWidgetUpdated; */
+
+    _timer = MonkeyTimer(period: 1);
+    add(_timer);
+
+    // start timer
+    _timer.start();
+
 /*    
         addWidgetOverlay(
         startWidgetName,
@@ -140,12 +156,60 @@ class ApeClimberGame extends FlameGame with TapDetector {
             userHighScore: _userHighScore,
             alltimeHighScore: _allTimeHighScore,
             onStartPressed: _startGame)); */
+
+    /*     initialise Text for Points and timer */
+    pointsText = TextPaint(
+        style: TextStyle(
+            fontSize: screenSize.width * 0.05,
+            fontWeight: FontWeight.bold,
+            color: score >= userHighScore && score != 0
+                ? LamaColors.greenAccent
+                : LamaColors.redAccent));
+
+    timeText = TextPaint(
+        style: TextStyle(
+            fontSize: screenSize.width * 0.05,
+            fontWeight: FontWeight.bold,
+            color: score >= userHighScore && score != 0
+                ? LamaColors.greenAccent
+                : LamaColors.redAccent));
   }
 
   /// This method increase the score as well as the score widget.
   void increaseScore() {
     score += 1;
     // _updateScoreWidget();
+  }
+
+  /// This method decrease the score as well as the score widget.
+  void decreaseScore() {
+    score -= 1;
+/*     _updateScoreWidget();
+ */
+  }
+
+  void decreaseTime() {
+    time -= 1;
+/*     _updateScoreWidget();
+ */
+  }
+
+  /// This methods updates the score widget.
+  void _updateScoreWidget() {
+    if (!_running) {
+      return;
+    }
+/*         removeWidgetOverlay(scoreWidgetName);
+    addWidgetOverlay(
+        scoreWidgetName, MonkeyScoreWidget(text: score.toString())); */
+  }
+
+  /// This method is the handler when the timer finished.
+  void _onTimerFinished(MonkeyTimerWidget widget) {
+/*     removeWidgetOverlay(timerWidgetName);
+    addWidgetOverlay(timerWidgetName, widget); */
+
+    _gameOver("Zeit abgelaufen!!");
   }
 
   @override
@@ -165,6 +229,20 @@ class ApeClimberGame extends FlameGame with TapDetector {
 
   void render(Canvas c) {
     super.render(c);
+    showPoints(c);
+    showTime(c);
+  }
+
+  void showPoints(Canvas canvas) {
+    pointsText.render(canvas, "Punkte:  $score",
+        Vector2(screenSize.width * 0.25, screenSize.height * 1 / 35),
+        anchor: Anchor.center);
+  }
+
+  void showTime(Canvas canvas) {
+    timeText.render(canvas, "Punkte:  $time",
+        Vector2(screenSize.width * 0.75, screenSize.height * 1 / 35),
+        anchor: Anchor.center);
   }
 
   @override
@@ -181,6 +259,8 @@ class ApeClimberGame extends FlameGame with TapDetector {
       _tree.move(_monkeySize);
       // move the branches
       _climberBranches.move(_monkeySize);
+      //das ist neu und sorgt dafür, dass der alte Input nicht in einer dauerschleife verarbeitet wird
+      _inputQueue.clear();
     }
 
     // background y animation on movement
@@ -201,19 +281,46 @@ class ApeClimberGame extends FlameGame with TapDetector {
   void _checkCollision() {
     try {
       if (_monkey.isLeft == _climberBranches.isLeft) {
+        print("AST BERÜPHRT");
         //decreaseScore();
         _climberBranches.highlightCollisionBranch();
-/*         _timer.pause();
-        _gameOver("Ast berührt!!"); */
+        _timer.pause();
+        _gameOver("Ast berührt!!");
       }
     } on StateError {
       print("[Error] _checkCollision : monkey not found");
     }
   }
 
+  /// This method finishes the game.
+  ///
+  /// sideffects:
+  ///   adds [MonkeyEndscreenWidget] widget
+  void _gameOver(String endText) {
+    _running = false;
+    pauseEngine();
+
+/*     _saveHighScore();
+
+    removeWidgetOverlay(scoreWidgetName);
+    addWidgetOverlay(
+        endScreenWidgetName,
+        MonkeyEndscreenWidget(
+          text: endText,
+          score: score,
+          onQuitPressed: _quit,
+        ));
+
+    // removed the playMode widget
+    removeWidgetOverlay(playPauseWidgetName); */
+  }
+
   void onTapDown(TapDownInfo info) {
     print("tapDown");
     if (_running) {
+      info.eventPosition.global.x < screenSize.width / 2
+          ? _monkey.move(ClimbSide.Left)
+          : _monkey.move(ClimbSide.Right);
       // add input to queue
       _inputQueue.addFirst(info.eventPosition.global.x < screenSize.width / 2
           ? ClimbSide.Left

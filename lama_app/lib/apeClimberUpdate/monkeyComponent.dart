@@ -1,10 +1,13 @@
 import 'dart:ui';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 
 /// This class is [AnimationComponent] to display a monkey with all its properties.
-class Monkey extends SpriteAnimationComponent {
+class Monkey extends SpriteAnimationComponent with CollisionCallbacks {
+  late ShapeHitbox hitbox;
   // SETTINGS
   // --------
   /// time which is needed to move
@@ -45,7 +48,7 @@ class Monkey extends SpriteAnimationComponent {
   double _moveTimeLeft = 0;
 
   /// is the monkey moving (switching or climbing)
-  bool _moving = true;
+  bool _moving = false;
 
   /// Function which gets called when the movement finished
   late Function onMovementFinished;
@@ -100,6 +103,22 @@ class Monkey extends SpriteAnimationComponent {
         row: 0, loop: false, from: 8, to: 11, stepTime: stepTime / 4);
 
     animation = _idleLeft;
+/* WENN DAS HIONZUGEFÜGT WIRD; ENTSTEHEN  UNGEWOLLTE ABSTÄNDE ZWISCHEN DEN BÄUMEN
+    final hitboxPaint = BasicPalette.white.paint()
+      ..style = PaintingStyle.stroke;
+    add(
+      PolygonHitbox.relative(
+        [
+          Vector2(-1.0, 0.0),
+          Vector2(-1.0, -1.0),
+          Vector2(0.0, -1.0),
+          Vector2(0.0, 0.0),
+        ],
+        parentSize: size,
+      )
+        ..paint = hitboxPaint
+        ..renderShape = true,
+    ); */
   }
 
   /// This method will activate the matching move animation to its [side] and its constraints.
@@ -136,6 +155,9 @@ class Monkey extends SpriteAnimationComponent {
 
   @override
   void update(double dt) {
+    if (isColliding == true) {
+      print("COLLIUSION");
+    }
     // monkey is switching the sides
     if (_moving) {
       if (_moveTimeLeft > 0) {
@@ -188,6 +210,15 @@ class Monkey extends SpriteAnimationComponent {
     // start location in the center with the offset
     x = canvasSize.x / 2 - _size - relOffsetCenter[0] * _size;
     y = canvasSize.y / 1.4 - _size / 2 - relOffsetCenter[1] * _size;
+  }
+
+  @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    print("LAMA HIT");
+    super.onCollisionStart(intersectionPoints, other);
   }
 }
 
