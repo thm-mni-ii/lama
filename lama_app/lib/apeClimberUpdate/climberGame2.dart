@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/input.dart';
+import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:lama_app/apeClimber/components/treeSprite.dart';
 
@@ -16,12 +17,22 @@ import '../app/repository/user_repository.dart';
 import '../util/LamaColors.dart';
 import 'backgroundApeClimber.dart';
 import 'monkeyComponent.dart';
+import 'package:lama_app/app/model/highscore_model.dart';
 
 class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
   int time = 120;
   late TextPaint pointsText;
   late TextPaint timeText;
   // SETTINGS
+  //#region Global Game Over Variables
+  late TextPaint gameOverText;
+  late TextPaint gameOverSuccessText;
+  late TextPaint gameOverScoreText;
+  late TextPaint gameOverAdditionalScoreText;
+  var tempUserHighScore = 0;
+  var tempAllTimeHighScore = 0;
+  var tempSuccessText = "";
+  //#endregion
   // --------
   /// amount of tiles on the x coordinate
   final int tilesX = 9;
@@ -59,6 +70,7 @@ class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
 
   /// a bool flag which indicates if the score of the game has been saved
   bool _savedHighScore = false;
+  bool gameOver = false;
 
   /// flag if the background is moving
   bool _backMoving = false;
@@ -86,11 +98,6 @@ class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
 
   /// Timer component for display and organize the gametimer.
   late MonkeyTimer _timer;
-
-/*
-    /// Background component
-  ParallaxComponent _back;
-  */
 
   /// pixel left which the background has to move
   late ClimberBranches _climberBranches;
@@ -210,6 +217,7 @@ class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
     addWidgetOverlay(timerWidgetName, widget); */
 
     _gameOver("Zeit abgelaufen!!");
+    gameOver = true;
   }
 
   @override
@@ -231,6 +239,9 @@ class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
     super.render(c);
     showPoints(c);
     showTime(c);
+    if (gameOver == true) {
+      showGameOverText(c);
+    }
   }
 
   void showPoints(Canvas canvas) {
@@ -240,7 +251,7 @@ class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
   }
 
   void showTime(Canvas canvas) {
-    timeText.render(canvas, "Punkte:  $time",
+    timeText.render(canvas, "Zeit:  $time",
         Vector2(screenSize.width * 0.75, screenSize.height * 1 / 35),
         anchor: Anchor.center);
   }
@@ -286,6 +297,7 @@ class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
         _climberBranches.highlightCollisionBranch();
         _timer.pause();
         _gameOver("Ast berührt!!");
+        gameOver = true;
       }
     } on StateError {
       print("[Error] _checkCollision : monkey not found");
@@ -300,8 +312,9 @@ class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
     _running = false;
     pauseEngine();
 
-/*     _saveHighScore();
-
+    _saveHighScore();
+    print("Highscore safed");
+/*  
     removeWidgetOverlay(scoreWidgetName);
     addWidgetOverlay(
         endScreenWidgetName,
@@ -315,6 +328,20 @@ class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
     removeWidgetOverlay(playPauseWidgetName); */
   }
 
+  /// This method saves the actual Score to the database for the user which is logged in.
+  ///
+  /// sideffects:
+  ///   [_savedHighScore] = true
+  void _saveHighScore() {
+    if (!_savedHighScore) {
+      _savedHighScore = true;
+      _userRepo.addHighscore(Highscore(
+          gameID: _gameId,
+          score: score,
+          userID: _userRepo.authenticatedUser!.id));
+    }
+  }
+
   void onTapDown(TapDownInfo info) {
     print("tapDown");
     if (_running) {
@@ -325,6 +352,107 @@ class ApeClimberGame extends FlameGame with TapDetector, HasCollisionDetection {
       _inputQueue.addFirst(info.eventPosition.global.x < screenSize.width / 2
           ? ClimbSide.Left
           : ClimbSide.Right);
+    }
+  }
+
+  void showGameOverText(Canvas canvas) {
+    openGameOverMenu();
+    //  createGameOverTextAndGameOverButtons();
+
+    gameOverText.render(canvas, "Game Over!",
+        Vector2(screenSize.width * 0.5, screenSize.height * 1 / 10),
+        anchor: Anchor.center);
+
+    gameOverSuccessText.render(canvas, tempSuccessText,
+        Vector2(screenSize.width * 0.5, screenSize.height * 2 / 10),
+        anchor: Anchor.center);
+
+    /// set height of additional game text depending on the height/width ratio of the device
+    var yPosAdditionalText;
+    screenSize.height / screenSize.width >= (16 / 9)
+        ? yPosAdditionalText = screenSize.height * 0.345
+        : yPosAdditionalText = screenSize.height * 0.325;
+
+/*     gameOverAdditionalScoreText.render(canvas, "(Score: $score )",
+        Vector2(screenSize.width * 0.15, yPosAdditionalText),
+        anchor: Anchor.centerLeft); */
+
+    gameOverScoreText.render(
+        canvas,
+        "Rekord:  $tempUserHighScore\n\nHigh-Score:    $tempAllTimeHighScore",
+        Vector2(screenSize.width * 0.15, screenSize.height * 4 / 10),
+        anchor: Anchor.centerLeft);
+  }
+
+  Future<void> openGameOverMenu() async {
+/*     if (!removedone) {
+      remove(obst1);
+      remove(obst2);
+      remove(userLama);
+      removedone = true;
+    } */
+
+    RectangleComponent gameOverBackground = RectangleComponent(
+        position: Vector2(0, 0),
+        anchor: Anchor.topLeft,
+        size: Vector2(screenSize.width, screenSize.height),
+        paint: PaletteEntry(Color(0xeaeceaea)).paint(),
+        priority: 5);
+    add(gameOverBackground);
+    createGameOverTextAndGameOverButtons();
+  }
+
+  Future<void> createGameOverTextAndGameOverButtons() async {
+    ///initialise TextPaint Objects for relevant text parts in the game over menu
+
+    gameOverText = TextPaint(
+        style: TextStyle(
+            fontSize: screenSize.width * 0.15,
+            fontWeight: FontWeight.bold,
+            color: score >= userHighScore! && score != 0
+                ? LamaColors.greenAccent
+                : LamaColors.redAccent));
+
+    gameOverSuccessText = TextPaint(
+        style: TextStyle(
+            fontSize: screenSize.width * 0.06,
+            fontWeight: FontWeight.bold,
+            color: score >= userHighScore! && score != 0
+                ? LamaColors.greenAccent
+                : LamaColors.redAccent));
+
+    gameOverScoreText = TextPaint(
+        style: TextStyle(
+            fontSize: screenSize.width * 0.08,
+            fontWeight: FontWeight.bold,
+            color: LamaColors.blueAccent));
+
+    gameOverAdditionalScoreText = TextPaint(
+        style: TextStyle(
+            fontSize: screenSize.width * 0.04, color: LamaColors.bluePrimary));
+
+    ///temporal variables to get a create a correct score text
+    tempUserHighScore = userHighScore;
+    tempAllTimeHighScore = _allTimeHighScore;
+    tempSuccessText = "";
+
+    ///creating individual text depending on the score of the player
+    if (score > userHighScore) {
+      tempSuccessText = "Super, dein bestes Spiel bisher!";
+      userHighScore = score;
+      tempUserHighScore = score;
+      if (score > _allTimeHighScore) {
+        tempSuccessText = "Wow, ein neuer Highscore!";
+        userHighScore = score;
+        _allTimeHighScore = score;
+        tempAllTimeHighScore = score;
+      }
+    } else if (score == 0) {
+      tempSuccessText = "Das war wohl nichts :(";
+    } else if (score == userHighScore) {
+      tempSuccessText = "Fast!";
+    } else {
+      tempSuccessText = "Das war wohl nichts :(";
     }
   }
 }
